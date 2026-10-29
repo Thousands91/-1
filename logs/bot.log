@@ -1735,3 +1735,5 @@ nohup: ignoring input
 10-29 14:12:50 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
 10-29 17:32:07 [INFO] uvicorn | 127.0.0.1:40968 - "GET / HTTP/1.1" 404
 10-29 17:32:08 [INFO] uvicorn | 127.0.0.1:38422 - "GET / HTTP/1.1" 404
+10-29 18:04:47 [INFO] uvicorn | 127.0.0.1:43276 - "GET /wd/hub/status HTTP/1.1" 404
+10-29 19:04:14 [INFO] uvicorn | 127.0.0.1:46374 - "GET / HTTP/1.1" 404
