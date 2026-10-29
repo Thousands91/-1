@@ -9,6 +9,7 @@ AI 智能问答 —— 阿萨尔人格（《苏丹的游戏》书店老板）
 - 字节豆包 https://www.volcengine.com/product/doubao
 - 月之暗面 https://platform.moonshot.cn
 """
+import asyncio
 import os
 import random
 import sys
@@ -478,6 +479,36 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
         await ai_chat.finish(Message(f"（书页翻到一半，灯灭了）{type(e).__name__}\n请检查 API Key 或网络"))
         return
 
+    # 联网搜索：对方在问客观事实（人名/作品/日期/版本…）时，先搜一圈再重答。
+    # 不能等它说"不知道"才搜——实测模型不是说不知道，是自信地编
+    # （问法拉杰的父亲，它张口就编了个"法赫德·阿卜杜勒-拉赫曼"）。
+    # 判定必须用用户的原始话：text 里已经拼了记忆块和引用前缀，拿它判断会误判。
+    _ask = event.get_plaintext().strip() or text
+    if _needs_fact(_ask) and not _is_self_inquiry(_ask):
+        try:
+            snippets = await asyncio.wait_for(
+                asyncio.to_thread(_web_snippets, _ask), timeout=14
+            )
+        except Exception:
+            snippets = ""
+        if snippets:
+            logger.info(f"[联网] 「{_ask[:24]}」检索到线索，重答一次")
+            try:
+                retry = await call_llm(
+                    to_model,
+                    extra_system=extra_sys + "\n" + (
+                        "内部备忘（绝不复述本段，也别提'搜索'、'查资料'这类字眼）：\n"
+                        "以下是网上查到的线索，按相关度排好序。请直接采用第一条里的事实来回答，"
+                        "别用你记忆里的旧版本；线索里没有的细节一个字都不要补，"
+                        "宁可口吻含糊也别编。用阿萨尔的口吻说一句就够，别罗列线索：\n"
+                        f"{snippets}"
+                    ),
+                )
+                if retry:
+                    answer = retry
+            except Exception:
+                pass  # 搜索重答失败就用原答案
+
     # 硬性截断：最多三句（模型不听话时兜底）。
     # 先进历史再截断的话，历史里存的是"用户没看见的那半句"，
     # 后面追问时模型会以为自己说过——所以先截断，存和发用同一份。
@@ -502,6 +533,79 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
         _out.append(MessageSegment.text(answer[_pos:]))
 
     await ai_chat.finish(_out if _pos else Message(answer))
+
+
+# ---------- 联网搜索（问事实才搜） ----------
+# 只在这些"客观事实"特征出现时才搜：模型对这类问题最爱编。
+# 闲聊、要书、撒娇、骂人一律不搜——否则每条都多两秒、还容易答得不像阿萨尔。
+_FACT_RE = __import__("re").compile(
+    r"是谁|叫什么|什么名字|哪一年|哪年|什么时候|多少|几几年|哪个|出自|作者|原型|"
+    r"的?父亲|的?母亲|的?儿子|的?女儿|的?老婆|的?丈夫|主演|导演|发行|上映|"
+    r"最新|现在.{0,4}(?:多少|几|哪)|是不是|有没有|对不对|你知道吗|你知不知道"
+)
+_CHITCHAT_RE = __import__("re").compile(
+    r"^嗨|^哈喽|^你好|在吗|在不在|早|晚安|吃了吗|谢谢|再见|陪我聊|讲个|说个|来点|"
+    r"推荐|给我看|我想买|多少钱|要钱|买书|卖书"
+)
+
+
+_SELF_RE = __import__("re").compile(r"你是谁|你叫什么|你多大|你几岁|你的?名字|你是干什么|你这店|你卖")
+
+
+def _is_self_inquiry(text: str) -> bool:
+    """问阿萨尔自己是谁的——不该搜网，它当然知道自己是谁。"""
+    return bool(_SELF_RE.search(text))
+
+
+def _needs_fact(text: str) -> bool:
+    """判断这句是不是在问可以查证的客观事实（而不是闲聊/买卖/情绪）。"""
+    t = text.strip()
+    if len(t) < 5:
+        return False
+    if _CHITCHAT_RE.search(t):
+        return False
+    return bool(_FACT_RE.search(t))
+
+
+def _web_snippets(query: str, max_results: int = 3) -> str:
+    """用智谱官方的 web-search-pro 联网检索，返回拼好的摘要。
+
+    为什么不用网页抓取：实测百度会被"安全验证"拦（同 IP 请求几次就空手而归），
+    必应对中文问题经常跑偏（问"法拉杰的父亲"给你 B站视频下载教程）。
+    智谱这个接口用同一个 API key，0.7 秒返回、结果准、不用额外注册。
+    """
+    import re as _rw
+
+    import requests as _rq
+
+    q = _rw.sub(r"[\s]+", " ", (query or "")).strip()
+    if not q:
+        return ""
+    try:
+        resp = _rq.post(
+            "https://open.bigmodel.cn/api/paas/v4/tools",
+            json={"tool": "web-search-pro", "messages": [{"role": "user", "content": q}]},
+            headers={"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"},
+            timeout=12,
+        )
+        data = resp.json()
+    except Exception as e:
+        logger.warning(f"[联网] 检索失败：{type(e).__name__}")
+        return ""
+
+    calls = (data.get("choices") or [{}])[0].get("message", {}).get("tool_calls") or []
+    rows = []
+    for c in calls:
+        if c.get("type") != "search_result":
+            continue
+        for it in c.get("search_result") or []:
+            title = (it.get("title") or "").strip()[:60]
+            body = (it.get("content") or "").strip().replace("\n", " ")[:200]
+            if title or body:
+                rows.append(f"- {title}：{body}")
+            if len(rows) >= max_results:
+                break
+    return "\n".join(rows[:max_results])
 
 
 def trim_to_sentences(text: str, max_sentences: int = 3) -> str:
