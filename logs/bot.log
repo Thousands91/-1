@@ -1,24 +1,806 @@
-10-27 00:54:14 [SUCCESS] nonebot | NoneBot is initializing...
-10-27 00:54:14 [INFO] nonebot | Current Env: prod
-10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
-10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "image_search_web" from "plugins.image_search_web"
-10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
-10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
-10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
-10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "image_search" from "plugins.image_search"
-10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
-10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
-10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
-10-27 00:54:14 [SUCCESS] nonebot | Running NoneBot...
-10-27 00:54:14 [SUCCESS] nonebot | Loaded adapters: OneBot V11
-10-27 00:54:14 [INFO] uvicorn | Started server process [148999]
-10-27 00:54:14 [INFO] uvicorn | Waiting for application startup.
-10-27 00:54:14 [INFO] __main__ | ==================================================
-10-27 00:54:14 [INFO] __main__ | QQ 群机器人启动成功 ✅
-10-27 00:54:14 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
-10-27 00:54:14 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
-10-27 00:54:14 [INFO] __main__ | ==================================================
-10-27 00:54:14 [INFO] uvicorn | Application startup complete.
-10-27 00:54:14 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+nohup: ignoring input
+10-29 00:36:19 [SUCCESS] nonebot | NoneBot is initializing...
+10-29 00:36:19 [INFO] nonebot | Current Env: prod
+10-29 00:36:20 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
+10-29 00:36:20 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+10-29 00:36:21 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
+10-29 00:36:21 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+10-29 00:36:21 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+10-29 00:36:21 [SUCCESS] nonebot | Succeeded to load plugin "image_search_web" from "plugins.image_search_web"
+10-29 00:36:21 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
+10-29 00:36:21 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+10-29 00:36:21 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
+10-29 00:36:21 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
+10-29 00:36:21 [SUCCESS] nonebot | Succeeded to load plugin "image_search" from "plugins.image_search"
+10-29 00:36:21 [SUCCESS] nonebot | Running NoneBot...
+10-29 00:36:21 [SUCCESS] nonebot | Loaded adapters: OneBot V11
+10-29 00:36:21 [INFO] uvicorn | Started server process [21479]
+10-29 00:36:21 [INFO] uvicorn | Waiting for application startup.
+10-29 00:36:21 [INFO] __main__ | ==================================================
+10-29 00:36:21 [INFO] __main__ | QQ 群机器人启动成功 ✅
+10-29 00:36:21 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
+10-29 00:36:21 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
+10-29 00:36:21 [INFO] __main__ | ==================================================
+10-29 00:36:21 [INFO] uvicorn | Application startup complete.
+10-29 00:36:21 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+10-29 00:43:05 [INFO] uvicorn | 127.0.0.1:38946 - "GET /onebot/v11/ws HTTP/1.1" 404
+10-29 01:06:41 [INFO] uvicorn | 127.0.0.1:43382 - "GET /wd/hub/status HTTP/1.1" 404
+10-29 01:13:10 [INFO] uvicorn | 127.0.0.1:46094 - "WebSocket /onebot/v11/ws" [accepted]
+10-29 01:13:10 [INFO] websockets | connection open
+10-29 01:13:10 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+10-29 01:13:31 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1378709634 from 1561950850 '在吗？'
+10-29 01:13:31 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 01:13:31 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 01:13:31 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 01:13:31 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 01:13:31 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 01:13:31 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 01:13:31 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 01:13:31 [INFO] ai_chat | [调试] tome=True message=在吗？ raw='在吗？'
+10-29 01:13:37 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 01:14:33 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 460828235 from 1561950850@[群:590454333] '[at:qq=3427943187] '
+10-29 01:14:33 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 01:14:33 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 01:14:33 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 01:14:33 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 01:14:33 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 01:14:33 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 01:14:33 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 01:14:33 [INFO] ai_chat | [调试] tome=True message= raw='[CQ:at,qq=3427943187]'
+10-29 01:14:33 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 01:17:02 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1431070724 from 1561950850 '还活着吗？'
+10-29 01:17:02 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1722338566 from 1561950850@[群:590454333] '[at:qq=3427943187] 找书 明亮的夜晚'
+10-29 01:17:02 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1009647293 from 1561950850@[群:590454333] '[at:qq=3427943187] 菜单'
+10-29 01:17:02 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 01:17:02 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 01:17:02 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 01:17:02 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 01:17:02 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 01:17:02 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 01:17:02 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 01:17:02 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.book_find, lineno=51)
+10-29 01:17:02 [INFO] ai_chat | [调试] tome=True message=还活着吗？ raw='还活着吗？'
+10-29 01:17:02 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=129)
+10-29 01:17:03 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=129) running complete
+10-29 01:17:05 [INFO] nonebot | Matcher(type='message', module=plugins.book_find, lineno=51) running complete
+10-29 01:17:07 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 01:23:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 362750893 from 1561950850@[群:590454333] '[at:qq=3220329126] 现在好了'
+10-29 01:23:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1157260358 from 1561950850@[群:590454333] '[at:qq=3427943187] 搜图 苏丹'
+10-29 01:23:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 581775924 from 1561950850@[群:590454333] '[at:qq=3427943187] 还在吗'
+10-29 01:23:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 116492311 from 1561950850 '色图苏丹'
+10-29 01:23:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1881791626 from 1561950850 '色图 苏丹'
+10-29 01:23:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.image_search_web, lineno=31)
+10-29 01:23:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 01:23:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 01:23:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 01:23:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 01:23:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.image_search, lineno=37)
+10-29 01:23:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.image_search, lineno=37)
+10-29 01:23:35 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 01:23:35 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 01:23:35 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 01:23:35 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 01:23:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 01:23:38 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 01:23:38 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 01:23:38 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 01:23:38 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 01:23:38 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 01:23:38 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 01:23:38 [INFO] ai_chat | [调试] tome=True message=还在吗 raw='[CQ:at,qq=3427943187] 还在吗'
+10-29 01:23:42 [INFO] nonebot | Matcher(type='message', module=plugins.image_search, lineno=37) running complete
+10-29 01:23:43 [INFO] nonebot | Matcher(type='message', module=plugins.image_search, lineno=37) running complete
+10-29 01:23:44 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 01:23:46 [INFO] nonebot | Matcher(type='message', module=plugins.image_search_web, lineno=31) running complete
+10-29 01:25:38 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 232889391 from 1561950850@[群:590454333] '[at:qq=3427943187] '
+10-29 01:25:38 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 01:25:38 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 01:25:38 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 01:25:38 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 01:25:38 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 01:25:38 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 01:25:38 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 01:25:38 [INFO] ai_chat | [调试] tome=True message= raw='[CQ:at,qq=3427943187]'
+10-29 01:25:43 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 01:31:16 [INFO] uvicorn | 127.0.0.1:46996 - "GET / HTTP/1.1" 404
+10-29 01:36:31 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+10-29 02:00:51 [INFO] uvicorn | 127.0.0.1:40752 - "GET /wd/hub/status HTTP/1.1" 404
+10-29 09:21:30 [INFO] uvicorn | 127.0.0.1:41508 - "GET / HTTP/1.1" 404
+10-29 09:21:31 [INFO] uvicorn | 127.0.0.1:41650 - "GET / HTTP/1.1" 404
+10-29 09:42:40 [INFO] uvicorn | 127.0.0.1:37940 - "GET / HTTP/1.1" 404
+10-29 09:42:41 [INFO] uvicorn | 127.0.0.1:42728 - "GET / HTTP/1.1" 404
+10-29 09:42:42 [INFO] uvicorn | 127.0.0.1:38368 - "GET / HTTP/1.1" 404
+10-29 09:42:42 [INFO] uvicorn | 127.0.0.1:40980 - "GET / HTTP/1.1" 404
+10-29 12:22:04 [INFO] uvicorn | 127.0.0.1:45800 - "WebSocket /onebot/v11/ws" [accepted]
+10-29 12:22:04 [INFO] websockets | connection open
+10-29 12:22:04 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+10-29 12:22:11 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.group_recall]: {'time': 1793247731, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'group_recall', 'user_id': 0, 'group_id': 590454333, 'operator_id': 568187738, 'message_id': 1534617434}
+10-29 12:22:19 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793247739, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:22:19 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793247739, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:22:19 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793247739, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:22:19 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1979706919 from 1561950850 '在吗'
+10-29 12:22:19 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:22:19 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:22:19 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:22:19 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:22:19 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:22:19 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:22:19 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:22:19 [INFO] ai_chat | [调试] tome=True message=在吗 raw='在吗'
+10-29 12:22:25 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793247745, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:22:25 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:22:29 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793247749, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:22:30 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793247750, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:22:30 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793247750, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:22:30 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2113620474 from 1561950850 '你又活了'
+10-29 12:22:30 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:22:30 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:22:30 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:22:30 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:22:30 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:22:30 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:22:30 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:22:30 [INFO] ai_chat | [调试] tome=True message=你又活了 raw='你又活了'
+10-29 12:22:33 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:22:34 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793247754, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:22:34 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.essence.add]: {'time': 1793247754, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'essence', 'group_id': 590454333, 'user_id': 1561950850, 'sender_id': 1561950850, 'operator_id': 3819642626, 'sub_type': 'add'}
+10-29 12:22:38 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793247758, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:22:38 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793247758, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:22:38 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793247758, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:22:38 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1706129225 from 1561950850 '色图'
+10-29 12:22:39 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.image_search, lineno=37)
+10-29 12:22:43 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793247763, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:22:45 [INFO] nonebot | Matcher(type='message', module=plugins.image_search, lineno=37) running complete
+10-29 12:23:13 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 665912000 from 2534970154@[群:1109952783] '你们今天应该都在玩影之刃零了吧，那种我从没玩过的高级游戏，没关系的我一点都不羡慕。你们玩你们的游戏，我上我的班，真的我一点都不羡慕。你也不用安慰我，我上班上的很开心饿了就吃渴了就喝。你如果实在想安慰我的话就v我50我吃kfc吧'
+10-29 12:23:13 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:23:13 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:23:13 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:23:13 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:23:13 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:23:13 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:23:13 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:23:13 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:23:17 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793247797, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:23:38 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 893011646 from 1561950850@[群:590454333] '[at:qq=3427943187] 找书 龙族'
+10-29 12:23:38 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.book_find, lineno=51)
+10-29 12:23:42 [INFO] nonebot | Matcher(type='message', module=plugins.book_find, lineno=51) running complete
+10-29 12:23:54 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1659931470 from 1561950850@[群:590454333] '[at:qq=2045344206] '
+10-29 12:23:54 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:23:54 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:23:54 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:23:54 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:23:54 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:23:54 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:23:54 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:23:54 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:29:21 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2053058309 from 3464489995@[群:1109952783] '[image:summary=,file=599785CAD7972207C05AAC34F845CAF8.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSChY6v...,file_size=94784]'
+10-29 12:29:21 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:29:21 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:29:21 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:29:21 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:29:21 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:29:21 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:29:21 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:29:21 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:30:22 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1805476483 from 2045344206@[群:590454333] '活过来了'
+10-29 12:30:22 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:30:22 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:30:22 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:30:22 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:30:22 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:30:22 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:30:22 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:30:22 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:35:23 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 285963616 from 2360319698@[群:590454333] '早啊'
+10-29 12:35:23 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:35:23 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:35:23 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:35:23 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:35:23 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:35:24 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:35:24 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:35:24 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:38:20 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 901197791 from 3322434352@[群:590454333] '群里有多少机器人？'
+10-29 12:38:20 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:38:20 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:38:20 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:38:20 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:38:20 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:38:20 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:38:20 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:38:21 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:38:30 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 275321640 from 3322434352@[群:590454333] '[at:qq=2419770062] '
+10-29 12:38:30 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:38:30 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:38:30 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:38:30 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:38:30 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:38:30 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:38:30 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:38:30 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:38:41 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1972871683 from 2419770062@[群:590454333] '[reply:id=275321640]在的，怎么啦？想聊点什么～'
+10-29 12:38:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:38:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:38:41 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:38:41 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:38:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:38:41 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:38:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:38:41 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:38:49 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 110652439 from 1561950850@[群:590454333] '[at:qq=3427943187] 吃什么'
+10-29 12:38:49 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:38:49 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:38:49 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:38:49 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:38:49 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:38:49 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:38:49 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:38:49 [INFO] ai_chat | [调试] tome=True message=吃什么 raw='[CQ:at,qq=3427943187] 吃什么'
+10-29 12:38:54 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:38:54 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1529130390 from 2419770062@[群:590454333] '[reply:id=110652439]这是问阿萨尔的吧，不过鸠可以插一句：中午吃米饭套餐最稳，想吃好点就麻辣烫～'
+10-29 12:38:54 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:38:54 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:38:54 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:38:54 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:38:54 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:38:54 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:38:54 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:38:54 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:39:11 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 446225927 from 3322434352@[群:590454333] '[reply:id=1972871683][at:qq=2419770062] '
+10-29 12:39:11 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:39:11 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:39:11 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:39:11 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:39:11 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:39:11 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:39:11 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:39:11 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:39:15 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 384539599 from 2419770062@[群:590454333] '[reply:id=446225927]嗯？引用是空的，是没发出来吗～'
+10-29 12:39:15 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:39:15 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:39:15 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:39:15 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:39:15 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:39:15 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:39:15 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:39:15 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:40:17 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 429012672 from 1561950850@[群:590454333] '[at:qq=3427943187] 你回复的时候能艾特别人吗'
+10-29 12:40:17 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:40:17 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:40:17 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:40:17 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:40:17 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:40:17 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:40:17 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:40:17 [INFO] ai_chat | [调试] tome=True message=你回复的时候能艾特别人吗 raw='[CQ:at,qq=3427943187] 你回复的时候能艾特别人吗'
+10-29 12:40:21 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:40:46 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1848667545 from 1561950850@[群:590454333] '[reply:id=1468934441][at:qq=3427943187] [at:qq=2419770062] 艾特他'
+10-29 12:40:46 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:40:46 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:40:46 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:40:46 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:40:46 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:40:46 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:40:46 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:40:46 [INFO] ai_chat | [调试] tome=True message=[CQ:at,qq=2419770062] 艾特他 raw='[CQ:reply,id=1468934441][CQ:at,qq=3427943187] [CQ:at,qq=2419770062] 艾特他'
+10-29 12:40:49 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:40:50 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 673160787 from 2419770062@[群:590454333] '[reply:id=1848667545]这是叫阿萨尔的，不是叫鸠，鸠就不抢答啦～'
+10-29 12:40:50 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:40:50 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:40:50 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:40:50 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:40:50 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:40:50 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:40:50 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:40:50 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:41:07 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 864173880 from 1561950850@[群:590454333] '[reply:id=662549871][at:qq=3427943187] 你还是没有艾特他呀'
+10-29 12:41:07 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:41:07 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:41:07 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:41:07 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:41:07 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:41:07 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:41:07 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:41:07 [INFO] ai_chat | [调试] tome=True message=你还是没有艾特他呀 raw='[CQ:reply,id=662549871][CQ:at,qq=3427943187] 你还是没有艾特他呀'
+10-29 12:41:22 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:41:41 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1433334442 from 1561950850@[群:590454333] '[reply:id=469691363]你不用管艾特他干什么你就艾特他就行[at:qq=3427943187] '
+10-29 12:41:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:41:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:41:41 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:41:41 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:41:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:41:41 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:41:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:41:41 [INFO] ai_chat | [调试] tome=True message=你不用管艾特他干什么你就艾特他就行[CQ:at,qq=3427943187]  raw='[CQ:reply,id=469691363]你不用管艾特他干什么你就艾特他就行[CQ:at,qq=3427943187]'
+10-29 12:41:52 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:42:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1968167063 from 1561950850@[群:590454333] '[at:qq=2419770062] 你能艾特别人吗'
+10-29 12:42:10 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:42:10 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:42:10 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:42:10 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:42:10 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:42:10 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:42:10 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:42:10 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:42:15 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2024695400 from 2419770062@[群:590454333] '[reply:id=1968167063][at:qq=1561950850] \n能啊，你说 at 谁我就 at 谁～'
+10-29 12:42:15 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:42:15 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:42:15 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:42:15 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:42:15 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:42:15 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:42:15 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:42:15 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:42:22 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2002100815 from 1561950850@[群:590454333] '[at:qq=3427943187] [at:qq=2419770062] 他'
+10-29 12:42:22 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:42:22 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:42:22 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:42:22 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:42:22 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:42:22 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:42:22 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:42:22 [INFO] ai_chat | [调试] tome=True message=[CQ:at,qq=2419770062] 他 raw='[CQ:at,qq=3427943187] [CQ:at,qq=2419770062] 他'
+10-29 12:42:26 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:42:37 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1820174406 from 2419770062@[群:590454333] '[at:qq=3427943187]'
+10-29 12:42:37 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:42:37 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:42:37 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:42:37 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:42:37 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:42:37 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:42:37 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:42:37 [INFO] ai_chat | [调试] tome=True message= raw='[CQ:at,qq=3427943187]'
+10-29 12:42:37 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:42:42 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1552128303 from 2419770062@[群:590454333] '[reply:id=2002100815][at:qq=1561950850] \n艾特好了～咕。'
+10-29 12:42:42 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:42:42 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:42:42 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:42:42 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:42:42 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:42:42 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:42:42 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:42:42 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:42:57 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1377064066 from 1561950850@[群:590454333] '[reply:id=1820174406][at:qq=2419770062] [at:qq=3427943187] 你能学习一下人家吗'
+10-29 12:42:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:42:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:42:57 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:42:57 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:42:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:42:57 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:42:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:42:57 [INFO] ai_chat | [调试] tome=True message=你能学习一下人家吗 raw='[CQ:reply,id=1820174406][CQ:at,qq=2419770062] [CQ:at,qq=3427943187] 你能学习一下人家吗'
+10-29 12:43:04 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1582292730 from 2419770062@[群:590454333] '[reply:id=1377064066][at:qq=1561950850] \n诶嘿，被当模范生了～阿萨尔是书呆子，鸠是行动派，各有所长啦。'
+10-29 12:43:04 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:43:04 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:43:04 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:43:04 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:43:04 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:43:04 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:43:04 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:43:04 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:43:14 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:43:18 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1036297119 from 1561950850@[群:590454333] '？'
+10-29 12:43:18 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:43:18 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:43:18 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:43:18 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:43:18 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:43:18 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:43:18 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:43:18 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:43:25 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1423323943 from 1561950850@[群:590454333] '又寄了？'
+10-29 12:43:25 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:43:25 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:43:25 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:43:25 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:43:25 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:43:25 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:43:25 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:43:25 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:43:31 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 919661958 from 1561950850@[群:590454333] '[at:qq=3427943187] hello'
+10-29 12:43:31 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:43:31 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:43:31 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:43:31 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:43:31 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:43:31 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:43:31 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:43:31 [INFO] ai_chat | [调试] tome=True message=hello raw='[CQ:at,qq=3427943187] hello'
+10-29 12:43:31 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:43:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 737136584 from 2419770062@[群:590454333] '[reply:id=919661958][at:qq=1561950850] \n他断线了，API超时，等会儿应该能缓过来。'
+10-29 12:43:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:43:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:43:35 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:43:35 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:43:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:43:35 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:43:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:43:35 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:43:49 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 185854422 from 1561950850@[群:590454333] '[reply:id=1764025496][at:qq=3427943187] 这是什么情况'
+10-29 12:43:49 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:43:49 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:43:49 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:43:49 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:43:49 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:43:49 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:43:49 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:43:49 [INFO] ai_chat | [调试] tome=True message=这是什么情况 raw='[CQ:reply,id=1764025496][CQ:at,qq=3427943187] 这是什么情况'
+10-29 12:43:55 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:46:56 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249216, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:46:57 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249217, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:46:57 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249217, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:46:57 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1842487915 from 1561950850 '色图'
+10-29 12:46:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.image_search, lineno=37)
+10-29 12:47:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249221, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:47:08 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249228, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:47:13 [INFO] nonebot | Matcher(type='message', module=plugins.image_search, lineno=37) running complete
+10-29 12:47:22 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249242, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:47:22 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249242, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:47:22 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249242, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:47:23 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1948574807 from 1561950850 '[reply:id=1613170925]这是谁'
+10-29 12:47:23 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:47:23 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:47:23 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:47:23 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:47:23 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:47:23 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:47:23 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:47:23 [INFO] ai_chat | [调试] tome=True message=这是谁 raw='[CQ:reply,id=1613170925]这是谁'
+10-29 12:47:26 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:47:27 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249247, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:47:32 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249252, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:47:32 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249252, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:47:32 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249252, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:47:33 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1246506790 from 1561950850 '你去搜一下这是谁'
+10-29 12:47:33 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:47:33 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:47:33 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:47:33 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:47:33 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:47:33 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:47:33 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:47:33 [INFO] ai_chat | [调试] tome=True message=你去搜一下这是谁 raw='你去搜一下这是谁'
+10-29 12:47:35 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:47:37 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249257, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:47:42 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249262, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:47:43 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249263, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:47:43 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249263, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:47:43 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 910082365 from 1561950850 '你就不能搜一下吗'
+10-29 12:47:43 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:47:43 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:47:43 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:47:43 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:47:43 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:47:43 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:47:43 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:47:43 [INFO] ai_chat | [调试] tome=True message=你就不能搜一下吗 raw='你就不能搜一下吗'
+10-29 12:47:47 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249267, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:47:59 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:48:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249290, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:48:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249290, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:48:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249290, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:48:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1296486503 from 1561950850 '？'
+10-29 12:48:10 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:48:10 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:48:10 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:48:10 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:48:10 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:48:10 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:48:10 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:48:10 [INFO] ai_chat | [调试] tome=True message=？ raw='？'
+10-29 12:48:14 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:48:15 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249295, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:48:19 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249299, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:48:20 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249300, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:48:20 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249300, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:48:20 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1322251124 from 1561950850 '。。'
+10-29 12:48:20 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:48:20 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:48:20 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:48:20 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:48:20 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:48:20 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:48:20 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:48:20 [INFO] ai_chat | [调试] tome=True message=。。 raw='。。'
+10-29 12:48:23 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:48:24 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249304, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:48:32 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249312, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:49:07 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249347, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:49:08 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249348, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:49:08 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249348, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:49:08 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1510410260 from 1561950850 '色图'
+10-29 12:49:08 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.image_search, lineno=37)
+10-29 12:49:11 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249351, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:49:12 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249352, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:49:16 [INFO] nonebot | Matcher(type='message', module=plugins.image_search, lineno=37) running complete
+10-29 12:49:22 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249362, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:49:24 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249364, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:49:24 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249364, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:49:24 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1431608519 from 1561950850 '色图 熟女'
+10-29 12:49:24 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.image_search, lineno=37)
+10-29 12:49:27 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249367, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:49:40 [INFO] nonebot | Matcher(type='message', module=plugins.image_search, lineno=37) running complete
+10-29 12:49:54 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249394, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:49:56 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249396, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:49:56 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249396, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:49:56 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1699124321 from 1561950850 '色图 奶奶'
+10-29 12:49:56 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.image_search, lineno=37)
+10-29 12:49:58 [INFO] nonebot | Matcher(type='message', module=plugins.image_search, lineno=37) running complete
+10-29 12:49:59 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249399, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:50:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249401, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:50:03 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249403, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:50:03 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249403, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:50:03 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1259053058 from 1561950850 '色图 阿姨'
+10-29 12:50:03 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.image_search, lineno=37)
+10-29 12:50:05 [INFO] nonebot | Matcher(type='message', module=plugins.image_search, lineno=37) running complete
+10-29 12:50:06 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249406, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:50:08 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249408, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:50:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249410, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:50:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249410, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:50:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1387989529 from 1561950850 '色图 熟女'
+10-29 12:50:10 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.image_search, lineno=37)
+10-29 12:50:13 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249413, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:50:16 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249416, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:50:19 [INFO] nonebot | Matcher(type='message', module=plugins.image_search, lineno=37) running complete
+10-29 12:50:43 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249443, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:51:36 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1567005223 from 3358627236@[群:590454333] '嘻嘻哈哈'
+10-29 12:51:36 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:51:36 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:51:36 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:51:36 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:51:36 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:51:36 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:51:36 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:51:36 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:51:39 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 720411077 from 3358627236@[群:590454333] '[image:summary=,file=84266B6325E2995C9FC6978912DCBE98.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSUtZTY...,file_size=241689]'
+10-29 12:51:39 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:51:39 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:51:39 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:51:39 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:51:39 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:51:39 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:51:39 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:51:39 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:51:46 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249506, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:51:48 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249508, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:51:48 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249508, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:51:48 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 507447937 from 1561950850 '你能生成图片吗'
+10-29 12:51:48 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:51:48 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:51:48 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:51:48 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:51:48 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:51:48 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:51:48 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:51:48 [INFO] ai_chat | [调试] tome=True message=你能生成图片吗 raw='你能生成图片吗'
+10-29 12:51:51 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249511, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:51:52 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:51:57 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249517, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:51:58 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249518, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:51:58 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249518, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:51:58 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1818865697 from 1561950850 '行吧'
+10-29 12:51:58 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:51:58 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:51:58 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:51:58 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:51:58 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:51:58 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:51:58 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:51:58 [INFO] ai_chat | [调试] tome=True message=行吧 raw='行吧'
+10-29 12:52:01 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:52:02 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249522, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:52:25 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249545, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:52:28 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249548, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:52:28 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249548, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:52:28 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 206115749 from 1561950850 '你喜欢苏丹还是阿尔图'
+10-29 12:52:28 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:52:28 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:52:28 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:52:28 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:52:28 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:52:28 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:52:28 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:52:28 [INFO] ai_chat | [调试] tome=True message=你喜欢苏丹还是阿尔图 raw='你喜欢苏丹还是阿尔图'
+10-29 12:52:30 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249550, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:52:38 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:52:39 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249559, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:52:52 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249572, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:52:57 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249577, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:53:03 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249583, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:53:03 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249583, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:53:03 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 822523220 from 1561950850 '阿尔图哪里是舞姬'
+10-29 12:53:03 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:53:03 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:53:03 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:53:03 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:53:03 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:53:03 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:53:03 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:53:03 [INFO] ai_chat | [调试] tome=True message=阿尔图哪里是舞姬 raw='阿尔图哪里是舞姬'
+10-29 12:53:08 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:53:12 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249592, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:53:13 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249593, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:53:13 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249593, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:53:13 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 531860407 from 1561950850 '？'
+10-29 12:53:13 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:53:13 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:53:13 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:53:13 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:53:13 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:53:13 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:53:13 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:53:13 [INFO] ai_chat | [调试] tome=True message=？ raw='？'
+10-29 12:53:17 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:53:17 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249597, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:54:15 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249655, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:54:15 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249655, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:54:15 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249655, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:54:15 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1269890205 from 1561950850 '你还认识谁'
+10-29 12:54:15 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:54:15 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:54:15 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:54:15 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:54:15 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:54:15 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:54:15 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:54:15 [INFO] ai_chat | [调试] tome=True message=你还认识谁 raw='你还认识谁'
+10-29 12:54:20 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249660, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:54:20 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249660, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:54:20 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:54:30 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249670, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:54:33 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249673, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:54:33 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249673, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:54:33 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1559419931 from 1561950850 '俺寻思呢？'
+10-29 12:54:33 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:54:33 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:54:33 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:54:33 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:54:33 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:54:33 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:54:33 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:54:33 [INFO] ai_chat | [调试] tome=True message=俺寻思呢？ raw='俺寻思呢？'
+10-29 12:54:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249675, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:54:49 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:55:03 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249703, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:55:04 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249704, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:55:04 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249704, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:55:04 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1686046264 from 1561950850 '？'
+10-29 12:55:04 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:55:04 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:55:04 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:55:04 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:55:04 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:55:04 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:55:04 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:55:04 [INFO] ai_chat | [调试] tome=True message=？ raw='？'
+10-29 12:55:08 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:55:08 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249708, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:55:16 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249716, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:55:17 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249716, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:55:17 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249717, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:55:17 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 723031635 from 1561950850 '[reply:id=1559419931]不认识吗'
+10-29 12:55:17 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:55:17 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:55:17 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:55:17 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:55:17 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:55:17 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:55:17 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:55:17 [INFO] ai_chat | [调试] tome=True message=不认识吗 raw='[CQ:reply,id=1559419931]不认识吗'
+10-29 12:55:21 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249721, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:55:22 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:55:47 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249747, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:55:48 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249748, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:55:48 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249748, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:55:49 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1563031157 from 1561950850 '黄绮珊是谁'
+10-29 12:55:49 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:55:49 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:55:49 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:55:49 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:55:49 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:55:49 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:55:49 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:55:49 [INFO] ai_chat | [调试] tome=True message=黄绮珊是谁 raw='黄绮珊是谁'
+10-29 12:55:52 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249752, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:55:55 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:56:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249761, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:56:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249761, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:56:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249761, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:56:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 965426950 from 1561950850 '齐豫是谁'
+10-29 12:56:01 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:56:01 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:56:01 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:56:01 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:56:01 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:56:01 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:56:01 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:56:01 [INFO] ai_chat | [调试] tome=True message=齐豫是谁 raw='齐豫是谁'
+10-29 12:56:06 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249766, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:56:18 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:56:18 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249778, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:56:22 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249782, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:56:23 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249783, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:56:23 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249783, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:56:23 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1139191593 from 1561950850 '？'
+10-29 12:56:23 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:56:23 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:56:23 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:56:23 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:56:23 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:56:23 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:56:23 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:56:23 [INFO] ai_chat | [调试] tome=True message=？ raw='？'
+10-29 12:56:27 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249787, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:56:40 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:57:51 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249871, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:57:53 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249873, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:57:53 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249873, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:57:54 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 973834810 from 1561950850 '又寄了吗？'
+10-29 12:57:54 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:57:54 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:57:54 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:57:54 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:57:54 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:57:54 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:57:54 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:57:54 [INFO] ai_chat | [调试] tome=True message=又寄了吗？ raw='又寄了吗？'
+10-29 12:57:56 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249876, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:57:58 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:57:58 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249878, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:58:09 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249889, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:58:09 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249889, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:58:09 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249889, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:58:09 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 534521784 from 1561950850 '齐豫是谁'
+10-29 12:58:09 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:58:09 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:58:09 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:58:09 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:58:09 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:58:09 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:58:09 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:58:09 [INFO] ai_chat | [调试] tome=True message=齐豫是谁 raw='齐豫是谁'
+10-29 12:58:14 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249894, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:58:14 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:58:18 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249898, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+10-29 12:58:18 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249898, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:58:18 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249898, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+10-29 12:58:19 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1508721931 from 1561950850 '色图'
+10-29 12:58:19 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.image_search, lineno=37)
+10-29 12:58:23 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793249903, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+10-29 12:58:28 [INFO] nonebot | Matcher(type='message', module=plugins.image_search, lineno=37) running complete
+10-29 12:59:20 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 759726813 from 2045344206@[群:590454333] '[reply:id=720411077][at:qq=3358627236] 宿舍用的嘛'
+10-29 12:59:20 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:59:20 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:59:20 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:59:20 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:59:20 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:59:20 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:59:20 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:59:20 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:59:27 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1770914103 from 3358627236@[群:590454333] '不是'
+10-29 12:59:27 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:59:27 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:59:27 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:59:27 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:59:27 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:59:27 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:59:27 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:59:27 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 12:59:31 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1025780567 from 3358627236@[群:590454333] '买回家'
+10-29 12:59:31 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 12:59:31 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 12:59:31 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 12:59:31 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 12:59:31 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 12:59:31 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 12:59:31 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 12:59:31 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 13:00:05 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1335503243 from 2045344206@[群:590454333] '[reply:id=737136584][at:qq=2419770062] 你能和阿萨尔聊天嘛'
+10-29 13:00:05 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-29 13:00:05 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-29 13:00:05 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-29 13:00:05 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-29 13:00:05 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-29 13:00:05 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-29 13:00:05 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=266)
+10-29 13:00:05 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
