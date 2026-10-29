@@ -23,3 +23,81 @@ nohup: ignoring input
 10-30 00:38:48 [INFO] __main__ | ==================================================
 10-30 00:38:48 [INFO] uvicorn | Application startup complete.
 10-30 00:38:48 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+10-30 01:30:05 [INFO] uvicorn | 127.0.0.1:39338 - "WebSocket /onebot/v11/ws" [accepted]
+10-30 01:30:05 [INFO] websockets | connection open
+10-30 01:30:05 [INFO] nonebot | OneBot V11 | Bot 99999 connected
+10-30 01:30:16 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 99999 closed by peer
+10-30 01:31:21 [INFO] uvicorn | 127.0.0.1:46666 - "WebSocket /onebot/v11/ws" [accepted]
+10-30 01:31:21 [INFO] websockets | connection open
+10-30 01:31:21 [INFO] nonebot | OneBot V11 | Bot 99999 connected
+10-30 01:31:21 [SUCCESS] nonebot | OneBot V11 99999 | [message.group.normal]: Message 1 from 456@[群:123] '你好，你是谁？'
+10-30 01:31:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-30 01:31:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-30 01:31:34 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-30 01:31:34 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-30 01:31:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-30 01:31:34 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-30 01:31:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
+10-30 01:31:34 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
+10-30 01:32:51 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 99999 closed by peer
+10-30 01:34:41 [INFO] uvicorn | 127.0.0.1:48342 - "WebSocket /onebot/v11/ws" [accepted]
+10-30 01:34:41 [INFO] websockets | connection open
+10-30 01:34:41 [INFO] nonebot | OneBot V11 | Bot 99999 connected
+10-30 01:34:41 [SUCCESS] nonebot | OneBot V11 99999 | [message.group.normal]: Message 900001 from 22222@[群:33333] '[at:qq=99999] 你好，你是谁？'
+10-30 01:34:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+10-30 01:34:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+10-30 01:34:41 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+10-30 01:34:41 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+10-30 01:34:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+10-30 01:34:41 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+10-30 01:34:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
+10-30 01:34:49 [INFO] ai_chat | [核对·调试] ask='你好，你是谁？' lead=False contra=False agree=False dodge=False ans='您好，我是阿萨尔，城里的书店老板，人称“垂钓者”。'
+10-30 01:34:49 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 99999 closed by peer
+10-30 01:35:19 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
+10-30 01:35:19 [ERROR] nonebot | Running Matcher(type='message', module=plugins.ai_chat, lineno=364) failed.
+Traceback (most recent call last):
+  File "/root/bot/bot/main.py", line 42, in <module>
+    run()
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/__init__.py", line 337, in run
+    get_driver().run(*args, **kwargs)
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/drivers/fastapi.py", line 187, in run
+    uvicorn.run(
+  File "/root/bot/venv/lib/python3.12/site-packages/uvicorn/main.py", line 632, in run
+    server.run()
+  File "/root/bot/venv/lib/python3.12/site-packages/uvicorn/server.py", line 86, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "/root/bot/venv/lib/python3.12/site-packages/anyio/_core/_tasks.py", line 327, in _run_coro
+    retval = await self._coro
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/utils.py", line 328, in run_coro_with_shield
+    return await coro
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/message.py", line 509, in check_and_run_matcher
+    await _run_matcher(
+> File "/root/bot/venv/lib/python3.12/site-packages/nonebot/message.py", line 461, in _run_matcher
+    await matcher.run(bot, event, state, stack, dependency_cache)
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/matcher/matcher.py", line 916, in run
+    await self.simple_run(bot, event, state, stack, dependency_cache)
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/matcher/matcher.py", line 855, in simple_run
+    await handler(
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/dependencies/__init__.py", line 113, in __call__
+    return await cast(Callable[..., Awaitable[R]], self.call)(**values)
+  File "/root/bot/bot/plugins/ai_chat.py", line 638, in _
+    await ai_chat.finish(_out if _pos else Message(answer))
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/matcher/matcher.py", line 584, in finish
+    await cls.send(message, **kwargs)
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/matcher/matcher.py", line 568, in send
+    return await bot.send(event=event, message=_message, **kwargs)
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/adapters/onebot/v11/bot.py", line 237, in send
+    return await self.__class__.send_handler(self, event, message, **kwargs)
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/adapters/onebot/v11/bot.py", line 190, in send
+    return await bot.send_msg(**params)
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/adapter/bot.py", line 176, in call_api
+    raise exception
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/adapter/bot.py", line 128, in call_api
+    result = await self.adapter._call_api(self, api, **data)
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/adapters/onebot/v11/adapter.py", line 177, in _call_api
+    raise NetworkError(f"WebSocket call api {api} timeout") from None
+nonebot.adapters.onebot.v11.exception.NetworkError: NetWorkError(message='WebSocket call api send_msg timeout')
