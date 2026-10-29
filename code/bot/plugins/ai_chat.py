@@ -178,8 +178,10 @@ SYSTEM_PROMPT = AZAR_PERSONA + GROUP_HINT + (
     "**这不是让你点头，是先考你**。\n"
     "答之前先在心里核对一遍事实：他说的对，就应一声；**他说的不对，就直接说他不对**，"
     "然后给正确的说法。别为了让对方高兴而说「是的」——你是书商，说错话是要被人写进书里的。\n"
+    "**也不许拿「书上没记」「不敢妄言」把这种问题糊过去。** 人家说的对错，你心里是有数的，"
+    "这不是你没读过的东西——答不上来只会显得你这个书商当得虚。\n"
     "纠正的时候别端着先生架子损人，一句「不全是」「没那么一说」就够了，"
-    "接下去说你那版。\n"
+    "接下去说你那版；也别在纠正的开头先附和一句「您说得对」。\n"
 )
 
 # ============ 吃 / 喝：模型容易把"吃什么"答成菜单，这里兜一层 ============
@@ -579,39 +581,34 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
         except Exception:
             pass
 
-    # 对方把猜测当定论问（"……才修得起来吧？"），它一上来就点头。
+    # 后面几个"重说一遍"的兜底（被夸却谦让、被预设带着走）走同一套：
+    # 原地重说一次，还不行就把提示词抹干净再问问——历史里那段顺着说的话
+    # 会一直牵着它，不清掉就永远改不过来。
+    _orig_answer = answer
+
+    # 对方把猜测当定论问（"……才修得起来吧？"），答案里却不能把话掰回来。
     # 小模型天生顺着人说话，人设里写"他说的不对就直接说他不对"也没用，
-    # 只能在代码层拦。这里同样不给否定指令，直接指定必须用的否定开头。
-    # 重答之后还点头（或者变成半句"是的……不过"），就直接用写好的那句顶上——
-    # 只要最后那段仍然在附和对方，就不能让它当答案发出去。
+    # 只能在代码层拦：答完先验一遍，不合格就重答，重答还不合格就用定稿句。
+    # 实测的几种不合格形态：点头（"是的…"）、把错话原样重复一遍、
+    # 拿"书上没记"糊过去、以及绕了半天把"侠名"这个词丢掉（只答"得有人牵头"）。
+    logger.info(f"[核对·调试] ask={_ask!r} lead={_is_leading_question(_ask)} contra={_contradicts_lore(_ask)} agree={bool(_AGREE_OPEN.search(answer))} dodge={bool(_DODGE_RE.search(answer))} ans={answer[:36]!r}")
     if _is_yes_man_answer(_ask, answer):
-        logger.info(f"[核对] 对方带了预设，它直接点头：{answer[:24]}")
+        logger.info(f"[核对] 对方带了预设，它顺着说了：{answer[:30]}")
         _denials = random.choice([
             '"不全是。"', '"没那么一说。"', '"这话不对。"', '"谁跟您说的？"',
         ])
-        retry = ""
-        try:
-            retry = await call_llm(
-                to_model,
-                extra_system=extra_sys + "\n" + (
-                    "内部备忘（绝不复述本段）：\n"
-                    f"对方这一句把自己的猜测当成了定论，而这个猜测是不对的。"
-                    f"下一句必须以 {_denials} 开头，然后用一句话把正确的说法讲清楚。\n"
-                    "开头不许用：是的、对、没错、确实、正是、当然、的确。"
-                ),
-            )
-        except Exception:
-            pass
-        if retry and not _is_yes_man_answer(_ask, retry):
-            answer = retry
-        else:
-            # 重答还是点头——那就自己写一句。宁可生硬，也不能把错的说出去。
-            fixed = _lore_correction(_ask)
-            if fixed:
-                logger.info("[核对] 重答仍在附和，改用定稿句")
-                answer = fixed
-            elif retry:
-                answer = retry
+        _truth = _lore_correction(_ask)
+        _retry_sys = extra_sys + "\n" + (
+            "内部备忘（绝不复述本段）：\n"
+            "对方这一句把自己的猜测当成了定论，而这个猜测是不对的。\n"
+            f"下一句必须以 {_denials} 开头，再用一句话把对的说法讲清楚"
+            + (f"，大意是：{_truth}\n" if _truth else "。\n")
+            + "开头不许用：是的、对、没错、确实、正是、当然、的确、这话您说得对。\n"
+            "也不许说「书上没记」「不敢妄言」「不清楚」——这条你心里有数。"
+        )
+        answer = await _rerun_until_ok(_ask, to_model, _retry_sys, _lore_correction(_ask), logger)
+        if answer is None:
+            answer = _orig_answer
 
     # 硬性截断：最多三句（模型不听话时兜底）。
     # 先进历史再截断的话，历史里存的是"用户没看见的那半句"，
@@ -696,6 +693,31 @@ def _is_praise(text: str) -> bool:
     return bool(_PRAISE_RE.search(text or ""))
 
 
+async def _rerun_until_ok(question: str, msgs: List[dict], extra_sys: str,
+                          fallback: str, log) -> str | None:
+    """重说一遍，直到它不再顺着对方说话；实在改不过来就用定稿句。
+
+    为什么要在原地问一遍、还要抹掉历史再问一遍：
+    glm-4-flash 会把"接在错话后面"当成任务的延续，原地重说往往只是换个说法
+    继续顺着说。把这一轮之前的历史整体让位给一句干净的提示，它才当新问题答。
+    """
+    for attempt in (1, 2):
+        try:
+            retry = await call_llm(msgs, extra_system=extra_sys)
+        except Exception:
+            continue
+        if retry and not _is_yes_man_answer(question, retry):
+            return retry
+        log.info(f"[核对] 第{attempt}次重说仍不合格：{(retry or '')[:30]}")
+        if attempt == 1:
+            # 第二次：历史压到只剩一句，干净问一遍
+            msgs = [{"role": "user", "content": question}]
+    if fallback:
+        log.info("[核对] 改用定稿句")
+        return fallback
+    return None
+
+
 def _is_self_inquiry(text: str) -> bool:
     """问阿萨尔自己是谁的——不该搜网，它当然知道自己是谁。"""
     return bool(_SELF_RE.search(text))
@@ -703,10 +725,15 @@ def _is_self_inquiry(text: str) -> bool:
 
 # 对方把自己的猜测当定论问："舍馆要侠名才修得起来吧？""是不是……"
 _LEADING_Q = __import__("re").compile(r"(吧|对不对|是不是|对吧|是吧)[？?。！!\s]*$")
-# 顺从式开口：一上来就点头
+# 顺从式开口：一上来就点头（句首可能先来一句"这城里的规矩，"这种前置，也得算）
 _AGREE_OPEN = __import__("re").compile(
-    r"^[\s，。！、]*(嗯，)?(是的|对啊|对的|没错|确实|正是|当然|的确|是这样的|您说的对|你说得对)"
+    r"^[\s，。！、]{0,3}(?:[^。！？]{0,12}[，,])?\s*(嗯[，,]\s*)?(是的|对啊|对的|没错|确实|正是|"
+    r"当然|的确|是这样的|您说得对|你说得对|这话您说得对|您说得没错|说得对)"
 )
+# 反过来：这几个是**合格**的开头，判定时要先摘出去，不能被上面误伤。
+_NEG_OPEN = __import__("re").compile(r"不全是|不是的|不是那么说|没那么一说|谁跟您说的|这话不对")
+# 装糊涂式闪避：把该表态的问题推给"书上没记"
+_DODGE_RE = __import__("re").compile(r"书上没记|不敢妄言|不太清楚|说不准|没听过这说法")
 
 
 def _echoes_premise(question: str, answer: str) -> bool:
@@ -729,22 +756,44 @@ def _is_leading_question(text: str) -> bool:
 
 
 def _is_yes_man_answer(question: str, answer: str) -> bool:
-    """对带预设的问法答了个"Yeah"——多半是顺着说，而不是核对过。
+    """对带预设的问法，答得等于把对方那个错的预设放过去了。
 
-    两种都算点头：嘴上说"是的"，和一字不改把对方那句错话重复一遍。
+    四种都算不合格：
+    1. 嘴上点头（"是的""这话您说得对"）；
+    2. 一字不改把对方那句错话重复一遍；
+    3. 拿"书上没记""不敢妄言"把该表态的问题糊过去；
+    4. 绕开那个词不谈（问侠名，答"得有人牵头"）——等于默认。
+    前三种是"答错"，第四种是"没答"，对提问的人一样没用。
+
     只在"对方的预设确实和设定相反"时才算——否则人家问得对，点头就该点头。
     """
     if not _is_leading_question(question):
         return False
-    if not (_AGREE_OPEN.search(answer or "") or _echoes_premise(question, answer or "")):
+    a = answer or ""
+    # 开头就把他那句错话否回去的，已经过关了——后面说什么都是补救。
+    if _NEG_OPEN.search(a[:24]):
         return False
-    return _contradicts_lore(question)
+    if not _contradicts_lore(question):
+        return False
+    topic = next((t for t, bad in _WRONG_LORE if t in question), "")
+    if _AGREE_OPEN.search(a) or _DODGE_RE.search(a) or _echoes_premise(question, a):
+        return True
+    # 以下只处理"没正面表态"这一类：嘴上没说"是的"，也没开头否，
+    # 但把一个错的预设当背景用了——要么整句在复述它，要么绕开不谈。
+    if not topic:
+        return False
+    if topic not in a:
+        return True
+    quote_words = ("一开始", "不费", "搭得起", "往上", "再修", "不用", "不必", "不是必需")
+    return topic == "舍馆" and not any(w in a for w in quote_words)
 
 
 # 已知的"常见误传"：人设里写清楚了，但群里有人会反着说。
 # 命中才强制纠口——不能拿"吧"当通用信号，否则对方问对了也被怼。
+# 注意第二条：问法里常常只有"修得起来"，没有单字"修"，
+# 之前只挂"修"结果带"吧"的问句一条都没命中，白拦了。
 _WRONG_LORE = (
-    ("舍馆", ("侠名", "修")),
+    ("舍馆", ("侠名", "修", "搭", "建", "开")),
     ("苗圃", ("流民",)),
     ("苏丹卡", ("复原", "重来", "重新")),
 )
