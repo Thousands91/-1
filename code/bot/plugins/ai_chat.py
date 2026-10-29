@@ -29,6 +29,8 @@ try:
 except ImportError:
     AZAR_PERSONA = "你扮演《苏丹的游戏》书店老板阿萨尔，博学、矜持、说话文雅简短。"
 
+_DUP: Dict[tuple, float] = {}
+
 _RE_REPLY = __import__("re").compile(r"\[CQ:reply,id=(\d+)\]")
 
 ENABLE = os.getenv("ENABLE_AI_CHAT", "true").lower() == "true"
@@ -355,8 +357,16 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
             )
         return
 
-    logger.info(f"[调试] tome={event.to_me} message={event.message!s} raw={event.raw_message!r}")
     text = event.get_plaintext().strip()
+    # 同一句话 60 秒内只回一次（防手滑连发/风控重发导致复读）
+    import time as _time
+    _dupkey = (getattr(event, "group_id", 0), event.user_id, text)
+    _last = _DUP.get(_dupkey)
+    _now = _time.time()
+    if text and _last and _now - _last < 60:
+        return
+    if text:
+        _DUP[_dupkey] = _now
     # 引用消息：OneBot 的 reply 段只带消息 id，不带内容，
     # 要拿 get_msg 把被引用那条的原话取回来，喂给模型。
     # 实测手机版 NapCat 会把 reply 段从 message 数组里剥掉，
