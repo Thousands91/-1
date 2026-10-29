@@ -2,7 +2,7 @@
 # 阿萨尔同步脚本：手机日志上仓库 / 仓库代码下手机
 REPO=/root/asar-sync
 LOG=/tmp/fakelog
-BOT_DIR=/root/bot/bot
+BOT_DIR=/tmp/fakebot
 BRANCH=main
 
 cd "$REPO" || exit 1
@@ -27,6 +27,8 @@ push() {
 }
 
 pull() {
+    git add -A
+    git diff --cached --quiet || git commit -q -m "本地快照 $(date '+%H:%M')"
     git pull --rebase origin $BRANCH || return 1
     # 只覆盖代码，绝不动 data/（记忆和棋局都在里面）
     if [ -d "$REPO/code/bot" ]; then
