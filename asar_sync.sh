@@ -12,7 +12,7 @@ git config user.email "asar@phone.local" 2>/dev/null
 push() {
     [ -f "$LOG" ] || { echo "找不到日志 $LOG"; return 1; }
     mkdir -p logs
-    tail -3000 "$LOG" > logs/bot.log
+    cp "$LOG" logs/bot.log
     git add logs/bot.log
     if [ -z "$(git status --porcelain -- logs/bot.log)" ]; then
         echo "日志无新内容"
