@@ -640,7 +640,8 @@ class _Cooldown:
     """简单的冷却闸：被限流后短时间里别再打这个接口。"""
 
     def __init__(self) -> None:
-        self.until = 0.0
+        self.until = 0.0        # 智谱搜索接口
+        self.scrape_until = 0.0  # 网页抓取
 
 
 _search_cooldown = _Cooldown()
@@ -765,25 +766,32 @@ def _needs_fact(text: str) -> bool:
 
 
 def _web_snippets(query: str, max_results: int = 3) -> str:
-    """用智谱官方的 web-search-pro 联网检索，返回拼好的摘要。
+    """联网检索，返回拼好的摘要。两条路，谁通用谁：
 
-    为什么不用网页抓取：实测百度会被"安全验证"拦（同 IP 请求几次就空手而归），
-    必应对中文问题经常跑偏（问"法拉杰的父亲"给你 B站视频下载教程）。
-    智谱这个接口用同一个 API key，0.7 秒返回、结果准、不用额外注册。
+    1. 智谱 web-search-pro（准、快，但是付费工具，1113 余额不足时不可用）
+    2. 直接抓搜狗/百度的结果页（免费，实测在机房和手机网络都能拿到）
 
-    注意额度：glm 免费号并发只有 1，搜索和聊天抢同一个额度。
-    被限流过一次就冷静两分钟，否则群里连着问几句会把聊天也一起拖垮。
+    web-search-pro 一旦判定没额度，后面只走抓取，不再白等那 12 秒。
     """
-    import re as _rw
-
-    import requests as _rq
-
-    q = _rw.sub(r"[\s]+", " ", (query or "")).strip()
+    q = _re_mod.sub(r"[\s]+", " ", (query or "")).strip()
     if not q:
         return ""
-    if _time.time() < _search_cooldown.until:
-        logger.info("[联网] 冷却中，跳过检索")
+
+    if _time.time() >= _search_cooldown.until:
+        rows = _search_via_zhipu(q, max_results)
+        if rows:
+            return rows
+
+    if _time.time() < _search_cooldown.scrape_until:
+        logger.info("[联网] 抓取冷却中，跳过")
         return ""
+    return _search_via_scrape(q, max_results)
+
+
+# ---------- 路线一：智谱 web-search-pro（付费） ----------
+def _search_via_zhipu(q: str, max_results: int = 3) -> str:
+    import requests as _rq
+
     try:
         resp = _rq.post(
             "https://open.bigmodel.cn/api/paas/v4/tools",
@@ -791,28 +799,25 @@ def _web_snippets(query: str, max_results: int = 3) -> str:
             headers={"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"},
             timeout=12,
         )
-        # 429 时 body 也是一段合法 JSON，只是没有 tool_calls，
-        # 不单独报出来的话，日志里只会看到"没搜到"，看不出是被限流了。
         if resp.status_code == 429:
-            # 1113 是"余额不足/无可用资源包"——搜索是付费工具，不在免费额度里。
-            # 这种情况重试没有意义，直接长期关掉，别让每句话白等 12 秒。
             try:
-                code = ((resp.json() or {}).get("error") or {}).get("code", "")
+                code = str(((resp.json() or {}).get("error") or {}).get("code", ""))
             except Exception:
                 code = ""
-            if str(code) == "1113":
+            if code == "1113":
+                # 余额不足：这不是限流，重试没用，直接长期关掉这条路
                 _search_cooldown.until = _time.time() + 6 * 3600
-                logger.warning("[联网] 搜索额度不足（1113），六小时内不再检索；聊天不受影响")
+                logger.warning("[联网] 智谱搜索额度不足（1113），改用网页抓取")
             else:
                 _search_cooldown.until = _time.time() + 120
-                logger.warning(f"[联网] 被限流（429/{code}），两分钟内不再检索")
+                logger.warning(f"[联网] 智谱搜索限流（429/{code}），改走抓取")
             return ""
         if resp.status_code >= 400:
-            logger.warning(f"[联网] 接口返回 {resp.status_code}")
+            logger.warning(f"[联网] 智谱搜索返回 {resp.status_code}")
             return ""
         data = resp.json()
     except Exception as e:
-        logger.warning(f"[联网] 检索失败：{type(e).__name__}")
+        logger.warning(f"[联网] 智谱搜索失败：{type(e).__name__}")
         return ""
 
     calls = (data.get("choices") or [{}])[0].get("message", {}).get("tool_calls") or []
@@ -828,6 +833,117 @@ def _web_snippets(query: str, max_results: int = 3) -> str:
             if len(rows) >= max_results:
                 break
     return "\n".join(rows[:max_results])
+
+
+# ---------- 路线二：抓搜狗/百度结果页（免费） ----------
+_SCRAPE_UA = (
+    "Mozilla/5.0 (Linux; Android 13; SM-G991B) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
+)
+_SCRAPE_HEADERS = {
+    "User-Agent": _SCRAPE_UA,
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+}
+# 命中这些说明被风控拦了，不是"没结果"
+_BLOCK_WORDS = ("安全验证", "百度安全", "验证码", "人机验证", "captcha", "unusual traffic")
+
+
+def _html_clean(s: str) -> str:
+    s = _re_mod.sub(r"<[^>]+>", "", s or "")
+    for a, b in (("&amp;", "&"), ("&quot;", '"'), ("&nbsp;", " "),
+                 ("&lt;", "<"), ("&gt;", ">"), ("&#39;", "'")):
+        s = s.replace(a, b)
+    return _re_mod.sub(r"\s+", " ", s).strip()
+
+
+def _scrape_sogou(q: str):
+    import requests as _rq
+
+    r = _rq.get("https://www.sogou.com/web", params={"query": q},
+                headers=_SCRAPE_HEADERS, timeout=10)
+    r.encoding = "utf-8"
+    html = r.text
+    if any(w in html for w in _BLOCK_WORDS):
+        return None
+    out = []
+    for m in _re_mod.finditer(r"<h3[^>]*>(.*?)</h3>", html, _re_mod.S):
+        a = _re_mod.search(r"<a[^>]*>(.*?)</a>", m.group(1), _re_mod.S)
+        title = _html_clean(a.group(1) if a else m.group(1))
+        if not (4 <= len(title) <= 90):
+            continue
+        tail = html[m.end(): m.end() + 1500]
+        p = _re_mod.search(
+            r'class="[^"]*(?:text-layout|space-txt|fz-mid|str-text)[^"]*"[^>]*>(.*?)</',
+            tail, _re_mod.S)
+        out.append((title, _html_clean(p.group(1)) if p else ""))
+        if len(out) >= 8:
+            break
+    return out or None
+
+
+def _scrape_baidu(q: str):
+    import requests as _rq
+
+    r = _rq.get("https://www.baidu.com/s", params={"wd": q},
+                headers=_SCRAPE_HEADERS, timeout=10)
+    r.encoding = "utf-8"
+    html = r.text
+    if any(w in html for w in _BLOCK_WORDS):
+        return None
+    out = []
+    for m in _re_mod.finditer(r"<h3[^>]*>(.*?)</h3>", html, _re_mod.S):
+        title = _html_clean(m.group(1))
+        if not (4 <= len(title) <= 90):
+            continue
+        tail = html[m.end(): m.end() + 1200]
+        p = _re_mod.search(
+            r'class="[^"]*(?:content-right|c-abstract|cos-line-clamp)[^"]*"[^>]*>(.*?)</',
+            tail, _re_mod.S)
+        out.append((title, _html_clean(p.group(1)) if p else ""))
+        if len(out) >= 8:
+            break
+    return out or None
+
+
+def _relevance(title: str, body: str, q: str) -> int:
+    """粗打分：问句里的词命中几个，摘要里有没有具体答案的样子。"""
+    text = f"{title} {body}"
+    keys = [w for w in _re_mod.split(r"[\s，。？?、]+", q) if len(w) >= 2]
+    hit = sum(1 for k in keys if k in text)
+    # 摘要里出现括号/年份/引号包着的专名，往往就是答案
+    if _re_mod.search(r"《[^》]+》\s*是|[（(]\s*[A-Za-z·]+|[A-Za-z]{3,}", text):
+        hit += 1
+    return hit
+
+
+def _search_via_scrape(q: str, max_results: int = 3) -> str:
+    for name, fn in (("搜狗", _scrape_sogou), ("百度", _scrape_baidu)):
+        try:
+            rows = fn(q)
+        except Exception as e:
+            logger.warning(f"[联网] {name}抓取失败：{type(e).__name__}")
+            continue
+        if not rows:
+            continue
+
+        # 相关度排序。门槛放到 0：宁可多带两条让模型自己挑，
+        # 也别因为"标题里没写'周杰伦'"就把整页丢掉（实测就栽在这）。
+        # 只把明显的导航垃圾（大家还在搜/相关搜索…）剔掉。
+        ranked = sorted(rows, key=lambda ts: _relevance(ts[0], ts[1], q), reverse=True)
+        keep = [(t, s) for t, s in ranked
+                if not _re_mod.search(r"大家还在搜|相关搜索|其他人还搜|热搜榜|展开全部", t)
+                and (len(t) >= 6 or s)][:max_results]
+        if not keep:
+            continue
+
+        logger.info(f"[联网] 走{name}抓到 {len(keep)} 条")
+        return "\n".join(f"- {t}：{s}" if s else f"- {t}" for t, s in keep)
+
+    # 两个都没成：冷却五分钟，别每条消息都去撞风控
+    _search_cooldown.scrape_until = _time.time() + 300
+    logger.warning("[联网] 搜狗/百度都没抓到期，五分钟后重试")
+    return ""
 
 
 def trim_to_sentences(text: str, max_sentences: int = 3) -> str:
