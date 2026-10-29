@@ -1,5 +1,4 @@
 10-27 00:54:14 [SUCCESS] nonebot | NoneBot is initializing...
-/* 测试新增行 */
 10-27 00:54:14 [INFO] nonebot | Current Env: prod
 10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
 10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "image_search_web" from "plugins.image_search_web"
