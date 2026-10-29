@@ -582,11 +582,14 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
     # 对方把猜测当定论问（"……才修得起来吧？"），它一上来就点头。
     # 小模型天生顺着人说话，人设里写"他说的不对就直接说他不对"也没用，
     # 只能在代码层拦。这里同样不给否定指令，直接指定必须用的否定开头。
+    # 重答之后还点头（或者变成半句"是的……不过"），就直接用写好的那句顶上——
+    # 只要最后那段仍然在附和对方，就不能让它当答案发出去。
     if _is_yes_man_answer(_ask, answer):
         logger.info(f"[核对] 对方带了预设，它直接点头：{answer[:24]}")
         _denials = random.choice([
             '"不全是。"', '"没那么一说。"', '"这话不对。"', '"谁跟您说的？"',
         ])
+        retry = ""
         try:
             retry = await call_llm(
                 to_model,
@@ -597,13 +600,18 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
                     "开头不许用：是的、对、没错、确实、正是、当然、的确。"
                 ),
             )
-            if retry and not _AGREE_OPEN.search(retry):
-                answer = retry
-            else:
-                # 重答还是点头——那就自己写一句。宁可生硬，也不能把错的说出去。
-                answer = _lore_correction(_ask) or answer
         except Exception:
-            answer = _lore_correction(_ask) or answer
+            pass
+        if retry and not _is_yes_man_answer(_ask, retry):
+            answer = retry
+        else:
+            # 重答还是点头——那就自己写一句。宁可生硬，也不能把错的说出去。
+            fixed = _lore_correction(_ask)
+            if fixed:
+                logger.info("[核对] 重答仍在附和，改用定稿句")
+                answer = fixed
+            elif retry:
+                answer = retry
 
     # 硬性截断：最多三句（模型不听话时兜底）。
     # 先进历史再截断的话，历史里存的是"用户没看见的那半句"，
@@ -637,11 +645,10 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
 
 
 class _Cooldown:
-    """简单的冷却闸：被限流后短时间里别再打这个接口。"""
+    """简单的冷却闸：抓取被风控拦了就歇五分钟，别硬怼。"""
 
     def __init__(self) -> None:
-        self.until = 0.0        # 智谱搜索接口
-        self.scrape_until = 0.0  # 网页抓取
+        self.scrape_until = 0.0
 
 
 _search_cooldown = _Cooldown()
@@ -652,7 +659,8 @@ _search_cooldown = _Cooldown()
 _IN_LORE_RE = __import__("re").compile(
     r"阿尔图|阿图娜尔|梅姬|奈费勒|鲁梅拉|哈比卜|莎姬|阿卜德|奈布哈尼|哲巴尔|赛里曼|法里斯|"
     r"阿迪莱|拜玲耶|伊曼|娜依拉|夏玛|贾丽拉|朱娜|布缇娜|阿里木|哈桑|热娜|马尔基娜|"
-    r"玛希尔|麦娜尔|阿穆尔|小星星|法拉杰|苗圃|舍馆|浴场|欢愉之馆|黑街|垂钓者|苏丹卡"
+    r"玛希尔|麦娜尔|阿穆尔|小星星|法拉杰|杰莫尔|哈马尔|苗圃|舍馆|浴场|欢愉之馆|黑街|"
+    r"垂钓者|苏丹卡|近卫|门客|思潮"
 )
 
 # 只在这些"客观事实"特征出现时才搜：模型对这类问题最爱编。
@@ -701,6 +709,20 @@ _AGREE_OPEN = __import__("re").compile(
 )
 
 
+def _echoes_premise(question: str, answer: str) -> bool:
+    """答案一开头就把对方那句错误预设原样重复了一遍——等于点了头。
+
+    模型很爱这么答："舍馆要侠名才修得起来。没有侠名，单靠财力是不够的。"
+    一个字都没认，但把错的说得比谁都肯定，比"是的"更糟。
+    """
+    q = __import__("re").sub(r"[\s，。！？、?！]", "", question or "")
+    q = __import__("re").sub(r"(吧|对不对|是不是|对吧|是吧)$", "", q)
+    a = __import__("re").sub(r"[\s，。！？、?！]", "", answer or "")
+    if len(q) < 6 or not a:
+        return False
+    return a.startswith(q[: min(len(q), 14)])
+
+
 def _is_leading_question(text: str) -> bool:
     """这句是不是"带预设的问法"，即把猜测塞给你、等你点头。"""
     return bool(_LEADING_Q.search((text or "").strip()))
@@ -709,9 +731,12 @@ def _is_leading_question(text: str) -> bool:
 def _is_yes_man_answer(question: str, answer: str) -> bool:
     """对带预设的问法答了个"Yeah"——多半是顺着说，而不是核对过。
 
+    两种都算点头：嘴上说"是的"，和一字不改把对方那句错话重复一遍。
     只在"对方的预设确实和设定相反"时才算——否则人家问得对，点头就该点头。
     """
-    if not _is_leading_question(question) or not _AGREE_OPEN.search(answer or ""):
+    if not _is_leading_question(question):
+        return False
+    if not (_AGREE_OPEN.search(answer or "") or _echoes_premise(question, answer or "")):
         return False
     return _contradicts_lore(question)
 
@@ -766,76 +791,22 @@ def _needs_fact(text: str) -> bool:
 
 
 def _web_snippets(query: str, max_results: int = 3) -> str:
-    """联网检索，返回拼好的摘要。两条路，谁通用谁：
+    """联网检索，返回拼好的摘要。
 
-    1. 智谱 web-search-pro（准、快，但是付费工具，1113 余额不足时不可用）
-    2. 直接抓搜狗/百度的结果页（免费，实测在机房和手机网络都能拿到）
-
-    web-search-pro 一旦判定没额度，后面只走抓取，不再白等那 12 秒。
+    只走网页抓取：搜狗优先、百度兜底。没有别的路子——
+    智谱的 web-search-pro 是付费工具，不在 glm-4-flash 的免费额度里，
+    留着它只会让每次问事实都先白等一轮 429。
     """
     q = _re_mod.sub(r"[\s]+", " ", (query or "")).strip()
     if not q:
         return ""
-
-    if _time.time() >= _search_cooldown.until:
-        rows = _search_via_zhipu(q, max_results)
-        if rows:
-            return rows
-
     if _time.time() < _search_cooldown.scrape_until:
         logger.info("[联网] 抓取冷却中，跳过")
         return ""
     return _search_via_scrape(q, max_results)
 
 
-# ---------- 路线一：智谱 web-search-pro（付费） ----------
-def _search_via_zhipu(q: str, max_results: int = 3) -> str:
-    import requests as _rq
-
-    try:
-        resp = _rq.post(
-            "https://open.bigmodel.cn/api/paas/v4/tools",
-            json={"tool": "web-search-pro", "messages": [{"role": "user", "content": q}]},
-            headers={"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"},
-            timeout=12,
-        )
-        if resp.status_code == 429:
-            try:
-                code = str(((resp.json() or {}).get("error") or {}).get("code", ""))
-            except Exception:
-                code = ""
-            if code == "1113":
-                # 余额不足：这不是限流，重试没用，直接长期关掉这条路
-                _search_cooldown.until = _time.time() + 6 * 3600
-                logger.warning("[联网] 智谱搜索额度不足（1113），改用网页抓取")
-            else:
-                _search_cooldown.until = _time.time() + 120
-                logger.warning(f"[联网] 智谱搜索限流（429/{code}），改走抓取")
-            return ""
-        if resp.status_code >= 400:
-            logger.warning(f"[联网] 智谱搜索返回 {resp.status_code}")
-            return ""
-        data = resp.json()
-    except Exception as e:
-        logger.warning(f"[联网] 智谱搜索失败：{type(e).__name__}")
-        return ""
-
-    calls = (data.get("choices") or [{}])[0].get("message", {}).get("tool_calls") or []
-    rows = []
-    for c in calls:
-        if c.get("type") != "search_result":
-            continue
-        for it in c.get("search_result") or []:
-            title = (it.get("title") or "").strip()[:60]
-            body = (it.get("content") or "").strip().replace("\n", " ")[:200]
-            if title or body:
-                rows.append(f"- {title}：{body}")
-            if len(rows) >= max_results:
-                break
-    return "\n".join(rows[:max_results])
-
-
-# ---------- 路线二：抓搜狗/百度结果页（免费） ----------
+# ---------- 抓搜狗/百度结果页（免费，唯一可用的联网方式） ----------
 _SCRAPE_UA = (
     "Mozilla/5.0 (Linux; Android 13; SM-G991B) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
