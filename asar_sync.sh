@@ -2,7 +2,7 @@
 # 阿萨尔同步脚本：手机日志上仓库 / 仓库代码下手机
 REPO=/root/asar-sync
 LOG=/tmp/fakelog
-BOT_DIR=/tmp/fakebot
+BOT_DIR=/root/bot/bot
 BRANCH=main
 
 cd "$REPO" || exit 1
