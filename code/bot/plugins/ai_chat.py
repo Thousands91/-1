@@ -509,6 +509,31 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
             except Exception:
                 pass  # 搜索重答失败就用原答案
 
+    # 被夸却客套谦让 —— glm-4-flash 的语料惯性太强，人设里写"禁用"、让它"别自谦"，
+    # 实测都压不住（十次里八次还是"过誉了，不过是书读得多"）。
+    # 所以别再要求它"不要做什么"，直接给它四个必须用上的开头，让它只能往里填。
+    if _is_praise(_ask) and _HUMBLE_RE.search(answer):
+        logger.info(f"[改口] 被夸却谦让，重说：{answer[:20]}")
+        _openers = random.choice([
+            '"这话您是不是跟卖布的也说过？"',
+            '"夸完了？那该我说两句了。"',
+            '"您这么一说，我这价钱都不好意思涨了。"',
+            '"知道。所以您才常来。"',
+        ])
+        try:
+            retry = await call_llm(
+                to_model,
+                extra_system=extra_sys + "\n" + (
+                    "内部备忘（绝不复述本段）：\n"
+                    f"对方刚夸了你。下一句必须以 {_openers} 开头，再接一句你自己的话。\n"
+                    "不许出现：过誉、过奖、哪里、不敢当、罢了、不过是、读书人、书读得多。"
+                ),
+            )
+            if retry and not _HUMBLE_RE.search(retry):
+                answer = retry
+        except Exception:
+            pass
+
     # 硬性截断：最多三句（模型不听话时兜底）。
     # 先进历史再截断的话，历史里存的是"用户没看见的那半句"，
     # 后面追问时模型会以为自己说过——所以先截断，存和发用同一份。
@@ -550,6 +575,23 @@ _CHITCHAT_RE = __import__("re").compile(
 
 
 _SELF_RE = __import__("re").compile(r"你是谁|你叫什么|你多大|你几岁|你的?名字|你是干什么|你这店|你卖")
+
+
+# 夸人的话：你真会说话 / 你人真好 / 好喜欢你 / 嘴真甜 …
+_PRAISE_RE = __import__("re").compile(
+    r"真会说话|嘴真甜|嘴好甜|说得好听|人真好|你真好|好喜欢你|喜欢你|你好棒|真厉害|好厉害|"
+    r"真聪明|好聪明|有魅力|迷人|好温柔|好可爱|你真好玩|有意思"
+)
+# 自谦的口头禅：一旦出现在被夸的回答里，就是要改口了
+_HUMBLE_RE = __import__("re").compile(
+    r"过誉|过奖|哪里哪里|不敢当|谬赞|拙|浅薄|不才|算不上|谈不上|不过是|罢了|"
+    r"只是个|只是.{0,6}读书|只是.{0,8}念出来|只是.{0,6}说法|书读得多|读了几年书|混口饭吃|"
+    r"书里的话|照着书|书本上的"
+)
+
+
+def _is_praise(text: str) -> bool:
+    return bool(_PRAISE_RE.search(text or ""))
 
 
 def _is_self_inquiry(text: str) -> bool:
