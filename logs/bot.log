@@ -1,0 +1,25 @@
+10-27 00:54:14 [SUCCESS] nonebot | NoneBot is initializing...
+/* 测试新增行 */
+10-27 00:54:14 [INFO] nonebot | Current Env: prod
+10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "image_search_web" from "plugins.image_search_web"
+10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
+10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
+10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "image_search" from "plugins.image_search"
+10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
+10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
+10-27 00:54:14 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
+10-27 00:54:14 [SUCCESS] nonebot | Running NoneBot...
+10-27 00:54:14 [SUCCESS] nonebot | Loaded adapters: OneBot V11
+10-27 00:54:14 [INFO] uvicorn | Started server process [148999]
+10-27 00:54:14 [INFO] uvicorn | Waiting for application startup.
+10-27 00:54:14 [INFO] __main__ | ==================================================
+10-27 00:54:14 [INFO] __main__ | QQ 群机器人启动成功 ✅
+10-27 00:54:14 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
+10-27 00:54:14 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
+10-27 00:54:14 [INFO] __main__ | ==================================================
+10-27 00:54:14 [INFO] uvicorn | Application startup complete.
+10-27 00:54:14 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
