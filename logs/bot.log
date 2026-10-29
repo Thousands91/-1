@@ -1738,3 +1738,4 @@ nohup: ignoring input
 10-29 18:04:47 [INFO] uvicorn | 127.0.0.1:43276 - "GET /wd/hub/status HTTP/1.1" 404
 10-29 19:04:14 [INFO] uvicorn | 127.0.0.1:46374 - "GET / HTTP/1.1" 404
 10-29 22:21:56 [INFO] uvicorn | 127.0.0.1:49558 - "GET /wd/hub/status HTTP/1.1" 404
+10-29 22:52:18 [INFO] uvicorn | 127.0.0.1:43082 - "GET / HTTP/1.1" 404
