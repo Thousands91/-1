@@ -1732,3 +1732,4 @@ nohup: ignoring input
 10-29 14:01:50 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
 10-29 14:01:50 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
 10-29 14:01:50 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=266) running complete
+10-29 14:12:50 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
