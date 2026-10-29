@@ -32,7 +32,8 @@ pull() {
     git pull --rebase origin $BRANCH || return 1
     # 只覆盖代码，绝不动 data/（记忆和棋局都在里面）
     if [ -d "$REPO/code/bot" ]; then
-        rsync -a --exclude 'data' --exclude '__pycache__' --delete "$REPO/code/bot/" "$BOT_DIR/"
+        cp -a "$REPO/code/bot/." "$BOT_DIR/"
+        find "$BOT_DIR" -name '__pycache__' -type d -exec rm -rf {} + 2>/dev/null
         echo "✅ 代码已更新到 $BOT_DIR（data/ 未动）"
         echo "如需生效请重启大脑：pkill -f 'python main.py'; cd $BOT_DIR && nohup python main.py > /root/bot/bot/bot.log 2>&1 &"
     else
