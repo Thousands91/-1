@@ -81,15 +81,22 @@ def _save_memory(uid: int, entries: list) -> None:
         logger.warning(f"长期记忆写入失败：{type(e).__name__} {e}")
 
 
-def _remember(uid: int, text: str) -> None:
-    """随手记一条：太短、像命令/寒暄的、和上一条重复的都不记。"""
+def _remember(uid: int, text: str, reply: str = "") -> None:
+    """随手记一条：太短、像命令/寒暄的、和上一条重复的都不记。
+
+    同时把这次自己答的那一句记进 r 字段。下一轮拼记忆时，"他问过什么"和
+    "你答过什么"成对出现，模型才不会以为某个旧问题是还没回答的。
+    """
     text = text.strip()
     if len(text) < _MEMORY_MIN_LEN or _MEMORY_SKIP.search(text):
         return
     entries = _load_memory(uid)
     if entries and entries[-1].get("m") == text:
         return
-    entries.append({"t": int(_time.time()), "m": text[:120]})
+    item = {"t": int(_time.time()), "m": text[:120]}
+    if reply:
+        item["r"] = reply.strip()[:80]
+    entries.append(item)
     _save_memory(uid, entries[-MEMORY_CAP:])
 
 
@@ -97,8 +104,17 @@ def _memory_block(uid: int) -> str:
     entries = _load_memory(uid)
     if not entries:
         return ""
-    recent = [e.get("m", "") for e in entries[-MEMORY_IN_PROMPT:]]
-    return "（这是你以前和对方打交道时记下的话，聊天时可以自然地用上，证明你记得他；别整段复述。）\n" + "\n".join(f"- {m}" for m in recent)
+    lines = []
+    for e in entries[-MEMORY_IN_PROMPT:]:
+        m = e.get("m", "")
+        r = e.get("r", "")
+        lines.append(f"- 他问：「{m}」，你当时答：「{r}」" if r else f"- 他问：「{m}」")
+    return (
+        "（以下是以前和对方打交道时留下的记录，每一条都已经答完了。\n"
+        "**这些是旧话题，不是待回答的问题**：除非对方这一句又提起来，"
+        "否则一个字都别往里接，更别把上一条的答案续到这轮回答后面。\n"
+        "记着它们只是让你认得这个人，别整段复述。）\n" + "\n".join(lines)
+    )
 
 # 群聊场合的补充约束
 GROUP_HINT = (
@@ -157,6 +173,13 @@ SYSTEM_PROMPT = AZAR_PERSONA + GROUP_HINT + (
     "别人说「他哪里是…」「不对吧」时，先核对：若自己真说岔了（比如认错人、"
     "认错身份），就痛痛快快认：「记岔了」——不编新细节圆场。\n"
     "自己说过的话要认账：刚说过什么，下一条引用它时不能翻脸不认。\n"
+    "\n## 对方把话说错时的规矩（务必遵守）\n"
+    "对方常把自己的猜测当定论问你，句尾带「吧」「对不对」「是不是」。"
+    "**这不是让你点头，是先考你**。\n"
+    "答之前先在心里核对一遍事实：他说的对，就应一声；**他说的不对，就直接说他不对**，"
+    "然后给正确的说法。别为了让对方高兴而说「是的」——你是书商，说错话是要被人写进书里的。\n"
+    "纠正的时候别端着先生架子损人，一句「不全是」「没那么一说」就够了，"
+    "接下去说你那版。\n"
 )
 
 # ============ 吃 / 喝：模型容易把"吃什么"答成菜单，这里兜一层 ============
@@ -489,8 +512,9 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
             snippets = await asyncio.wait_for(
                 asyncio.to_thread(_web_snippets, _ask), timeout=14
             )
-        except Exception:
+        except Exception as e:
             snippets = ""
+            logger.warning(f"[联网] 检索失败（{type(e).__name__}），用原答案兜底")
         if snippets:
             logger.info(f"[联网] 「{_ask[:24]}」检索到线索，重答一次")
             try:
@@ -508,6 +532,27 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
                     answer = retry
             except Exception:
                 pass  # 搜索重答失败就用原答案
+        else:
+            # 搜不到线索（额度不足/没命中）。这时候模型只会瞎编——
+            # 实测问"《苏丹的游戏》开发商"，它张口就来"KEMCO"，跟这游戏毫无关系。
+            # 只能再问一遍，并要求它把"说不准"说出口。
+            logger.info(f"[存疑] 「{_ask[:24]}」没查到线索，要求它别硬编")
+            try:
+                retry = await call_llm(
+                    to_model,
+                    extra_system=extra_sys + "\n" + (
+                        "内部备忘（绝不复述本段，也别提'搜索'、'查资料'这类字眼）：\n"
+                        "这一句问的是你没有把握的实事。你不知道确切答案。\n"
+                        "下一句必须以「这我可说不准」开头，然后用自己的口吻说一句"
+                        "你能确定的部分（比如这城里怎么看、或者书上没写）。\n"
+                        "**绝对不许说出任何具体的人名、公司名、年份、数字来充数**——"
+                        "编一个比说不知道糟得多，那是要被写进别人的书里的。"
+                    ),
+                )
+                if retry:
+                    answer = retry
+            except Exception:
+                pass
 
     # 被夸却客套谦让 —— glm-4-flash 的语料惯性太强，人设里写"禁用"、让它"别自谦"，
     # 实测都压不住（十次里八次还是"过誉了，不过是书读得多"）。
@@ -534,6 +579,32 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
         except Exception:
             pass
 
+    # 对方把猜测当定论问（"……才修得起来吧？"），它一上来就点头。
+    # 小模型天生顺着人说话，人设里写"他说的不对就直接说他不对"也没用，
+    # 只能在代码层拦。这里同样不给否定指令，直接指定必须用的否定开头。
+    if _is_yes_man_answer(_ask, answer):
+        logger.info(f"[核对] 对方带了预设，它直接点头：{answer[:24]}")
+        _denials = random.choice([
+            '"不全是。"', '"没那么一说。"', '"这话不对。"', '"谁跟您说的？"',
+        ])
+        try:
+            retry = await call_llm(
+                to_model,
+                extra_system=extra_sys + "\n" + (
+                    "内部备忘（绝不复述本段）：\n"
+                    f"对方这一句把自己的猜测当成了定论，而这个猜测是不对的。"
+                    f"下一句必须以 {_denials} 开头，然后用一句话把正确的说法讲清楚。\n"
+                    "开头不许用：是的、对、没错、确实、正是、当然、的确。"
+                ),
+            )
+            if retry and not _AGREE_OPEN.search(retry):
+                answer = retry
+            else:
+                # 重答还是点头——那就自己写一句。宁可生硬，也不能把错的说出去。
+                answer = _lore_correction(_ask) or answer
+        except Exception:
+            answer = _lore_correction(_ask) or answer
+
     # 硬性截断：最多三句（模型不听话时兜底）。
     # 先进历史再截断的话，历史里存的是"用户没看见的那半句"，
     # 后面追问时模型会以为自己说过——所以先截断，存和发用同一份。
@@ -542,8 +613,10 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
     msgs.append({"role": "user", "content": text})
     msgs.append({"role": "assistant", "content": answer})
 
-    # 长期记忆：只记用户自己的话，不记带记忆块/挑食提醒的拼装版
-    _remember(event.user_id, event.get_plaintext().strip())
+    # 长期记忆：只记用户自己的话，不记带记忆块/挑食提醒的拼装版。
+    # 顺手记下自己答过的那一句——否则下一轮记忆里只有"用户问过什么"，
+    # 模型会以为没答完，把上一个话题的答案硬塞进新回答里。
+    _remember(event.user_id, event.get_plaintext().strip(), reply=answer)
 
     # 把模型回复里的 @数字 转成真正的艾特段
     import re as _re2
@@ -561,6 +634,26 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
 
 
 # ---------- 联网搜索（问事实才搜） ----------
+
+
+class _Cooldown:
+    """简单的冷却闸：被限流后短时间里别再打这个接口。"""
+
+    def __init__(self) -> None:
+        self.until = 0.0
+
+
+_search_cooldown = _Cooldown()
+
+# 问的是"这个游戏里的人物/地点/物件"——答案在人设里，不该去网上找。
+# 注意别把"《苏丹的游戏》开发商是谁"也拦掉：那是关于这游戏本身的事实，恰恰该搜。
+# 所以这里只列专名，不列"苏丹的游戏"这个标题。
+_IN_LORE_RE = __import__("re").compile(
+    r"阿尔图|阿图娜尔|梅姬|奈费勒|鲁梅拉|哈比卜|莎姬|阿卜德|奈布哈尼|哲巴尔|赛里曼|法里斯|"
+    r"阿迪莱|拜玲耶|伊曼|娜依拉|夏玛|贾丽拉|朱娜|布缇娜|阿里木|哈桑|热娜|马尔基娜|"
+    r"玛希尔|麦娜尔|阿穆尔|小星星|法拉杰|苗圃|舍馆|浴场|欢愉之馆|黑街|垂钓者|苏丹卡"
+)
+
 # 只在这些"客观事实"特征出现时才搜：模型对这类问题最爱编。
 # 闲聊、要书、撒娇、骂人一律不搜——否则每条都多两秒、还容易答得不像阿萨尔。
 _FACT_RE = __import__("re").compile(
@@ -599,12 +692,74 @@ def _is_self_inquiry(text: str) -> bool:
     return bool(_SELF_RE.search(text))
 
 
+# 对方把自己的猜测当定论问："舍馆要侠名才修得起来吧？""是不是……"
+_LEADING_Q = __import__("re").compile(r"(吧|对不对|是不是|对吧|是吧)[？?。！!\s]*$")
+# 顺从式开口：一上来就点头
+_AGREE_OPEN = __import__("re").compile(
+    r"^[\s，。！、]*(嗯，)?(是的|对啊|对的|没错|确实|正是|当然|的确|是这样的|您说的对|你说得对)"
+)
+
+
+def _is_leading_question(text: str) -> bool:
+    """这句是不是"带预设的问法"，即把猜测塞给你、等你点头。"""
+    return bool(_LEADING_Q.search((text or "").strip()))
+
+
+def _is_yes_man_answer(question: str, answer: str) -> bool:
+    """对带预设的问法答了个"Yeah"——多半是顺着说，而不是核对过。
+
+    只在"对方的预设确实和设定相反"时才算——否则人家问得对，点头就该点头。
+    """
+    if not _is_leading_question(question) or not _AGREE_OPEN.search(answer or ""):
+        return False
+    return _contradicts_lore(question)
+
+
+# 已知的"常见误传"：人设里写清楚了，但群里有人会反着说。
+# 命中才强制纠口——不能拿"吧"当通用信号，否则对方问对了也被怼。
+_WRONG_LORE = (
+    ("舍馆", ("侠名", "修")),
+    ("苗圃", ("流民",)),
+    ("苏丹卡", ("复原", "重来", "重新")),
+)
+
+
+def _contradicts_lore(text: str) -> bool:
+    t = text or ""
+    for topic, bad in _WRONG_LORE:
+        if topic in t and any(b in t for b in bad):
+            return True
+    return False
+
+
+# 重答仍然顺着说时，直接用的现成纠正句（阿萨尔的口吻，一句话讲清）。
+_LORE_FIX = {
+    "舍馆": "没那么一说。舍馆一开始搭起来不费什么，侠名不够也搭得起；要往上再修一层，才得看侠名。",
+    "苗圃": "不全是。苗圃收的不只是流民，是贫民区的孤儿、阿里木手底的乞儿、舍馆后街的流浪儿，一样一样进来的。",
+    "苏丹卡": "这话不对。折掉的卡不会复原，二十八张抽完才算完，城里人就赌这个。",
+}
+
+
+def _lore_correction(text: str) -> str:
+    t = text or ""
+    for topic, bad in _WRONG_LORE:
+        if topic in t and any(b in t for b in bad):
+            return _LORE_FIX.get(topic, "")
+    return ""
+
+
 def _needs_fact(text: str) -> bool:
-    """判断这句是不是在问可以查证的客观事实（而不是闲聊/买卖/情绪）。"""
+    """判断这句是不是在问可以查证的客观事实（而不是闲聊/买卖/情绪）。
+
+    注意"苏丹的游戏里的人"不算——阿尔图的老婆是谁、梅姬干什么的，
+    这些答案就在人设里，模型自己知道。去搜反而会把答对的改成"说不准"。
+    """
     t = text.strip()
     if len(t) < 5:
         return False
     if _CHITCHAT_RE.search(t):
+        return False
+    if _IN_LORE_RE.search(t):
         return False
     return bool(_FACT_RE.search(t))
 
@@ -615,6 +770,9 @@ def _web_snippets(query: str, max_results: int = 3) -> str:
     为什么不用网页抓取：实测百度会被"安全验证"拦（同 IP 请求几次就空手而归），
     必应对中文问题经常跑偏（问"法拉杰的父亲"给你 B站视频下载教程）。
     智谱这个接口用同一个 API key，0.7 秒返回、结果准、不用额外注册。
+
+    注意额度：glm 免费号并发只有 1，搜索和聊天抢同一个额度。
+    被限流过一次就冷静两分钟，否则群里连着问几句会把聊天也一起拖垮。
     """
     import re as _rw
 
@@ -623,6 +781,9 @@ def _web_snippets(query: str, max_results: int = 3) -> str:
     q = _rw.sub(r"[\s]+", " ", (query or "")).strip()
     if not q:
         return ""
+    if _time.time() < _search_cooldown.until:
+        logger.info("[联网] 冷却中，跳过检索")
+        return ""
     try:
         resp = _rq.post(
             "https://open.bigmodel.cn/api/paas/v4/tools",
@@ -630,6 +791,25 @@ def _web_snippets(query: str, max_results: int = 3) -> str:
             headers={"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"},
             timeout=12,
         )
+        # 429 时 body 也是一段合法 JSON，只是没有 tool_calls，
+        # 不单独报出来的话，日志里只会看到"没搜到"，看不出是被限流了。
+        if resp.status_code == 429:
+            # 1113 是"余额不足/无可用资源包"——搜索是付费工具，不在免费额度里。
+            # 这种情况重试没有意义，直接长期关掉，别让每句话白等 12 秒。
+            try:
+                code = ((resp.json() or {}).get("error") or {}).get("code", "")
+            except Exception:
+                code = ""
+            if str(code) == "1113":
+                _search_cooldown.until = _time.time() + 6 * 3600
+                logger.warning("[联网] 搜索额度不足（1113），六小时内不再检索；聊天不受影响")
+            else:
+                _search_cooldown.until = _time.time() + 120
+                logger.warning(f"[联网] 被限流（429/{code}），两分钟内不再检索")
+            return ""
+        if resp.status_code >= 400:
+            logger.warning(f"[联网] 接口返回 {resp.status_code}")
+            return ""
         data = resp.json()
     except Exception as e:
         logger.warning(f"[联网] 检索失败：{type(e).__name__}")
