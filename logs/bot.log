@@ -101,3 +101,4 @@ Traceback (most recent call last):
   File "/root/bot/venv/lib/python3.12/site-packages/nonebot/adapters/onebot/v11/adapter.py", line 177, in _call_api
     raise NetworkError(f"WebSocket call api {api} timeout") from None
 nonebot.adapters.onebot.v11.exception.NetworkError: NetWorkError(message='WebSocket call api send_msg timeout')
+10-30 06:55:14 [INFO] uvicorn | 127.0.0.1:40412 - "GET / HTTP/1.1" 404
