@@ -25,17 +25,15 @@ echo "napcat最近出二维码: ${last_qr:-无}"
 
 # 3. 结论
 echo "---------------- 诊断结论 ----------------"
-ts() { date -d "$1" +%s 2>/dev/null || echo 0; }
-now=$(date +%s)
-
+# 时间都是 "MM-DD HH:MM:SS" 格式，直接用字符串比较（同年内可靠）
 if [ "$brain" = "0" ]; then
     echo "❌ 大脑进程死了。修复: pkill -f 'python main.py'; sleep 2; cd /root/bot/bot && nohup python main.py > /root/bot/bot/bot.log 2>&1 &"
 elif [ "$nap" = "0" ]; then
     echo "❌ NapCat死了。需要重启并扫码（用之前的扫码一条命令）。"
-elif [ -n "$last_closed" ] && [ -n "$last_connect" ] && [ "$(ts "$last_closed")" -gt "$(ts "$last_connect")" ]; then
-    echo "❌ 掉线了：最近一次被踢晚于最近一次连上。是腾讯踢的，需要重新扫码。"
-elif [ -n "$last_qr" ] && [ "$(ts "$last_qr")" -gt "$(ts "${last_connect:-2000-01-01 00:00:00}")" ]; then
-    echo "❌ NapCat在等扫码（二维码时间晚于上线时间）。扫码登录即可。"
+elif [ -n "$last_closed" ] && [ -n "$last_connect" ] && [[ "$last_closed" > "$last_connect" ]]; then
+    echo "❌ 掉线了：被踢($last_closed)晚于连上($last_connect)。是腾讯踢的，需要重新扫码。"
+elif [ -n "$last_qr" ] && [[ "$last_qr" > "${last_connect:-00-00 00:00:00}" ]]; then
+    echo "❌ NapCat在等扫码（二维码 $last_qr 晚于上线 $last_connect）。扫码登录即可。"
 elif [ -n "$last_err" ] && [ -n "$last_msg" ] && [ "$(ts "$last_err")" -gt "$(ts "$last_msg")" ]; then
     echo "⚠️ 收到过消息但之后有报错，可能是处理时崩了。把下面这行发给AI分析："
     grep "\[ERROR\]" "$BOT_LOG" | tail -3
