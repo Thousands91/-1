@@ -2,7 +2,7 @@
 # 阿萨尔同步脚本：手机日志上仓库 / 仓库代码下手机
 REPO=/root/asar-sync
 LOG=/tmp/fakelog
-BOT_DIR=/tmp/fakebot
+BOT_DIR=/root/bot/bot
 BRANCH=main
 
 cd "$REPO" || exit 1
@@ -13,7 +13,8 @@ push() {
     [ -f "$LOG" ] || { echo "找不到日志 $LOG"; return 1; }
     mkdir -p logs
     tail -3000 "$LOG" > logs/bot.log
-    if git diff --quiet -- logs/bot.log 2>/dev/null; then
+    git add logs/bot.log
+    if [ -z "$(git status --porcelain -- logs/bot.log)" ]; then
         echo "日志无新内容"
         return 0
     fi
