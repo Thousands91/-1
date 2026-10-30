@@ -104,3 +104,11 @@ nonebot.adapters.onebot.v11.exception.NetworkError: NetWorkError(message='WebSoc
 10-30 06:55:14 [INFO] uvicorn | 127.0.0.1:40412 - "GET / HTTP/1.1" 404
 10-30 11:16:50 [INFO] uvicorn | 127.0.0.1:44070 - "GET / HTTP/1.1" 404
 10-30 20:43:21 [INFO] uvicorn | 127.0.0.1:42970 - "GET / HTTP/1.1" 404
+10-30 20:43:22 [INFO] uvicorn | 127.0.0.1:37196 - "GET / HTTP/1.1" 404
+10-30 20:43:23 [INFO] uvicorn | 127.0.0.1:41276 - "GET / HTTP/1.1" 404
+10-30 21:03:25 [INFO] uvicorn | 127.0.0.1:41588 - "GET / HTTP/1.1" 404
+10-30 21:03:26 [INFO] uvicorn | 127.0.0.1:48758 - "GET / HTTP/1.1" 404
+10-30 21:03:26 [INFO] uvicorn | 127.0.0.1:43494 - "GET / HTTP/1.1" 404
+10-30 21:03:26 [INFO] uvicorn | 127.0.0.1:37866 - "GET / HTTP/1.1" 404
+10-30 21:03:27 [INFO] uvicorn | 127.0.0.1:45224 - "GET / HTTP/1.1" 404
+10-30 21:03:27 [INFO] uvicorn | 127.0.0.1:43702 - "GET / HTTP/1.1" 404
