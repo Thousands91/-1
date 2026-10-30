@@ -103,3 +103,4 @@ Traceback (most recent call last):
 nonebot.adapters.onebot.v11.exception.NetworkError: NetWorkError(message='WebSocket call api send_msg timeout')
 10-30 06:55:14 [INFO] uvicorn | 127.0.0.1:40412 - "GET / HTTP/1.1" 404
 10-30 11:16:50 [INFO] uvicorn | 127.0.0.1:44070 - "GET / HTTP/1.1" 404
+10-30 20:43:21 [INFO] uvicorn | 127.0.0.1:42970 - "GET / HTTP/1.1" 404
