@@ -1,4 +1,9 @@
-===== 任务3 11-01 01:00:50 =====
-=== 新脚本已部署，进程: ===
-28722 bash /root/remote_ctl.sh
-=== 补传本任务输出 ===
+===== 任务4 11-01 01:05:49 =====
+--- 命令 ---
+echo ---remote_ctl进程数(应为1)---
+pgrep -fc "bash /root/remote_ctl.sh"
+echo ---日志文件---
+ls -la /root/remote_ctl.log && tail -15 /root/remote_ctl.log
+--- 输出 ---
+bash: line 1: syntax error near unexpected token `('
+bash: line 1: `echo ---remote_ctl进程数(应为1)---'
