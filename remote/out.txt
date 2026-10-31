@@ -1,4 +1,35 @@
-===== 任务1 11-01 00:50:07 =====
-遥控通道测试成功
-手机时间 2026-11-01 00:50:07
-localhost
+===== 任务2 11-01 00:50:58 =====
+---大脑进程---
+715 /root/bot/venv/bin/python main.py
+---NapCat进程---
+782 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox
+797 /root/Napcat/opt/QQ/qq --no-sandbox
+799 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+---8080监听---
+grep: /proc/net/tcp: Permission denied
+---onebot11配置---
+{
+  "network": {
+    "websocketClients": [
+      {
+        "name": "nonebot",
+        "enable": true,
+        "url": "ws://127.0.0.1:8080/onebot/v11/ws",
+        "messagePostFormat": "array",
+        "reportSelfMessage": false,
+        "token": "",
+        "debug": false,
+        "heartInterval": 30000,
+        "reconnectInterval": 5000
+      }
+    ],
+    "websocketServers": [],
+    "httpServers": [],
+    "httpClients": [],
+    "httpSseServers": [],
+    "plugins": []
+  },
+  "musicSignUrl": "",
+  "enableLocalFile2Url": false,
+  "parseMultMsg": false
+}
