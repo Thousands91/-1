@@ -1,24 +1,29 @@
-===== 任务5 11-01 01:08:24 =====
+===== 任务6 11-01 01:23:22 =====
 --- 命令 ---
-echo "---remote_ctl进程数 应为1---"
-pgrep -fc "bash /root/remote_ctl.sh"
-echo "---日志文件---"
-ls -la /root/remote_ctl.log
-tail -12 /root/remote_ctl.log
+cat > /root/logincheck.sh <<'EOS'
+#!/bin/bash
+CFG=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json
+PY=/root/bot/venv/bin/python3
+[ -x "$PY" ] || PY=python3
+TOKEN=$(grep -o '"token": "[^"]*"' "$CFG" | head -1 | sed 's/.*: "//;s/"//')
+H=$($PY -c "import hashlib;print(hashlib.sha256(('$TOKEN'+'.napcat').encode()).hexdigest())")
+C=$(curl -s --max-time 5 -X POST http://127.0.0.1:6099/api/auth/login -H "Content-Type: application/json" -d "{\"hash\":\"$H\"}" | $PY -c "import sys,json;print(json.load(sys.stdin)['data']['Credential'])" 2>/dev/null)
+curl -s --max-time 5 -X POST http://127.0.0.1:6099/api/QQLogin/CheckLoginStatus -H "Authorization: Bearer $C" | $PY -c "
+import sys,json
+d=json.load(sys.stdin)['data']
+print('=== 登录状态（权威判定）===')
+print('[在线] 已登录，一切正常' if d['isLogin'] else ('[掉线] 登录过但已断开，需要重启NapCat' if d['isOffline'] else '[未登录] 当前没有有效会话'))
+print('阶段:', d.get('loginPhase'))
+e=d.get('loginError')
+print('最近错误:', e if e else '无')
+"
+EOS
+chmod +x /root/logincheck.sh
+echo "--- 手机上实测 ---"
+/root/logincheck.sh
 --- 输出 ---
----remote_ctl进程数 应为1---
-1
----日志文件---
--rw-r--r--. 1 root root 469 Nov  1 01:05 /root/remote_ctl.log
-=== 新脚本已部署，进程: ===
-28722 bash /root/remote_ctl.sh
-=== 补传本任务输出 ===
-===== 任务4 11-01 01:05:49 =====
---- 命令 ---
-echo ---remote_ctl进程数(应为1)---
-pgrep -fc "bash /root/remote_ctl.sh"
-echo ---日志文件---
-ls -la /root/remote_ctl.log && tail -15 /root/remote_ctl.log
---- 输出 ---
-bash: line 1: syntax error near unexpected token `('
-bash: line 1: `echo ---remote_ctl进程数(应为1)---'
+--- 手机上实测 ---
+=== 登录状态（权威判定）===
+[未登录] 当前没有有效会话
+阶段: waiting_qrcode
+最近错误: 无
