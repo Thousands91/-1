@@ -1,4 +1,9 @@
-1
-echo 遥控通道测试成功
-date "+手机时间 %F %T"
-hostname
+2
+echo ---大脑进程---
+pgrep -af "main.py" | grep -v grep | head -2
+echo ---NapCat进程---
+pgrep -af "qq" | grep -v grep | head -3
+echo ---8080监听---
+grep -c ":1F90" /proc/net/tcp
+echo ---onebot11配置---
+cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json
