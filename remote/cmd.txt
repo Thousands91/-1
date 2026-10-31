@@ -1,9 +1,37 @@
-2
-echo ---大脑进程---
-pgrep -af "main.py" | grep -v grep | head -2
-echo ---NapCat进程---
-pgrep -af "qq" | grep -v grep | head -3
-echo ---8080监听---
-grep -c ":1F90" /proc/net/tcp
-echo ---onebot11配置---
-cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json
+3
+echo 3 > /root/.remote_last
+pkill -f "bash /root/remote_ctl.sh"
+sleep 1
+cat > /root/remote_ctl.sh <<'NEWEOS'
+#!/bin/bash
+REPO=/root/asar-sync
+LOG=/root/remote_ctl.log
+cd "$REPO" || exit 1
+LAST=0
+[ -f /root/.remote_last ] && LAST=$(cat /root/.remote_last)
+while true; do
+  git pull --rebase -q origin main >/dev/null 2>&1
+  ID=$(head -1 remote/cmd.txt 2>/dev/null | tr -dc 0-9)
+  if [ -n "$ID" ] && [ "$ID" -gt "$LAST" ]; then
+    echo "$ID" > /root/.remote_last
+    LAST=$ID
+    O="/tmp/remote_out_$ID.txt"
+    { echo "===== 任务$ID $(date '+%m-%d %H:%M:%S') ====="; echo "--- 命令 ---"; tail -n +2 remote/cmd.txt; echo "--- 输出 ---"; tail -n +2 remote/cmd.txt | timeout 90 bash 2>&1; } > "$O"
+    cat "$O" >> "$LOG" 2>/dev/null
+    git pull --rebase -q origin main >/dev/null 2>&1
+    cp "$O" remote/out.txt
+    git add remote/out.txt; git commit -m "遥控输出$ID" -q
+    git push -q origin main 2>/dev/null || { git pull --rebase -q origin main >/dev/null 2>&1; git push -q origin main 2>/dev/null; }
+  fi
+  sleep 30
+done
+NEWEOS
+nohup bash /root/remote_ctl.sh >/dev/null 2>&1 &
+sleep 1
+echo "=== 新脚本已部署，进程: ==="
+pgrep -af remote_ctl.sh | grep -v grep
+echo "=== 补传本任务输出 ==="
+cat /tmp/remote_out_3.txt >> /root/remote_ctl.log 2>/dev/null
+cp /tmp/remote_out_3.txt remote/out.txt 2>/dev/null || echo 输出文件未生成
+cd /root/asar-sync && git add remote/out.txt && git commit -m "遥控输出3" -q && { git push -q origin main 2>/dev/null || { git pull --rebase -q origin main >/dev/null 2>&1; git push -q origin main 2>/dev/null; }; }
+echo 完成
