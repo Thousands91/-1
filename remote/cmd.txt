@@ -1,0 +1,4 @@
+1
+echo 遥控通道测试成功
+date "+手机时间 %F %T"
+hostname
