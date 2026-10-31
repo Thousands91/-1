@@ -1,5 +1,6 @@
-4
-echo ---remote_ctl进程数(应为1)---
+5
+echo "---remote_ctl进程数 应为1---"
 pgrep -fc "bash /root/remote_ctl.sh"
-echo ---日志文件---
-ls -la /root/remote_ctl.log && tail -15 /root/remote_ctl.log
+echo "---日志文件---"
+ls -la /root/remote_ctl.log
+tail -12 /root/remote_ctl.log
