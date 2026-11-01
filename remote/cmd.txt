@@ -1,13 +1,13 @@
-44
-echo "--- NapCat 真正的日志文件(最近1小时内修改过) ---"
-find /root/Napcat -name "*.log" -mmin -90 2>/dev/null | head -6
-ls -t /root/Napcat/log/ 2>/dev/null | head -4
-echo "--- 最新NapCat日志尾部30行 ---"
-F=$(find /root/Napcat -name "*.log" -mmin -90 2>/dev/null | head -1)
-echo "文件: $F"
-tail -30 "$F" 2>/dev/null | grep -v "^$" | tail -20
-echo "--- 手机当前网络连通性 ---"
-curl -s -m 8 -o /dev/null -w "GitHub: %{http_code}\n" https://api.github.com
-curl -s -m 8 -o /dev/null -w "QQ服务: %{http_code}\n" https://www.qq.com
-echo "--- 内存情况 ---"
-free -m | head -3
+45
+echo "--- 先找有没有现成的 NapCat 启动脚本 ---"
+ls /root/*.sh 2>/dev/null
+ps aux | grep -iE "restart|watchdog" | grep -v grep | grep -v "opt/QQ/qq" | head -3
+echo "--- 杀掉 QQ 进程 ---"
+pkill -f "opt/QQ/qq"
+sleep 3
+echo "残留QQ进程: $(pgrep -fc 'opt/QQ/qq' 2>/dev/null || echo 0)"
+echo "--- 重新启动 NapCat ---"
+cd /root && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 &
+sleep 8
+pgrep -f "opt/QQ/qq" | head -3
+echo "--- NapCat 已拉起,等它自动登录并重连 ---"
