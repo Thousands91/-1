@@ -1,27 +1,24 @@
-===== 任务8 11-01 14:14:01 =====
+===== 任务10 11-01 15:44:16 =====
 --- 命令 ---
-echo "--- 原启动信息 ---"
-tr "\0" " " < /proc/782/cmdline; echo
-DIR="$(readlink /proc/782/cwd)"; echo "$DIR"
-kill 782 2>/dev/null; sleep 3
-pgrep -f "opt/QQ/qq" >/dev/null && pkill -f "opt/QQ/qq"; sleep 2
-cd "$DIR" && nohup $(tr "\0" " " < /proc/782/cmdline) >> /root/napcat-restart.log 2>&1 &
-sleep 25
-echo "--- 新进程 ---"
-pgrep -f "opt/QQ/qq" | head -3
-echo "--- 新码 ---"
-ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /root/asar-sync/remote/qr.png
-cd /root/asar-sync && git add remote/qr.png && git commit -m "手机新二维码" -q && timeout 60 git push origin main || { timeout 60 git pull --rebase origin main >/dev/null 2>&1; timeout 60 git push origin main; }
-echo 已上传
+echo "--- 登录状态 ---"
+/root/logincheck.sh
+echo "--- NapCat ---"
+pgrep -f "opt/QQ/qq" >/dev/null && echo 活着 || echo 已死
+stat -c "码时间 %y" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+echo "--- 大脑 ---"
+pgrep -f main.py >/dev/null && echo 活着 || echo 已死
+echo "--- git同步测试 ---"
+cd /root/asar-sync && timeout 30 git pull --rebase origin main 2>&1 | tail -1
 --- 输出 ---
---- 原启动信息 ---
-/bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox 
-/root/Napcat
-bash: line 6: /proc/782/cmdline: No such file or directory
---- 新进程 ---
---- 新码 ---
--rw-r--r--. 1 root root 599 Nov  1 13:27 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-To https://github.com/Thousands91/-1.git
-   246ab95..e684b72  main -> main
-已上传
+--- 登录状态 ---
+=== 登录状态（权威判定）===
+[未登录] 当前没有有效会话
+阶段: generating_qrcode
+最近错误: 无
+--- NapCat ---
+活着
+码时间 2026-11-01 15:31:44.366566570 +0800
+--- 大脑 ---
+活着
+--- git同步测试 ---
+Already up to date.
