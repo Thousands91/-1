@@ -49,6 +49,26 @@ api_report() {
   fi
 }
 
+NAP_FUSE=/root/.napcat_pulls
+restart_napcat() {
+  NOW=$(date +%s)
+  touch "$NAP_FUSE"
+  : > /tmp/napf
+  while IFS= read -r t; do
+    [ -n "$t" ] && [ $((NOW - t)) -lt 86400 ] && echo "$t" >> /tmp/napf
+  done < "$NAP_FUSE"
+  CNT=$(wc -l < /tmp/napf)
+  if [ "$CNT" -ge 3 ]; then
+    echo "[$(date '+%m-%d %H:%M')] 保险丝熔断:NapCat 24h内已自动拉起${CNT}次,停止自动重启,需人工排查" >> "$LOG"
+    return 1
+  fi
+  echo "$NOW" >> /tmp/napf && cp /tmp/napf "$NAP_FUSE"
+  echo "[$(date '+%m-%d %H:%M')] 看护:自动拉起NapCat(24h内第$((CNT+1))次)" >> "$LOG"
+  pkill -f "opt/QQ/qq" 2>/dev/null; sleep 3
+  cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 &
+  cd "$REPO"
+}
+
 while true; do
   [ -n "$TOK" ] || TOK=$(get_tok)
   RAW=$(timeout 30 curl -s -H "Accept: application/vnd.github.raw" ${TOK:+-H "Authorization: token $TOK"} "$CMD_URL")
@@ -70,13 +90,11 @@ while true; do
     NOW=$(date +%s); MT=$(stat -c %Y "$QR" 2>/dev/null || echo "$NOW")
     AGE=$((NOW - MT))
     if [ "$AGE" -gt 600 ]; then
-      echo "[$(date '+%m-%d %H:%M')] 看护：未登录且码${AGE}s未刷新，重启NapCat" >> "$LOG"
-      pkill -f "opt/QQ/qq" 2>/dev/null; sleep 3
-      cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 &
-      cd "$REPO"
+      echo "[$(date '+%m-%d %H:%M')] 看护：未登录且码${AGE}s未刷新，尝试重启NapCat" >> "$LOG"
+      restart_napcat
     fi
   fi
-  pgrep -f "opt/QQ/qq" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：NapCat不在，拉起" >> "$LOG"; cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 & cd "$REPO"; }
+  pgrep -f "opt/QQ/qq" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：NapCat不在" >> "$LOG"; restart_napcat; }
   pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & cd "$REPO"; }
   C=$((C+1)); [ $((C % 10)) -eq 0 ] && echo "[$(date '+%m-%d %H:%M')] 心跳:循环正常,LAST=$LAST" >> "$LOG"
   sleep 30
