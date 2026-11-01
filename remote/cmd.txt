@@ -1,7 +1,5 @@
-26
-echo "=== 手机代码版本核对 $(date '+%H:%M:%S') ==="
-md5sum /root/bot/bot/plugins/ai_chat.py /root/bot/bot/main.py 2>/dev/null
-wc -c /root/bot/bot/plugins/ai_chat.py
-grep -c "_AGREE_OPEN" /root/bot/bot/plugins/ai_chat.py
-grep -ci "zhipu" /root/bot/bot/plugins/ai_chat.py
-ls -la /root/bot/bot/plugins/ | head -8
+27
+echo "=== 登录后在线验证（只读，不碰任何进程） $(date '+%H:%M:%S') ==="
+bash /root/logincheck.sh 2>/dev/null
+pgrep -f "opt/QQ/qq" >/dev/null && echo "NapCat: 运行中" || echo "NapCat: 未运行"
+pgrep -f "main.py" >/dev/null && echo "大脑: 运行中" || echo "大脑: 未运行"
