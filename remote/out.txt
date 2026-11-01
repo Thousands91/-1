@@ -1,31 +1,27 @@
-<<<task_45.txt>>>
-===== 任务45 11-02 00:23:37 =====
+<<<task_46.txt>>>
+===== 任务46 11-02 00:26:43 =====
 --- 命令 ---
-echo "--- 先找有没有现成的 NapCat 启动脚本 ---"
-ls /root/*.sh 2>/dev/null
-ps aux | grep -iE "restart|watchdog" | grep -v grep | grep -v "opt/QQ/qq" | head -3
-echo "--- 杀掉 QQ 进程 ---"
-pkill -f "opt/QQ/qq"
-sleep 3
-echo "残留QQ进程: $(pgrep -fc 'opt/QQ/qq' 2>/dev/null || echo 0)"
-echo "--- 重新启动 NapCat ---"
-cd /root && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 &
-sleep 8
-pgrep -f "opt/QQ/qq" | head -3
-echo "--- NapCat 已拉起,等它自动登录并重连 ---"
+echo "--- bot.log 断开后的新动态 ---"
+grep -n "00:07:16" /root/bot.log | head -1
+tail -n +$(( $(grep -n "00:07:16" /root/bot.log | head -1 | cut -d: -f1) )) /root/bot.log | grep -iE "websocket|connect|登录|online|ready" | head -8
+echo "--- bot.log 最新3行 ---"
+tail -3 /root/bot.log
+echo "--- NapCat 启动输出尾部 ---"
+tail -8 /root/napcat-restart.log
 --- 输出 ---
---- 先找有没有现成的 NapCat 启动脚本 ---
-/root/azar_login.sh
-/root/check.sh
-/root/logincheck.sh
-/root/morning.sh
-/root/remote_ctl.sh
-/root/st.sh
---- 杀掉 QQ 进程 ---
-残留QQ进程: 0
-0
---- 重新启动 NapCat ---
-21827
-21843
-21853
---- NapCat 已拉起,等它自动登录并重连 ---
+--- bot.log 断开后的新动态 ---
+15799:11-02 00:07:16 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+11-02 00:07:16 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+--- bot.log 最新3行 ---
+11-02 00:06:08 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
+11-02 00:07:16 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+11-02 00:25:00 [INFO] uvicorn | 127.0.0.1:40630 - "GET / HTTP/1.1" 404
+--- NapCat 启动输出尾部 ---
+88c4881fff4a9514728dc04c3ffa31b792fc0d2802bc47369198af8f1040d12a
+7d483569c35fd6034db0520333c227a1e2a4c956d530248cf6a1598567cdd59a
+382a279f57da6f17fdd81e9fea1c41eb6a03d252a748f7b70ccc17fd60435ad2
+21a38f263f988291c474a2324db7d40fa2a1b114efc0ef77a6c7da8f6f9df11d
+aef50141cb26810b32dbb66c179a8985f5bd3233eaab72f2b7ce77fd6ca2c61f
+66603c68b9d9dc94f3b4a9b16becf0bce25e8d7df2a301762dba8e42111f3931
+90a31d15d971684136aee4c62fa2f962cf9e91a70d1e163613f0198ef834f387
+01f9f2efb6e103e755b4a1c0e14a46aef660b6e12b37bb36305f74249a6ca2a0
