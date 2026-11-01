@@ -1,0 +1,23 @@
+25
+echo "=== 扫码前最终检查 $(date '+%H:%M:%S') ==="
+echo "--- 1. 遥控循环 ---"
+pgrep -fc "bash /root/remote_ctl.sh"
+echo "--- 2. NapCat 进程 ---"
+pgrep -f "opt/QQ/qq" >/dev/null && echo "运行中" || echo "未运行"
+echo "--- 3. 大脑 ---"
+pgrep -f "main.py" >/dev/null && echo "运行中" || echo "未运行"
+echo "--- 4. 登录状态 ---"
+bash /root/logincheck.sh 2>/dev/null
+echo "--- 5. 二维码新鲜度 ---"
+QR=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+if [ -f "$QR" ]; then
+  AGE=$(( $(date +%s) - $(stat -c %Y "$QR") ))
+  echo "码文件存在，生成于 $AGE 秒前"
+  ls -la "$QR"
+else
+  echo "码文件不存在"
+fi
+echo "--- 6. 保险丝计数 ---"
+wc -l < /root/.napcat_pulls 2>/dev/null || echo 0
+echo "--- 7. 相册目录可写性 ---"
+ls -d /sdcard/Pictures >/dev/null 2>&1 && echo "/sdcard/Pictures 可访问" || echo "/sdcard/Pictures 不可访问"
