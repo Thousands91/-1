@@ -1,7 +1,12 @@
-47
-echo "--- bot.log 最新6行 ---"
-tail -6 /root/bot.log
-echo "--- 有无 connected/在线 记录 ---"
-grep -iE "connected|登录成功|online" /root/bot.log | tail -3
-echo "--- QQ进程 ---"
-pgrep -fc "opt/QQ/qq"
+48
+echo "--- NapCat 目录 ---"
+ls /root/Napcat/ 2>/dev/null
+echo "--- 10分钟内新写入的文件 ---"
+find /root/Napcat -mmin -10 -type f 2>/dev/null | head -8
+echo "--- WebUI 探测 ---"
+curl -s -m 5 -o /dev/null -w "6099端口: %{http_code}\n" http://127.0.0.1:6099
+echo "--- NapCat 配置 ---"
+ls /root/Napcat/config/ 2>/dev/null
+head -30 /root/Napcat/config/onebot11_3427943187.json 2>/dev/null
+echo "--- 登录脚本怎么写的(前25行) ---"
+head -25 /root/azar_login.sh 2>/dev/null
