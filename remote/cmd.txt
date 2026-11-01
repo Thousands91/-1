@@ -1,17 +1,14 @@
-33
-echo "=== bot.log 概况 $(date '+%H:%M:%S') ==="
-wc -l /root/bot.log
-echo "--- 首行（启动时间）---"
-head -3 /root/bot.log
-echo "--- 末行时间 ---"
-tail -1 /root/bot.log
-echo "--- 错误/警告统计 ---"
-grep -c "ERROR" /root/bot.log
-grep -c "WARNING" /root/bot.log
-grep -c "Traceback" /root/bot.log
-echo "--- 错误样本（去重，最多10种）---"
-grep "ERROR" /root/bot.log | sed 's/^[0-9-]* [0-9:]* //' | cut -c1-100 | sort | uniq -c | sort -rn | head -10
-echo "--- 今天扫码登录后的启动点（找最近一次启动横幅）---"
-grep -n "NoneBot\|startup\|Application startup" /root/bot.log | tail -3
-echo "--- 最近60行 ---"
-tail -60 /root/bot.log
+34
+echo "=== 深入分析 $(date '+%H:%M:%S') ==="
+echo "--- 登录相关关键行 ---"
+grep -in "login\|扫码\|qrcode\|二维码" /root/bot.log | head -8
+grep -in "login success\|qrcode\|二维码" /root/napcat-restart.log | tail -8
+echo "--- 今日每小时收到群消息条数 ---"
+grep -o "11-01 [0-9][0-9]:" /root/bot.log | grep -B0 ".*" | awk '{print $2}' | sort | uniq -c
+echo "--- 收到消息总数 ---"
+grep -c "message.group.normal" /root/bot.log
+echo "--- @阿萨尔 的消息条数 ---"
+grep -c "CQ:at" /root/bot.log
+grep -o "\[CQ:at[^]]*\]" /root/bot.log | head -3
+echo "--- NapCat 尾部 25 行 ---"
+tail -25 /root/napcat-restart.log
