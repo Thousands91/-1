@@ -1,10 +1,44 @@
-<<<task_22.txt>>>
-===== 任务22 11-01 17:59:49 =====
+<<<task_23.txt>>>
+===== 任务23 11-01 19:36:05 =====
 --- 命令 ---
-echo "保险丝函数: $(grep -c restart_napcat /root/remote_ctl.sh) 处"
-echo "进程数: $(pgrep -fc remote_ctl.sh)"
-echo "拉起计数文件: $(cat /root/.napcat_pulls 2>/dev/null | wc -l) 条记录"
+echo "=== 手机状态检查 ==="
+echo "时间: $(date '+%H:%M:%S')"
+echo "--- 遥控循环 ---"
+pgrep -af "bash /root/remote_ctl.sh"
+echo "--- NapCat ---"
+pgrep -f "opt/QQ/qq" >/dev/null && echo "NapCat: 运行中" || echo "NapCat: 未运行"
+echo "--- 大脑 ---"
+pgrep -f "main.py" >/dev/null && echo "大脑: 运行中" || echo "大脑: 未运行"
+echo "--- 最近日志 ---"
+tail -8 /root/remote_ctl.log
+echo "--- logincheck ---"
+bash /root/logincheck.sh 2>/dev/null || echo "logincheck.sh 不可用"
+echo "--- 保险丝计数 ---"
+wc -l < /root/.napcat_pulls 2>/dev/null || echo 0
 --- 输出 ---
-保险丝函数: 3 处
-进程数: 1
-拉起计数文件: 0 条记录
+=== 手机状态检查 ===
+时间: 19:36:05
+--- 遥控循环 ---
+26191 bash /root/remote_ctl.sh
+26326 bash /root/remote_ctl.sh
+26340 bash /root/remote_ctl.sh
+--- NapCat ---
+NapCat: 运行中
+--- 大脑 ---
+大脑: 运行中
+--- 最近日志 ---
+[11-01 19:32] intake:API响应异常
+[11-01 19:32] 心跳:循环正常,LAST=22
+[11-01 19:32] intake:API响应异常
+[11-01 19:33] intake:API响应异常
+[11-01 19:33] intake:API响应异常
+[11-01 19:34] intake:API响应异常
+[11-01 19:34] intake:API响应异常
+[11-01 19:35] intake:API响应异常
+--- logincheck ---
+=== 登录状态（权威判定）===
+[未登录] 当前没有有效会话
+阶段: waiting_qrcode
+最近错误: 无
+--- 保险丝计数 ---
+1
