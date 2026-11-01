@@ -1,31 +1,55 @@
-<<<task_35.txt>>>
-===== 任务35 11-01 21:15:51 =====
+<<<task_36.txt>>>
+===== 任务36 11-01 23:47:47 =====
 --- 命令 ---
-echo "=== 阿萨尔发送统计 $(date '+%H:%M:%S') ==="
-grep -c "发送 ->" /root/napcat-restart.log
-echo "--- 今晚发送的消息样本（最近12条）---"
-grep "发送 ->" /root/napcat-restart.log | tail -12
-echo "--- WS 连接状态行 ---"
-grep -i "websocket\|ws \|连接" /root/napcat-restart.log | tail -5
+L=$(ls -t /root/bot.log /root/*/bot.log /root/*/*/bot.log /root/QQ*/bot.log 2>/dev/null | head -1)
+echo "LOG=$L 总行数=$(wc -l < "$L")"
+tail -n +5290 "$L" > /tmp/botlog_inc.txt
+echo "=== 增量行数: $(wc -l < /tmp/botlog_inc.txt) ==="
+echo "--- 增量起始时间与最新时间 ---"
+head -1 /tmp/botlog_inc.txt | cut -c1-50
+tail -1 /tmp/botlog_inc.txt | cut -c1-50
+echo "--- ERROR 条数: $(grep -c ERROR /tmp/botlog_inc.txt) / WARNING 条数: $(grep -c WARNING /tmp/botlog_inc.txt) ---"
+grep "ERROR\|WARNING" /tmp/botlog_inc.txt | tail -8
+echo "--- 收到消息: $(grep -c '收到' /tmp/botlog_inc.txt) 条 ---"
+echo "--- 消息类型分布(群/私) ---"
+grep -o "GroupMessage\|PrivateMessage" /tmp/botlog_inc.txt | sort | uniq -c
+echo "--- 阿萨尔回复样本(最近10条) ---"
+grep "发送 ->" /tmp/botlog_inc.txt | tail -10 | cut -c1-120
+echo "--- 命令触发统计 ---"
+grep -o "色图\|点歌\|菜单\|运势\|签到\|看书\|看景\|下棋" /tmp/botlog_inc.txt | sort | uniq -c | sort -rn | head -8
+echo "--- 最新15行 ---"
+tail -15 "$L" | cut -c1-120
 --- 输出 ---
-=== 阿萨尔发送统计 21:15:51 ===
-33
---- 今晚发送的消息样本（最近12条）---
-11-01 20:22:58 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [相亲相爱一家人(590454333)] [阿萨尔(3427943187)] 鸠，您这是何出此言？我这里可没有艾特您的习惯。📖
-11-01 20:23:42 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [相亲相爱一家人(590454333)] [阿萨尔(3427943187)] 哦，原来如此，我明白了。📖
-11-01 20:27:28 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [图片]
-11-01 20:27:51 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 「男」的风月册页，图库里未曾收录。冷门的作品，画师们不轻易落笔——换位热门角色，兴许有货。
-11-01 20:28:06 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [图片]
-11-01 20:39:43 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] 这一条，不写进书里。
-11-01 20:40:12 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] 五十？哦，这个，书店里一本书是一枚金币，您是要买书吗？
-11-01 20:41:13 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] 这城里的麦当劳，我倒是没见识过。🏠
-11-01 20:56:04 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [相亲相爱一家人(590454333)] [阿萨尔(3427943187)] 翻柜子找「觉 齐豫」，稍等一下……
-11-01 20:56:08 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [相亲相爱一家人(590454333)] [阿萨尔(3427943187)] 🎵 觉 ...
-11-01 20:58:48 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [相亲相爱一家人(590454333)] [阿萨尔(3427943187)] 晚安，灯我吹了。
-11-01 20:59:00 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] 我在。您有什么要说给我听？📖
---- WS 连接状态行 ---
-11-01 17:33:06 [[32minfo[39m] 等待网络连接...
-11-01 17:33:06 [[32minfo[39m] 网络已连接
-11-01 19:27:40 [[32minfo[39m] 等待网络连接...
-11-01 19:27:40 [[32minfo[39m] 网络已连接
-WebSocket反向服务: ws://127.0.0.1:8080/onebot/v11/ws, : 已启动
+LOG=/root/bot.log 总行数=15511
+=== 增量行数: 10222 ===
+--- 增量起始时间与最新时间 ---
+11-01 21:11:09 [INFO] nonebot | Matcher(type='mess
+11-01 23:47:28 [INFO] nonebot | Matcher(type='mess
+--- ERROR 条数: 0 / WARNING 条数: 6 ---
+11-01 22:01:54 [WARNING] ai_chat | [联网] 搜狗抓取失败：ModuleNotFoundError
+11-01 22:01:54 [WARNING] ai_chat | [联网] 百度抓取失败：ModuleNotFoundError
+11-01 22:01:54 [WARNING] ai_chat | [联网] 搜狗/百度都没抓到期，五分钟后重试
+11-01 22:10:15 [WARNING] ai_chat | [联网] 搜狗抓取失败：ModuleNotFoundError
+11-01 22:10:15 [WARNING] ai_chat | [联网] 百度抓取失败：ModuleNotFoundError
+11-01 22:10:15 [WARNING] ai_chat | [联网] 搜狗/百度都没抓到期，五分钟后重试
+--- 收到消息: 0 条 ---
+--- 消息类型分布(群/私) ---
+--- 阿萨尔回复样本(最近10条) ---
+--- 命令触发统计 ---
+     35 色图
+--- 最新15行 ---
+11-01 23:47:20 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+11-01 23:47:20 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+11-01 23:47:20 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=13
+11-01 23:47:20 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+11-01 23:47:20 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
+11-01 23:47:20 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
+11-01 23:47:28 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1308214329 from 3552275152@[�
+11-01 23:47:28 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+11-01 23:47:28 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+11-01 23:47:28 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+11-01 23:47:28 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+11-01 23:47:28 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=13
+11-01 23:47:28 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+11-01 23:47:28 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
+11-01 23:47:28 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
