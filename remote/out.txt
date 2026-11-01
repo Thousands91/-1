@@ -1,29 +1,18 @@
-===== 任务6 11-01 01:23:22 =====
+===== 任务7 11-01 13:59:13 =====
 --- 命令 ---
-cat > /root/logincheck.sh <<'EOS'
-#!/bin/bash
-CFG=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json
-PY=/root/bot/venv/bin/python3
-[ -x "$PY" ] || PY=python3
-TOKEN=$(grep -o '"token": "[^"]*"' "$CFG" | head -1 | sed 's/.*: "//;s/"//')
-H=$($PY -c "import hashlib;print(hashlib.sha256(('$TOKEN'+'.napcat').encode()).hexdigest())")
-C=$(curl -s --max-time 5 -X POST http://127.0.0.1:6099/api/auth/login -H "Content-Type: application/json" -d "{\"hash\":\"$H\"}" | $PY -c "import sys,json;print(json.load(sys.stdin)['data']['Credential'])" 2>/dev/null)
-curl -s --max-time 5 -X POST http://127.0.0.1:6099/api/QQLogin/CheckLoginStatus -H "Authorization: Bearer $C" | $PY -c "
-import sys,json
-d=json.load(sys.stdin)['data']
-print('=== 登录状态（权威判定）===')
-print('[在线] 已登录，一切正常' if d['isLogin'] else ('[掉线] 登录过但已断开，需要重启NapCat' if d['isOffline'] else '[未登录] 当前没有有效会话'))
-print('阶段:', d.get('loginPhase'))
-e=d.get('loginError')
-print('最近错误:', e if e else '无')
-"
-EOS
-chmod +x /root/logincheck.sh
-echo "--- 手机上实测 ---"
 /root/logincheck.sh
+echo "---进程---"
+pgrep -f "main.py" | head -1
+pgrep -f "qq --no-sandbox" | head -1
+echo "---码状态---"
+ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null || echo 无码文件
 --- 输出 ---
---- 手机上实测 ---
 === 登录状态（权威判定）===
 [未登录] 当前没有有效会话
-阶段: waiting_qrcode
+阶段: offline
 最近错误: 无
+---进程---
+715
+782
+---码状态---
+-rw-r--r--. 1 root root 599 Nov  1 13:27 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
