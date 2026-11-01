@@ -1,7 +1,11 @@
-49
-nohup bash /root/azar_login.sh > /root/azar_login_run.log 2>&1 &
-sleep 40
-echo "--- 登录脚本运行输出 ---"
-tail -15 /root/azar_login_run.log
-echo "--- 二维码是否已复制到相册 ---"
-ls -la /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null && echo "二维码已就位"
+50
+echo "--- 手机上 NapCat 实际版本 ---"
+grep -o '"version": *"[^"]*"' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/package.json 2>/dev/null | head -1
+echo "--- QQ 客户端版本 ---"
+ls /root/Napcat/opt/QQ/ | grep -oE "[0-9]+\.[0-9]+\.[0-9]+" | head -2
+cat /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null | grep -o '"version": *"[^"]*"' | head -1
+echo "--- NoneBot 监听端口 ---"
+ss -tlnp 2>/dev/null | grep -E "python|uvicorn" | head -3
+grep -iE "port|host" /root/bot/.env /root/bot/.env.* /root/bot/pyproject.toml 2>/dev/null | head -5
+echo "--- QQ 进程启动参数 ---"
+ps aux | grep "opt/QQ/qq --no-sandbox" | grep -v grep | grep -v zygote | head -2
