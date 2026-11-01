@@ -1,7 +1,15 @@
-7
-/root/logincheck.sh
-echo "---进程---"
-pgrep -f "main.py" | head -1
-pgrep -f "qq --no-sandbox" | head -1
-echo "---码状态---"
-ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null || echo 无码文件
+8
+echo "--- 原启动信息 ---"
+tr "\0" " " < /proc/782/cmdline; echo
+DIR="$(readlink /proc/782/cwd)"; echo "$DIR"
+kill 782 2>/dev/null; sleep 3
+pgrep -f "opt/QQ/qq" >/dev/null && pkill -f "opt/QQ/qq"; sleep 2
+cd "$DIR" && nohup $(tr "\0" " " < /proc/782/cmdline) >> /root/napcat-restart.log 2>&1 &
+sleep 25
+echo "--- 新进程 ---"
+pgrep -f "opt/QQ/qq" | head -3
+echo "--- 新码 ---"
+ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /root/asar-sync/remote/qr.png
+cd /root/asar-sync && git add remote/qr.png && git commit -m "手机新二维码" -q && timeout 60 git push origin main || { timeout 60 git pull --rebase origin main >/dev/null 2>&1; timeout 60 git push origin main; }
+echo 已上传
