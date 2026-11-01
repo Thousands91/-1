@@ -1,29 +1,22 @@
-<<<task_49.txt>>>
-===== 任务49 11-02 00:34:20 =====
+<<<task_50.txt>>>
+===== 任务50 11-02 00:41:07 =====
 --- 命令 ---
-nohup bash /root/azar_login.sh > /root/azar_login_run.log 2>&1 &
-sleep 40
-echo "--- 登录脚本运行输出 ---"
-tail -15 /root/azar_login_run.log
-echo "--- 二维码是否已复制到相册 ---"
-ls -la /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null && echo "二维码已就位"
+echo "--- 手机上 NapCat 实际版本 ---"
+grep -o '"version": *"[^"]*"' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/package.json 2>/dev/null | head -1
+echo "--- QQ 客户端版本 ---"
+ls /root/Napcat/opt/QQ/ | grep -oE "[0-9]+\.[0-9]+\.[0-9]+" | head -2
+cat /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null | grep -o '"version": *"[^"]*"' | head -1
+echo "--- NoneBot 监听端口 ---"
+ss -tlnp 2>/dev/null | grep -E "python|uvicorn" | head -3
+grep -iE "port|host" /root/bot/.env /root/bot/.env.* /root/bot/pyproject.toml 2>/dev/null | head -5
+echo "--- QQ 进程启动参数 ---"
+ps aux | grep "opt/QQ/qq --no-sandbox" | grep -v grep | grep -v zygote | head -2
 --- 输出 ---
---- 登录脚本运行输出 ---
-==> 第 3 步：等二维码生成（NapCat 启动约需 20~40 秒）
-==> 第 4 步：复制二维码到相册
-   二维码已就位（生成于 1 秒前），有效期约 110 秒
-
-############################################################
-#                                                          #
-#   现在去手机上操作（抓紧时间，剩约 109 秒）：      #
-#   1. 打开 QQ（机器人小号 3427943187 登录的那个）           #
-#   2. 随便开个聊天（推荐文件传输助手）                      #
-#   3. 发图片 -> 选 DCIM/Camera 里的 asar_qr.png            #
-#   4. 点开大图 -> 长按 -> 识别二维码 -> 确认登录            #
-#                                                          #
-############################################################
-
-==> 第 5 步：盯着登录结果（你也可以先去扫码，我在这等着）
---- 二维码是否已复制到相册 ---
--rw-rw----. 1 10155 1023 590 Nov  2 00:34 /sdcard/DCIM/Camera/asar_qr.png
-二维码已就位
+--- 手机上 NapCat 实际版本 ---
+"version": "0.0.1"
+--- QQ 客户端版本 ---
+"version": "3.2.34-53644"
+--- NoneBot 监听端口 ---
+--- QQ 进程启动参数 ---
+aid_u0_+  6371  0.0  0.0   2396   548 pts/0    S     2023   0:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox
+aid_u0_+  6404  2.7  0.5 205568312 64696 pts/0 S<l   2023   0:10 /root/Napcat/opt/QQ/qq --no-sandbox
