@@ -1,5 +1,0 @@
-24
-for p in $(pgrep -f "bash /root/remote_ctl.sh"); do [ "$p" != "26191" ] && kill -9 $p 2>/dev/null; done
-echo 26191 > /root/.remote_pid
-echo "清理完成，剩余循环进程:"
-pgrep -af "bash /root/remote_ctl.sh"
