@@ -1,7 +1,19 @@
-35
-echo "=== 阿萨尔发送统计 $(date '+%H:%M:%S') ==="
-grep -c "发送 ->" /root/napcat-restart.log
-echo "--- 今晚发送的消息样本（最近12条）---"
-grep "发送 ->" /root/napcat-restart.log | tail -12
-echo "--- WS 连接状态行 ---"
-grep -i "websocket\|ws \|连接" /root/napcat-restart.log | tail -5
+36
+L=$(ls -t /root/bot.log /root/*/bot.log /root/*/*/bot.log /root/QQ*/bot.log 2>/dev/null | head -1)
+echo "LOG=$L 总行数=$(wc -l < "$L")"
+tail -n +5290 "$L" > /tmp/botlog_inc.txt
+echo "=== 增量行数: $(wc -l < /tmp/botlog_inc.txt) ==="
+echo "--- 增量起始时间与最新时间 ---"
+head -1 /tmp/botlog_inc.txt | cut -c1-50
+tail -1 /tmp/botlog_inc.txt | cut -c1-50
+echo "--- ERROR 条数: $(grep -c ERROR /tmp/botlog_inc.txt) / WARNING 条数: $(grep -c WARNING /tmp/botlog_inc.txt) ---"
+grep "ERROR\|WARNING" /tmp/botlog_inc.txt | tail -8
+echo "--- 收到消息: $(grep -c '收到' /tmp/botlog_inc.txt) 条 ---"
+echo "--- 消息类型分布(群/私) ---"
+grep -o "GroupMessage\|PrivateMessage" /tmp/botlog_inc.txt | sort | uniq -c
+echo "--- 阿萨尔回复样本(最近10条) ---"
+grep "发送 ->" /tmp/botlog_inc.txt | tail -10 | cut -c1-120
+echo "--- 命令触发统计 ---"
+grep -o "色图\|点歌\|菜单\|运势\|签到\|看书\|看景\|下棋" /tmp/botlog_inc.txt | sort | uniq -c | sort -rn | head -8
+echo "--- 最新15行 ---"
+tail -15 "$L" | cut -c1-120
