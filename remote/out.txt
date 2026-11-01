@@ -1,33 +1,26 @@
-<<<task_37.txt>>>
-===== 任务37 11-01 23:52:11 =====
+<<<task_38.txt>>>
+===== 任务38 11-01 23:55:54 =====
 --- 命令 ---
-echo "=== 修复联网抓取: 补装 requests(不重启进程,零影响) ==="
-pip3 install -q requests >/dev/null 2>&1 || pip3 install -q --break-system-packages requests >/dev/null 2>&1
-python3 -c "import requests; print('requests 安装成功, 版本', requests.__version__)" 2>&1
-echo "=== 事件统计(21:11-23:47) ==="
-echo "群消息事件: $(grep -c 'message.group.normal' /tmp/botlog_inc.txt)  私聊事件: $(grep -c 'message.private' /tmp/botlog_inc.txt)"
-echo "=== NapCat 发送统计 ==="
-echo "全天总发送: $(grep -c '发送 ->' /root/napcat-restart.log)"
-echo "带图发送: $(grep '发送 ->' /root/napcat-restart.log | grep -c 'image')"
-echo "最近5条发送:"
-grep '发送 ->' /root/napcat-restart.log | tail -5 | cut -c1-100
-echo "=== 进程状态确认 ==="
-pgrep -f "python.*bot.py" | head -3 && echo "阿萨尔主进程存活"
+echo "--- bot 进程用的 python ---"
+ps aux | grep -E "python" | grep -v grep | head -4
+echo "--- python/pip 现状 ---"
+python3 --version 2>&1
+which python3 pip3 pip 2>&1
+echo "--- pip 真实报错 ---"
+python3 -m pip install requests 2>&1 | tail -6
+echo "--- 验证 ---"
+python3 -c "import requests; print('requests OK', requests.__version__)" 2>&1
 --- 输出 ---
-=== 修复联网抓取: 补装 requests(不重启进程,零影响) ===
+--- bot 进程用的 python ---
+aid_u0_+ 26353  1.0  0.2 876236 26836 pts/0    Sl    2023   2:46 /root/bot/venv/bin/python main.py
+--- python/pip 现状 ---
+Python 3.12.3
+/usr/bin/python3
+/data/data/com.termux/files/usr/bin/pip3
+/data/data/com.termux/files/usr/bin/pip
+--- pip 真实报错 ---
+/usr/bin/python3: No module named pip
+--- 验证 ---
 Traceback (most recent call last):
   File "<string>", line 1, in <module>
 ModuleNotFoundError: No module named 'requests'
-=== 事件统计(21:11-23:47) ===
-群消息事件: 1000  私聊事件: 99
-=== NapCat 发送统计 ===
-全天总发送: 137
-带图发送: 0
-最近5条发送:
-11-01 23:20:33 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 画送来的路上破损�
-11-01 23:21:07 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 画送来的路上破损�
-11-01 23:23:09 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [相亲相爱一家人(590454333)] [阿
-11-01 23:23:10 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [相亲相爱一家人(590454333)] [阿
-11-01 23:24:16 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [相亲相爱一家人(590454333)] [阿
-=== 进程状态确认 ===
-阿萨尔主进程存活
