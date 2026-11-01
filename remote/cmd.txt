@@ -1,10 +1,10 @@
-9
-echo "--- 仓库最新提交 ---"
-cd /root/asar-sync && git log --oneline -1
-echo "--- 手机大脑代码 ---"
-ls -la /root/bot/bot/plugins/ai_chat.py
-grep -c "_AGREE_OPEN" /root/bot/bot/plugins/ai_chat.py
-grep -c "_NEG_OPEN" /root/bot/bot/plugins/ai_chat.py
-grep -ci "zhipu" /root/bot/bot/plugins/ai_chat.py
-echo "--- 大脑目录版本记录 ---"
-cd /root/bot && git log --oneline -1 2>/dev/null || echo "非git目录，靠asar-sync同步"
+10
+echo "--- 登录状态 ---"
+/root/logincheck.sh
+echo "--- NapCat ---"
+pgrep -f "opt/QQ/qq" >/dev/null && echo 活着 || echo 已死
+stat -c "码时间 %y" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+echo "--- 大脑 ---"
+pgrep -f main.py >/dev/null && echo 活着 || echo 已死
+echo "--- git同步测试 ---"
+cd /root/asar-sync && timeout 30 git pull --rebase origin main 2>&1 | tail -1
