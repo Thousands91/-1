@@ -1,8 +1,7 @@
-46
-echo "--- bot.log 断开后的新动态 ---"
-grep -n "00:07:16" /root/bot.log | head -1
-tail -n +$(( $(grep -n "00:07:16" /root/bot.log | head -1 | cut -d: -f1) )) /root/bot.log | grep -iE "websocket|connect|登录|online|ready" | head -8
-echo "--- bot.log 最新3行 ---"
-tail -3 /root/bot.log
-echo "--- NapCat 启动输出尾部 ---"
-tail -8 /root/napcat-restart.log
+47
+echo "--- bot.log 最新6行 ---"
+tail -6 /root/bot.log
+echo "--- 有无 connected/在线 记录 ---"
+grep -iE "connected|登录成功|online" /root/bot.log | tail -3
+echo "--- QQ进程 ---"
+pgrep -fc "opt/QQ/qq"
