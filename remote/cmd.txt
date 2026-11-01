@@ -1,17 +1,11 @@
-42
-echo "--- 主进程 ---"
-pgrep -fc "venv/bin/python main.py"
-echo "--- bot.log 尾部事件/错误 ---"
-tail -60 /root/bot.log | grep -E "Message|ERROR|WARNING|Exception|failed|失败|超时|timeout" | tail -12
-echo "--- bot.log 最后3行 ---"
-tail -3 /root/bot.log
-echo "--- 从运行进程环境取key实测模型API ---"
-P=$(pgrep -f "venv/bin/python main.py" | head -1)
-K=$(tr '\0' '\n' < /proc/$P/environ | grep '^OPENAI_API_KEY=' | cut -d= -f2-)
-U=$(tr '\0' '\n' < /proc/$P/environ | grep '^OPENAI_BASE_URL=' | cut -d= -f2-)
-M=$(tr '\0' '\n' < /proc/$P/environ | grep '^OPENAI_MODEL=' | cut -d= -f2-)
-echo "BASE_URL=$U MODEL=$M KEY存在=$([ -n "$K" ] && echo yes || echo no)"
-curl -s -m 20 "${U:-https://open.bigmodel.cn/api/paas/v4}/chat/completions" -H "Authorization: Bearer $K" -H "Content-Type: application/json" -d "{\"model\":\"${M:-glm-4-flash}\",\"messages\":[{\"role\":\"user\",\"content\":\"回复ok两个字母\"}],\"max_tokens\":10}" | head -c 400
-echo ""
-echo "--- NapCat 非info日志尾部 ---"
-tail -40 /root/napcat-restart.log | grep -iv "info" | tail -6
+43
+echo "--- NapCat 进程 ---"
+ps aux | grep -iE "napcat|QQ " | grep -v grep | head -4
+echo "--- NapCat 日志最新15行 ---"
+tail -15 /root/napcat-restart.log
+echo "--- 00:07:16 断开后 bot.log 有无重连记录 ---"
+grep "00:0[7-9]\|00:1[0-9]" /root/bot.log | grep -iE "websocket|connect|disconnect|reconnect|closed" | head -6
+echo "--- bot.log 最新1行(看现在时间还活着吗) ---"
+tail -1 /root/bot.log
+echo "--- 端口监听(NoneBot服务端口) ---"
+netstat -tln 2>/dev/null | grep -E "8080|3000|5700|6700|2000|9000" | head -5
