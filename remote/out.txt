@@ -1,36 +1,98 @@
-<<<task_32.txt>>>
-===== 任务32 11-01 21:08:10 =====
+<<<task_33.txt>>>
+===== 任务33 11-01 21:11:09 =====
 --- 命令 ---
-echo "=== 日志文件盘点 $(date '+%H:%M:%S') ==="
-ls -la /root/*.log /root/bot/*.log /root/bot/bot/*.log 2>/dev/null
-ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/*.log 2>/dev/null | head -5
-echo "--- bot 目录下最近的日志类文件 ---"
-find /root/bot -maxdepth 2 -name "*.log" -o -maxdepth 2 -name "logs" -type d 2>/dev/null | head -10
-echo "--- 大脑进程启动时间与启动方式 ---"
-PID=$(pgrep -f "main.py" | head -1)
-ps -o pid,lstart,cmd -p $PID 2>/dev/null
-ls -la /proc/$PID/fd/1 2>/dev/null | head -2
-echo "--- NapCat 进程 ---"
-pgrep -f "opt/QQ/qq" | head -2
-ps -o pid,lstart -p $(pgrep -f "opt/QQ/qq" | head -1) 2>/dev/null
+echo "=== bot.log 概况 $(date '+%H:%M:%S') ==="
+wc -l /root/bot.log
+echo "--- 首行（启动时间）---"
+head -3 /root/bot.log
+echo "--- 末行时间 ---"
+tail -1 /root/bot.log
+echo "--- 错误/警告统计 ---"
+grep -c "ERROR" /root/bot.log
+grep -c "WARNING" /root/bot.log
+grep -c "Traceback" /root/bot.log
+echo "--- 错误样本（去重，最多10种）---"
+grep "ERROR" /root/bot.log | sed 's/^[0-9-]* [0-9:]* //' | cut -c1-100 | sort | uniq -c | sort -rn | head -10
+echo "--- 今天扫码登录后的启动点（找最近一次启动横幅）---"
+grep -n "NoneBot\|startup\|Application startup" /root/bot.log | tail -3
+echo "--- 最近60行 ---"
+tail -60 /root/bot.log
 --- 输出 ---
-=== 日志文件盘点 21:08:10 ===
--rw-r--r--. 1 root root     26 Oct 30 22:55 /root/asar_sync.log
--rw-r--r--. 1 root root 591480 Nov  1 21:08 /root/bot.log
--rw-r--r--. 1 root root   7870 Nov  1 15:31 /root/bot/bot/bot.log
--rw-r--r--. 1 root root 608889 Nov  1 21:08 /root/napcat-restart.log
--rw-r--r--. 1 root root 188244 Nov  1 14:14 /root/napcat.log
--rw-r--r--. 1 root root  24148 Nov  1 21:07 /root/remote_ctl.log
---- bot 目录下最近的日志类文件 ---
-/root/bot/bot/bot.log
-/root/bot/.git/logs
-/root/bot/cqhttp/logs
---- 大脑进程启动时间与启动方式 ---
-  PID                  STARTED CMD
-26353 Wed Mar 29 00:52:27 2023 /root/bot/venv/bin/python main.py
-l-wx------. 1 root root 64 Nov  1 21:08 /proc/26353/fd/1 -> /root/bot.log
---- NapCat 进程 ---
-26329
-26369
-  PID                  STARTED
-26329 Wed Mar 29 00:52:27 2023
+=== bot.log 概况 21:11:09 ===
+5290 /root/bot.log
+--- 首行（启动时间）---
+11-01 19:27:35 [SUCCESS] nonebot | NoneBot is initializing...
+11-01 19:27:35 [INFO] nonebot | Current Env: prod
+11-01 19:27:39 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+--- 末行时间 ---
+11-01 21:11:09 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
+--- 错误/警告统计 ---
+0
+0
+0
+--- 错误样本（去重，最多10种）---
+--- 今天扫码登录后的启动点（找最近一次启动横幅）---
+14:11-01 19:27:40 [SUCCESS] nonebot | Running NoneBot...
+17:11-01 19:27:40 [INFO] uvicorn | Waiting for application startup.
+23:11-01 19:27:40 [INFO] uvicorn | Application startup complete.
+--- 最近60行 ---
+11-01 21:10:50 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+11-01 21:10:50 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+11-01 21:10:50 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+11-01 21:10:50 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+11-01 21:10:50 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
+11-01 21:10:50 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
+11-01 21:10:51 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 95847573 from 568187738@[群:590454333] '谈了吗'
+11-01 21:10:51 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+11-01 21:10:51 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+11-01 21:10:51 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+11-01 21:10:51 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+11-01 21:10:51 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+11-01 21:10:51 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+11-01 21:10:51 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
+11-01 21:10:51 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
+11-01 21:10:53 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 647925932 from 568187738@[群:590454333] '[image:summary=[动画表情],file=08B8625D8088032708B9E14E2E320E3C.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTzZxfI...,file_size=108640]'
+11-01 21:10:53 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+11-01 21:10:53 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+11-01 21:10:53 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+11-01 21:10:53 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+11-01 21:10:53 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+11-01 21:10:53 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+11-01 21:10:53 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
+11-01 21:10:53 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
+11-01 21:10:57 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 38253938 from 568187738@[群:590454333] '真的吗'
+11-01 21:10:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+11-01 21:10:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+11-01 21:10:57 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+11-01 21:10:57 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+11-01 21:10:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+11-01 21:10:57 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+11-01 21:10:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
+11-01 21:10:57 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
+11-01 21:10:58 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1232487796 from 1445169274@[群:590454333] '人像模式有背景虚化'
+11-01 21:10:59 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+11-01 21:10:59 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+11-01 21:10:59 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+11-01 21:10:59 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+11-01 21:10:59 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+11-01 21:10:59 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+11-01 21:10:59 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
+11-01 21:10:59 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
+11-01 21:11:03 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 683212613 from 568187738@[群:590454333] '恭喜恭喜'
+11-01 21:11:03 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+11-01 21:11:03 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+11-01 21:11:03 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+11-01 21:11:03 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+11-01 21:11:03 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+11-01 21:11:03 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+11-01 21:11:03 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
+11-01 21:11:03 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
+11-01 21:11:08 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 762499213 from 2045344206@[群:590454333] '恭喜恭喜'
+11-01 21:11:08 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+11-01 21:11:08 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+11-01 21:11:08 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+11-01 21:11:08 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+11-01 21:11:08 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+11-01 21:11:08 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+11-01 21:11:09 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
+11-01 21:11:09 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
