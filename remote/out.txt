@@ -1,27 +1,21 @@
-<<<task_46.txt>>>
-===== 任务46 11-02 00:26:43 =====
+<<<task_47.txt>>>
+===== 任务47 11-02 00:30:37 =====
 --- 命令 ---
-echo "--- bot.log 断开后的新动态 ---"
-grep -n "00:07:16" /root/bot.log | head -1
-tail -n +$(( $(grep -n "00:07:16" /root/bot.log | head -1 | cut -d: -f1) )) /root/bot.log | grep -iE "websocket|connect|登录|online|ready" | head -8
-echo "--- bot.log 最新3行 ---"
-tail -3 /root/bot.log
-echo "--- NapCat 启动输出尾部 ---"
-tail -8 /root/napcat-restart.log
+echo "--- bot.log 最新6行 ---"
+tail -6 /root/bot.log
+echo "--- 有无 connected/在线 记录 ---"
+grep -iE "connected|登录成功|online" /root/bot.log | tail -3
+echo "--- QQ进程 ---"
+pgrep -fc "opt/QQ/qq"
 --- 输出 ---
---- bot.log 断开后的新动态 ---
-15799:11-02 00:07:16 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
-11-02 00:07:16 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
---- bot.log 最新3行 ---
+--- bot.log 最新6行 ---
+11-02 00:06:00 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+11-02 00:06:00 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
+11-02 00:06:08 [INFO] ai_chat | [核对·调试] ask='那城里到底禁不禁酒' lead=False contra=False agree=False dodge=False ans='城里确实禁酒，这风俗由来已久，认为酒是祸水的化身，故而禁售。🌿🍹'
 11-02 00:06:08 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
 11-02 00:07:16 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
 11-02 00:25:00 [INFO] uvicorn | 127.0.0.1:40630 - "GET / HTTP/1.1" 404
---- NapCat 启动输出尾部 ---
-88c4881fff4a9514728dc04c3ffa31b792fc0d2802bc47369198af8f1040d12a
-7d483569c35fd6034db0520333c227a1e2a4c956d530248cf6a1598567cdd59a
-382a279f57da6f17fdd81e9fea1c41eb6a03d252a748f7b70ccc17fd60435ad2
-21a38f263f988291c474a2324db7d40fa2a1b114efc0ef77a6c7da8f6f9df11d
-aef50141cb26810b32dbb66c179a8985f5bd3233eaab72f2b7ce77fd6ca2c61f
-66603c68b9d9dc94f3b4a9b16becf0bce25e8d7df2a301762dba8e42111f3931
-90a31d15d971684136aee4c62fa2f962cf9e91a70d1e163613f0198ef834f387
-01f9f2efb6e103e755b4a1c0e14a46aef660b6e12b37bb36305f74249a6ca2a0
+--- 有无 connected/在线 记录 ---
+11-01 20:11:14 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+--- QQ进程 ---
+5
