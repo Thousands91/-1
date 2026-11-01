@@ -1,7 +1,3 @@
-39
-echo "--- 用 bot 自己的 venv 装 requests ---"
-/root/bot/venv/bin/python -m pip install -q requests 2>&1 | tail -3
-echo "--- 用 venv python 验证 ---"
+40
 /root/bot/venv/bin/python -c "import requests; print('requests OK, 版本', requests.__version__)" 2>&1
-echo "--- 阿萨尔主进程确认存活 ---"
-ps aux | grep "venv/bin/python main.py" | grep -v grep | head -1 && echo "主进程未受影响"
+ps aux | grep "venv/bin/python main.py" | grep -v grep | wc -l
