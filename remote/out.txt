@@ -1,26 +1,11 @@
-<<<task_38.txt>>>
-===== 任务38 11-01 23:55:54 =====
+<<<task_39.txt>>>
+===== 任务39 11-01 23:59:02 =====
 --- 命令 ---
-echo "--- bot 进程用的 python ---"
-ps aux | grep -E "python" | grep -v grep | head -4
-echo "--- python/pip 现状 ---"
-python3 --version 2>&1
-which python3 pip3 pip 2>&1
-echo "--- pip 真实报错 ---"
-python3 -m pip install requests 2>&1 | tail -6
-echo "--- 验证 ---"
-python3 -c "import requests; print('requests OK', requests.__version__)" 2>&1
+echo "--- 用 bot 自己的 venv 装 requests ---"
+/root/bot/venv/bin/python -m pip install -q requests 2>&1 | tail -3
+echo "--- 用 venv python 验证 ---"
+/root/bot/venv/bin/python -c "import requests; print('requests OK, 版本', requests.__version__)" 2>&1
+echo "--- 阿萨尔主进程确认存活 ---"
+ps aux | grep "venv/bin/python main.py" | grep -v grep | head -1 && echo "主进程未受影响"
 --- 输出 ---
---- bot 进程用的 python ---
-aid_u0_+ 26353  1.0  0.2 876236 26836 pts/0    Sl    2023   2:46 /root/bot/venv/bin/python main.py
---- python/pip 现状 ---
-Python 3.12.3
-/usr/bin/python3
-/data/data/com.termux/files/usr/bin/pip3
-/data/data/com.termux/files/usr/bin/pip
---- pip 真实报错 ---
-/usr/bin/python3: No module named pip
---- 验证 ---
-Traceback (most recent call last):
-  File "<string>", line 1, in <module>
-ModuleNotFoundError: No module named 'requests'
+--- 用 bot 自己的 venv 装 requests ---
