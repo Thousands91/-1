@@ -1,42 +1,40 @@
-<<<task_42.txt>>>
-===== 任务42 11-02 00:12:56 =====
+<<<task_43.txt>>>
+===== 任务43 11-02 00:15:16 =====
 --- 命令 ---
-echo "--- 主进程 ---"
-pgrep -fc "venv/bin/python main.py"
-echo "--- bot.log 尾部事件/错误 ---"
-tail -60 /root/bot.log | grep -E "Message|ERROR|WARNING|Exception|failed|失败|超时|timeout" | tail -12
-echo "--- bot.log 最后3行 ---"
-tail -3 /root/bot.log
-echo "--- 从运行进程环境取key实测模型API ---"
-P=$(pgrep -f "venv/bin/python main.py" | head -1)
-K=$(tr '\0' '\n' < /proc/$P/environ | grep '^OPENAI_API_KEY=' | cut -d= -f2-)
-U=$(tr '\0' '\n' < /proc/$P/environ | grep '^OPENAI_BASE_URL=' | cut -d= -f2-)
-M=$(tr '\0' '\n' < /proc/$P/environ | grep '^OPENAI_MODEL=' | cut -d= -f2-)
-echo "BASE_URL=$U MODEL=$M KEY存在=$([ -n "$K" ] && echo yes || echo no)"
-curl -s -m 20 "${U:-https://open.bigmodel.cn/api/paas/v4}/chat/completions" -H "Authorization: Bearer $K" -H "Content-Type: application/json" -d "{\"model\":\"${M:-glm-4-flash}\",\"messages\":[{\"role\":\"user\",\"content\":\"回复ok两个字母\"}],\"max_tokens\":10}" | head -c 400
-echo ""
-echo "--- NapCat 非info日志尾部 ---"
-tail -40 /root/napcat-restart.log | grep -iv "info" | tail -6
+echo "--- NapCat 进程 ---"
+ps aux | grep -iE "napcat|QQ " | grep -v grep | head -4
+echo "--- NapCat 日志最新15行 ---"
+tail -15 /root/napcat-restart.log
+echo "--- 00:07:16 断开后 bot.log 有无重连记录 ---"
+grep "00:0[7-9]\|00:1[0-9]" /root/bot.log | grep -iE "websocket|connect|disconnect|reconnect|closed" | head -6
+echo "--- bot.log 最新1行(看现在时间还活着吗) ---"
+tail -1 /root/bot.log
+echo "--- 端口监听(NoneBot服务端口) ---"
+netstat -tln 2>/dev/null | grep -E "8080|3000|5700|6700|2000|9000" | head -5
 --- 输出 ---
---- 主进程 ---
-1
---- bot.log 尾部事件/错误 ---
-11-02 00:04:40 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 63189286 from 1561950850 '那他到底最喜欢喝什么'
-11-02 00:05:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1187449032 from 1561950850 '怎么又是酒'
-11-02 00:05:21 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 750152893 from 1561950850 '所以哪一个才是对的'
-11-02 00:06:00 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1086500585 from 1561950850 '那城里到底禁不禁酒'
+--- NapCat 进程 ---
+aid_u0_+ 27809  0.0  0.0   2396   236 pts/0    S     2023   0:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox
+aid_u0_+ 27827  2.3  0.2 339786104 27376 pts/0 S<l   2023   0:10 /root/Napcat/opt/QQ/qq --no-sandbox
+aid_u0_+ 27838  0.0  0.0 50707504 2424 pts/0   S     2023   0:00 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+aid_u0_+ 27839  0.0  0.0 50707504 560 pts/0    S     2023   0:00 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
+--- NapCat 日志最新15行 ---
+aa011ce4235405577408bb8f6a461f7cbc64679067aa09aed2a14e49b20678b0
+32cba84f9314cd6170803bb03da37b22a63f5cc86d23fde7ccf48a30dde2959e
+c75134be70cc5a9514f19da62d28751b53f17479d82cf1f0957420ab02cd3065
+90299dc773a9e8536f40096286382c4f3f2c9fbd3f9b563cd7c1da4db2883021
+957be1ae21e6c745d8959a717e968480acba1e472541291fa5afa91abbbfa9f2
+b5e09beff975a30d5909eae8d162a04561c7a0ab522208f93cdf0f989cb99856
+750fe4dd522b9907dfbef597db742a8f6a70dbdd335b2df07a2fffe9ad830d4f
+c9a40c8cd363aa05a4d92ea45119c196bdad4656c360cbba1bd5c61ac860c615
+b72c60418b506ef438303334adbfd914e5eb2bec742343c41ad76fb6f86fe011
+0157728ff53bbdd1f2007d0bce7662154c27b591c855ad00d3016bdc098fadb6
+3edb648754b5805be3db458b2c2b9433d80216374dfc1c32adf6744c29d5334c
+88a42305f38b7e6e64d117e26cf8530145313534009d8e2dbc399758b110e74d
+7ad8ff4b3fa640545f84a1cfc6eea4023b21694d47694cf4a87f50335580c056
+63e9f85714f6c53509cef0338c5c62e985cc7ab811f362569672d49dcf19e7e3
+aca41333d05637a5da7854220a66ee4a14a6cb48a44eda0f42057d96a94e85e8
+--- 00:07:16 断开后 bot.log 有无重连记录 ---
 11-02 00:07:16 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
---- bot.log 最后3行 ---
-11-02 00:06:08 [INFO] ai_chat | [核对·调试] ask='那城里到底禁不禁酒' lead=False contra=False agree=False dodge=False ans='城里确实禁酒，这风俗由来已久，认为酒是祸水的化身，故而禁售。🌿🍹'
-11-02 00:06:08 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
+--- bot.log 最新1行(看现在时间还活着吗) ---
 11-02 00:07:16 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
---- 从运行进程环境取key实测模型API ---
-BASE_URL= MODEL= KEY存在=no
-{"error":{"code":"401","message":"令牌已过期或验证不正确"}}
---- NapCat 非info日志尾部 ---
-818acd5a4bca70ea241102010606627df0f48b13fbc7bd4a471f082d8c7640ba
-e53e9d3ff973904e59aa22d85c95c04ee8300af580a5bd7a264edd2aee647917
-b57dd427876e28f4707b20814423d2363943ac51f02231927ab079bdb04ce9aa
-6ef648071ab6b8535f4a2c8cd5fbf416b94efda6eb2dd90a041829b77649c588
-83244937e6363a61e3fe102160e8578a015d98b743b9a48e26f51379da97b2cc
-f6ee366939cf651bb74a8988bf8dbdb541b5fd93f24ff6bcaaaf799c4c9c0d48
+--- 端口监听(NoneBot服务端口) ---
