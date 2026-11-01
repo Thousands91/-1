@@ -1,5 +1,7 @@
-27
-echo "=== 登录后在线验证（只读，不碰任何进程） $(date '+%H:%M:%S') ==="
-bash /root/logincheck.sh 2>/dev/null
-pgrep -f "opt/QQ/qq" >/dev/null && echo "NapCat: 运行中" || echo "NapCat: 未运行"
-pgrep -f "main.py" >/dev/null && echo "大脑: 运行中" || echo "大脑: 未运行"
+28
+PID=$(pgrep -f "main.py" | head -1)
+tr '\0' '\n' < /proc/$PID/environ | grep -E "OPENAI_API_KEY|BASE_URL|MODEL" | head -5
+grep -rn "OPENAI_API_KEY" /root/bot/bot/.env /root/bot/.env /root/bot/bot/plugins/.env 2>/dev/null | head -3
+echo "BASE_URL与MODEL（代码内）:"
+grep -n "BASE_URL\s*=" /root/bot/bot/plugins/ai_chat.py | head -2
+grep -n "MODEL\s*=" /root/bot/bot/plugins/ai_chat.py | head -2
