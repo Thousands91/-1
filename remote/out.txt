@@ -1,25 +1,15 @@
-<<<task_16.txt>>>
-===== 任务16 11-01 17:04:25 =====
+<<<task_17.txt>>>
+===== 任务17 11-01 17:13:21 =====
 --- 命令 ---
-echo "--- 登录状态 ---"
-/root/logincheck.sh
-echo "--- NapCat与二维码 ---"
-pgrep -f "opt/QQ/qq" >/dev/null && echo NapCat活着 || echo NapCat已死
-stat -c "码时间: %y" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null
-echo "--- 复制进相册 ---"
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/Pictures/阿萨尔登录码.png 2>/dev/null && echo "已存入相册Pictures/阿萨尔登录码.png" || echo "复制失败(无存储权限)"
-termux-media-scan /sdcard/Pictures/阿萨尔登录码.png 2>/dev/null || am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///sdcard/Pictures/阿萨尔登录码.png 2>/dev/null
-echo 完成
+pkill -f qr_refresh 2>/dev/null
+cat > /tmp/qr_refresh.sh <<'RR'
+#!/bin/bash
+for i in $(seq 1 36); do
+  cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/Pictures/阿萨尔登录码.png 2>/dev/null
+  sleep 20
+done
+RR
+nohup bash /tmp/qr_refresh.sh >/dev/null 2>&1 &
+echo "保鲜已启动：未来12分钟相册里的码每20秒自动更新"
 --- 输出 ---
---- 登录状态 ---
-=== 登录状态（权威判定）===
-[未登录] 当前没有有效会话
-阶段: offline
-最近错误: 无
---- NapCat与二维码 ---
-NapCat活着
-码时间: 2026-11-01 17:02:15.578533588 +0800
---- 复制进相册 ---
-已存入相册Pictures/阿萨尔登录码.png
-Broadcasting: Intent { act=android.intent.action.MEDIA_SCANNER_SCAN_FILE dat=file:///... }
-完成
+保鲜已启动：未来12分钟相册里的码每20秒自动更新
