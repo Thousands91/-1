@@ -1,14 +1,7 @@
-34
-echo "=== 深入分析 $(date '+%H:%M:%S') ==="
-echo "--- 登录相关关键行 ---"
-grep -in "login\|扫码\|qrcode\|二维码" /root/bot.log | head -8
-grep -in "login success\|qrcode\|二维码" /root/napcat-restart.log | tail -8
-echo "--- 今日每小时收到群消息条数 ---"
-grep -o "11-01 [0-9][0-9]:" /root/bot.log | grep -B0 ".*" | awk '{print $2}' | sort | uniq -c
-echo "--- 收到消息总数 ---"
-grep -c "message.group.normal" /root/bot.log
-echo "--- @阿萨尔 的消息条数 ---"
-grep -c "CQ:at" /root/bot.log
-grep -o "\[CQ:at[^]]*\]" /root/bot.log | head -3
-echo "--- NapCat 尾部 25 行 ---"
-tail -25 /root/napcat-restart.log
+35
+echo "=== 阿萨尔发送统计 $(date '+%H:%M:%S') ==="
+grep -c "发送 ->" /root/napcat-restart.log
+echo "--- 今晚发送的消息样本（最近12条）---"
+grep "发送 ->" /root/napcat-restart.log | tail -12
+echo "--- WS 连接状态行 ---"
+grep -i "websocket\|ws \|连接" /root/napcat-restart.log | tail -5
