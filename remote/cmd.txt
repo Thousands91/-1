@@ -1,11 +1,73 @@
-50
-echo "--- 手机上 NapCat 实际版本 ---"
-grep -o '"version": *"[^"]*"' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/package.json 2>/dev/null | head -1
-echo "--- QQ 客户端版本 ---"
-ls /root/Napcat/opt/QQ/ | grep -oE "[0-9]+\.[0-9]+\.[0-9]+" | head -2
-cat /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null | grep -o '"version": *"[^"]*"' | head -1
-echo "--- NoneBot 监听端口 ---"
-ss -tlnp 2>/dev/null | grep -E "python|uvicorn" | head -3
-grep -iE "port|host" /root/bot/.env /root/bot/.env.* /root/bot/pyproject.toml 2>/dev/null | head -5
-echo "--- QQ 进程启动参数 ---"
-ps aux | grep "opt/QQ/qq --no-sandbox" | grep -v grep | grep -v zygote | head -2
+51
+cat > /root/azar_guard.sh << 'GUARDEOF'
+#!/bin/bash
+# 阿萨尔掉线守护 v1.0 (2026-11-02) —— 每60秒体检一次
+# 规则1: QQ进程死了且不是在等扫码 -> 自动拉起
+# 规则2: WS断开但会话还在(无新二维码) -> 自动重启NapCat恢复,免扫码
+# 规则3: 有新二维码(被腾讯踢线) -> 只记录状态等人工,绝不多动
+# 规则4: 每小时最多自动重启3次;重启后冷却5分钟
+LOG=/root/bot.log
+QR=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+STATE=/root/guard_status.txt
+LAST_RESTART=/root/.guard_last
+CNT_FILE=/root/.guard_cnt
+start_qq() {
+  cd /root && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 &
+}
+can_restart() {
+  NOW=$(date +%s)
+  LR=$(cat "$LAST_RESTART" 2>/dev/null || echo 0)
+  [ $(( NOW - LR )) -lt 300 ] && return 1
+  H=$(date +%H)
+  read C H2 < "$CNT_FILE" 2>/dev/null || { C=0; H2=$H; }
+  [ "$H" != "$H2" ] && C=0
+  [ "$C" -ge 3 ] && return 1
+  echo "$((C+1)) $H" > "$CNT_FILE"
+  echo "$NOW" > "$LAST_RESTART"
+  return 0
+}
+echo "$(date '+%m-%d %H:%M:%S') 守护启动" >> "$STATE"
+while true; do
+  sleep 60
+  QQ_N=$(pgrep -fc "opt/QQ/qq --no-sandbox" 2>/dev/null)
+  if [ "$QQ_N" = "0" ] || [ -z "$QQ_N" ]; then
+    AGE=999999
+    [ -f "$QR" ] && AGE=$(( $(date +%s) - $(stat -c %Y "$QR" 2>/dev/null || echo 0) ))
+    if [ $AGE -gt 600 ]; then
+      if can_restart; then
+        echo "$(date '+%m-%d %H:%M:%S') QQ进程消失,自动拉起" >> "$STATE"
+        start_qq
+      fi
+    fi
+    continue
+  fi
+  LAST=$(grep "WebSocket for Bot 3427943187" "$LOG" 2>/dev/null | tail -1)
+  case "$LAST" in
+    *closed*)
+      AGE=999999
+      [ -f "$QR" ] && AGE=$(( $(date +%s) - $(stat -c %Y "$QR" 2>/dev/null || echo 0) ))
+      if [ $AGE -lt 300 ]; then
+        echo "$(date '+%m-%d %H:%M:%S') NapCat在等扫码(被踢),等人工处理" >> "$STATE"
+        continue
+      fi
+      if can_restart; then
+        echo "$(date '+%m-%d %H:%M:%S') WS断开但会话似在,重启NapCat尝试免扫码恢复" >> "$STATE"
+        pkill -f "opt/QQ/qq" 2>/dev/null
+        sleep 3
+        start_qq
+      fi
+      ;;
+  esac
+done
+GUARDEOF
+chmod +x /root/azar_guard.sh
+pkill -f azar_guard.sh 2>/dev/null
+sleep 1
+nohup bash /root/azar_guard.sh > /root/guard.log 2>&1 &
+sleep 4
+echo "--- 守护进程 ---"
+pgrep -f azar_guard.sh | head -2
+echo "--- 状态文件 ---"
+cat /root/guard_status.txt 2>/dev/null | tail -3
+echo "--- 当前NapCat在干嘛(等扫码属正常) ---"
+ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null
