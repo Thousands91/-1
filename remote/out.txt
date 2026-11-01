@@ -1,51 +1,36 @@
-<<<task_31.txt>>>
-===== 任务31 11-01 21:03:13 =====
+<<<task_32.txt>>>
+===== 任务32 11-01 21:08:10 =====
 --- 命令 ---
-echo "=== 色图菜单修复验证 $(date '+%H:%M:%S') ==="
-echo "--- 群菜单文本（MENU_TEXT）---"
-grep -n -B2 -A16 "MENU_TEXT" /root/bot/bot/plugins/keyword_reply.py | head -40
-echo "--- 色图相关行 ---"
-grep -n "色图\|R18\|r18\|私聊" /root/bot/bot/plugins/keyword_reply.py | head -10
+echo "=== 日志文件盘点 $(date '+%H:%M:%S') ==="
+ls -la /root/*.log /root/bot/*.log /root/bot/bot/*.log 2>/dev/null
+ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/*.log 2>/dev/null | head -5
+echo "--- bot 目录下最近的日志类文件 ---"
+find /root/bot -maxdepth 2 -name "*.log" -o -maxdepth 2 -name "logs" -type d 2>/dev/null | head -10
+echo "--- 大脑进程启动时间与启动方式 ---"
+PID=$(pgrep -f "main.py" | head -1)
+ps -o pid,lstart,cmd -p $PID 2>/dev/null
+ls -la /proc/$PID/fd/1 2>/dev/null | head -2
+echo "--- NapCat 进程 ---"
+pgrep -f "opt/QQ/qq" | head -2
+ps -o pid,lstart -p $(pgrep -f "opt/QQ/qq" | head -1) 2>/dev/null
 --- 输出 ---
-=== 色图菜单修复验证 21:03:13 ===
---- 群菜单文本（MENU_TEXT）---
-111-# ============================================================
-112-
-113:MENU_TEXT = (
-114-    "@我 就能办这些事：\n"
-115-    "　找书 —— @我 找书 + 书名，古籍能直接下载\n"
-116-    "　点歌 —— @我 点歌 + 歌名\n"
-117-    "　抽签 —— @我 抽签\n"
-118-    "　天气 —— @我 天气 + 城市名\n"
-119-    "　新闻 —— @我 新闻\n"
-120-    "　看景 —— @我 看景，随手一张真人摄影\n"
-121-    "　搜图 —— @我 搜图 + 关键词，实拍图万物皆可搜\n"
-122-    "　国际象棋 —— @我 说「国际象棋」开局，两人各报一次；"
-123-    "开局后 @我 走 e4 落子；发「国际象棋教程」看完整玩法\n"
-124-    "　问我吃什么 / 喝什么 —— @我，我替您挑一样\n"
-125-    "　@我 + 任意话题 —— 跟我聊聊\n"
-126-    "（问候和闲聊不用 @，直接说就行）"
-127-)
-128-
-129-menu_cmd = on_command("菜单", rule=to_me(), priority=20, block=True)
---
-132-@menu_cmd.handle()
-133-async def _():
-134:    await menu_cmd.finish(MENU_TEXT)
-135-
-136-kw_reply = on_message(priority=80, block=False)
-137-
-138-# 问候语后面允许跟的东西。整句必须能拆成「关键词 + 这些词」才算。
-139-# 群友爱说什么新花样（"早上好哇"），往这里加一个字就行。
-140-TAIL_WORDS = ["各位", "大家", "朋友们", "兄弟们", "姐妹们", "亲们", "老板",
-141-              "啊", "呀", "吗", "呢", "吧", "啦", "哦", "嘛", "哈", "哇", "哟",
-142-              "了", "您", "你", "您们"]
-143-
-144-
-145-def _keys(item) -> list:
-146-    """关键词可以是字符串，也可以是一组同义词。统一成 list 方便遍历。"""
-147-    return [item] if isinstance(item, str) else list(item)
-148-
-149-
-150-def _match(text: str):
---- 色图相关行 ---
+=== 日志文件盘点 21:08:10 ===
+-rw-r--r--. 1 root root     26 Oct 30 22:55 /root/asar_sync.log
+-rw-r--r--. 1 root root 591480 Nov  1 21:08 /root/bot.log
+-rw-r--r--. 1 root root   7870 Nov  1 15:31 /root/bot/bot/bot.log
+-rw-r--r--. 1 root root 608889 Nov  1 21:08 /root/napcat-restart.log
+-rw-r--r--. 1 root root 188244 Nov  1 14:14 /root/napcat.log
+-rw-r--r--. 1 root root  24148 Nov  1 21:07 /root/remote_ctl.log
+--- bot 目录下最近的日志类文件 ---
+/root/bot/bot/bot.log
+/root/bot/.git/logs
+/root/bot/cqhttp/logs
+--- 大脑进程启动时间与启动方式 ---
+  PID                  STARTED CMD
+26353 Wed Mar 29 00:52:27 2023 /root/bot/venv/bin/python main.py
+l-wx------. 1 root root 64 Nov  1 21:08 /proc/26353/fd/1 -> /root/bot.log
+--- NapCat 进程 ---
+26329
+26369
+  PID                  STARTED
+26329 Wed Mar 29 00:52:27 2023
