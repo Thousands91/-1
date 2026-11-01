@@ -1,21 +1,51 @@
-<<<task_47.txt>>>
-===== 任务47 11-02 00:30:37 =====
+<<<task_48.txt>>>
+===== 任务48 11-02 00:32:31 =====
 --- 命令 ---
-echo "--- bot.log 最新6行 ---"
-tail -6 /root/bot.log
-echo "--- 有无 connected/在线 记录 ---"
-grep -iE "connected|登录成功|online" /root/bot.log | tail -3
-echo "--- QQ进程 ---"
-pgrep -fc "opt/QQ/qq"
+echo "--- NapCat 目录 ---"
+ls /root/Napcat/ 2>/dev/null
+echo "--- 10分钟内新写入的文件 ---"
+find /root/Napcat -mmin -10 -type f 2>/dev/null | head -8
+echo "--- WebUI 探测 ---"
+curl -s -m 5 -o /dev/null -w "6099端口: %{http_code}\n" http://127.0.0.1:6099
+echo "--- NapCat 配置 ---"
+ls /root/Napcat/config/ 2>/dev/null
+head -30 /root/Napcat/config/onebot11_3427943187.json 2>/dev/null
+echo "--- 登录脚本怎么写的(前25行) ---"
+head -25 /root/azar_login.sh 2>/dev/null
 --- 输出 ---
---- bot.log 最新6行 ---
-11-02 00:06:00 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
-11-02 00:06:00 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
-11-02 00:06:08 [INFO] ai_chat | [核对·调试] ask='那城里到底禁不禁酒' lead=False contra=False agree=False dodge=False ans='城里确实禁酒，这风俗由来已久，认为酒是祸水的化身，故而禁售。🌿🍹'
-11-02 00:06:08 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
-11-02 00:07:16 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
-11-02 00:25:00 [INFO] uvicorn | 127.0.0.1:40630 - "GET / HTTP/1.1" 404
---- 有无 connected/在线 记录 ---
-11-01 20:11:14 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
---- QQ进程 ---
-5
+--- NapCat 目录 ---
+guild1.db
+guild1.db-shm
+guild1.db-wal
+opt
+--- 10分钟内新写入的文件 ---
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+--- WebUI 探测 ---
+6099端口: 301
+--- NapCat 配置 ---
+--- 登录脚本怎么写的(前25行) ---
+#!/bin/bash
+# 阿萨尔 NapCat 一键登录助手 —— 在手机 Ubuntu (proot) 的 ~ 目录运行
+# 用法: bash azar_login.sh
+# 做的事: 清理旧进程 -> 启动 NapCat -> 盯着二维码文件等它刷新 ->
+#         复制到相册目录 -> 倒计时提醒扫码 -> 盯到登录成功为止
+
+QR_SRC="/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png"
+QR_DST="/sdcard/DCIM/Camera/asar_qr.png"
+LOG="/root/napcat.log"
+QR_VALID_SEC=110   # 二维码按 110 秒算过期，留足余量
+
+echo "==> 第 1 步：清理旧进程"
+screen -S napcat -X quit 2>/dev/null
+pkill -f "opt/QQ/qq" 2>/dev/null
+sleep 3
+
+echo "==> 第 2 步：启动 NapCat（后台，日志在 $LOG）"
+rm -f "$LOG" "$QR_SRC"
+nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox > "$LOG" 2>&1 &
+
+echo "==> 第 3 步：等二维码生成（NapCat 启动约需 20~40 秒）"
+GEN_TIME=""
+for i in $(seq 1 30); do
+    sleep 2
+    if [ -f "$QR_SRC" ]; then
