@@ -1,13 +1,8 @@
-45
-echo "--- 先找有没有现成的 NapCat 启动脚本 ---"
-ls /root/*.sh 2>/dev/null
-ps aux | grep -iE "restart|watchdog" | grep -v grep | grep -v "opt/QQ/qq" | head -3
-echo "--- 杀掉 QQ 进程 ---"
-pkill -f "opt/QQ/qq"
-sleep 3
-echo "残留QQ进程: $(pgrep -fc 'opt/QQ/qq' 2>/dev/null || echo 0)"
-echo "--- 重新启动 NapCat ---"
-cd /root && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 &
-sleep 8
-pgrep -f "opt/QQ/qq" | head -3
-echo "--- NapCat 已拉起,等它自动登录并重连 ---"
+46
+echo "--- bot.log 断开后的新动态 ---"
+grep -n "00:07:16" /root/bot.log | head -1
+tail -n +$(( $(grep -n "00:07:16" /root/bot.log | head -1 | cut -d: -f1) )) /root/bot.log | grep -iE "websocket|connect|登录|online|ready" | head -8
+echo "--- bot.log 最新3行 ---"
+tail -3 /root/bot.log
+echo "--- NapCat 启动输出尾部 ---"
+tail -8 /root/napcat-restart.log
