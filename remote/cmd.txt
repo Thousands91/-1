@@ -1,6 +1,13 @@
-31
-echo "=== 色图菜单修复验证 $(date '+%H:%M:%S') ==="
-echo "--- 群菜单文本（MENU_TEXT）---"
-grep -n -B2 -A16 "MENU_TEXT" /root/bot/bot/plugins/keyword_reply.py | head -40
-echo "--- 色图相关行 ---"
-grep -n "色图\|R18\|r18\|私聊" /root/bot/bot/plugins/keyword_reply.py | head -10
+32
+echo "=== 日志文件盘点 $(date '+%H:%M:%S') ==="
+ls -la /root/*.log /root/bot/*.log /root/bot/bot/*.log 2>/dev/null
+ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/*.log 2>/dev/null | head -5
+echo "--- bot 目录下最近的日志类文件 ---"
+find /root/bot -maxdepth 2 -name "*.log" -o -maxdepth 2 -name "logs" -type d 2>/dev/null | head -10
+echo "--- 大脑进程启动时间与启动方式 ---"
+PID=$(pgrep -f "main.py" | head -1)
+ps -o pid,lstart,cmd -p $PID 2>/dev/null
+ls -la /proc/$PID/fd/1 2>/dev/null | head -2
+echo "--- NapCat 进程 ---"
+pgrep -f "opt/QQ/qq" | head -2
+ps -o pid,lstart -p $(pgrep -f "opt/QQ/qq" | head -1) 2>/dev/null
