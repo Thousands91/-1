@@ -1,15 +1,10 @@
-8
-echo "--- 原启动信息 ---"
-tr "\0" " " < /proc/782/cmdline; echo
-DIR="$(readlink /proc/782/cwd)"; echo "$DIR"
-kill 782 2>/dev/null; sleep 3
-pgrep -f "opt/QQ/qq" >/dev/null && pkill -f "opt/QQ/qq"; sleep 2
-cd "$DIR" && nohup $(tr "\0" " " < /proc/782/cmdline) >> /root/napcat-restart.log 2>&1 &
-sleep 25
-echo "--- 新进程 ---"
-pgrep -f "opt/QQ/qq" | head -3
-echo "--- 新码 ---"
-ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /root/asar-sync/remote/qr.png
-cd /root/asar-sync && git add remote/qr.png && git commit -m "手机新二维码" -q && timeout 60 git push origin main || { timeout 60 git pull --rebase origin main >/dev/null 2>&1; timeout 60 git push origin main; }
-echo 已上传
+9
+echo "--- 仓库最新提交 ---"
+cd /root/asar-sync && git log --oneline -1
+echo "--- 手机大脑代码 ---"
+ls -la /root/bot/bot/plugins/ai_chat.py
+grep -c "_AGREE_OPEN" /root/bot/bot/plugins/ai_chat.py
+grep -c "_NEG_OPEN" /root/bot/bot/plugins/ai_chat.py
+grep -ci "zhipu" /root/bot/bot/plugins/ai_chat.py
+echo "--- 大脑目录版本记录 ---"
+cd /root/bot && git log --oneline -1 2>/dev/null || echo "非git目录，靠asar-sync同步"
