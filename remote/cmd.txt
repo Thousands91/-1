@@ -1,12 +1,7 @@
-48
-echo "--- NapCat 目录 ---"
-ls /root/Napcat/ 2>/dev/null
-echo "--- 10分钟内新写入的文件 ---"
-find /root/Napcat -mmin -10 -type f 2>/dev/null | head -8
-echo "--- WebUI 探测 ---"
-curl -s -m 5 -o /dev/null -w "6099端口: %{http_code}\n" http://127.0.0.1:6099
-echo "--- NapCat 配置 ---"
-ls /root/Napcat/config/ 2>/dev/null
-head -30 /root/Napcat/config/onebot11_3427943187.json 2>/dev/null
-echo "--- 登录脚本怎么写的(前25行) ---"
-head -25 /root/azar_login.sh 2>/dev/null
+49
+nohup bash /root/azar_login.sh > /root/azar_login_run.log 2>&1 &
+sleep 40
+echo "--- 登录脚本运行输出 ---"
+tail -15 /root/azar_login_run.log
+echo "--- 二维码是否已复制到相册 ---"
+ls -la /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null && echo "二维码已就位"
