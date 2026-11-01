@@ -1,26 +1,31 @@
-<<<task_44.txt>>>
-===== 任务44 11-02 00:18:39 =====
+<<<task_45.txt>>>
+===== 任务45 11-02 00:23:37 =====
 --- 命令 ---
-echo "--- NapCat 真正的日志文件(最近1小时内修改过) ---"
-find /root/Napcat -name "*.log" -mmin -90 2>/dev/null | head -6
-ls -t /root/Napcat/log/ 2>/dev/null | head -4
-echo "--- 最新NapCat日志尾部30行 ---"
-F=$(find /root/Napcat -name "*.log" -mmin -90 2>/dev/null | head -1)
-echo "文件: $F"
-tail -30 "$F" 2>/dev/null | grep -v "^$" | tail -20
-echo "--- 手机当前网络连通性 ---"
-curl -s -m 8 -o /dev/null -w "GitHub: %{http_code}\n" https://api.github.com
-curl -s -m 8 -o /dev/null -w "QQ服务: %{http_code}\n" https://www.qq.com
-echo "--- 内存情况 ---"
-free -m | head -3
+echo "--- 先找有没有现成的 NapCat 启动脚本 ---"
+ls /root/*.sh 2>/dev/null
+ps aux | grep -iE "restart|watchdog" | grep -v grep | grep -v "opt/QQ/qq" | head -3
+echo "--- 杀掉 QQ 进程 ---"
+pkill -f "opt/QQ/qq"
+sleep 3
+echo "残留QQ进程: $(pgrep -fc 'opt/QQ/qq' 2>/dev/null || echo 0)"
+echo "--- 重新启动 NapCat ---"
+cd /root && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 &
+sleep 8
+pgrep -f "opt/QQ/qq" | head -3
+echo "--- NapCat 已拉起,等它自动登录并重连 ---"
 --- 输出 ---
---- NapCat 真正的日志文件(最近1小时内修改过) ---
---- 最新NapCat日志尾部30行 ---
-文件: 
---- 手机当前网络连通性 ---
-GitHub: 200
-QQ服务: 501
---- 内存情况 ---
-               total        used        free      shared  buff/cache   available
-Mem:           11296        9434         209         111        2542        1862
-Swap:          11296        6452        4843
+--- 先找有没有现成的 NapCat 启动脚本 ---
+/root/azar_login.sh
+/root/check.sh
+/root/logincheck.sh
+/root/morning.sh
+/root/remote_ctl.sh
+/root/st.sh
+--- 杀掉 QQ 进程 ---
+残留QQ进程: 0
+0
+--- 重新启动 NapCat ---
+21827
+21843
+21853
+--- NapCat 已拉起,等它自动登录并重连 ---
