@@ -3,7 +3,9 @@ termux-wake-lock 2>/dev/null
 REPO=/root/asar-sync
 LOG=/root/remote_ctl.log
 QR=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-API="https://api.github.com/repos/Thousands91/-1/contents/remote/cmd.txt"
+BASE="https://api.github.com/repos/Thousands91/-1/contents/remote"
+CMD_URL="$BASE/cmd.txt"
+OUT_URL="$BASE/out.txt"
 PBOX=/root/.remote_pending
 mkdir -p "$PBOX"
 get_tok() {
@@ -18,7 +20,7 @@ LAST=0
 run_task() {
   echo "$1" > /root/.remote_last
   LAST=$1
-  O="$PBOX/$1"
+  O="$PBOX/task_$1.txt"
   { echo "===== 任务$1 $(date '+%m-%d %H:%M:%S') ====="; echo "--- 命令 ---"; tail -n +2 "$2"; echo "--- 输出 ---"; tail -n +2 "$2" | timeout 90 bash 2>&1; } > "$O"
   cat "$O" >> "$LOG"
 }
@@ -26,22 +28,23 @@ run_task() {
 api_report() {
   ls "$PBOX"/*.txt >/dev/null 2>&1 || return 0
   : > /tmp/remote_bundle.txt
-  for f in $(ls "$PBOX"/*.txt | sort -n); do cat "$f" >> /tmp/remote_bundle.txt; done
+  for f in $(ls "$PBOX"/task_*.txt 2>/dev/null | sort -t_ -k2 -n); do cat "$f" >> /tmp/remote_bundle.txt; done
   [ -n "$TOK" ] || TOK=$(get_tok)
-  SHA=$(timeout 30 curl -s -H "Authorization: token $TOK" "$API/out.txt" | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+  [ -n "$TOK" ] || { echo "[$(date '+%m-%d %H:%M')] report:无token,留待下轮" >> "$LOG"; return 1; }
+  SHA=$(timeout 30 curl -s -H "Authorization: token $TOK" "$OUT_URL" | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
   B64=$(base64 -w0 /tmp/remote_bundle.txt) || return 1
-  R=$(timeout 60 curl -s -X PUT -H "Authorization: token $TOK" -d "{\"message\":\"遥控输出(API) $(date '+%m-%d %H:%M')\",\"content\":\"$B64\"${SHA:+,\"sha\":\"$SHA\"}}" "$API/out.txt")
+  R=$(timeout 60 curl -s -X PUT -H "Authorization: token $TOK" -d "{\"message\":\"遥控输出(API) $(date '+%m-%d %H:%M')\",\"content\":\"$B64\"${SHA:+,\"sha\":\"$SHA\"}}" "$OUT_URL")
   if echo "$R" | grep -q '"content"'; then
-    rm -f "$PBOX"/*.txt
+    rm -f "$PBOX"/task_*.txt
     echo "[$(date '+%m-%d %H:%M')] report:API回传成功" >> "$LOG"
   else
-    echo "[$(date '+%m-%d %H:%M')] report:API回传失败,留待下轮" >> "$LOG"
+    echo "[$(date '+%m-%d %H:%M')] report:API回传失败:$(echo "$R" | head -c 120)" >> "$LOG"
   fi
 }
 
 while true; do
   [ -n "$TOK" ] || TOK=$(get_tok)
-  RAW=$(timeout 30 curl -s -H "Accept: application/vnd.github.raw" ${TOK:+-H "Authorization: token $TOK"} "$API")
+  RAW=$(timeout 30 curl -s -H "Accept: application/vnd.github.raw" ${TOK:+-H "Authorization: token $TOK"} "$CMD_URL")
   case "$RAW" in
     [0-9]*)
       RID=$(printf '%s\n' "$RAW" | head -1 | tr -dc 0-9)
