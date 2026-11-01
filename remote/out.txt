@@ -1,44 +1,10 @@
-<<<task_23.txt>>>
-===== 任务23 11-01 19:36:05 =====
+<<<task_24.txt>>>
+===== 任务24 11-01 19:39:22 =====
 --- 命令 ---
-echo "=== 手机状态检查 ==="
-echo "时间: $(date '+%H:%M:%S')"
-echo "--- 遥控循环 ---"
+for p in $(pgrep -f "bash /root/remote_ctl.sh"); do [ "$p" != "26191" ] && kill -9 $p 2>/dev/null; done
+echo 26191 > /root/.remote_pid
+echo "清理完成，剩余循环进程:"
 pgrep -af "bash /root/remote_ctl.sh"
-echo "--- NapCat ---"
-pgrep -f "opt/QQ/qq" >/dev/null && echo "NapCat: 运行中" || echo "NapCat: 未运行"
-echo "--- 大脑 ---"
-pgrep -f "main.py" >/dev/null && echo "大脑: 运行中" || echo "大脑: 未运行"
-echo "--- 最近日志 ---"
-tail -8 /root/remote_ctl.log
-echo "--- logincheck ---"
-bash /root/logincheck.sh 2>/dev/null || echo "logincheck.sh 不可用"
-echo "--- 保险丝计数 ---"
-wc -l < /root/.napcat_pulls 2>/dev/null || echo 0
 --- 输出 ---
-=== 手机状态检查 ===
-时间: 19:36:05
---- 遥控循环 ---
+清理完成，剩余循环进程:
 26191 bash /root/remote_ctl.sh
-26326 bash /root/remote_ctl.sh
-26340 bash /root/remote_ctl.sh
---- NapCat ---
-NapCat: 运行中
---- 大脑 ---
-大脑: 运行中
---- 最近日志 ---
-[11-01 19:32] intake:API响应异常
-[11-01 19:32] 心跳:循环正常,LAST=22
-[11-01 19:32] intake:API响应异常
-[11-01 19:33] intake:API响应异常
-[11-01 19:33] intake:API响应异常
-[11-01 19:34] intake:API响应异常
-[11-01 19:34] intake:API响应异常
-[11-01 19:35] intake:API响应异常
---- logincheck ---
-=== 登录状态（权威判定）===
-[未登录] 当前没有有效会话
-阶段: waiting_qrcode
-最近错误: 无
---- 保险丝计数 ---
-1
