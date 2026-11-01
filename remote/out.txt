@@ -1,15 +1,13 @@
-<<<task_17.txt>>>
-===== 任务17 11-01 17:13:21 =====
+<<<task_18.txt>>>
+===== 任务18 11-01 17:32:51 =====
 --- 命令 ---
-pkill -f qr_refresh 2>/dev/null
-cat > /tmp/qr_refresh.sh <<'RR'
-#!/bin/bash
-for i in $(seq 1 36); do
-  cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/Pictures/阿萨尔登录码.png 2>/dev/null
-  sleep 20
-done
-RR
-nohup bash /tmp/qr_refresh.sh >/dev/null 2>&1 &
-echo "保鲜已启动：未来12分钟相册里的码每20秒自动更新"
+echo "--- 执行时刻: $(date '+%H:%M:%S') ---"
+echo "--- 心跳记录(最近10条) ---"
+grep 心跳 /root/remote_ctl.log | tail -10
+echo "--- 循环进程 ---"
+pgrep -fc remote_ctl.sh
 --- 输出 ---
-保鲜已启动：未来12分钟相册里的码每20秒自动更新
+--- 执行时刻: 17:32:51 ---
+--- 心跳记录(最近10条) ---
+--- 循环进程 ---
+1
