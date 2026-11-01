@@ -1,40 +1,26 @@
-<<<task_43.txt>>>
-===== 任务43 11-02 00:15:16 =====
+<<<task_44.txt>>>
+===== 任务44 11-02 00:18:39 =====
 --- 命令 ---
-echo "--- NapCat 进程 ---"
-ps aux | grep -iE "napcat|QQ " | grep -v grep | head -4
-echo "--- NapCat 日志最新15行 ---"
-tail -15 /root/napcat-restart.log
-echo "--- 00:07:16 断开后 bot.log 有无重连记录 ---"
-grep "00:0[7-9]\|00:1[0-9]" /root/bot.log | grep -iE "websocket|connect|disconnect|reconnect|closed" | head -6
-echo "--- bot.log 最新1行(看现在时间还活着吗) ---"
-tail -1 /root/bot.log
-echo "--- 端口监听(NoneBot服务端口) ---"
-netstat -tln 2>/dev/null | grep -E "8080|3000|5700|6700|2000|9000" | head -5
+echo "--- NapCat 真正的日志文件(最近1小时内修改过) ---"
+find /root/Napcat -name "*.log" -mmin -90 2>/dev/null | head -6
+ls -t /root/Napcat/log/ 2>/dev/null | head -4
+echo "--- 最新NapCat日志尾部30行 ---"
+F=$(find /root/Napcat -name "*.log" -mmin -90 2>/dev/null | head -1)
+echo "文件: $F"
+tail -30 "$F" 2>/dev/null | grep -v "^$" | tail -20
+echo "--- 手机当前网络连通性 ---"
+curl -s -m 8 -o /dev/null -w "GitHub: %{http_code}\n" https://api.github.com
+curl -s -m 8 -o /dev/null -w "QQ服务: %{http_code}\n" https://www.qq.com
+echo "--- 内存情况 ---"
+free -m | head -3
 --- 输出 ---
---- NapCat 进程 ---
-aid_u0_+ 27809  0.0  0.0   2396   236 pts/0    S     2023   0:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox
-aid_u0_+ 27827  2.3  0.2 339786104 27376 pts/0 S<l   2023   0:10 /root/Napcat/opt/QQ/qq --no-sandbox
-aid_u0_+ 27838  0.0  0.0 50707504 2424 pts/0   S     2023   0:00 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-aid_u0_+ 27839  0.0  0.0 50707504 560 pts/0    S     2023   0:00 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
---- NapCat 日志最新15行 ---
-aa011ce4235405577408bb8f6a461f7cbc64679067aa09aed2a14e49b20678b0
-32cba84f9314cd6170803bb03da37b22a63f5cc86d23fde7ccf48a30dde2959e
-c75134be70cc5a9514f19da62d28751b53f17479d82cf1f0957420ab02cd3065
-90299dc773a9e8536f40096286382c4f3f2c9fbd3f9b563cd7c1da4db2883021
-957be1ae21e6c745d8959a717e968480acba1e472541291fa5afa91abbbfa9f2
-b5e09beff975a30d5909eae8d162a04561c7a0ab522208f93cdf0f989cb99856
-750fe4dd522b9907dfbef597db742a8f6a70dbdd335b2df07a2fffe9ad830d4f
-c9a40c8cd363aa05a4d92ea45119c196bdad4656c360cbba1bd5c61ac860c615
-b72c60418b506ef438303334adbfd914e5eb2bec742343c41ad76fb6f86fe011
-0157728ff53bbdd1f2007d0bce7662154c27b591c855ad00d3016bdc098fadb6
-3edb648754b5805be3db458b2c2b9433d80216374dfc1c32adf6744c29d5334c
-88a42305f38b7e6e64d117e26cf8530145313534009d8e2dbc399758b110e74d
-7ad8ff4b3fa640545f84a1cfc6eea4023b21694d47694cf4a87f50335580c056
-63e9f85714f6c53509cef0338c5c62e985cc7ab811f362569672d49dcf19e7e3
-aca41333d05637a5da7854220a66ee4a14a6cb48a44eda0f42057d96a94e85e8
---- 00:07:16 断开后 bot.log 有无重连记录 ---
-11-02 00:07:16 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
---- bot.log 最新1行(看现在时间还活着吗) ---
-11-02 00:07:16 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
---- 端口监听(NoneBot服务端口) ---
+--- NapCat 真正的日志文件(最近1小时内修改过) ---
+--- 最新NapCat日志尾部30行 ---
+文件: 
+--- 手机当前网络连通性 ---
+GitHub: 200
+QQ服务: 501
+--- 内存情况 ---
+               total        used        free      shared  buff/cache   available
+Mem:           11296        9434         209         111        2542        1862
+Swap:          11296        6452        4843
