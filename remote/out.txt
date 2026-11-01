@@ -1,51 +1,29 @@
-<<<task_48.txt>>>
-===== 任务48 11-02 00:32:31 =====
+<<<task_49.txt>>>
+===== 任务49 11-02 00:34:20 =====
 --- 命令 ---
-echo "--- NapCat 目录 ---"
-ls /root/Napcat/ 2>/dev/null
-echo "--- 10分钟内新写入的文件 ---"
-find /root/Napcat -mmin -10 -type f 2>/dev/null | head -8
-echo "--- WebUI 探测 ---"
-curl -s -m 5 -o /dev/null -w "6099端口: %{http_code}\n" http://127.0.0.1:6099
-echo "--- NapCat 配置 ---"
-ls /root/Napcat/config/ 2>/dev/null
-head -30 /root/Napcat/config/onebot11_3427943187.json 2>/dev/null
-echo "--- 登录脚本怎么写的(前25行) ---"
-head -25 /root/azar_login.sh 2>/dev/null
+nohup bash /root/azar_login.sh > /root/azar_login_run.log 2>&1 &
+sleep 40
+echo "--- 登录脚本运行输出 ---"
+tail -15 /root/azar_login_run.log
+echo "--- 二维码是否已复制到相册 ---"
+ls -la /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null && echo "二维码已就位"
 --- 输出 ---
---- NapCat 目录 ---
-guild1.db
-guild1.db-shm
-guild1.db-wal
-opt
---- 10分钟内新写入的文件 ---
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
---- WebUI 探测 ---
-6099端口: 301
---- NapCat 配置 ---
---- 登录脚本怎么写的(前25行) ---
-#!/bin/bash
-# 阿萨尔 NapCat 一键登录助手 —— 在手机 Ubuntu (proot) 的 ~ 目录运行
-# 用法: bash azar_login.sh
-# 做的事: 清理旧进程 -> 启动 NapCat -> 盯着二维码文件等它刷新 ->
-#         复制到相册目录 -> 倒计时提醒扫码 -> 盯到登录成功为止
+--- 登录脚本运行输出 ---
+==> 第 3 步：等二维码生成（NapCat 启动约需 20~40 秒）
+==> 第 4 步：复制二维码到相册
+   二维码已就位（生成于 1 秒前），有效期约 110 秒
 
-QR_SRC="/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png"
-QR_DST="/sdcard/DCIM/Camera/asar_qr.png"
-LOG="/root/napcat.log"
-QR_VALID_SEC=110   # 二维码按 110 秒算过期，留足余量
+############################################################
+#                                                          #
+#   现在去手机上操作（抓紧时间，剩约 109 秒）：      #
+#   1. 打开 QQ（机器人小号 3427943187 登录的那个）           #
+#   2. 随便开个聊天（推荐文件传输助手）                      #
+#   3. 发图片 -> 选 DCIM/Camera 里的 asar_qr.png            #
+#   4. 点开大图 -> 长按 -> 识别二维码 -> 确认登录            #
+#                                                          #
+############################################################
 
-echo "==> 第 1 步：清理旧进程"
-screen -S napcat -X quit 2>/dev/null
-pkill -f "opt/QQ/qq" 2>/dev/null
-sleep 3
-
-echo "==> 第 2 步：启动 NapCat（后台，日志在 $LOG）"
-rm -f "$LOG" "$QR_SRC"
-nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox > "$LOG" 2>&1 &
-
-echo "==> 第 3 步：等二维码生成（NapCat 启动约需 20~40 秒）"
-GEN_TIME=""
-for i in $(seq 1 30); do
-    sleep 2
-    if [ -f "$QR_SRC" ]; then
+==> 第 5 步：盯着登录结果（你也可以先去扫码，我在这等着）
+--- 二维码是否已复制到相册 ---
+-rw-rw----. 1 10155 1023 590 Nov  2 00:34 /sdcard/DCIM/Camera/asar_qr.png
+二维码已就位
