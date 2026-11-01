@@ -8,6 +8,11 @@ CMD_URL="$BASE/cmd.txt"
 OUT_URL="$BASE/out.txt"
 PBOX=/root/.remote_pending
 mkdir -p "$PBOX"
+if [ -f /root/.remote_pid ]; then
+  OP=$(cat /root/.remote_pid 2>/dev/null)
+  [ -n "$OP" ] && [ "$OP" != "$$" ] && kill -0 "$OP" 2>/dev/null && exit 0
+fi
+echo $$ > /root/.remote_pid
 get_tok() {
   printf 'protocol=https\nhost=github.com\n\n' | timeout 10 git credential fill 2>/dev/null | sed -n 's/^password=//p' | head -1
 }
@@ -15,6 +20,7 @@ TOK=$(get_tok)
 [ -n "$TOK" ] || TOK=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
 cd "$REPO" || exit 1
 LAST=0
+C=0
 [ -f /root/.remote_last ] && LAST=$(cat /root/.remote_last)
 
 run_task() {
@@ -26,16 +32,17 @@ run_task() {
 }
 
 api_report() {
-  ls "$PBOX"/*.txt >/dev/null 2>&1 || return 0
+  ls "$PBOX" >/dev/null 2>&1 || return 0
+  F=$(ls -A "$PBOX" 2>/dev/null); [ -n "$F" ] || return 0
   : > /tmp/remote_bundle.txt
-  for f in $(ls "$PBOX"/task_*.txt 2>/dev/null | sort -t_ -k2 -n); do cat "$f" >> /tmp/remote_bundle.txt; done
+  for f in $F; do echo "<<<$f>>>" >> /tmp/remote_bundle.txt; cat "$PBOX/$f" >> /tmp/remote_bundle.txt; done
   [ -n "$TOK" ] || TOK=$(get_tok)
   [ -n "$TOK" ] || { echo "[$(date '+%m-%d %H:%M')] report:无token,留待下轮" >> "$LOG"; return 1; }
   SHA=$(timeout 30 curl -s -H "Authorization: token $TOK" "$OUT_URL" | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
   B64=$(base64 -w0 /tmp/remote_bundle.txt) || return 1
   R=$(timeout 60 curl -s -X PUT -H "Authorization: token $TOK" -d "{\"message\":\"遥控输出(API) $(date '+%m-%d %H:%M')\",\"content\":\"$B64\"${SHA:+,\"sha\":\"$SHA\"}}" "$OUT_URL")
   if echo "$R" | grep -q '"content"'; then
-    rm -f "$PBOX"/task_*.txt
+    rm -f "$PBOX"/*
     echo "[$(date '+%m-%d %H:%M')] report:API回传成功" >> "$LOG"
   else
     echo "[$(date '+%m-%d %H:%M')] report:API回传失败:$(echo "$R" | head -c 120)" >> "$LOG"
@@ -71,5 +78,6 @@ while true; do
   fi
   pgrep -f "opt/QQ/qq" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：NapCat不在，拉起" >> "$LOG"; cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 & cd "$REPO"; }
   pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & cd "$REPO"; }
+  C=$((C+1)); [ $((C % 10)) -eq 0 ] && echo "[$(date '+%m-%d %H:%M')] 心跳:循环正常,LAST=$LAST" >> "$LOG"
   sleep 30
 done
