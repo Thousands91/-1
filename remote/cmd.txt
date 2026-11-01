@@ -1,13 +1,17 @@
-32
-echo "=== 日志文件盘点 $(date '+%H:%M:%S') ==="
-ls -la /root/*.log /root/bot/*.log /root/bot/bot/*.log 2>/dev/null
-ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/*.log 2>/dev/null | head -5
-echo "--- bot 目录下最近的日志类文件 ---"
-find /root/bot -maxdepth 2 -name "*.log" -o -maxdepth 2 -name "logs" -type d 2>/dev/null | head -10
-echo "--- 大脑进程启动时间与启动方式 ---"
-PID=$(pgrep -f "main.py" | head -1)
-ps -o pid,lstart,cmd -p $PID 2>/dev/null
-ls -la /proc/$PID/fd/1 2>/dev/null | head -2
-echo "--- NapCat 进程 ---"
-pgrep -f "opt/QQ/qq" | head -2
-ps -o pid,lstart -p $(pgrep -f "opt/QQ/qq" | head -1) 2>/dev/null
+33
+echo "=== bot.log 概况 $(date '+%H:%M:%S') ==="
+wc -l /root/bot.log
+echo "--- 首行（启动时间）---"
+head -3 /root/bot.log
+echo "--- 末行时间 ---"
+tail -1 /root/bot.log
+echo "--- 错误/警告统计 ---"
+grep -c "ERROR" /root/bot.log
+grep -c "WARNING" /root/bot.log
+grep -c "Traceback" /root/bot.log
+echo "--- 错误样本（去重，最多10种）---"
+grep "ERROR" /root/bot.log | sed 's/^[0-9-]* [0-9:]* //' | cut -c1-100 | sort | uniq -c | sort -rn | head -10
+echo "--- 今天扫码登录后的启动点（找最近一次启动横幅）---"
+grep -n "NoneBot\|startup\|Application startup" /root/bot.log | tail -3
+echo "--- 最近60行 ---"
+tail -60 /root/bot.log
