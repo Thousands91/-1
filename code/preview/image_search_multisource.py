@@ -52,12 +52,19 @@ async def _(event: GroupMessageEvent | PrivateMessageEvent, arg: Message = Comma
     query = " ".join(tags)
 
     item = None
-    if private and not tags and random.random() < 0.5:
-        # 私聊纯随机抽图：先掷硬币选图源，jitsu 题材更多样；失败回落 Lolicon
-        _img = await fetch_jitsu_bytes(r18=True)
-        if _img:
-            await image_search.finish(MessageSegment.image(_img))
-            return
+    if private and not tags:
+        # 私聊纯随机：三源轮庄——jitsu(题材杂) / tbib(大库) / lolicon
+        _roll = random.random()
+        if _roll < 0.34:
+            _img = await fetch_jitsu_bytes(r18=True)
+            if _img:
+                await image_search.finish(MessageSegment.image(_img))
+                return
+        elif _roll >= 0.67:
+            _img = await fetch_tbib_bytes(None)
+            if _img:
+                await image_search.finish(MessageSegment.image(_img))
+                return
     item = await fetch_lolicon(r18=1 if private else 0, tags=tags)
 
     if item:
@@ -92,7 +99,19 @@ async def _(event: GroupMessageEvent | PrivateMessageEvent, arg: Message = Comma
     if img is None:
         # 带关键词搜不到就不随机兜底，如实说；不带关键词才走备用图源
         if tags:
-            if private and img is None:
+            if private:
+                # Lolicon 搜不到 → tbib 大库再搜一轮（同为色图库，不货不对板）
+                # 中文高频词先直译；其余交给 AI 翻译成 booru 英文标签
+                tbib_tags = _ZH_TAG_MAP.get(query)
+                if tbib_tags is None:
+                    bt = await translate_tags(query)
+                    if bt:
+                        tbib_tags = [t.strip() for t in bt.split(",") if t.strip()] or None
+                if tbib_tags:
+                    _img = await fetch_tbib_bytes(tbib_tags)
+                    if _img:
+                        await image_search.finish(MessageSegment.image(_img))
+                        return
                 await image_search.finish(
                     f"「{query}」的风月册页，图库里未曾收录。冷门的作品，画师们不轻易落笔——换位热门角色，兴许有货。"
                 )
@@ -125,6 +144,73 @@ async def _():
     seed = random.randint(0, 999999)
     url = f"https://picsum.photos/seed/{seed}/1200/800.jpg"
     await scenery.finish(Message(f"[CQ:image,file={url},cache=0]"))
+
+
+# —— 多图源：tbib.org（Danbooru 系大库，可标签搜索，R18，国内可达） ——
+# API 与图床（images/samples/thumbnails）实测全通。sample 采样图约
+# 1200px，与 Lolicon regular 同级。tags 用 booru 英文标签体系。
+TBIB_API = "https://tbib.org/index.php"
+_TBIB_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0"
+
+# 中文高频词 → booru 标签直译（不走 AI 翻译也能用）
+_ZH_TAG_MAP = {
+    "男": ["1boy", "solo"], "男性": ["1boy", "solo"], "男人": ["1boy", "solo"],
+    "帅哥": ["1boy", "solo"], "女": ["1girl"], "女性": ["1girl"], "美女": ["1girl"],
+}
+
+
+async def fetch_tbib_bytes(tags: list[str] | None = None) -> bytes | None:
+    """tbib 搜图。tags: booru 英文标签（空 = 纯随机）。失败返回 None，绝不抛错。"""
+    if tags:
+        norm = []
+        for t in tags:
+            t = t.strip().replace(" ", "_")
+            if t and t not in norm:
+                norm.append(t)
+        tags = norm or None
+    # 冷门标签总图数可能很少，pid 不能翻太深；小页码取一批候选随机挑。
+    # 注意：booru API 的标签分隔符必须用裸 "+"——走 aiohttp params 会被
+    # 编码成 %2B 导致永远搜不到，所以这里手动拼 query string。
+    _q = "+".join(["rating:explicit"] + (tags or []))
+    url = (f"{TBIB_API}?page=dapi&s=post&q=index&json=1&limit=25"
+           f"&tags={_q}&pid={random.randint(0, 3)}")
+    try:
+        async with aiohttp.ClientSession() as sess:
+            async with sess.get(
+                url,
+                timeout=aiohttp.ClientTimeout(total=15),
+                headers={"User-Agent": _TBIB_UA},
+            ) as resp:
+                if resp.status != 200:
+                    return None
+                arr = await resp.json(content_type=None)
+                if not arr:
+                    return None
+                random.shuffle(arr)
+                for post in arr[:4]:
+                    image = post.get("image", "")
+                    directory = post.get("directory", "")
+                    if not image or not directory:
+                        continue
+                    # sample(约1200px) 优先，原图兜底——两者实测都可达
+                    urls = [f"https://tbib.org/samples/{directory}/sample_{image}",
+                            f"https://tbib.org/images/{directory}/{image}"]
+                    for u in urls:
+                        try:
+                            async with sess.get(
+                                u, timeout=aiohttp.ClientTimeout(total=25),
+                                headers={"User-Agent": _TBIB_UA},
+                            ) as r2:
+                                if r2.status == 200:
+                                    data = await r2.read()
+                                    # QQ 发图 10MB 会拖死：超大图直接换下一张
+                                    if 2048 < len(data) <= 5 * 1024 * 1024:
+                                        return data
+                        except Exception:
+                            continue
+                return None
+    except Exception:
+        return None
 
 
 # —— 多图源：寂寞随机图 API（国内可达，图库杂、题材类型更广） ——
