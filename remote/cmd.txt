@@ -1,17 +1,17 @@
-41
-python3 << 'PYEOF' 2>&1
-import re
-# 收到的消息: bot.log 尾部 4000 行里的 Message 事件行
-lines = open('/root/bot.log', errors='ignore').readlines()[-4000:]
-msgs = [l.rstrip('\n') for l in lines if 'Message ' in l and 'from ' in l and ': ' in l]
-print(f"=== 收到的消息 最近25条 (共{len(msgs)}条) ===")
-for l in msgs[-25:]:
-    ts = l[:16]
-    body = l.split('] ', 1)[-1]
-    print(f"{ts} | {body[:100]}")
-# 阿萨尔的发送
-send = [l.rstrip('\n') for l in open('/root/napcat-restart.log', errors='ignore') if '发送 ->' in l]
-print(f"=== 阿萨尔回复 最近25条 (全天共{len(send)}条) ===")
-for l in send[-25:]:
-    print(l[:110])
-PYEOF
+42
+echo "--- 主进程 ---"
+pgrep -fc "venv/bin/python main.py"
+echo "--- bot.log 尾部事件/错误 ---"
+tail -60 /root/bot.log | grep -E "Message|ERROR|WARNING|Exception|failed|失败|超时|timeout" | tail -12
+echo "--- bot.log 最后3行 ---"
+tail -3 /root/bot.log
+echo "--- 从运行进程环境取key实测模型API ---"
+P=$(pgrep -f "venv/bin/python main.py" | head -1)
+K=$(tr '\0' '\n' < /proc/$P/environ | grep '^OPENAI_API_KEY=' | cut -d= -f2-)
+U=$(tr '\0' '\n' < /proc/$P/environ | grep '^OPENAI_BASE_URL=' | cut -d= -f2-)
+M=$(tr '\0' '\n' < /proc/$P/environ | grep '^OPENAI_MODEL=' | cut -d= -f2-)
+echo "BASE_URL=$U MODEL=$M KEY存在=$([ -n "$K" ] && echo yes || echo no)"
+curl -s -m 20 "${U:-https://open.bigmodel.cn/api/paas/v4}/chat/completions" -H "Authorization: Bearer $K" -H "Content-Type: application/json" -d "{\"model\":\"${M:-glm-4-flash}\",\"messages\":[{\"role\":\"user\",\"content\":\"回复ok两个字母\"}],\"max_tokens\":10}" | head -c 400
+echo ""
+echo "--- NapCat 非info日志尾部 ---"
+tail -40 /root/napcat-restart.log | grep -iv "info" | tail -6
