@@ -1,2 +1,6 @@
-29
-cat /root/bot/bot/.env
+30
+echo "=== 手机菜单版本核对 $(date '+%H:%M:%S') ==="
+ls -la /root/bot/bot/plugins/keyword_reply.py
+md5sum /root/bot/bot/plugins/keyword_reply.py
+echo "--- 菜单文案段 ---"
+grep -n -A 12 "店里这几样\|您挑\|找书" /root/bot/bot/plugins/keyword_reply.py | head -30
