@@ -159,21 +159,10 @@ _ZH_TAG_MAP = {
 }
 
 
-async def fetch_tbib_bytes(tags: list[str] | None = None) -> bytes | None:
-    """tbib 搜图。tags: booru 英文标签（空 = 纯随机）。失败返回 None，绝不抛错。"""
-    if tags:
-        norm = []
-        for t in tags:
-            t = t.strip().replace(" ", "_")
-            if t and t not in norm:
-                norm.append(t)
-        tags = norm or None
-    # 冷门标签总图数可能很少，pid 不能翻太深；小页码取一批候选随机挑。
-    # 注意：booru API 的标签分隔符必须用裸 "+"——走 aiohttp params 会被
-    # 编码成 %2B 导致永远搜不到，所以这里手动拼 query string。
-    _q = "+".join(["rating:explicit"] + (tags or []))
+async def _tbib_query_bytes(tag_str: str) -> bytes | None:
+    """单个标签组合查 tbib。失败/无图返回 None。"""
     url = (f"{TBIB_API}?page=dapi&s=post&q=index&json=1&limit=25"
-           f"&tags={_q}&pid={random.randint(0, 3)}")
+           f"&tags={tag_str}&pid={random.randint(0, 3)}")
     try:
         async with aiohttp.ClientSession() as sess:
             async with sess.get(
@@ -211,6 +200,38 @@ async def fetch_tbib_bytes(tags: list[str] | None = None) -> bytes | None:
                 return None
     except Exception:
         return None
+
+
+async def fetch_tbib_bytes(tags: list[str] | None = None) -> bytes | None:
+    """tbib 搜图。tags: booru 英文标签（空 = 纯随机）。失败返回 None，绝不抛错。
+
+    先按全部标签取交集搜；搜不到时逐个标签单独搜兜底——防止 AI 翻译出
+    不存在的复合标签（如 silver_hair_girl）导致整链空手。
+    """
+    if tags:
+        norm = []
+        for t in tags:
+            t = t.strip().replace(" ", "_")
+            if t and t not in norm:
+                norm.append(t)
+        tags = norm or None
+    # 冷门标签总图数可能很少，pid 不能翻太深；小页码取一批候选随机挑。
+    # 注意：booru API 的标签分隔符必须用裸 "+"——走 aiohttp params 会被
+    # 编码成 %2B 导致永远搜不到，所以这里手动拼 query string。
+    if tags:
+        _q = "+".join(["rating:explicit"] + tags)
+        data = await _tbib_query_bytes(_q)
+        if data:
+            return data
+        # 交集空手 → 逐标签单独搜（保留"色图"属性 rating:explicit）
+        for t in tags:
+            if t.startswith("rating:"):
+                continue
+            data = await _tbib_query_bytes(f"rating:explicit+{t}")
+            if data:
+                return data
+        return None
+    return await _tbib_query_bytes("rating:explicit")
 
 
 # —— 多图源：寂寞随机图 API（国内可达，图库杂、题材类型更广） ——
@@ -329,6 +350,11 @@ _TRANSLATE_PROMPT = (
     "你把中文关键词翻译成 Danbooru/Safebooru 二次元图库的英文标签。"
     "规则：标签全小写、单词间用下划线，多个标签之间用逗号分隔，"
     "角色名用 名字_(作品名) 格式。只输出标签，不要解释。\n"
+    "重要——必须使用图库真实存在的标签，禁止自造复合标签：\n"
+    "1. 人物属性要拆开：外貌用 silver_hair/blonde/twintails 等独立标签，"
+    "人数用 1girl/2girls/1boy/2boys，服饰用 maid/kimono/bikini 等\n"
+    "2. 例：银发少女 → silver_hair, 1girl（不是 silver_hair_girl）\n"
+    "3. 例：两个女仆 → maid, 2girls（不是 two_maids）\n"
     "常见对照：原神→genshin_impact；雷电将军→raiden_shogun；"
     "甘雨→ganyu；胡桃→hu_tao；初音未来→hatsune_miku；"
     "芙宁娜→furina；纳西妲→nahida；钟离→zhongli\n"
