@@ -1,45 +1,24 @@
-<<<task_25.txt>>>
-===== 任务25 11-01 20:01:49 =====
+<<<task_26.txt>>>
+===== 任务26 11-01 20:07:18 =====
 --- 命令 ---
-echo "=== 扫码前最终检查 $(date '+%H:%M:%S') ==="
-echo "--- 1. 遥控循环 ---"
-pgrep -fc "bash /root/remote_ctl.sh"
-echo "--- 2. NapCat 进程 ---"
-pgrep -f "opt/QQ/qq" >/dev/null && echo "运行中" || echo "未运行"
-echo "--- 3. 大脑 ---"
-pgrep -f "main.py" >/dev/null && echo "运行中" || echo "未运行"
-echo "--- 4. 登录状态 ---"
-bash /root/logincheck.sh 2>/dev/null
-echo "--- 5. 二维码新鲜度 ---"
-QR=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-if [ -f "$QR" ]; then
-  AGE=$(( $(date +%s) - $(stat -c %Y "$QR") ))
-  echo "码文件存在，生成于 $AGE 秒前"
-  ls -la "$QR"
-else
-  echo "码文件不存在"
-fi
-echo "--- 6. 保险丝计数 ---"
-wc -l < /root/.napcat_pulls 2>/dev/null || echo 0
-echo "--- 7. 相册目录可写性 ---"
-ls -d /sdcard/Pictures >/dev/null 2>&1 && echo "/sdcard/Pictures 可访问" || echo "/sdcard/Pictures 不可访问"
+echo "=== 手机代码版本核对 $(date '+%H:%M:%S') ==="
+md5sum /root/bot/bot/plugins/ai_chat.py /root/bot/bot/main.py 2>/dev/null
+wc -c /root/bot/bot/plugins/ai_chat.py
+grep -c "_AGREE_OPEN" /root/bot/bot/plugins/ai_chat.py
+grep -ci "zhipu" /root/bot/bot/plugins/ai_chat.py
+ls -la /root/bot/bot/plugins/ | head -8
 --- 输出 ---
-=== 扫码前最终检查 20:01:49 ===
---- 1. 遥控循环 ---
-1
---- 2. NapCat 进程 ---
-运行中
---- 3. 大脑 ---
-运行中
---- 4. 登录状态 ---
-=== 登录状态（权威判定）===
-[未登录] 当前没有有效会话
-阶段: waiting_qrcode
-最近错误: 无
---- 5. 二维码新鲜度 ---
-码文件存在，生成于 97 秒前
--rw-r--r--. 1 root root 603 Nov  1 20:00 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
---- 6. 保险丝计数 ---
-1
---- 7. 相册目录可写性 ---
-/sdcard/Pictures 可访问
+=== 手机代码版本核对 20:07:18 ===
+4a882abe855a450684c6ccfb65547d5f  /root/bot/bot/plugins/ai_chat.py
+2ce3f1afeafe29cc2d9e596df1f58e9c  /root/bot/bot/main.py
+51386 /root/bot/bot/plugins/ai_chat.py
+3
+0
+total 183
+drwxr-xr-x. 3 root root  3452 Oct 30 00:38 .
+drwxr-xr-x. 8 root root  3452 Oct 30 00:38 ..
+drwxr-xr-x. 2 root root  3452 Oct 30 00:38 __pycache__
+-rw-r--r--. 1 root root 51386 Oct 30 00:32 ai_chat.py
+-rw-r--r--. 1 root root 25498 Oct 29 00:35 book_find.py
+-rw-r--r--. 1 root root 11359 Oct 25 11:52 chess_game.py
+-rw-r--r--. 1 root root 13846 Oct 25 11:52 fortune.py
