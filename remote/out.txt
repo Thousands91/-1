@@ -1,10 +1,72 @@
-<<<task_40.txt>>>
-===== 任务40 11-02 00:02:50 =====
+<<<task_41.txt>>>
+===== 任务41 11-02 00:08:55 =====
 --- 命令 ---
-/root/bot/venv/bin/python -c "import requests; print('requests OK, 版本', requests.__version__)" 2>&1
-ps aux | grep "venv/bin/python main.py" | grep -v grep | wc -l
+python3 << 'PYEOF' 2>&1
+import re
+# 收到的消息: bot.log 尾部 4000 行里的 Message 事件行
+lines = open('/root/bot.log', errors='ignore').readlines()[-4000:]
+msgs = [l.rstrip('\n') for l in lines if 'Message ' in l and 'from ' in l and ': ' in l]
+print(f"=== 收到的消息 最近25条 (共{len(msgs)}条) ===")
+for l in msgs[-25:]:
+    ts = l[:16]
+    body = l.split('] ', 1)[-1]
+    print(f"{ts} | {body[:100]}")
+# 阿萨尔的发送
+send = [l.rstrip('\n') for l in open('/root/napcat-restart.log', errors='ignore') if '发送 ->' in l]
+print(f"=== 阿萨尔回复 最近25条 (全天共{len(send)}条) ===")
+for l in send[-25:]:
+    print(l[:110])
+PYEOF
 --- 输出 ---
-Traceback (most recent call last):
-  File "<string>", line 1, in <module>
-ModuleNotFoundError: No module named 'requests'
-1
+=== 收到的消息 最近25条 (共434条) ===
+11-01 23:47:05 [ | nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1593042429 from 3220329126@[群:5904
+11-01 23:47:19 [ | nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 87250328 from 1561950850@[群:590454
+11-01 23:47:28 [ | nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1308214329 from 3552275152@[群:5904
+11-01 23:51:52 [ | nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 131729182 from 3220329126@[群:59045
+11-01 23:51:59 [ | nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 181161112 from 3552275152@[群:59045
+11-01 23:52:06 [ | nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1583152183 from 3220329126@[群:5904
+11-01 23:52:15 [ | nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1879846550 from 3220329126@[群:5904
+11-01 23:56:23 [ | nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2080609726 from 1561950850 '色图'
+11-01 23:56:51 [ | nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 181118898 from 1561950850 '你在干什么
+11-01 23:57:14 [ | nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1869598683 from 1561950850 '真不错呢
+11-01 23:57:44 [ | nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 937739941 from 1561950850 '垂钓者有卖
+11-01 23:58:36 [ | nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1346189040 from 1561950850 '我不想喝
+11-01 23:58:53 [ | nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 218390132 from 1561950850 '有酒吗'
+11-01 23:59:06 [ | nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1101307842 from 1561950850 '我说的是
+11-01 23:59:32 [ | nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 500237784 from 1561950850 '你们这没有
+11-01 23:59:47 [ | nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 69659571 from 1561950850 '为什么'
+11-02 00:00:07 [ | nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 736875655 from 1561950850 '为什么禁酒
+11-02 00:00:45 [ | nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1250577406 from 1561950850 '苏丹也不
+11-02 00:02:02 [ | nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 927711526 from 3611220879@[群:59045
+11-02 00:04:00 [ | nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 411624286 from 1561950850 '那苏丹最喜
+11-02 00:04:19 [ | nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 471710000 from 1561950850 '不是说苏丹
+11-02 00:04:40 [ | nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 63189286 from 1561950850 '那他到底最喜
+11-02 00:05:01 [ | nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1187449032 from 1561950850 '怎么又是
+11-02 00:05:21 [ | nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 750152893 from 1561950850 '所以哪一个
+11-02 00:06:00 [ | nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1086500585 from 1561950850 '那城里到
+=== 阿萨尔回复 最近25条 (全天共154条) ===
+11-01 23:19:14 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 「王者」的风月册页，图库里未曾收录。冷门的作品，画师们不轻易落笔——换位热门角色，兴许有货。
+11-01 23:19:35 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [图片]
+11-01 23:20:01 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 画送来的路上破损了，今日只得作罢，改日再取。
+11-01 23:20:33 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 画送来的路上破损了，今日只得作罢，改日再取。
+11-01 23:21:07 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 画送来的路上破损了，今日只得作罢，改日再取。
+11-01 23:23:09 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [相亲相爱一家人(590454333)] [阿萨尔(3427943187)] 晚安，灯我吹了。
+11-01 23:23:10 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [相亲相爱一家人(590454333)] [阿萨尔(3427943187)] 晚安，睡前一页闲书最好。
+11-01 23:24:16 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [相亲相爱一家人(590454333)] [阿萨尔(3427943187)] 晚安，灯我吹了。
+11-01 23:56:42 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 画送来的路上破损了，今日只得作罢，改日再取。
+11-01 23:57:02 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 此刻，我正坐在「垂钓者」书店的柜台后，整理着书架上的书籍。阳光透过窗户洒在地板上，我手中的笔在纸上沙
+11-01 23:57:27 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 承蒙夸奖，这城里的每一份工作都有其价值。我在这「垂钓者」书店，不仅是为了生计，更是为了记录和传承知识
+11-01 23:57:49 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 当然，垂钓者书店也提供饮品。一杯鲜榨橙汁，清新解渴。🍊🥤
+11-01 23:58:44 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 一杯冷萃，清爽宜人，适合成年人的口味。🍵🥤
+11-01 23:58:57 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 一杯乌龙茶，醇厚回甘，适合成年人品味。🍵🥤
+11-01 23:59:16 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 一杯杏仁露，香气扑鼻，适合成年人的雅致口味。🌸🥛
+11-01 23:59:42 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 抱歉，我们这里不卖酒。🍊🥤
+11-01 23:59:52 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 这城里禁酒，怕是连卖的地方都没有。📚🌿
+11-02 00:00:23 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 这城里的风俗，认为酒是祸水的化身，故而禁售。🌿🍹
+11-02 00:01:01 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 苏丹也不例外，这城里上下都遵循这一风俗。🍋🥤
+11-02 00:04:07 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 苏丹最喜欢的饮品，是那杯骷髅泡酒，风味独特，据说能让人忘却尘世的烦恼。🦋🍻
+11-02 00:04:23 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 抱歉，我之前的回答有误。苏丹确实遵守禁酒的风俗，所以他没有特别喜欢的酒。🍹🚫
+11-02 00:04:44 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 苏丹最喜欢的，是一杯米酒，醇厚而不烈，适合他这样的贵胄品尝。🍻
+11-02 00:05:09 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 苏丹最喜欢喝的，是一杯白茶，清雅宜人，能让人心静神宁。🍵
+11-02 00:05:27 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 苏丹最喜欢的饮品，是那杯骷髅泡酒，风味独特，据说能让人忘却尘世的烦恼。🦋🍻
+11-02 00:06:08 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 城里确实禁酒，这风俗由来已久，认为酒是祸水的化身，故而禁售。🌿🍹
