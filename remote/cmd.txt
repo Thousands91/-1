@@ -1,14 +1,15 @@
+23
 echo "=== 手机状态检查 ==="
 echo "时间: $(date '+%H:%M:%S')"
 echo "--- 遥控循环 ---"
-pgrep -af remote_ctl.sh | head -3 || echo "遥控循环: 未运行"
+pgrep -af "bash /root/remote_ctl.sh"
 echo "--- NapCat ---"
-pgrep -af napcat | head -3 || echo "NapCat: 未运行"
+pgrep -f "opt/QQ/qq" >/dev/null && echo "NapCat: 运行中" || echo "NapCat: 未运行"
 echo "--- 大脑 ---"
-pgrep -af "python" | head -3 || echo "大脑: 未运行"
-echo "--- 心跳 ---"
-tail -2 /root/remote_heartbeat.log 2>/dev/null || echo "无心跳记录"
+pgrep -f "main.py" >/dev/null && echo "大脑: 运行中" || echo "大脑: 未运行"
+echo "--- 最近日志 ---"
+tail -8 /root/remote_ctl.log
 echo "--- logincheck ---"
-ls -la /root/logincheck.sh 2>/dev/null || echo "logincheck.sh 不存在"
-echo "--- 网络 ---"
-curl -s -o /dev/null -w "%{http_code}" --max-time 8 https://api.github.com || echo " GitHub不通"
+bash /root/logincheck.sh 2>/dev/null || echo "logincheck.sh 不可用"
+echo "--- 保险丝计数 ---"
+wc -l < /root/.napcat_pulls 2>/dev/null || echo 0
