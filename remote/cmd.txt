@@ -1,9 +1,6 @@
-13
-pkill -f remote_ctl.sh; sleep 1
-TOK=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
-curl -s --max-time 40 -H "Accept: application/vnd.github.raw" ${TOK:+-H "Authorization: token $TOK"} -o /root/remote_ctl.sh "https://api.github.com/repos/Thousands91/-1/contents/remote/remote_ctl.sh" || curl -sL --max-time 40 -o /root/remote_ctl.sh "https://gh-proxy.com/https://raw.githubusercontent.com/Thousands91/-1/main/remote/remote_ctl.sh"
-head -1 /root/remote_ctl.sh
+14
+echo "--- v4.2自检 ---"
+pgrep -fc remote_ctl.sh
 grep -c "BASE=" /root/remote_ctl.sh
-nohup bash /root/remote_ctl.sh >/dev/null 2>&1 &
-termux-wake-lock 2>/dev/null
-echo 任务13执行完毕
+ls /root/.remote_pending/ 2>/dev/null
+tail -6 /root/remote_ctl.log
