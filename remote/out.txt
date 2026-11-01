@@ -1,98 +1,61 @@
-<<<task_33.txt>>>
-===== 任务33 11-01 21:11:09 =====
+<<<task_34.txt>>>
+===== 任务34 11-01 21:14:07 =====
 --- 命令 ---
-echo "=== bot.log 概况 $(date '+%H:%M:%S') ==="
-wc -l /root/bot.log
-echo "--- 首行（启动时间）---"
-head -3 /root/bot.log
-echo "--- 末行时间 ---"
-tail -1 /root/bot.log
-echo "--- 错误/警告统计 ---"
-grep -c "ERROR" /root/bot.log
-grep -c "WARNING" /root/bot.log
-grep -c "Traceback" /root/bot.log
-echo "--- 错误样本（去重，最多10种）---"
-grep "ERROR" /root/bot.log | sed 's/^[0-9-]* [0-9:]* //' | cut -c1-100 | sort | uniq -c | sort -rn | head -10
-echo "--- 今天扫码登录后的启动点（找最近一次启动横幅）---"
-grep -n "NoneBot\|startup\|Application startup" /root/bot.log | tail -3
-echo "--- 最近60行 ---"
-tail -60 /root/bot.log
+echo "=== 深入分析 $(date '+%H:%M:%S') ==="
+echo "--- 登录相关关键行 ---"
+grep -in "login\|扫码\|qrcode\|二维码" /root/bot.log | head -8
+grep -in "login success\|qrcode\|二维码" /root/napcat-restart.log | tail -8
+echo "--- 今日每小时收到群消息条数 ---"
+grep -o "11-01 [0-9][0-9]:" /root/bot.log | grep -B0 ".*" | awk '{print $2}' | sort | uniq -c
+echo "--- 收到消息总数 ---"
+grep -c "message.group.normal" /root/bot.log
+echo "--- @阿萨尔 的消息条数 ---"
+grep -c "CQ:at" /root/bot.log
+grep -o "\[CQ:at[^]]*\]" /root/bot.log | head -3
+echo "--- NapCat 尾部 25 行 ---"
+tail -25 /root/napcat-restart.log
 --- 输出 ---
-=== bot.log 概况 21:11:09 ===
-5290 /root/bot.log
---- 首行（启动时间）---
-11-01 19:27:35 [SUCCESS] nonebot | NoneBot is initializing...
-11-01 19:27:35 [INFO] nonebot | Current Env: prod
-11-01 19:27:39 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
---- 末行时间 ---
-11-01 21:11:09 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
---- 错误/警告统计 ---
+=== 深入分析 21:14:07 ===
+--- 登录相关关键行 ---
+6593:二维码解码URL: https://txz.qq.com/p?k=6dnWbnzjUNlvfnzkCjxjJiiLzYmhSDg*&f=1600001615
+6594:如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+6596:11-01 20:08:19 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+6660:11-01 20:10:21 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+6682:二维码解码URL: https://txz.qq.com/p?k=CZw6vEOF9V7CT98m*UpKLKCKM*A-WC*p&f=1600001615
+6683:如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+6684:06f5e91640c3310e4d606b2aa79adadb445d89174211-01 20:10:21 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+6706:11-01 20:11:03 [[32minfo[39m] [Core] [Login] 二维码已被扫描，等待确认...
+--- 今日每小时收到群消息条数 ---
+     24 19:
+   3528 20:
+   2244 21:
+--- 收到消息总数 ---
+627
+--- @阿萨尔 的消息条数 ---
 0
-0
-0
---- 错误样本（去重，最多10种）---
---- 今天扫码登录后的启动点（找最近一次启动横幅）---
-14:11-01 19:27:40 [SUCCESS] nonebot | Running NoneBot...
-17:11-01 19:27:40 [INFO] uvicorn | Waiting for application startup.
-23:11-01 19:27:40 [INFO] uvicorn | Application startup complete.
---- 最近60行 ---
-11-01 21:10:50 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
-11-01 21:10:50 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
-11-01 21:10:50 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
-11-01 21:10:50 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
-11-01 21:10:50 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
-11-01 21:10:50 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
-11-01 21:10:51 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 95847573 from 568187738@[群:590454333] '谈了吗'
-11-01 21:10:51 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
-11-01 21:10:51 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
-11-01 21:10:51 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
-11-01 21:10:51 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
-11-01 21:10:51 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
-11-01 21:10:51 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
-11-01 21:10:51 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
-11-01 21:10:51 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
-11-01 21:10:53 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 647925932 from 568187738@[群:590454333] '[image:summary=[动画表情],file=08B8625D8088032708B9E14E2E320E3C.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTzZxfI...,file_size=108640]'
-11-01 21:10:53 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
-11-01 21:10:53 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
-11-01 21:10:53 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
-11-01 21:10:53 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
-11-01 21:10:53 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
-11-01 21:10:53 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
-11-01 21:10:53 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
-11-01 21:10:53 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
-11-01 21:10:57 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 38253938 from 568187738@[群:590454333] '真的吗'
-11-01 21:10:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
-11-01 21:10:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
-11-01 21:10:57 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
-11-01 21:10:57 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
-11-01 21:10:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
-11-01 21:10:57 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
-11-01 21:10:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
-11-01 21:10:57 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
-11-01 21:10:58 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1232487796 from 1445169274@[群:590454333] '人像模式有背景虚化'
-11-01 21:10:59 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
-11-01 21:10:59 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
-11-01 21:10:59 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
-11-01 21:10:59 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
-11-01 21:10:59 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
-11-01 21:10:59 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
-11-01 21:10:59 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
-11-01 21:10:59 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
-11-01 21:11:03 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 683212613 from 568187738@[群:590454333] '恭喜恭喜'
-11-01 21:11:03 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
-11-01 21:11:03 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
-11-01 21:11:03 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
-11-01 21:11:03 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
-11-01 21:11:03 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
-11-01 21:11:03 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
-11-01 21:11:03 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
-11-01 21:11:03 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
-11-01 21:11:08 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 762499213 from 2045344206@[群:590454333] '恭喜恭喜'
-11-01 21:11:08 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
-11-01 21:11:08 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
-11-01 21:11:08 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
-11-01 21:11:08 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
-11-01 21:11:08 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
-11-01 21:11:08 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
-11-01 21:11:09 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=364)
-11-01 21:11:09 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=364) running complete
+--- NapCat 尾部 25 行 ---
+11-01 21:12:14 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 我知道
+11-01 21:12:15 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [oOvOa(3361875175)] 打错字了前面
+11-01 21:12:18 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 在吧
+11-01 21:12:21 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [枫淞诗（已复活）(568187738)] 没在
+11-01 21:12:22 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [珂知我意深(1843662201)] 真的，感觉有一点胡子更好看！
+11-01 21:12:35 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爻心懒寄云中月(1445169274)] 不同风格吧
+11-01 21:12:39 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爻心懒寄云中月(1445169274)] 不习惯有胡子
+11-01 21:12:43 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 不在
+11-01 21:12:46 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 咦
+11-01 21:12:48 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 不记得了
+11-01 21:12:49 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [oOvOa(3361875175)] 其实哈基米当时是点语音的时候，那个语音进去就是一个摄像头
+11-01 21:12:57 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] [回复消息 [爻心懒寄云中月(1445169274)] 不习惯有胡子] @爻心懒寄云中月 (1445169274)  那剃了
+11-01 21:13:01 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [云逸(4G📶淡人机(1664743600)] [回复消息 [爻心懒寄云中月(1445169274)] [图片]] @爻心懒寄云中月 (1445169274)  这胡子留的好
+11-01 21:13:07 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [oOvOa(3361875175)] 不过那个时候我在外面没有进语音
+11-01 21:13:09 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [oOvOa(3361875175)] 其实没有看见
+11-01 21:13:10 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爻心懒寄云中月(1445169274)] 明早上班就剃了
+11-01 21:13:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 居然
+11-01 21:13:18 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 咋这样
+11-01 21:13:21 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爻心懒寄云中月(1445169274)] 两天不剃胡子就会这样
+11-01 21:13:33 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 让我偷窥一下
+11-01 21:13:33 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [珂知我意深(1843662201)] 别剃，很帅啊
+11-01 21:13:44 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 剃了吧
+11-01 21:13:48 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 清清爽爽的
+11-01 21:13:58 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [枫淞诗（已复活）(568187738)] 剃了看起来清爽干净
+11-01 21:14:06 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [oOvOa(3361875175)] 确实
