@@ -1,11 +1,13 @@
-43
-echo "--- NapCat 进程 ---"
-ps aux | grep -iE "napcat|QQ " | grep -v grep | head -4
-echo "--- NapCat 日志最新15行 ---"
-tail -15 /root/napcat-restart.log
-echo "--- 00:07:16 断开后 bot.log 有无重连记录 ---"
-grep "00:0[7-9]\|00:1[0-9]" /root/bot.log | grep -iE "websocket|connect|disconnect|reconnect|closed" | head -6
-echo "--- bot.log 最新1行(看现在时间还活着吗) ---"
-tail -1 /root/bot.log
-echo "--- 端口监听(NoneBot服务端口) ---"
-netstat -tln 2>/dev/null | grep -E "8080|3000|5700|6700|2000|9000" | head -5
+44
+echo "--- NapCat 真正的日志文件(最近1小时内修改过) ---"
+find /root/Napcat -name "*.log" -mmin -90 2>/dev/null | head -6
+ls -t /root/Napcat/log/ 2>/dev/null | head -4
+echo "--- 最新NapCat日志尾部30行 ---"
+F=$(find /root/Napcat -name "*.log" -mmin -90 2>/dev/null | head -1)
+echo "文件: $F"
+tail -30 "$F" 2>/dev/null | grep -v "^$" | tail -20
+echo "--- 手机当前网络连通性 ---"
+curl -s -m 8 -o /dev/null -w "GitHub: %{http_code}\n" https://api.github.com
+curl -s -m 8 -o /dev/null -w "QQ服务: %{http_code}\n" https://www.qq.com
+echo "--- 内存情况 ---"
+free -m | head -3
