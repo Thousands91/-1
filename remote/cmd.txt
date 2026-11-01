@@ -1,6 +1,6 @@
-30
-echo "=== 手机菜单版本核对 $(date '+%H:%M:%S') ==="
-ls -la /root/bot/bot/plugins/keyword_reply.py
-md5sum /root/bot/bot/plugins/keyword_reply.py
-echo "--- 菜单文案段 ---"
-grep -n -A 12 "店里这几样\|您挑\|找书" /root/bot/bot/plugins/keyword_reply.py | head -30
+31
+echo "=== 色图菜单修复验证 $(date '+%H:%M:%S') ==="
+echo "--- 群菜单文本（MENU_TEXT）---"
+grep -n -B2 -A16 "MENU_TEXT" /root/bot/bot/plugins/keyword_reply.py | head -40
+echo "--- 色图相关行 ---"
+grep -n "色图\|R18\|r18\|私聊" /root/bot/bot/plugins/keyword_reply.py | head -10
