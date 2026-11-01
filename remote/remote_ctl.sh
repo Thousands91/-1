@@ -1,0 +1,72 @@
+#!/bin/bash
+termux-wake-lock 2>/dev/null
+REPO=/root/asar-sync
+LOG=/root/remote_ctl.log
+QR=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+API="https://api.github.com/repos/Thousands91/-1/contents/remote/cmd.txt"
+PBOX=/root/.remote_pending
+mkdir -p "$PBOX"
+get_tok() {
+  printf 'protocol=https\nhost=github.com\n\n' | timeout 10 git credential fill 2>/dev/null | sed -n 's/^password=//p' | head -1
+}
+TOK=$(get_tok)
+[ -n "$TOK" ] || TOK=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
+cd "$REPO" || exit 1
+LAST=0
+[ -f /root/.remote_last ] && LAST=$(cat /root/.remote_last)
+
+run_task() {
+  echo "$1" > /root/.remote_last
+  LAST=$1
+  O="$PBOX/$1"
+  { echo "===== 任务$1 $(date '+%m-%d %H:%M:%S') ====="; echo "--- 命令 ---"; tail -n +2 "$2"; echo "--- 输出 ---"; tail -n +2 "$2" | timeout 90 bash 2>&1; } > "$O"
+  cat "$O" >> "$LOG"
+}
+
+api_report() {
+  ls "$PBOX"/*.txt >/dev/null 2>&1 || return 0
+  : > /tmp/remote_bundle.txt
+  for f in $(ls "$PBOX"/*.txt | sort -n); do cat "$f" >> /tmp/remote_bundle.txt; done
+  [ -n "$TOK" ] || TOK=$(get_tok)
+  SHA=$(timeout 30 curl -s -H "Authorization: token $TOK" "$API/out.txt" | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+  B64=$(base64 -w0 /tmp/remote_bundle.txt) || return 1
+  R=$(timeout 60 curl -s -X PUT -H "Authorization: token $TOK" -d "{\"message\":\"遥控输出(API) $(date '+%m-%d %H:%M')\",\"content\":\"$B64\"${SHA:+,\"sha\":\"$SHA\"}}" "$API/out.txt")
+  if echo "$R" | grep -q '"content"'; then
+    rm -f "$PBOX"/*.txt
+    echo "[$(date '+%m-%d %H:%M')] report:API回传成功" >> "$LOG"
+  else
+    echo "[$(date '+%m-%d %H:%M')] report:API回传失败,留待下轮" >> "$LOG"
+  fi
+}
+
+while true; do
+  [ -n "$TOK" ] || TOK=$(get_tok)
+  RAW=$(timeout 30 curl -s -H "Accept: application/vnd.github.raw" ${TOK:+-H "Authorization: token $TOK"} "$API")
+  case "$RAW" in
+    [0-9]*)
+      RID=$(printf '%s\n' "$RAW" | head -1 | tr -dc 0-9)
+      if [ -n "$RID" ] && [ "$RID" -gt "$LAST" ]; then
+        printf '%s\n' "$RAW" > "/tmp/remote_cmd_$RID.txt"
+        run_task "$RID" "/tmp/remote_cmd_$RID.txt"
+        api_report
+      fi
+      ;;
+    "") echo "[$(date '+%m-%d %H:%M')] intake:API无响应" >> "$LOG" ;;
+    *) echo "[$(date '+%m-%d %H:%M')] intake:API响应异常" >> "$LOG" ;;
+  esac
+  api_report
+  ST=$(bash /root/logincheck.sh 2>/dev/null | grep -c "\[未登录\]\|\[掉线\]")
+  if [ "$ST" = "1" ] && [ -f "$QR" ]; then
+    NOW=$(date +%s); MT=$(stat -c %Y "$QR" 2>/dev/null || echo "$NOW")
+    AGE=$((NOW - MT))
+    if [ "$AGE" -gt 600 ]; then
+      echo "[$(date '+%m-%d %H:%M')] 看护：未登录且码${AGE}s未刷新，重启NapCat" >> "$LOG"
+      pkill -f "opt/QQ/qq" 2>/dev/null; sleep 3
+      cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 &
+      cd "$REPO"
+    fi
+  fi
+  pgrep -f "opt/QQ/qq" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：NapCat不在，拉起" >> "$LOG"; cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 & cd "$REPO"; }
+  pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & cd "$REPO"; }
+  sleep 30
+done
