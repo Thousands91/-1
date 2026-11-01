@@ -1,3 +1,17 @@
-40
-/root/bot/venv/bin/python -c "import requests; print('requests OK, 版本', requests.__version__)" 2>&1
-ps aux | grep "venv/bin/python main.py" | grep -v grep | wc -l
+41
+python3 << 'PYEOF' 2>&1
+import re
+# 收到的消息: bot.log 尾部 4000 行里的 Message 事件行
+lines = open('/root/bot.log', errors='ignore').readlines()[-4000:]
+msgs = [l.rstrip('\n') for l in lines if 'Message ' in l and 'from ' in l and ': ' in l]
+print(f"=== 收到的消息 最近25条 (共{len(msgs)}条) ===")
+for l in msgs[-25:]:
+    ts = l[:16]
+    body = l.split('] ', 1)[-1]
+    print(f"{ts} | {body[:100]}")
+# 阿萨尔的发送
+send = [l.rstrip('\n') for l in open('/root/napcat-restart.log', errors='ignore') if '发送 ->' in l]
+print(f"=== 阿萨尔回复 最近25条 (全天共{len(send)}条) ===")
+for l in send[-25:]:
+    print(l[:110])
+PYEOF
