@@ -1,2 +1,2 @@
-19
-echo "后台存活实测: $(date '+%H:%M:%S') 进程:$(pgrep -fc remote_ctl.sh)"
+20
+echo "持续存活验证: $(date '+%H:%M:%S')"
