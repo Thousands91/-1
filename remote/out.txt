@@ -1,11 +1,10 @@
-<<<task_39.txt>>>
-===== 任务39 11-01 23:59:02 =====
+<<<task_40.txt>>>
+===== 任务40 11-02 00:02:50 =====
 --- 命令 ---
-echo "--- 用 bot 自己的 venv 装 requests ---"
-/root/bot/venv/bin/python -m pip install -q requests 2>&1 | tail -3
-echo "--- 用 venv python 验证 ---"
 /root/bot/venv/bin/python -c "import requests; print('requests OK, 版本', requests.__version__)" 2>&1
-echo "--- 阿萨尔主进程确认存活 ---"
-ps aux | grep "venv/bin/python main.py" | grep -v grep | head -1 && echo "主进程未受影响"
+ps aux | grep "venv/bin/python main.py" | grep -v grep | wc -l
 --- 输出 ---
---- 用 bot 自己的 venv 装 requests ---
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+ModuleNotFoundError: No module named 'requests'
+1
