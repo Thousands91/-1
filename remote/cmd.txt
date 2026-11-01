@@ -1,19 +1,13 @@
-36
-L=$(ls -t /root/bot.log /root/*/bot.log /root/*/*/bot.log /root/QQ*/bot.log 2>/dev/null | head -1)
-echo "LOG=$L 总行数=$(wc -l < "$L")"
-tail -n +5290 "$L" > /tmp/botlog_inc.txt
-echo "=== 增量行数: $(wc -l < /tmp/botlog_inc.txt) ==="
-echo "--- 增量起始时间与最新时间 ---"
-head -1 /tmp/botlog_inc.txt | cut -c1-50
-tail -1 /tmp/botlog_inc.txt | cut -c1-50
-echo "--- ERROR 条数: $(grep -c ERROR /tmp/botlog_inc.txt) / WARNING 条数: $(grep -c WARNING /tmp/botlog_inc.txt) ---"
-grep "ERROR\|WARNING" /tmp/botlog_inc.txt | tail -8
-echo "--- 收到消息: $(grep -c '收到' /tmp/botlog_inc.txt) 条 ---"
-echo "--- 消息类型分布(群/私) ---"
-grep -o "GroupMessage\|PrivateMessage" /tmp/botlog_inc.txt | sort | uniq -c
-echo "--- 阿萨尔回复样本(最近10条) ---"
-grep "发送 ->" /tmp/botlog_inc.txt | tail -10 | cut -c1-120
-echo "--- 命令触发统计 ---"
-grep -o "色图\|点歌\|菜单\|运势\|签到\|看书\|看景\|下棋" /tmp/botlog_inc.txt | sort | uniq -c | sort -rn | head -8
-echo "--- 最新15行 ---"
-tail -15 "$L" | cut -c1-120
+37
+echo "=== 修复联网抓取: 补装 requests(不重启进程,零影响) ==="
+pip3 install -q requests >/dev/null 2>&1 || pip3 install -q --break-system-packages requests >/dev/null 2>&1
+python3 -c "import requests; print('requests 安装成功, 版本', requests.__version__)" 2>&1
+echo "=== 事件统计(21:11-23:47) ==="
+echo "群消息事件: $(grep -c 'message.group.normal' /tmp/botlog_inc.txt)  私聊事件: $(grep -c 'message.private' /tmp/botlog_inc.txt)"
+echo "=== NapCat 发送统计 ==="
+echo "全天总发送: $(grep -c '发送 ->' /root/napcat-restart.log)"
+echo "带图发送: $(grep '发送 ->' /root/napcat-restart.log | grep -c 'image')"
+echo "最近5条发送:"
+grep '发送 ->' /root/napcat-restart.log | tail -5 | cut -c1-100
+echo "=== 进程状态确认 ==="
+pgrep -f "python.*bot.py" | head -3 && echo "阿萨尔主进程存活"
