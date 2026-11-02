@@ -1,5 +1,7 @@
-92
-tail -60 /root/bot/bot/bot.log
-echo ==兜底语记录==
-grep -ac "眼花了" /root/bot/bot/bot.log
-ls -la /root/bot/bot/plugins/image_see.py
+93
+BPID=$(pgrep -f "venv/bin/python main.py" | head -1)
+LOG=$(readlink /proc/$BPID/fd/1)
+echo "bot PID=$BPID 日志去向=$LOG"
+grep -a "识图" $LOG | tail -12
+echo ==日志尾部==
+tail -25 $LOG
