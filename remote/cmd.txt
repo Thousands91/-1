@@ -1,14 +1,21 @@
-65
+66
 python3 << 'PYEOF' 2>&1
-import glob, re
-# 找人设/备忘文本在哪
-for f in glob.glob('/root/bot/bot/plugins/*.py') + glob.glob('/root/bot/bot/*.py') + glob.glob('/root/bot/bot/**/*.txt', recursive=True):
-    c = open(f, errors='ignore').read()
-    for kw in ['人设', '备忘', '阿萨尔', '书店老板']:
-        if kw in c:
-            idx = c.index(kw)
-            print(f"=== {f} 含'{kw}' ===")
-            print(c[max(0,idx-100):idx+600].replace('\n','\n| ')[:700])
-            print()
-            break
+p = '/root/bot/bot/plugins/ai_chat.py'
+src = open(p, encoding='utf-8').read()
+old = '语气克制、带点自嘲的清醒，不热血不中二，不卖惨。'
+add = '\\n- 回复末尾的小符号（📖✨📚这些）别每条都带：十条里有两三条带就够，平时素着说，真有心境才点一个，不带也完全没问题。'
+n = src.count(old)
+print(f'锚点匹配: {n}处')
+if n == 1:
+    open(p, 'w', encoding='utf-8').write(src.replace(old, old + add))
+    print('人设已更新')
 PYEOF
+echo "--- 语法检查 ---"
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo "语法OK"
+echo "--- 重启加载 ---"
+pkill -f "venv/bin/python main.py"
+sleep 3
+cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot.log 2>&1 &
+sleep 12
+pgrep -f "venv/bin/python main.py" | head -1
+tail -8 /root/bot/bot.log | grep -E "SUCCESS|ERROR|startup" | tail -3
