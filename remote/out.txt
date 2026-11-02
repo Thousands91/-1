@@ -1,24 +1,29 @@
-<<<task_57.txt>>>
-===== 任务57 11-02 12:57:57 =====
+<<<task_58.txt>>>
+===== 任务58 11-02 12:59:37 =====
 --- 命令 ---
-python3 << 'PYEOF' 2>&1
-import base64, json, urllib.request, shutil
-files = {"ai_chat_face.py": "/root/bot/bot/plugins/ai_chat.py",
-         "image_search_multisource.py": "/root/bot/bot/plugins/image_search.py"}
-for f, dst in files.items():
-    d = json.load(urllib.request.urlopen(f"https://api.github.com/repos/Thousands91/-1/contents/code/preview/{f}"))
-    content = base64.b64decode(d["content"])
-    bak = dst + ".bak_1102"
-    shutil.copy(dst, bak)
-    open(dst, "wb").write(content)
-    print(f"OK {f} -> {dst} ({len(content)}字节, 旧版备份{bak})")
-PYEOF
-echo "--- 语法检查 ---"
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo "ai_chat.py 语法OK"
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/image_search.py && echo "image_search.py 语法OK"
+pkill -f "venv/bin/python main.py"
+sleep 3
+cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 12
+echo "--- 新进程 ---"
+pgrep -af "venv/bin/python main.py" | head -2
+echo "--- 插件加载情况 ---"
+tail -25 /root/bot.log | grep -iE "succeeded|error|traceback|failed|loaded" | tail -8
+echo "--- 日志尾部3行 ---"
+tail -3 /root/bot.log
 --- 输出 ---
-OK ai_chat_face.py -> /root/bot/bot/plugins/ai_chat.py (56093字节, 旧版备份/root/bot/bot/plugins/ai_chat.py.bak_1102)
-OK image_search_multisource.py -> /root/bot/bot/plugins/image_search.py (18416字节, 旧版备份/root/bot/bot/plugins/image_search.py.bak_1102)
---- 语法检查 ---
-ai_chat.py 语法OK
-image_search.py 语法OK
+--- 新进程 ---
+6788 /root/bot/venv/bin/python main.py
+--- 插件加载情况 ---
+11-02 12:59:43 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
+11-02 12:59:43 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
+11-02 12:59:43 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+11-02 12:59:43 [SUCCESS] nonebot | Succeeded to load plugin "image_search_web" from "plugins.image_search_web"
+11-02 12:59:43 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-02 12:59:43 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+11-02 12:59:43 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+11-02 12:59:43 [SUCCESS] nonebot | Loaded adapters: OneBot V11
+--- 日志尾部3行 ---
+11-02 12:59:43 [INFO] __main__ | ==================================================
+11-02 12:59:43 [INFO] uvicorn | Application startup complete.
+11-02 12:59:43 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
