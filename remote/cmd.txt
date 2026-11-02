@@ -1,7 +1,9 @@
-61
-echo "--- bot.log 前3行(看时间戳格式) ---"
-head -3 /root/bot.log
-echo "--- bot.log 总行数与文件时间 ---"
-wc -l /root/bot.log; stat -c "%y %s字节" /root/bot.log
-echo "--- NapCat 发送日志 前2行(看格式) ---"
-head -2 /root/napcat-restart.log
+62
+echo "--- /root 下所有日志文件 ---"
+ls -la /root/*.log /root/*.log.* 2>/dev/null
+echo "--- bot 目录里的日志 ---"
+find /root/bot -name "*.log*" -mmin -1440 2>/dev/null | head -5
+echo "--- 全盘找昨天修改过的log ---"
+find /root -name "*.log" -newermt "2026-11-01" ! -newermt "2026-11-02" 2>/dev/null | head -8
+echo "--- 当前bot.log全部内容(52行看完) ---"
+cat /root/bot.log | tail -8
