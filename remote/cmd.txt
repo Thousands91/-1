@@ -1,3 +1,5 @@
-79
-grep -n "DRINK_WORDS\|EAT_WORDS" /root/bot/bot/plugins/ai_chat.py | head -4
-sed -n '505,560p' /root/bot/bot/plugins/ai_chat.py
+80
+sed -n '245,262p' /root/bot/bot/plugins/ai_chat.py
+echo ==_memory_block定义==
+grep -n "_memory_block" /root/bot/bot/plugins/ai_chat.py | head -3
+awk '/def _memory_block/,/^def [a-z_]+\(|^async def /' /root/bot/bot/plugins/ai_chat.py | head -30
