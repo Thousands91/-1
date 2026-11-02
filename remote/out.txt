@@ -1,12 +1,34 @@
-<<<task_59.txt>>>
-===== 任务59 11-02 13:01:29 =====
+<<<task_60.txt>>>
+===== 任务60 11-02 13:08:29 =====
 --- 命令 ---
-grep "image_search" /root/bot.log | tail -2
-/root/bot/venv/bin/python -c "import requests; print('requests', requests.__version__)"
-tail -2 /root/guard_status.txt
+python3 << 'PYEOF' 2>&1
+import re
+# 昨天的 bot.log 行(日期 11-01)
+lines = open('/root/bot.log', errors='ignore').readlines()
+yest = [l.rstrip('\n') for l in lines if l[:5] in ('11-01',) or '2026-11-01' in l[:22]]
+if not yest:
+    # 时间格式可能不同,取昨天日期出现的前后行
+    yest = [l.rstrip('\n') for l in lines if '11-01' in l[:24]]
+print(f"昨天日志行数: {len(yest)}")
+print(f"时间范围: {yest[0][:22]} ~ {yest[-1][:22]}")
+# 收到的消息(用户说的)
+msgs = [l for l in yest if 'Message ' in l and 'from ' in l and ': ' in l]
+print(f"\n=== 收到消息 共{len(msgs)}条, 抽样40条 ===")
+# 均匀抽样,覆盖全天
+step = max(1, len(msgs)//40)
+for l in msgs[::step][:40]:
+    ts = l[:16]
+    body = l.split('] ', 1)[-1]
+    print(f"{ts} | {body[:90]}")
+# 阿萨尔的回复
+send = [l.rstrip('\n') for l in open('/root/napcat-restart.log', errors='ignore') if '发送 ->' in l and ('11-01' in l[:24] or '2026-11-01' in l[:24])]
+print(f"\n=== 阿萨尔回复 共{len(send)}条, 抽样40条 ===")
+step = max(1, len(send)//40)
+for l in send[::step][:40]:
+    print(l[:110])
+PYEOF
 --- 输出 ---
-11-02 12:59:43 [SUCCESS] nonebot | Succeeded to load plugin "image_search" from "plugins.image_search"
-11-02 12:59:43 [SUCCESS] nonebot | Succeeded to load plugin "image_search_web" from "plugins.image_search_web"
-requests 2.34.2
-11-02 12:33:02 被踢标记超6小时,允许再试
-11-02 12:33:02 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+昨天日志行数: 0
+Traceback (most recent call last):
+  File "<stdin>", line 9, in <module>
+IndexError: list index out of range
