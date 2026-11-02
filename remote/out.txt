@@ -1,49 +1,55 @@
-<<<task_81.txt>>>
-===== 任务81 11-02 22:09:05 =====
+<<<task_82.txt>>>
+===== 任务82 11-02 22:13:08 =====
 --- 命令 ---
-sed -n '166,205p' /root/bot/bot/plugins/ai_chat.py
-echo ==记忆存储位置==
-ls /root/bot/bot/memory* /root/bot/bot/*.json /root/bot/bot/*.db 2>/dev/null | head -8
+grep -n "def _load_memory" /root/bot/bot/plugins/ai_chat.py
+sed -n "$(grep -n 'def _load_memory' /root/bot/bot/plugins/ai_chat.py | cut -d: -f1),+18p" /root/bot/bot/plugins/ai_chat.py
+echo ==记忆内容==
+python3 - <<'PY'
+import sqlite3, json
+con = sqlite3.connect('/root/bot/bot/guild1.db')
+cur = con.cursor()
+tabs = [r[0] for r in cur.execute("SELECT name FROM sqlite_master WHERE type='table'")]
+print('表:', tabs)
+for t in tabs:
+    cols = [c[1] for c in cur.execute(f'PRAGMA table_info({t})')]
+    print(t, cols)
+PY
 --- 输出 ---
-def _memory_block(uid: int) -> str:
-    entries = _load_memory(uid)
-    if not entries:
-        return ""
-    lines = []
-    for e in entries[-MEMORY_IN_PROMPT:]:
-        m = e.get("m", "")
-        r = e.get("r", "")
-        lines.append(f"- 他问：「{m}」，你当时答：「{r}」" if r else f"- 他问：「{m}」")
-    return (
-        "（以下是以前和对方打交道时留下的记录，每一条都已经答完了。\n"
-        "**这些是旧话题，不是待回答的问题**：除非对方这一句又提起来，"
-        "否则一个字都别往里接，更别把上一条的答案续到这轮回答后面。\n"
-        "记着它们只是让你认得这个人，别整段复述。）\n" + "\n".join(lines)
-    )
+68:def _load_memory(uid: int) -> list:
+def _load_memory(uid: int) -> list:
+    try:
+        return _json.loads(_memory_path(uid).read_text(encoding="utf-8"))
+    except Exception:
+        return []
 
-# 群聊场合的补充约束
-GROUP_HINT = (
-    "\n\n## 当前场合（务必遵守）\n"
-    "你在一个群里，有人直接问你话。\n"
-    "**默认只说一句话**。对方问得多、或事情复杂，可以说两句；"
-    "最多三句，绝不可再多。\n"
-    "不铺垫、不总结、不分点、不用小标题、不要反问收尾。\n"
-    "群友说话随便，你不必纠正，但要保持书商的身份。\n"
-    "**不要主动科普苏丹卡、七日之期、百科全书**——那是你的底子，不是你的口头禅。"
-    "只有对方问起，或者正好能说明一件事时，才提一句。\n"
-    "讲起城里的谁，讲一件具体的小事，比讲他的身份有用。\n"
-    "\n"
-    "## 说话的腔调（务必遵守）\n"
-    "- 日常闲聊就正常接话，问候就好好问候，别硬塞卡牌、折卡这些词。\n"
-    "- 只有话题本身沾到这个世界（卡牌、王城、城中的人和事）时，才以当事人、"
-    "旁观者的口吻聊，细节取自你的人设，像住在这里的人随口讲，不是介绍设定。\n"
-    "- 听来的事要标明是听来的：「这话是听来的，我没亲见，不写进册子。」"
-    "但别人随口一句感想、抱怨、玩笑不算「听来的事」。"
-    "**这句话一周说一次都嫌多，别当口头禅反复用。**\n"
-    "- 有人问危险的事（折卡、弑君、逃亡），你不入局，也不出主意，可以转述别人怎么做。\n"
-    "- **绝对禁止现编名字**：不知道的歌名、书名、人名、地名，就直说没听过、书上没记。"
-    "编一个《某某》出来是最大的露馅——你立过誓只写亲眼见过的事。\n"
-    "- 语气克制、带点自嘲的清醒，不热血不中二，不卖惨。"
-    "\n\n"
-==记忆存储位置==
-/root/bot/bot/guild1.db
+
+def _save_memory(uid: int, entries: list) -> None:
+    try:
+        _memory_path(uid).write_text(
+            _json.dumps(entries[-MEMORY_CAP:], ensure_ascii=False), encoding="utf-8"
+        )
+    except Exception as e:
+        logger.warning(f"长期记忆写入失败：{type(e).__name__} {e}")
+
+
+
+# ---------- QQ 表情识别（face/mface 段转文字标记） ----------
+# get_plaintext() 只取纯文本，QQ 小表情/商城表情整段被丢，
+==记忆内容==
+表: ['t_GPro_ChannelAuthStore', 't_GPro_QQMsgListGuild', 't_GPro_QQMsgListChannel', 't_GPro_MemberListStatusInfo', 't_GPro_Preference', 't_GPro_Guild_v15', 't_GPro_Channel_v2', 't_GPro_CategoryInfo_v1', 't_GPro_Category', 't_GPro_Role', 't_GPro_GuildRoleOrder', 't_GPro_TopRoleInfo', 't_GPro_PersistPollingData', 't_GPro_GuildUserProfile_v3', 't_GPro_AISearchRspBufModel', 't_GPro_CommonUserProfile_v2']
+t_GPro_ChannelAuthStore ['channel_id_', 'channel_user_permission_', 'guild_id_']
+t_GPro_QQMsgListGuild ['auto_subscribe_flag_', 'avatar_seq_', 'guild_id_', 'guild_name_', 'subscribe_timestamp_', 'top_timestamp_']
+t_GPro_QQMsgListChannel ['appid_', 'avatar_seq_', 'channel_id_', 'channel_name_', 'channel_type_', 'guild_id_', 'guild_name_', 'subscribe_timestamp_', 'top_timestamp_']
+t_GPro_MemberListStatusInfo ['cookie_buf_', 'err_code_', 'err_msg_', 'finish_', 'guild_id_', 'max_index_id_', 'next_index_', 'totoal_count_', 'update_time_']
+t_GPro_Preference ['key_', 'str_value_']
+t_GPro_Guild_v15 ['cmd_uin_info', 'guild_id', 'guild_info']
+t_GPro_Channel_v2 ['application_info', 'auth_control_status_list', 'banned_info', 'banned_speak', 'calc_msg_notify_type', 'channel_auth_bitmap', 'channel_change_seq', 'channel_id', 'channel_name', 'channel_num', 'channel_type', 'cmd_uin_info', 'create_time', 'creator_tinyid', 'essence_info', 'face_seq', 'forum_channel_info', 'goto_channel_id', 'group_info', 'guild_id', 'has_custom_msg_notify_type', 'hidden_post_channel', 'icon_url', 'is_category_admin', 'is_channel_admin', 'join_time', 'last_cnt_msg_seq', 'last_msg_seq', 'live_channel_info', 'live_permission', 'msg_meta', 'msg_notify_type', 'my_msg_notify_backend_flag', 'my_msg_notify_type', 'my_qq_msg_list_setting', 'my_read_cnt_seq', 'my_read_msg_seq', 'my_speak_permission_type', 'need_show', 'operation_title', 'operation_type', 'private_type', 'read_msg_meta', 'slow_mode_info_list', 'slow_mode_key', 'speak_permission', 'special_type_list', 'switch_jump_channel_id', 'text_channel_info', 'top_msg', 'top_msg_list', 'visible_type', 'voice_channel_info']
+t_GPro_CategoryInfo_v1 ['bytes_category_common_list', 'category_alias', 'category_id', 'category_index', 'category_name', 'category_type', 'close_switch', 'guild_id', 'msg_channel_info_list']
+t_GPro_Category ['category_id_', 'guild_id_', 'is_folded_']
+t_GPro_Role ['backgroud_color1_', 'backgroud_color2_', 'color_', 'count_', 'description_', 'display_tag_name_', 'display_type_', 'guild_id_', 'hoist_', 'is_channel_role_', 'is_not_sort_', 'levelBigIcon_', 'levelDsc_', 'levelIcon_', 'level_simpleDsc_color_', 'level_split_line_color_', 'member_limit_', 'name_', 'outline_color_', 'role_id_', 'role_permissions_', 'type_']
+t_GPro_GuildRoleOrder ['common_role_order_buf_', 'guild_id_', 'level_role_order_buf_', 'limit_']
+t_GPro_TopRoleInfo ['channel_id_', 'guild_id_', 'role_id_']
+t_GPro_PersistPollingData ['channel_id_', 'cookie_', 'data_buf_', 'guild_id_', 'poll_source_', 'poll_type_', 'version_']
+t_GPro_GuildUserProfile_v3 ['avatar_meta_', 'avatar_meta_ts_', 'client_identity_buffer_', 'client_identity_ts_', 'guild_id_', 'level_role_id_', 'level_role_id_ts_', 'manage_category_ids_buffer_', 'manage_category_ids_ts_', 'member_name_', 'member_name_ts_', 'role_id_', 'role_id_ts_', 'tiny_id_', 'user_identity_buffer_', 'user_identity_ts_']
+t_GPro_AISearchRspBufModel ['cache_key_', 'rsp_buf_', 'update_ts_']
+t_GPro_CommonUserProfile_v2 ['avatar_meta_', 'avatar_meta_ts_', 'avatar_pendant_', 'avatar_pendant_ts_', 'follow_status_', 'follow_status_ts_', 'is_guild_author_', 'is_guild_author_ts_', 'member_type_', 'member_type_ts_', 'nick_name_', 'nick_name_ts_', 'tiny_id_', 'user_medal_buffer_', 'user_medal_ts_']
