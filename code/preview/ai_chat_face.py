@@ -1108,7 +1108,9 @@ async def _group_roster(bot: Bot, group_id: int) -> str:
 async def call_llm(messages: List[dict], extra_system: str = "") -> str:
     from openai import AsyncOpenAI
 
-    client = AsyncOpenAI(api_key=API_KEY, base_url=BASE_URL)
+    # glm-4.7-flash 及以上默认开深度思考，正文会被思考过程吃空——显式关闭。
+    # 免费档限流较激进，SDK 层加 3 次指数退避重试。
+    client = AsyncOpenAI(api_key=API_KEY, base_url=BASE_URL, max_retries=3)
     full_messages = [{"role": "system", "content": SYSTEM_PROMPT}] + messages
     if extra_system:
         # 内部备忘放在末尾的 system 层，模型只参考不复述
@@ -1119,8 +1121,13 @@ async def call_llm(messages: List[dict], extra_system: str = "") -> str:
         messages=full_messages,
         max_tokens=MAX_TOKENS,
         temperature=TEMPERATURE,
+        extra_body={"thinking": {"type": "disabled"}},
     )
-    return (resp.choices[0].message.content or "").strip()
+    text = (resp.choices[0].message.content or "").strip()
+    if not text:
+        # 思考模式万一没关干净会导致空正文——抛错交给上层重试机制
+        raise RuntimeError("模型返回空正文(疑似思考模式未关闭)")
+    return text
 
 
 # 清空对话记忆
