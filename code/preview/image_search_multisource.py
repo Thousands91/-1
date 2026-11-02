@@ -375,6 +375,8 @@ async def translate_tags(query: str) -> str:
                     "model": AI_MODEL,
                     "max_tokens": 60,
                     "temperature": 0,
+                    # glm-4.7-flash+ 默认开深度思考，会把正文吃空——显式关闭
+                    "thinking": {"type": "disabled"},
                     "messages": [
                         {"role": "system", "content": _TRANSLATE_PROMPT},
                         {"role": "user", "content": query},
