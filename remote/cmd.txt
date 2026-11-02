@@ -1,11 +1,16 @@
-54
-echo "--- venv/bin 内容 ---"
-ls /root/bot/venv/bin/ | head -12
-echo "--- venv pip 是否可用 ---"
-/root/bot/venv/bin/python -m pip --version 2>&1 | head -2
-echo "--- 若无pip则ensurepip ---"
-/root/bot/venv/bin/python -m ensurepip 2>&1 | tail -2
-echo "--- 安装 requests(显示真实报错) ---"
-/root/bot/venv/bin/python -m pip install requests 2>&1 | tail -5
-echo "--- 验证 ---"
-/root/bot/venv/bin/python -c "import requests; print('requests OK, 版本', requests.__version__)" 2>&1
+55
+python3 << 'PYEOF' 2>&1
+import base64, json, urllib.request, shutil
+files = {"ai_chat_face.py": "/root/bot/plugins/ai_chat.py",
+         "image_search_multisource.py": "/root/bot/plugins/image_search.py"}
+for f, dst in files.items():
+    d = json.load(urllib.request.urlopen(f"https://api.github.com/repos/Thousands91/-1/contents/code/preview/{f}"))
+    content = base64.b64decode(d["content"])
+    bak = dst + ".bak_1102"
+    shutil.copy(dst, bak)
+    open(dst, "wb").write(content)
+    print(f"OK {f} -> {dst} ({len(content)}字节, 旧版备份{bak})")
+PYEOF
+echo "--- 语法检查 ---"
+/root/bot/venv/bin/python -m py_compile /root/bot/plugins/ai_chat.py && echo "ai_chat.py 语法OK"
+/root/bot/venv/bin/python -m py_compile /root/bot/plugins/image_search.py && echo "image_search.py 语法OK"
