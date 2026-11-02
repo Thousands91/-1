@@ -120,6 +120,13 @@
 5. 遥控下发「状态检查」任务验证回传；同时查循环日志排多实例
 
 ### 扫码登录（用户说"出码"才启动）
+
+**用户侧固定命令（2026-11-02 与用户确认，永远用这套，别换花样）**：
+1. 打开 Termux → `proot-distro login ubuntu`
+2. `bash ~/azar_login.sh`（自动出码，二维码存 DCIM/Camera/asar_qr.png）
+3. QQ 扫相册里的 asar_qr.png
+4. 成功后**按 Home 切走，永不 exit**（exit = NapCat 被清场陪葬，2026-11-02 实锤）
+
 1. 遥控下发保鲜命令（相册 `Pictures/阿萨尔登录码.png` 每 20 秒更新）
 2. NapCat 若未出码则人工重启出码（先看 logincheck + 保险丝状态）
 3. QQ 扫一扫 → 相册选码 → 确认登录
