@@ -1,16 +1,8 @@
-55
-python3 << 'PYEOF' 2>&1
-import base64, json, urllib.request, shutil
-files = {"ai_chat_face.py": "/root/bot/plugins/ai_chat.py",
-         "image_search_multisource.py": "/root/bot/plugins/image_search.py"}
-for f, dst in files.items():
-    d = json.load(urllib.request.urlopen(f"https://api.github.com/repos/Thousands91/-1/contents/code/preview/{f}"))
-    content = base64.b64decode(d["content"])
-    bak = dst + ".bak_1102"
-    shutil.copy(dst, bak)
-    open(dst, "wb").write(content)
-    print(f"OK {f} -> {dst} ({len(content)}字节, 旧版备份{bak})")
-PYEOF
-echo "--- 语法检查 ---"
-/root/bot/venv/bin/python -m py_compile /root/bot/plugins/ai_chat.py && echo "ai_chat.py 语法OK"
-/root/bot/venv/bin/python -m py_compile /root/bot/plugins/image_search.py && echo "image_search.py 语法OK"
+56
+P=$(pgrep -f "venv/bin/python main.py" | head -1)
+echo "--- bot进程 $P 的真实工作目录 ---"
+ls -l /proc/$P/cwd
+echo "--- 该目录内容 ---"
+ls $(readlink /proc/$P/cwd)/ 2>/dev/null | head -12
+echo "--- plugins 目录 ---"
+ls $(readlink /proc/$P/cwd)/plugins/ 2>/dev/null | head -15
