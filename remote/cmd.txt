@@ -1,20 +1,10 @@
-63
+64
 python3 << 'PYEOF' 2>&1
-L = '/root/bot/bot/bot.log'
-lines = open(L, errors='ignore').readlines()
+lines = open('/root/napcat-restart.log', errors='ignore').readlines()
 yest = [l.rstrip('\n') for l in lines if l.startswith('11-01')]
-print(f"总行数:{len(lines)} 昨天(11-01)行数:{len(yest)}")
-if yest:
-    print(f"时间范围: {yest[0][:16]} ~ {yest[-1][:16]}")
-    msgs = [l for l in yest if 'Message ' in l and 'from ' in l and ': ' in l]
-    print(f"收到消息:{len(msgs)}条")
-    step = max(1, len(msgs)//35)
-    print("=== 用户消息抽样 ===")
-    for l in msgs[::step][:35]:
-        print(f"{l[:16]} | {l.split('] ',1)[-1][:85]}")
-    send = [l.rstrip('\n') for l in open('/root/napcat-restart.log', errors='ignore') if '发送 ->' in l and l.startswith('11-01')]
-    print(f"=== 阿萨尔回复:{len(send)}条 抽样 ===")
-    step = max(1, len(send)//35)
-    for l in send[::step][:35]:
-        print(l[:105])
+recv = [l for l in yest if '收到' in l or 'receive' in l.lower()]
+print(f"NapCat昨天行数:{len(yest)} 含'收到'行:{len(recv)}")
+step = max(1, len(recv)//45)
+for l in recv[::step][:45]:
+    print(l[:130])
 PYEOF
