@@ -1,9 +1,20 @@
-62
-echo "--- /root 下所有日志文件 ---"
-ls -la /root/*.log /root/*.log.* 2>/dev/null
-echo "--- bot 目录里的日志 ---"
-find /root/bot -name "*.log*" -mmin -1440 2>/dev/null | head -5
-echo "--- 全盘找昨天修改过的log ---"
-find /root -name "*.log" -newermt "2026-11-01" ! -newermt "2026-11-02" 2>/dev/null | head -8
-echo "--- 当前bot.log全部内容(52行看完) ---"
-cat /root/bot.log | tail -8
+63
+python3 << 'PYEOF' 2>&1
+L = '/root/bot/bot/bot.log'
+lines = open(L, errors='ignore').readlines()
+yest = [l.rstrip('\n') for l in lines if l.startswith('11-01')]
+print(f"总行数:{len(lines)} 昨天(11-01)行数:{len(yest)}")
+if yest:
+    print(f"时间范围: {yest[0][:16]} ~ {yest[-1][:16]}")
+    msgs = [l for l in yest if 'Message ' in l and 'from ' in l and ': ' in l]
+    print(f"收到消息:{len(msgs)}条")
+    step = max(1, len(msgs)//35)
+    print("=== 用户消息抽样 ===")
+    for l in msgs[::step][:35]:
+        print(f"{l[:16]} | {l.split('] ',1)[-1][:85]}")
+    send = [l.rstrip('\n') for l in open('/root/napcat-restart.log', errors='ignore') if '发送 ->' in l and l.startswith('11-01')]
+    print(f"=== 阿萨尔回复:{len(send)}条 抽样 ===")
+    step = max(1, len(send)//35)
+    for l in send[::step][:35]:
+        print(l[:105])
+PYEOF
