@@ -1,5 +1,2 @@
-76
-echo ==1.人设里的饮品相关内容==
-grep -n "苏打\|手冲\|饮品\|茶在\|解渴\|提神" /root/bot/bot/plugins/ai_chat.py | head -10
-echo ==2.今晚21:5x的日志==
-grep -a "21:5" /root/bot/bot/bot.log | tail -25
+77
+sed -n '330,400p' /root/bot/bot/plugins/ai_chat.py
