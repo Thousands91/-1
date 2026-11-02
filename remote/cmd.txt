@@ -1,11 +1,4 @@
-58
-pkill -f "venv/bin/python main.py"
-sleep 3
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 12
-echo "--- 新进程 ---"
-pgrep -af "venv/bin/python main.py" | head -2
-echo "--- 插件加载情况 ---"
-tail -25 /root/bot.log | grep -iE "succeeded|error|traceback|failed|loaded" | tail -8
-echo "--- 日志尾部3行 ---"
-tail -3 /root/bot.log
+59
+grep "image_search" /root/bot.log | tail -2
+/root/bot/venv/bin/python -c "import requests; print('requests', requests.__version__)"
+tail -2 /root/guard_status.txt
