@@ -1,5 +1,4 @@
-80
-sed -n '245,262p' /root/bot/bot/plugins/ai_chat.py
-echo ==_memory_block定义==
-grep -n "_memory_block" /root/bot/bot/plugins/ai_chat.py | head -3
-awk '/def _memory_block/,/^def [a-z_]+\(|^async def /' /root/bot/bot/plugins/ai_chat.py | head -30
+81
+sed -n '166,205p' /root/bot/bot/plugins/ai_chat.py
+echo ==记忆存储位置==
+ls /root/bot/bot/memory* /root/bot/bot/*.json /root/bot/bot/*.db 2>/dev/null | head -8
