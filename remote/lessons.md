@@ -68,6 +68,7 @@
 - **单实例锁的坑**：重启后旧 PID 可能被其他进程占用 → `kill -0` 误判"已运行" → 新循环静默退出。人工确认无真实例后 `rm -f /root/.remote_pid` 再启动。
 - **多实例清理**：反复启动会并存多实例（重复执行任务/重复拉 NapCat/保险丝计数虚高）。`for p in $(pgrep -f "bash /root/remote_ctl.sh"); do [ "$p" != "保留PID" ] && kill -9 $p; done`。
 - **proot 一条式启动会被清场**：`proot-distro login ubuntu -- bash -c 'nohup ... &'` 跑完 proot 以 `--kill-on-exit` 收尾，后台循环陪葬。正确姿势：交互式进 ubuntu，nohup 启动后**不 exit**，Home 切走。
+- **exit 会连 NapCat 一起葬掉（2026-11-02 实锤复现）**：扫码登录站稳 10 分钟后用户为"回 Termux 输命令" exit 退出 Ubuntu，NapCat 被 --kill-on-exit 带走（日志特征：Electron `FATAL: Failed to shutdown` + Trace/breakpoint trap），会话作废重新扫码。**用户误解"不退出就不能输命令"是根因**——按 Home 切走后重开 Termux 即回到原会话，随时可输命令，exit 全程无必要。以后用户问"要不要退出"一律答：按 Home，永不 exit。
 - **能 grep 解决的不重启，pkill 是最后手段**。
 - **竞态**：先读 `/proc/<pid>` 再 kill，中间进程可能已消失；升级瞬间新旧循环竞态会回传空文件（验证升级看下一个任务的输出，不信当次）。
 - **shell 假成功**：`a && b ; echo 完成` 中 echo 必执行，别拿尾缀 echo 当成功凭证。
