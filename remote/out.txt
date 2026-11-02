@@ -1,28 +1,49 @@
-<<<task_70.txt>>>
-===== 任务70 11-02 14:08:01 =====
+<<<task_71.txt>>>
+===== 任务71 11-02 16:04:49 =====
 --- 命令 ---
-echo "--- 14:01启动的插件清单 ---"
-grep "14:01" /root/bot/bot.log | grep -E "Succeeded|Failed|error" | head -14
-echo "--- image_see 是否加载 ---"
-grep "image_see" /root/bot/bot.log | head -2
-echo "--- 当前进程与启动时间 ---"
-ps -o pid,lstart,cmd -p $(pgrep -f "venv/bin/python main.py" | head -1)
+echo "--- 1.遥控循环 ---"
+pgrep -f "bash /root/remote_ctl.sh" | head -1 && echo 循环OK
+echo "--- 2.bot主进程 ---"
+pgrep -f "venv/bin/python main.py" | head -1 && echo bot进程OK
+echo "--- 3.插件加载(14:01启动) ---"
+grep "14:01" /root/bot/bot.log | grep -c "Succeeded to load"
+grep "14:01" /root/bot/bot.log | grep -c "Failed"
+echo "--- 4.关键插件在位 ---"
+for P in ai_chat image_search image_see; do grep -q "plugins.$P\"" /root/bot/bot.log && echo "$P 已加载"; done
+echo "--- 5.掉线守护 ---"
+pgrep -f azar_guard.sh | head -1 && echo 守护OK
+echo "--- 6.NapCat与登录状态 ---"
+pgrep -fc "opt/QQ/qq"
+ls /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null && echo "二维码缓存存在(等扫码属正常)"
+echo "--- 7.登录脚本就绪 ---"
+ls -la /root/azar_login.sh
+echo "--- 8.requests(联网搜索) ---"
+/root/bot/venv/bin/python -c "import requests; print('requests', requests.__version__, 'OK')"
+echo "--- 9.bot监听端口 ---"
+ss -tln 2>/dev/null | grep 8080 | head -1
 --- 输出 ---
---- 14:01启动的插件清单 ---
-11-02 14:01:50 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-11-02 14:01:50 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
-11-02 14:01:50 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
-11-02 14:01:50 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
-11-02 14:01:50 [SUCCESS] nonebot | Succeeded to load plugin "image_see" from "plugins.image_see"
-11-02 14:01:50 [SUCCESS] nonebot | Succeeded to load plugin "image_search_web" from "plugins.image_search_web"
-11-02 14:01:50 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-02 14:01:50 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
-11-02 14:01:50 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
-11-02 14:01:50 [SUCCESS] nonebot | Succeeded to load plugin "image_search" from "plugins.image_search"
-11-02 14:01:50 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
-11-02 14:01:50 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
---- image_see 是否加载 ---
-11-02 14:01:50 [SUCCESS] nonebot | Succeeded to load plugin "image_see" from "plugins.image_see"
---- 当前进程与启动时间 ---
-  PID                  STARTED CMD
-29324 Wed Mar 29 08:38:04 2023 /root/bot/venv/bin/python main.py
+--- 1.遥控循环 ---
+8245
+循环OK
+--- 2.bot主进程 ---
+29324
+bot进程OK
+--- 3.插件加载(14:01启动) ---
+12
+0
+--- 4.关键插件在位 ---
+ai_chat 已加载
+image_search 已加载
+image_see 已加载
+--- 5.掉线守护 ---
+8344
+守护OK
+--- 6.NapCat与登录状态 ---
+5
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+二维码缓存存在(等扫码属正常)
+--- 7.登录脚本就绪 ---
+-rw-r--r--. 1 root root 3356 Oct 29 01:10 /root/azar_login.sh
+--- 8.requests(联网搜索) ---
+requests 2.34.2 OK
+--- 9.bot监听端口 ---
