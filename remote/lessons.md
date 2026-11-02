@@ -68,7 +68,7 @@
 - **单实例锁的坑**：重启后旧 PID 可能被其他进程占用 → `kill -0` 误判"已运行" → 新循环静默退出。人工确认无真实例后 `rm -f /root/.remote_pid` 再启动。
 - **多实例清理**：反复启动会并存多实例（重复执行任务/重复拉 NapCat/保险丝计数虚高）。`for p in $(pgrep -f "bash /root/remote_ctl.sh"); do [ "$p" != "保留PID" ] && kill -9 $p; done`。
 - **proot 一条式启动会被清场**：`proot-distro login ubuntu -- bash -c 'nohup ... &'` 跑完 proot 以 `--kill-on-exit` 收尾，后台循环陪葬。正确姿势：交互式进 ubuntu，nohup 启动后**不 exit**，Home 切走。
-- **exit 会连 NapCat 一起葬掉（2026-11-02 实锤复现）**：扫码登录站稳 10 分钟后用户为"回 Termux 输命令" exit 退出 Ubuntu，NapCat 被 --kill-on-exit 带走（日志特征：Electron `FATAL: Failed to shutdown` + Trace/breakpoint trap），会话作废重新扫码。**用户误解"不退出就不能输命令"是根因**——按 Home 切走后重开 Termux 即回到原会话，随时可输命令，exit 全程无必要。以后用户问"要不要退出"一律答：按 Home，永不 exit。
+- **Ctrl+C 退出出码脚本会连坐杀死 NapCat（2026-11-02 实锤，当日事故真因）**：脚本（非交互 shell）里 `nohup xxx &` 的后台任务与脚本**同进程组**；Ctrl+C 向整组广播 SIGINT；nohup 只防 SIGHUP，而 QQ/Electron 会自行重置信号处理器，绕过 POSIX"后台任务忽略 SIGINT"的保护 → 用户 Ctrl+C 退出 azar_login.sh，NapCat 于 16:20:37 以 Electron `FATAL: Failed to shutdown` 崩溃（死亡姿势=shutdown 中被信号打断）。**沙箱四组对照实验实锤**：普通 bash 后台任务存活 / Electron 型被连坐杀 / 加 setsid 毫发无伤。**修复：一切脚本内启动 NapCat 必须加 `setsid`**。当日最初误判为"用户 exit 退出 Ubuntu 触发清场"，经用户纠正（"我没退 Ubuntu，只退了脚本"）后重新归因——用户对自己操作的描述是最优先证据，归因前先问清每一步按了什么。
 - **能 grep 解决的不重启，pkill 是最后手段**。
 - **竞态**：先读 `/proc/<pid>` 再 kill，中间进程可能已消失；升级瞬间新旧循环竞态会回传空文件（验证升级看下一个任务的输出，不信当次）。
 - **shell 假成功**：`a && b ; echo 完成` 中 echo 必执行，别拿尾缀 echo 当成功凭证。
