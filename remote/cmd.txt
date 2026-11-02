@@ -1,6 +1,7 @@
-83
-sed -n "$(grep -n 'def _memory_path' /root/bot/bot/plugins/ai_chat.py | cut -d: -f1),+6p" /root/bot/bot/plugins/ai_chat.py
-echo ==记忆目录==
-ls -la /root/bot/bot/memory/ 2>/dev/null | head -10
-echo ==该用户记忆==
-cat /root/bot/bot/memory/1445169274.json 2>/dev/null | head -c 1500
+84
+echo ==全插件搜关键词==
+grep -rn "苏打水\|手冲\|解渴又提神\|香气四溢" /root/bot/bot/plugins/ | head -10
+echo ==MEMORY_DIR==
+grep -n "MEMORY_DIR *=" /root/bot/bot/plugins/ai_chat.py
+echo ==keyword_reply里的触发==
+grep -n "在吗\|hi\|你好" /root/bot/bot/plugins/keyword_reply.py | head -10
