@@ -1,29 +1,12 @@
-<<<task_58.txt>>>
-===== 任务58 11-02 12:59:37 =====
+<<<task_59.txt>>>
+===== 任务59 11-02 13:01:29 =====
 --- 命令 ---
-pkill -f "venv/bin/python main.py"
-sleep 3
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 12
-echo "--- 新进程 ---"
-pgrep -af "venv/bin/python main.py" | head -2
-echo "--- 插件加载情况 ---"
-tail -25 /root/bot.log | grep -iE "succeeded|error|traceback|failed|loaded" | tail -8
-echo "--- 日志尾部3行 ---"
-tail -3 /root/bot.log
+grep "image_search" /root/bot.log | tail -2
+/root/bot/venv/bin/python -c "import requests; print('requests', requests.__version__)"
+tail -2 /root/guard_status.txt
 --- 输出 ---
---- 新进程 ---
-6788 /root/bot/venv/bin/python main.py
---- 插件加载情况 ---
-11-02 12:59:43 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
-11-02 12:59:43 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
-11-02 12:59:43 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+11-02 12:59:43 [SUCCESS] nonebot | Succeeded to load plugin "image_search" from "plugins.image_search"
 11-02 12:59:43 [SUCCESS] nonebot | Succeeded to load plugin "image_search_web" from "plugins.image_search_web"
-11-02 12:59:43 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-02 12:59:43 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
-11-02 12:59:43 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-11-02 12:59:43 [SUCCESS] nonebot | Loaded adapters: OneBot V11
---- 日志尾部3行 ---
-11-02 12:59:43 [INFO] __main__ | ==================================================
-11-02 12:59:43 [INFO] uvicorn | Application startup complete.
-11-02 12:59:43 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+requests 2.34.2
+11-02 12:33:02 被踢标记超6小时,允许再试
+11-02 12:33:02 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
