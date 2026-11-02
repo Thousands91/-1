@@ -1,18 +1,3 @@
-86
-python3 - <<'PY'
-import json
-d = json.load(open('/root/bot/bot/data/memory/1561950850.json', encoding='utf-8'))
-print('记忆条数:', len(d))
-EAT = ("吃什么","吃啥","吃点什么","吃点啥","吃哪个","吃的","点吃的","来点吃","推荐吃","有什么吃","有啥吃","吃推荐","饿了","好饿","早饭","午饭","晚饭","夜宵","宵夜")
-DRINK = ("喝什么","喝啥","喝点什么","喝点啥","喝哪个","喝的","点喝的","来点喝","推荐喝","有什么喝","有啥喝","喝推荐","渴了","好渴")
-hits = 0
-for e in d:
-    m = e.get('m','')
-    r = e.get('r','')
-    both = m + r
-    if any(w in both for w in EAT+DRINK):
-        hits += 1
-        if hits <= 5:
-            print('命中条目 → 问:', m[:60], '| 答:', r[:60])
-print('含触发词的记忆条数:', hits, '/', len(d))
-PY
+87
+echo ==AICHT==
+base64 -w0 /root/bot/bot/plugins/ai_chat.py
