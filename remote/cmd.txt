@@ -1,7 +1,4 @@
-84
-echo ==全插件搜关键词==
-grep -rn "苏打水\|手冲\|解渴又提神\|香气四溢" /root/bot/bot/plugins/ | head -10
-echo ==MEMORY_DIR==
-grep -n "MEMORY_DIR *=" /root/bot/bot/plugins/ai_chat.py
-echo ==keyword_reply里的触发==
-grep -n "在吗\|hi\|你好" /root/bot/bot/plugins/keyword_reply.py | head -10
+85
+ls -la /root/bot/bot/data/memory/ 2>/dev/null | head -10
+echo ==记忆内容==
+cat /root/bot/bot/data/memory/1445169274.json 2>/dev/null
