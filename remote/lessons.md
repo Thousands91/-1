@@ -205,3 +205,14 @@
 1. 三个月后回看，它还能帮我避开错误或省时间吗？——不能就不记
 2. 它是【坑/教训/流程/工具备忘】四类之一吗？——都不是就不记
 3. 混入了过程数据、统计数字、给用户的话吗？——有就删掉再记
+
+### 新坑 21：bot 真实路径是双层嵌套 /root/bot/bot/（2026-11-02）
+进程 cmdline 是 `/root/bot/venv/bin/python main.py`（相对路径），真实工作目录 = `/root/bot/bot/`，插件在 `/root/bot/bot/plugins/`。**部署文件前先 `ls -l /proc/<pid>/cwd` 确认 cwd，别按 venv 路径想当然**。本次第一版部署因路径错白跑一轮（幸有备份机制，零损坏）。
+
+### 新坑 22：遥控命令里不能带 GitHub token（2026-11-02）
+cmd.txt 里含 `ghp_` 字样的 token 会被 **GitHub secret scanning 直接拒绝提交（409 Secret detected）**，且报错信息只有用 curl PUT 才看得到。解法：** Thousands91/-1 是 public 仓库，手机拉文件走未认证 API 即可**（60 次/小时够用），cmd.txt 永远别放 token。
+
+### 部署状态（2026-11-02 12:59）
+- requests 2.34.2 已装入 venv，联网搜索恢复（昨晚 venv pip 失败原因未明，当时 pip 其实完好，疑似瞬时网络问题）
+- 四件套已上线：表情识别+@真艾特（ai_chat.py 56KB）、三源色图（image_search.py 18KB），全部插件 SUCCESS 加载、语法通过、旧版备份 .bak_1102
+- **待办：扫码登录后按四层法做上线首验**（群里发含表情消息/@请求/色图命令各测一次）
