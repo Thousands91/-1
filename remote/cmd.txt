@@ -1,10 +1,14 @@
-64
+65
 python3 << 'PYEOF' 2>&1
-lines = open('/root/napcat-restart.log', errors='ignore').readlines()
-yest = [l.rstrip('\n') for l in lines if l.startswith('11-01')]
-recv = [l for l in yest if '收到' in l or 'receive' in l.lower()]
-print(f"NapCat昨天行数:{len(yest)} 含'收到'行:{len(recv)}")
-step = max(1, len(recv)//45)
-for l in recv[::step][:45]:
-    print(l[:130])
+import glob, re
+# 找人设/备忘文本在哪
+for f in glob.glob('/root/bot/bot/plugins/*.py') + glob.glob('/root/bot/bot/*.py') + glob.glob('/root/bot/bot/**/*.txt', recursive=True):
+    c = open(f, errors='ignore').read()
+    for kw in ['人设', '备忘', '阿萨尔', '书店老板']:
+        if kw in c:
+            idx = c.index(kw)
+            print(f"=== {f} 含'{kw}' ===")
+            print(c[max(0,idx-100):idx+600].replace('\n','\n| ')[:700])
+            print()
+            break
 PYEOF
