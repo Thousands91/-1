@@ -1,20 +1,5 @@
-89
-cp /root/remote_ctl.sh /root/remote_ctl_v1.bak 2>/dev/null
-curl -s -o /root/remote_ctl_new.sh "https://raw.githubusercontent.com/Thousands91/-1/main/remote/remote_ctl.sh"
-bash -n /root/remote_ctl_new.sh && echo 新脚本语法OK || { echo 语法错误,放弃部署; exit 1; }
-OLDPID=$(cat /root/.remote_pid 2>/dev/null)
-mv /root/remote_ctl_new.sh /root/remote_ctl.sh
-[ -n "$OLDPID" ] && kill "$OLDPID" 2>/dev/null
-sleep 1
-setsid nohup bash /root/remote_ctl.sh >/dev/null 2>&1 < /dev/null &
-sleep 4
-NEWPID=$(cat /root/.remote_pid 2>/dev/null)
-if [ -n "$NEWPID" ] && kill -0 "$NEWPID" 2>/dev/null; then
-  echo "新循环已运行 PID=$NEWPID (旧=$OLDPID)"
-else
-  echo 新循环未存活,回滚旧版
-  cp /root/remote_ctl_v1.bak /root/remote_ctl.sh
-  setsid nohup bash /root/remote_ctl.sh >/dev/null 2>&1 < /dev/null &
-  sleep 3
-  echo "回滚完成 PID=$(cat /root/.remote_pid 2>/dev/null)"
-fi
+90
+echo "循环PID=$(cat /root/.remote_pid)"
+echo "当前时间:$(date +%H:%M:%S)"
+echo "脚本版本:$(grep -o "sleep 15" /root/remote_ctl.sh | head -1)"
+tail -3 /root/remote_ctl.log
