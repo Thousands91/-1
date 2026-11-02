@@ -1,7 +1,16 @@
-93
-BPID=$(pgrep -f "venv/bin/python main.py" | head -1)
-LOG=$(readlink /proc/$BPID/fd/1)
-echo "bot PID=$BPID 日志去向=$LOG"
-grep -a "识图" $LOG | tail -12
-echo ==日志尾部==
-tail -25 $LOG
+94
+date "+%F %T"
+echo ==循环==
+kill -0 $(cat /root/.remote_pid 2>/dev/null) 2>/dev/null && echo 循环OK || echo 循环死了
+echo ==bot==
+pgrep -f "venv/bin/python main.py" >/dev/null && echo bot进程OK || echo bot进程没了
+echo ==NapCat==
+pgrep -f "opt/QQ/qq" >/dev/null && echo NapCat进程OK || echo NapCat没了
+echo ==登录状态==
+bash /root/logincheck.sh 2>&1 | tail -3
+echo ==napcat日志尾==
+tail -6 /root/napcat.log 2>/dev/null
+echo ==guard日志尾==
+tail -6 /root/guard_status.txt 2>/dev/null
+echo ==bot日志尾==
+tail -8 $(readlink /proc/$(pgrep -f "venv/bin/python main.py" | head -1)/fd/1 2>/dev/null) 2>/dev/null | grep -a "connected\|disconnect\|error\|二维码" | tail -5
