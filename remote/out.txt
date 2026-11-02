@@ -1,20 +1,33 @@
-<<<task_61.txt>>>
-===== 任务61 11-02 13:10:07 =====
+<<<task_62.txt>>>
+===== 任务62 11-02 13:12:48 =====
 --- 命令 ---
-echo "--- bot.log 前3行(看时间戳格式) ---"
-head -3 /root/bot.log
-echo "--- bot.log 总行数与文件时间 ---"
-wc -l /root/bot.log; stat -c "%y %s字节" /root/bot.log
-echo "--- NapCat 发送日志 前2行(看格式) ---"
-head -2 /root/napcat-restart.log
+echo "--- /root 下所有日志文件 ---"
+ls -la /root/*.log /root/*.log.* 2>/dev/null
+echo "--- bot 目录里的日志 ---"
+find /root/bot -name "*.log*" -mmin -1440 2>/dev/null | head -5
+echo "--- 全盘找昨天修改过的log ---"
+find /root -name "*.log" -newermt "2026-11-01" ! -newermt "2026-11-02" 2>/dev/null | head -8
+echo "--- 当前bot.log全部内容(52行看完) ---"
+cat /root/bot.log | tail -8
 --- 输出 ---
---- bot.log 前3行(看时间戳格式) ---
-11-02 12:32:07 [SUCCESS] nonebot | NoneBot is initializing...
-11-02 12:32:07 [INFO] nonebot | Current Env: prod
-11-02 12:32:10 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
---- bot.log 总行数与文件时间 ---
-52 /root/bot.log
-2026-11-02 12:59:43.960425943 +0800 4160字节
---- NapCat 发送日志 前2行(看格式) ---
-nohup: missing operand
-Try 'nohup --help' for more information.
+--- /root 下所有日志文件 ---
+-rw-r--r--. 1 root root      26 Oct 30 22:55 /root/asar_sync.log
+-rw-r--r--. 1 root root    1455 Nov  2 00:44 /root/azar_login_run.log
+-rw-r--r--. 1 root root    4160 Nov  2 12:59 /root/bot.log
+-rw-r--r--. 1 root root      22 Nov  2 12:32 /root/guard.log
+-rw-r--r--. 1 root root 1304319 Nov  2 13:12 /root/napcat-restart.log
+-rw-r--r--. 1 root root  101319 Nov  2 01:06 /root/napcat.log
+-rw-r--r--. 1 root root  103290 Nov  2 13:10 /root/remote_ctl.log
+--- bot 目录里的日志 ---
+/root/bot/bot/bot.log
+--- 全盘找昨天修改过的log ---
+/root/bot/bot/bot.log
+--- 当前bot.log全部内容(52行看完) ---
+11-02 12:59:43 [INFO] uvicorn | Waiting for application startup.
+11-02 12:59:43 [INFO] __main__ | ==================================================
+11-02 12:59:43 [INFO] __main__ | QQ 群机器人启动成功 ✅
+11-02 12:59:43 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
+11-02 12:59:43 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
+11-02 12:59:43 [INFO] __main__ | ==================================================
+11-02 12:59:43 [INFO] uvicorn | Application startup complete.
+11-02 12:59:43 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
