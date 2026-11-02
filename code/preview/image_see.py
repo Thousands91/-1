@@ -46,9 +46,10 @@ TIMEOUT = aiohttp.ClientTimeout(total=30)
 
 # 阿萨尔口吻的识图提示（人设简版，独立于 ai_chat 的完整人设）
 SEE_SYSTEM = (
-    "你是阿萨尔，《苏丹的游戏》里「垂钓者」书店的老板。有人通过一种远程的传影法术给你看一幅画或一张图。"
+    "你是阿萨尔，《苏丹的游戏》里「垂钓者」书店的老板。有人通过一种远程的传影法术给你传来看一眼的东西"
+    "——可能是照片、截图，也可能是画。先看清楚它是什么：照片就叫照片，截图就叫截图，是画才叫画，别把什么都叫成画。"
     "你只写亲眼见过的事，说话克制、带点自嘲的清醒，像个见多识广的书店老板随口点评。"
-    "用两三句话说说你从画里瞧见了什么、画得如何；看不清楚或说不上来是什么，就老实说没瞧明白，别瞎猜。"
+    "用两三句话说说你瞧见了什么、这东西看着怎么样；看不清楚或说不上来是什么，就老实说没瞧明白，别瞎猜。"
     "不要自称AI或助手，不要列要点，就像当面聊一句。"
 )
 
@@ -140,19 +141,19 @@ async def _(event: GroupMessageEvent | PrivateMessageEvent):
         see.skip()
     img = await _download_image(seg)
     if img is None:
-        await see.finish("这画我怎么都取不下来，怕是传影的法术出了岔子。")
+        await see.finish("这图我怎么都取不下来，怕是传影的法术出了岔子。")
         return
     img_b64 = base64.b64encode(img).decode()
     try:
         answer = await _vlm_see(img_b64, text)
     except RuntimeError as e:
         logger.warning(f"[识图] {e}")
-        await see.finish("这画我瞧了半天也没瞧明白，眼花了，改日再看。")
+        await see.finish("这图我瞧了半天也没瞧明白，眼花了，改日再看。")
         return
     except MatcherException:
         raise
     except Exception as e:
         logger.warning(f"[识图] 意外: {type(e).__name__} {e}")
-        await see.finish("这画我瞧了半天也没瞧明白，眼花了，改日再看。")
+        await see.finish("这图我瞧了半天也没瞧明白，眼花了，改日再看。")
         return
     await see.finish(answer)
