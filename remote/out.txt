@@ -1,22 +1,27 @@
-<<<task_73.txt>>>
-===== 任务73 11-02 16:32:17 =====
+<<<task_74.txt>>>
+===== 任务74 11-02 16:51:46 =====
 --- 命令 ---
-grep -n 'xvfb-run' /root/azar_guard.sh | head -3
-pkill -f 'Napcat/opt/QQ/[q]q' || true
+date "+%F %T"
+bash /root/logincheck.sh 2>&1 | tail -3
+echo ====QR====
+ls -l /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null
+echo ====保鲜循环====
+if [ -f /root/.qr_fresh_pid ] && kill -0 $(cat /root/.qr_fresh_pid) 2>/dev/null; then
+  echo 循环已在运行
+else
+  nohup bash -c 'while true; do cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null; sleep 20; done' >/dev/null 2>&1 &
+  echo $! > /root/.qr_fresh_pid
+  echo 保鲜循环已启动
+fi
 sleep 2
-nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox -q 3427943187 >/root/napcat.log 2>&1 &
-sleep 30
-bash /root/logincheck.sh 2>&1 | tail -4
-tail -6 /root/napcat.log
+ls -l /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null
 --- 输出 ---
-16:  cd /root && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 &
-=== 登录状态（权威判定）===
+2026-11-02 16:51:47
 [未登录] 当前没有有效会话
 阶段: waiting_qrcode
 最近错误: 无
-18d8884efb0b90f874d93f9b5c48e1bde8f62115a6744be40b90c4b76bc3ac0b
-8abf7cb1feba88189ffb0fa466276d23b5ed5fe6f79083755631a4324e0738ed
-6b25ae05bb496fa926ef520051419e49eabb96a83d2fcd8508182bb323b10b02
-35b0a8c7a2454f23d89474d2dfcb10c244ebf0845df3ddca7d8ad279cbc82d75
-892a1c467e2f720037d642e1265a13bfead86df1db25f8ab1be83a9bf1443a6c
-198680a4c52c0dcb2a7399158f7d92d62cc4210b6da448eeb61adba9f98a78ed
+====QR====
+-rw-r--r--. 1 root root 594 Nov  2 16:50 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+====保鲜循环====
+保鲜循环已启动
+-rw-rw----. 1 10155 1023 594 Nov  2 16:51 /sdcard/DCIM/Camera/asar_qr.png
