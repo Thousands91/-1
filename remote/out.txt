@@ -1,40 +1,45 @@
-<<<task_93.txt>>>
-===== 任务93 11-02 23:06:36 =====
+<<<task_94.txt>>>
+===== 任务94 11-03 07:02:00 =====
 --- 命令 ---
-BPID=$(pgrep -f "venv/bin/python main.py" | head -1)
-LOG=$(readlink /proc/$BPID/fd/1)
-echo "bot PID=$BPID 日志去向=$LOG"
-grep -a "识图" $LOG | tail -12
-echo ==日志尾部==
-tail -25 $LOG
+date "+%F %T"
+echo ==循环==
+kill -0 $(cat /root/.remote_pid 2>/dev/null) 2>/dev/null && echo 循环OK || echo 循环死了
+echo ==bot==
+pgrep -f "venv/bin/python main.py" >/dev/null && echo bot进程OK || echo bot进程没了
+echo ==NapCat==
+pgrep -f "opt/QQ/qq" >/dev/null && echo NapCat进程OK || echo NapCat没了
+echo ==登录状态==
+bash /root/logincheck.sh 2>&1 | tail -3
+echo ==napcat日志尾==
+tail -6 /root/napcat.log 2>/dev/null
+echo ==guard日志尾==
+tail -6 /root/guard_status.txt 2>/dev/null
+echo ==bot日志尾==
+tail -8 $(readlink /proc/$(pgrep -f "venv/bin/python main.py" | head -1)/fd/1 2>/dev/null) 2>/dev/null | grep -a "connected\|disconnect\|error\|二维码" | tail -5
 --- 输出 ---
-bot PID=25330 日志去向=/root/bot.log
-11-02 21:58:32 [WARNING] image_see | [识图] 视觉模型失败: 该模型当前访问量过大，请您稍后再试
-11-02 22:00:48 [WARNING] image_see | [识图] 视觉模型失败: 该模型当前访问量过大，请您稍后再试
-11-02 22:01:33 [WARNING] image_see | [识图] 视觉模型失败: 该模型当前访问量过大，请您稍后再试
-==日志尾部==
-11-02 23:02:22 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
-11-02 23:02:22 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
-11-02 23:02:22 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
-11-02 23:02:22 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
-11-02 23:02:22 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=427)
-11-02 23:02:22 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=427) running complete
-11-02 23:02:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2028211578 from 2959186535@[群:1109952783] '双开门'
-11-02 23:02:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
-11-02 23:02:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
-11-02 23:02:35 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
-11-02 23:02:35 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
-11-02 23:02:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
-11-02 23:02:35 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
-11-02 23:02:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=427)
-11-02 23:02:35 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=427) running complete
-11-02 23:02:43 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 355595461 from 2959186535@[群:1109952783] '[reply:id=719242375][at:qq=553414459] 正常正常'
-11-02 23:02:43 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
-11-02 23:02:43 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
-11-02 23:02:43 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
-11-02 23:02:43 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
-11-02 23:02:43 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
-11-02 23:02:43 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
-11-02 23:02:43 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=427)
-11-02 23:02:43 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=427) running complete
-11-02 23:05:46 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793631946, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+2026-11-03 07:02:00
+==循环==
+循环OK
+==bot==
+bot进程OK
+==NapCat==
+NapCat进程OK
+==登录状态==
+[未登录] 当前没有有效会话
+阶段: waiting_qrcode
+最近错误: 无
+==napcat日志尾==
+[7732:1103/003513.881000:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[7732:1103/003513.884480:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[7732:1103/003513.892890:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[7732:1103/003513.895790:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[7732:1103/003513.898589:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[7732:1103/003513.898626:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+==guard日志尾==
+11-02 20:59:42 守护v1.1启动
+11-03 00:35:13 被踢标记超6小时,允许再试
+11-03 00:35:13 WS断开,尝试重启NapCat免扫码恢复
+11-03 00:36:16 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-03 06:37:13 被踢标记超6小时,允许再试
+11-03 06:37:13 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+==bot日志尾==
