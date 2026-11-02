@@ -1,13 +1,11 @@
-53
-echo "--- 循环 ---"
-ls -la /root/.remote_pid 2>&1; pgrep -f "bash /root/remote_ctl.sh" | head -3
-echo "--- bot 主进程 ---"
-pgrep -af "venv/bin/python main.py" | head -2
-echo "--- 守护 ---"
-pgrep -f azar_guard.sh | head -2; tail -2 /root/guard_status.txt 2>/dev/null
-echo "--- QQ进程 ---"
-pgrep -fc "opt/QQ/qq"
-echo "--- 登录状态 ---"
-bash /root/logincheck.sh 2>&1 | head -5
-echo "--- bot.log 尾部3行 ---"
-tail -3 /root/bot.log
+54
+echo "--- venv/bin 内容 ---"
+ls /root/bot/venv/bin/ | head -12
+echo "--- venv pip 是否可用 ---"
+/root/bot/venv/bin/python -m pip --version 2>&1 | head -2
+echo "--- 若无pip则ensurepip ---"
+/root/bot/venv/bin/python -m ensurepip 2>&1 | tail -2
+echo "--- 安装 requests(显示真实报错) ---"
+/root/bot/venv/bin/python -m pip install requests 2>&1 | tail -5
+echo "--- 验证 ---"
+/root/bot/venv/bin/python -c "import requests; print('requests OK, 版本', requests.__version__)" 2>&1
