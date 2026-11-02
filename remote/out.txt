@@ -1,14 +1,233 @@
-<<<task_64.txt>>>
-===== 任务64 11-02 13:17:53 =====
+<<<task_65.txt>>>
+===== 任务65 11-02 13:30:14 =====
 --- 命令 ---
 python3 << 'PYEOF' 2>&1
-lines = open('/root/napcat-restart.log', errors='ignore').readlines()
-yest = [l.rstrip('\n') for l in lines if l.startswith('11-01')]
-recv = [l for l in yest if '收到' in l or 'receive' in l.lower()]
-print(f"NapCat昨天行数:{len(yest)} 含'收到'行:{len(recv)}")
-step = max(1, len(recv)//45)
-for l in recv[::step][:45]:
-    print(l[:130])
+import glob, re
+# 找人设/备忘文本在哪
+for f in glob.glob('/root/bot/bot/plugins/*.py') + glob.glob('/root/bot/bot/*.py') + glob.glob('/root/bot/bot/**/*.txt', recursive=True):
+    c = open(f, errors='ignore').read()
+    for kw in ['人设', '备忘', '阿萨尔', '书店老板']:
+        if kw in c:
+            idx = c.index(kw)
+            print(f"=== {f} 含'{kw}' ===")
+            print(c[max(0,idx-100):idx+600].replace('\n','\n| ')[:700])
+            print()
+            break
 PYEOF
 --- 输出 ---
-NapCat昨天行数:2905 含'收到'行:0
+=== /root/bot/bot/plugins/ai_chat.py 含'人设' ===
+ "- 日常闲聊就正常接话，问候就好好问候，别硬塞卡牌、折卡这些词。\n"
+|     "- 只有话题本身沾到这个世界（卡牌、王城、城中的人和事）时，才以当事人、"
+|     "旁观者的口吻聊，细节取自你的人设，像住在这里的人随口讲，不是介绍设定。\n"
+|     "- 听来的事要标明是听来的：「这话是听来的，我没亲见，不写进册子。」"
+|     "但别人随口一句感想、抱怨、玩笑不算「听来的事」。"
+|     "**这句话一周说一次都嫌多，别当口头禅反复用。**\n"
+|     "- 有人问危险的事（折卡、弑君、逃亡），你不入局，也不出主意，可以转述别人怎么做。\n"
+|     "- **绝对禁止现编名字**：不知道的歌名、书名、人名、地名，就直说没听过、书上没记。"
+|     "编一个《某某》出来是最大的露馅——你立过誓只写亲眼见过的事。\n"
+|     "- 语气克制、带点自嘲的清醒，不热血不中二，不卖惨。"
+|     "\n\n"
+|     "## 国际象棋（这个群里有棋盘，常有人问，照实答）\n"
+|     "店里摆着一副能下的棋。开法：第一位玩家 @我 说「国际象棋」占白方，"
+|     "第二位玩家也 @我 说「国际象棋」接黑方，就能下。\n"
+|     "走棋：发「走 e4」这样的着法。棋盘列是 a 到 h（从左到右），行是 1 到 8（从下到上，白方在下），"
+|     "「走 e4」就是把兵走到 e4 那个格；马是「走 Nf3」，象 B、车 R、后 Q、王 K；"
+|     "王车易位是「走 O-O」；「走 e2e4」这种起点格加
+
+=== /root/bot/bot/plugins/fortune.py 含'阿萨尔' ===
+"""
+| 抽签 —— 阿萨尔替人翻一页命书
+| 
+| 命令：/抽签  /运势  /翻书  /折卡
+| 
+| 设计要点
+| 1. 签筒就是苏丹的卡组：4 类卡 × 4 品级 = 16 种牌面，
+|    每张牌面配一张签诗，共 16 张签。
+| 2. 签筒 32 支，每种签占 2 支 —— 16 张签概率完全相同，各 6.25%。
+| 3. 品级写在卡名那一行最前面，一眼能看见。
+| 4. 吉凶按"离你多远"分：两头（大吉/吉/小凶）各 3 张，中间（小吉/平/凶）各 2 张，
+|    "未定" 1 张 —— 吉凶越极端，能说的话越多。
+| """
+| import random
+| import datetime
+| 
+| from nonebot import on_command
+| from nonebot.rule import to_me
+| from nonebot.adapters.onebot.v11 import GroupMessageEvent, PrivateMessageEvent, Message
+| 
+| fortune = on_command("抽签", aliases={"运势", "翻书", "折卡"}, rule=to_me(), priority=20, block=True)
+| 
+| # ============ 四类卡：决定运势"应在何处" ============
+| CARD_TYPES = {
+|     "纵欲": {"mark": "
+
+=== /root/bot/bot/plugins/image_search.py 含'阿萨尔' ===
+
+|     "甘雨→ganyu；胡桃→hu_tao；初音未来→hatsune_miku；"
+|     "芙宁娜→furina；纳西妲→nahida；钟离→zhongli\n"
+|     "示例：苏丹的游戏 阿萨尔 → sultan's_game, azar_(sultan's_game)"
+| )
+| 
+| 
+| async def translate_tags(query: str) -> str:
+|     """中文关键词 → 图库英文标签，结果缓存。失败返回空串。"""
+|     if query in _TAG_CACHE:
+|         return _TAG_CACHE[query]
+|     try:
+|         async with aiohttp.ClientSession() as sess:
+|             async with sess.post(
+|                 f"{AI_URL}/chat/completions",
+|                 headers={"Authorization": f"Bearer {AI_KEY}"},
+|                 json={
+|                     "model": AI_MODEL,
+|                     "max_tokens": 60,
+|                     "temperature": 0,
+|                     "messag
+
+=== /root/bot/bot/plugins/weather.py 含'阿萨尔' ===
+"""
+| 天气查询 —— 阿萨尔替你望一眼天
+| 命令：/天气 <城市>
+| 
+| 默认走 Open-Meteo，不需要任何 key、不限调用次数。
+| 若额外配置了和风天气（QWEATHER_KEY + QWEATHER_API_HOST），则优先用它，
+| 数据更细；不配也照样能用。
+| """
+| import os
+| from datetime import datetime
+| 
+| import aiohttp
+| from nonebot import on_command
+| from nonebot.rule import to_me
+| from nonebot.adapters.onebot.v11 import GroupMessageEvent, PrivateMessageEvent, Message
+| from nonebot.params import CommandArg
+| 
+| KEY = os.getenv("QWEATHER_KEY", "")
+| # 和风天气 2024 年起改成"每个账号一个专属域名"（形如 xxxxx.re.qweatherapi.com），
+| # 旧的 devapi.qweather.com 已停用。不填就退到 Open-Meteo，不影响使用。
+| HOST = os.getenv("QWEATHER_API_HOST", "").rstrip("/")
+| 
+| weather = on_command("天气",
+
+=== /root/bot/bot/plugins/keyword_reply.py 含'人设' ===
+   "不必谢，这一条我记下了。",
+|         "客气了。",
+|         "小意思。您常来，比什么都强。",
+|     ],
+|     # 百科全书是阿萨尔的毕生志向："只写亲眼所见之事"——人设核心，保留
+|     "百科全书": [
+|         "百科全书，我和我家族编了一辈子的东西。",
+|         "上面只收我亲眼见过的事，道听途说一个字都不进。",
+|         "这活没人做完过。我不急，一天记一条也算数。",
+|     ],
+|     "苏丹": [
+|         "他的心思我从不猜——猜中了是死，猜不中也是死。",
+|         "他抽他的卡，我们过我们的日子。",
+|     ],
+|     "苏丹卡": [
+|         "纵欲、奢靡、征服、杀戮，四类各七张，金一银二铜二石二。",
+|         "七日折不掉，斩首。城里人管这个叫游戏。",
+|         "高品向下兼容，低阶折不动高阶。不公平，但这就是规矩。",
+|     ],
+|     # 只认整句，不认单字"书"
+|     ("找书", "想看书", "看书吗", "有什么书", "推荐本"): [
+|         "报个书名，柜上有就给您，没有也能说道说道。",
+|         "想看什么，说说看，或许我记得。",
+|         "想找什么书？我给您翻翻柜子。",
+|     ],
+|     "阿萨尔": [
+|         "我在。",
+|         "您叫我，是有书要找？",
+|   
+
+=== /root/bot/bot/plugins/book_find.py 含'阿萨尔' ===
+"""
+| 找书 —— 阿萨尔的书店
+| 
+| 群里发 /找书 三体        → 阿萨尔报几本书，附作者年份和豆瓣链接
+| 群里发 /找书 山海经 下载  → 若是公有领域的古籍，直接把 txt 发进群
+| 
+| 为什么要做这个
+| -------------
+| 阿萨尔是开书店的，他的毕生志业是"编纂百科全书、只写亲眼见过的事"。
+| "帮他找一本书"是他本行里最自然的一件事，比抽签、点歌都更贴。
+| 
+| 数据源分两半
+| ------------
+| **现代书** 走豆瓣 subject_suggest（无需 key），返回 title / author_name /
+| year / url，搜不到就是空数组。详情接口（简介、评分）全要 key 或已下线，
+| 所以卡片里只有书名、作者、年份、链接四样。
+| 
+| **古籍** 走 Project Gutenberg。它的中文区有 409 本，全部是公有领域作品
+| （四大名著、《山海經》《三字經》《老殘遊記》…），可以合法下载 txt 进群。
+| 目录已抓成本地文件 bot/data/gutenberg_zh.json，所以匹配书名不联网也行。
+| 官方站连不上时自动降级到 pglaf 镜像（见 MIRRORS）。
+| 
+| 为什么不支持现代书下载
+| ----------------------
+| 试过的都不可用：Anna's Archive / Z-Library / LibGen 全部连不上；微信读书、
+| 京东读书、当当要
+
+=== /root/bot/bot/plugins/news.py 含'阿萨尔' ===
+"""
+| 新闻早报 —— 每天六十秒，阿萨尔替你读报
+| 
+| 命令：新闻 / 早报 / 60s / 每日新闻 / 看新闻
+| 
+| 数据源
+| ------
+| 主源 https://news.topurl.cn/api —— 当日时事要闻 + 农历 + 每日一句
+| 备用 https://uapis.cn/api/v1/misc/hotboard?type=weibo —— 微博热搜
+| 
+| 两个源都只给标题，没有正文。宁可只报标题，也不让大模型去"推测"内容——
+| 猜出来的东西就是假新闻。想看细节点每条后面的链接。
+| """
+| import aiohttp
+| from nonebot import on_command
+| from nonebot.rule import to_me
+| from nonebot.adapters.onebot.v11 import Message
+| 
+| news_cmd = on_command(
+|     "新闻", aliases={"早报", "60s", "每日新闻", "看新闻"},
+|     rule=to_me(), priority=20, block=True,
+| )
+| 
+| API = "https://news.topurl.cn/api"
+| FALLBACK = "https://uapis.cn/api/v1/misc/hotboard"
+| COUNT = 10          # 报几条
+| TIMEOUT = 15
+| 
+| 
+
+=== /root/bot/bot/plugins/games.py 含'阿萨尔' ===
+"""
+| 店内游戏 —— 说书人的消遣
+| 
+| 命令（裸词或带斜杠均可）：
+| - 掷骰            → 阿萨尔掷两把骰子，报点数
+| - 决斗 @某人       → 你和对方各掷三把，点数大者胜
+| - 猜数字           → 开一局：猜 1~100 里阿萨尔心里想的数
+| - 猜 50 / 猜一百    → 出手（本局进行中才认）
+| - 不玩了           → 认输，公布答案
+| - 谜语            → 说书人出一个谜面
+| - 答 xxx          → 抢答（谜面挂着时才认）
+| - 揭晓            → 没人猜中时公布答案
+| 
+| 设计说明：
+| - 猜数字按群分局，同一群同时只有一局，谁开谁出题的就是机器人自己
+| - 谜语同一时间每群只挂一个，答对即收
+| - 全部状态存内存，重启清零——输赢是消遣，不值得持久化
+| """
+| import random
+| import re
+| 
+| from nonebot import on_command, on_message
+| from nonebot.adapters.onebot.v11 import (
+|     GroupMessageEvent,
+|     Message,
+|     PrivateMessageEvent,
+| )
+| from nonebot.params import CommandArg
+| 
+| # =======================================================
+
