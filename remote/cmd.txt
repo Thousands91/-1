@@ -1,4 +1,5 @@
-91
-grep -a "image_see" /root/bot/bot/bot.log | tail -15
-echo ==23:04前后日志==
-grep -a "23:0" /root/bot/bot/bot.log | tail -25
+92
+tail -60 /root/bot/bot/bot.log
+echo ==兜底语记录==
+grep -ac "眼花了" /root/bot/bot/bot.log
+ls -la /root/bot/bot/plugins/image_see.py
