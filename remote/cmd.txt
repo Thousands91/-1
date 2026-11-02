@@ -1,4 +1,3 @@
-78
-grep -n "pick_food_or_drink\|FOODS\|DRINKS" /root/bot/bot/plugins/ai_chat.py | grep -v "^3[0-9][0-9]:\|^4[0-9][0-9]:.*\[.*\"\| Foods\|Drinks" | head -15
-echo ====触发逻辑====
-sed -n '400,470p' /root/bot/bot/plugins/ai_chat.py
+79
+grep -n "DRINK_WORDS\|EAT_WORDS" /root/bot/bot/plugins/ai_chat.py | head -4
+sed -n '505,560p' /root/bot/bot/plugins/ai_chat.py
