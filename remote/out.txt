@@ -1,27 +1,36 @@
-<<<task_74.txt>>>
-===== 任务74 11-02 16:51:46 =====
+<<<task_75.txt>>>
+===== 任务75 11-02 21:01:27 =====
 --- 命令 ---
 date "+%F %T"
+echo ==1.遥控循环==
+if [ -f /root/.remote_pid ] && kill -0 $(cat /root/.remote_pid) 2>/dev/null; then echo 循环OK $(cat /root/.remote_pid); else echo 循环异常; fi
+echo ==2.bot大脑==
+pgrep -f "venv/bin/python main[.]py" >/dev/null && echo bot进程OK || echo bot进程缺失
+echo ==3.守护==
+pgrep -f "bash /root/azar_guard[.]sh" >/dev/null && echo 守护OK || echo 守护缺失
+echo ==4.NapCat==
+pgrep -f "opt/QQ/[q]q" >/dev/null && echo NapCat进程OK || echo NapCat缺失
+echo ==5.登录状态==
 bash /root/logincheck.sh 2>&1 | tail -3
-echo ====QR====
-ls -l /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null
-echo ====保鲜循环====
-if [ -f /root/.qr_fresh_pid ] && kill -0 $(cat /root/.qr_fresh_pid) 2>/dev/null; then
-  echo 循环已在运行
-else
-  nohup bash -c 'while true; do cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null; sleep 20; done' >/dev/null 2>&1 &
-  echo $! > /root/.qr_fresh_pid
-  echo 保鲜循环已启动
-fi
-sleep 2
-ls -l /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null
+echo ==6.二维码保鲜循环==
+if [ -f /root/.qr_fresh_pid ] && kill -0 $(cat /root/.qr_fresh_pid) 2>/dev/null; then echo 保鲜循环OK; else nohup bash -c 'while true; do cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null; sleep 20; done' >/dev/null 2>&1 & echo $! > /root/.qr_fresh_pid; echo 保鲜循环已启动; fi
+echo ==7.相册码==
+ls -l /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null | tail -1
 --- 输出 ---
-2026-11-02 16:51:47
+2026-11-02 21:01:27
+==1.遥控循环==
+循环OK 24922
+==2.bot大脑==
+bot进程OK
+==3.守护==
+守护OK
+==4.NapCat==
+NapCat进程OK
+==5.登录状态==
 [未登录] 当前没有有效会话
 阶段: waiting_qrcode
 最近错误: 无
-====QR====
--rw-r--r--. 1 root root 594 Nov  2 16:50 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-====保鲜循环====
+==6.二维码保鲜循环==
 保鲜循环已启动
--rw-rw----. 1 10155 1023 594 Nov  2 16:51 /sdcard/DCIM/Camera/asar_qr.png
+==7.相册码==
+-rw-rw----. 1 10155 1023 591 Nov  2 19:08 /sdcard/DCIM/Camera/asar_qr.png
