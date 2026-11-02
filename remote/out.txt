@@ -1,14 +1,9 @@
-<<<task_90.txt>>>
-===== 任务90 11-02 22:55:31 =====
+<<<task_91.txt>>>
+===== 任务91 11-02 23:05:06 =====
 --- 命令 ---
-echo "循环PID=$(cat /root/.remote_pid)"
-echo "当前时间:$(date +%H:%M:%S)"
-echo "脚本版本:$(grep -o "sleep 15" /root/remote_ctl.sh | head -1)"
-tail -3 /root/remote_ctl.log
+grep -a "image_see" /root/bot/bot/bot.log | tail -15
+echo ==23:04前后日志==
+grep -a "23:0" /root/bot/bot/bot.log | tail -25
 --- 输出 ---
-循环PID=6737
-当前时间:22:55:31
-脚本版本:sleep 15
-[11-02 22:48] 看护：未登录且码3464s未刷新，尝试重启NapCat
-[11-02 22:48] 保险丝熔断:NapCat 24h内已自动拉起3次,停止自动重启,需人工排查
-[11-02 22:52] report:API回传成功
+==23:04前后日志==
+10-31 23:02:42 [INFO] uvicorn | 127.0.0.1:43576 - "GET / HTTP/1.1" 404
