@@ -1,2 +1,7 @@
-69
-grep "Succeeded to load" /root/bot/bot/bot.log | tail -13
+70
+echo "--- 14:01启动的插件清单 ---"
+grep "14:01" /root/bot/bot.log | grep -E "Succeeded|Failed|error" | head -14
+echo "--- image_see 是否加载 ---"
+grep "image_see" /root/bot/bot.log | head -2
+echo "--- 当前进程与启动时间 ---"
+ps -o pid,lstart,cmd -p $(pgrep -f "venv/bin/python main.py" | head -1)
