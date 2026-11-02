@@ -1,49 +1,76 @@
-<<<task_71.txt>>>
-===== 任务71 11-02 16:04:49 =====
+<<<task_72.txt>>>
+===== 任务72 11-02 16:28:02 =====
 --- 命令 ---
-echo "--- 1.遥控循环 ---"
-pgrep -f "bash /root/remote_ctl.sh" | head -1 && echo 循环OK
-echo "--- 2.bot主进程 ---"
-pgrep -f "venv/bin/python main.py" | head -1 && echo bot进程OK
-echo "--- 3.插件加载(14:01启动) ---"
-grep "14:01" /root/bot/bot.log | grep -c "Succeeded to load"
-grep "14:01" /root/bot/bot.log | grep -c "Failed"
-echo "--- 4.关键插件在位 ---"
-for P in ai_chat image_search image_see; do grep -q "plugins.$P\"" /root/bot/bot.log && echo "$P 已加载"; done
-echo "--- 5.掉线守护 ---"
-pgrep -f azar_guard.sh | head -1 && echo 守护OK
-echo "--- 6.NapCat与登录状态 ---"
-pgrep -fc "opt/QQ/qq"
-ls /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null && echo "二维码缓存存在(等扫码属正常)"
-echo "--- 7.登录脚本就绪 ---"
-ls -la /root/azar_login.sh
-echo "--- 8.requests(联网搜索) ---"
-/root/bot/venv/bin/python -c "import requests; print('requests', requests.__version__, 'OK')"
-echo "--- 9.bot监听端口 ---"
-ss -tln 2>/dev/null | grep 8080 | head -1
+date "+%F %T"
+bash /root/logincheck.sh 2>&1 | tail -4
+echo ====BOTLOG====
+tail -40 /root/bot/bot/bot.log
+echo ====GUARD====
+tail -8 /root/guard_status.txt 2>/dev/null
+echo ====NAPCATLOG====
+tail -8 /root/napcat.log 2>/dev/null
 --- 输出 ---
---- 1.遥控循环 ---
-8245
-循环OK
---- 2.bot主进程 ---
-29324
-bot进程OK
---- 3.插件加载(14:01启动) ---
-12
-0
---- 4.关键插件在位 ---
-ai_chat 已加载
-image_search 已加载
-image_see 已加载
---- 5.掉线守护 ---
-8344
-守护OK
---- 6.NapCat与登录状态 ---
-5
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-二维码缓存存在(等扫码属正常)
---- 7.登录脚本就绪 ---
--rw-r--r--. 1 root root 3356 Oct 29 01:10 /root/azar_login.sh
---- 8.requests(联网搜索) ---
-requests 2.34.2 OK
---- 9.bot监听端口 ---
+2026-11-02 16:28:02
+=== 登录状态（权威判定）===
+[未登录] 当前没有有效会话
+阶段: waiting_qrcode
+最近错误: 无
+====BOTLOG====
+    await _run_matcher(
+> File "/root/bot/venv/lib/python3.12/site-packages/nonebot/message.py", line 461, in _run_matcher
+    await matcher.run(bot, event, state, stack, dependency_cache)
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/matcher/matcher.py", line 916, in run
+    await self.simple_run(bot, event, state, stack, dependency_cache)
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/matcher/matcher.py", line 855, in simple_run
+    await handler(
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/dependencies/__init__.py", line 113, in __call__
+    return await cast(Callable[..., Awaitable[R]], self.call)(**values)
+  File "/root/bot/bot/plugins/ai_chat.py", line 638, in _
+    await ai_chat.finish(_out if _pos else Message(answer))
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/matcher/matcher.py", line 584, in finish
+    await cls.send(message, **kwargs)
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/matcher/matcher.py", line 568, in send
+    return await bot.send(event=event, message=_message, **kwargs)
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/adapters/onebot/v11/bot.py", line 237, in send
+    return await self.__class__.send_handler(self, event, message, **kwargs)
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/adapters/onebot/v11/bot.py", line 190, in send
+    return await bot.send_msg(**params)
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/adapter/bot.py", line 176, in call_api
+    raise exception
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/adapter/bot.py", line 128, in call_api
+    result = await self.adapter._call_api(self, api, **data)
+  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/adapters/onebot/v11/adapter.py", line 177, in _call_api
+    raise NetworkError(f"WebSocket call api {api} timeout") from None
+nonebot.adapters.onebot.v11.exception.NetworkError: NetWorkError(message='WebSocket call api send_msg timeout')
+10-31 18:29:20 [INFO] uvicorn | 127.0.0.1:47998 - "GET / HTTP/1.1" 404
+10-31 20:56:43 [INFO] uvicorn | 127.0.0.1:44936 - "GET / HTTP/1.1" 404
+10-31 20:56:43 [INFO] uvicorn | 127.0.0.1:41218 - "GET / HTTP/1.1" 404
+10-31 20:56:43 [INFO] uvicorn | 127.0.0.1:37976 - "GET / HTTP/1.1" 404
+10-31 20:56:43 [INFO] uvicorn | 127.0.0.1:41892 - "GET / HTTP/1.1" 404
+10-31 23:02:42 [INFO] uvicorn | 127.0.0.1:43576 - "GET / HTTP/1.1" 404
+10-31 23:24:17 [INFO] uvicorn | 127.0.0.1:39622 - "GET / HTTP/1.1" 404
+10-31 23:48:07 [INFO] uvicorn | 127.0.0.1:48782 - "GET / HTTP/1.1" 404
+11-01 00:09:31 [INFO] uvicorn | 127.0.0.1:39752 - "GET / HTTP/1.1" 404
+11-01 00:24:42 [INFO] uvicorn | 127.0.0.1:42470 - "GET / HTTP/1.1" 404
+11-01 00:42:43 [INFO] uvicorn | 127.0.0.1:41842 - "GET / HTTP/1.1" 404
+11-01 07:47:20 [INFO] uvicorn | 127.0.0.1:47888 - "GET / HTTP/1.1" 404
+11-01 13:57:47 [INFO] uvicorn | 127.0.0.1:43686 - "GET / HTTP/1.1" 404
+11-01 15:31:41 [INFO] uvicorn | 127.0.0.1:47326 - "GET / HTTP/1.1" 404
+====GUARD====
+11-02 00:45:25 NapCat在等扫码(被踢),等人工处理
+11-02 00:45:46 守护v1.1启动
+11-02 01:06:49 WS断开,尝试重启NapCat免扫码恢复
+11-02 01:07:53 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-02 12:32:02 守护v1.1启动
+11-02 12:33:02 被踢标记超6小时,允许再试
+11-02 12:33:02 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-02 16:24:29 QQ进程消失,自动拉起
+====NAPCATLOG====
+11-02 16:20:10 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爻心懒寄云中月(1445169274)] [回复消息 [(∩爻_爻)⊃━☆变🐸～小冉(3819642626)] @爻心懒寄云中月 (1445169274)  无趣给我买好吃的] @(∩爻_爻)⊃━☆变🐸～小冉 (3819642626)   吃吃吃就知道吃
+11-02 16:20:11 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [昵称(3322434352)] 我也要
+11-02 16:20:17 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [冉要当烟酒生(1062461846)] @鸠 (2419770062)  你在干什么
+11-02 16:20:18 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [昵称(3322434352)] 小冉有什么好吃的推荐吗
+11-02 16:20:20 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爻心懒寄云中月(1445169274)] 要要要就知道要
+11-02 16:20:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [(∩爻_爻)⊃━☆变🐸～小冉(3819642626)] @昵称 (3322434352)  零食是吗
+[9932:1102/162037.253189:FATAL:electron/shell/browser/electron_browser_main_parts.cc:529] Failed to shutdown.
+Trace/breakpoint trap
