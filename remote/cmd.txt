@@ -1,14 +1,6 @@
-82
-grep -n "def _load_memory" /root/bot/bot/plugins/ai_chat.py
-sed -n "$(grep -n 'def _load_memory' /root/bot/bot/plugins/ai_chat.py | cut -d: -f1),+18p" /root/bot/bot/plugins/ai_chat.py
-echo ==记忆内容==
-python3 - <<'PY'
-import sqlite3, json
-con = sqlite3.connect('/root/bot/bot/guild1.db')
-cur = con.cursor()
-tabs = [r[0] for r in cur.execute("SELECT name FROM sqlite_master WHERE type='table'")]
-print('表:', tabs)
-for t in tabs:
-    cols = [c[1] for c in cur.execute(f'PRAGMA table_info({t})')]
-    print(t, cols)
-PY
+83
+sed -n "$(grep -n 'def _memory_path' /root/bot/bot/plugins/ai_chat.py | cut -d: -f1),+6p" /root/bot/bot/plugins/ai_chat.py
+echo ==记忆目录==
+ls -la /root/bot/bot/memory/ 2>/dev/null | head -10
+echo ==该用户记忆==
+cat /root/bot/bot/memory/1445169274.json 2>/dev/null | head -c 1500
