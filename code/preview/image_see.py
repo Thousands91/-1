@@ -37,6 +37,8 @@ VLM_URL = (
 )
 VLM_KEY = API_KEY if "bigmodel" in BASE_URL else os.getenv("ZHIPU_API_KEY", API_KEY)
 VLM_MODEL = os.getenv("VISION_MODEL", "glm-4.6v-flash")
+# 备用视觉模型：主模型撞限流（1305）时自动换它再试（2026-11-02 高峰实锤主模型 50% 可用）
+VLM_FALLBACK = os.getenv("VISION_MODEL_FB", "glm-4v-flash")
 
 MAX_IMG_BYTES = 5 * 1024 * 1024  # 5MB
 RETRY_TIMES = 2                  # 429 重试次数
@@ -97,27 +99,33 @@ async def _vlm_see(img_b64: str, user_text: str) -> str:
             {"role": "user", "content": content},
         ],
     }
+    # 模型链：主模型限流时自动落到备用模型（每个模型各试 1+RETRY 次）
+    models = [VLM_MODEL]
+    if VLM_FALLBACK and VLM_FALLBACK != VLM_MODEL:
+        models.append(VLM_FALLBACK)
     last_err = ""
-    for attempt in range(1 + RETRY_TIMES):
-        try:
-            async with aiohttp.ClientSession() as sess:
-                async with sess.post(
-                    VLM_URL,
-                    headers={"Authorization": f"Bearer {VLM_KEY}"},
-                    json=payload,
-                    timeout=TIMEOUT,
-                ) as resp:
-                    data = await resp.json()
-            if data.get("error"):
-                last_err = str(data["error"].get("message", ""))[:80]
-            else:
-                text_out = (data["choices"][0]["message"].get("content") or "").strip()
-                if text_out:
-                    return text_out
-                last_err = "空正文"
-        except Exception as e:
-            last_err = f"{type(e).__name__} {str(e)[:60]}"
-        await asyncio.sleep(4)
+    for model in models:
+        payload["model"] = model
+        for attempt in range(1 + RETRY_TIMES):
+            try:
+                async with aiohttp.ClientSession() as sess:
+                    async with sess.post(
+                        VLM_URL,
+                        headers={"Authorization": f"Bearer {VLM_KEY}"},
+                        json=payload,
+                        timeout=TIMEOUT,
+                    ) as resp:
+                        data = await resp.json()
+                if data.get("error"):
+                    last_err = f"{model}: {str(data['error'].get('message', ''))[:80]}"
+                else:
+                    text_out = (data["choices"][0]["message"].get("content") or "").strip()
+                    if text_out:
+                        return text_out
+                    last_err = f"{model}: 空正文"
+            except Exception as e:
+                last_err = f"{model}: {type(e).__name__} {str(e)[:60]}"
+            await asyncio.sleep(4)
     raise RuntimeError(f"视觉模型失败: {last_err}")
 
 
