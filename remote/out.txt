@@ -1,37 +1,40 @@
-<<<task_53.txt>>>
-===== 任务53 11-02 12:33:09 =====
+<<<task_54.txt>>>
+===== 任务54 11-02 12:47:35 =====
 --- 命令 ---
-echo "--- 循环 ---"
-ls -la /root/.remote_pid 2>&1; pgrep -f "bash /root/remote_ctl.sh" | head -3
-echo "--- bot 主进程 ---"
-pgrep -af "venv/bin/python main.py" | head -2
-echo "--- 守护 ---"
-pgrep -f azar_guard.sh | head -2; tail -2 /root/guard_status.txt 2>/dev/null
-echo "--- QQ进程 ---"
-pgrep -fc "opt/QQ/qq"
-echo "--- 登录状态 ---"
-bash /root/logincheck.sh 2>&1 | head -5
-echo "--- bot.log 尾部3行 ---"
-tail -3 /root/bot.log
+echo "--- venv/bin 内容 ---"
+ls /root/bot/venv/bin/ | head -12
+echo "--- venv pip 是否可用 ---"
+/root/bot/venv/bin/python -m pip --version 2>&1 | head -2
+echo "--- 若无pip则ensurepip ---"
+/root/bot/venv/bin/python -m ensurepip 2>&1 | tail -2
+echo "--- 安装 requests(显示真实报错) ---"
+/root/bot/venv/bin/python -m pip install requests 2>&1 | tail -5
+echo "--- 验证 ---"
+/root/bot/venv/bin/python -c "import requests; print('requests OK, 版本', requests.__version__)" 2>&1
 --- 输出 ---
---- 循环 ---
--rw-r--r--. 1 root root 5 Nov  2 12:32 /root/.remote_pid
-8245
-8448
---- bot 主进程 ---
-8452 /root/bot/venv/bin/python main.py
---- 守护 ---
-8344
-11-02 12:33:02 被踢标记超6小时,允许再试
-11-02 12:33:02 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
---- QQ进程 ---
-5
---- 登录状态 ---
-=== 登录状态（权威判定）===
-[未登录] 当前没有有效会话
-阶段: waiting_qrcode
-最近错误: 无
---- bot.log 尾部3行 ---
-11-02 12:32:11 [INFO] __main__ | ==================================================
-11-02 12:32:11 [INFO] uvicorn | Application startup complete.
-11-02 12:32:11 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+--- venv/bin 内容 ---
+Activate.ps1
+activate
+activate.csh
+activate.fish
+ddgs
+dotenv
+fastapi
+httpx2
+idna
+pip
+pip3
+pip3.12
+--- venv pip 是否可用 ---
+pip 24.0 from /root/bot/venv/lib/python3.12/site-packages/pip (python 3.12)
+--- 若无pip则ensurepip ---
+Looking in links: /tmp/tmp6j1rwtly
+Requirement already satisfied: pip in /root/bot/venv/lib/python3.12/site-packages (24.0)
+--- 安装 requests(显示真实报错) ---
+Using cached charset_normalizer-3.5.2-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (246 kB)
+Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.7/135.7 kB 289.8 kB/s eta 0:00:00
+Installing collected packages: urllib3, charset_normalizer, certifi, requests
+Successfully installed certifi-2026.10.23 charset_normalizer-3.5.2 requests-2.34.2 urllib3-2.8.0
+--- 验证 ---
+requests OK, 版本 2.34.2
