@@ -1,21 +1,9 @@
-71
-echo "--- 1.遥控循环 ---"
-pgrep -f "bash /root/remote_ctl.sh" | head -1 && echo 循环OK
-echo "--- 2.bot主进程 ---"
-pgrep -f "venv/bin/python main.py" | head -1 && echo bot进程OK
-echo "--- 3.插件加载(14:01启动) ---"
-grep "14:01" /root/bot/bot.log | grep -c "Succeeded to load"
-grep "14:01" /root/bot/bot.log | grep -c "Failed"
-echo "--- 4.关键插件在位 ---"
-for P in ai_chat image_search image_see; do grep -q "plugins.$P\"" /root/bot/bot.log && echo "$P 已加载"; done
-echo "--- 5.掉线守护 ---"
-pgrep -f azar_guard.sh | head -1 && echo 守护OK
-echo "--- 6.NapCat与登录状态 ---"
-pgrep -fc "opt/QQ/qq"
-ls /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null && echo "二维码缓存存在(等扫码属正常)"
-echo "--- 7.登录脚本就绪 ---"
-ls -la /root/azar_login.sh
-echo "--- 8.requests(联网搜索) ---"
-/root/bot/venv/bin/python -c "import requests; print('requests', requests.__version__, 'OK')"
-echo "--- 9.bot监听端口 ---"
-ss -tln 2>/dev/null | grep 8080 | head -1
+72
+date "+%F %T"
+bash /root/logincheck.sh 2>&1 | tail -4
+echo ====BOTLOG====
+tail -40 /root/bot/bot/bot.log
+echo ====GUARD====
+tail -8 /root/guard_status.txt 2>/dev/null
+echo ====NAPCATLOG====
+tail -8 /root/napcat.log 2>/dev/null
