@@ -1,29 +1,39 @@
-<<<task_55.txt>>>
-===== 任务55 11-02 12:54:11 =====
+<<<task_56.txt>>>
+===== 任务56 11-02 12:56:20 =====
 --- 命令 ---
-python3 << 'PYEOF' 2>&1
-import base64, json, urllib.request, shutil
-files = {"ai_chat_face.py": "/root/bot/plugins/ai_chat.py",
-         "image_search_multisource.py": "/root/bot/plugins/image_search.py"}
-for f, dst in files.items():
-    d = json.load(urllib.request.urlopen(f"https://api.github.com/repos/Thousands91/-1/contents/code/preview/{f}"))
-    content = base64.b64decode(d["content"])
-    bak = dst + ".bak_1102"
-    shutil.copy(dst, bak)
-    open(dst, "wb").write(content)
-    print(f"OK {f} -> {dst} ({len(content)}字节, 旧版备份{bak})")
-PYEOF
-echo "--- 语法检查 ---"
-/root/bot/venv/bin/python -m py_compile /root/bot/plugins/ai_chat.py && echo "ai_chat.py 语法OK"
-/root/bot/venv/bin/python -m py_compile /root/bot/plugins/image_search.py && echo "image_search.py 语法OK"
+P=$(pgrep -f "venv/bin/python main.py" | head -1)
+echo "--- bot进程 $P 的真实工作目录 ---"
+ls -l /proc/$P/cwd
+echo "--- 该目录内容 ---"
+ls $(readlink /proc/$P/cwd)/ 2>/dev/null | head -12
+echo "--- plugins 目录 ---"
+ls $(readlink /proc/$P/cwd)/plugins/ 2>/dev/null | head -15
 --- 输出 ---
-Traceback (most recent call last):
-  File "<stdin>", line 8, in <module>
-  File "/usr/lib/python3.12/shutil.py", line 435, in copy
-    copyfile(src, dst, follow_symlinks=follow_symlinks)
-  File "/usr/lib/python3.12/shutil.py", line 260, in copyfile
-    with open(src, 'rb') as fsrc:
-         ^^^^^^^^^^^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: '/root/bot/plugins/ai_chat.py'
---- 语法检查 ---
-[Errno 2] No such file or directory: '/root/bot/plugins/ai_chat.py'[Errno 2] No such file or directory: '/root/bot/plugins/image_search.py'
+--- bot进程 8452 的真实工作目录 ---
+lrwxrwxrwx. 1 root root 0 Nov  2 12:56 /proc/8452/cwd -> /root/bot/bot
+--- 该目录内容 ---
+__pycache__
+assets
+azar_watch.sh
+bot.log
+config
+config.py
+data
+guild1.db
+guild1.db-shm
+guild1.db-wal
+main.py
+persona
+--- plugins 目录 ---
+__pycache__
+ai_chat.py
+book_find.py
+chess_game.py
+fortune.py
+games.py
+image_search.py
+image_search_web.py
+keyword_reply.py
+news.py
+song_request.py
+weather.py
