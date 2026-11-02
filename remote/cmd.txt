@@ -1,5 +1,2 @@
-68
-grep "image_see" /root/bot/bot/bot.log | tail -2
-echo "--- 全部插件加载统计 ---"
-grep -c "Succeeded to load" /root/bot/bot.log
-grep "Failed" /root/bot/bot.log | head -3
+69
+grep "Succeeded to load" /root/bot/bot/bot.log | tail -13
