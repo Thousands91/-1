@@ -1,23 +1,5 @@
-67
-python3 << 'PYEOF' 2>&1
-import base64, json, urllib.request, shutil
-files = {"ai_chat_face.py": "/root/bot/bot/plugins/ai_chat.py",
-         "image_search_multisource.py": "/root/bot/bot/plugins/image_search.py",
-         "image_see.py": "/root/bot/bot/plugins/image_see.py"}
-for f, dst in files.items():
-    d = json.load(urllib.request.urlopen(f"https://api.github.com/repos/Thousands91/-1/contents/code/preview/{f}"))
-    content = base64.b64decode(d["content"])
-    open(dst, "wb").write(content)
-    print(f"OK {f} -> {dst} ({len(content)}字节)")
-PYEOF
-echo "--- 语法检查 ---"
-for F in ai_chat image_search image_see; do
-  /root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/$F.py && echo "$F.py 语法OK"
-done
-echo "--- 重启加载 ---"
-pkill -f "venv/bin/python main.py"
-sleep 3
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot.log 2>&1 &
-sleep 12
-pgrep -f "venv/bin/python main.py" | head -1
-grep -E "Succeeded|Failed|ERROR" /root/bot/bot.log | tail -6
+68
+grep "image_see" /root/bot/bot/bot.log | tail -2
+echo "--- 全部插件加载统计 ---"
+grep -c "Succeeded to load" /root/bot/bot.log
+grep "Failed" /root/bot/bot.log | head -3
