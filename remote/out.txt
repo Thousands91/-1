@@ -1,10 +1,16 @@
-<<<task_68.txt>>>
-===== 任务68 11-02 14:03:39 =====
+<<<task_69.txt>>>
+===== 任务69 11-02 14:05:19 =====
 --- 命令 ---
-grep "image_see" /root/bot/bot/bot.log | tail -2
-echo "--- 全部插件加载统计 ---"
-grep -c "Succeeded to load" /root/bot/bot.log
-grep "Failed" /root/bot/bot.log | head -3
+grep "Succeeded to load" /root/bot/bot/bot.log | tail -13
 --- 输出 ---
---- 全部插件加载统计 ---
-23
+10-31 16:39:15 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
+10-31 16:39:15 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+10-31 16:39:15 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
+10-31 16:39:16 [SUCCESS] nonebot | Succeeded to load plugin "image_search_web" from "plugins.image_search_web"
+10-31 16:39:16 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+10-31 16:39:16 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
+10-31 16:39:16 [SUCCESS] nonebot | Succeeded to load plugin "image_search" from "plugins.image_search"
+10-31 16:39:16 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
+10-31 16:39:16 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
+10-31 16:39:16 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+10-31 16:39:16 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
