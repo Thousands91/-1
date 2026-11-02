@@ -1,41 +1,10 @@
-<<<task_67.txt>>>
-===== 任务67 11-02 14:01:39 =====
+<<<task_68.txt>>>
+===== 任务68 11-02 14:03:39 =====
 --- 命令 ---
-python3 << 'PYEOF' 2>&1
-import base64, json, urllib.request, shutil
-files = {"ai_chat_face.py": "/root/bot/bot/plugins/ai_chat.py",
-         "image_search_multisource.py": "/root/bot/bot/plugins/image_search.py",
-         "image_see.py": "/root/bot/bot/plugins/image_see.py"}
-for f, dst in files.items():
-    d = json.load(urllib.request.urlopen(f"https://api.github.com/repos/Thousands91/-1/contents/code/preview/{f}"))
-    content = base64.b64decode(d["content"])
-    open(dst, "wb").write(content)
-    print(f"OK {f} -> {dst} ({len(content)}字节)")
-PYEOF
-echo "--- 语法检查 ---"
-for F in ai_chat image_search image_see; do
-  /root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/$F.py && echo "$F.py 语法OK"
-done
-echo "--- 重启加载 ---"
-pkill -f "venv/bin/python main.py"
-sleep 3
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot.log 2>&1 &
-sleep 12
-pgrep -f "venv/bin/python main.py" | head -1
-grep -E "Succeeded|Failed|ERROR" /root/bot/bot.log | tail -6
+grep "image_see" /root/bot/bot/bot.log | tail -2
+echo "--- 全部插件加载统计 ---"
+grep -c "Succeeded to load" /root/bot/bot.log
+grep "Failed" /root/bot/bot.log | head -3
 --- 输出 ---
-OK ai_chat_face.py -> /root/bot/bot/plugins/ai_chat.py (56548字节)
-OK image_search_multisource.py -> /root/bot/bot/plugins/image_search.py (18568字节)
-OK image_see.py -> /root/bot/bot/plugins/image_see.py (6095字节)
---- 语法检查 ---
-ai_chat.py 语法OK
-image_search.py 语法OK
-image_see.py 语法OK
---- 重启加载 ---
-29324
-11-02 14:01:50 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-02 14:01:50 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
-11-02 14:01:50 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
-11-02 14:01:50 [SUCCESS] nonebot | Succeeded to load plugin "image_search" from "plugins.image_search"
-11-02 14:01:50 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
-11-02 14:01:50 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+--- 全部插件加载统计 ---
+23
