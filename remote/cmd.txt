@@ -1,8 +1,15 @@
-73
-grep -n 'xvfb-run' /root/azar_guard.sh | head -3
-pkill -f 'Napcat/opt/QQ/[q]q' || true
+74
+date "+%F %T"
+bash /root/logincheck.sh 2>&1 | tail -3
+echo ====QR====
+ls -l /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null
+echo ====保鲜循环====
+if [ -f /root/.qr_fresh_pid ] && kill -0 $(cat /root/.qr_fresh_pid) 2>/dev/null; then
+  echo 循环已在运行
+else
+  nohup bash -c 'while true; do cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null; sleep 20; done' >/dev/null 2>&1 &
+  echo $! > /root/.qr_fresh_pid
+  echo 保鲜循环已启动
+fi
 sleep 2
-nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox -q 3427943187 >/root/napcat.log 2>&1 &
-sleep 30
-bash /root/logincheck.sh 2>&1 | tail -4
-tail -6 /root/napcat.log
+ls -l /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null
