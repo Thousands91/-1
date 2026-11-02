@@ -85,6 +85,9 @@ while true; do
     *) echo "[$(date '+%m-%d %H:%M')] intake:API响应异常" >> "$LOG" ;;
   esac
   api_report
+  C=$((C+1))
+  # 看护检查每 4 轮跑一次（约 60s），任务拉取每轮都跑（15s）——拉任务轻、看护重，分开节流
+  if [ $((C % 4)) -eq 0 ]; then
   ST=$(bash /root/logincheck.sh 2>/dev/null | grep -c "\[未登录\]\|\[掉线\]")
   if [ "$ST" = "1" ] && [ -f "$QR" ]; then
     NOW=$(date +%s); MT=$(stat -c %Y "$QR" 2>/dev/null || echo "$NOW")
@@ -96,6 +99,7 @@ while true; do
   fi
   pgrep -f "opt/QQ/qq" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：NapCat不在" >> "$LOG"; restart_napcat; }
   pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & cd "$REPO"; }
-  C=$((C+1)); [ $((C % 10)) -eq 0 ] && echo "[$(date '+%m-%d %H:%M')] 心跳:循环正常,LAST=$LAST" >> "$LOG"
-  sleep 30
+  [ $((C % 40)) -eq 0 ] && echo "[$(date '+%m-%d %H:%M')] 心跳:循环正常,LAST=$LAST" >> "$LOG"
+  fi
+  sleep 15
 done
