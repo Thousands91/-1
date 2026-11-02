@@ -1,21 +1,23 @@
-66
+67
 python3 << 'PYEOF' 2>&1
-p = '/root/bot/bot/plugins/ai_chat.py'
-src = open(p, encoding='utf-8').read()
-old = '语气克制、带点自嘲的清醒，不热血不中二，不卖惨。'
-add = '\\n- 回复末尾的小符号（📖✨📚这些）别每条都带：十条里有两三条带就够，平时素着说，真有心境才点一个，不带也完全没问题。'
-n = src.count(old)
-print(f'锚点匹配: {n}处')
-if n == 1:
-    open(p, 'w', encoding='utf-8').write(src.replace(old, old + add))
-    print('人设已更新')
+import base64, json, urllib.request, shutil
+files = {"ai_chat_face.py": "/root/bot/bot/plugins/ai_chat.py",
+         "image_search_multisource.py": "/root/bot/bot/plugins/image_search.py",
+         "image_see.py": "/root/bot/bot/plugins/image_see.py"}
+for f, dst in files.items():
+    d = json.load(urllib.request.urlopen(f"https://api.github.com/repos/Thousands91/-1/contents/code/preview/{f}"))
+    content = base64.b64decode(d["content"])
+    open(dst, "wb").write(content)
+    print(f"OK {f} -> {dst} ({len(content)}字节)")
 PYEOF
 echo "--- 语法检查 ---"
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo "语法OK"
+for F in ai_chat image_search image_see; do
+  /root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/$F.py && echo "$F.py 语法OK"
+done
 echo "--- 重启加载 ---"
 pkill -f "venv/bin/python main.py"
 sleep 3
 cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot.log 2>&1 &
 sleep 12
 pgrep -f "venv/bin/python main.py" | head -1
-tail -8 /root/bot/bot.log | grep -E "SUCCESS|ERROR|startup" | tail -3
+grep -E "Succeeded|Failed|ERROR" /root/bot/bot.log | tail -6
