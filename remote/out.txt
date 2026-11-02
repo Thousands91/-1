@@ -1,71 +1,40 @@
-<<<task_92.txt>>>
-===== 任务92 11-02 23:05:42 =====
+<<<task_93.txt>>>
+===== 任务93 11-02 23:06:36 =====
 --- 命令 ---
-tail -60 /root/bot/bot/bot.log
-echo ==兜底语记录==
-grep -ac "眼花了" /root/bot/bot/bot.log
-ls -la /root/bot/bot/plugins/image_see.py
+BPID=$(pgrep -f "venv/bin/python main.py" | head -1)
+LOG=$(readlink /proc/$BPID/fd/1)
+echo "bot PID=$BPID 日志去向=$LOG"
+grep -a "识图" $LOG | tail -12
+echo ==日志尾部==
+tail -25 $LOG
 --- 输出 ---
-Traceback (most recent call last):
-  File "/root/bot/bot/main.py", line 42, in <module>
-    run()
-  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/__init__.py", line 337, in run
-    get_driver().run(*args, **kwargs)
-  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/drivers/fastapi.py", line 187, in run
-    uvicorn.run(
-  File "/root/bot/venv/lib/python3.12/site-packages/uvicorn/main.py", line 632, in run
-    server.run()
-  File "/root/bot/venv/lib/python3.12/site-packages/uvicorn/server.py", line 86, in run
-    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
-    return runner.run(main)
-  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-  File "/root/bot/venv/lib/python3.12/site-packages/anyio/_core/_tasks.py", line 327, in _run_coro
-    retval = await self._coro
-  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/utils.py", line 328, in run_coro_with_shield
-    return await coro
-  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/message.py", line 509, in check_and_run_matcher
-    await _run_matcher(
-> File "/root/bot/venv/lib/python3.12/site-packages/nonebot/message.py", line 461, in _run_matcher
-    await matcher.run(bot, event, state, stack, dependency_cache)
-  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/matcher/matcher.py", line 916, in run
-    await self.simple_run(bot, event, state, stack, dependency_cache)
-  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/matcher/matcher.py", line 855, in simple_run
-    await handler(
-  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/dependencies/__init__.py", line 113, in __call__
-    return await cast(Callable[..., Awaitable[R]], self.call)(**values)
-  File "/root/bot/bot/plugins/ai_chat.py", line 638, in _
-    await ai_chat.finish(_out if _pos else Message(answer))
-  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/matcher/matcher.py", line 584, in finish
-    await cls.send(message, **kwargs)
-  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/matcher/matcher.py", line 568, in send
-    return await bot.send(event=event, message=_message, **kwargs)
-  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/adapters/onebot/v11/bot.py", line 237, in send
-    return await self.__class__.send_handler(self, event, message, **kwargs)
-  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/adapters/onebot/v11/bot.py", line 190, in send
-    return await bot.send_msg(**params)
-  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/adapter/bot.py", line 176, in call_api
-    raise exception
-  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/adapter/bot.py", line 128, in call_api
-    result = await self.adapter._call_api(self, api, **data)
-  File "/root/bot/venv/lib/python3.12/site-packages/nonebot/adapters/onebot/v11/adapter.py", line 177, in _call_api
-    raise NetworkError(f"WebSocket call api {api} timeout") from None
-nonebot.adapters.onebot.v11.exception.NetworkError: NetWorkError(message='WebSocket call api send_msg timeout')
-10-31 18:29:20 [INFO] uvicorn | 127.0.0.1:47998 - "GET / HTTP/1.1" 404
-10-31 20:56:43 [INFO] uvicorn | 127.0.0.1:44936 - "GET / HTTP/1.1" 404
-10-31 20:56:43 [INFO] uvicorn | 127.0.0.1:41218 - "GET / HTTP/1.1" 404
-10-31 20:56:43 [INFO] uvicorn | 127.0.0.1:37976 - "GET / HTTP/1.1" 404
-10-31 20:56:43 [INFO] uvicorn | 127.0.0.1:41892 - "GET / HTTP/1.1" 404
-10-31 23:02:42 [INFO] uvicorn | 127.0.0.1:43576 - "GET / HTTP/1.1" 404
-10-31 23:24:17 [INFO] uvicorn | 127.0.0.1:39622 - "GET / HTTP/1.1" 404
-10-31 23:48:07 [INFO] uvicorn | 127.0.0.1:48782 - "GET / HTTP/1.1" 404
-11-01 00:09:31 [INFO] uvicorn | 127.0.0.1:39752 - "GET / HTTP/1.1" 404
-11-01 00:24:42 [INFO] uvicorn | 127.0.0.1:42470 - "GET / HTTP/1.1" 404
-11-01 00:42:43 [INFO] uvicorn | 127.0.0.1:41842 - "GET / HTTP/1.1" 404
-11-01 07:47:20 [INFO] uvicorn | 127.0.0.1:47888 - "GET / HTTP/1.1" 404
-11-01 13:57:47 [INFO] uvicorn | 127.0.0.1:43686 - "GET / HTTP/1.1" 404
-11-01 15:31:41 [INFO] uvicorn | 127.0.0.1:47326 - "GET / HTTP/1.1" 404
-==兜底语记录==
-0
--rw-r--r--. 1 root root 6095 Nov  2 14:01 /root/bot/bot/plugins/image_see.py
+bot PID=25330 日志去向=/root/bot.log
+11-02 21:58:32 [WARNING] image_see | [识图] 视觉模型失败: 该模型当前访问量过大，请您稍后再试
+11-02 22:00:48 [WARNING] image_see | [识图] 视觉模型失败: 该模型当前访问量过大，请您稍后再试
+11-02 22:01:33 [WARNING] image_see | [识图] 视觉模型失败: 该模型当前访问量过大，请您稍后再试
+==日志尾部==
+11-02 23:02:22 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+11-02 23:02:22 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+11-02 23:02:22 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+11-02 23:02:22 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+11-02 23:02:22 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=427)
+11-02 23:02:22 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=427) running complete
+11-02 23:02:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2028211578 from 2959186535@[群:1109952783] '双开门'
+11-02 23:02:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+11-02 23:02:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+11-02 23:02:35 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+11-02 23:02:35 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+11-02 23:02:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+11-02 23:02:35 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+11-02 23:02:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=427)
+11-02 23:02:35 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=427) running complete
+11-02 23:02:43 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 355595461 from 2959186535@[群:1109952783] '[reply:id=719242375][at:qq=553414459] 正常正常'
+11-02 23:02:43 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=88)
+11-02 23:02:43 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=184)
+11-02 23:02:43 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
+11-02 23:02:43 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
+11-02 23:02:43 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
+11-02 23:02:43 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
+11-02 23:02:43 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=427)
+11-02 23:02:43 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=427) running complete
+11-02 23:05:46 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793631946, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
