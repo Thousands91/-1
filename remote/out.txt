@@ -1,34 +1,20 @@
-<<<task_60.txt>>>
-===== 任务60 11-02 13:08:29 =====
+<<<task_61.txt>>>
+===== 任务61 11-02 13:10:07 =====
 --- 命令 ---
-python3 << 'PYEOF' 2>&1
-import re
-# 昨天的 bot.log 行(日期 11-01)
-lines = open('/root/bot.log', errors='ignore').readlines()
-yest = [l.rstrip('\n') for l in lines if l[:5] in ('11-01',) or '2026-11-01' in l[:22]]
-if not yest:
-    # 时间格式可能不同,取昨天日期出现的前后行
-    yest = [l.rstrip('\n') for l in lines if '11-01' in l[:24]]
-print(f"昨天日志行数: {len(yest)}")
-print(f"时间范围: {yest[0][:22]} ~ {yest[-1][:22]}")
-# 收到的消息(用户说的)
-msgs = [l for l in yest if 'Message ' in l and 'from ' in l and ': ' in l]
-print(f"\n=== 收到消息 共{len(msgs)}条, 抽样40条 ===")
-# 均匀抽样,覆盖全天
-step = max(1, len(msgs)//40)
-for l in msgs[::step][:40]:
-    ts = l[:16]
-    body = l.split('] ', 1)[-1]
-    print(f"{ts} | {body[:90]}")
-# 阿萨尔的回复
-send = [l.rstrip('\n') for l in open('/root/napcat-restart.log', errors='ignore') if '发送 ->' in l and ('11-01' in l[:24] or '2026-11-01' in l[:24])]
-print(f"\n=== 阿萨尔回复 共{len(send)}条, 抽样40条 ===")
-step = max(1, len(send)//40)
-for l in send[::step][:40]:
-    print(l[:110])
-PYEOF
+echo "--- bot.log 前3行(看时间戳格式) ---"
+head -3 /root/bot.log
+echo "--- bot.log 总行数与文件时间 ---"
+wc -l /root/bot.log; stat -c "%y %s字节" /root/bot.log
+echo "--- NapCat 发送日志 前2行(看格式) ---"
+head -2 /root/napcat-restart.log
 --- 输出 ---
-昨天日志行数: 0
-Traceback (most recent call last):
-  File "<stdin>", line 9, in <module>
-IndexError: list index out of range
+--- bot.log 前3行(看时间戳格式) ---
+11-02 12:32:07 [SUCCESS] nonebot | NoneBot is initializing...
+11-02 12:32:07 [INFO] nonebot | Current Env: prod
+11-02 12:32:10 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+--- bot.log 总行数与文件时间 ---
+52 /root/bot.log
+2026-11-02 12:59:43.960425943 +0800 4160字节
+--- NapCat 发送日志 前2行(看格式) ---
+nohup: missing operand
+Try 'nohup --help' for more information.
