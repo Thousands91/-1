@@ -1,7 +1,20 @@
-102
-echo "=====1.匹配到的所有进程明细====="
-pgrep -af "opt/QQ/[q]q"
-echo "=====2.守护脚本里这段逻辑上下文====="
-sed -n "35,50p" /root/azar_guard.sh
-echo "=====3.守护进程启动时间====="
-ps -o pid,lstart,args -p 24962 2>/dev/null
+103
+echo "=====1.重启守护使新参数生效====="
+OLDPID=$(pgrep -f "bash /root/azar_guard[.]sh" | head -1)
+echo "旧守护PID=$OLDPID"
+[ -n "$OLDPID" ] && kill "$OLDPID" 2>/dev/null && echo "已停止旧守护"
+sleep 2
+setsid nohup bash /root/azar_guard.sh > /dev/null 2>&1 < /dev/null &
+sleep 5
+NEWPID=$(pgrep -f "bash /root/azar_guard[.]sh" | head -1)
+echo "新守护PID=$NEWPID"
+echo "=====2.确认守护运行中====="
+[ -n "$NEWPID" ] && kill -0 "$NEWPID" 2>/dev/null && echo "守护运行中" || echo "守护未启动!"
+echo "=====3.守护日志确认====="
+tail -5 /root/guard_status.txt 2>/dev/null
+echo "=====4.最终状态总览====="
+echo "--- 循环 ---"; kill -0 $(cat /root/.remote_pid 2>/dev/null) 2>/dev/null && echo OK || echo 异常
+echo "--- bot ---"; pgrep -f "venv/bin/python main.py" >/dev/null && echo OK || echo 异常
+echo "--- 守护 ---"; pgrep -f "bash /root/azar_guard[.]sh" >/dev/null && echo OK || echo 异常
+echo "--- NapCat ---"; pgrep -f "opt/QQ/[q]q" >/dev/null && echo "OK(等扫码)" || echo "未运行"
+echo "--- 当前NapCat启动参数 ---"; ps -eo args | grep "[o]pt/QQ/qq --no-sandbox" | head -1
