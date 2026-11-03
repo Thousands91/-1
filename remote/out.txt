@@ -1,23 +1,24 @@
-<<<task_107.txt>>>
-===== 任务107 11-03 16:14:46 =====
+<<<task_108.txt>>>
+===== 任务108 11-03 17:49:16 =====
 --- 命令 ---
-echo ==A.此刻登录状态==
-bash /root/logincheck.sh 2>/dev/null | head -4
-echo ==B.16:08之后有没有新消息和恢复记录==
-tail -4 /root/napcat.log
-echo ==C.脚本带新参数核查==
-grep -c "disable-gpu" /root/remote_ctl.sh /root/azar_guard.sh
+echo ==登录状态==
+bash /root/logincheck.sh 2>/dev/null | head -3
+echo ==NapCat主进程==
+pgrep -af "opt/QQ/[q]q" | head -2
+echo ==新日志GPU报错==
+echo "GPU: $(grep -c 'GPU process' /root/napcat.log 2>/dev/null)"
+echo ==bot遥控守护==
+pgrep -f main.py | head -1; pgrep -f "bash /root/remote_ctl.sh" | head -1; pgrep -f "bash /root/azar_guard.sh" | head -1
 --- 输出 ---
-==A.此刻登录状态==
+==登录状态==
 === 登录状态（权威判定）===
-[在线] 已登录，一切正常
-阶段: ready
-最近错误: 无
-==B.16:08之后有没有新消息和恢复记录==
-9d027ca793e22f5696a48de3abde1994550d4613671e9ae3c3912fa3ddc3ec80
-11-03 16:08:26 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-138dd09f4409e9708893ffe46b62ddf3e6ee5cee3de83af6855dde114d269d2f
-11-03 16:13:29 [[32minfo[39m] 阿萨尔 | 接收 <- 临时消息 (2290230341)
-==C.脚本带新参数核查==
-/root/remote_ctl.sh:1
-/root/azar_guard.sh:1
+[未登录] 当前没有有效会话
+阶段: waiting_qrcode
+==NapCat主进程==
+30377 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage
+30455 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage
+==新日志GPU报错==
+GPU: 0
+==bot遥控守护==
+30745
+30757
