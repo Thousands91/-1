@@ -1,7 +1,7 @@
-123
-echo ==看景功能在哪个文件==
-grep -l "看景" /root/bot/bot/plugins/*.py 2>/dev/null
-echo ==搜图类文件md5==
-md5sum /root/bot/bot/plugins/image_search.py /root/bot/bot/plugins/image_search_web.py 2>/dev/null
-echo ==各文件行数==
-wc -l /root/bot/bot/plugins/image_search*.py /root/bot/bot/plugins/image_see.py 2>/dev/null
+124
+cd /root/bot/bot/plugins
+tar czf /tmp/pl.tgz *.py
+echo "BASE64_START"
+base64 -w 300 /tmp/pl.tgz
+echo "BASE64_END"
+echo "大小: $(du -h /tmp/pl.tgz | cut -f1)"
