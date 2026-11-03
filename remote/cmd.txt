@@ -1,8 +1,11 @@
-117
-echo ==通道活着==
-echo "Xvfb数: $(pgrep -x Xvfb | wc -l)"
-pgrep -af "opt/QQ/[q]q" | head -2
-pgrep -f "bash /root/remote_ctl.sh" | head -1
-pgrep -f "bash /root/azar_guard.sh" | head -1
-pgrep -f main.py | head -1
-top -b -n1 2>/dev/null | grep -E "Xvfb|qq" | head -4
+118
+echo ==登录状态==
+bash /root/logincheck.sh 2>/dev/null | head -3
+echo ==四件套==
+echo "qq:$(pgrep -cf 'Napcat/opt/QQ/[q]q') Xvfb:$(pgrep -cx Xvfb) bot:$(pgrep -cf '[m]ain.py') 遥控:$(pgrep -cf '[r]emote_ctl.sh') 守护:$(pgrep -cf '[a]zar_guard.sh')"
+echo ==GPU报错==
+echo "GPU: $(grep -c 'GPU process' /root/napcat.log)"
+echo ==CPU前6==
+top -b -n1 2>/dev/null | head -14 | tail -7
+echo ==内存==
+free -m | head -3
