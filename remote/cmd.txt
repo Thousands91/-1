@@ -1,9 +1,7 @@
-108
+109
+echo ==bot进程==
+pgrep -af main.py | head -2
+echo ==bot.log尾部==
+tail -5 /root/bot.log 2>/dev/null
 echo ==登录状态==
 bash /root/logincheck.sh 2>/dev/null | head -3
-echo ==NapCat主进程==
-pgrep -af "opt/QQ/[q]q" | head -2
-echo ==新日志GPU报错==
-echo "GPU: $(grep -c 'GPU process' /root/napcat.log 2>/dev/null)"
-echo ==bot遥控守护==
-pgrep -f main.py | head -1; pgrep -f "bash /root/remote_ctl.sh" | head -1; pgrep -f "bash /root/azar_guard.sh" | head -1
