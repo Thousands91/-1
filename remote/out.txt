@@ -1,30 +1,43 @@
-<<<task_113.txt>>>
-===== 任务113 11-03 20:28:10 =====
+<<<task_114.txt>>>
+===== 任务114 11-03 21:41:34 =====
 --- 命令 ---
-echo ==bot进程详情==
-pgrep -af "main.py" | head -3
-echo ==bot.log尾部8行==
-tail -8 /root/bot.log 2>/dev/null
-echo ==全脚本js-flags清单==
-grep -c "js-flags" /root/remote_ctl.sh /root/azar_guard.sh /root/azar_login.sh /root/asar_loop.sh /root/napcat_guard.sh 2>/dev/null
-echo ==out.txt里111的痕迹==
-grep -c "task_111" /root/remote_out.txt /root/out.txt 2>/dev/null
-ls -la /root/*.txt 2>/dev/null | head -5
+echo ==CPU占用前10==
+top -b -n1 2>/dev/null | head -18
+echo ==QQ全家CPU==
+ps -o pid,pcpu,rss,args -C qq 2>/dev/null | head -8
+echo ==bot与守护CPU==
+ps -o pid,pcpu,args -p $(pgrep -f main.py | head -1) 2>/dev/null
+ps -o pid,pcpu,args -p $(pgrep -f "bash /root/remote_ctl.sh" | head -1) 2>/dev/null
 --- 输出 ---
-==bot进程详情==
-11505 /root/bot/venv/bin/python main.py
-==bot.log尾部8行==
-11-03 20:26:06 [INFO] uvicorn | Waiting for application startup.
-11-03 20:26:07 [INFO] __main__ | ==================================================
-11-03 20:26:07 [INFO] __main__ | QQ 群机器人启动成功 ✅
-11-03 20:26:07 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
-11-03 20:26:07 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
-11-03 20:26:07 [INFO] __main__ | ==================================================
-11-03 20:26:07 [INFO] uvicorn | Application startup complete.
-11-03 20:26:07 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-==全脚本js-flags清单==
-/root/remote_ctl.sh:1
-/root/azar_guard.sh:1
-/root/azar_login.sh:1
-==out.txt里111的痕迹==
--rw-r--r--. 1 root root 1496 Nov  3 20:24 /root/guard_status.txt
+==CPU占用前10==
+top - 21:41:37 up 2 min,  0 user,  load average: 0.12, 0.07, 0.02
+Tasks:  31 total,   9 running,  21 sleeping,   0 stopped,   1 zombie
+%Cpu(s):   0.0 us,   0.0 sy,   0.0 ni, 100.0 id,   0.0 wa,   0.0 hi,   0.0 si 
+MiB Mem :  11296.6 total,    132.4 free,   7777.8 used,   3955.0 buff/cache     
+MiB Swap:  11296.6 total,   6481.1 free,   4815.4 used.   3518.8 avail Mem 
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+ 3620 root      10 -10   27816    248    152 R 100.0   0.0 150:31.76 Xvfb
+ 7707 root      10 -10   27816    320    204 R 100.0   0.0 153:14.62 Xvfb
+24662 root      10 -10   27796    200    108 R 100.0   0.0 151:46.18 Xvfb
+31206 root      10 -10    4048    252    132 R 100.0   0.0 158:22.36 bash
+12181 root      10 -10   27816    180     88 R 100.0   0.0 151:49.15 Xvfb
+28023 root      10 -10   27816    288    188 R 100.0   0.0 150:38.57 Xvfb
+12329 root      10 -10   27816    292    184 R 100.0   0.0 154:01.85 Xvfb
+ 6521 root      20   0   11.8g   2936   1648 R 100.0   0.0  27:18.62 proot
+ 7100 root      20   0  196.6g  36140  24552 S 800.0   0.3  17:24.80 qq
+19205 root      20   0    8804   3300   1300 R 100.0   0.0   0:00.03 top
+ 6537 root      20   0    4936    308    308 S   0.0   0.0   0:00.10 bash
+==QQ全家CPU==
+  PID %CPU   RSS COMMAND
+ 6864  0.6  5880 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+ 6866  0.0   400 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+ 6867  0.0   336 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
+ 7096  0.0  1160 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+ 7100 22.2 36140 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --no-sandbox --disable-dev-shm-usage --enable-crash-reporter=066ad494-c96d-4e6a-9b3c-edaba4b49dd8,no_channel --user-data-dir=/root/.config/QQ --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,366143383210891759,4050236904826167257,262144 --enable-features=PdfUseShowSaveFilePicker --disable-features=LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708989122997041
+ 7101  0.0  1300 /proc/self/exe --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --no-sandbox --disable-dev-shm-usage --enable-crash-reporter=066ad494-c96d-4e6a-9b3c-edaba4b49dd8,no_channel --user-data-dir=/root/.config/QQ --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,366143383210891759,4050236904826167257,262144 --enable-features=PdfUseShowSaveFilePicker --disable-features=LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708990060038890
+==bot与守护CPU==
+  PID %CPU COMMAND
+11505  0.3 /root/bot/venv/bin/python main.py
+  PID %CPU COMMAND
+ 7226  0.0 bash /root/remote_ctl.sh
