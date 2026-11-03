@@ -1,17 +1,12 @@
-104
-echo "=====1.停掉旧NapCat（当前是旧参数）====="
-pkill -f "opt/QQ/[q]q"; sleep 4
-pgrep -f "opt/QQ/[q]q" >/dev/null && { echo "残留,强杀"; pkill -9 -f "opt/QQ/[q]q"; sleep 2; } || echo "旧进程已清"
-echo "=====2.用新参数启动====="
-cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage > /root/napcat.log 2>&1 < /dev/null &
-sleep 30
-echo "=====3.验证进程与参数====="
-ps -eo args | grep "[o]pt/QQ/qq --no-sandbox" | head -1
-echo "=====4.GPU报错检查（应为0）====="
-grep -c "GPU process launch failed" /root/napcat.log 2>/dev/null || echo "0"
-grep -c "isn.t usable" /root/napcat.log 2>/dev/null || echo "0"
-echo "=====5.启动日志尾部====="
-tail -12 /root/napcat.log 2>/dev/null
-echo "=====6.二维码状态====="
-ls -l /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null
-bash /root/logincheck.sh 2>&1 | tail -3
+105
+echo ==1.登录状态==
+bash /root/logincheck.sh 2>/dev/null
+echo ==2.新日志GPU报错计数==
+echo "GPU process: $(grep -c 'GPU process' /root/napcat.log 2>/dev/null)"
+echo "FATAL: $(grep -c FATAL /root/napcat.log 2>/dev/null)"
+echo ==3.napcat.log最后6行==
+tail -6 /root/napcat.log 2>/dev/null
+echo ==4.bot日志最后6行==
+tail -6 /root/bot.log 2>/dev/null
+echo ==5.守护与标记==
+for f in /root/*guard*.log /root/asar*.log /root/.kicked*; do [ -f "$f" ] && echo "-- $f" && tail -6 "$f"; done
