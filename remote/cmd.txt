@@ -1,7 +1,2 @@
-109
-echo ==bot进程==
-pgrep -af main.py | head -2
-echo ==bot.log尾部==
-tail -5 /root/bot.log 2>/dev/null
-echo ==登录状态==
-bash /root/logincheck.sh 2>/dev/null | head -3
+110
+cp -f /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png && echo 刷码完成 $(date +%H:%M:%S)
