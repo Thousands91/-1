@@ -424,6 +424,17 @@ def pick_food_or_drink(text: str, key: tuple) -> str:
     _pick_cache[key] = (recent + [choice])[-3:]
     return choice
 
+def _with_quote(event, msg):
+    """群聊回复带引用段（像人手动"回复"那样引用触发的那条消息）；私聊原样返回。
+
+    放最前面一条 reply 段即可，QQ 客户端会渲染成引用框。
+    注意 finish() 的参数可能已经是拼好的 Message（带艾特段），只能前置、不能重拼。
+    """
+    if isinstance(event, GroupMessageEvent):
+        return Message([MessageSegment.reply(event.message_id)]) + msg
+    return msg
+
+
 ai_chat = on_message(priority=99, block=False)
 
 
@@ -442,7 +453,7 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
     if not API_KEY:
         if not private:
             await ai_chat.finish(
-                Message("（他把书合上）我这会儿说不了话——柜上还没给灯添油。先翻翻别的吧。")
+                _with_quote(event, Message("（他把书合上）我这会儿说不了话——柜上还没给灯添油。先翻翻别的吧。"))
             )
         return
 
@@ -498,7 +509,7 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
         base = text or "（没另写字）"
         text = f"（对方引用了一条消息，但那条不是文字，取不到内容）{base}，看我怎么说。"
     if not _extract_text(event) and not has_reply:
-        await ai_chat.finish(Message("我在。您有什么要说给我听？📖"))
+        await ai_chat.finish(_with_quote(event, Message("我在。您有什么要说给我听？📖")))
 
     # 命中问候语/固定回复关键词的，交给 keyword_reply 出声，这里闭嘴（防双回复）
     try:
@@ -515,11 +526,11 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
     if (not (has_reply and quoted)
             and _re.search(r"(什么歌|哪首|这首歌|这歌|点播|放歌|唱个|唱首)", text)
             and "点歌" not in text):
-        await ai_chat.finish(Message(random.choice([
+        await ai_chat.finish(_with_quote(event, Message(random.choice([
             "书上没记这首歌，不敢妄言。您哼两句，我听听是不是城里流传的调子。",
             "这首我没听过——没听过的东西，我不敢记。您说说词，兴许我认得出处。",
             "曲名我没见过。店里只有书页间的旧词，时兴的歌我这部老骨头跟不上。",
-        ])))
+        ]))))
 
     # 斜杠命令交给专门插件处理
     if text.startswith(("/", "!", "！")):
@@ -568,7 +579,7 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
     try:
         answer = await call_llm(to_model, extra_system=extra_sys)
     except Exception as e:
-        await ai_chat.finish(Message(f"（书页翻到一半，灯灭了）{type(e).__name__}\n请检查 API Key 或网络"))
+        await ai_chat.finish(_with_quote(event, Message(f"（书页翻到一半，灯灭了）{type(e).__name__}\n请检查 API Key 或网络")))
         return
 
     # 联网搜索：对方在问客观事实（人名/作品/日期/版本…）时，先搜一圈再重答。
@@ -704,7 +715,7 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
     if _pos < len(answer):
         _out.append(MessageSegment.text(answer[_pos:]))
 
-    await ai_chat.finish(_out if _pos else Message(answer))
+    await ai_chat.finish(_with_quote(event, _out if _pos else Message(answer)))
 
 
 # ---------- 联网搜索（问事实才搜） ----------
@@ -1144,5 +1155,5 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent):
         _memory_path(event.user_id).unlink(missing_ok=True)
     except Exception:
         pass
-    await clear.finish("记忆已清空，重新谈吧。")
+    await clear.finish(_with_quote(event, "记忆已清空，重新谈吧。"))
 
