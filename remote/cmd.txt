@@ -1,12 +1,10 @@
-105
-echo ==1.登录状态==
-bash /root/logincheck.sh 2>/dev/null
-echo ==2.新日志GPU报错计数==
-echo "GPU process: $(grep -c 'GPU process' /root/napcat.log 2>/dev/null)"
-echo "FATAL: $(grep -c FATAL /root/napcat.log 2>/dev/null)"
-echo ==3.napcat.log最后6行==
-tail -6 /root/napcat.log 2>/dev/null
-echo ==4.bot日志最后6行==
-tail -6 /root/bot.log 2>/dev/null
-echo ==5.守护与标记==
-for f in /root/*guard*.log /root/asar*.log /root/.kicked*; do [ -f "$f" ] && echo "-- $f" && tail -6 "$f"; done
+106
+echo ==1.当前NapCat进程参数==
+pgrep -af "opt/QQ/[q]q" | head -4
+echo ==2.离线事件上下文==
+grep -n "离线" /root/napcat.log | tail -5
+echo ==3.napcat.log最后15行==
+tail -15 /root/napcat.log
+echo ==4.脚本自动拉起是否带新参数==
+grep -n "disable-gpu" /root/remote_ctl.sh /root/azar_guard.sh 2>/dev/null
+grep -n "KICKED=" /root/azar_guard.sh 2>/dev/null | head -2
