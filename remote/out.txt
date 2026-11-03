@@ -1,44 +1,34 @@
-<<<task_116.txt>>>
-===== 任务116 11-03 21:49:13 =====
+<<<task_118.txt>>>
+===== 任务118 11-03 22:14:00 =====
 --- 命令 ---
-echo ==1.清残骸==
-kill -9 31206 6521 6537 2>/dev/null && echo 已杀logincheck残骸和旧proot
-echo ==2.全杀全启(连Xvfb一起)==
-pkill -9 -x Xvfb; pkill -9 -f "opt/QQ/[q]q"; sleep 2
-cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null &
-sleep 22
-echo ==3.验证==
-echo "Xvfb数: $(pgrep -x Xvfb | wc -l) (应为1)"
-pgrep -af "opt/QQ/[q]q" | head -2
+echo ==登录状态==
+bash /root/logincheck.sh 2>/dev/null | head -3
+echo ==四件套==
+echo "qq:$(pgrep -cf 'Napcat/opt/QQ/[q]q') Xvfb:$(pgrep -cx Xvfb) bot:$(pgrep -cf '[m]ain.py') 遥控:$(pgrep -cf '[r]emote_ctl.sh') 守护:$(pgrep -cf '[a]zar_guard.sh')"
+echo ==GPU报错==
 echo "GPU: $(grep -c 'GPU process' /root/napcat.log)"
-tail -3 /root/napcat.log
-echo ==4.最终CPU状态==
-top -b -n1 2>/dev/null | grep -E "Xvfb|qq|proot|bash" | head -6
+echo ==CPU前6==
+top -b -n1 2>/dev/null | head -14 | tail -7
+echo ==内存==
+free -m | head -3
 --- 输出 ---
-==1.清残骸==
-已杀logincheck残骸和旧proot
-bash: line 3: syntax error near unexpected token `('
-bash: line 3: `echo ==2.全杀全启(连Xvfb一起)=='
-timeout: error waiting for command: Function not implemented
-timeout: write error: Function not implemented
-<<<task_117.txt>>>
-===== 任务117 11-03 22:13:04 =====
---- 命令 ---
-echo ==通道活着==
-echo "Xvfb数: $(pgrep -x Xvfb | wc -l)"
-pgrep -af "opt/QQ/[q]q" | head -2
-pgrep -f "bash /root/remote_ctl.sh" | head -1
-pgrep -f "bash /root/azar_guard.sh" | head -1
-pgrep -f main.py | head -1
-top -b -n1 2>/dev/null | grep -E "Xvfb|qq" | head -4
---- 输出 ---
-==通道活着==
-Xvfb数: 1
-22518 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
-22548 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
-23049
-23055
-22636 root      20   0  196.2g 139696  80644 S 800.0   1.2   0:10.95 qq
-22537 root      20   0   27912  12628   3488 S   0.0   0.1   0:00.08 Xvfb
-22548 root      12  -8  196.0g 139260  79024 S   0.0   1.2   0:03.20 qq
-22573 root      20   0   48.4g  36304  26084 S   0.0   0.3   0:00.10 qq
+==登录状态==
+=== 登录状态（权威判定）===
+[未登录] 当前没有有效会话
+阶段: waiting_qrcode
+==四件套==
+qq:5 Xvfb:1 bot:0 遥控:1 守护:1
+==GPU报错==
+GPU: 0
+==CPU前6==
+21520 root      20   0   11.9g   3492   1728 R 100.0   0.0   0:50.99 proot
+22636 root      20   0  196.2g 176892 117652 S 600.0   1.5   0:32.35 qq
+24634 root      20   0    8804   3300   1300 R 100.0   0.0   0:00.03 top
+20430 root      20   0   16.1g 120064  82504 S   0.0   1.0   0:07.30 com.termux
+20529 root      20   0   11.8g   3068   1808 S   0.0   0.0   0:00.04 bash
+21557 root      20   0    4936   2476   1268 S   0.0   0.0   0:00.10 bash
+22516 root      20   0    4420   1084    408 S   0.0   0.0   0:00.00 bash
+==内存==
+               total        used        free      shared  buff/cache   available
+Mem:           11296        8259         114          31        3294        3036
+Swap:          11296        3706        7590
