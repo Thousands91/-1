@@ -1,8 +1,20 @@
-114
-echo ==CPU占用前10==
-top -b -n1 2>/dev/null | head -18
-echo ==QQ全家CPU==
-ps -o pid,pcpu,rss,args -C qq 2>/dev/null | head -8
-echo ==bot与守护CPU==
-ps -o pid,pcpu,args -p $(pgrep -f main.py | head -1) 2>/dev/null
-ps -o pid,pcpu,args -p $(pgrep -f "bash /root/remote_ctl.sh" | head -1) 2>/dev/null
+115
+QQ=$(pgrep -f "opt/QQ/[q]q" | head -1)
+QQPP=$(ps -o ppid= -p $QQ 2>/dev/null | tr -d ' ')
+echo "当前qq=$QQ 其父=$QQPP"
+echo ==清理孤儿Xvfb==
+for x in $(pgrep -x Xvfb); do
+  XP=$(ps -o ppid= -p $x 2>/dev/null | tr -d ' ')
+  if [ "$XP" = "$QQPP" ]; then
+    echo "保留 $x (当前会话的屏幕)"
+  else
+    kill -9 $x 2>/dev/null && echo "杀孤儿 $x (父=$XP)"
+  fi
+done
+echo ==检查两个100%残骸==
+echo "-- bash 31206:"; cat /proc/31206/cmdline 2>/dev/null | tr '\0' ' '; echo
+ps -o pid,ppid,etime -p 31206 2>/dev/null | tail -1
+echo "-- proot 6521 的子进程:"; ps --ppid 6521 -o pid,args 2>/dev/null | head -6
+echo ==杀后3秒CPU状态==
+sleep 3
+top -b -n1 2>/dev/null | grep -E "Xvfb|proot|qq|bash" | head -8
