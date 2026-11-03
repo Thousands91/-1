@@ -1,13 +1,27 @@
-99
-echo "=====1.当前NapCat进程与启动命令====="
-ps -eo pid,args | grep "[o]pt/QQ/qq" | head -3
-echo "=====2.所有启动NapCat的地方（脚本扫描）====="
-grep -rn "xvfb-run" /root/*.sh /root/Napcat/*.sh 2>/dev/null | head -10
-echo "=====3.守护脚本里的启动行====="
-grep -n "opt/QQ" /root/azar_guard.sh 2>/dev/null
-echo "=====4.登录脚本里的启动行====="
-grep -n "opt/QQ" /root/azar_login.sh 2>/dev/null
-echo "=====5.遥控脚本里的启动行====="
-grep -n "opt/QQ" /root/remote_ctl.sh 2>/dev/null
-echo "=====6.当前登录状态====="
-bash /root/logincheck.sh 2>&1 | tail -3
+100
+BADGE=$(date +%m%d_%H%M)
+echo "=====1.备份所有相关脚本====="
+for f in azar_guard.sh azar_login.sh morning.sh remote_ctl.sh st.sh; do
+  [ -f /root/$f ] && cp /root/$f /root/$f.bak_$BADGE && echo "$f 已备份";
+done
+echo "=====2.统一追加禁用GPU参数====="
+NEWFLAGS="--disable-gpu --disable-software-rasterizer --disable-dev-shm-usage"
+for f in azar_guard.sh azar_login.sh morning.sh remote_ctl.sh st.sh; do
+  [ -f /root/$f ] || continue
+  if grep -q "opt/QQ/qq --no-sandbox" /root/$f; then
+    if grep -q "disable-gpu" /root/$f; then
+      echo "$f 已含参数,跳过";
+    else
+      sed -i "s#opt/QQ/qq --no-sandbox#opt/QQ/qq --no-sandbox $NEWFLAGS#g" /root/$f
+      echo "$f 已修改";
+    fi
+  fi
+done
+echo "=====3.验证修改结果====="
+grep -n "opt/QQ/qq" /root/azar_guard.sh /root/azar_login.sh /root/morning.sh /root/remote_ctl.sh /root/st.sh 2>/dev/null | grep -v "QR=\|pgrep\|pkill"
+echo "=====4.语法校验====="
+for f in azar_guard.sh azar_login.sh morning.sh remote_ctl.sh st.sh; do
+  [ -f /root/$f ] && { bash -n /root/$f && echo "$f 语法OK" || echo "$f 语法错误!"; }
+done
+echo "=====5.守护pgrep兼容性检查====="
+grep -n "pgrep -fc" /root/azar_guard.sh
