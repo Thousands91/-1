@@ -1,10 +1,8 @@
-113
-echo ==bot进程详情==
-pgrep -af "main.py" | head -3
-echo ==bot.log尾部8行==
-tail -8 /root/bot.log 2>/dev/null
-echo ==全脚本js-flags清单==
-grep -c "js-flags" /root/remote_ctl.sh /root/azar_guard.sh /root/azar_login.sh /root/asar_loop.sh /root/napcat_guard.sh 2>/dev/null
-echo ==out.txt里111的痕迹==
-grep -c "task_111" /root/remote_out.txt /root/out.txt 2>/dev/null
-ls -la /root/*.txt 2>/dev/null | head -5
+114
+echo ==CPU占用前10==
+top -b -n1 2>/dev/null | head -18
+echo ==QQ全家CPU==
+ps -o pid,pcpu,rss,args -C qq 2>/dev/null | head -8
+echo ==bot与守护CPU==
+ps -o pid,pcpu,args -p $(pgrep -f main.py | head -1) 2>/dev/null
+ps -o pid,pcpu,args -p $(pgrep -f "bash /root/remote_ctl.sh" | head -1) 2>/dev/null
