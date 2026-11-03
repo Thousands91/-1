@@ -1,2 +1,9 @@
-110
-cp -f /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png && echo 刷码完成 $(date +%H:%M:%S)
+111
+for f in /root/*.sh; do
+  grep -q "disable-dev-shm-usage" "$f" || continue
+  grep -q "js-flags" "$f" && continue
+  sed -i 's/--disable-dev-shm-usage/--disable-dev-shm-usage --js-flags=--max-old-space-size=512/g' "$f"
+  echo "已加内存封顶: $f"
+done
+echo ==核查==
+grep -H "js-flags" /root/*.sh
