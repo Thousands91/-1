@@ -34,14 +34,20 @@ except ImportError:
 _DUP: Dict[tuple, float] = {}
 
 # ===== 闭嘴开关（防两台机器人互@刹不住车）=====
-# 用户对阿萨尔说"停止/别回了"→ 本群 ai_chat 静音 10 分钟；说"继续"提前解除。
+# 用户对阿萨尔说"停止/别回了"→ 锁定互怼对象并进入静音；说"继续"提前解除。
+# 互怼对象 = 喊停前一段时间里触发阿萨尔回复最多的那个人（乒乓的另一方，
+# 通常是另一台机器人）。静音只对他一人：他再来 @ 一声不吭（回话就会被
+# 接住继续循环）；其他群友 @ 照常聊，互不影响。
 # 只静音 ai_chat（聊天主脑），识图/搜图等专门插件不受影响。
 # 触发词整句匹配（允许语气词环绕），避免"别让时间停下"这种句子误伤。
 _TAIL = r"[\s啊呀吧呢了哦嘛哈哟哇嗯好那就先，,！!。.~]*"
 _BOT_STOP_RE = re.compile(rf"^{_TAIL}(停止|别回了|别说了|住口|闭嘴|停下|歇了吧|stop){_TAIL}$", re.I)
 _BOT_RESUME_RE = re.compile(rf"^{_TAIL}(继续|接着说|可以说话了|回来吧|解除静音|start){_TAIL}$", re.I)
-_MUTE_UNTIL: Dict[int, float] = {}
+_MUTE_UNTIL: Dict[int, float] = {}   # gid -> 静音截止时间
+_MUTE_TARGET: Dict[int, set] = {}    # gid -> 静音期间不搭理的互怼对象 user_id
 _MUTE_SECONDS = 600
+_TRIGGER_LOG: Dict[int, list] = {}   # gid -> [(时间, 触发者uid)] 近窗口触发记录
+_TRIGGER_WINDOW = 600
 
 _RE_REPLY = __import__("re").compile(r"\[CQ:reply,id=(\d+)\]")
 
@@ -490,6 +496,18 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
         _plain = text.strip()
         if _BOT_STOP_RE.fullmatch(_plain):
             _MUTE_UNTIL[event.group_id] = _now + _MUTE_SECONDS
+            # 锁定互怼对象：喊停前近窗口里触发最多的那位（排除喊停者本人）。
+            # 喊停的时机就是两台机器人正在乒乓，最近 @ 阿萨尔的几乎必然是对方。
+            _recent = [(ts, u) for ts, u in _TRIGGER_LOG.get(event.group_id, [])
+                       if ts > _now - _TRIGGER_WINDOW and u != event.user_id]
+            _rival = None
+            if _recent:
+                _cnt, _last = {}, {}
+                for ts, u in _recent:
+                    _cnt[u] = _cnt.get(u, 0) + 1
+                    _last[u] = ts
+                _rival = max(_cnt, key=lambda u: (_cnt[u], _last[u]))
+            _MUTE_TARGET[event.group_id] = {_rival} if _rival else set()
             await ai_chat.finish(_with_quote(event, Message(random.choice([
                 "（他把书合上）好，我先不说话。要我了就说「继续」。",
                 "（他把笔搁下）嗯，我闭口。想让我接话，说声「继续」就行。",
@@ -497,8 +515,16 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
         if _MUTE_UNTIL.get(event.group_id, 0) > _now:
             if _BOT_RESUME_RE.fullmatch(_plain):
                 _MUTE_UNTIL.pop(event.group_id, None)
+                _MUTE_TARGET.pop(event.group_id, None)
                 await ai_chat.finish(_with_quote(event, Message("（书页重新翻开）说吧，我听着。")))
-            return  # 静音中：@我也不应声（停止/继续命令在上方已处理）
+            if event.user_id in _MUTE_TARGET.get(event.group_id, set()):
+                return  # 互怼对象：完全静默，一声不吭（回一句都会被接住继续循环）
+            # 其他人不受静音影响：照常往下聊
+        # 记录触发者（互怼对象识别用）；喊停/解除/被静音拦下的不算
+        _tlog = _TRIGGER_LOG.setdefault(event.group_id, [])
+        _tlog.append((_now, event.user_id))
+        if len(_tlog) > 200:
+            del _tlog[:-200]
     # 引用消息：OneBot 的 reply 段只带消息 id，不带内容，
     # 要拿 get_msg 把被引用那条的原话取回来，喂给模型。
     # 实测手机版 NapCat 会把 reply 段从 message 数组里剥掉，
