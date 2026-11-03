@@ -1,9 +1,10 @@
-111
-for f in /root/*.sh; do
-  grep -q "disable-dev-shm-usage" "$f" || continue
-  grep -q "js-flags" "$f" && continue
-  sed -i 's/--disable-dev-shm-usage/--disable-dev-shm-usage --js-flags=--max-old-space-size=512/g' "$f"
-  echo "已加内存封顶: $f"
-done
-echo ==核查==
-grep -H "js-flags" /root/*.sh
+112
+echo ==登录状态==
+bash /root/logincheck.sh 2>/dev/null | head -3
+echo ==NapCat参数与GPU==
+pgrep -af "opt/QQ/[q]q" | head -2
+echo "GPU: $(grep -c 'GPU process' /root/napcat.log 2>/dev/null)"
+echo ==四件套==
+pgrep -f main.py | head -1; pgrep -f "bash /root/remote_ctl.sh" | head -1; pgrep -f "bash /root/azar_guard.sh" | head -1
+echo ==内存封顶参数是否已补进脚本==
+grep -H "js-flags" /root/*.sh 2>/dev/null | head -6
