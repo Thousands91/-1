@@ -23,7 +23,7 @@ import os
 
 import aiohttp
 from nonebot import logger, on_message
-from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message, PrivateMessageEvent
+from nonebot.adapters.onebot.v11 import GroupMessageEvent, Message, MessageSegment, PrivateMessageEvent
 from nonebot.exception import MatcherException
 from nonebot.rule import to_me
 
@@ -130,6 +130,13 @@ async def _vlm_see(img_b64: str, user_text: str) -> str:
     raise RuntimeError(f"视觉模型失败: {last_err}")
 
 
+def _with_quote(event, msg):
+    """群聊回复带引用段（引用发图那个人触发的那条消息）；私聊原样返回。"""
+    if isinstance(event, GroupMessageEvent):
+        return Message([MessageSegment.reply(event.message_id)]) + msg
+    return msg
+
+
 @see.handle()
 async def _(event: GroupMessageEvent | PrivateMessageEvent):
     if not VLM_KEY:
@@ -141,19 +148,19 @@ async def _(event: GroupMessageEvent | PrivateMessageEvent):
         see.skip()
     img = await _download_image(seg)
     if img is None:
-        await see.finish("这图我怎么都取不下来，怕是传影的法术出了岔子。")
+        await see.finish(_with_quote(event, "这图我怎么都取不下来，怕是传影的法术出了岔子。"))
         return
     img_b64 = base64.b64encode(img).decode()
     try:
         answer = await _vlm_see(img_b64, text)
     except RuntimeError as e:
         logger.warning(f"[识图] {e}")
-        await see.finish("这图我瞧了半天也没瞧明白，眼花了，改日再看。")
+        await see.finish(_with_quote(event, "这图我瞧了半天也没瞧明白，眼花了，改日再看。"))
         return
     except MatcherException:
         raise
     except Exception as e:
         logger.warning(f"[识图] 意外: {type(e).__name__} {e}")
-        await see.finish("这图我瞧了半天也没瞧明白，眼花了，改日再看。")
+        await see.finish(_with_quote(event, "这图我瞧了半天也没瞧明白，眼花了，改日再看。"))
         return
-    await see.finish(answer)
+    await see.finish(_with_quote(event, answer))
