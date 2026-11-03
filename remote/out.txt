@@ -1,22 +1,6 @@
-<<<task_109.txt>>>
-===== 任务109 11-03 17:53:31 =====
+<<<task_110.txt>>>
+===== 任务110 11-03 17:55:36 =====
 --- 命令 ---
-echo ==bot进程==
-pgrep -af main.py | head -2
-echo ==bot.log尾部==
-tail -5 /root/bot.log 2>/dev/null
-echo ==登录状态==
-bash /root/logincheck.sh 2>/dev/null | head -3
+cp -f /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png && echo 刷码完成 $(date +%H:%M:%S)
 --- 输出 ---
-==bot进程==
-32528 /root/bot/venv/bin/python main.py
-==bot.log尾部==
-11-03 17:49:45 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
-11-03 17:49:45 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
-11-03 17:49:45 [INFO] __main__ | ==================================================
-11-03 17:49:45 [INFO] uvicorn | Application startup complete.
-11-03 17:49:45 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-==登录状态==
-=== 登录状态（权威判定）===
-[未登录] 当前没有有效会话
-阶段: waiting_qrcode
+刷码完成 17:55:37
