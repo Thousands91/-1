@@ -1,21 +1,13 @@
-98
-echo "=====1.当前bot进程====="
-pgrep -f "venv/bin/python main.py" | head -3
-echo "=====2.停旧进程（仅bot大脑，不碰NapCat）====="
-pkill -f "venv/bin/python [m]ain.py"; sleep 3
-pgrep -f "venv/bin/python main.py" >/dev/null && echo "仍有残留,强杀" && pkill -9 -f "venv/bin/python [m]ain.py" && sleep 2 || echo "旧进程已停"
-echo "=====3.重新拉起====="
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 < /dev/null &
-sleep 18
-echo "=====4.验证加载结果====="
-NEWPID=$(pgrep -f "venv/bin/python main.py" | head -1)
-echo "新PID=$NEWPID"
-LOG=$(readlink /proc/$NEWPID/fd/1 2>/dev/null)
-echo "日志=$LOG"
-grep -a "Succeeded to load plugin\|Plugin .* loaded\|插件" $LOG 2>/dev/null | tail -15
-echo "=====5.是否有报错====="
-grep -a -iE "error|exception|traceback|failed" $LOG 2>/dev/null | tail -8 || echo "无报错"
-echo "=====6.加载统计====="
-grep -ac "Succeeded to load plugin" $LOG 2>/dev/null
-echo "=====7.关键插件确认====="
-grep -ao "plugins\.[a-z_]*" $LOG 2>/dev/null | sort -u | head -20
+99
+echo "=====1.当前NapCat进程与启动命令====="
+ps -eo pid,args | grep "[o]pt/QQ/qq" | head -3
+echo "=====2.所有启动NapCat的地方（脚本扫描）====="
+grep -rn "xvfb-run" /root/*.sh /root/Napcat/*.sh 2>/dev/null | head -10
+echo "=====3.守护脚本里的启动行====="
+grep -n "opt/QQ" /root/azar_guard.sh 2>/dev/null
+echo "=====4.登录脚本里的启动行====="
+grep -n "opt/QQ" /root/azar_login.sh 2>/dev/null
+echo "=====5.遥控脚本里的启动行====="
+grep -n "opt/QQ" /root/remote_ctl.sh 2>/dev/null
+echo "=====6.当前登录状态====="
+bash /root/logincheck.sh 2>&1 | tail -3
