@@ -1,46 +1,48 @@
-<<<task_103.txt>>>
-===== 任务103 11-03 12:47:02 =====
+<<<task_104.txt>>>
+===== 任务104 11-03 12:47:30 =====
 --- 命令 ---
-echo "=====1.重启守护使新参数生效====="
-OLDPID=$(pgrep -f "bash /root/azar_guard[.]sh" | head -1)
-echo "旧守护PID=$OLDPID"
-[ -n "$OLDPID" ] && kill "$OLDPID" 2>/dev/null && echo "已停止旧守护"
-sleep 2
-setsid nohup bash /root/azar_guard.sh > /dev/null 2>&1 < /dev/null &
-sleep 5
-NEWPID=$(pgrep -f "bash /root/azar_guard[.]sh" | head -1)
-echo "新守护PID=$NEWPID"
-echo "=====2.确认守护运行中====="
-[ -n "$NEWPID" ] && kill -0 "$NEWPID" 2>/dev/null && echo "守护运行中" || echo "守护未启动!"
-echo "=====3.守护日志确认====="
-tail -5 /root/guard_status.txt 2>/dev/null
-echo "=====4.最终状态总览====="
-echo "--- 循环 ---"; kill -0 $(cat /root/.remote_pid 2>/dev/null) 2>/dev/null && echo OK || echo 异常
-echo "--- bot ---"; pgrep -f "venv/bin/python main.py" >/dev/null && echo OK || echo 异常
-echo "--- 守护 ---"; pgrep -f "bash /root/azar_guard[.]sh" >/dev/null && echo OK || echo 异常
-echo "--- NapCat ---"; pgrep -f "opt/QQ/[q]q" >/dev/null && echo "OK(等扫码)" || echo "未运行"
-echo "--- 当前NapCat启动参数 ---"; ps -eo args | grep "[o]pt/QQ/qq --no-sandbox" | head -1
+echo "=====1.停掉旧NapCat（当前是旧参数）====="
+pkill -f "opt/QQ/[q]q"; sleep 4
+pgrep -f "opt/QQ/[q]q" >/dev/null && { echo "残留,强杀"; pkill -9 -f "opt/QQ/[q]q"; sleep 2; } || echo "旧进程已清"
+echo "=====2.用新参数启动====="
+cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage > /root/napcat.log 2>&1 < /dev/null &
+sleep 30
+echo "=====3.验证进程与参数====="
+ps -eo args | grep "[o]pt/QQ/qq --no-sandbox" | head -1
+echo "=====4.GPU报错检查（应为0）====="
+grep -c "GPU process launch failed" /root/napcat.log 2>/dev/null || echo "0"
+grep -c "isn.t usable" /root/napcat.log 2>/dev/null || echo "0"
+echo "=====5.启动日志尾部====="
+tail -12 /root/napcat.log 2>/dev/null
+echo "=====6.二维码状态====="
+ls -l /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null
+bash /root/logincheck.sh 2>&1 | tail -3
 --- 输出 ---
-=====1.重启守护使新参数生效=====
-旧守护PID=24962
-已停止旧守护
-新守护PID=24536
-=====2.确认守护运行中=====
-守护运行中
-=====3.守护日志确认=====
-11-03 06:37:13 被踢标记超6小时,允许再试
-11-03 06:37:13 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
-11-03 12:38:00 被踢标记超6小时,允许再试
-11-03 12:38:00 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
-11-03 12:47:04 守护v1.1启动
-=====4.最终状态总览=====
---- 循环 ---
-OK
---- bot ---
-OK
---- 守护 ---
-OK
---- NapCat ---
-OK(等扫码)
---- 当前NapCat启动参数 ---
-/bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox
+=====1.停掉旧NapCat（当前是旧参数）=====
+旧进程已清
+=====2.用新参数启动=====
+=====3.验证进程与参数=====
+/bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage
+=====4.GPU报错检查（应为0）=====
+0
+0
+0
+0
+=====5.启动日志尾部=====
+a642af01179853665bc15b5e7ec63bd52afc8a22200fbc623627075a03aaabef
+aeef82534e85cf8c7bf1640096481326664fd4809e07497de1c3cd4e4c80f634
+f568c1ad9ca7205161c9e44c79d9dea79cc297e699c464e20e090ec2cb4c74a2
+710161e3a805c0db650eef909df6117d8122e1ea1f57a6229b642976d6e222c2
+a974a533b1e9a958017c98fc1a3006b196780ca63919948dc207f5b96d9a20ad
+802d969847408f693098faedef00ba4ba85da9cd65e9089147695fcd4825985e
+7d6058af0fc4ff45cb3fc535774ccb0cd263eec2a9ae03479ca2a4a2e8728b0a
+6cb6c8fac9ce719bfb85d343705c26a6410095dd76dea912ac3fa204d5e6206e
+6b0d908d3cdf6fcb5006ba798cf68a392c16807a85c2ff4fdc483728de2c6a8e
+9564d014df71a1bfac1327e09161ee3108db98a090797248e44ea30ec085603f
+003da4a3fa6e2628ef0e312c1fa2697d9b0f4b1bc5c04da892a6032adc074ea1
+7ca056298aaafd302103d35c5fe74d6309c3dab8c93cd810536ce6a31d75d980
+=====6.二维码状态=====
+-rw-r--r--. 1 root root 598 Nov  3 12:47 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+[未登录] 当前没有有效会话
+阶段: waiting_qrcode
+最近错误: 无
