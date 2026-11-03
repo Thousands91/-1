@@ -1,10 +1,10 @@
-112
-echo ==登录状态==
-bash /root/logincheck.sh 2>/dev/null | head -3
-echo ==NapCat参数与GPU==
-pgrep -af "opt/QQ/[q]q" | head -2
-echo "GPU: $(grep -c 'GPU process' /root/napcat.log 2>/dev/null)"
-echo ==四件套==
-pgrep -f main.py | head -1; pgrep -f "bash /root/remote_ctl.sh" | head -1; pgrep -f "bash /root/azar_guard.sh" | head -1
-echo ==内存封顶参数是否已补进脚本==
-grep -H "js-flags" /root/*.sh 2>/dev/null | head -6
+113
+echo ==bot进程详情==
+pgrep -af "main.py" | head -3
+echo ==bot.log尾部8行==
+tail -8 /root/bot.log 2>/dev/null
+echo ==全脚本js-flags清单==
+grep -c "js-flags" /root/remote_ctl.sh /root/azar_guard.sh /root/azar_login.sh /root/asar_loop.sh /root/napcat_guard.sh 2>/dev/null
+echo ==out.txt里111的痕迹==
+grep -c "task_111" /root/remote_out.txt /root/out.txt 2>/dev/null
+ls -la /root/*.txt 2>/dev/null | head -5
