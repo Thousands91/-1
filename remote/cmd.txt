@@ -1,10 +1,7 @@
-106
-echo ==1.当前NapCat进程参数==
-pgrep -af "opt/QQ/[q]q" | head -4
-echo ==2.离线事件上下文==
-grep -n "离线" /root/napcat.log | tail -5
-echo ==3.napcat.log最后15行==
-tail -15 /root/napcat.log
-echo ==4.脚本自动拉起是否带新参数==
-grep -n "disable-gpu" /root/remote_ctl.sh /root/azar_guard.sh 2>/dev/null
-grep -n "KICKED=" /root/azar_guard.sh 2>/dev/null | head -2
+107
+echo ==A.此刻登录状态==
+bash /root/logincheck.sh 2>/dev/null | head -4
+echo ==B.16:08之后有没有新消息和恢复记录==
+tail -4 /root/napcat.log
+echo ==C.脚本带新参数核查==
+grep -c "disable-gpu" /root/remote_ctl.sh /root/azar_guard.sh
