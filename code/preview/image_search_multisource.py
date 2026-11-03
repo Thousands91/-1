@@ -24,13 +24,6 @@ from nonebot.adapters.onebot.v11 import (
 
 TOKEN = os.getenv("LOLICON_TOKEN", "")
 
-
-def _with_quote(event, msg):
-    """群聊回复带引用段（引用发命令那条消息）；私聊原样返回。"""
-    if isinstance(event, GroupMessageEvent):
-        return Message([MessageSegment.reply(event.message_id)]) + msg
-    return msg
-
 # 全年龄备用图源：dmoe.cc 还活着，sevin.cn 已 404
 RANDOM_IMG_APIS = [
     "https://www.dmoe.cc/random.php?return=json",
@@ -145,12 +138,12 @@ scenery = on_command(
 
 
 @scenery.handle()
-async def _(event: GroupMessageEvent | PrivateMessageEvent):
+async def _():
     # picsum：真实摄影图库。用 seed URL：同一链接永远返回同一张图。
     # 不做预检——图能不能拉成功由 QQ 的服务器说了算，机器人这边探一遍只是白等
     seed = random.randint(0, 999999)
     url = f"https://picsum.photos/seed/{seed}/1200/800.jpg"
-    await scenery.finish(_with_quote(event, Message(f"[CQ:image,file={url},cache=0]")))
+    await scenery.finish(Message(f"[CQ:image,file={url},cache=0]"))
 
 
 # —— 多图源：tbib.org（Danbooru 系大库，可标签搜索，R18，国内可达） ——
