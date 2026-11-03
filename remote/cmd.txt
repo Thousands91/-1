@@ -1,12 +1,7 @@
-101
-echo "=====1.修正守护的进程计数匹配（改用宽松匹配）====="
-sed -i 's#pgrep -fc "opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage"#pgrep -fc "opt/QQ/[q]q"#' /root/azar_guard.sh
-grep -n "pgrep -fc" /root/azar_guard.sh
-echo "=====2.验证pkill行未被误伤====="
-grep -n "pkill" /root/azar_guard.sh
-echo "=====3.语法复检====="
-bash -n /root/azar_guard.sh && echo "守护语法OK"
-echo "=====4.实测匹配是否有效（当前无NapCat,应为0或空，不报错）====="
-pgrep -fc "opt/QQ/[q]q" 2>/dev/null || echo "0"
-echo "=====5.守护是否在跑（在跑的话需要重启才生效）====="
-pgrep -f "bash /root/azar_guard[.]sh" | head -2
+102
+echo "=====1.匹配到的所有进程明细====="
+pgrep -af "opt/QQ/[q]q"
+echo "=====2.守护脚本里这段逻辑上下文====="
+sed -n "35,50p" /root/azar_guard.sh
+echo "=====3.守护进程启动时间====="
+ps -o pid,lstart,args -p 24962 2>/dev/null
