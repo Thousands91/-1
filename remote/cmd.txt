@@ -1,14 +1,7 @@
-122
-cd /root/bot/bot/plugins
-echo ==插件清单==
-ls
-echo ==全量语法检查==
-/root/bot/venv/bin/python -m py_compile *.py && echo 全部语法通过
-echo ==关键文件md5==
-md5sum ai_chat.py image_see.py image_search_multisource.py keyword_reply.py 2>/dev/null
-echo ==bot.log今日报错==
-grep -cE "ERROR|Traceback" /root/bot.log
-grep -E "ERROR|Traceback" /root/bot.log | tail -5
-echo ==napcat非GPU报错==
-grep -iE "error|fatal" /root/napcat.log | grep -vc "GPU"
-grep -iE "error|fatal" /root/napcat.log | grep -v "GPU" | head -4
+123
+echo ==看景功能在哪个文件==
+grep -l "看景" /root/bot/bot/plugins/*.py 2>/dev/null
+echo ==搜图类文件md5==
+md5sum /root/bot/bot/plugins/image_search.py /root/bot/bot/plugins/image_search_web.py 2>/dev/null
+echo ==各文件行数==
+wc -l /root/bot/bot/plugins/image_search*.py /root/bot/bot/plugins/image_see.py 2>/dev/null
