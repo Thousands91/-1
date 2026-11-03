@@ -1,16 +1,11 @@
-94
-date "+%F %T"
-echo ==循环==
-kill -0 $(cat /root/.remote_pid 2>/dev/null) 2>/dev/null && echo 循环OK || echo 循环死了
-echo ==bot==
-pgrep -f "venv/bin/python main.py" >/dev/null && echo bot进程OK || echo bot进程没了
-echo ==NapCat==
-pgrep -f "opt/QQ/qq" >/dev/null && echo NapCat进程OK || echo NapCat没了
-echo ==登录状态==
-bash /root/logincheck.sh 2>&1 | tail -3
-echo ==napcat日志尾==
-tail -6 /root/napcat.log 2>/dev/null
-echo ==guard日志尾==
-tail -6 /root/guard_status.txt 2>/dev/null
-echo ==bot日志尾==
-tail -8 $(readlink /proc/$(pgrep -f "venv/bin/python main.py" | head -1)/fd/1 2>/dev/null) 2>/dev/null | grep -a "connected\|disconnect\|error\|二维码" | tail -5
+95
+echo "=========1.登录状态全量输出========"
+bash /root/logincheck.sh 2>&1
+echo "=========2.NapCat日志中的退出/踢线/错误关键字========"
+grep -a -i -n "kick\|踢\|logout\|offline\|下线\|踢下线\|code\":\|error_code\|Code:\|token\|失效\|过期\|被禁止\|restricted" /root/napcat.log 2>/dev/null | tail -40
+echo "=========3.NapCat日志最后80行========"
+tail -80 /root/napcat.log 2>/dev/null
+echo "=========4.日志文件清单与大小========"
+ls -lt /root/*.log /root/bot/*.log /root/bot/bot/*.log 2>/dev/null | head -10
+echo "=========5.NapCat版本与配置========"
+ls /root/Napcat/opt/QQ/resources/app/app_launcher/ 2>/dev/null; find /root/Napcat -maxdepth 4 -name "napcat*.json" 2>/dev/null | head -5
