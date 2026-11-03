@@ -1,20 +1,14 @@
-115
-QQ=$(pgrep -f "opt/QQ/[q]q" | head -1)
-QQPP=$(ps -o ppid= -p $QQ 2>/dev/null | tr -d ' ')
-echo "当前qq=$QQ 其父=$QQPP"
-echo ==清理孤儿Xvfb==
-for x in $(pgrep -x Xvfb); do
-  XP=$(ps -o ppid= -p $x 2>/dev/null | tr -d ' ')
-  if [ "$XP" = "$QQPP" ]; then
-    echo "保留 $x (当前会话的屏幕)"
-  else
-    kill -9 $x 2>/dev/null && echo "杀孤儿 $x (父=$XP)"
-  fi
-done
-echo ==检查两个100%残骸==
-echo "-- bash 31206:"; cat /proc/31206/cmdline 2>/dev/null | tr '\0' ' '; echo
-ps -o pid,ppid,etime -p 31206 2>/dev/null | tail -1
-echo "-- proot 6521 的子进程:"; ps --ppid 6521 -o pid,args 2>/dev/null | head -6
-echo ==杀后3秒CPU状态==
-sleep 3
-top -b -n1 2>/dev/null | grep -E "Xvfb|proot|qq|bash" | head -8
+116
+echo ==1.清残骸==
+kill -9 31206 6521 6537 2>/dev/null && echo 已杀logincheck残骸和旧proot
+echo ==2.全杀全启(连Xvfb一起)==
+pkill -9 -x Xvfb; pkill -9 -f "opt/QQ/[q]q"; sleep 2
+cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null &
+sleep 22
+echo ==3.验证==
+echo "Xvfb数: $(pgrep -x Xvfb | wc -l) (应为1)"
+pgrep -af "opt/QQ/[q]q" | head -2
+echo "GPU: $(grep -c 'GPU process' /root/napcat.log)"
+tail -3 /root/napcat.log
+echo ==4.最终CPU状态==
+top -b -n1 2>/dev/null | grep -E "Xvfb|qq|proot|bash" | head -6
