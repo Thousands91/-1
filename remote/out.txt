@@ -1,36 +1,46 @@
-<<<task_102.txt>>>
-===== 任务102 11-03 12:45:36 =====
+<<<task_103.txt>>>
+===== 任务103 11-03 12:47:02 =====
 --- 命令 ---
-echo "=====1.匹配到的所有进程明细====="
-pgrep -af "opt/QQ/[q]q"
-echo "=====2.守护脚本里这段逻辑上下文====="
-sed -n "35,50p" /root/azar_guard.sh
-echo "=====3.守护进程启动时间====="
-ps -o pid,lstart,args -p 24962 2>/dev/null
+echo "=====1.重启守护使新参数生效====="
+OLDPID=$(pgrep -f "bash /root/azar_guard[.]sh" | head -1)
+echo "旧守护PID=$OLDPID"
+[ -n "$OLDPID" ] && kill "$OLDPID" 2>/dev/null && echo "已停止旧守护"
+sleep 2
+setsid nohup bash /root/azar_guard.sh > /dev/null 2>&1 < /dev/null &
+sleep 5
+NEWPID=$(pgrep -f "bash /root/azar_guard[.]sh" | head -1)
+echo "新守护PID=$NEWPID"
+echo "=====2.确认守护运行中====="
+[ -n "$NEWPID" ] && kill -0 "$NEWPID" 2>/dev/null && echo "守护运行中" || echo "守护未启动!"
+echo "=====3.守护日志确认====="
+tail -5 /root/guard_status.txt 2>/dev/null
+echo "=====4.最终状态总览====="
+echo "--- 循环 ---"; kill -0 $(cat /root/.remote_pid 2>/dev/null) 2>/dev/null && echo OK || echo 异常
+echo "--- bot ---"; pgrep -f "venv/bin/python main.py" >/dev/null && echo OK || echo 异常
+echo "--- 守护 ---"; pgrep -f "bash /root/azar_guard[.]sh" >/dev/null && echo OK || echo 异常
+echo "--- NapCat ---"; pgrep -f "opt/QQ/[q]q" >/dev/null && echo "OK(等扫码)" || echo "未运行"
+echo "--- 当前NapCat启动参数 ---"; ps -eo args | grep "[o]pt/QQ/qq --no-sandbox" | head -1
 --- 输出 ---
-=====1.匹配到的所有进程明细=====
-12168 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox
-12186 /root/Napcat/opt/QQ/qq --no-sandbox
-12188 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-12189 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
-12237 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-=====2.守护脚本里这段逻辑上下文=====
-    *connected*)
-      [ -f "$KICKED" ] && rm -f "$KICKED" && echo "$(date '+%m-%d %H:%M:%S') 已重新上线,清除被踢标记" >> "$STATE"
-      continue
-      ;;
-  esac
-  QQ_N=$(pgrep -fc "opt/QQ/[q]q" 2>/dev/null)
-  if [ "$QQ_N" = "0" ] || [ -z "$QQ_N" ]; then
-    AGE=999999
-    [ -f "$QR" ] && AGE=$(( $(date +%s) - $(TS "$QR") ))
-    if [ $AGE -gt 600 ]; then
-      if can_restart; then
-        echo "$(date '+%m-%d %H:%M:%S') QQ进程消失,自动拉起" >> "$STATE"
-        start_qq
-      fi
-    fi
-    continue
-=====3.守护进程启动时间=====
-  PID                  STARTED COMMAND
-24962 Wed Mar 29 01:22:27 2023 bash /root/azar_guard.sh
+=====1.重启守护使新参数生效=====
+旧守护PID=24962
+已停止旧守护
+新守护PID=24536
+=====2.确认守护运行中=====
+守护运行中
+=====3.守护日志确认=====
+11-03 06:37:13 被踢标记超6小时,允许再试
+11-03 06:37:13 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-03 12:38:00 被踢标记超6小时,允许再试
+11-03 12:38:00 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-03 12:47:04 守护v1.1启动
+=====4.最终状态总览=====
+--- 循环 ---
+OK
+--- bot ---
+OK
+--- 守护 ---
+OK
+--- NapCat ---
+OK(等扫码)
+--- 当前NapCat启动参数 ---
+/bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox
