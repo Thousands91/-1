@@ -1,4 +1,14 @@
-121
-echo "采样时间 $(date +%T)"
-ps -o time= -p 21520,22636 2>/dev/null
-echo "==稳态判定: 与22:22:30的00:04:08/00:02:51相减=="
+122
+cd /root/bot/bot/plugins
+echo ==插件清单==
+ls
+echo ==全量语法检查==
+/root/bot/venv/bin/python -m py_compile *.py && echo 全部语法通过
+echo ==关键文件md5==
+md5sum ai_chat.py image_see.py image_search_multisource.py keyword_reply.py 2>/dev/null
+echo ==bot.log今日报错==
+grep -cE "ERROR|Traceback" /root/bot.log
+grep -E "ERROR|Traceback" /root/bot.log | tail -5
+echo ==napcat非GPU报错==
+grep -iE "error|fatal" /root/napcat.log | grep -vc "GPU"
+grep -iE "error|fatal" /root/napcat.log | grep -v "GPU" | head -4
