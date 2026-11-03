@@ -1,6 +1,23 @@
-<<<task_110.txt>>>
-===== 任务110 11-03 17:55:36 =====
+<<<task_111.txt>>>
+===== 任务111 11-03 20:24:00 =====
 --- 命令 ---
-cp -f /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png && echo 刷码完成 $(date +%H:%M:%S)
+for f in /root/*.sh; do
+  grep -q "disable-dev-shm-usage" "$f" || continue
+  grep -q "js-flags" "$f" && continue
+  sed -i 's/--disable-dev-shm-usage/--disable-dev-shm-usage --js-flags=--max-old-space-size=512/g' "$f"
+  echo "已加内存封顶: $f"
+done
+echo ==核查==
+grep -H "js-flags" /root/*.sh
 --- 输出 ---
-刷码完成 17:55:37
+已加内存封顶: /root/azar_guard.sh
+已加内存封顶: /root/azar_login.sh
+已加内存封顶: /root/morning.sh
+已加内存封顶: /root/remote_ctl.sh
+已加内存封顶: /root/st.sh
+==核查==
+/root/azar_guard.sh:  cd /root && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 &
+/root/azar_login.sh:nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > "$LOG" 2>&1 &
+/root/morning.sh:  cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 &
+/root/remote_ctl.sh:  cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 &
+/root/st.sh:  nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 &
