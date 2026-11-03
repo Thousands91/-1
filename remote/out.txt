@@ -1,24 +1,22 @@
-<<<task_108.txt>>>
-===== 任务108 11-03 17:49:16 =====
+<<<task_109.txt>>>
+===== 任务109 11-03 17:53:31 =====
 --- 命令 ---
+echo ==bot进程==
+pgrep -af main.py | head -2
+echo ==bot.log尾部==
+tail -5 /root/bot.log 2>/dev/null
 echo ==登录状态==
 bash /root/logincheck.sh 2>/dev/null | head -3
-echo ==NapCat主进程==
-pgrep -af "opt/QQ/[q]q" | head -2
-echo ==新日志GPU报错==
-echo "GPU: $(grep -c 'GPU process' /root/napcat.log 2>/dev/null)"
-echo ==bot遥控守护==
-pgrep -f main.py | head -1; pgrep -f "bash /root/remote_ctl.sh" | head -1; pgrep -f "bash /root/azar_guard.sh" | head -1
 --- 输出 ---
+==bot进程==
+32528 /root/bot/venv/bin/python main.py
+==bot.log尾部==
+11-03 17:49:45 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
+11-03 17:49:45 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
+11-03 17:49:45 [INFO] __main__ | ==================================================
+11-03 17:49:45 [INFO] uvicorn | Application startup complete.
+11-03 17:49:45 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 ==登录状态==
 === 登录状态（权威判定）===
 [未登录] 当前没有有效会话
 阶段: waiting_qrcode
-==NapCat主进程==
-30377 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage
-30455 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage
-==新日志GPU报错==
-GPU: 0
-==bot遥控守护==
-30745
-30757
