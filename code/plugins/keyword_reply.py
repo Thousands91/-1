@@ -11,16 +11,9 @@ import re
 
 from nonebot import on_command, on_message
 from nonebot.rule import to_me
-from nonebot.adapters.onebot.v11 import GroupMessageEvent, MessageSegment, PrivateMessageEvent, Message
+from nonebot.adapters.onebot.v11 import GroupMessageEvent, PrivateMessageEvent, Message
 
 ENABLE = os.getenv("ENABLE_KEYWORD_REPLY", "true").lower() == "true"
-
-
-def _with_quote(event, msg):
-    """群聊回复带引用段（像人手动"回复"那样引用对方那条）；私聊原样返回。"""
-    if isinstance(event, GroupMessageEvent):
-        return Message([MessageSegment.reply(event.message_id)]) + msg
-    return msg
 
 # ===================== 关键词 → 一句话 =====================
 # 触发规则就一条：**整句等于某个关键词**（允许后面带语气词或称呼）。
@@ -137,8 +130,8 @@ menu_cmd = on_command("菜单", rule=to_me(), priority=20, block=True)
 
 
 @menu_cmd.handle()
-async def _(event: GroupMessageEvent | PrivateMessageEvent):
-    await menu_cmd.finish(_with_quote(event, MENU_TEXT))
+async def _():
+    await menu_cmd.finish(MENU_TEXT)
 
 kw_reply = on_message(priority=80, block=False)
 
@@ -205,4 +198,4 @@ async def _(event: GroupMessageEvent | PrivateMessageEvent):
 
     m = _match(text)
     if m:
-        await kw_reply.finish(_with_quote(event, Message(random.choice(m[1]))))
+        await kw_reply.finish(Message(random.choice(m[1])))
