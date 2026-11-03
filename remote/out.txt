@@ -1,38 +1,50 @@
-<<<task_96.txt>>>
-===== 任务96 11-03 11:13:37 =====
+<<<task_97.txt>>>
+===== 任务97 11-03 11:33:07 =====
 --- 命令 ---
-echo "=====1.崩溃次数统计====="
-grep -a -c "GPU process isn" /root/napcat-restart.log
-echo "=====2.每次崩溃前的错误类型====="
-grep -a "error_code" /root/napcat-restart.log | grep -o "error_code=[0-9]*" | sort | uniq -c | sort -rn | head
-echo "=====3.崩溃时刻（FATAL行的时间戳）====="
-grep -a "FATAL" /root/napcat-restart.log | grep -o "[0-9]\{4\}/[0-9]\{6\}" | cut -c6-7 | sort | uniq -c
-echo "=====4.当前启动命令====="
-ps aux | grep "[o]pt/QQ/qq" | head -2
-echo "=====5.Xvfb进程数====="
-ps aux | grep -c "[X]vfb"
-echo "=====6.GPU相关环境变量====="
-PID=$(pgrep -f "opt/QQ/qq" | head -1); tr "\0" "\n" < /proc/$PID/environ 2>/dev/null | grep -i -E "gpu|gl|render|display|angle" | head -10
-echo "=====7.日志里有无 踢/下线/失效 字样====="
-grep -a -c -E "踢|下线|失效|被禁止|logout" /root/napcat-restart.log
+set -u
+P=/root/bot/bot/plugins
+BADGE=$(date +%m%d_%H%M)
+echo "=====1.备份现有文件====="
+cp $P/ai_chat.py $P/ai_chat.py.bak_$BADGE && echo "ai_chat 已备份 bak_$BADGE"
+cp $P/image_see.py $P/image_see.py.bak_$BADGE && echo "image_see 已备份 bak_$BADGE"
+ls -l $P/ai_chat.py.bak_$BADGE $P/image_see.py.bak_$BADGE
+echo "=====2.下载新版本====="
+curl -s -o /tmp/ai_chat.new "https://raw.githubusercontent.com/Thousands91/-1/main/code/preview/ai_chat.py"
+curl -s -o /tmp/image_see.new "https://raw.githubusercontent.com/Thousands91/-1/main/code/preview/image_see.py"
+wc -c /tmp/ai_chat.new /tmp/image_see.new
+echo "=====3.语法校验====="
+python3 -c "import ast;ast.parse(open('/tmp/ai_chat.new',encoding='utf-8').read());print('ai_chat 语法OK')" || { echo "ai_chat 语法失败,中止"; exit 1; }
+python3 -c "import ast;ast.parse(open('/tmp/image_see.new',encoding='utf-8').read());print('image_see 语法OK')" || { echo "image_see 语法失败,中止"; exit 1; }
+echo "=====4.校验修复内容存在====="
+grep -c "pick_food_or_drink(user_text" /tmp/ai_chat.new && echo "报菜名修复已确认"
+grep -c "VLM_FALLBACK" /tmp/image_see.new && echo "识图fallback已确认"
+grep -c "照片就叫照片" /tmp/image_see.new && echo "措辞修复已确认"
+echo "=====5.替换上线====="
+cp /tmp/ai_chat.new $P/ai_chat.py && echo "ai_chat.py 已更新"
+cp /tmp/image_see.new $P/image_see.py && echo "image_see.py 已更新"
+ls -l $P/ai_chat.py $P/image_see.py
 --- 输出 ---
-=====1.崩溃次数统计=====
-11
-=====2.每次崩溃前的错误类型=====
-     70 error_code=1002
-=====3.崩溃时刻（FATAL行的时间戳）=====
-      4 00
-      1 13
-      1 15
-      2 16
-      1 17
-      2 21
-=====4.当前启动命令=====
-aid_u0_+ 12168  0.0  0.0   2396   236 ?        S<    2023   0:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox
-aid_u0_+ 12186  3.2  0.0 205560056 5148 ?      S<l   2023  20:12 /root/Napcat/opt/QQ/qq --no-sandbox
-=====5.Xvfb进程数=====
-5
-=====6.GPU相关环境变量=====
-LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:
-=====7.日志里有无 踢/下线/失效 字样=====
+=====1.备份现有文件=====
+ai_chat 已备份 bak_1103_1133
+image_see 已备份 bak_1103_1133
+-rw-r--r--. 1 root root 56548 Nov  3 11:33 /root/bot/bot/plugins/ai_chat.py.bak_1103_1133
+-rw-r--r--. 1 root root  6095 Nov  3 11:33 /root/bot/bot/plugins/image_see.py.bak_1103_1133
+=====2.下载新版本=====
+56782 /tmp/ai_chat.new
+ 6829 /tmp/image_see.new
+63611 total
+=====3.语法校验=====
+ai_chat 语法OK
+image_see 语法OK
+=====4.校验修复内容存在=====
 1
+报菜名修复已确认
+3
+识图fallback已确认
+1
+措辞修复已确认
+=====5.替换上线=====
+ai_chat.py 已更新
+image_see.py 已更新
+-rw-r--r--. 1 root root 56782 Nov  3 11:33 /root/bot/bot/plugins/ai_chat.py
+-rw-r--r--. 1 root root  6829 Nov  3 11:33 /root/bot/bot/plugins/image_see.py
