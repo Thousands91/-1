@@ -1,45 +1,126 @@
-<<<task_94.txt>>>
-===== 任务94 11-03 07:02:00 =====
+<<<task_95.txt>>>
+===== 任务95 11-03 11:13:02 =====
 --- 命令 ---
-date "+%F %T"
-echo ==循环==
-kill -0 $(cat /root/.remote_pid 2>/dev/null) 2>/dev/null && echo 循环OK || echo 循环死了
-echo ==bot==
-pgrep -f "venv/bin/python main.py" >/dev/null && echo bot进程OK || echo bot进程没了
-echo ==NapCat==
-pgrep -f "opt/QQ/qq" >/dev/null && echo NapCat进程OK || echo NapCat没了
-echo ==登录状态==
-bash /root/logincheck.sh 2>&1 | tail -3
-echo ==napcat日志尾==
-tail -6 /root/napcat.log 2>/dev/null
-echo ==guard日志尾==
-tail -6 /root/guard_status.txt 2>/dev/null
-echo ==bot日志尾==
-tail -8 $(readlink /proc/$(pgrep -f "venv/bin/python main.py" | head -1)/fd/1 2>/dev/null) 2>/dev/null | grep -a "connected\|disconnect\|error\|二维码" | tail -5
+echo "=========1.登录状态全量输出========"
+bash /root/logincheck.sh 2>&1
+echo "=========2.NapCat日志中的退出/踢线/错误关键字========"
+grep -a -i -n "kick\|踢\|logout\|offline\|下线\|踢下线\|code\":\|error_code\|Code:\|token\|失效\|过期\|被禁止\|restricted" /root/napcat.log 2>/dev/null | tail -40
+echo "=========3.NapCat日志最后80行========"
+tail -80 /root/napcat.log 2>/dev/null
+echo "=========4.日志文件清单与大小========"
+ls -lt /root/*.log /root/bot/*.log /root/bot/bot/*.log 2>/dev/null | head -10
+echo "=========5.NapCat版本与配置========"
+ls /root/Napcat/opt/QQ/resources/app/app_launcher/ 2>/dev/null; find /root/Napcat -maxdepth 4 -name "napcat*.json" 2>/dev/null | head -5
 --- 输出 ---
-2026-11-03 07:02:00
-==循环==
-循环OK
-==bot==
-bot进程OK
-==NapCat==
-NapCat进程OK
-==登录状态==
+=========1.登录状态全量输出========
+=== 登录状态（权威判定）===
 [未登录] 当前没有有效会话
 阶段: waiting_qrcode
 最近错误: 无
-==napcat日志尾==
+=========2.NapCat日志中的退出/踢线/错误关键字========
+41:11-02 21:50:50 [[32minfo[39m] [NapCat] [WebUi] WebUi Token: 072bb0cc960e
+42:11-02 21:50:50 [[32minfo[39m] [NapCat] [WebUi] WebUi User Panel Url: http://127.0.0.1:6099/webui?token=072bb0cc960e
+43:11-02 21:50:50 [[32minfo[39m] [NapCat] [WebUi] WebUi User Panel Url: http://[::]:6099/webui?token=072bb0cc960e
+164:11-02 21:51:47 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 养成了先踢人或者先处罚，然后再搞群里的
+455:[7732:1103/003513.875741:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+456:[7732:1103/003513.881000:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+457:[7732:1103/003513.884480:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+458:[7732:1103/003513.892890:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+459:[7732:1103/003513.895790:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+460:[7732:1103/003513.898589:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+=========3.NapCat日志最后80行========
+11-02 23:37:21 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [林老师📚(3117126263)] 要交两遍
+11-02 23:38:10 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [第五人格启动中(3492685785)] 因为交税而交税的交税也要交税（
+11-02 23:38:18 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爱上齐豫是我的福报(1561950850)] ？
+11-02 23:38:23 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 我去
+11-02 23:38:30 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 绕晕了
+11-02 23:38:44 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 来个审计给你们都抓了
+11-02 23:41:11 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [长太息以笑希希，乐希希之多艰(553414459)] 大部分手游都能识别模拟器的吧
+11-02 23:41:25 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [长太息以笑希希，乐希希之多艰(553414459)] 好像用模拟器只会排到模拟器
+11-02 23:41:35 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [长太息以笑希希，乐希希之多艰(553414459)] 那还不如打端瓦
+[I] <MMKV_IO.cpp:516::writeActualSize> [nt_mmkv_united_config_no_login_v3] increase sequence to 52, crc 3366605956, actualSize 1409
+[I] <MMKV.cpp:1178::sync> MMKV::sync, SyncFlag = 1
+11-02 23:45:02 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-02 23:45:07 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-02 23:45:16 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-02 23:45:16 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-02 23:45:17 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 你对我有哪些记忆
+11-02 23:45:29 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-02 23:45:35 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 苏丹最喜欢的饮品，是那杯骷髅泡酒，风味独特，据说能让人忘却尘世的烦恼。🦋🍻
+5b5d3f45a7c0be97ae5447bf36645a08c8e8b0edec6f8600cb2ca4ed770d8d2a
+11-02 23:45:44 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-02 23:45:45 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-02 23:45:45 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-02 23:45:46 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) [图片]
+11-02 23:45:49 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-02 23:45:52 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-02 23:46:07 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 瞧了瞧，一只橘猫，嘴边还挂了根手指。画得倒挺像，就是这手指有点突兀，像贴上去的贴纸。
+cd2d55364d1e5a652f5f76617ea35ffb19c11dea60f493d781d03f7f6e470865
+11-02 23:46:38 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-02 23:46:38 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-02 23:46:38 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-02 23:46:39 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 我要笑死了
+11-02 23:46:40 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-02 23:46:43 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-02 23:46:43 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 一杯清酒，清冽可口，最能衬托欢愉。🍻
+360318d1d7e040a5cb421fa4b23a41bb54d47158617ea20a595fd1f37552b57b
+11-02 23:47:40 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+17260a34bbb595ff341ff06d0431968e8c864f44fa149b5c71179e4d0d98fe05
+11-02 23:49:02 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [冉(3220329126)] 俺是监理
+11-02 23:49:08 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [冉(3220329126)] 你给我一半我就不说出去
+11-02 23:51:40 [[32minfo[39m] 阿萨尔 | [ServerTime] 时间同步完成，偏差 -973ms
+[I] <MMKV_IO.cpp:516::writeActualSize> [nt_mmkv_united_config_no_login_v3] increase sequence to 53, crc 2258821599, actualSize 1409
+[I] <MMKV.cpp:1178::sync> MMKV::sync, SyncFlag = 1
+487f4e4533cff42b5d409b4ce44bdbbd5d606a7da06fcc78724ec9f58640c136
+[I] <MMKV_IO.cpp:516::writeActualSize> [nt_mmkv_united_config_no_login_v3] increase sequence to 54, crc 123936486, actualSize 1409
+[I] <MMKV.cpp:1178::sync> MMKV::sync, SyncFlag = 1
+11-03 00:24:12 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] @幽幽子 (3889001246)  /今日猪猪 
+11-03 00:24:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [幽幽子(3889001246)] [未实现 (ElementType = 17)] [Markdown 消息] @七嘻ttl   🎉 抓到一只新猪猪啦！ ...
+11-03 00:28:25 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [冉(3220329126)] @幽幽子 (3889001246)  /今日猪猪 
+11-03 00:28:27 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [幽幽子(3889001246)] [未实现 (ElementType = 17)] [Markdown 消息] @冉   💫 这是你第2次抓到这只猪猪啦~ ...
+11-03 00:28:28 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-03 00:28:29 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-03 00:28:29 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-03 00:28:29 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 你还在吗
+11-03 00:28:29 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [冉(3220329126)] [图片]
+11-03 00:28:33 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-03 00:28:36 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 一杯酸梅汤，酸中带甜，消暑解渴。🍋🥤
+ec0ef525c1158a6ab56c25ccebf576a86800532e58c45f6abc652b147c06e2d4
+11-03 00:28:40 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [冉(3220329126)] [图片]
+11-03 00:28:43 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-03 00:28:48 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-03 00:28:48 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-03 00:28:48 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-03 00:28:48 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 我要时刻关注你什么时候还在
+11-03 00:29:04 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 一杯乌梅汁，酸酸甜甜，提神解乏。🍋🥤
+66ab89f06791eae7276912a43834a75a95804b7b0ee231d2d1027343eb6be7a2
+11-03 00:29:22 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-03 00:29:34 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爱上齐豫是我的福报(1561950850)] @幽幽子 (3889001246)  /今日猪猪 
+11-03 00:29:39 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [幽幽子(3889001246)] [未实现 (ElementType = 17)] [Markdown 消息] @爱上齐豫是我的福报   🎉 抓到一只新猪猪啦！ ...
+[I] <MMKV_IO.cpp:516::writeActualSize> [nt_mmkv_united_config_no_login_v3] increase sequence to 55, crc 1082738687, actualSize 1409
+[I] <MMKV.cpp:1178::sync> MMKV::sync, SyncFlag = 1
+11-03 00:33:37 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [Xylitol(2586464457)] [图片]
+11-03 00:33:56 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [Xylitol(2586464457)] 久留美（启动b计划版）
+[7732:1103/003513.812782:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
+[7732:1103/003513.875741:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
 [7732:1103/003513.881000:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
 [7732:1103/003513.884480:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
 [7732:1103/003513.892890:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
 [7732:1103/003513.895790:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
 [7732:1103/003513.898589:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
 [7732:1103/003513.898626:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
-==guard日志尾==
-11-02 20:59:42 守护v1.1启动
-11-03 00:35:13 被踢标记超6小时,允许再试
-11-03 00:35:13 WS断开,尝试重启NapCat免扫码恢复
-11-03 00:36:16 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
-11-03 06:37:13 被踢标记超6小时,允许再试
-11-03 06:37:13 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
-==bot日志尾==
+=========4.日志文件清单与大小========
+-rw-r--r--. 1 root root 3161987 Nov  3 11:13 /root/napcat-restart.log
+-rw-r--r--. 1 root root  353653 Nov  3 11:12 /root/remote_ctl.log
+-rw-r--r--. 1 root root      33 Nov  3 00:49 /root/guard.log
+-rw-r--r--. 1 root root  130664 Nov  3 00:35 /root/bot.log
+-rw-r--r--. 1 root root   53912 Nov  3 00:35 /root/napcat.log
+-rw-r--r--. 1 root root   50865 Nov  2 18:17 /root/bot/bot.log
+-rw-r--r--. 1 root root    1455 Nov  2 00:44 /root/azar_login_run.log
+-rw-r--r--. 1 root root    7870 Nov  1 15:31 /root/bot/bot/bot.log
+-rw-r--r--. 1 root root      26 Oct 30 22:55 /root/asar_sync.log
+=========5.NapCat版本与配置========
+adm-zip.js
+index.js
+launcher.js
+napcat
