@@ -12,6 +12,7 @@ AI 智能问答 —— 阿萨尔人格（《苏丹的游戏》书店老板）
 import asyncio
 import os
 import random
+import re
 import sys
 from collections import defaultdict, deque
 from pathlib import Path
@@ -31,6 +32,16 @@ except ImportError:
     AZAR_PERSONA = "你扮演《苏丹的游戏》书店老板阿萨尔，博学、矜持、说话文雅简短。"
 
 _DUP: Dict[tuple, float] = {}
+
+# ===== 闭嘴开关（防两台机器人互@刹不住车）=====
+# 用户对阿萨尔说"停止/别回了"→ 本群 ai_chat 静音 10 分钟；说"继续"提前解除。
+# 只静音 ai_chat（聊天主脑），识图/搜图等专门插件不受影响。
+# 触发词整句匹配（允许语气词环绕），避免"别让时间停下"这种句子误伤。
+_TAIL = r"[\s啊呀吧呢了哦嘛哈哟哇嗯好那就先，,！!。.~]*"
+_BOT_STOP_RE = re.compile(rf"^{_TAIL}(停止|别回了|别说了|住口|闭嘴|停下|歇了吧|stop){_TAIL}$", re.I)
+_BOT_RESUME_RE = re.compile(rf"^{_TAIL}(继续|接着说|可以说话了|回来吧|解除静音|start){_TAIL}$", re.I)
+_MUTE_UNTIL: Dict[int, float] = {}
+_MUTE_SECONDS = 600
 
 _RE_REPLY = __import__("re").compile(r"\[CQ:reply,id=(\d+)\]")
 
@@ -425,14 +436,19 @@ def pick_food_or_drink(text: str, key: tuple) -> str:
     return choice
 
 def _with_quote(event, msg):
-    """群聊回复带引用段（像人手动"回复"那样引用触发的那条消息）；私聊原样返回。
+    """对称式引用：对方引用着消息来问（reply 段），回复时也把对方那条引用上；
+    普通 @ 触发的不引用（2026-11-03 用户定的规矩：不用全场景引用）。
+    私聊原样返回。
 
-    放最前面一条 reply 段即可，QQ 客户端会渲染成引用框。
     注意 finish() 的参数可能已经是拼好的 Message（带艾特段），只能前置、不能重拼。
     """
-    if isinstance(event, GroupMessageEvent):
-        return Message([MessageSegment.reply(event.message_id)]) + msg
-    return msg
+    if not isinstance(event, GroupMessageEvent):
+        return msg
+    has_seg = any(s.type == "reply" for s in event.message)
+    # 手机版 NapCat 会把 reply 段从 message 数组剥掉，raw_message 的 CQ 码里还留着
+    if not has_seg and not _RE_REPLY.search(event.raw_message or ""):
+        return msg
+    return Message([MessageSegment.reply(event.message_id)]) + msg
 
 
 ai_chat = on_message(priority=99, block=False)
@@ -467,6 +483,22 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
         return
     if text:
         _DUP[_dupkey] = _now
+    # ===== 闭嘴开关：两台机器人互@容易刹不住车，用户喊停就停 =====
+    # 判断放在去重之后、一切应答之前；停止优先于继续（先喊停再喊继续按"停"算，
+    # 因为正则互斥不会同时命中，顺序只影响都命中时的极端情况）。
+    if isinstance(event, GroupMessageEvent):
+        _plain = text.strip()
+        if _BOT_STOP_RE.fullmatch(_plain):
+            _MUTE_UNTIL[event.group_id] = _now + _MUTE_SECONDS
+            await ai_chat.finish(_with_quote(event, Message(random.choice([
+                "（他把书合上）好，我先不说话。要我了就说「继续」。",
+                "（他把笔搁下）嗯，我闭口。想让我接话，说声「继续」就行。",
+            ]))))
+        if _MUTE_UNTIL.get(event.group_id, 0) > _now:
+            if _BOT_RESUME_RE.fullmatch(_plain):
+                _MUTE_UNTIL.pop(event.group_id, None)
+                await ai_chat.finish(_with_quote(event, Message("（书页重新翻开）说吧，我听着。")))
+            return  # 静音中：@我也不应声（停止/继续命令在上方已处理）
     # 引用消息：OneBot 的 reply 段只带消息 id，不带内容，
     # 要拿 get_msg 把被引用那条的原话取回来，喂给模型。
     # 实测手机版 NapCat 会把 reply 段从 message 数组里剥掉，
@@ -1155,5 +1187,5 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent):
         _memory_path(event.user_id).unlink(missing_ok=True)
     except Exception:
         pass
-    await clear.finish(_with_quote(event, "记忆已清空，重新谈吧。"))
+    await clear.finish("记忆已清空，重新谈吧。")
 
