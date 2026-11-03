@@ -1,56 +1,25 @@
-<<<task_100.txt>>>
-===== 任务100 11-03 12:44:56 =====
+<<<task_101.txt>>>
+===== 任务101 11-03 12:45:16 =====
 --- 命令 ---
-BADGE=$(date +%m%d_%H%M)
-echo "=====1.备份所有相关脚本====="
-for f in azar_guard.sh azar_login.sh morning.sh remote_ctl.sh st.sh; do
-  [ -f /root/$f ] && cp /root/$f /root/$f.bak_$BADGE && echo "$f 已备份";
-done
-echo "=====2.统一追加禁用GPU参数====="
-NEWFLAGS="--disable-gpu --disable-software-rasterizer --disable-dev-shm-usage"
-for f in azar_guard.sh azar_login.sh morning.sh remote_ctl.sh st.sh; do
-  [ -f /root/$f ] || continue
-  if grep -q "opt/QQ/qq --no-sandbox" /root/$f; then
-    if grep -q "disable-gpu" /root/$f; then
-      echo "$f 已含参数,跳过";
-    else
-      sed -i "s#opt/QQ/qq --no-sandbox#opt/QQ/qq --no-sandbox $NEWFLAGS#g" /root/$f
-      echo "$f 已修改";
-    fi
-  fi
-done
-echo "=====3.验证修改结果====="
-grep -n "opt/QQ/qq" /root/azar_guard.sh /root/azar_login.sh /root/morning.sh /root/remote_ctl.sh /root/st.sh 2>/dev/null | grep -v "QR=\|pgrep\|pkill"
-echo "=====4.语法校验====="
-for f in azar_guard.sh azar_login.sh morning.sh remote_ctl.sh st.sh; do
-  [ -f /root/$f ] && { bash -n /root/$f && echo "$f 语法OK" || echo "$f 语法错误!"; }
-done
-echo "=====5.守护pgrep兼容性检查====="
+echo "=====1.修正守护的进程计数匹配（改用宽松匹配）====="
+sed -i 's#pgrep -fc "opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage"#pgrep -fc "opt/QQ/[q]q"#' /root/azar_guard.sh
 grep -n "pgrep -fc" /root/azar_guard.sh
+echo "=====2.验证pkill行未被误伤====="
+grep -n "pkill" /root/azar_guard.sh
+echo "=====3.语法复检====="
+bash -n /root/azar_guard.sh && echo "守护语法OK"
+echo "=====4.实测匹配是否有效（当前无NapCat,应为0或空，不报错）====="
+pgrep -fc "opt/QQ/[q]q" 2>/dev/null || echo "0"
+echo "=====5.守护是否在跑（在跑的话需要重启才生效）====="
+pgrep -f "bash /root/azar_guard[.]sh" | head -2
 --- 输出 ---
-=====1.备份所有相关脚本=====
-azar_guard.sh 已备份
-azar_login.sh 已备份
-morning.sh 已备份
-remote_ctl.sh 已备份
-st.sh 已备份
-=====2.统一追加禁用GPU参数=====
-azar_guard.sh 已修改
-azar_login.sh 已修改
-morning.sh 已修改
-remote_ctl.sh 已修改
-st.sh 已修改
-=====3.验证修改结果=====
-/root/azar_guard.sh:16:  cd /root && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage >> /root/napcat-restart.log 2>&1 &
-/root/azar_login.sh:19:nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage > "$LOG" 2>&1 &
-/root/morning.sh:15:  cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage > /root/napcat.log 2>&1 &
-/root/remote_ctl.sh:68:  cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage >> /root/napcat-restart.log 2>&1 &
-/root/st.sh:4:  nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage > /root/napcat.log 2>&1 &
-=====4.语法校验=====
-azar_guard.sh 语法OK
-azar_login.sh 语法OK
-morning.sh 语法OK
-remote_ctl.sh 语法OK
-st.sh 语法OK
-=====5.守护pgrep兼容性检查=====
-40:  QQ_N=$(pgrep -fc "opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage" 2>/dev/null)
+=====1.修正守护的进程计数匹配（改用宽松匹配）=====
+40:  QQ_N=$(pgrep -fc "opt/QQ/[q]q" 2>/dev/null)
+=====2.验证pkill行未被误伤=====
+77:    pkill -f "opt/QQ/qq" 2>/dev/null
+=====3.语法复检=====
+守护语法OK
+=====4.实测匹配是否有效（当前无NapCat,应为0或空，不报错）=====
+5
+=====5.守护是否在跑（在跑的话需要重启才生效）=====
+24962
