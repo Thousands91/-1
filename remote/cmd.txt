@@ -1,7 +1,2 @@
-124
-cd /root/bot/bot/plugins
-tar czf /tmp/pl.tgz *.py
-echo "BASE64_START"
-base64 -w 300 /tmp/pl.tgz
-echo "BASE64_END"
-echo "大小: $(du -h /tmp/pl.tgz | cut -f1)"
+125
+ls -la /root/bot/bot/data/gutenberg_zh.json 2>/dev/null && python3 -c "import json; d=json.load(open('/root/bot/bot/data/gutenberg_zh.json')); print('古籍目录条数:', len(d))"
