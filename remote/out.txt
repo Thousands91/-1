@@ -1,43 +1,40 @@
-<<<task_105.txt>>>
-===== 任务105 11-03 16:09:45 =====
+<<<task_106.txt>>>
+===== 任务106 11-03 16:13:23 =====
 --- 命令 ---
-echo ==1.登录状态==
-bash /root/logincheck.sh 2>/dev/null
-echo ==2.新日志GPU报错计数==
-echo "GPU process: $(grep -c 'GPU process' /root/napcat.log 2>/dev/null)"
-echo "FATAL: $(grep -c FATAL /root/napcat.log 2>/dev/null)"
-echo ==3.napcat.log最后6行==
-tail -6 /root/napcat.log 2>/dev/null
-echo ==4.bot日志最后6行==
-tail -6 /root/bot.log 2>/dev/null
-echo ==5.守护与标记==
-for f in /root/*guard*.log /root/asar*.log /root/.kicked*; do [ -f "$f" ] && echo "-- $f" && tail -6 "$f"; done
+echo ==1.当前NapCat进程参数==
+pgrep -af "opt/QQ/[q]q" | head -4
+echo ==2.离线事件上下文==
+grep -n "离线" /root/napcat.log | tail -5
+echo ==3.napcat.log最后15行==
+tail -15 /root/napcat.log
+echo ==4.脚本自动拉起是否带新参数==
+grep -n "disable-gpu" /root/remote_ctl.sh /root/azar_guard.sh 2>/dev/null
+grep -n "KICKED=" /root/azar_guard.sh 2>/dev/null | head -2
 --- 输出 ---
-==1.登录状态==
-=== 登录状态（权威判定）===
-[在线] 已登录，一切正常
-阶段: ready
-最近错误: 无
-==2.新日志GPU报错计数==
-GPU process: 0
-FATAL: 0
-==3.napcat.log最后6行==
+==1.当前NapCat进程参数==
+21137 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage
+21153 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage
+21155 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+21156 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
+==2.离线事件上下文==
+236:11-03 16:08:26 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+==3.napcat.log最后15行==
+[I] <MMKV_IO.cpp:516::writeActualSize> [nt_mmkv_united_config_no_login_v3] increase sequence to 58, crc 450718596, actualSize 1409
+[I] <MMKV.cpp:1178::sync> MMKV::sync, SyncFlag = 1
+11-03 16:05:05 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-03 16:05:06 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-03 16:05:12 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [我爱这橙色的海洋🍀💛乐育群里的(1561950850)] @阿萨尔 (3427943187)  
+11-03 16:05:12 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] 我在。您有什么要说给我听？📖
+79e72942efdc895bbf7c8b4a1b2a457e884a068f1bd6dc4407679813aa2cf9e6
+11-03 16:05:23 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [我爱这橙色的海洋🍀💛乐育群里的(1561950850)] @阿萨尔 (3427943187)  新闻
+11-03 16:05:24 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] 📰 2026年11月3日 ...
 3c0813c698b609c4d9fa25a8a852ab41eb3862d0dcc7b8ab91ed0b79dea87bae
 11-03 16:05:39 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爱上齐豫是我的福报(1561950850)] @阿萨尔 (3427943187)  
 11-03 16:05:39 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [相亲相爱一家人(590454333)] [阿萨尔(3427943187)] 我在。您有什么要说给我听？📖
 9d027ca793e22f5696a48de3abde1994550d4613671e9ae3c3912fa3ddc3ec80
 11-03 16:08:26 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
 138dd09f4409e9708893ffe46b62ddf3e6ee5cee3de83af6855dde114d269d2f
-==4.bot日志最后6行==
-11-03 16:05:39 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=88) running complete
-11-03 16:05:39 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=184) running complete
-11-03 16:05:39 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=136)
-11-03 16:05:39 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=136) running complete
-11-03 16:05:39 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=427)
-11-03 16:05:40 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=427) running complete
-==5.守护与标记==
--- /root/guard.log
-nohup: ignoring input
-Terminated
--- /root/asar_sync.log
-✅ 日志已推送 22:55
+==4.脚本自动拉起是否带新参数==
+/root/remote_ctl.sh:68:  cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage >> /root/napcat-restart.log 2>&1 &
+/root/azar_guard.sh:16:  cd /root && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage >> /root/napcat-restart.log 2>&1 &
+13:KICKED=/root/.guard_kicked
