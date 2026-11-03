@@ -1,25 +1,36 @@
-<<<task_101.txt>>>
-===== 任务101 11-03 12:45:16 =====
+<<<task_102.txt>>>
+===== 任务102 11-03 12:45:36 =====
 --- 命令 ---
-echo "=====1.修正守护的进程计数匹配（改用宽松匹配）====="
-sed -i 's#pgrep -fc "opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage"#pgrep -fc "opt/QQ/[q]q"#' /root/azar_guard.sh
-grep -n "pgrep -fc" /root/azar_guard.sh
-echo "=====2.验证pkill行未被误伤====="
-grep -n "pkill" /root/azar_guard.sh
-echo "=====3.语法复检====="
-bash -n /root/azar_guard.sh && echo "守护语法OK"
-echo "=====4.实测匹配是否有效（当前无NapCat,应为0或空，不报错）====="
-pgrep -fc "opt/QQ/[q]q" 2>/dev/null || echo "0"
-echo "=====5.守护是否在跑（在跑的话需要重启才生效）====="
-pgrep -f "bash /root/azar_guard[.]sh" | head -2
+echo "=====1.匹配到的所有进程明细====="
+pgrep -af "opt/QQ/[q]q"
+echo "=====2.守护脚本里这段逻辑上下文====="
+sed -n "35,50p" /root/azar_guard.sh
+echo "=====3.守护进程启动时间====="
+ps -o pid,lstart,args -p 24962 2>/dev/null
 --- 输出 ---
-=====1.修正守护的进程计数匹配（改用宽松匹配）=====
-40:  QQ_N=$(pgrep -fc "opt/QQ/[q]q" 2>/dev/null)
-=====2.验证pkill行未被误伤=====
-77:    pkill -f "opt/QQ/qq" 2>/dev/null
-=====3.语法复检=====
-守护语法OK
-=====4.实测匹配是否有效（当前无NapCat,应为0或空，不报错）=====
-5
-=====5.守护是否在跑（在跑的话需要重启才生效）=====
-24962
+=====1.匹配到的所有进程明细=====
+12168 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox
+12186 /root/Napcat/opt/QQ/qq --no-sandbox
+12188 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+12189 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
+12237 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+=====2.守护脚本里这段逻辑上下文=====
+    *connected*)
+      [ -f "$KICKED" ] && rm -f "$KICKED" && echo "$(date '+%m-%d %H:%M:%S') 已重新上线,清除被踢标记" >> "$STATE"
+      continue
+      ;;
+  esac
+  QQ_N=$(pgrep -fc "opt/QQ/[q]q" 2>/dev/null)
+  if [ "$QQ_N" = "0" ] || [ -z "$QQ_N" ]; then
+    AGE=999999
+    [ -f "$QR" ] && AGE=$(( $(date +%s) - $(TS "$QR") ))
+    if [ $AGE -gt 600 ]; then
+      if can_restart; then
+        echo "$(date '+%m-%d %H:%M:%S') QQ进程消失,自动拉起" >> "$STATE"
+        start_qq
+      fi
+    fi
+    continue
+=====3.守护进程启动时间=====
+  PID                  STARTED COMMAND
+24962 Wed Mar 29 01:22:27 2023 bash /root/azar_guard.sh
