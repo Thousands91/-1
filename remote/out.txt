@@ -1,11 +1,49 @@
-<<<task_121.txt>>>
-===== 任务121 11-03 22:28:36 =====
+<<<task_122.txt>>>
+===== 任务122 11-03 22:36:05 =====
 --- 命令 ---
-echo "采样时间 $(date +%T)"
-ps -o time= -p 21520,22636 2>/dev/null
-echo "==稳态判定: 与22:22:30的00:04:08/00:02:51相减=="
+cd /root/bot/bot/plugins
+echo ==插件清单==
+ls
+echo ==全量语法检查==
+/root/bot/venv/bin/python -m py_compile *.py && echo 全部语法通过
+echo ==关键文件md5==
+md5sum ai_chat.py image_see.py image_search_multisource.py keyword_reply.py 2>/dev/null
+echo ==bot.log今日报错==
+grep -cE "ERROR|Traceback" /root/bot.log
+grep -E "ERROR|Traceback" /root/bot.log | tail -5
+echo ==napcat非GPU报错==
+grep -iE "error|fatal" /root/napcat.log | grep -vc "GPU"
+grep -iE "error|fatal" /root/napcat.log | grep -v "GPU" | head -4
 --- 输出 ---
-采样时间 22:28:36
-00:06:51
-00:04:42
-==稳态判定: 与22:22:30的00:04:08/00:02:51相减==
+==插件清单==
+__pycache__
+ai_chat.py
+ai_chat.py.bak_1102
+ai_chat.py.bak_1103_1133
+book_find.py
+chess_game.py
+fortune.py
+games.py
+image_search.py
+image_search.py.bak_1102
+image_search_web.py
+image_see.py
+image_see.py.bak_1103_1133
+keyword_reply.py
+news.py
+song_request.py
+weather.py
+==全量语法检查==
+全部语法通过
+==关键文件md5==
+1ea1029467fa1331a5dfd4e1b2681f61  ai_chat.py
+730d6e432958814b2b9123bbbd85fff7  image_see.py
+0c6fd634e85b96ccc7a062008601c59a  keyword_reply.py
+==bot.log今日报错==
+0
+==napcat非GPU报错==
+23
+[22548:1103/221236.866168:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[22548:1103/221240.369452:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[22548:1103/221240.369574:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[22548:1103/221240.375134:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
