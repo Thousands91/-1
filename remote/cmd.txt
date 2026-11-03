@@ -1,7 +1,9 @@
-107
-echo ==A.此刻登录状态==
-bash /root/logincheck.sh 2>/dev/null | head -4
-echo ==B.16:08之后有没有新消息和恢复记录==
-tail -4 /root/napcat.log
-echo ==C.脚本带新参数核查==
-grep -c "disable-gpu" /root/remote_ctl.sh /root/azar_guard.sh
+108
+echo ==登录状态==
+bash /root/logincheck.sh 2>/dev/null | head -3
+echo ==NapCat主进程==
+pgrep -af "opt/QQ/[q]q" | head -2
+echo ==新日志GPU报错==
+echo "GPU: $(grep -c 'GPU process' /root/napcat.log 2>/dev/null)"
+echo ==bot遥控守护==
+pgrep -f main.py | head -1; pgrep -f "bash /root/remote_ctl.sh" | head -1; pgrep -f "bash /root/azar_guard.sh" | head -1
