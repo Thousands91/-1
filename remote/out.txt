@@ -1,26 +1,11 @@
-<<<task_120.txt>>>
-===== 任务120 11-03 22:22:30 =====
+<<<task_121.txt>>>
+===== 任务121 11-03 22:28:36 =====
 --- 命令 ---
-echo ==21520是谁==
-tr '\0' ' ' < /proc/21520/cmdline 2>/dev/null; echo
-echo ==22636是谁==
-tr '\0' ' ' < /proc/22636/cmdline 2>/dev/null | head -c 150; echo
-echo ==第一次采样==
-date +%T
+echo "采样时间 $(date +%T)"
 ps -o time= -p 21520,22636 2>/dev/null
-sleep 60
-echo ==第二次采样(60秒后)==
-date +%T
-ps -o time= -p 21520,22636 2>/dev/null
-echo ==解读: 两次time差值/60s = 真实平均核数==
+echo "==稳态判定: 与22:22:30的00:04:08/00:02:51相减=="
 --- 输出 ---
-==21520是谁==
-/data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/data/misc/apexdata/com.android.art/dalvik-cache --bind=/storage/self/primary:/mnt/sdcard --bind=/storage/self/primary:/sdcard --bind=/storage/self/primary:/storage/emulated/0 --bind=/storage/self/primary:/storage/self/primary --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/product --bind=/system --bind=/system_ext --bind=/vendor --bind=/linkerconfig/ld.config.txt --bind=/linkerconfig/com.android.art/ld.config.txt --bind=/data/data/com.termux/files/usr /bin/bash -l 
-==22636是谁==
-/proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --no-sandbox --disable-dev-shm-usage 
-==第一次采样==
-22:22:30
-00:04:08
-00:02:51
-bash: line 9: syntax error near unexpected token `('
-bash: line 9: `echo ==第二次采样(60秒后)=='
+采样时间 22:28:36
+00:06:51
+00:04:42
+==稳态判定: 与22:22:30的00:04:08/00:02:51相减==
