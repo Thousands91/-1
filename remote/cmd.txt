@@ -1,11 +1,15 @@
-95
-echo "=========1.登录状态全量输出========"
-bash /root/logincheck.sh 2>&1
-echo "=========2.NapCat日志中的退出/踢线/错误关键字========"
-grep -a -i -n "kick\|踢\|logout\|offline\|下线\|踢下线\|code\":\|error_code\|Code:\|token\|失效\|过期\|被禁止\|restricted" /root/napcat.log 2>/dev/null | tail -40
-echo "=========3.NapCat日志最后80行========"
-tail -80 /root/napcat.log 2>/dev/null
-echo "=========4.日志文件清单与大小========"
-ls -lt /root/*.log /root/bot/*.log /root/bot/bot/*.log 2>/dev/null | head -10
-echo "=========5.NapCat版本与配置========"
-ls /root/Napcat/opt/QQ/resources/app/app_launcher/ 2>/dev/null; find /root/Napcat -maxdepth 4 -name "napcat*.json" 2>/dev/null | head -5
+96
+echo "=====1.崩溃次数统计====="
+grep -a -c "GPU process isn" /root/napcat-restart.log
+echo "=====2.每次崩溃前的错误类型====="
+grep -a "error_code" /root/napcat-restart.log | grep -o "error_code=[0-9]*" | sort | uniq -c | sort -rn | head
+echo "=====3.崩溃时刻（FATAL行的时间戳）====="
+grep -a "FATAL" /root/napcat-restart.log | grep -o "[0-9]\{4\}/[0-9]\{6\}" | cut -c6-7 | sort | uniq -c
+echo "=====4.当前启动命令====="
+ps aux | grep "[o]pt/QQ/qq" | head -2
+echo "=====5.Xvfb进程数====="
+ps aux | grep -c "[X]vfb"
+echo "=====6.GPU相关环境变量====="
+PID=$(pgrep -f "opt/QQ/qq" | head -1); tr "\0" "\n" < /proc/$PID/environ 2>/dev/null | grep -i -E "gpu|gl|render|display|angle" | head -10
+echo "=====7.日志里有无 踢/下线/失效 字样====="
+grep -a -c -E "踢|下线|失效|被禁止|logout" /root/napcat-restart.log
