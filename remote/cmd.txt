@@ -1,14 +1,8 @@
-116
-echo ==1.清残骸==
-kill -9 31206 6521 6537 2>/dev/null && echo 已杀logincheck残骸和旧proot
-echo ==2.全杀全启(连Xvfb一起)==
-pkill -9 -x Xvfb; pkill -9 -f "opt/QQ/[q]q"; sleep 2
-cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null &
-sleep 22
-echo ==3.验证==
-echo "Xvfb数: $(pgrep -x Xvfb | wc -l) (应为1)"
+117
+echo ==通道活着==
+echo "Xvfb数: $(pgrep -x Xvfb | wc -l)"
 pgrep -af "opt/QQ/[q]q" | head -2
-echo "GPU: $(grep -c 'GPU process' /root/napcat.log)"
-tail -3 /root/napcat.log
-echo ==4.最终CPU状态==
-top -b -n1 2>/dev/null | grep -E "Xvfb|qq|proot|bash" | head -6
+pgrep -f "bash /root/remote_ctl.sh" | head -1
+pgrep -f "bash /root/azar_guard.sh" | head -1
+pgrep -f main.py | head -1
+top -b -n1 2>/dev/null | grep -E "Xvfb|qq" | head -4
