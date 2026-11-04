@@ -1,83 +1,8 @@
-<<<task_136.txt>>>
-===== 任务136 11-04 22:28:18 =====
+<<<task_137.txt>>>
+===== 任务137 11-04 22:31:19 =====
 --- 命令 ---
-echo "== remote_ctl.sh 全文 =="; cat /root/remote_ctl.sh; echo "== 心跳条数: $(grep -c 心跳 /root/remote_ctl.log 2>/dev/null) =="; echo "== remote_ctl.log 最后30行 =="; tail -30 /root/remote_ctl.log 2>/dev/null; echo "== log 文件属性 =="; ls -l --time-style=full-iso /root/remote_ctl.log
+sed -n '75,130p' /root/remote_ctl.sh; echo "== remote_ctl.log 全文行数: $(wc -l < /root/remote_ctl.log) =="; grep -n "心跳\|19:\|20:\|21:4" /root/remote_ctl.log | tail -25; ls -l --time-style=full-iso /root/remote_ctl.log
 --- 输出 ---
-== remote_ctl.sh 全文 ==
-#!/bin/bash
-termux-wake-lock 2>/dev/null
-REPO=/root/asar-sync
-LOG=/root/remote_ctl.log
-QR=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-BASE="https://api.github.com/repos/Thousands91/-1/contents/remote"
-CMD_URL="$BASE/cmd.txt"
-OUT_URL="$BASE/out.txt"
-PBOX=/root/.remote_pending
-mkdir -p "$PBOX"
-if [ -f /root/.remote_pid ]; then
-  OP=$(cat /root/.remote_pid 2>/dev/null)
-  [ -n "$OP" ] && [ "$OP" != "$$" ] && kill -0 "$OP" 2>/dev/null && exit 0
-fi
-echo $$ > /root/.remote_pid
-get_tok() {
-  printf 'protocol=https\nhost=github.com\n\n' | timeout 10 git credential fill 2>/dev/null | sed -n 's/^password=//p' | head -1
-}
-TOK=$(get_tok)
-[ -n "$TOK" ] || TOK=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
-cd "$REPO" || exit 1
-LAST=0
-C=0
-[ -f /root/.remote_last ] && LAST=$(cat /root/.remote_last)
-
-run_task() {
-  echo "$1" > /root/.remote_last
-  LAST=$1
-  O="$PBOX/task_$1.txt"
-  { echo "===== 任务$1 $(date '+%m-%d %H:%M:%S') ====="; echo "--- 命令 ---"; tail -n +2 "$2"; echo "--- 输出 ---"; tail -n +2 "$2" | timeout 90 bash 2>&1; } > "$O"
-  cat "$O" >> "$LOG"
-}
-
-api_report() {
-  ls "$PBOX" >/dev/null 2>&1 || return 0
-  F=$(ls -A "$PBOX" 2>/dev/null); [ -n "$F" ] || return 0
-  : > /tmp/remote_bundle.txt
-  for f in $F; do echo "<<<$f>>>" >> /tmp/remote_bundle.txt; cat "$PBOX/$f" >> /tmp/remote_bundle.txt; done
-  [ -n "$TOK" ] || TOK=$(get_tok)
-  [ -n "$TOK" ] || { echo "[$(date '+%m-%d %H:%M')] report:无token,留待下轮" >> "$LOG"; return 1; }
-  SHA=$(timeout 30 curl -s -H "Authorization: token $TOK" "$OUT_URL" | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
-  B64=$(base64 -w0 /tmp/remote_bundle.txt) || return 1
-  R=$(timeout 60 curl -s -X PUT -H "Authorization: token $TOK" -d "{\"message\":\"遥控输出(API) $(date '+%m-%d %H:%M')\",\"content\":\"$B64\"${SHA:+,\"sha\":\"$SHA\"}}" "$OUT_URL")
-  if echo "$R" | grep -q '"content"'; then
-    rm -f "$PBOX"/*
-    echo "[$(date '+%m-%d %H:%M')] report:API回传成功" >> "$LOG"
-  else
-    echo "[$(date '+%m-%d %H:%M')] report:API回传失败:$(echo "$R" | head -c 120)" >> "$LOG"
-  fi
-}
-
-NAP_FUSE=/root/.napcat_pulls
-restart_napcat() {
-  NOW=$(date +%s)
-  touch "$NAP_FUSE"
-  : > /tmp/napf
-  while IFS= read -r t; do
-    [ -n "$t" ] && [ $((NOW - t)) -lt 86400 ] && echo "$t" >> /tmp/napf
-  done < "$NAP_FUSE"
-  CNT=$(wc -l < /tmp/napf)
-  if [ "$CNT" -ge 3 ]; then
-    echo "[$(date '+%m-%d %H:%M')] 保险丝熔断:NapCat 24h内已自动拉起${CNT}次,停止自动重启,需人工排查" >> "$LOG"
-    return 1
-  fi
-  echo "$NOW" >> /tmp/napf && cp /tmp/napf "$NAP_FUSE"
-  echo "[$(date '+%m-%d %H:%M')] 看护:自动拉起NapCat(24h内第$((CNT+1))次)" >> "$LOG"
-  pkill -f "opt/QQ/qq" 2>/dev/null; sleep 3
-  cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 &
-  cd "$REPO"
-}
-
-while true; do
-  [ -n "$TOK" ] || TOK=$(get_tok)
-  RAW=$(timeout 30 curl -s -H "Accept: application/vnd.github.raw" ${TOK:+-H "Authorization: token $TOK"} "$CMD_URL")
   case "$RAW" in
     [0-9]*)
       RID=$(printf '%s\n' "$RAW" | head -1 | tr -dc 0-9)
@@ -109,37 +34,30 @@ while true; do
   fi
   sleep 15
 done
-== 心跳条数: 433 ==
-== remote_ctl.log 最后30行 ==
-[11-04 21:57] report:API回传成功
-[11-04 22:00] 心跳:循环正常,LAST=133
-== 其他log身份 ==
-[8210:1104/160705.378982:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[8210:1104/160705.379095:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
-✅ 日志已推送 22:55
-[00:42:45] 二维码刷新了，已复制新的到相册，请重新识别（asar_qr.png）
-!! 10 分钟没等到登录成功。重新运行本脚本再试一轮。
-== napcat当前状态 ==
-ea54582e342a4183578a1af287ae7876d998bff2dfce203af61d92e56660171d
-c3533ea07cf25e77ae92e4af4104a260cbe0c2ca030d0fe9aa56c885c81da506
-b791f8131213b7bae1aa3a1c6cb1182caa9c2772c0abc483ab96cf8a2846e608
-[11-04 22:04] report:API回传成功
-[11-04 22:13] 心跳:循环正常,LAST=134
-===== 任务135 11-04 22:14:43 =====
---- 命令 ---
-echo "== 死亡时刻(旧日志最后活动) =="; grep -n "^11-04 2[01]:" /root/bot.log | tail -4; mv /root/bot/bot/plugins/image_search.py /root/image_search.py.bak_1104 && echo 旧版image_search已移出插件目录; BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP && echo 已杀旧bot:$BP; sleep 2; cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & sleep 8; echo "重复规则警告数: $(grep -c Duplicated /root/bot.log)"; echo "插件加载数: $(grep -c 'Succeeded to load' /root/bot.log)"; ps -eo pid,args | grep "[m]ain.py" | head -1
---- 输出 ---
-== 死亡时刻(旧日志最后活动) ==
-553:11-04 21:47:07 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
-554:11-04 21:47:07 [INFO] __main__ | ==================================================
-555:11-04 21:47:07 [INFO] uvicorn | Application startup complete.
-556:11-04 21:47:07 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-旧版image_search已移出插件目录
-已杀旧bot:18264
-重复规则警告数: 0
-插件加载数: 12
-  427 /root/bot/venv/bin/python main.py
-[11-04 22:15] report:API回传成功
-[11-04 22:25] 心跳:循环正常,LAST=135
-== log 文件属性 ==
--rw-r--r--. 1 root root 591805 2026-11-04 22:25:53.558966663 +0800 /root/remote_ctl.log
+== remote_ctl.log 全文行数: 8607 ==
+8414:11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "看景"
+8415:11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "/看景"
+8416:11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "！看景"
+8417:11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "!看景"
+8418:11-04 21:47:07 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+8419:11-04 21:47:07 [SUCCESS] nonebot | Succeeded to load plugin "image_see" from "plugins.image_see"
+8420:11-04 21:47:07 [SUCCESS] nonebot | Succeeded to load plugin "image_search_web" from "plugins.image_search_web"
+8421:11-04 21:47:07 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+8434:[11-04 22:00] 心跳:循环正常,LAST=133
+8446:[11-04 22:13] 心跳:循环正常,LAST=134
+8452:553:11-04 21:47:07 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
+8453:554:11-04 21:47:07 [INFO] __main__ | ==================================================
+8454:555:11-04 21:47:07 [INFO] uvicorn | Application startup complete.
+8455:556:11-04 21:47:07 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+8462:[11-04 22:25] 心跳:循环正常,LAST=135
+8465:echo "== remote_ctl.sh 全文 =="; cat /root/remote_ctl.sh; echo "== 心跳条数: $(grep -c 心跳 /root/remote_ctl.log 2>/dev/null) =="; echo "== remote_ctl.log 最后30行 =="; tail -30 /root/remote_ctl.log 2>/dev/null; echo "== log 文件属性 =="; ls -l --time-style=full-iso /root/remote_ctl.log
+8569:  [ $((C % 40)) -eq 0 ] && echo "[$(date '+%m-%d %H:%M')] 心跳:循环正常,LAST=$LAST" >> "$LOG"
+8573:== 心跳条数: 433 ==
+8576:[11-04 22:00] 心跳:循环正常,LAST=133
+8588:[11-04 22:13] 心跳:循环正常,LAST=134
+8594:553:11-04 21:47:07 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
+8595:554:11-04 21:47:07 [INFO] __main__ | ==================================================
+8596:555:11-04 21:47:07 [INFO] uvicorn | Application startup complete.
+8597:556:11-04 21:47:07 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+8604:[11-04 22:25] 心跳:循环正常,LAST=135
+-rw-r--r--. 1 root root 599152 2026-11-04 22:28:26.818966604 +0800 /root/remote_ctl.log
