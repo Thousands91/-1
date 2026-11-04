@@ -1,2 +1,2 @@
-138
-echo "== 今天全部心跳时间线 =="; grep -n "心跳" /root/remote_ctl.log | grep "11-04" | tail -15; echo "== 看护动作时间线 =="; grep -n "看护\|保险丝\|拉起" /root/remote_ctl.log | grep "11-04" | tail -10; echo "== 当前内存 =="; free -m | awk 'NR==2{print "可用:",$7"MB / 总量:",$2"MB"}'
+139
+echo "== 1.Ubuntu里能否直接调Termux的adb =="; /data/data/com.termux/files/usr/bin/adb version 2>&1 | head -3; echo "== 2.Ubuntu自带adb? =="; which adb; adb version 2>&1 | head -3; echo "== 3.尝试apt装adb =="; apt-get install -y adb 2>&1 | tail -2; adb version 2>&1 | head -4; echo "== 4.架构与网络 =="; uname -m; ping -c1 -W2 127.0.0.1 >/dev/null && echo 本地网络OK
