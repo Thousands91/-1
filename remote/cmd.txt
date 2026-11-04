@@ -1,2 +1,2 @@
-135
-echo "== 死亡时刻(旧日志最后活动) =="; grep -n "^11-04 2[01]:" /root/bot.log | tail -4; mv /root/bot/bot/plugins/image_search.py /root/image_search.py.bak_1104 && echo 旧版image_search已移出插件目录; BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP && echo 已杀旧bot:$BP; sleep 2; cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & sleep 8; echo "重复规则警告数: $(grep -c Duplicated /root/bot.log)"; echo "插件加载数: $(grep -c 'Succeeded to load' /root/bot.log)"; ps -eo pid,args | grep "[m]ain.py" | head -1
+136
+echo "== remote_ctl.sh 全文 =="; cat /root/remote_ctl.sh; echo "== 心跳条数: $(grep -c 心跳 /root/remote_ctl.log 2>/dev/null) =="; echo "== remote_ctl.log 最后30行 =="; tail -30 /root/remote_ctl.log 2>/dev/null; echo "== log 文件属性 =="; ls -l --time-style=full-iso /root/remote_ctl.log
