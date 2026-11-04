@@ -1,63 +1,34 @@
-<<<task_137.txt>>>
-===== 任务137 11-04 22:31:19 =====
+<<<task_138.txt>>>
+===== 任务138 11-04 22:38:55 =====
 --- 命令 ---
-sed -n '75,130p' /root/remote_ctl.sh; echo "== remote_ctl.log 全文行数: $(wc -l < /root/remote_ctl.log) =="; grep -n "心跳\|19:\|20:\|21:4" /root/remote_ctl.log | tail -25; ls -l --time-style=full-iso /root/remote_ctl.log
+echo "== 今天全部心跳时间线 =="; grep -n "心跳" /root/remote_ctl.log | grep "11-04" | tail -15; echo "== 看护动作时间线 =="; grep -n "看护\|保险丝\|拉起" /root/remote_ctl.log | grep "11-04" | tail -10; echo "== 当前内存 =="; free -m | awk 'NR==2{print "可用:",$7"MB / 总量:",$2"MB"}'
 --- 输出 ---
-  case "$RAW" in
-    [0-9]*)
-      RID=$(printf '%s\n' "$RAW" | head -1 | tr -dc 0-9)
-      if [ -n "$RID" ] && [ "$RID" -gt "$LAST" ]; then
-        printf '%s\n' "$RAW" > "/tmp/remote_cmd_$RID.txt"
-        run_task "$RID" "/tmp/remote_cmd_$RID.txt"
-        api_report
-      fi
-      ;;
-    "") echo "[$(date '+%m-%d %H:%M')] intake:API无响应" >> "$LOG" ;;
-    *) echo "[$(date '+%m-%d %H:%M')] intake:API响应异常" >> "$LOG" ;;
-  esac
-  api_report
-  C=$((C+1))
-  # 看护检查每 4 轮跑一次（约 60s），任务拉取每轮都跑（15s）——拉任务轻、看护重，分开节流
-  if [ $((C % 4)) -eq 0 ]; then
-  ST=$(bash /root/logincheck.sh 2>/dev/null | grep -c "\[未登录\]\|\[掉线\]")
-  if [ "$ST" = "1" ] && [ -f "$QR" ]; then
-    NOW=$(date +%s); MT=$(stat -c %Y "$QR" 2>/dev/null || echo "$NOW")
-    AGE=$((NOW - MT))
-    if [ "$AGE" -gt 600 ]; then
-      echo "[$(date '+%m-%d %H:%M')] 看护：未登录且码${AGE}s未刷新，尝试重启NapCat" >> "$LOG"
-      restart_napcat
-    fi
-  fi
-  pgrep -f "opt/QQ/qq" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：NapCat不在" >> "$LOG"; restart_napcat; }
-  pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & cd "$REPO"; }
-  [ $((C % 40)) -eq 0 ] && echo "[$(date '+%m-%d %H:%M')] 心跳:循环正常,LAST=$LAST" >> "$LOG"
-  fi
-  sleep 15
-done
-== remote_ctl.log 全文行数: 8607 ==
-8414:11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "看景"
-8415:11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "/看景"
-8416:11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "！看景"
-8417:11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "!看景"
-8418:11-04 21:47:07 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
-8419:11-04 21:47:07 [SUCCESS] nonebot | Succeeded to load plugin "image_see" from "plugins.image_see"
-8420:11-04 21:47:07 [SUCCESS] nonebot | Succeeded to load plugin "image_search_web" from "plugins.image_search_web"
-8421:11-04 21:47:07 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+== 今天全部心跳时间线 ==
+8312:[11-04 20:31] 心跳:循环正常,LAST=130
+8386:[11-04 22:00] 心跳:循环正常,LAST=133
 8434:[11-04 22:00] 心跳:循环正常,LAST=133
 8446:[11-04 22:13] 心跳:循环正常,LAST=134
-8452:553:11-04 21:47:07 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
-8453:554:11-04 21:47:07 [INFO] __main__ | ==================================================
-8454:555:11-04 21:47:07 [INFO] uvicorn | Application startup complete.
-8455:556:11-04 21:47:07 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 8462:[11-04 22:25] 心跳:循环正常,LAST=135
-8465:echo "== remote_ctl.sh 全文 =="; cat /root/remote_ctl.sh; echo "== 心跳条数: $(grep -c 心跳 /root/remote_ctl.log 2>/dev/null) =="; echo "== remote_ctl.log 最后30行 =="; tail -30 /root/remote_ctl.log 2>/dev/null; echo "== log 文件属性 =="; ls -l --time-style=full-iso /root/remote_ctl.log
-8569:  [ $((C % 40)) -eq 0 ] && echo "[$(date '+%m-%d %H:%M')] 心跳:循环正常,LAST=$LAST" >> "$LOG"
-8573:== 心跳条数: 433 ==
 8576:[11-04 22:00] 心跳:循环正常,LAST=133
 8588:[11-04 22:13] 心跳:循环正常,LAST=134
-8594:553:11-04 21:47:07 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
-8595:554:11-04 21:47:07 [INFO] __main__ | ==================================================
-8596:555:11-04 21:47:07 [INFO] uvicorn | Application startup complete.
-8597:556:11-04 21:47:07 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 8604:[11-04 22:25] 心跳:循环正常,LAST=135
--rw-r--r--. 1 root root 599152 2026-11-04 22:28:26.818966604 +0800 /root/remote_ctl.log
+8652:8434:[11-04 22:00] 心跳:循环正常,LAST=133
+8653:8446:[11-04 22:13] 心跳:循环正常,LAST=134
+8658:8462:[11-04 22:25] 心跳:循环正常,LAST=135
+8662:8576:[11-04 22:00] 心跳:循环正常,LAST=133
+8663:8588:[11-04 22:13] 心跳:循环正常,LAST=134
+8668:8604:[11-04 22:25] 心跳:循环正常,LAST=135
+8671:[11-04 22:38] 心跳:循环正常,LAST=137
+== 看护动作时间线 ==
+8184:[11-04 11:36] 看护：未登录且码4134s未刷新，尝试重启NapCat
+8185:[11-04 11:36] 保险丝熔断:NapCat 24h内已自动拉起3次,停止自动重启,需人工排查
+8186:[11-04 11:37] 看护：未登录且码4200s未刷新，尝试重启NapCat
+8187:[11-04 11:37] 保险丝熔断:NapCat 24h内已自动拉起3次,停止自动重启,需人工排查
+8189:[11-04 11:38] 看护：未登录且码4267s未刷新，尝试重启NapCat
+8190:[11-04 11:38] 保险丝熔断:NapCat 24h内已自动拉起3次,停止自动重启,需人工排查
+8191:[11-04 11:39] 看护：未登录且码4334s未刷新，尝试重启NapCat
+8192:[11-04 11:39] 保险丝熔断:NapCat 24h内已自动拉起3次,停止自动重启,需人工排查
+8193:[11-04 11:40] 看护：未登录且码4399s未刷新，尝试重启NapCat
+8194:[11-04 11:40] 保险丝熔断:NapCat 24h内已自动拉起3次,停止自动重启,需人工排查
+== 当前内存 ==
+可用: 2084MB / 总量: 11296MB
