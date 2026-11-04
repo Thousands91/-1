@@ -1,2 +1,2 @@
-133
-echo "== 全部 connected/启动 记录 =="; grep -n "connected\|启动成功\|Running\|Uvicorn running" /root/bot.log; echo "== 死亡前最后10行 =="; N=$(wc -l < /root/bot.log); sed -n "$((N-13)),$((N-4))p" /root/bot.log; echo "== 当前 main.py 数: $(pgrep -c -f main.py) =="; ls /root/*.log 2>/dev/null; echo "== napcat.log 头部(重启时间) =="; head -3 /root/napcat.log 2>/dev/null | grep -o "^[^\[]*" | head -2
+134
+echo "== bot.log 500-545行(死亡前活动) =="; sed -n '500,545p' /root/bot.log | tail -30; echo "== remote_ctl.log 尾部 =="; tail -12 /root/remote_ctl.log 2>/dev/null; echo "== 其他log身份 =="; tail -2 /root/napcat-restart.log 2>/dev/null; tail -2 /root/asar_sync.log 2>/dev/null; tail -2 /root/azar_login_run.log 2>/dev/null; echo "== napcat当前状态 =="; tail -3 /root/napcat.log 2>/dev/null | cut -c1-120
