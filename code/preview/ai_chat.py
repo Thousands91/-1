@@ -51,6 +51,17 @@ _TRIGGER_WINDOW = 600
 
 _RE_REPLY = __import__("re").compile(r"\[CQ:reply,id=(\d+)\]")
 
+# ===== 游戏出手整句不进聊天 =====
+# games 的猜数/谜语监听是 block=False（不拦消息），AI 不主动让路就会
+# 一条消息两头回：游戏回一条、AI 又回一条（2026-11-04 实锤）。
+# 整句锚定防误伤："猜 82"排除，"我猜他明天来""答案是什么"照常聊。
+_GAME_MSG_RE = re.compile(
+    r"^\s*(掷骰|骰子|掷骰子|决斗|猜数字|猜数|谜语|出谜|猜谜|说书"
+    r"|猜\s*[0-9一二两三四五六七八九十百零]+\s*"
+    r"|不玩了|不猜了|认输|放弃|揭晓|提示|给点提示|提示一下"
+    r"|答(?!案).{0,16})\s*$"
+)
+
 ENABLE = os.getenv("ENABLE_AI_CHAT", "true").lower() == "true"
 API_KEY = os.getenv("OPENAI_API_KEY", "")
 BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.siliconflow.cn/v1")
@@ -480,6 +491,9 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
         return
 
     text = _extract_text(event)  # 含表情标记
+    # 游戏出手整句：让路给 games 插件，AI 不插嘴
+    if _GAME_MSG_RE.fullmatch(text.strip()):
+        return
     # 同一句话 60 秒内只回一次（防手滑连发/风控重发导致复读）
     import time as _time
     _dupkey = (getattr(event, "group_id", 0), event.user_id, text)
