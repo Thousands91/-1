@@ -1,2 +1,2 @@
-130
-ps -eo pid,lstart,args | grep "[o]pt/QQ/qq" | head -2; bash /root/logincheck.sh 2>&1 | head -2; ls -l --time-style=full-iso /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null | awk '{print "二维码文件最后生成时间:", $6, $7}'
+131
+echo "== main.py 进程数 =="; ps -eo pid,args | grep "[m]ain.py" | grep -v grep; echo "== 数量: $(ps -eo args | grep -c '[m]ain.py')"; echo "== NapCat WS 连接 =="; ss -tnp 2>/dev/null | grep -E "8080|8081|3000|3001" | head -6; echo "== 登录态 =="; bash /root/logincheck.sh 2>&1 | head -2
