@@ -1,2 +1,2 @@
-136
-echo "== remote_ctl.sh 全文 =="; cat /root/remote_ctl.sh; echo "== 心跳条数: $(grep -c 心跳 /root/remote_ctl.log 2>/dev/null) =="; echo "== remote_ctl.log 最后30行 =="; tail -30 /root/remote_ctl.log 2>/dev/null; echo "== log 文件属性 =="; ls -l --time-style=full-iso /root/remote_ctl.log
+137
+sed -n '75,130p' /root/remote_ctl.sh; echo "== remote_ctl.log 全文行数: $(wc -l < /root/remote_ctl.log) =="; grep -n "心跳\|19:\|20:\|21:4" /root/remote_ctl.log | tail -25; ls -l --time-style=full-iso /root/remote_ctl.log
