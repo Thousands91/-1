@@ -1,7 +1,11 @@
-<<<task_125.txt>>>
-===== 任务125 11-03 23:01:04 =====
+<<<task_126.txt>>>
+===== 任务126 11-04 16:17:07 =====
 --- 命令 ---
-ls -la /root/bot/bot/data/gutenberg_zh.json 2>/dev/null && python3 -c "import json; d=json.load(open('/root/bot/bot/data/gutenberg_zh.json')); print('古籍目录条数:', len(d))"
+bash /root/logincheck.sh 2>&1 | head -2; pgrep -f remote_ctl.sh >/dev/null && echo 遥控循环:在跑 || echo 遥控循环:没起; pgrep -f "opt/QQ/[q]q" >/dev/null && echo NapCat:在跑 || echo NapCat:没跑; pgrep -f main.py >/dev/null && echo bot:在跑 || echo bot:没跑; free -m | awk 'NR==2{print "内存可用:", $7"MB"}'
 --- 输出 ---
--rw-r--r--. 1 root root 25369 Oct 23 09:07 /root/bot/bot/data/gutenberg_zh.json
-古籍目录条数: 408
+=== 登录状态（权威判定）===
+[在线] 已登录，一切正常
+遥控循环:在跑
+NapCat:在跑
+bot:在跑
+内存可用: 1912MB
