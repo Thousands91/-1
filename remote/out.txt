@@ -1,27 +1,40 @@
-<<<task_133.txt>>>
-===== 任务133 11-04 21:57:10 =====
+<<<task_134.txt>>>
+===== 任务134 11-04 22:04:38 =====
 --- 命令 ---
-echo "== 全部 connected/启动 记录 =="; grep -n "connected\|启动成功\|Running\|Uvicorn running" /root/bot.log; echo "== 死亡前最后10行 =="; N=$(wc -l < /root/bot.log); sed -n "$((N-13)),$((N-4))p" /root/bot.log; echo "== 当前 main.py 数: $(pgrep -c -f main.py) =="; ls /root/*.log 2>/dev/null; echo "== napcat.log 头部(重启时间) =="; head -3 /root/napcat.log 2>/dev/null | grep -o "^[^\[]*" | head -2
+echo "== bot.log 500-545行(死亡前活动) =="; sed -n '500,545p' /root/bot.log | tail -30; echo "== remote_ctl.log 尾部 =="; tail -12 /root/remote_ctl.log 2>/dev/null; echo "== 其他log身份 =="; tail -2 /root/napcat-restart.log 2>/dev/null; tail -2 /root/asar_sync.log 2>/dev/null; tail -2 /root/azar_login_run.log 2>/dev/null; echo "== napcat当前状态 =="; tail -3 /root/napcat.log 2>/dev/null | cut -c1-120
 --- 输出 ---
-== 全部 connected/启动 记录 ==
-48:11-04 19:20:43 [SUCCESS] nonebot | Running NoneBot...
-53:11-04 19:20:44 [INFO] __main__ | QQ 群机器人启动成功 ✅
-58:11-04 19:20:44 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-61:11-04 19:20:46 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
-546:11-04 21:47:07 [SUCCESS] nonebot | Running NoneBot...
-551:11-04 21:47:07 [INFO] __main__ | QQ 群机器人启动成功 ✅
-556:11-04 21:47:07 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-== 死亡前最后10行 ==
+== bot.log 500-545行(死亡前活动) ==
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "！整点涩图"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "!整点涩图"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "色图"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "/色图"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "！色图"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "!色图"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "摄影"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "/摄影"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "！摄影"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "!摄影"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "看风景"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "/看风景"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "！看风景"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "!看风景"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "风景"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "/风景"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "！风景"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "!风景"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "来点风景"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "/来点风景"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "！来点风景"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "!来点风景"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "看景"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "/看景"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "！看景"
+11-04 21:47:07 [WARNING] nonebot | Duplicated prefix rule "!看景"
+11-04 21:47:07 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
 11-04 21:47:07 [SUCCESS] nonebot | Succeeded to load plugin "image_see" from "plugins.image_see"
 11-04 21:47:07 [SUCCESS] nonebot | Succeeded to load plugin "image_search_web" from "plugins.image_search_web"
 11-04 21:47:07 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-04 21:47:07 [SUCCESS] nonebot | Running NoneBot...
-11-04 21:47:07 [SUCCESS] nonebot | Loaded adapters: OneBot V11
-11-04 21:47:07 [INFO] uvicorn | Started server process [18264]
-11-04 21:47:07 [INFO] uvicorn | Waiting for application startup.
-11-04 21:47:07 [INFO] __main__ | ==================================================
-11-04 21:47:07 [INFO] __main__ | QQ 群机器人启动成功 ✅
-11-04 21:47:07 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
+== remote_ctl.log 尾部 ==
 == 当前 main.py 数: 1 ==
 /root/asar_sync.log
 /root/azar_login_run.log
@@ -32,3 +45,15 @@ echo "== 全部 connected/启动 记录 =="; grep -n "connected\|启动成功\|R
 /root/remote_ctl.log
 == napcat.log 头部(重启时间) ==
 not mini app. 
+[11-04 21:57] report:API回传成功
+[11-04 22:00] 心跳:循环正常,LAST=133
+== 其他log身份 ==
+[8210:1104/160705.378982:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[8210:1104/160705.379095:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+✅ 日志已推送 22:55
+[00:42:45] 二维码刷新了，已复制新的到相册，请重新识别（asar_qr.png）
+!! 10 分钟没等到登录成功。重新运行本脚本再试一轮。
+== napcat当前状态 ==
+ea54582e342a4183578a1af287ae7876d998bff2dfce203af61d92e56660171d
+c3533ea07cf25e77ae92e4af4104a260cbe0c2ca030d0fe9aa56c885c81da506
+b791f8131213b7bae1aa3a1c6cb1182caa9c2772c0abc483ab96cf8a2846e608
