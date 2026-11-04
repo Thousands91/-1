@@ -1,12 +1,27 @@
-<<<task_131.txt>>>
-===== 任务131 11-04 20:39:43 =====
+<<<task_132.txt>>>
+===== 任务132 11-04 21:49:09 =====
 --- 命令 ---
-echo "== main.py 进程数 =="; ps -eo pid,args | grep "[m]ain.py" | grep -v grep; echo "== 数量: $(ps -eo args | grep -c '[m]ain.py')"; echo "== NapCat WS 连接 =="; ss -tnp 2>/dev/null | grep -E "8080|8081|3000|3001" | head -6; echo "== 登录态 =="; bash /root/logincheck.sh 2>&1 | head -2
+echo "== 进程盘点 =="; ps -eo pid,args | grep -E "[m]ain.py|[r]emote_ctl|[a]zar_guard" ; echo "qq数:$(pgrep -c -f 'opt/QQ/[q]q') Xvfb数:$(pgrep -c -x Xvfb)"; echo "== 登录 =="; bash /root/logincheck.sh 2>&1 | head -2; echo "== bot.log 今天的启动记录 =="; grep -n "start\|启动\|成功连接\|Bot.*connected\|loaded" /root/bot.log 2>/dev/null | tail -12; echo "== guard.log 尾部 =="; tail -15 /root/guard.log 2>/dev/null; echo "== 文件时间 =="; ls -l --time-style=full-iso /root/bot.log /root/guard.log 2>/dev/null | awk '{print $6, $7, $9}'; echo "== 死亡窗口日志 =="; grep -h "21:[0-5]" /root/guard.log 2>/dev/null | tail -5; dmesg 2>/dev/null | tail -5 | head -5
 --- 输出 ---
-== main.py 进程数 ==
- 5263 /root/bot/venv/bin/python main.py
-== 数量: 1
-== NapCat WS 连接 ==
-== 登录态 ==
+== 进程盘点 ==
+18264 /root/bot/venv/bin/python main.py
+18521 bash /root/remote_ctl.sh
+18845 bash /root/azar_guard.sh
+qq数:5 Xvfb数:1
+== 登录 ==
 === 登录状态（权威判定）===
-[在线] 已登录，一切正常
+[未登录] 当前没有有效会话
+== bot.log 今天的启动记录 ==
+51:11-04 19:20:44 [INFO] uvicorn | Waiting for application startup.
+53:11-04 19:20:44 [INFO] __main__ | QQ 群机器人启动成功 ✅
+57:11-04 19:20:44 [INFO] uvicorn | Application startup complete.
+61:11-04 19:20:46 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+549:11-04 21:47:07 [INFO] uvicorn | Waiting for application startup.
+551:11-04 21:47:07 [INFO] __main__ | QQ 群机器人启动成功 ✅
+555:11-04 21:47:07 [INFO] uvicorn | Application startup complete.
+== guard.log 尾部 ==
+nohup: ignoring input
+== 文件时间 ==
+2026-11-04 21:47:07.886967550 /root/bot.log
+2026-11-04 21:47:18.202967546 /root/guard.log
+== 死亡窗口日志 ==
