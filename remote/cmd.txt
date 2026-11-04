@@ -1,2 +1,2 @@
-129
-cd /root/bot/bot/plugins && T=$(grep -oE "ghp_[A-Za-z0-9]+" /root/.git-credentials | head -1) && curl -sL -H "Authorization: token $T" "https://raw.githubusercontent.com/Thousands91/-1/main/code/preview/ai_chat.py" -o ai_chat.py && md5sum ai_chat.py; BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP && echo 已杀旧bot:$BP; sleep 2; cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & sleep 8; ps -eo pid,args | grep "[m]ain.py" | grep -v grep | head -1; grep -cE "Failed|ERROR" /root/bot.log; tail -2 /root/bot.log
+130
+ps -eo pid,lstart,args | grep "[o]pt/QQ/qq" | head -2; bash /root/logincheck.sh 2>&1 | head -2; ls -l --time-style=full-iso /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null | awk '{print "二维码文件最后生成时间:", $6, $7}'
