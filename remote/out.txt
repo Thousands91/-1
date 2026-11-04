@@ -1,16 +1,22 @@
-<<<task_127.txt>>>
-===== 任务127 11-04 16:24:39 =====
+<<<task_128.txt>>>
+===== 任务128 11-04 16:30:43 =====
 --- 命令 ---
-cd /root/bot/bot/plugins && T=$(grep -oE "ghp_[A-Za-z0-9]+" /root/.git-credentials | head -1) && for f in ai_chat.py image_see.py image_search_multisource.py; do curl -sL -H "Authorization: token $T" "https://raw.githubusercontent.com/Thousands91/-1/main/code/preview/$f" -o "$f"; done; for f in keyword_reply.py games.py; do curl -sL -H "Authorization: token $T" "https://raw.githubusercontent.com/Thousands91/-1/main/code/plugins/$f" -o "$f"; done; md5sum ai_chat.py image_see.py image_search_multisource.py keyword_reply.py games.py; BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP && echo 已杀旧bot:$BP; sleep 2; cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & sleep 8; ps -eo pid,args | grep "[m]ain.py" | grep -v grep | head -2; tail -4 /root/bot.log
+grep -E "Succeeded to load|Failed to load|ERROR" /root/bot.log | tail -20; echo ---; bash /root/logincheck.sh 2>&1 | head -2; free -m | awk 'NR==2{print "内存可用:", $7"MB"}'
 --- 输出 ---
-fd445b5722f93fd37778992b6f23b892  ai_chat.py
-730d6e432958814b2b9123bbbd85fff7  image_see.py
-fd0fe27578274790a5cd7e50655a1c7c  image_search_multisource.py
-cff3795ab97fcbe903e581a8a71afad7  keyword_reply.py
-ca96803f2706672c82095d2772467558  games.py
-已杀旧bot:24950
- 1286 /root/bot/venv/bin/python main.py
-11-04 16:24:56 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
-11-04 16:24:56 [INFO] __main__ | ==================================================
-11-04 16:24:56 [INFO] uvicorn | Application startup complete.
-11-04 16:24:56 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+11-04 16:24:54 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
+11-04 16:24:54 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+11-04 16:24:55 [SUCCESS] nonebot | Succeeded to load plugin "image_search_web" from "plugins.image_search_web"
+11-04 16:24:55 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+11-04 16:24:55 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
+11-04 16:24:55 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
+11-04 16:24:55 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
+11-04 16:24:55 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+11-04 16:24:55 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
+11-04 16:24:55 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-04 16:24:55 [SUCCESS] nonebot | Succeeded to load plugin "image_search" from "plugins.image_search"
+11-04 16:24:55 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+11-04 16:24:55 [SUCCESS] nonebot | Succeeded to load plugin "image_see" from "plugins.image_see"
+---
+=== 登录状态（权威判定）===
+[在线] 已登录，一切正常
+内存可用: 2317MB
