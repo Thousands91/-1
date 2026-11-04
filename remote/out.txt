@@ -1,24 +1,28 @@
-<<<task_139.txt>>>
-===== 任务139 11-05 00:14:53 =====
+<<<task_140.txt>>>
+===== 任务140 11-05 00:17:51 =====
 --- 命令 ---
-echo "== 1.Ubuntu里能否直接调Termux的adb =="; /data/data/com.termux/files/usr/bin/adb version 2>&1 | head -3; echo "== 2.Ubuntu自带adb? =="; which adb; adb version 2>&1 | head -3; echo "== 3.尝试apt装adb =="; apt-get install -y adb 2>&1 | tail -2; adb version 2>&1 | head -4; echo "== 4.架构与网络 =="; uname -m; ping -c1 -W2 127.0.0.1 >/dev/null && echo 本地网络OK
+T=$(grep -oE "ghp_[A-Za-z0-9]+" /root/.git-credentials | head -1)
+ADB=/data/data/com.termux/files/usr/bin/adb
+$ADB start-server >/dev/null 2>&1
+OK=0
+for i in 1 2 3 4 5 6 7 8; do
+  PIN=$(curl -sL -H "Authorization: token $T" "https://raw.githubusercontent.com/Thousands91/-1/main/remote/pin.txt" | tr -d '\r\n')
+  if [ -n "$PIN" ]; then
+    ADDR=${PIN%% *}; CODE=${PIN##* }
+    echo "配对信息到货: $ADDR (码${#CODE}位)"
+    if echo "$CODE" | $ADB pair "$ADDR" 2>&1; then OK=1; break; fi
+  fi
+  sleep 4
+done
+echo "== 配对结果 OK=$OK =="
+echo "== mdns服务发现 =="
+$ADB mdns services 2>&1 | head -6
+CPORT=$($ADB mdns services 2>/dev/null | grep "_adb-tls-connect" | grep -oE ":[0-9]+" | head -1 | tr -d ':')
+if [ -n "$CPORT" ]; then echo "发现连接端口$CPORT,尝试直连"; $ADB connect 192.168.31.28:$CPORT 2>&1; fi
+$ADB devices
 --- 输出 ---
-== 1.Ubuntu里能否直接调Termux的adb ==
-Android Debug Bridge version 1.0.41
-Version 37.0.0p1-android-tools
-Installed as /data/data/com.termux/files/usr/bin/adb
-== 2.Ubuntu自带adb? ==
-/data/data/com.termux/files/usr/bin/adb
-Android Debug Bridge version 1.0.41
-Version 37.0.0p1-android-tools
-Installed as /data/data/com.termux/files/usr/bin/adb
-== 3.尝试apt装adb ==
-Setting up adb (1:34.0.4-1build3) ...
-Processing triggers for libc-bin (2.39-0ubuntu8.9) ...
-Android Debug Bridge version 1.0.41
-Version 34.0.4-debian
-Installed as /usr/lib/android-sdk/platform-tools/adb
-Running on Linux 6.17.0-PRoot-Distro (aarch64)
-== 4.架构与网络 ==
-aarch64
-本地网络OK
+== 配对结果 OK=0 ==
+== mdns服务发现 ==
+adb: mdns is not supported by this version of adb.
+List of devices attached
+
