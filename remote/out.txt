@@ -1,20 +1,13 @@
-<<<task_143.txt>>>
-===== 任务143 11-05 21:18:11 =====
+<<<task_144.txt>>>
+===== 任务144 11-05 21:22:04 =====
 --- 命令 ---
-curl -s -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/qq-bot/contents/bot/plugins/ai_chat.py" -o /root/bot/bot/plugins/ai_chat.py
-wc -c /root/bot/bot/plugins/ai_chat.py
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo 语法OK
-BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
-sleep 2
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
-sleep 30
-grep -iE "表情动态层" /root/bot.log | tail -2
-ls -la /root/bot/bot/data/qface_index.json 2>&1
-grep -c "SUCCESS" /root/bot.log
-grep -iE "Duplicated|Traceback" /root/bot.log | head -3
+bash /root/logincheck.sh 2>/dev/null | tail -2
+pgrep -fc main.py
+sleep 5; tail -3 /root/bot.log
 --- 输出 ---
-66349 /root/bot/bot/plugins/ai_chat.py
-语法OK
-11-05 21:18:23 [INFO] ai_chat | [表情动态层] 已加载 QFace 全量表 372 条（来源 koishi.js.org）
--rw-r--r--. 1 root root 6807 Nov  5 21:18 /root/bot/bot/data/qface_index.json
-16
+阶段: ready
+最近错误: 无
+1
+11-05 21:19:31 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-05 21:19:31 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=594)
+11-05 21:19:31 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=594) running complete
