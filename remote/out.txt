@@ -1,60 +1,27 @@
-<<<task_179.txt>>>
-===== 任务179 11-06 07:32:45 =====
+<<<task_180.txt>>>
+===== 任务180 11-06 07:37:27 =====
 --- 命令 ---
-ls /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/ 2>/dev/null
-echo "==logger类配置=="
-for f in /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/*.json; do echo "-- $f"; head -c 400 "$f"; echo ""; done 2>/dev/null | head -30
-echo "==termux-wake-lock=="
-which termux-wake-lock termux-wifi-connectioninfo 2>/dev/null || echo 无termux工具
-command -v ping && ping -c 1 -W 2 223.5.5.5 | tail -2
-echo "==电池温度=="
-cat /sys/class/power_supply/battery/capacity /sys/class/power_supply/battery/temp 2>/dev/null
-echo "==uptime负载=="
-uptime
+curl -s --retry 3 --retry-delay 2 --max-time 50 -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/-1/contents/code/netmon.sh" -o /root/netmon.sh
+curl -s --retry 3 --retry-delay 2 --max-time 50 -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/-1/contents/code/offline_watch.sh" -o /root/offline_watch.sh
+bash -n /root/netmon.sh && bash -n /root/offline_watch.sh && echo 两脚本语法OK
+chmod +x /root/netmon.sh /root/offline_watch.sh
+pgrep -f "netmon.sh" >/dev/null || setsid nohup bash /root/netmon.sh > /dev/null 2>&1 &
+pgrep -f "offline_watch.sh" >/dev/null || setsid nohup bash /root/offline_watch.sh > /dev/null 2>&1 &
+sleep 3
+pgrep -f "netmon.sh" >/dev/null && echo netmon在跑
+pgrep -f "offline_watch.sh" >/dev/null && echo offline_watch在跑
+PY=/root/bot/venv/bin/python3
+$PY - <<'PYEOF'
+import json
+P='/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json'
+import shutil; shutil.copy(P, P+'.bak_1106')
+d=json.load(open(P))
+d['fileLog']=True
+json.dump(d, open(P,'w'), ensure_ascii=False, indent=2)
+print('fileLog已开:', d['fileLog'])
+PYEOF
 --- 输出 ---
-napcat.json
-napcat_3427943187.json
-napcat_protocol_3427943187.json
-onebot11_3427943187.json
-passkey.json
-webui.json
-==logger类配置==
--- /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json
-{
-  "fileLog": false,
-  "consoleLog": true,
-  "fileLogLevel": "debug",
-  "consoleLogLevel": "info",
-  "packetBackend": "auto",
-  "packetServer": "",
-  "o3HookMode": 1,
-  "bypass": {
-    "hook": false,
-    "window": false,
-    "module": false,
-    "process": false,
-    "container": false,
-    "js": false
-  }
-}
--- /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json
-{
-  "fileLog": false,
-  "consoleLog": true,
-  "fileLogLevel": "debug",
-  "consoleLogLevel": "info",
-  "packetBackend": "auto",
-  "packetServer": "",
-  "o3HookMode": 1,
-  "bypass": {
-    "hook": false,
-    "window": false,
-==termux-wake-lock==
-/data/data/com.termux/files/usr/bin/termux-wake-lock
-无termux工具
-/data/data/com.termux/files/usr/bin/ping
-1 packets transmitted, 1 received, 0% packet loss, time 0ms
-rtt min/avg/max/mdev = 32.496/32.496/32.496/0.000 ms
-==电池温度==
-==uptime负载==
- 07:32:46 up 2 min,  0 user,  load average: 0.12, 0.07, 0.02
+两脚本语法OK
+netmon在跑
+offline_watch在跑
+fileLog已开: True
