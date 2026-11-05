@@ -1,11 +1,20 @@
-179
-ls /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/ 2>/dev/null
-echo "==logger类配置=="
-for f in /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/*.json; do echo "-- $f"; head -c 400 "$f"; echo ""; done 2>/dev/null | head -30
-echo "==termux-wake-lock=="
-which termux-wake-lock termux-wifi-connectioninfo 2>/dev/null || echo 无termux工具
-command -v ping && ping -c 1 -W 2 223.5.5.5 | tail -2
-echo "==电池温度=="
-cat /sys/class/power_supply/battery/capacity /sys/class/power_supply/battery/temp 2>/dev/null
-echo "==uptime负载=="
-uptime
+180
+curl -s --retry 3 --retry-delay 2 --max-time 50 -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/-1/contents/code/netmon.sh" -o /root/netmon.sh
+curl -s --retry 3 --retry-delay 2 --max-time 50 -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/-1/contents/code/offline_watch.sh" -o /root/offline_watch.sh
+bash -n /root/netmon.sh && bash -n /root/offline_watch.sh && echo 两脚本语法OK
+chmod +x /root/netmon.sh /root/offline_watch.sh
+pgrep -f "netmon.sh" >/dev/null || setsid nohup bash /root/netmon.sh > /dev/null 2>&1 &
+pgrep -f "offline_watch.sh" >/dev/null || setsid nohup bash /root/offline_watch.sh > /dev/null 2>&1 &
+sleep 3
+pgrep -f "netmon.sh" >/dev/null && echo netmon在跑
+pgrep -f "offline_watch.sh" >/dev/null && echo offline_watch在跑
+PY=/root/bot/venv/bin/python3
+$PY - <<'PYEOF'
+import json
+P='/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json'
+import shutil; shutil.copy(P, P+'.bak_1106')
+d=json.load(open(P))
+d['fileLog']=True
+json.dump(d, open(P,'w'), ensure_ascii=False, indent=2)
+print('fileLog已开:', d['fileLog'])
+PYEOF
