@@ -1,29 +1,58 @@
-<<<task_164.txt>>>
-===== 任务164 11-06 00:03:27 =====
+<<<task_165.txt>>>
+===== 任务165 11-06 00:06:26 =====
 --- 命令 ---
-echo ===谁在写restart.log===
-ps -eo pid,ppid,etime,args | grep -E "[n]apcat|[r]estart" | head -8
-grep -n "napcat-restart" /root/remote_ctl.sh | head -5
-echo ===循环脚本内容===
-grep -B2 -A8 "napcat-restart" /root/remote_ctl.sh | head -25
-echo ===restart.log尾部(找二维码)===
-tail -c 4000 /root/napcat-restart.log | tail -30
-echo ===磁盘===
 df -h /root | tail -1
+ls -lh /root/napcat-restart.log
+echo "==restart.log尾部=="
+tail -c 3000 /root/napcat-restart.log | tail -25
+echo "==napcat.log(旧)尾部=="
+tail -8 /root/napcat.log
+echo "==循环判断=="
+grep -n "watchdog\|看护\|CNT" /root/remote_ctl.sh | head -8
 --- 输出 ---
-===谁在写restart.log===
-68:  cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 &
-===循环脚本内容===
-  echo "[$(date '+%m-%d %H:%M')] 看护:自动拉起NapCat(24h内第$((CNT+1))次)" >> "$LOG"
-  pkill -f "opt/QQ/qq" 2>/dev/null; sleep 3
-  cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 &
-  cd "$REPO"
-}
-
-while true; do
-  [ -n "$TOK" ] || TOK=$(get_tok)
-  RAW=$(timeout 30 curl -s -H "Accept: application/vnd.github.raw" ${TOK:+-H "Authorization: token $TOK"} "$CMD_URL")
-  case "$RAW" in
-    [0-9]*)
-bash: line 6: syntax error near unexpected token `('
-bash: line 6: `echo ===restart.log尾部(找二维码)==='
+/dev/block/dm-25  222G  221G  1.5G 100% /
+-rw-r--r--. 1 root root 7.4G Nov  6 00:06 /root/napcat-restart.log
+==restart.log尾部==
+cc2dc96c1e5a3817a6ec83239e36c2a5b95f34301a18ea1a2ba56501fcf3c33b
+15d582841ed3928b15a1e30e849837bc22ef3ff41634ded515f5a7aaa08f4578
+a02ee66801045a9adf023c77dfe8f52c22fe27dc380172069359612bb47faceb
+941b3265aa5ae1d450db615c60229b43a783abb96740ab12e664a05f64df2f76
+c60d09d8e016d5329fc4e872be647c3808c920233f04985823122132d2a35ec2
+823aded9c11acc1b942cd4fded42b89bab93c12042e946fb724976e1b34a1556
+8db9740c7a446fff80d62533004e8e5dc43f379830ac493cdd84fbe7e25876c8
+72219c5be9b0ff4b2d4416f4350d5b4023fdb26335d5c7bacbef6d4bfd5cd598
+5158afc197f6d351e24edaa31bd00e1d310e3c1e5ae4e6a6e47f05022632d729
+4175461a29066b60f7474c6b5fc23fb7335e622d5e517af1bfbe8d32427d1569
+3b9f73f9d5921bcad7db7bf7d7c22d7cde2de86b8b86c4fbf2fb6568a03a3b1c
+d7fa474168cca147db57a98d0477cd4ac18e0e11c8fd3d5a538838cc94292f34
+3a0ea1426846e3bd17e4521b590111d08b1b3a07819a0ee413d92a8a00d2cc89
+9645d17f2e9bf219572a0e46f6a6697fd4dc2740f99310794274b02796c240bc
+f539c4cf88e230d17916f070a4a5ffd5a028cb378c1d66b688b22f9b2427613b
+28b3086ebb863cd558b2b3730a3ccd52a6fdd745755a6f33de5ca64783d574cd
+dc0557611057857632e5615d546a1e2bbc2bf131a5a9426b1c92dab6203c5f64
+ff94cc33efa929424b1744d243b4a9e926d4dcf38204639559932ac3ce99c827
+e53178be0d0e8ebd4cde363ddbb74d1f2f62cdbeb70c955cf18ba7acfbfc516a
+10a40b6db8e52cc510da7b7ed88e105682f8c0488a256e4f3f76208b4b020238
+1ffa3e799474e7d0055ba8081194698debc5e06d04b198d9b0cdad5d3f698e55
+b882d51d5152457e07247e094978e2b3740cd6f6b56c12ed82d1aec03d81ec3a
+0422935e96cce62b455c159b9c9865401468c85e44644139d29cca367944373e
+18b5f322c8b14d7ab59b5e0d457021d4bb28a8d4b4b19dc458ce36f097da1f1a
+cdba7067174dcb3f6413d704a26add55652cb0773e1111e85f4dd0a085191766
+==napcat.log(旧)尾部==
+fc190263dff61f22ff56dec0b7b7ec307bd3b77c0168f6033e6f61cda45e9bb0
+[I] <MMKV_IO.cpp:516::writeActualSize> [nt_mmkv_united_config_no_login_v3] increase sequence to 100, crc 3972421044, actualSize 1440
+[I] <MMKV.cpp:1178::sync> MMKV::sync, SyncFlag = 1
+[15870:1105/234155.062671:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
+[15870:1105/234155.154579:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[15870:1105/234155.160974:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[15870:1105/234155.177510:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[15870:1105/234155.177611:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+==循环判断==
+60:  CNT=$(wc -l < /tmp/napf)
+61:  if [ "$CNT" -ge 3 ]; then
+62:    echo "[$(date '+%m-%d %H:%M')] 保险丝熔断:NapCat 24h内已自动拉起${CNT}次,停止自动重启,需人工排查" >> "$LOG"
+66:  echo "[$(date '+%m-%d %H:%M')] 看护:自动拉起NapCat(24h内第$((CNT+1))次)" >> "$LOG"
+89:  # 看护检查每 4 轮跑一次（约 60s），任务拉取每轮都跑（15s）——拉任务轻、看护重，分开节流
+96:      echo "[$(date '+%m-%d %H:%M')] 看护：未登录且码${AGE}s未刷新，尝试重启NapCat" >> "$LOG"
+100:  pgrep -f "opt/QQ/qq" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：NapCat不在" >> "$LOG"; restart_napcat; }
+101:  pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & cd "$REPO"; }
