@@ -1,13 +1,54 @@
-<<<task_162.txt>>>
-===== 任务162 11-05 23:54:57 =====
+<<<task_163.txt>>>
+===== 任务163 11-05 23:59:11 =====
 --- 命令 ---
-find /root/Napcat -name "*.log" -mmin -30 2>/dev/null | head -5
-echo ===最近日志===
-LOG=$(find /root/Napcat -name "*.log" -mmin -30 2>/dev/null | head -1)
-[ -n "$LOG" ] && tail -25 "$LOG"
-echo ===napcat目录日志===
-ls -lt /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/logs/ 2>/dev/null | head -4
+ps -o pid,ppid,args -p 8016 2>/dev/null
+PP=$(ps -o ppid= -p 8016 2>/dev/null | tr -d ' '); ps -o pid,ppid,args -p $PP 2>/dev/null
+ls -lt /root/*.log /root/*.out 2>/dev/null | head -6
+echo ===找napcat输出===
+tail -30 /root/napcat.log 2>/dev/null || tail -30 /root/Napcat/napcat.log 2>/dev/null || echo 未找到
+grep -rl "二维码\|qrcode\|QrCode" /root/*.log 2>/dev/null | head -3
 --- 输出 ---
-===最近日志===
-===napcat目录日志===
-total 0
+  PID  PPID COMMAND
+ 8016  8013 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+  PID  PPID COMMAND
+ 8013  7432 bash /root/remote_ctl.sh
+-rw-r--r--. 1 root root 7938707197 Nov  5 23:59 /root/napcat-restart.log
+-rw-r--r--. 1 root root     633548 Nov  5 23:55 /root/remote_ctl.log
+-rw-r--r--. 1 root root       2082 Nov  5 23:42 /root/bot.log
+-rw-r--r--. 1 root root     143541 Nov  5 23:41 /root/napcat.log
+-rw-r--r--. 1 root root        623 Nov  5 00:58 /root/watcher.log
+-rw-r--r--. 1 root root         22 Nov  4 21:47 /root/guard.log
+===找napcat输出===
+11-05 23:30:03 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-05 23:30:07 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) （书页翻到一半，灯灭了）APITimeoutError ...
+45c1bb00dc0e01220c6da992ad7967a8713acd08c810dcbd91ff202feff367a2
+11-05 23:30:15 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) [表情 /知识增加]
+11-05 23:30:25 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-05 23:30:56 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [ ] 您的求知欲，恰似那在书海中求索的舟子，哪怕风浪再大，也定能抵达彼岸。
+9f496772a9f706e0c592a75d3d08fa783c323b3c51b41974cd45affbf903d2dd
+11-05 23:33:05 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+50bf1c12ebb9f61c0346e15a11e190f61487d5a7e3f49e4f6d566445cb0c54ea
+11-05 23:33:46 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+26d5c3598722e860fbf4307ba1259bf37cba1d2711304546ae412c4153552fc5
+11-05 23:36:17 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-05 23:36:44 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+c58013e5af0a20a65ce65aef5f511b10288b3d41ea36d9d4bbb271c2b9e202c8
+11-05 23:37:04 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+48d138797d5ca41ddc364fbbf6ac904bfed92f2c10053d0c3fcdd7279f52156b
+11-05 23:37:07 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [二旬老人想玩4i发现对方是比我还猛的猛1(2959186535)] nb
+11-05 23:37:07 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [二旬老人想玩4i发现对方是比我还猛的猛1(2959186535)] [回复消息 未找到消息记录 (MsgId = 0)] @神奇海萝 (3464489995)  ❤️
+11-05 23:37:07 [[33mwarn[39m] 阿萨尔 | 似乎是旧版客户端，尝试仅通过序号获取引用消息 92094
+11-05 23:37:57 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [愿愿嘻望(462681975)] [回复消息 [oOvOa(3361875175)] 你们觉得哪个斗篷好看一点] @oOvOa (3361875175)  海洋斗有吗
+11-05 23:38:09 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [愿愿嘻望(462681975)] [回复消息 [七嘻ttl(3552275152)] 3] @七嘻ttl (3552275152)  确实
+11-05 23:40:58 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+fc190263dff61f22ff56dec0b7b7ec307bd3b77c0168f6033e6f61cda45e9bb0
+[I] <MMKV_IO.cpp:516::writeActualSize> [nt_mmkv_united_config_no_login_v3] increase sequence to 100, crc 3972421044, actualSize 1440
+[I] <MMKV.cpp:1178::sync> MMKV::sync, SyncFlag = 1
+[15870:1105/234155.062671:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
+[15870:1105/234155.154579:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[15870:1105/234155.160974:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[15870:1105/234155.177510:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[15870:1105/234155.177611:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+/root/azar_login_run.log
+/root/napcat-restart.log
+/root/napcat.log
