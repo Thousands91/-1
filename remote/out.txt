@@ -1,16 +1,45 @@
-<<<task_151.txt>>>
-===== 任务151 11-05 22:46:59 =====
+<<<task_152.txt>>>
+===== 任务152 11-05 22:58:05 =====
 --- 命令 ---
-pgrep -fc main.py
-grep "^OPENAI_MODEL" /root/bot/bot/.env
-grep -c "SUCCESS" /root/bot.log
-grep -iE "Duplicated|Traceback" /root/bot.log | head -3
-bash /root/logincheck.sh 2>/dev/null | tail -2
-ps -eo pid,etime,args | grep "[m]ain.py"
+grep -n "22:5[0-9]" /root/bot.log | tail -40
 --- 输出 ---
-1
-OPENAI_MODEL=glm-4.7-flash
-15
-阶段: ready
-最近错误: 无
-  972       04:32 /root/bot/venv/bin/python main.py
+37:11-05 22:51:06 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=706)
+38:11-05 22:51:06 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=706) running complete
+39:11-05 22:53:11 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 24999426 from 2959186535@[群:1109952783] '[reply:id=571064832][at:qq=2148799774] 是的'
+40:11-05 22:53:11 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+41:11-05 22:53:11 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+42:11-05 22:53:11 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=706)
+43:11-05 22:53:11 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=706) running complete
+44:11-05 22:55:00 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 393981874 from 1561950850 "[face:id=480,raw={'faceIndex': 480, 'faceText': '/散味儿', 'faceType': 3, 'packId': '4'...,resultId=,chainCount=0]"
+45:11-05 22:55:00 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=92)
+46:11-05 22:55:00 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=188)
+47:11-05 22:55:00 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=92) running complete
+48:11-05 22:55:00 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=188) running complete
+49:11-05 22:55:00 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+50:11-05 22:55:00 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+51:11-05 22:55:00 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=706)
+52:11-05 22:55:05 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+53:11-05 22:55:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793890510, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+54:11-05 22:55:14 [INFO] ai_chat | [核对·调试] ask='[表情:散味儿]' lead=False contra=False agree=False dodge=False ans='[表情:散味儿]\n\n[表情:散味儿] 📖✨'
+55:11-05 22:55:14 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=706) running complete
+56:11-05 22:55:22 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 490045092 from 1561950850 '[dice:result=4]'
+57:11-05 22:55:22 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=92)
+58:11-05 22:55:22 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=188)
+59:11-05 22:55:22 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=92) running complete
+60:11-05 22:55:22 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=188) running complete
+61:11-05 22:55:22 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+62:11-05 22:55:22 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+63:11-05 22:55:22 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=706)
+64:11-05 22:55:22 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=706) running complete
+65:11-05 22:55:28 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1933504380 from 1561950850 "[face:id=483,raw={'faceIndex': 483, 'faceText': '/略', 'faceType': 3, 'packId': '4', ...,resultId=,chainCount=0]"
+66:11-05 22:55:28 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=92)
+67:11-05 22:55:28 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=188)
+68:11-05 22:55:28 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=92) running complete
+69:11-05 22:55:28 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=188) running complete
+70:11-05 22:55:28 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+71:11-05 22:55:28 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+72:11-05 22:55:28 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=706)
+73:11-05 22:55:29 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+74:11-05 22:55:33 [INFO] ai_chat | [核对·调试] ask='[表情:略]' lead=False contra=False agree=False dodge=False ans='[表情:散味儿]\n\n[表情:散味儿] 📖✨'
+75:11-05 22:55:34 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=706) running complete
+76:11-05 22:55:34 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1793890534, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
