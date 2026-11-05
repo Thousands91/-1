@@ -1,11 +1,5 @@
-146
-curl -s -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/qq-bot/contents/bot/plugins/ai_chat.py" -o /root/bot/bot/plugins/ai_chat.py
-wc -c /root/bot/bot/plugins/ai_chat.py
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo 语法OK
-BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
-sleep 2
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
-sleep 30
-grep -iE "表情动态层|Duplicated|Traceback" /root/bot.log | head -5
-grep -c "SUCCESS" /root/bot.log
-bash /root/logincheck.sh 2>/dev/null | tail -2
+147
+grep -E "OPENAI_MODEL|OPENAI_BASE_URL|ZHIPU" /root/bot/bot/.env /root/bot/.env /root/bot/bot/env 2>/dev/null | grep -v "^#"
+grep -rn "OPENAI_MODEL" /root/bot/bot/.env* 2>/dev/null | head -3
+ps -eo args | grep "[m]ain.py" | head -1
+tr '\0' '\n' < /proc/$(pgrep -f "[m]ain.py" | head -1)/environ 2>/dev/null | grep -E "OPENAI_MODEL|OPENAI_BASE_URL|ZHIPU" 
