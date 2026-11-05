@@ -1,14 +1,7 @@
-169
-tail -20 /root/napcat-run.log
-echo "==QQ进程=="
-ps -eo pid,etime,args | grep -i "[q]q\b" | grep -v Xvfb | head -4
-echo "==WebUI=="
-curl -s --max-time 5 http://127.0.0.1:6099/api/OB11Config/GetConfig -o /dev/null -w "%{http_code}\n" 2>/dev/null
-PY=/root/bot/venv/bin/python3
-CFG=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json
-TOKEN=$(grep -o '"token": "[^"]*"' "$CFG" | head -1 | sed 's/.*: "//;s/"//')
-H=$($PY -c "import hashlib;print(hashlib.sha256(('$TOKEN'+'.napcat').encode()).hexdigest())")
-C=$(curl -s --max-time 5 -X POST http://127.0.0.1:6099/api/auth/login -H "Content-Type: application/json" -d "{\"hash\":\"$H\"}" | $PY -c "import sys,json;print(json.load(sys.stdin)['data']['Credential'])" 2>/dev/null)
-echo "cred:${C:0:8}"
-curl -s --max-time 8 -X GET "http://127.0.0.1:6099/api/QQLogin/GetQQQRcode" -H "Authorization: Bearer $C" > /root/qrraw.json 2>/dev/null
-head -c 150 /root/qrraw.json; echo ""; wc -c /root/qrraw.json
+170
+echo "==napcat.log 掉线前后完整日志=="
+grep -n -B15 -A8 "离线" /root/napcat.log | tail -45
+echo "==系统OOM/内存=="
+dmesg 2>/dev/null | grep -iE "oom|kill|out of memory" | tail -5
+echo "==手机内存=="
+free -m 2>/dev/null | head -3
