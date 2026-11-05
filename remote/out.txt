@@ -1,10 +1,20 @@
-<<<task_142.txt>>>
-===== 任务142 11-05 21:05:31 =====
+<<<task_143.txt>>>
+===== 任务143 11-05 21:18:11 =====
 --- 命令 ---
-grep -iE "表情动态层" /root/bot.log | tail -3
+curl -s -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/qq-bot/contents/bot/plugins/ai_chat.py" -o /root/bot/bot/plugins/ai_chat.py
+wc -c /root/bot/bot/plugins/ai_chat.py
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo 语法OK
+BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
+sleep 2
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
+sleep 30
+grep -iE "表情动态层" /root/bot.log | tail -2
 ls -la /root/bot/bot/data/qface_index.json 2>&1
-head -c 300 /root/bot/bot/data/qface_index.json 2>/dev/null
-pgrep -fc main.py
+grep -c "SUCCESS" /root/bot.log
+grep -iE "Duplicated|Traceback" /root/bot.log | head -3
 --- 输出 ---
-ls: cannot access '/root/bot/bot/data/qface_index.json': No such file or directory
-1
+66349 /root/bot/bot/plugins/ai_chat.py
+语法OK
+11-05 21:18:23 [INFO] ai_chat | [表情动态层] 已加载 QFace 全量表 372 条（来源 koishi.js.org）
+-rw-r--r--. 1 root root 6807 Nov  5 21:18 /root/bot/bot/data/qface_index.json
+16
