@@ -1,5 +1,6 @@
-176
-ps -eo pid,args | grep "[X]vfb" | wc -l
-pgrep -f "[m]ain.py" >/dev/null && echo bot在跑 || echo bot不在
+177
 df -h /root | tail -1
-ls -lh /root/napcat-run.log
+ls -lh /root/napcat-run.log /root/napcat-restart.log
+ps -eo pid,etime,args | grep "[o]pt/QQ" | head -2
+bash /root/logincheck.sh 2>/dev/null | tail -2
+stat -c "%y %n" /root/napcat-restart.log 2>/dev/null | head -1
