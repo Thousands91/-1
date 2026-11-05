@@ -1,54 +1,30 @@
-<<<task_170.txt>>>
-===== 任务170 11-06 00:44:32 =====
+<<<task_172.txt>>>
+===== 任务172 11-06 01:05:45 =====
 --- 命令 ---
-echo "==napcat.log 掉线前后完整日志=="
-grep -n -B15 -A8 "离线" /root/napcat.log | tail -45
-echo "==系统OOM/内存=="
-dmesg 2>/dev/null | grep -iE "oom|kill|out of memory" | tail -5
-echo "==手机内存=="
-free -m 2>/dev/null | head -3
+pgrep -f "[m]ain.py" >/dev/null && echo bot在跑 || echo bot不在
+ps -eo pid,etime | grep "$(pgrep -f '[m]ain.py')" | head -1
+PY=/root/bot/venv/bin/python3
+$PY - <<'PYEOF'
+src = open('/root/remote_ctl.sh').read()
+o1 = src.replace('>> /root/napcat-restart.log 2>&1 &', '>> /root/napcat-run.log 2>&1 &')
+o2 = o1.replace('xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >>', 'xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >>')
+o3 = o2.replace('if [ $((C % 4)) -eq 0 ]; then', 'if [ $((C % 4)) -eq 0 ]; then\n  [ -f /root/napcat-run.log ] && [ "$(stat -c %s /root/napcat-run.log 2>/dev/null)" -gt 104857600 ] && : > /root/napcat-run.log', 1)
+assert o3 != src
+open('/root/remote_ctl.sh.new','w').write(o3)
+print('改动行数:', sum(1 for a,b in zip(src.splitlines(), o3.splitlines()) if a!=b))
+PYEOF
+diff /root/remote_ctl.sh /root/remote_ctl.sh.new | head -12
+cp /root/remote_ctl.sh /root/remote_ctl.sh.bak_1106
+mv /root/remote_ctl.sh.new /root/remote_ctl.sh
+bash -n /root/remote_ctl.sh && echo 新脚本语法OK
 --- 输出 ---
-==napcat.log 掉线前后完整日志==
-1156-2eff552f53e99b9383ad0fff235a7f28c1b56acae18cc591e54e0d57670f5a2a
-1157-11-05 23:28:20 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 3
-1158-11-05 23:28:32 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [oOvOa(3361875175)] 行
-1159-11-05 23:28:36 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [oOvOa(3361875175)] [图片]
-1160-11-05 23:29:20 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) [表情 /散味儿]
-1161-11-05 23:29:34 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [ ] 您的提问如同沙漠中的微风，带来一丝清新的气息。🌵📖
-1162-5f4dd0eb202c6c82f5bb9ccbed4363aa4e9c2477daeb451735bb3ba6ebc66f32
-1163-11-05 23:29:43 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) [表情 /略]
-1164-11-05 23:30:03 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-1165-11-05 23:30:07 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) （书页翻到一半，灯灭了）APITimeoutError ...
-1166-45c1bb00dc0e01220c6da992ad7967a8713acd08c810dcbd91ff202feff367a2
-1167-11-05 23:30:15 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) [表情 /知识增加]
-1168-11-05 23:30:25 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-1169-11-05 23:30:56 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [ ] 您的求知欲，恰似那在书海中求索的舟子，哪怕风浪再大，也定能抵达彼岸。
-1170-9f496772a9f706e0c592a75d3d08fa783c323b3c51b41974cd45affbf903d2dd
-1171:11-05 23:33:05 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-1172-50bf1c12ebb9f61c0346e15a11e190f61487d5a7e3f49e4f6d566445cb0c54ea
-1173:11-05 23:33:46 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-1174-26d5c3598722e860fbf4307ba1259bf37cba1d2711304546ae412c4153552fc5
-1175-11-05 23:36:17 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-1176:11-05 23:36:44 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-1177-c58013e5af0a20a65ce65aef5f511b10288b3d41ea36d9d4bbb271c2b9e202c8
-1178:11-05 23:37:04 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-1179-48d138797d5ca41ddc364fbbf6ac904bfed92f2c10053d0c3fcdd7279f52156b
-1180-11-05 23:37:07 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [二旬老人想玩4i发现对方是比我还猛的猛1(2959186535)] nb
-1181-11-05 23:37:07 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [二旬老人想玩4i发现对方是比我还猛的猛1(2959186535)] [回复消息 未找到消息记录 (MsgId = 0)] @神奇海萝 (3464489995)  ❤️
-1182-11-05 23:37:07 [[33mwarn[39m] 阿萨尔 | 似乎是旧版客户端，尝试仅通过序号获取引用消息 92094
-1183-11-05 23:37:57 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [愿愿嘻望(462681975)] [回复消息 [oOvOa(3361875175)] 你们觉得哪个斗篷好看一点] @oOvOa (3361875175)  海洋斗有吗
-1184-11-05 23:38:09 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [愿愿嘻望(462681975)] [回复消息 [七嘻ttl(3552275152)] 3] @七嘻ttl (3552275152)  确实
-1185:11-05 23:40:58 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-1186-fc190263dff61f22ff56dec0b7b7ec307bd3b77c0168f6033e6f61cda45e9bb0
-1187-[I] <MMKV_IO.cpp:516::writeActualSize> [nt_mmkv_united_config_no_login_v3] increase sequence to 100, crc 3972421044, actualSize 1440
-1188-[I] <MMKV.cpp:1178::sync> MMKV::sync, SyncFlag = 1
-1189-[15870:1105/234155.062671:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
-1190-[15870:1105/234155.154579:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-1191-[15870:1105/234155.160974:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-1192-[15870:1105/234155.177510:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-1193-[15870:1105/234155.177611:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
-==系统OOM/内存==
-==手机内存==
-               total        used        free      shared  buff/cache   available
-Mem:           11296        8440         228         125        3369        2855
-Swap:          11296        4970        6326
+bot在跑
+ 9134    01:23:25
+改动行数: 16
+68c68
+<   cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 &
+---
+>   cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-run.log 2>&1 &
+90a91
+>   [ -f /root/napcat-run.log ] && [ "$(stat -c %s /root/napcat-run.log 2>/dev/null)" -gt 104857600 ] && : > /root/napcat-run.log
+新脚本语法OK
