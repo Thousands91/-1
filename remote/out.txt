@@ -1,19 +1,16 @@
-<<<task_150.txt>>>
-===== 任务150 11-05 22:42:22 =====
+<<<task_151.txt>>>
+===== 任务151 11-05 22:46:59 =====
 --- 命令 ---
-curl -s -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/qq-bot/contents/bot/plugins/ai_chat.py" -o /root/bot/bot/plugins/ai_chat.py
-wc -c /root/bot/bot/plugins/ai_chat.py
-BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP && echo 已停旧进程
-sleep 2
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
-sleep 25
+pgrep -fc main.py
 grep "^OPENAI_MODEL" /root/bot/bot/.env
 grep -c "SUCCESS" /root/bot.log
+grep -iE "Duplicated|Traceback" /root/bot.log | head -3
 bash /root/logincheck.sh 2>/dev/null | tail -2
+ps -eo pid,etime,args | grep "[m]ain.py"
 --- 输出 ---
-71904 /root/bot/bot/plugins/ai_chat.py
-已停旧进程
+1
 OPENAI_MODEL=glm-4.7-flash
 15
 阶段: ready
 最近错误: 无
+  972       04:32 /root/bot/venv/bin/python main.py
