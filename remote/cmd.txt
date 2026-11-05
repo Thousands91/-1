@@ -1,6 +1,6 @@
-159
-wc -c /root/bot/bot/plugins/ai_chat.py
-ps -eo pid,etime | grep "$(pgrep -f '[m]ain.py')" | head -1
-grep -c "SUCCESS" /root/bot.log
-grep -iE "Duplicated|Traceback" /root/bot.log | head -3
-bash /root/logincheck.sh 2>/dev/null | tail -2
+160
+cat /root/logincheck.sh
+echo ===容器===
+docker ps 2>/dev/null | head -5
+echo ===napcat日志尾部===
+docker logs --tail 15 $(docker ps -q --filter name=napcat 2>/dev/null) 2>&1 | tail -15
