@@ -1,3 +1,11 @@
-178
-grep "二维码解码URL" /root/napcat-restart.log | tail -1
-grep "二维码解码URL" /root/napcat-run.log | tail -1
+179
+ls /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/ 2>/dev/null
+echo "==logger类配置=="
+for f in /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/*.json; do echo "-- $f"; head -c 400 "$f"; echo ""; done 2>/dev/null | head -30
+echo "==termux-wake-lock=="
+which termux-wake-lock termux-wifi-connectioninfo 2>/dev/null || echo 无termux工具
+command -v ping && ping -c 1 -W 2 223.5.5.5 | tail -2
+echo "==电池温度=="
+cat /sys/class/power_supply/battery/capacity /sys/class/power_supply/battery/temp 2>/dev/null
+echo "==uptime负载=="
+uptime
