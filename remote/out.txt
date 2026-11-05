@@ -1,11 +1,16 @@
-<<<task_167.txt>>>
-===== 任务167 11-06 00:14:08 =====
+<<<task_168.txt>>>
+===== 任务168 11-06 00:15:53 =====
 --- 命令 ---
-pkill -f "opt/QQ/[q]q"
-sleep 2
-: > /root/napcat-restart.log
-ls -lh /root/napcat-restart.log
+date "+%H:%M:%S"
+ps -eo pid,etime,args | grep -E "[o]pt/QQ|[x]vfb|[r]emote_ctl" | head -6
+ls -lh /root/napcat-restart.log /root/napcat-run.log 2>/dev/null
 df -h /root | tail -1
 --- 输出 ---
--rw-r--r--. 1 root root 0 Nov  6 00:14 /root/napcat-restart.log
+00:15:53
+ 6863       03:56 Xvfb :169 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.4phdki/Xauthority
+ 7432    05:52:43 bash /root/remote_ctl.sh
+ 8028       33:55 Xvfb :168 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.8h9Nve/Xauthority
+15865    05:48:57 Xvfb :167 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.nL7dgP/Xauthority
+-rw-r--r--. 1 root root   0 Nov  6 00:14 /root/napcat-restart.log
+-rw-r--r--. 1 root root 14K Nov  6 00:14 /root/napcat-run.log
 /dev/block/dm-25  222G  214G  8.8G  97% /
