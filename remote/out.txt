@@ -1,12 +1,17 @@
-<<<task_176.txt>>>
-===== 任务176 11-06 01:20:53 =====
+<<<task_177.txt>>>
+===== 任务177 11-06 06:55:35 =====
 --- 命令 ---
-ps -eo pid,args | grep "[X]vfb" | wc -l
-pgrep -f "[m]ain.py" >/dev/null && echo bot在跑 || echo bot不在
 df -h /root | tail -1
-ls -lh /root/napcat-run.log
+ls -lh /root/napcat-run.log /root/napcat-restart.log
+ps -eo pid,etime,args | grep "[o]pt/QQ" | head -2
+bash /root/logincheck.sh 2>/dev/null | tail -2
+stat -c "%y %n" /root/napcat-restart.log 2>/dev/null | head -1
 --- 输出 ---
-2
-bot在跑
-/dev/block/dm-25  222G  214G  8.2G  97% /
--rw-r--r--. 1 root root 14K Nov  6 00:14 /root/napcat-run.log
+/dev/block/dm-25  222G  214G  8.0G  97% /
+-rw-r--r--. 1 root root 447K Nov  6 06:55 /root/napcat-restart.log
+-rw-r--r--. 1 root root  14K Nov  6 00:14 /root/napcat-run.log
+14632    06:38:23 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+14648    06:38:23 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+阶段: waiting_qrcode
+最近错误: 无
+2026-11-06 06:55:35.200389865 +0800 /root/napcat-restart.log
