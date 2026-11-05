@@ -1,10 +1,9 @@
-174
-ps -o pid,ppid,etime,args -p 14630 2>/dev/null
-kill 14630 2>/dev/null && echo 已杀重复实例14630
-kill 7432 2>/dev/null && echo 已停旧实例7432
-rm -f /root/.remote_pid
-setsid nohup bash /root/remote_ctl.sh > /dev/null 2>&1 &
-sleep 5
+175
 ps -eo pid,etime,args | grep "[r]emote_ctl" | head -3
-for P in $(pgrep -f "Xvfb :167") $(pgrep -f "Xvfb :168"); do kill $P 2>/dev/null; done
-ps -eo pid,args | grep "[X]vfb" | head -3
+cat /root/.remote_pid 2>/dev/null
+grep -c "napcat-run.log" /root/remote_ctl.sh
+ps -eo pid,args | grep "[X]vfb" | wc -l
+pgrep -f "[m]ain.py" >/dev/null && echo bot在跑
+bash /root/logincheck.sh 2>/dev/null | tail -2
+tail -3 /root/napcat-run.log | head -3
+df -h /root | tail -1
