@@ -1,7 +1,7 @@
-170
-echo "==napcat.log 掉线前后完整日志=="
-grep -n -B15 -A8 "离线" /root/napcat.log | tail -45
-echo "==系统OOM/内存=="
-dmesg 2>/dev/null | grep -iE "oom|kill|out of memory" | tail -5
-echo "==手机内存=="
-free -m 2>/dev/null | head -3
+171
+curl -s --retry 3 --retry-delay 2 --max-time 55 -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/qq-bot/contents/bot/plugins/ai_chat.py" -o /root/bot/bot/plugins/ai_chat.py
+wc -c /root/bot/bot/plugins/ai_chat.py
+BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
+sleep 2
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
+echo bot重启已触发
