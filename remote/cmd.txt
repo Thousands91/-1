@@ -1,6 +1,8 @@
-160
-cat /root/logincheck.sh
-echo ===容器===
-docker ps 2>/dev/null | head -5
-echo ===napcat日志尾部===
-docker logs --tail 15 $(docker ps -q --filter name=napcat 2>/dev/null) 2>&1 | tail -15
+161
+bash /root/logincheck.sh
+echo ===bot.log连接状态===
+grep -E "WebSocket|已连接|napcat|NapCat|onebot" /root/bot.log | tail -6
+echo ===最近收发===
+tail -5 /root/bot.log
+echo ===NapCat进程===
+ps -eo pid,etime,args | grep -iE "[n]apcat|[Q]Q" | head -5
