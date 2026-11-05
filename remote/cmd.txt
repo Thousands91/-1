@@ -1,8 +1,7 @@
-161
-bash /root/logincheck.sh
-echo ===bot.log连接状态===
-grep -E "WebSocket|已连接|napcat|NapCat|onebot" /root/bot.log | tail -6
-echo ===最近收发===
-tail -5 /root/bot.log
-echo ===NapCat进程===
-ps -eo pid,etime,args | grep -iE "[n]apcat|[Q]Q" | head -5
+162
+find /root/Napcat -name "*.log" -mmin -30 2>/dev/null | head -5
+echo ===最近日志===
+LOG=$(find /root/Napcat -name "*.log" -mmin -30 2>/dev/null | head -1)
+[ -n "$LOG" ] && tail -25 "$LOG"
+echo ===napcat目录日志===
+ls -lt /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/logs/ 2>/dev/null | head -4
