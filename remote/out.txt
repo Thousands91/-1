@@ -1,30 +1,16 @@
-<<<task_172.txt>>>
-===== 任务172 11-06 01:05:45 =====
+<<<task_173.txt>>>
+===== 任务173 11-06 01:10:27 =====
 --- 命令 ---
-pgrep -f "[m]ain.py" >/dev/null && echo bot在跑 || echo bot不在
-ps -eo pid,etime | grep "$(pgrep -f '[m]ain.py')" | head -1
-PY=/root/bot/venv/bin/python3
-$PY - <<'PYEOF'
-src = open('/root/remote_ctl.sh').read()
-o1 = src.replace('>> /root/napcat-restart.log 2>&1 &', '>> /root/napcat-run.log 2>&1 &')
-o2 = o1.replace('xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >>', 'xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >>')
-o3 = o2.replace('if [ $((C % 4)) -eq 0 ]; then', 'if [ $((C % 4)) -eq 0 ]; then\n  [ -f /root/napcat-run.log ] && [ "$(stat -c %s /root/napcat-run.log 2>/dev/null)" -gt 104857600 ] && : > /root/napcat-run.log', 1)
-assert o3 != src
-open('/root/remote_ctl.sh.new','w').write(o3)
-print('改动行数:', sum(1 for a,b in zip(src.splitlines(), o3.splitlines()) if a!=b))
-PYEOF
-diff /root/remote_ctl.sh /root/remote_ctl.sh.new | head -12
-cp /root/remote_ctl.sh /root/remote_ctl.sh.bak_1106
-mv /root/remote_ctl.sh.new /root/remote_ctl.sh
-bash -n /root/remote_ctl.sh && echo 新脚本语法OK
+ls -la /root/remote_ctl.sh /root/remote_ctl.sh.new /root/remote_ctl.sh.bak_1106 2>/dev/null
+ps -eo pid,etime,args | grep "[r]emote_ctl" | head -3
+grep -c "napcat-restart.log" /root/remote_ctl.sh
+grep -c "napcat-run.log" /root/remote_ctl.sh
+ps -eo pid,etime | grep "$(pgrep -f '[m]ain.py' | head -1)" | head -1
 --- 输出 ---
-bot在跑
- 9134    01:23:25
-改动行数: 16
-68c68
-<   cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 &
----
->   cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-run.log 2>&1 &
-90a91
->   [ -f /root/napcat-run.log ] && [ "$(stat -c %s /root/napcat-run.log 2>/dev/null)" -gt 104857600 ] && : > /root/napcat-run.log
-新脚本语法OK
+-rw-r--r--. 1 root root 4750 Nov  6 01:05 /root/remote_ctl.sh
+-rw-r--r--. 1 root root 4626 Nov  6 01:05 /root/remote_ctl.sh.bak_1106
+ 7432    06:47:17 bash /root/remote_ctl.sh
+14630       53:15 bash /root/remote_ctl.sh
+0
+2
+ 9134    01:28:07
