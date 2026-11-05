@@ -1,17 +1,23 @@
-<<<task_174.txt>>>
-===== 任务174 11-06 01:14:46 =====
+<<<task_175.txt>>>
+===== 任务175 11-06 01:17:38 =====
 --- 命令 ---
-ps -o pid,ppid,etime,args -p 14630 2>/dev/null
-kill 14630 2>/dev/null && echo 已杀重复实例14630
-kill 7432 2>/dev/null && echo 已停旧实例7432
-rm -f /root/.remote_pid
-setsid nohup bash /root/remote_ctl.sh > /dev/null 2>&1 &
-sleep 5
 ps -eo pid,etime,args | grep "[r]emote_ctl" | head -3
-for P in $(pgrep -f "Xvfb :167") $(pgrep -f "Xvfb :168"); do kill $P 2>/dev/null; done
-ps -eo pid,args | grep "[X]vfb" | head -3
+cat /root/.remote_pid 2>/dev/null
+grep -c "napcat-run.log" /root/remote_ctl.sh
+ps -eo pid,args | grep "[X]vfb" | wc -l
+pgrep -f "[m]ain.py" >/dev/null && echo bot在跑
+bash /root/logincheck.sh 2>/dev/null | tail -2
+tail -3 /root/napcat-run.log | head -3
+df -h /root | tail -1
 --- 输出 ---
-  PID  PPID     ELAPSED COMMAND
-14630  7432       57:34 bash /root/remote_ctl.sh
-已杀重复实例14630
-已停旧实例7432
+17978       02:51 bash /root/remote_ctl.sh
+17978
+2
+2
+bot在跑
+阶段: waiting_qrcode
+最近错误: 无
+[6867:1106/001408.480483:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[6867:1106/001408.482782:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[6867:1106/001408.482841:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+/dev/block/dm-25  222G  214G  8.2G  97% /
