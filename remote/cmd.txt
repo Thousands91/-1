@@ -1,7 +1,5 @@
-154
-curl -s --retry 3 --retry-delay 2 --max-time 60 -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/qq-bot/contents/bot/plugins/ai_chat.py" -o /root/bot/bot/plugins/ai_chat.py
-wc -c /root/bot/bot/plugins/ai_chat.py
-BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
-sleep 2
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
-echo 重启完成
+155
+ps -eo pid,etime | grep "$(pgrep -f '[m]ain.py')" | head -1
+grep -c "SUCCESS" /root/bot.log
+grep -iE "Duplicated|Traceback" /root/bot.log | head -3
+bash /root/logincheck.sh 2>/dev/null | tail -2
