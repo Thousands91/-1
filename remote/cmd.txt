@@ -1,7 +1,2 @@
-151
-pgrep -fc main.py
-grep "^OPENAI_MODEL" /root/bot/bot/.env
-grep -c "SUCCESS" /root/bot.log
-grep -iE "Duplicated|Traceback" /root/bot.log | head -3
-bash /root/logincheck.sh 2>/dev/null | tail -2
-ps -eo pid,etime,args | grep "[m]ain.py"
+152
+grep -n "22:5[0-9]" /root/bot.log | tail -40
