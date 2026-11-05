@@ -1,10 +1,9 @@
-164
-echo ===谁在写restart.log===
-ps -eo pid,ppid,etime,args | grep -E "[n]apcat|[r]estart" | head -8
-grep -n "napcat-restart" /root/remote_ctl.sh | head -5
-echo ===循环脚本内容===
-grep -B2 -A8 "napcat-restart" /root/remote_ctl.sh | head -25
-echo ===restart.log尾部(找二维码)===
-tail -c 4000 /root/napcat-restart.log | tail -30
-echo ===磁盘===
+165
 df -h /root | tail -1
+ls -lh /root/napcat-restart.log
+echo "==restart.log尾部=="
+tail -c 3000 /root/napcat-restart.log | tail -25
+echo "==napcat.log(旧)尾部=="
+tail -8 /root/napcat.log
+echo "==循环判断=="
+grep -n "watchdog\|看护\|CNT" /root/remote_ctl.sh | head -8
