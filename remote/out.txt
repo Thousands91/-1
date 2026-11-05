@@ -1,24 +1,13 @@
-<<<task_148.txt>>>
-===== 任务148 11-05 22:30:37 =====
+<<<task_149.txt>>>
+===== 任务149 11-05 22:34:57 =====
 --- 命令 ---
-sed -i 's/^OPENAI_MODEL=.*/OPENAI_MODEL=glm-4.7-flash/' /root/bot/bot/.env
-grep "^OPENAI_MODEL" /root/bot/bot/.env
-curl -s -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/qq-bot/contents/bot/plugins/ai_chat.py" -o /root/bot/bot/plugins/ai_chat.py
-curl -s -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/qq-bot/contents/bot/persona/__init__.py" -o /root/bot/bot/persona/__init__.py
-wc -c /root/bot/bot/plugins/ai_chat.py /root/bot/bot/persona/__init__.py
+pgrep -fc main.py
 /root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py /root/bot/bot/persona/__init__.py && echo 语法OK
-BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
-sleep 2
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
-sleep 30
-grep -iE "Duplicated|Traceback" /root/bot.log | head -3
 grep -c "SUCCESS" /root/bot.log
+grep -iE "Duplicated|Traceback" /root/bot.log | head -3
 bash /root/logincheck.sh 2>/dev/null | tail -2
 --- 输出 ---
-OPENAI_MODEL=glm-4.7-flash
- 71706 /root/bot/bot/plugins/ai_chat.py
- 31065 /root/bot/bot/persona/__init__.py
-102771 total
+1
 语法OK
 15
 阶段: ready
