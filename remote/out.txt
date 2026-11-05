@@ -1,12 +1,21 @@
-<<<task_155.txt>>>
-===== 任务155 11-05 23:12:28 =====
+<<<task_156.txt>>>
+===== 任务156 11-05 23:24:56 =====
 --- 命令 ---
-ps -eo pid,etime | grep "$(pgrep -f '[m]ain.py')" | head -1
-grep -c "SUCCESS" /root/bot.log
-grep -iE "Duplicated|Traceback" /root/bot.log | head -3
-bash /root/logincheck.sh 2>/dev/null | tail -2
+echo "=== 23:08 新进程启动后的降级统计 ==="
+grep -c "模型降级" /root/bot.log
+echo "=== 最近10条对话日志 ==="
+grep -E "2[23]:[0-9]{2}" /root/bot.log | tail -10
 --- 输出 ---
-15648       04:16
-17
-阶段: ready
-最近错误: 无
+=== 23:08 新进程启动后的降级统计 ===
+0
+=== 最近10条对话日志 ===
+11-05 23:21:05 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 385898343 from 649203747@[群:590454333] '卖我一块冉'
+11-05 23:21:05 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-05 23:21:05 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-05 23:21:05 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=716)
+11-05 23:21:05 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=716) running complete
+11-05 23:23:05 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1837884689 from 462681975@[群:590454333] '[reply:id=1237685654][at:qq=3819642626] 😍那很美味了'
+11-05 23:23:05 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-05 23:23:05 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-05 23:23:05 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=716)
+11-05 23:23:05 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=716) running complete
