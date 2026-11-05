@@ -1,34 +1,13 @@
-<<<task_161.txt>>>
-===== 任务161 11-05 23:52:27 =====
+<<<task_162.txt>>>
+===== 任务162 11-05 23:54:57 =====
 --- 命令 ---
-bash /root/logincheck.sh
-echo ===bot.log连接状态===
-grep -E "WebSocket|已连接|napcat|NapCat|onebot" /root/bot.log | tail -6
-echo ===最近收发===
-tail -5 /root/bot.log
-echo ===NapCat进程===
-ps -eo pid,etime,args | grep -iE "[n]apcat|[Q]Q" | head -5
+find /root/Napcat -name "*.log" -mmin -30 2>/dev/null | head -5
+echo ===最近日志===
+LOG=$(find /root/Napcat -name "*.log" -mmin -30 2>/dev/null | head -1)
+[ -n "$LOG" ] && tail -25 "$LOG"
+echo ===napcat目录日志===
+ls -lt /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/logs/ 2>/dev/null | head -4
 --- 输出 ---
-=== 登录状态（权威判定）===
-[未登录] 当前没有有效会话
-阶段: waiting_qrcode
-最近错误: 无
-===bot.log连接状态===
-11-05 23:42:25 [SUCCESS] nonebot | Succeeded to load plugin "image_see" from "plugins.image_see"
-11-05 23:42:25 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-05 23:42:25 [SUCCESS] nonebot | Running NoneBot...
-11-05 23:42:25 [SUCCESS] nonebot | Loaded adapters: OneBot V11
-11-05 23:42:25 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
-11-05 23:42:25 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
-===最近收发===
-11-05 23:42:25 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
-11-05 23:42:25 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
-11-05 23:42:25 [INFO] __main__ | ==================================================
-11-05 23:42:25 [INFO] uvicorn | Application startup complete.
-11-05 23:42:25 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-===NapCat进程===
- 8016       10:30 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
- 8033       10:29 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
- 8060       10:29 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
- 8061       10:29 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
- 8335       10:25 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+===最近日志===
+===napcat目录日志===
+total 0
