@@ -1,20 +1,19 @@
-180
-curl -s --retry 3 --retry-delay 2 --max-time 50 -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/-1/contents/code/netmon.sh" -o /root/netmon.sh
-curl -s --retry 3 --retry-delay 2 --max-time 50 -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/-1/contents/code/offline_watch.sh" -o /root/offline_watch.sh
-bash -n /root/netmon.sh && bash -n /root/offline_watch.sh && echo 两脚本语法OK
-chmod +x /root/netmon.sh /root/offline_watch.sh
-pgrep -f "netmon.sh" >/dev/null || setsid nohup bash /root/netmon.sh > /dev/null 2>&1 &
-pgrep -f "offline_watch.sh" >/dev/null || setsid nohup bash /root/offline_watch.sh > /dev/null 2>&1 &
-sleep 3
-pgrep -f "netmon.sh" >/dev/null && echo netmon在跑
-pgrep -f "offline_watch.sh" >/dev/null && echo offline_watch在跑
+181
+pkill -f "opt/QQ/[q]q"; sleep 3
 PY=/root/bot/venv/bin/python3
 $PY - <<'PYEOF'
-import json
-P='/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json'
-import shutil; shutil.copy(P, P+'.bak_1106')
-d=json.load(open(P))
-d['fileLog']=True
-json.dump(d, open(P,'w'), ensure_ascii=False, indent=2)
-print('fileLog已开:', d['fileLog'])
+src = open('/root/remote_ctl.sh').read()
+old = '  pgrep -f "main.py" >/dev/null ||'
+new = '''  pgrep -f "netmon.sh" >/dev/null || { nohup bash /root/netmon.sh > /dev/null 2>&1 & echo "[$(date '+%m-%d %H:%M')] 看护:拉起netmon" >> "$LOG"; }
+  pgrep -f "offline_watch.sh" >/dev/null || { nohup bash /root/offline_watch.sh > /dev/null 2>&1 & echo "[$(date '+%m-%d %H:%M')] 看护:拉起offline_watch" >> "$LOG"; }
+  pgrep -f "main.py" >/dev/null ||'''
+assert old in src and 'netmon.sh' not in src
+open('/root/remote_ctl.sh','w').write(src.replace(old, new, 1))
+print('看护脚本已加黑匣子自启')
 PYEOF
+bash -n /root/remote_ctl.sh && echo 语法OK
+cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat-run.log 2>&1 &
+sleep 15
+ls -t /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/logs/ 2>/dev/null | head -3
+tail -2 /root/netmon.log 2>/dev/null
+grep "二维码解码URL" /root/napcat-run.log 2>/dev/null | tail -1
