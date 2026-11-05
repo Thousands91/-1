@@ -1,5 +1,5 @@
-155
-ps -eo pid,etime | grep "$(pgrep -f '[m]ain.py')" | head -1
-grep -c "SUCCESS" /root/bot.log
-grep -iE "Duplicated|Traceback" /root/bot.log | head -3
-bash /root/logincheck.sh 2>/dev/null | tail -2
+156
+echo "=== 23:08 新进程启动后的降级统计 ==="
+grep -c "模型降级" /root/bot.log
+echo "=== 最近10条对话日志 ==="
+grep -E "2[23]:[0-9]{2}" /root/bot.log | tail -10
