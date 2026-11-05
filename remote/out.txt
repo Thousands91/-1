@@ -1,17 +1,10 @@
-<<<task_141.txt>>>
-===== 任务141 11-05 21:01:56 =====
+<<<task_142.txt>>>
+===== 任务142 11-05 21:05:31 =====
 --- 命令 ---
-cp /root/bot/bot/plugins/ai_chat.py /root/bot/bot/plugins/ai_chat.py.bak_1105
-curl -s -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/qq-bot/contents/bot/plugins/ai_chat.py" -o /root/bot/bot/plugins/ai_chat.py
-wc -c /root/bot/bot/plugins/ai_chat.py
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo 语法OK
-BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
-sleep 2
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
-sleep 25
-grep -c "SUCCESS" /root/bot.log
-grep -iE "表情动态层|Duplicated|ERROR" /root/bot.log | head -6
+grep -iE "表情动态层" /root/bot.log | tail -3
+ls -la /root/bot/bot/data/qface_index.json 2>&1
+head -c 300 /root/bot/bot/data/qface_index.json 2>/dev/null
+pgrep -fc main.py
 --- 输出 ---
-65806 /root/bot/bot/plugins/ai_chat.py
-语法OK
-15
+ls: cannot access '/root/bot/bot/data/qface_index.json': No such file or directory
+1
