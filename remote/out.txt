@@ -1,8 +1,12 @@
-<<<task_157.txt>>>
-===== 任务157 11-05 23:33:30 =====
+<<<task_158.txt>>>
+===== 任务158 11-05 23:42:14 =====
 --- 命令 ---
-grep -E "23:(2[5-9]|3[01])" /root/bot.log | grep -iE "降级|ERROR|WARNING|Traceback|Timeout" | tail -15
+curl -s --retry 3 --retry-delay 2 --max-time 55 -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/qq-bot/contents/bot/plugins/ai_chat.py" -o /root/bot/bot/plugins/ai_chat.py
+wc -c /root/bot/bot/plugins/ai_chat.py
+BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
+sleep 2
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
+echo 重启已触发
 --- 输出 ---
-11-05 23:29:28 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-05 23:29:51 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-05 23:30:07 [WARNING] ai_chat | [模型降级] glm-4-flash 调用失败(APITimeoutError)，尝试下一个
+73586 /root/bot/bot/plugins/ai_chat.py
+重启已触发
