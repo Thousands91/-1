@@ -1,6 +1,7 @@
-153
-curl -s -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/qq-bot/contents/bot/plugins/ai_chat.py" -o /root/bot/bot/plugins/ai_chat.py
-BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP && echo 旧进程已停
+154
+curl -s --retry 3 --retry-delay 2 --max-time 60 -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/qq-bot/contents/bot/plugins/ai_chat.py" -o /root/bot/bot/plugins/ai_chat.py
+wc -c /root/bot/bot/plugins/ai_chat.py
+BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
 sleep 2
 cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
-echo 新进程已拉起
+echo 重启完成
