@@ -1,16 +1,17 @@
-<<<task_173.txt>>>
-===== 任务173 11-06 01:10:27 =====
+<<<task_174.txt>>>
+===== 任务174 11-06 01:14:46 =====
 --- 命令 ---
-ls -la /root/remote_ctl.sh /root/remote_ctl.sh.new /root/remote_ctl.sh.bak_1106 2>/dev/null
+ps -o pid,ppid,etime,args -p 14630 2>/dev/null
+kill 14630 2>/dev/null && echo 已杀重复实例14630
+kill 7432 2>/dev/null && echo 已停旧实例7432
+rm -f /root/.remote_pid
+setsid nohup bash /root/remote_ctl.sh > /dev/null 2>&1 &
+sleep 5
 ps -eo pid,etime,args | grep "[r]emote_ctl" | head -3
-grep -c "napcat-restart.log" /root/remote_ctl.sh
-grep -c "napcat-run.log" /root/remote_ctl.sh
-ps -eo pid,etime | grep "$(pgrep -f '[m]ain.py' | head -1)" | head -1
+for P in $(pgrep -f "Xvfb :167") $(pgrep -f "Xvfb :168"); do kill $P 2>/dev/null; done
+ps -eo pid,args | grep "[X]vfb" | head -3
 --- 输出 ---
--rw-r--r--. 1 root root 4750 Nov  6 01:05 /root/remote_ctl.sh
--rw-r--r--. 1 root root 4626 Nov  6 01:05 /root/remote_ctl.sh.bak_1106
- 7432    06:47:17 bash /root/remote_ctl.sh
-14630       53:15 bash /root/remote_ctl.sh
-0
-2
- 9134    01:28:07
+  PID  PPID     ELAPSED COMMAND
+14630  7432       57:34 bash /root/remote_ctl.sh
+已杀重复实例14630
+已停旧实例7432
