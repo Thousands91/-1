@@ -1,16 +1,55 @@
-<<<task_168.txt>>>
-===== 任务168 11-06 00:15:53 =====
+<<<task_169.txt>>>
+===== 任务169 11-06 00:18:29 =====
 --- 命令 ---
-date "+%H:%M:%S"
-ps -eo pid,etime,args | grep -E "[o]pt/QQ|[x]vfb|[r]emote_ctl" | head -6
-ls -lh /root/napcat-restart.log /root/napcat-run.log 2>/dev/null
-df -h /root | tail -1
+tail -20 /root/napcat-run.log
+echo "==QQ进程=="
+ps -eo pid,etime,args | grep -i "[q]q\b" | grep -v Xvfb | head -4
+echo "==WebUI=="
+curl -s --max-time 5 http://127.0.0.1:6099/api/OB11Config/GetConfig -o /dev/null -w "%{http_code}\n" 2>/dev/null
+PY=/root/bot/venv/bin/python3
+CFG=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json
+TOKEN=$(grep -o '"token": "[^"]*"' "$CFG" | head -1 | sed 's/.*: "//;s/"//')
+H=$($PY -c "import hashlib;print(hashlib.sha256(('$TOKEN'+'.napcat').encode()).hexdigest())")
+C=$(curl -s --max-time 5 -X POST http://127.0.0.1:6099/api/auth/login -H "Content-Type: application/json" -d "{\"hash\":\"$H\"}" | $PY -c "import sys,json;print(json.load(sys.stdin)['data']['Credential'])" 2>/dev/null)
+echo "cred:${C:0:8}"
+curl -s --max-time 8 -X GET "http://127.0.0.1:6099/api/QQLogin/GetQQQRcode" -H "Authorization: Bearer $C" > /root/qrraw.json 2>/dev/null
+head -c 150 /root/qrraw.json; echo ""; wc -c /root/qrraw.json
 --- 输出 ---
-00:15:53
- 6863       03:56 Xvfb :169 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.4phdki/Xauthority
- 7432    05:52:43 bash /root/remote_ctl.sh
- 8028       33:55 Xvfb :168 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.8h9Nve/Xauthority
-15865    05:48:57 Xvfb :167 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.nL7dgP/Xauthority
--rw-r--r--. 1 root root   0 Nov  6 00:14 /root/napcat-restart.log
--rw-r--r--. 1 root root 14K Nov  6 00:14 /root/napcat-run.log
-/dev/block/dm-25  222G  214G  8.8G  97% /
+█▄▀ ██ ▄▄ ▄ █▀▀▄  █▀▀█ ███▀▄▄███▄▄█
+█ ▀ ▄▀▀▄█ ███▀▄▀ ▄▄▀▄ ▄██▀▀▄█ █▀█▀█
+█▀  ▄▀█▄█▄▄▄ ▄▄  ▀▄▀▄▀▀█▄▄▄ ▀ ▄█  █
+█▄▀ ▄█▀▄▄█▀▀▀▄    █▄▄ ▄ ▄██▀█▄█▀▀ █
+█▀█▄█▄ ▄  ▀█▄▀██ █ ████▄ ▀▄█▀▀▀█▀██
+█ █▄▀█▄▄▀▄▄█ ▀█ ▄ ▀ █▄█ ▄▀ ▀ ▄█▀▄▄█
+█▄▄▄█▄▄▄█ ▀▄▄▄▀▄ ▀▀▀▀▄▄██ ▄▄▄ ▀▀ ██
+█ ▄▄▄▄▄ ██   ▄█  ▄▄█  ██  █▄█ ▀ █▀█
+█ █   █ █ ▄ ▀ ▄ ████▄ ▄ ▄▄ ▄▄▄▀█▄▄█
+█ █▄▄▄█ █▀▀ ▄█ ▄ ▄█  ▄█ ▀█▀▀▄   ▀ █
+█▄▄▄▄▄▄▄█▄█▄████████▄█▄██▄▄█▄█▄████
+
+二维码解码URL: https://txz.qq.com/p?k=aZj2hlCM96GCDKHJYZ8kQl3fKzozZNqv&f=1600001615
+如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+11-06 00:14:08 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+[6867:1106/001408.424805:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
+[6867:1106/001408.477377:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[6867:1106/001408.480483:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[6867:1106/001408.482782:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[6867:1106/001408.482841:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+==QQ进程==
+14632       01:17 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+14648       01:17 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+14650       01:17 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+14651       01:17 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
+==WebUI==
+200
+cred:eyJEYXRh
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /api/QQLogin/GetQQQRcode</pre>
+</bo
+162 /root/qrraw.json
