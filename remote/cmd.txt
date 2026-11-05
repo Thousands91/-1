@@ -1,6 +1,5 @@
-167
-pkill -f "opt/QQ/[q]q"
-sleep 2
-: > /root/napcat-restart.log
-ls -lh /root/napcat-restart.log
+168
+date "+%H:%M:%S"
+ps -eo pid,etime,args | grep -E "[o]pt/QQ|[x]vfb|[r]emote_ctl" | head -6
+ls -lh /root/napcat-restart.log /root/napcat-run.log 2>/dev/null
 df -h /root | tail -1
