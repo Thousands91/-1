@@ -1,7 +1,7 @@
-162
-find /root/Napcat -name "*.log" -mmin -30 2>/dev/null | head -5
-echo ===最近日志===
-LOG=$(find /root/Napcat -name "*.log" -mmin -30 2>/dev/null | head -1)
-[ -n "$LOG" ] && tail -25 "$LOG"
-echo ===napcat目录日志===
-ls -lt /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/logs/ 2>/dev/null | head -4
+163
+ps -o pid,ppid,args -p 8016 2>/dev/null
+PP=$(ps -o ppid= -p 8016 2>/dev/null | tr -d ' '); ps -o pid,ppid,args -p $PP 2>/dev/null
+ls -lt /root/*.log /root/*.out 2>/dev/null | head -6
+echo ===找napcat输出===
+tail -30 /root/napcat.log 2>/dev/null || tail -30 /root/Napcat/napcat.log 2>/dev/null || echo 未找到
+grep -rl "二维码\|qrcode\|QrCode" /root/*.log 2>/dev/null | head -3
