@@ -1,14 +1,6 @@
-148
-sed -i 's/^OPENAI_MODEL=.*/OPENAI_MODEL=glm-4.7-flash/' /root/bot/bot/.env
-grep "^OPENAI_MODEL" /root/bot/bot/.env
-curl -s -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/qq-bot/contents/bot/plugins/ai_chat.py" -o /root/bot/bot/plugins/ai_chat.py
-curl -s -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/qq-bot/contents/bot/persona/__init__.py" -o /root/bot/bot/persona/__init__.py
-wc -c /root/bot/bot/plugins/ai_chat.py /root/bot/bot/persona/__init__.py
+149
+pgrep -fc main.py
 /root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py /root/bot/bot/persona/__init__.py && echo 语法OK
-BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
-sleep 2
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
-sleep 30
-grep -iE "Duplicated|Traceback" /root/bot.log | head -3
 grep -c "SUCCESS" /root/bot.log
+grep -iE "Duplicated|Traceback" /root/bot.log | head -3
 bash /root/logincheck.sh 2>/dev/null | tail -2
