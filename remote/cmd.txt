@@ -1,7 +1,17 @@
-171
-curl -s --retry 3 --retry-delay 2 --max-time 55 -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/qq-bot/contents/bot/plugins/ai_chat.py" -o /root/bot/bot/plugins/ai_chat.py
-wc -c /root/bot/bot/plugins/ai_chat.py
-BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
-sleep 2
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
-echo bot重启已触发
+172
+pgrep -f "[m]ain.py" >/dev/null && echo bot在跑 || echo bot不在
+ps -eo pid,etime | grep "$(pgrep -f '[m]ain.py')" | head -1
+PY=/root/bot/venv/bin/python3
+$PY - <<'PYEOF'
+src = open('/root/remote_ctl.sh').read()
+o1 = src.replace('>> /root/napcat-restart.log 2>&1 &', '>> /root/napcat-run.log 2>&1 &')
+o2 = o1.replace('xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >>', 'xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >>')
+o3 = o2.replace('if [ $((C % 4)) -eq 0 ]; then', 'if [ $((C % 4)) -eq 0 ]; then\n  [ -f /root/napcat-run.log ] && [ "$(stat -c %s /root/napcat-run.log 2>/dev/null)" -gt 104857600 ] && : > /root/napcat-run.log', 1)
+assert o3 != src
+open('/root/remote_ctl.sh.new','w').write(o3)
+print('改动行数:', sum(1 for a,b in zip(src.splitlines(), o3.splitlines()) if a!=b))
+PYEOF
+diff /root/remote_ctl.sh /root/remote_ctl.sh.new | head -12
+cp /root/remote_ctl.sh /root/remote_ctl.sh.bak_1106
+mv /root/remote_ctl.sh.new /root/remote_ctl.sh
+bash -n /root/remote_ctl.sh && echo 新脚本语法OK
