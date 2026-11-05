@@ -1,16 +1,6 @@
-166
-pkill -f "opt/QQ/qq"; sleep 3
+167
+pkill -f "opt/QQ/[q]q"
+sleep 2
 : > /root/napcat-restart.log
-cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-space-size=512 > /root/napcat-run.log 2>&1 &
-sleep 12
+ls -lh /root/napcat-restart.log
 df -h /root | tail -1
-ls -lh /root/napcat-restart.log /root/napcat-run.log
-PY=/root/bot/venv/bin/python3
-CFG=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json
-TOKEN=$(grep -o '"token": "[^"]*"' "$CFG" | head -1 | sed 's/.*: "//;s/"//')
-H=$($PY -c "import hashlib;print(hashlib.sha256(('$TOKEN'+'.napcat').encode()).hexdigest())")
-C=$(curl -s --max-time 5 -X POST http://127.0.0.1:6099/api/auth/login -H "Content-Type: application/json" -d "{\"hash\":\"$H\"}" | $PY -c "import sys,json;print(json.load(sys.stdin)['data']['Credential'])" 2>/dev/null)
-curl -s --max-time 8 -X GET "http://127.0.0.1:6099/api/QQLogin/GetQQQRcode" -H "Authorization: Bearer $C" > /root/qrraw.json 2>/dev/null
-head -c 200 /root/qrraw.json
-echo ""
-wc -c /root/qrraw.json
