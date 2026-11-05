@@ -1,12 +1,4 @@
-143
-curl -s -H "Accept: application/vnd.github.raw" "https://api.github.com/repos/Thousands91/qq-bot/contents/bot/plugins/ai_chat.py" -o /root/bot/bot/plugins/ai_chat.py
-wc -c /root/bot/bot/plugins/ai_chat.py
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo 语法OK
-BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
-sleep 2
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
-sleep 30
-grep -iE "表情动态层" /root/bot.log | tail -2
-ls -la /root/bot/bot/data/qface_index.json 2>&1
-grep -c "SUCCESS" /root/bot.log
-grep -iE "Duplicated|Traceback" /root/bot.log | head -3
+144
+bash /root/logincheck.sh 2>/dev/null | tail -2
+pgrep -fc main.py
+sleep 5; tail -3 /root/bot.log
