@@ -1,6 +1,10 @@
-173
-ls -la /root/remote_ctl.sh /root/remote_ctl.sh.new /root/remote_ctl.sh.bak_1106 2>/dev/null
+174
+ps -o pid,ppid,etime,args -p 14630 2>/dev/null
+kill 14630 2>/dev/null && echo 已杀重复实例14630
+kill 7432 2>/dev/null && echo 已停旧实例7432
+rm -f /root/.remote_pid
+setsid nohup bash /root/remote_ctl.sh > /dev/null 2>&1 &
+sleep 5
 ps -eo pid,etime,args | grep "[r]emote_ctl" | head -3
-grep -c "napcat-restart.log" /root/remote_ctl.sh
-grep -c "napcat-run.log" /root/remote_ctl.sh
-ps -eo pid,etime | grep "$(pgrep -f '[m]ain.py' | head -1)" | head -1
+for P in $(pgrep -f "Xvfb :167") $(pgrep -f "Xvfb :168"); do kill $P 2>/dev/null; done
+ps -eo pid,args | grep "[X]vfb" | head -3
