@@ -1,7 +1,3 @@
-183
-echo "--- 检查单B3: 遥控实例数 ---"; pgrep -f "[r]emote_ctl.sh" | wc -l; pgrep -f "[r]emote_ctl.sh"
-echo "--- 检查单C: bot进程etime与启动时间 ---"; for p in $(pgrep -f "[m]ain.py"); do ps -o pid,etime,lstart -p $p | tail -1; done
-echo "--- 登录态 ---"; bash /root/logincheck.sh 2>/dev/null | head -3
-echo "--- 磁盘 ---"; df -h / | tail -1
-echo "--- netmon尾行 ---"; tail -2 /root/netmon.log
-echo "--- 看护进程 ---"; pgrep -f "[o]ffline_watch.sh" | wc -l; pgrep -f "[n]etmon.sh" | wc -l
+184
+echo "remote_task.sh 工具自检 $(date)"
+pgrep -f "[r]emote_ctl.sh" | wc -l
