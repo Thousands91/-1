@@ -1,27 +1,8 @@
-<<<task_183.txt>>>
-===== 任务183 11-06 08:38:40 =====
+<<<task_184.txt>>>
+===== 任务184 11-06 13:35:49 =====
 --- 命令 ---
-echo "--- 检查单B3: 遥控实例数 ---"; pgrep -f "[r]emote_ctl.sh" | wc -l; pgrep -f "[r]emote_ctl.sh"
-echo "--- 检查单C: bot进程etime与启动时间 ---"; for p in $(pgrep -f "[m]ain.py"); do ps -o pid,etime,lstart -p $p | tail -1; done
-echo "--- 登录态 ---"; bash /root/logincheck.sh 2>/dev/null | head -3
-echo "--- 磁盘 ---"; df -h / | tail -1
-echo "--- netmon尾行 ---"; tail -2 /root/netmon.log
-echo "--- 看护进程 ---"; pgrep -f "[o]ffline_watch.sh" | wc -l; pgrep -f "[n]etmon.sh" | wc -l
+echo "remote_task.sh 工具自检 $(date)"
+pgrep -f "[r]emote_ctl.sh" | wc -l
 --- 输出 ---
---- 检查单B3: 遥控实例数 ---
-1
-17978
---- 检查单C: bot进程etime与启动时间 ---
- 9134    08:56:19 Fri Mar 31 02:01:12 2023
---- 登录态 ---
-=== 登录状态（权威判定）===
-[未登录] 当前没有有效会话
-阶段: waiting_qrcode
---- 磁盘 ---
-/dev/block/dm-25  222G  215G  7.6G  97% /
---- netmon尾行 ---
-11-06 08:36:42 ping=21.4ms batt=
-11-06 08:37:42 ping=34.0ms batt=
---- 看护进程 ---
-1
+remote_task.sh 工具自检 Fri Nov  6 13:35:49 CST 2026
 1
