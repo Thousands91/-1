@@ -1,16 +1,15 @@
-267
-echo "== 遥控恢复确认 =="
-date "+%H:%M:%S"
+268
+echo "== NapCat 配置目录内容 =="
+ls /root/.config/QQ/NapCat/
 echo ""
-echo "== napcat.json 各候选路径 =="
-for p in /root/.config/QQ/napcat.json /root/.config/QQ/napcat/napcat.json /root/Napcat/napcat.json; do [ -f "$p" ] && echo "--- $p ---" && cat "$p"; done
+echo "== napcat.json 全文 =="
+cat /root/.config/QQ/NapCat/napcat.json 2>/dev/null
 echo ""
-echo "== QQ数据目录顶层 =="
-ls /root/.config/QQ/ | head -20
+echo "== onebot11 相关配置 =="
+ls /root/.config/QQ/NapCat/ | grep -i onebot
+for f in /root/.config/QQ/NapCat/onebot11*.json; do [ -f "$f" ] && echo "--- $f ---" && cat "$f"; done
 echo ""
-echo "== onebot11 账号配置 =="
-cat /root/.config/QQ/onebot11_3427943187.json 2>/dev/null | head -40
-echo ""
-echo "== NapCat 与 QQ 版本 =="
-grep -m1 "\"version\"" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/package.json 2>/dev/null
-grep -m1 "\"version\"" /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null
+echo "== NapCat 真实版本（从更新日志/常量里抓）=="
+grep -roE "NapCat v?[0-9]+\.[0-9]+\.[0-9]+" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/package.json 2>/dev/null | head -2
+cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/version 2>/dev/null
+grep -m1 version /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/core/package.json 2>/dev/null
