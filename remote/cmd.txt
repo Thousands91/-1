@@ -1,4 +1,16 @@
-266
-echo 回显测试OK
-tail -8 /root/remote_ctl.log
+267
+echo "== 遥控恢复确认 =="
 date "+%H:%M:%S"
+echo ""
+echo "== napcat.json 各候选路径 =="
+for p in /root/.config/QQ/napcat.json /root/.config/QQ/napcat/napcat.json /root/Napcat/napcat.json; do [ -f "$p" ] && echo "--- $p ---" && cat "$p"; done
+echo ""
+echo "== QQ数据目录顶层 =="
+ls /root/.config/QQ/ | head -20
+echo ""
+echo "== onebot11 账号配置 =="
+cat /root/.config/QQ/onebot11_3427943187.json 2>/dev/null | head -40
+echo ""
+echo "== NapCat 与 QQ 版本 =="
+grep -m1 "\"version\"" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/package.json 2>/dev/null
+grep -m1 "\"version\"" /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null
