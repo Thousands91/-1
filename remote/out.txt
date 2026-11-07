@@ -1,17 +1,36 @@
-<<<task_266.txt>>>
-===== 任务266 11-08 06:13:13 =====
+<<<task_267.txt>>>
+===== 任务267 11-08 06:14:21 =====
 --- 命令 ---
-echo 回显测试OK
-tail -8 /root/remote_ctl.log
+echo "== 遥控恢复确认 =="
 date "+%H:%M:%S"
+echo ""
+echo "== napcat.json 各候选路径 =="
+for p in /root/.config/QQ/napcat.json /root/.config/QQ/napcat/napcat.json /root/Napcat/napcat.json; do [ -f "$p" ] && echo "--- $p ---" && cat "$p"; done
+echo ""
+echo "== QQ数据目录顶层 =="
+ls /root/.config/QQ/ | head -20
+echo ""
+echo "== onebot11 账号配置 =="
+cat /root/.config/QQ/onebot11_3427943187.json 2>/dev/null | head -40
+echo ""
+echo "== NapCat 与 QQ 版本 =="
+grep -m1 "\"version\"" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/package.json 2>/dev/null
+grep -m1 "\"version\"" /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null
 --- 输出 ---
-回显测试OK
-21766:如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
-21767:11-06 17:48:41 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-[11-08 00:47] report:API回传成功
-[11-08 00:58] 心跳:循环正常,LAST=263
-[11-08 01:11] 心跳:循环正常,LAST=263
-[11-08 01:23] 心跳:循环正常,LAST=263
-[11-08 01:34] 心跳:循环正常,LAST=263
-nohup: ignoring input
-06:13:13
+== 遥控恢复确认 ==
+06:14:21
+
+== napcat.json 各候选路径 ==
+
+== QQ数据目录顶层 ==
+Crashpad
+NapCat
+crash_files
+global
+nt_qq_f31de70269f5ae9ebeb8d47e85491317
+
+== onebot11 账号配置 ==
+
+== NapCat 与 QQ 版本 ==
+  "version": "0.0.1",
+  "version": "3.2.34-53644",
