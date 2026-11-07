@@ -524,6 +524,64 @@ async def _extract_text(event, bot=None) -> str:
     return "".join(parts).strip()
 
 
+async def _memory_biography(uid: int) -> str:
+    """「你还记得我吗」→ 翻记忆和抽签账本，写一段关于这个人的小传。
+
+    素材全来自真实记录（记忆条目 + fortune_log），铁律：不许编造记录里没有的事。
+    LLM 挂了退规则版拼装，两头都不许空手。
+    """
+    entries = _load_memory(uid)
+    draws = []
+    try:
+        flog = _json.loads((MEMORY_DIR.parent / "fortune_log.json").read_text(encoding="utf-8"))
+        draws = flog.get(str(uid), [])[-5:]
+    except Exception:
+        pass
+    if not entries and not draws:
+        return random.choice([
+            "（他翻了一阵账本）您的名字还没上我这儿的簿子。今儿头一回来？坐，聊聊，兴许明天我就记得您了。",
+            "（他把账本摊开又合上）簿上还没有您。头一面的客人我都记得牢——可惜您还不是。",
+        ])
+    n = len(entries)
+    topics = [e.get("m", "") for e in entries[-8:] if e.get("m")]
+    first_day = ""
+    if entries:
+        try:
+            first_day = _time.strftime("%m月%d日", _time.localtime(min(e.get("t", 0) for e in entries)))
+        except Exception:
+            first_day = ""
+    draw_line = ""
+    if draws:
+        draw_line = "抽过的签：" + "、".join(f"{d.get('name')}({d.get('key')})" for d in draws)
+    material = (
+        f"记录条数：{n} 条" + (f"，最早一条记于 {first_day}" if first_day else "") + "\n"
+        + ("最近打交道的内容：\n" + "\n".join(f"- {t[:60]}" for t in topics) + "\n" if topics else "")
+        + (draw_line + "\n" if draw_line else "")
+    )
+    try:
+        out = await call_llm(
+            [{"role": "user",
+              "content": "客人问我「你还记得我吗」。以下是店里簿子上关于他的全部记录，"
+                         "用三五句话写一段「关于这位客人」的小传回答他：他是个什么来头的人、"
+                         "你们之间打过什么交道、抽过什么签。只用记录里有的事，一个字都不许编。"
+                         "末尾用一句书商口吻的话收（比如'您的账还记在我这儿'之类，自拟）。\n\n" + material}],
+            extra_system="（这是「小传」场景：回答里可以提'簿子/账本/我记着'这类书店意象，"
+                         "但铁律照旧——不编造、不模板腔、不挂emoji结尾。）",
+        )
+        if out and out.strip():
+            return out.strip()
+    except Exception as e:
+        logger.warning(f"小传LLM失败: {type(e).__name__} {e}")
+    # 规则兜底：拼不出花样也得给出真实信息
+    parts = [f"（他翻了翻簿子）您这名字我记着——簿上有 {n} 条跟您打交道的记录。"]
+    if topics:
+        parts.append(f"最近一回说的是：{topics[-1][:40]}。")
+    if draws:
+        parts.append(f"上回抽的签是{draws[-1].get('name')}。")
+    parts.append("这笔账我还记着呢。")
+    return "".join(parts)
+
+
 def _remember(uid: int, text: str, reply: str = "") -> None:
     """随手记一条：太短、像命令/寒暄的、和上一条重复的都不记。
 
@@ -945,6 +1003,10 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
         text = f"（对方引用了一条消息，但那条不是文字，取不到内容）{base}，看我怎么说。"
     if not await _extract_text(event, bot) and not has_reply:
         await ai_chat.finish(_with_quote(event, Message("我在。您有什么要说给我听？📖")))
+
+    # 「你还记得我吗」→ 翻记忆写小传（真实素材，不走普通对话链，防模型现编）
+    if _re_mod.search(r"(还?记得我吗|还认识我吗|认识我吗)", text):
+        await ai_chat.finish(_with_quote(event, Message(await _memory_biography(event.user_id))))
 
     # 命中问候语/固定回复关键词的，交给 keyword_reply 出声，这里闭嘴（防双回复）
     try:
