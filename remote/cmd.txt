@@ -1,2 +1,16 @@
-195
-grep -E "OPENAI_API_KEY|OPENAI_BASE_URL|OPENAI_MODEL" /root/bot/bot/.env 2>/dev/null || find /root/bot -maxdepth 2 -name ".env" 2>/dev/null
+196
+set -e
+echo "--- 1.写入API key到.env ---"
+if grep -q "SILICONFLOW_API_KEY" /root/bot/bot/.env 2>/dev/null; then echo "key已存在,跳过"; else echo 'SILICONFLOW_API_KEY="sk-veyzzthgrrlhuircmfzcnkpqwpxppchezxhqfjaggmqdummg"' >> /root/bot/bot/.env && echo "key已追加"; fi
+echo "--- 2.下载新代码 ---"
+curl -s --max-time 60 -H "Authorization: token $(grep -oE '[A-Za-z0-9_]{36,}' /root/remote_ctl.sh | head -1)" "https://raw.githubusercontent.com/Thousands91/-1/main/code/bot/plugins/ai_chat.py" -o /root/ai_chat_new.py
+wc -c /root/ai_chat_new.py
+echo "--- 3.语法检查 ---"
+if python3 -m py_compile /root/ai_chat_new.py; then echo "语法通过"; else echo "语法失败"; exit 1; fi
+echo "--- 4.备份并替换 ---"
+cp /root/bot/bot/plugins/ai_chat.py /root/ai_chat.py.bak_1107
+mv /root/ai_chat_new.py /root/bot/bot/plugins/ai_chat.py
+echo "--- 5.杀bot让看护循环拉起新版 ---"
+for p in $(pgrep -f "[m]ain.py"); do kill $p; done
+echo "bot已杀,看护60秒内自动拉起"
+echo "DEPLOY-OK"
