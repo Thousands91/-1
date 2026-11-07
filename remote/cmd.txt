@@ -1,8 +1,18 @@
-203
-apt-get install -y fonts-wqy-zenhei 2>&1 | tail -2
-echo "--- 验证 ---"
-find /usr/share/fonts -name "*wqy*" 2>/dev/null
-/root/bot/venv/bin/python -c "
-from PIL import ImageFont
-f = ImageFont.truetype('/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc', 40)
-print('字体加载OK:', f.getbbox('阿萨尔签卡')[2], 'px宽')" 2>&1
+204
+set -e
+TOKEN=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
+[ -n "$TOKEN" ] || { echo "FAIL:无token"; exit 1; }
+echo "--- 1.下载两个插件 ---"
+curl -s --max-time 60 -H "Authorization: token $TOKEN" "https://raw.githubusercontent.com/Thousands91/-1/main/code/bot/plugins/fortune.py" -o /root/fortune_new.py
+curl -s --max-time 60 -H "Authorization: token $TOKEN" "https://raw.githubusercontent.com/Thousands91/-1/main/code/bot/plugins/ai_chat.py" -o /root/ai_chat_new.py
+wc -c /root/fortune_new.py /root/ai_chat_new.py
+echo "--- 2.语法检查 ---"
+/root/bot/venv/bin/python -m py_compile /root/fortune_new.py /root/ai_chat_new.py && echo "语法通过" || { echo "语法失败"; exit 1; }
+echo "--- 3.备份替换 ---"
+cp /root/bot/bot/plugins/fortune.py /root/fortune.py.bak_1107
+cp /root/bot/bot/plugins/ai_chat.py /root/ai_chat.py.bak_1107c
+mv /root/fortune_new.py /root/bot/bot/plugins/fortune.py
+mv /root/ai_chat_new.py /root/bot/bot/plugins/ai_chat.py
+echo "--- 4.重启bot ---"
+for p in $(pgrep -f "[m]ain.py"); do kill $p; done
+echo "DEPLOY-OK"
