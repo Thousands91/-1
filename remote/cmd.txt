@@ -1,18 +1,9 @@
-262
-echo "== napcat.log 覆盖的时间范围 =="
-head -3 /root/napcat.log | grep -aoE "11-0[0-9] [0-9:]+" | head -2
-tail -5 /root/napcat.log | grep -aoE "11-0[0-9] [0-9:]+" | head -2
+263
+echo "== napcat.log 开头10行原文（确认覆盖范围起点）=="
+head -10 /root/napcat.log
 echo ""
-echo "== 所有 账号状态 变更记录 =="
-grep -an "账号状态" /root/napcat.log
+echo "== 掉线前30行（00:05:30 附近所有行）=="
+sed -n "1170,1205p" /root/napcat.log
 echo ""
-echo "== 00:05:40 到 00:06:10 完整现场 =="
-grep -an "^11-08 00:05:5\|^11-08 00:06:0" /root/napcat.log
-echo ""
-echo "== 有没有 他处登录/踢下线/安全 相关字样 =="
-grep -acn "其他设备\|他处\|安全中心\|下线\|kick" /root/napcat.log
-grep -an "其他设备\|他处\|安全中心\|kick" /root/napcat.log | head -5
-echo ""
-echo "== 内存现在的样子 =="
-free -m | head -2
-date "+现在: %F %H:%M:%S"
+echo "== 00:31 守护重启后的启动日志：登录方式相关 =="
+grep -an "快速登录\|quick\|token\|扫码\|二维码\|login\|Login\|refresh" /root/napcat-restart.log | tail -20
