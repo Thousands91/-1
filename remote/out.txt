@@ -1,24 +1,30 @@
-<<<task_250.txt>>>
-===== 任务250 11-07 21:21:56 =====
+<<<task_251.txt>>>
+===== 任务251 11-07 21:44:43 =====
 --- 命令 ---
-echo "== 1. 21:1x 表情消息的核对日志 =="
-grep -a "21:1" /root/bot/bot/bot.log | grep -aE "核对|表情" | tail -6
-echo ""
-echo "== 2. 21:0x~21:2x 全部ai_chat日志 =="
-grep -a "ai_chat" /root/bot/bot/bot.log | grep -aE "21:0|21:1|21:2" | tail -8
+echo "STEP1 下载"
+cd /root/bot/bot
+TOKEN=$(grep -o '[^:]*@github.com' /root/.git-credentials | head -1 | sed 's/@github.com//')
+cp plugins/ai_chat.py plugins/ai_chat.py.bak_1107c
+V=$(date +%s)$RANDOM
+curl -s --max-time 60 -H "Authorization: token $TOKEN" -L "https://raw.githubusercontent.com/Thousands91/qq-bot/main/bot/plugins/ai_chat.py?v=$V" -o plugins/ai_chat.py
+echo "STEP2 验证（下载源落地字节）"
+ls -la plugins/ai_chat.py
+grep -c "_emoji_scrub\|_EMOJI_OPENERS\|系统提示：对方刚冲你做了个动作" plugins/ai_chat.py
+python3 -c "import ast; ast.parse(open('plugins/ai_chat.py').read()); print('语法OK')"
+echo "STEP3 只重启bot（不动NapCat）"
+kill $(pgrep -f "venv/bin/python main.py") 2>/dev/null; sleep 4
+nohup /root/bot/venv/bin/python main.py >> bot.log 2>&1 &
+sleep 15
+pgrep -af "main.py" || echo "启动失败"
+tail -3 bot.log
 --- 输出 ---
-== 1. 21:1x 表情消息的核对日志 ==
-11-07 21:15:52 [INFO] ai_chat | [核对·调试] ask='[表情:略]' lead=False contra=False agree=False dodge=False ans='[表情:略] 这表情，似乎在说“故事先放一放，我有话要说”。📖🤔'
-11-07 21:16:07 [INFO] ai_chat | [核对·调试] ask='[表情:知识增加]' lead=False contra=False agree=False dodge=False ans='[表情:知识增加] 您的提问如同夜空中闪烁的星辰，照亮了我知识的海洋。🌟'
-11-07 21:17:16 [INFO] ai_chat | [核对·调试] ask='[表情:无语]' lead=False contra=False agree=False dodge=False ans='[表情:无语] 这表情，似乎在说“这事情，实在让人难以置信”。📚😕'
-11-07 21:19:10 [INFO] ai_chat | [核对·调试] ask='[表情:散味儿]' lead=False contra=False agree=False dodge=False ans='[表情:散味儿] 这表情，像是在说“这件事情，真是让人闻所未闻”。📚🥂'
-
-== 2. 21:0x~21:2x 全部ai_chat日志 ==
-11-07 21:19:18 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=893)
-11-07 21:19:18 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=893) running complete
-11-07 21:19:38 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=893)
-11-07 21:19:38 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=893) running complete
-11-07 21:19:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=893)
-11-07 21:19:41 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=893) running complete
-11-07 21:19:50 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=893)
-11-07 21:19:50 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=893) running complete
+STEP1 下载
+STEP2 验证（下载源落地字节）
+-rw-r--r--. 1 root root 88507 Nov  7 21:44 plugins/ai_chat.py
+7
+语法OK
+STEP3 只重启bot（不动NapCat）
+24966 /root/bot/venv/bin/python main.py
+11-07 21:44:56 [INFO] uvicorn | 127.0.0.1:39054 - "WebSocket /onebot/v11/ws" [accepted]
+11-07 21:44:56 [INFO] websockets | connection open
+11-07 21:44:56 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
