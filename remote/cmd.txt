@@ -1,16 +1,12 @@
-269
-echo "== napcat 安装目录下的 config =="
-ls /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/
+270
+echo "== 账号级 napcat_3427943187.json =="
+cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json
 echo ""
-echo "== napcat.json =="
-cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json 2>/dev/null
+echo "== 协议配置 =="
+cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_protocol_3427943187.json 2>/dev/null
 echo ""
-echo "== onebot11 配置 =="
-for f in /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11*.json; do [ -f "$f" ] && echo "--- $f ---" && cat "$f"; done
+echo "== NapCat 版本（从启动日志找）=="
+grep -aoE "NapCat[/ ]v?[0-9]+\.[0-9]+\.[0-9]+" /root/napcat.log /root/napcat-restart.log 2>/dev/null | head -3
 echo ""
-echo "== NapCat data 目录 =="
-ls /root/.config/QQ/NapCat/data/ | head
-echo ""
-echo "== NapCat 版本（找更新器常量）=="
-grep -roE "\"[0-9]+\.[0-9]+\.[0-9]+\"" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/static/dist/version.json 2>/dev/null | head -3
-ls /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/static 2>/dev/null | head -8
+echo "== QQ 当前是否在等扫码 =="
+tail -5 /root/napcat.log
