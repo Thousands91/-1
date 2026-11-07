@@ -1,5 +1,2 @@
-227
-grep -B1 "txz.qq.com/p?k=" /root/napcat-run.log | tail -4
-echo "== 日志最后修改时间 =="
-ls -la /root/napcat-run.log
-date "+现在: %F %H:%M:%S"
+228
+grep -oE "https://txz.qq.com/p\?k=[^ \"]*" /root/napcat-run.log | tail -1
