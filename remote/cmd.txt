@@ -1,17 +1,15 @@
-220
-echo "STEP1 下载到正确路径"
+221
+echo "STEP1 重新下载"
 cd /root/bot/bot
 TOKEN=$(grep -o '[^:]*@github.com' /root/.git-credentials | head -1 | sed 's/@github.com//')
 curl -s --max-time 60 -H "Authorization: token $TOKEN" -L "https://raw.githubusercontent.com/Thousands91/qq-bot/main/bot/plugins/fortune.py?v=$(date +%s)$RANDOM" -o plugins/fortune.py
-echo "STEP2 版本验证"
-grep -c "_readable" plugins/fortune.py
+echo "STEP2 验证"
 ls -la plugins/fortune.py
-echo "STEP3 清理误下载目录"
-rm -rf /root/bot/bot/bot/plugins 2>/dev/null; rmdir /root/bot/bot/bot 2>/dev/null; ls /root/bot/bot/bot 2>/dev/null || echo "已清理"
-echo "STEP4 重启bot"
-kill 16618 2>/dev/null; sleep 4
+grep -c "_readable" plugins/fortune.py
+python3 -c "import ast; ast.parse(open('plugins/fortune.py').read()); print('语法OK')"
+echo "STEP3 重启"
+kill $(pgrep -f "venv/bin/python main.py") 2>/dev/null; sleep 4
 nohup /root/bot/venv/bin/python main.py >> bot.log 2>&1 &
 sleep 15
-echo "STEP5 启动验证"
 pgrep -af "main.py" || echo "启动失败"
-tail -6 bot.log
+tail -3 bot.log
