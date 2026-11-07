@@ -1,41 +1,24 @@
-<<<task_224.txt>>>
-===== 任务224 11-07 18:54:40 =====
+<<<task_225.txt>>>
+===== 任务225 11-07 18:58:35 =====
 --- 命令 ---
-echo "== 1. 复制新码进相册 =="
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null && chmod 644 /sdcard/DCIM/Camera/asar_qr.png && echo "新码已进相册" || echo "复制失败"
-ls -la /sdcard/DCIM/Camera/asar_qr.png
-echo "== 2. 启动监控脚本（有nohup后台版则用之） =="
-if [ -f /root/azar_watchd.sh ]; then
-  nohup bash /root/azar_watchd.sh > /root/azar_watchd.log 2>&1 & 
-  echo "用后台守护版启动"
-else
-  nohup bash /root/bot/bot/azar_watch.sh > /root/azar_watch.log 2>&1 &
-  echo "用bot目录版启动"
-fi
-sleep 3
-pgrep -af "azar_watch" || echo "启动失败"
-echo "== 3. NapCat 进程确认（换个搜法） =="
-ps aux 2>/dev/null | grep -iE "napcat|NapCat" | grep -v grep | head -3 || echo "ps里未见"
-ls /proc/*/cmdline 2>/dev/null | head -1 >/dev/null && for p in /proc/[0-9]*/cmdline; do tr '\0' ' ' < "$p" 2>/dev/null | grep -qi napcat && echo "活: $(cat /proc/${p//[!0-9]/}/cmdline 2>/dev/null | tr '\0' ' ' | head -c 80)"; done | head -3
-echo "== 4. NapCat 当前是否在等扫码 =="
-tail -3 /root/napcat.log 2>/dev/null
+echo "== proot/沙箱启动命令 =="
+ps aux 2>/dev/null | grep -iE "proot" | grep -v grep | head -2
+echo "== 从Termux视角看沙箱根 =="
+mount 2>/dev/null | grep -E "proot|/root" | head -3
+echo "== NapCat 出新码的日志特征确认 =="
+grep "二维码" /root/napcat.log 2>/dev/null | tail -3
+echo "== 二维码缓存当前位置与时间 =="
+ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
 --- 输出 ---
-== 1. 复制新码进相册 ==
-新码已进相册
--rw-rw----. 1 10155 1023 605 Nov  7 18:54 /sdcard/DCIM/Camera/asar_qr.png
-== 2. 启动监控脚本（有nohup后台版则用之） ==
-用bot目录版启动
-17045 bash /root/bot/bot/azar_watch.sh
-17048 bash /root/bot/bot/azar_watch.sh
-== 3. NapCat 进程确认（换个搜法） ==
-aid_u0_+  1459  0.0  0.0   2396   132 ?        S<    2023   0:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
-aid_u0_+  1476  2.1  0.0 205568312 6048 ?      S<l   2023  15:51 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
-aid_u0_+  1479  0.0  0.0 50707504 460 ?        S<    2023   0:00 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-活: /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu -
-活: /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer 
-活: /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox 
-bash: line 16: /proc/17084/cmdline: No such file or directory
-== 4. NapCat 当前是否在等扫码 ==
-[15870:1105/234155.160974:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[15870:1105/234155.177510:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[15870:1105/234155.177611:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+== proot/沙箱启动命令 ==
+aid_u0_+  9220 31.4  0.0 12405472 3088 pts/0   S<    2023 1002:38 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/data/misc/apexdata/com.android.art/dalvik-cache --bind=/storage/self/primary:/mnt/sdcard --bind=/storage/self/primary:/sdcard --bind=/storage/self/primary:/storage/emulated/0 --bind=/storage/self/primary:/storage/self/primary --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/product --bind=/system --bind=/system_ext --bind=/vendor --bind=/linkerconfig/ld.config.txt --bind=/linkerconfig/com.android.art/ld.config.txt --bind=/data/data/com.termux/files/usr /bin/bash -l
+== 从Termux视角看沙箱根 ==
+/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm on /dev/shm type bind (rw,relatime)
+/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid on /proc/sys/kernel/overflowgid type bind (rw,relatime)
+/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid on /proc/sys/kernel/overflowuid type bind (rw,relatime)
+== NapCat 出新码的日志特征确认 ==
+如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+11-05 18:27:07 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+11-05 18:27:47 [[32minfo[39m] [Core] [Login] 二维码已被扫描，等待确认...
+== 二维码缓存当前位置与时间 ==
+-rw-r--r--. 1 root root 600 Nov  7 18:56 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
