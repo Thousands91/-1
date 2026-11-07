@@ -1,24 +1,44 @@
-<<<task_217.txt>>>
-===== 任务217 11-07 17:54:05 =====
+<<<task_218.txt>>>
+===== 任务218 11-07 17:54:40 =====
 --- 命令 ---
-echo "STEP1 版本检查"
-grep -c "_readable" /root/bot/bot/bot/plugins/fortune.py || echo "无_readable=旧版"
-echo "STEP2 进程"
-pgrep -f "python.*bot.py" || echo "无bot进程"
-echo "STEP3 日志尾"
-tail -8 /tmp/bot_run.log 2>/dev/null || tail -8 /root/bot/bot/bot.log 2>/dev/null || echo "无日志"
+echo "== find bot.py =="
+find /root -name "bot.py" -not -path "*/node_modules/*" 2>/dev/null | head -5
+echo "== find fortune.py =="
+find /root -name "fortune.py" 2>/dev/null | head -5
+echo "== /root/bot 结构 =="
+ls /root/bot 2>/dev/null
+ls /root/bot/bot 2>/dev/null | head -20
 --- 输出 ---
-STEP1 版本检查
-grep: /root/bot/bot/bot/plugins/fortune.py: No such file or directory
-无_readable=旧版
-STEP2 进程
-无bot进程
-STEP3 日志尾
-10-31 23:24:17 [INFO] uvicorn | 127.0.0.1:39622 - "GET / HTTP/1.1" 404
-10-31 23:48:07 [INFO] uvicorn | 127.0.0.1:48782 - "GET / HTTP/1.1" 404
-11-01 00:09:31 [INFO] uvicorn | 127.0.0.1:39752 - "GET / HTTP/1.1" 404
-11-01 00:24:42 [INFO] uvicorn | 127.0.0.1:42470 - "GET / HTTP/1.1" 404
-11-01 00:42:43 [INFO] uvicorn | 127.0.0.1:41842 - "GET / HTTP/1.1" 404
-11-01 07:47:20 [INFO] uvicorn | 127.0.0.1:47888 - "GET / HTTP/1.1" 404
-11-01 13:57:47 [INFO] uvicorn | 127.0.0.1:43686 - "GET / HTTP/1.1" 404
-11-01 15:31:41 [INFO] uvicorn | 127.0.0.1:47326 - "GET / HTTP/1.1" 404
+== find bot.py ==
+/root/bot/venv/lib/python3.12/site-packages/nonebot/adapters/onebot/v11/bot.py
+/root/bot/venv/lib/python3.12/site-packages/nonebot/adapters/onebot/v12/bot.py
+/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/adapter/bot.py
+== find fortune.py ==
+/root/bot/bot/plugins/fortune.py
+== /root/bot 结构 ==
+README.md
+bot
+bot.log
+cqhttp
+cqhttp-config.yml
+docker
+docs
+scripts
+termux
+ven
+venv
+venv③
+装
+__pycache__
+assets
+azar_watch.sh
+bot.log
+config
+config.py
+data
+guild1.db
+main.py
+persona
+plugins
+pyproject.toml
+requirements.txt
