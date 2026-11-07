@@ -51,8 +51,9 @@ _CARD_FONT_CANDIDATES = [
     "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
     "/usr/share/fonts/truetype/wqy/wqy-microhei.ttc",
 ]
-# 品级配色对齐原作：金=黄金、银=白银、铜=青铜、石=生赭色（SCP-19299："金、银、青铜、生赭四色对应金银铜石"）
-_TIER_RGB = {"金": (216, 176, 74), "银": (185, 196, 206), "铜": (172, 114, 60), "石": (148, 88, 52)}
+# 品级配色 = 官方wiki卡面阴影层实测主色（patchwiki.biligame.com 素材直接取色，2026-11-07）
+# 金(188,172,88) 银(148,172,200偏蓝) 铜(156,180,132偏绿锈) 石(152,134,122暖石灰)
+_TIER_RGB = {"金": (188, 172, 88), "银": (148, 172, 200), "铜": (156, 180, 132), "石": (152, 134, 122)}
 _KEY_RGB = {"大吉": (168, 108, 10), "吉": (128, 100, 22), "小吉": (108, 92, 44),
             "平": (108, 108, 100), "小凶": (64, 96, 140), "凶": (172, 36, 20), "未定": (118, 110, 98)}
 
@@ -84,15 +85,16 @@ def _render_card(sign, card, tier, scores, avg, user, date_str):
             return None
         W, H = 720, 1080
         tc = _TIER_RGB[tier["name"]]
-        tc_text = tuple(int(c * 0.72) for c in tc)   # 品级色文字用（加深）
+        tc_deep = _mix(tc, (30, 24, 16), 0.35)       # 边框/进度条用（比底色深才看得见）
+        tc_text = _mix(tc, (30, 24, 16), 0.45)       # 品级色文字用
         kc = _KEY_RGB.get(sign["key"], (110, 102, 88))
-        # 卡面底色 = 品级色的柔和版（对齐原作：金卡金面、石卡赭面），文字保持深色可读
-        bg = _mix(tc, (255, 253, 249), 0.55)
+        # 卡面底色 = 官方品级阴影层实测色
+        bg = tc
         img = Image.new("RGB", (W, H), bg)
         d = ImageDraw.Draw(img)
-        # 双层边框：外粗内细，品级色
-        d.rectangle([8, 8, W - 9, H - 9], outline=tc, width=5)
-        d.rectangle([20, 20, W - 21, H - 21], outline=tuple(int(c * 0.55) for c in tc), width=2)
+        # 双层边框：外粗内细
+        d.rectangle([8, 8, W - 9, H - 9], outline=tc_deep, width=5)
+        d.rectangle([20, 20, W - 21, H - 21], outline=tc_text, width=2)
         f_small = ImageFont.truetype(font_path, 26)
         f_key = ImageFont.truetype(font_path, 58)
         f_name = ImageFont.truetype(font_path, 96)
@@ -125,9 +127,9 @@ def _render_card(sign, card, tier, scores, avg, user, date_str):
         bar_x, bar_w = 210, 330
         for dim, v in scores.items():
             d.text((70, y), dim, font=f_dim, fill=(85, 76, 66))
-            d.rounded_rectangle([bar_x, y + 4, bar_x + bar_w, y + 26], radius=8, fill=_mix(bg, (40, 30, 20), 0.14))
+            d.rounded_rectangle([bar_x, y + 4, bar_x + bar_w, y + 26], radius=8, fill=_mix(bg, (30, 24, 16), 0.22))
             fill_w = int(bar_w * (v - 20) / 80)
-            d.rounded_rectangle([bar_x, y + 4, bar_x + max(fill_w, 14), y + 26], radius=8, fill=tc)
+            d.rounded_rectangle([bar_x, y + 4, bar_x + max(fill_w, 14), y + 26], radius=8, fill=tc_deep)
             d.text((bar_x + bar_w + 18, y), str(v), font=f_dim, fill=(62, 54, 46))
             y += 46
         # 底部：人 + 日期
