@@ -1,8 +1,8 @@
-<<<task_260.txt>>>
-===== 任务260 11-08 00:37:54 =====
+<<<task_261.txt>>>
+===== 任务261 11-08 00:40:06 =====
 --- 命令 ---
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册(DCIM/Camera/asar_qr.png)
+cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png && echo 码已放进相册去QQ扫
 stat -c "%y" /sdcard/DCIM/Camera/asar_qr.png
 --- 输出 ---
-bash: line 1: syntax error near unexpected token `('
-bash: line 1: `cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册(DCIM/Camera/asar_qr.png)'
+码已放进相册去QQ扫
+2026-11-08 00:40:06.468332541 +0800
