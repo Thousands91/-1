@@ -1,30 +1,17 @@
-<<<task_206.txt>>>
-===== 任务206 11-07 15:01:27 =====
+<<<task_207.txt>>>
+===== 任务207 11-07 15:18:13 =====
 --- 命令 ---
-cd /root/bot/bot && /root/bot/venv/bin/python - <<'PYEOF'
-import sys
-sys.path.insert(0, "/root/bot/bot/plugins")
-import nonebot
-nonebot.init()
-import fortune as F
-b = F._render_card(F.SIGNS[0], F.CARD_TYPES["征服"], F.TIERS["金"],
-                   {d: 60 for d in F.DIMENSIONS}, 60, "真机测试客", "11月07日")
-open("/root/test_card.png", "wb").write(b)
-print("卡牌PNG字节数:", len(b))
-F._log_draw(99999, F.SIGNS[0])
-import json, pathlib
-print("记账:", json.loads(pathlib.Path("/root/bot/bot/data/fortune_log.json").read_text()).get("99999"))
-from PIL import Image
-img = Image.open("/root/test_card.png"); img.verify()
-print("PNG校验:", img.size, img.format)
-PYEOF
-ls -la /root/test_card.png && rm -f /root/test_card.png
-echo "LIVE-OK"
+set -e
+TOKEN=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
+[ -n "$TOKEN" ] || { echo "FAIL:无token"; exit 1; }
+curl -s --max-time 60 -H "Authorization: token $TOKEN" "https://raw.githubusercontent.com/Thousands91/-1/main/code/bot/plugins/fortune.py" -o /root/fortune_new.py
+wc -c /root/fortune_new.py
+/root/bot/venv/bin/python -m py_compile /root/fortune_new.py && echo "语法通过" || { echo "语法失败"; exit 1; }
+cp /root/bot/bot/plugins/fortune.py /root/fortune.py.bak_1107b
+mv /root/fortune_new.py /root/bot/bot/plugins/fortune.py
+for p in $(pgrep -f "[m]ain.py"); do kill $p; done
+echo "DEPLOY-OK"
 --- 输出 ---
-11-07 15:01:29 [SUCCESS] nonebot | NoneBot is initializing...
-11-07 15:01:29 [INFO] nonebot | Current Env: prod
-卡牌PNG字节数: 83519
-记账: [{'d': '2026-11-07', 'key': '大吉', 'name': '破城'}]
-PNG校验: (720, 1080) PNG
--rw-r--r--. 1 root root 83519 Nov  7 15:01 /root/test_card.png
-LIVE-OK
+19519 /root/fortune_new.py
+语法通过
+DEPLOY-OK
