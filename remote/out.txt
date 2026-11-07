@@ -1,28 +1,21 @@
-<<<task_252.txt>>>
-===== 任务252 11-07 21:58:57 =====
+<<<task_253.txt>>>
+===== 任务253 11-07 22:06:13 =====
 --- 命令 ---
-echo "STEP1 下载"
 cd /root/bot/bot
 TOKEN=$(grep -o '[^:]*@github.com' /root/.git-credentials | head -1 | sed 's/@github.com//')
 V=$(date +%s)$RANDOM
 curl -s --max-time 60 -H "Authorization: token $TOKEN" -L "https://raw.githubusercontent.com/Thousands91/qq-bot/main/bot/plugins/ai_chat.py?v=$V" -o plugins/ai_chat.py
-echo "STEP2 验证"
 ls -la plugins/ai_chat.py
-grep -c "_hist_text" plugins/ai_chat.py
+grep -c "混用" plugins/ai_chat.py
 python3 -c "import ast; ast.parse(open('plugins/ai_chat.py').read()); print('语法OK')"
-echo "STEP3 重启bot"
 kill $(pgrep -f "venv/bin/python main.py") 2>/dev/null; sleep 4
 nohup /root/bot/venv/bin/python main.py >> bot.log 2>&1 &
 sleep 15
 pgrep -af "main.py" || echo "启动失败"
 grep -a "connected" bot.log | tail -1
-grep -a "21:5\|21:4" bot.log | grep -aiE "error|traceback" | tail -3 || echo "无报错"
 --- 输出 ---
-STEP1 下载
-STEP2 验证
--rw-r--r--. 1 root root 88689 Nov  7 21:58 plugins/ai_chat.py
-3
+-rw-r--r--. 1 root root 89127 Nov  7 22:06 plugins/ai_chat.py
+4
 语法OK
-STEP3 重启bot
-28261 /root/bot/venv/bin/python main.py
-11-07 21:59:15 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+12863 /root/bot/venv/bin/python main.py
+11-07 22:06:26 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
