@@ -1,2 +1,5 @@
-230
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null && chmod 644 /sdcard/DCIM/Camera/asar_qr.png && echo 相册已更新
+231
+echo "== azar_login.sh 是否在 =="
+ls -la /root/azar_login.sh 2>/dev/null || echo "不在了"
+echo "== 内容 =="
+cat /root/azar_login.sh 2>/dev/null | head -40
