@@ -1,17 +1,15 @@
-<<<task_226.txt>>>
-===== 任务226 11-07 19:12:19 =====
+<<<task_227.txt>>>
+===== 任务227 11-07 19:12:56 =====
 --- 命令 ---
-echo "== 找最新的二维码解码URL =="
-for f in /root/napcat-run.log /root/napcat.log /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/logs/*.log; do
-  [ -f "$f" ] && grep -oE "https?://[^ '\"]*" "$f" 2>/dev/null | grep -iE "ptlogin|qrcode|qr" | tail -2 && echo "（来自 $f）"
-done 2>/dev/null | tail -8
-echo "== 日志尾部ASCII码图特征确认 =="
-grep -c "█\|▄\|▀" /root/napcat-run.log 2>/dev/null || echo "0"
+grep -B1 "txz.qq.com/p?k=" /root/napcat-run.log | tail -4
+echo "== 日志最后修改时间 =="
+ls -la /root/napcat-run.log
+date "+现在: %F %H:%M:%S"
 --- 输出 ---
-== 找最新的二维码解码URL ==
-https://txz.qq.com/p?k=qSyvnhlv5tHODNqRVCHnBNEkUfw9hHQo&f=1600001615
-https://txz.qq.com/p?k=eUg8TzQrA8gcaEQB6mIMMdYfd93o-GQt&f=1600001615
-（来自 /root/napcat-run.log）
-（来自 /root/napcat.log）
-== 日志尾部ASCII码图特征确认 ==
-11646
+二维码解码URL: https://txz.qq.com/p?k=rS4KndGxqWQauFMSekJkhQZzR7l6xc7a&f=1600001615
+--
+
+二维码解码URL: https://txz.qq.com/p?k=DcSii2-AVIkfYOi*720K4y6Do1G5cR-7&f=1600001615
+== 日志最后修改时间 ==
+-rw-r--r--. 1 root root 4398867 Nov  7 19:12 /root/napcat-run.log
+现在: 2026-11-07 19:12:56
