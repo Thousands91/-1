@@ -1,30 +1,13 @@
-<<<task_232.txt>>>
-===== 任务232 11-07 19:45:42 =====
+<<<task_233.txt>>>
+===== 任务233 11-07 19:46:18 =====
 --- 命令 ---
-echo "== 1. 登录状态 =="
-grep -aE "Login success|登录成功|账号.*上线|websocket" /root/napcat-run.log 2>/dev/null | tail -3
-echo "== 2. NapCat 连接大脑的WS =="
-grep -aE "connect|WebSocket" /root/napcat-run.log 2>/dev/null | tail -3
-echo "== 3. bot 日志尾（看有没有收到消息的痕迹） =="
-tail -8 /root/bot/bot/bot.log
-echo "== 4. 进程三件套 =="
-pgrep -af "main.py" | head -1
-pgrep -f "opt/QQ/qq" >/dev/null && echo "NapCat:活" || echo "NapCat:死"
+grep -aE "call_api|send_msg|image" /root/bot/bot/bot.log 2>/dev/null | tail -4
+echo "== 抽签处理时段有没有异常 =="
+grep -a "19:45:2" /root/bot/bot/bot.log | grep -iaE "error|fail|traceback" || echo "无报错"
 --- 输出 ---
-== 1. 登录状态 ==
-== 2. NapCat 连接大脑的WS ==
-[1476:1107/064124.285485:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
-[1476:1107/064124.287774:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
-[1549:1107/194319.018144:ERROR:ui/gfx/x/connection.cc:66] X connection error received.
-== 3. bot 日志尾（看有没有收到消息的痕迹） ==
-11-07 19:45:21 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 376322581 from 1561950850@[群:590454333] '[at:qq=3427943187] 抽签'
-11-07 19:45:21 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.fortune, lineno=25)
-11-07 19:45:23 [INFO] nonebot | Matcher(type='message', module=plugins.fortune, lineno=25) running complete
-11-07 19:45:24 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1001716945 from 3552275152@[群:590454333] '哎这个小圆和谁换上情头了'
-11-07 19:45:24 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-07 19:45:24 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-07 19:45:24 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=886)
-11-07 19:45:24 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=886) running complete
-== 4. 进程三件套 ==
-5585 /root/bot/venv/bin/python main.py
-NapCat:活
+11-07 17:57:54 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+11-07 18:01:50 [SUCCESS] nonebot | Succeeded to load plugin "image_search_web" from "plugins.image_search_web"
+11-07 18:01:50 [SUCCESS] nonebot | Succeeded to load plugin "image_see" from "plugins.image_see"
+11-07 18:01:50 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+== 抽签处理时段有没有异常 ==
+无报错
