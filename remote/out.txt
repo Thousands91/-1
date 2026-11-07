@@ -1,83 +1,17 @@
-<<<task_263.txt>>>
-===== 任务263 11-08 00:47:21 =====
+<<<task_266.txt>>>
+===== 任务266 11-08 06:13:13 =====
 --- 命令 ---
-echo "== napcat.log 开头10行原文（确认覆盖范围起点）=="
-head -10 /root/napcat.log
-echo ""
-echo "== 掉线前30行（00:05:30 附近所有行）=="
-sed -n "1170,1205p" /root/napcat.log
-echo ""
-echo "== 00:31 守护重启后的启动日志：登录方式相关 =="
-grep -an "快速登录\|quick\|token\|扫码\|二维码\|login\|Login\|refresh" /root/napcat-restart.log | tail -20
+echo 回显测试OK
+tail -8 /root/remote_ctl.log
+date "+%H:%M:%S"
 --- 输出 ---
-== napcat.log 开头10行原文（确认覆盖范围起点）==
-not mini app. 
-[preload] succeeded. /root/Napcat/opt/QQ/resources/app/major.node
-[preload] succeeded. /root/Napcat/opt/QQ/resources/app/major.node
-[28575:1107/210417.605278:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
-resourcesPath: /root/Napcat/opt/QQ/resources
-[28575:1107/210420.170883:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
-[28575:1107/210420.170996:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
-[28575:1107/210420.177860:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
-[28575:1107/210420.180439:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
-[28575:1107/210420.225569:ERROR:device/udev_linux/udev_watcher.cc:51] Failed to initialize a udev monitor.
-
-== 掉线前30行（00:05:30 附近所有行）==
-11-08 00:02:41 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [嘻嘻(3358627236)] 他告诉我这个是12345678
-11-08 00:02:42 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [嘻嘻(3358627236)] 这种
-11-08 00:02:44 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 什么蓝牙
-11-08 00:02:46 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [小圆ovo(1963439579)] ？
-11-08 00:02:49 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [嘻嘻(3358627236)] [回复消息 [七嘻ttl(3552275152)] 什么蓝牙] @七嘻ttl (3552275152)  耳机
-11-08 00:02:51 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [嘻嘻(3358627236)] 配
-11-08 00:02:54 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [嘻嘻(3358627236)] 音响
-11-08 00:03:00 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [木子米木子米(2423816346)] [图片]
-11-08 00:03:11 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 放歌吗
-11-08 00:03:15 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [愿愿嘻望(462681975)] 我碎觉了晚安
-11-08 00:03:17 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [嘻嘻(3358627236)] 我当时想着以后想买穿戴甲
-11-08 00:03:21 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [愿愿嘻望(462681975)] 卷子晚自习再说
-11-08 00:03:22 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [愿愿嘻望(462681975)] [图片]
-11-08 00:03:23 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [小圆ovo(1963439579)] @愿愿嘻望 (462681975)  别睡啊
-11-08 00:03:23 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [嘻嘻(3358627236)] 就问问这个多少码m码吗
-11-08 00:03:32 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [小圆ovo(1963439579)] @愿愿嘻望 (462681975)  先给你讲讲竞赛
-11-08 00:03:32 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [嘻嘻(3358627236)] 他说是看数字
-11-08 00:03:39 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [愿愿嘻望(462681975)] [回复消息 [小圆ovo(1963439579)] @愿愿嘻望 (462681975)  先给你讲讲竞赛] @小圆ovo (1963439579)  会听睡着的
-11-08 00:03:43 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [嘻嘻(3358627236)] 数字越大说明你指甲越小
-11-08 00:03:48 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [嘻嘻(3358627236)] [回复消息 [七嘻ttl(3552275152)] 放歌吗] @七嘻ttl (3552275152)  是的
-11-08 00:03:49 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [小圆ovo(1963439579)] @愿愿嘻望 (462681975)  没事听一点是一点
-11-08 00:03:51 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [嘻嘻(3358627236)] 不然太尴尬了
-11-08 00:03:54 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [嘻嘻(3358627236)] 很安静
-11-08 00:04:06 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [小圆ovo(1963439579)] 原来不会睡觉吗
-11-08 00:04:42 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [二旬老人想玩4i发现对方是比我还猛的猛1(2959186535)] [语音 56s]
-11-08 00:04:58 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [长太息以笑希希，乐希希之多艰(553414459)] 好舒服啊😌
-11-08 00:05:04 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [长太息以笑希希，乐希希之多艰(553414459)] 龙龙我爱你
-11-08 00:05:05 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [长太息以笑希希，乐希希之多艰(553414459)] ❤
-11-08 00:05:13 [[32minfo[39m] 阿萨尔 | [ServerTime] 时间同步完成，偏差 411ms
-478f89d109687318292a19b1d51794045e7654847fb1d438547aa0c207424121
-11-08 00:05:54 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-c9ef99ffa8e934d4f7a97166741cb5e9499f30a41aa8a52a91fa5c4d7d3d5387
-[28575:1108/000558.158712:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
-[28575:1108/000558.328216:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[28575:1108/000558.356795:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[28575:1108/000558.381270:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-
-== 00:31 守护重启后的启动日志：登录方式相关 ==
-21474:11-06 17:42:36 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-21476:11-06 17:42:36 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
-21499:二维码解码URL: https://txz.qq.com/p?k=cXlTaTySEZut-cKpjeXDIPgKfcMyjOFC&f=1600001615
-21500:如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
-21501:11-06 17:42:36 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-21563:11-06 17:44:38 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-21565:11-06 17:44:38 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
-21588:二维码解码URL: https://txz.qq.com/p?k=-*JzNU*K8gwkCkGJT0YlrdL177Y74ayF&f=1600001615
-21589:如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
-21590:11-06 17:44:39 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-21652:11-06 17:46:41 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-21654:11-06 17:46:41 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
-21677:二维码解码URL: https://txz.qq.com/p?k=SR72NCfeDHstdV9grUEyJLYWbjlzRWsc&f=1600001615
-21678:如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
-21679:11-06 17:46:41 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-21740:11-06 17:48:41 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-21742:11-06 17:48:41 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
-21765:二维码解码URL: https://txz.qq.com/p?k=yd1yQV5OpPzT8orX8pCyT5*MgLTd0rpO&f=1600001615
+回显测试OK
 21766:如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
 21767:11-06 17:48:41 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+[11-08 00:47] report:API回传成功
+[11-08 00:58] 心跳:循环正常,LAST=263
+[11-08 01:11] 心跳:循环正常,LAST=263
+[11-08 01:23] 心跳:循环正常,LAST=263
+[11-08 01:34] 心跳:循环正常,LAST=263
+nohup: ignoring input
+06:13:13
