@@ -1,13 +1,6 @@
-254
-cd /root/bot/bot
-TOKEN=$(grep -o '[^:]*@github.com' /root/.git-credentials | head -1 | sed 's/@github.com//')
-V=$(date +%s)$RANDOM
-curl -s --max-time 60 -H "Authorization: token $TOKEN" -L "https://raw.githubusercontent.com/Thousands91/qq-bot/main/bot/plugins/ai_chat.py?v=$V" -o plugins/ai_chat.py
-ls -la plugins/ai_chat.py
-grep -c "坑58" plugins/ai_chat.py
-python3 -c "import ast; ast.parse(open('plugins/ai_chat.py').read()); print('语法OK')"
-kill $(pgrep -f "venv/bin/python main.py") 2>/dev/null; sleep 4
-nohup /root/bot/venv/bin/python main.py >> bot.log 2>&1 &
-sleep 15
-pgrep -af "main.py" || echo "启动失败"
-grep -a "connected" bot.log | tail -1
+255
+echo "== 手机端最近的联网日志 =="
+grep -aE "\[联网\]|\[存疑\]" /root/bot/bot/bot.log | tail -8
+echo ""
+echo "== 最近一次联网的时间距今 =="
+date "+现在: %F %H:%M:%S"
