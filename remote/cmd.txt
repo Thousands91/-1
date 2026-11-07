@@ -1,11 +1,15 @@
-222
-echo "== 进程 =="
-pgrep -af "main.py" || echo "无进程"
-echo "== 启动后日志中的报错/异常 =="
-grep -iE "error|traceback|exception|失败" /root/bot/bot/bot.log 2>/dev/null | tail -5 || echo "无报错"
-echo "== 最新日志 =="
-tail -6 /root/bot/bot/bot.log
-echo "== 插件文件在位 =="
-ls -la /root/bot/bot/plugins/fortune.py /root/bot/bot/plugins/ai_chat.py 2>/dev/null
-echo "== NapCat 状态 =="
-tail -3 /root/napcat.log 2>/dev/null | head -3
+223
+echo "== 1. NapCat/QQ 进程 =="
+pgrep -af "napcat\|NapCat\|qq" 2>/dev/null | grep -v grep | head -4 || echo "未见NapCat进程"
+echo "== 2. 二维码监控脚本是否在跑 =="
+pgrep -af "azar_watch" || echo "监控脚本未运行"
+echo "== 3. NapCat 最近登录相关日志 =="
+grep -E "二维码|扫码|Login|登录|offline|离线|账号" /root/napcat.log 2>/dev/null | tail -6
+echo "== 4. 二维码文件与时间 =="
+ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null || echo "缓存无二维码文件"
+ls -la /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null || echo "相册暂无二维码副本"
+date "+当前时间 %H:%M:%S"
+echo "== 5. bot端就绪 =="
+pgrep -af "main.py" || echo "bot未运行"
+echo "== 6. NapCat webui/端口 =="
+netstat -tlnp 2>/dev/null | grep -E "6099|8080|3001" | head -4
