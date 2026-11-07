@@ -1,39 +1,17 @@
-<<<task_215.txt>>>
-===== 任务215 11-07 16:20:15 =====
+<<<task_216.txt>>>
+===== 任务216 11-07 17:51:32 =====
 --- 命令 ---
-echo "验证时间: $(date +%H:%M:%S)"
-PID=$(pgrep -f "[m]ain.py" | head -1)
-if [ -n "$PID" ]; then ps -o pid,etime -p $PID | tail -1; else echo "bot未运行!"; fi
-grep -icE "error|traceback" /root/bot.log 2>/dev/null || true
-md5sum /root/bot/bot/plugins/fortune.py | cut -c1-12
-echo "--- 活体:四品级卡面色值(官方取色核对) ---"
-cd /root/bot/bot && /root/bot/venv/bin/python - <<'PYEOF'
-import sys
-sys.path.insert(0, "/root/bot/bot/plugins")
-import nonebot
-nonebot.init()
-import fortune as F
-from PIL import Image
-import io
-expect = {"金":(188,172,88),"银":(148,172,200),"铜":(156,180,132),"石":(152,134,122)}
-for tier, exp in expect.items():
-    t = F.TIERS[tier]
-    b = F._render_card(F.SIGNS[0], F.CARD_TYPES["征服"], t, {d:60 for d in F.DIMENSIONS}, 60, "取色核对", "11月07日")
-    img = Image.open(io.BytesIO(b))
-    px = img.getpixel((60, 600))
-    print(tier, "卡面空白处:", px, "期望:", exp)
-PYEOF
-echo "LIVE-OK"
+set -e
+cd /root/bot/bot
+TOKEN=$(grep -o '[^:]*@github.com' /root/.git-credentials | head -1 | sed 's/@github.com//')
+curl -s --max-time 60 -H "Authorization: token $TOKEN" -L "https://raw.githubusercontent.com/Thousands91/qq-bot/main/bot/plugins/fortune.py?v=$(date +%s)$RANDOM" -o bot/plugins/fortune.py
+cmp -s bot/plugins/fortune.py <(curl -s --max-time 60 -H "Authorization: token $TOKEN" -L "https://raw.githubusercontent.com/Thousands91/qq-bot/main/bot/plugins/fortune.py?v=$(date +%s)$RANDOM") && echo "下载自校验OK" || echo "WARN:两次下载不一致"
+grep -c "_readable" bot/plugins/fortune.py
+ls -la bot/plugins/fortune.py
+pkill -f "python.*bot.py" 2>/dev/null || true
+sleep 3
+cd /root/bot/bot && nohup python3 bot.py > /tmp/bot_run.log 2>&1 &
+sleep 12
+tail -5 /tmp/bot_run.log
+pgrep -f "python.*bot.py" && echo "BOT_RUNNING"
 --- 输出 ---
-验证时间: 16:20:15
-16618       02:43
-0
-7fbc90f8d8ae
---- 活体:四品级卡面色值(官方取色核对) ---
-11-07 16:20:17 [SUCCESS] nonebot | NoneBot is initializing...
-11-07 16:20:17 [INFO] nonebot | Current Env: prod
-金 卡面空白处: (188, 172, 88) 期望: (188, 172, 88)
-银 卡面空白处: (148, 172, 200) 期望: (148, 172, 200)
-铜 卡面空白处: (156, 180, 132) 期望: (156, 180, 132)
-石 卡面空白处: (152, 134, 122) 期望: (152, 134, 122)
-LIVE-OK
