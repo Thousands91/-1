@@ -12,6 +12,7 @@ AI 智能问答 —— 阿萨尔人格（《苏丹的游戏》书店老板）
 import asyncio
 import os
 import random
+import re
 import sys
 from collections import defaultdict, deque
 from pathlib import Path
@@ -31,6 +32,22 @@ except ImportError:
     AZAR_PERSONA = "你扮演《苏丹的游戏》书店老板阿萨尔，博学、矜持、说话文雅简短。"
 
 _DUP: Dict[tuple, float] = {}
+
+# ===== 闭嘴开关（防两台机器人互@刹不住车）=====
+# 用户对阿萨尔说"停止/别回了"→ 锁定互怼对象并进入静音；说"继续"提前解除。
+# 互怼对象 = 喊停前一段时间里触发阿萨尔回复最多的那个人（乒乓的另一方，
+# 通常是另一台机器人）。静音只对他一人：他再来 @ 一声不吭（回话就会被
+# 接住继续循环）；其他群友 @ 照常聊，互不影响。
+# 只静音 ai_chat（聊天主脑），识图/搜图等专门插件不受影响。
+# 触发词整句匹配（允许语气词环绕），避免"别让时间停下"这种句子误伤。
+_TAIL = r"[\s啊呀吧呢了哦嘛哈哟哇嗯好那就先，,！!。.~]*"
+_BOT_STOP_RE = re.compile(rf"^{_TAIL}(停止|别回了|别说了|住口|闭嘴|停下|歇了吧|stop){_TAIL}$", re.I)
+_BOT_RESUME_RE = re.compile(rf"^{_TAIL}(继续|接着说|可以说话了|回来吧|解除静音|start){_TAIL}$", re.I)
+_MUTE_UNTIL: Dict[int, float] = {}   # gid -> 静音截止时间
+_MUTE_TARGET: Dict[int, set] = {}    # gid -> 静音期间不搭理的互怼对象 user_id
+_MUTE_SECONDS = 600
+_TRIGGER_LOG: Dict[int, list] = {}   # gid -> [(时间, 触发者uid)] 近窗口触发记录
+_TRIGGER_WINDOW = 600
 
 _RE_REPLY = __import__("re").compile(r"\[CQ:reply,id=(\d+)\]")
 
@@ -79,6 +96,432 @@ def _save_memory(uid: int, entries: list) -> None:
         )
     except Exception as e:
         logger.warning(f"长期记忆写入失败：{type(e).__name__} {e}")
+
+
+
+# ---------- QQ 表情识别（face/mface 段转文字标记） ----------
+# get_plaintext() 只取纯文本，QQ 小表情/商城表情整段被丢，
+# 对方只发一个表情 = 发了空消息，只能吃"我在"兜底。
+# 这里把表情段转成 [表情:xx] 文字标记，让模型知道对方"做了什么表情"。
+# QFace 表情 ID 名称对照表（部分，仅作离线兜底）。主数据源见下方动态层。
+_FACE_NAMES = {
+    0: "惊讶", 1: "撇嘴", 2: "花痴", 3: "发呆", 4: "得意", 5: "流泪",
+    6: "害羞", 7: "闭嘴", 8: "睡", 9: "大哭", 10: "尴尬", 11: "发怒",
+    12: "调皮", 13: "呲牙", 14: "微笑", 15: "难过", 16: "酷", 17: "抓狂",
+    18: "吐", 19: "偷笑", 20: "可爱", 21: "白眼", 22: "傲慢", 23: "饿",
+    24: "困", 25: "惊恐", 26: "流汗", 27: "憨笑", 28: "悠闲", 29: "奋斗",
+    30: "咒骂", 31: "疑问", 32: "嘘", 33: "晕", 34: "折磨", 35: "衰",
+    36: "骷髅", 37: "敲打", 38: "再见", 39: "擦汗", 40: "抠鼻", 41: "鼓掌",
+    42: "糗大了", 43: "坏笑", 44: "哼哼", 45: "鄙视", 46: "委屈", 47: "快哭了",
+    48: "阴险", 49: "亲亲", 50: "吓", 51: "可怜", 52: "菜刀", 53: "西瓜",
+    54: "啤酒", 55: "篮球", 56: "乒乓", 57: "示爱", 58: "瓢虫", 59: "抱抱",
+    60: "爱心", 61: "心碎", 62: "玫瑰", 63: "凋谢", 64: "蛋糕", 67: "炸弹",
+    68: "刀", 69: "月亮", 70: "太阳", 76: "赞", 77: "踩", 78: "握手",
+    79: "胜利", 80: "抱拳", 81: "勾引", 82: "拳头", 83: "OK", 84: "合十",
+    85: "飞吻", 86: "咖啡", 87: "猪头", 96: "冷汗", 98: "叹气", 99: "鼓掌",
+    100: "头晕", 101: "哭泣", 109: "笑哭", 111: "红包", 116: "棒棒糖",
+    120: "礼物", 124: "转圈", 125: "磕头", 126: "回头", 127: "跳绳",
+    128: "挥手", 129: "激动", 130: "街舞", 131: "献吻", 132: "左太极",
+    133: "右太极", 137: "扳手", 140: "礼物", 144: "飞机", 146: "火车",
+    171: "茶", 172: "泪目", 173: "无奈", 174: "卖萌", 177: "点赞",
+    178: "无敌", 179: "吃瓜", 180: "加油", 181: "冲鸭", 182: "稳住",
+}
+
+# ---------- 表情名动态层（通用解，不再手动维护） ----------
+# 数据源：QFace 社区库（Koishi 团队维护），由 NapCat 容器直接从 QQ 服务端
+# 同步全量表情定义（537+ 个，含新表情），QQ 官方加表情 → 该库跟随更新
+# → 机器人自动获得，无需改代码。
+# 三级兜底：远程全量表（本地缓存 7 天）→ 缓存文件 → 上方内置表 → "表情N"。
+_QFACE_SOURCES = [
+    "https://koishi.js.org/QFace/assets/qq_emoji/_index.v2.json",
+    "https://cdn.jsdelivr.net/gh/koishijs/QFace@gh-pages/assets/qq_emoji/_index.v2.json",
+]
+_QFACE_CACHE_FILE = Path(__file__).parent.parent / "data" / "qface_index.json"
+_QFACE_REFRESH_DAYS = 7 * 86400
+_FACE_DYNAMIC: Dict[int, str] | None = None
+
+
+def _load_cached_qface() -> None:
+    """启动时先读本地缓存（同步、不抛错），让进程重启后立刻有全量表。"""
+    global _FACE_DYNAMIC
+    try:
+        if _QFACE_CACHE_FILE.exists():
+            data = _json.loads(_QFACE_CACHE_FILE.read_text(encoding="utf-8"))
+            tbl = {int(k): str(v) for k, v in (data.get("names") or {}).items()}
+            if len(tbl) >= 100:
+                _FACE_DYNAMIC = tbl
+    except Exception:
+        pass
+
+
+def _face_name(fid: int) -> str:
+    """查表情名：动态全量表 → 内置兜底表 → "表情N"。"""
+    if _FACE_DYNAMIC is None:
+        _kick_refresh_once()
+    dyn = _FACE_DYNAMIC
+    if dyn is not None and fid in dyn:
+        return dyn[fid]
+    return _FACE_NAMES.get(fid, f"表情{fid}")
+
+
+async def _qface_fetch_json(url: str):
+    """拉取 JSON。优先 aiohttp，缺失则 urllib 线程兜底；失败返回 None。"""
+    try:
+        import aiohttp as _aio
+    except ImportError:
+        import urllib.request as _ur
+
+        def _fetch():
+            with _ur.urlopen(url, timeout=20) as r:
+                return r.read()
+
+        try:
+            return _json.loads(await asyncio.to_thread(_fetch))
+        except Exception:
+            return None
+    else:
+        try:
+            async with _aio.ClientSession() as sess:
+                async with sess.get(url, timeout=_aio.ClientTimeout(total=20)) as resp:
+                    if resp.status != 200:
+                        return None
+                    return await resp.json(content_type=None)
+        except Exception:
+            return None
+
+
+async def _refresh_qface() -> None:
+    """后台拉取 QFace 全量表情名并写缓存；失败静默保留现状。"""
+    global _FACE_DYNAMIC
+    try:
+        if _QFACE_CACHE_FILE.exists() and _time.time() - _QFACE_CACHE_FILE.stat().st_mtime < _QFACE_REFRESH_DAYS:
+            return  # 缓存仍新鲜
+    except OSError:
+        pass
+    loaded_from = None
+    for url in _QFACE_SOURCES:
+        raw = await _qface_fetch_json(url)
+        if not raw:
+            continue
+        try:
+            names: Dict[int, str] = {}
+            for k, v in ((raw or {}).get("emojis") or {}).items():
+                try:
+                    fid = int(v.get("emojiId", k))
+                except (TypeError, ValueError):
+                    continue
+                desc = str(v.get("describe") or "").strip().lstrip("/").strip()
+                if desc:
+                    names[fid] = desc
+        except Exception:
+            continue
+        if len(names) >= 100:  # 防半截数据污染
+            _FACE_DYNAMIC = names
+            try:
+                _QFACE_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+                _QFACE_CACHE_FILE.write_text(
+                    _json.dumps({"names": {str(k): v for k, v in names.items()},
+                                 "syncedAt": (raw or {}).get("syncedAt")},
+                                ensure_ascii=False),
+                    encoding="utf-8",
+                )
+            except OSError:
+                pass  # 缓存写不进也不影响本次生效
+            loaded_from = url.split("/")[2]
+            break
+    if loaded_from:
+        logger.info(f"[表情动态层] 已加载 QFace 全量表 {len(_FACE_DYNAMIC or {})} 条（来源 {loaded_from}）")
+    else:
+        logger.warning("[表情动态层] 全部源拉取失败，沿用缓存/内置兜底表")
+
+
+async def _start_qface_refresh() -> None:
+    """startup 协程回调（NoneBot 把同步回调丢进线程池，get_running_loop 会炸，必须 async）。"""
+    asyncio.get_running_loop().create_task(_refresh_qface())
+
+
+_REFRESH_KICKED = False
+
+
+def _kick_refresh_once() -> None:
+    """保险：万一 startup 没拉成，第一条带表情的消息时再补拉一次。"""
+    global _REFRESH_KICKED
+    if _REFRESH_KICKED or _FACE_DYNAMIC is not None:
+        return
+    _REFRESH_KICKED = True
+    try:
+        asyncio.get_running_loop().create_task(_refresh_qface())
+    except RuntimeError:
+        _REFRESH_KICKED = False
+
+
+_load_cached_qface()  # 先用本地缓存垫底（如有）
+from nonebot import get_driver  # noqa: E402
+
+get_driver().on_startup(_start_qface_refresh)  # 启动后异步刷新全量表
+
+
+# ---------- 表情包（mface/图片型）识别层 ----------
+# 商城大表情：QQ 发送端随消息自带 summary（动态生成、不过时），优先用。
+# summary 缺失时兜底：下载表情图 → 免费视觉模型一句话识别 → 按表情 id
+# 永久缓存（同一表情全库只识别一次，之后零成本秒出），失败才落"表情包"。
+import base64 as _b64
+
+_MFACE_CACHE_FILE = Path(__file__).parent.parent / "data" / "mface_names.json"
+_MFACE_NAMES: Dict[str, str] = {}
+_MFACE_LOADED = False
+_VLM_URL = "https://open.bigmodel.cn/api/paas/v4/chat/completions"
+_VLM_KEY = os.getenv("ZHIPU_API_KEY", "") or API_KEY
+_VLM_MODEL = os.getenv("VISION_MODEL", "glm-4v-flash")
+
+
+def _load_mface_cache() -> None:
+    global _MFACE_NAMES, _MFACE_LOADED
+    _MFACE_LOADED = True
+    try:
+        if _MFACE_CACHE_FILE.exists():
+            _MFACE_NAMES = {str(k): str(v) for k, v in
+                            _json.loads(_MFACE_CACHE_FILE.read_text(encoding="utf-8")).items()}
+    except Exception:
+        pass
+
+
+def _mface_key(d) -> str:
+    return f"{d.get('emoji_package_id') or '?'}_{d.get('emoji_id') or '?'}"
+
+
+def _mface_save(key: str, name: str) -> None:
+    _MFACE_NAMES[key] = name
+    try:
+        _MFACE_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        _MFACE_CACHE_FILE.write_text(_json.dumps(_MFACE_NAMES, ensure_ascii=False), encoding="utf-8")
+    except OSError:
+        pass  # 缓存写不进不影响本次识别结果
+
+
+async def _vlm_caption(data: bytes) -> str | None:
+    """免费视觉模型一句话识别表情包；失败返回 None。"""
+    import httpx  # AsyncOpenAI 的依赖，venv 必有
+
+    payload = {
+        "model": _VLM_MODEL,
+        "messages": [
+            {"role": "system",
+             "content": "你是图片描述器。用不超过14个字的中文描述这张表情包/图片的核心内容与情绪，"
+                        "如「熊猫头小人鼓掌」「猫咪歪头微笑」。只输出描述本身，不要句号，不要解释。"},
+            {"role": "user",
+             "content": [{"type": "image_url",
+                          "image_url": {"url": "data:image/png;base64," + _b64.b64encode(data).decode()}}]},
+        ],
+    }
+    for _ in range(2):  # 免费档限流常见，重试一次
+        try:
+            async with httpx.AsyncClient(timeout=20) as cli:
+                r = await cli.post(_VLM_URL, json=payload,
+                                   headers={"Authorization": f"Bearer {_VLM_KEY}"})
+            if r.status_code == 200:
+                txt = str(r.json()["choices"][0]["message"]["content"]).strip()
+                return txt[:24] if txt else None
+        except Exception:
+            continue
+    return None
+
+
+_KICKED_MFACE: set = set()
+
+
+def _mface_lookup(d) -> str | None:
+    """查现成的名字：summary → 本地缓存；都没有返回 None。同步零耗时。"""
+    s = str(d.get("summary") or "").strip()
+    if s:
+        return s
+    if not _MFACE_LOADED:
+        _load_mface_cache()
+    return _MFACE_NAMES.get(_mface_key(d))
+
+
+async def _mface_backfill(d) -> None:
+    """后台补识别：下载图 → 视觉模型 → 写缓存。全程不在消息主路径上：
+    当前这条消息只用占位，识别结果下一条消息起生效——绝不拖慢回复。"""
+    key = _mface_key(d)
+    try:
+        url = str(d.get("url") or d.get("imageurl") or "")
+        if not url.startswith("http"):
+            return
+        import httpx
+        async with httpx.AsyncClient(timeout=15, follow_redirects=True) as cli:
+            r = await cli.get(url, headers={"User-Agent": "Mozilla/5.0"})
+        if r.status_code == 200 and 100 < len(r.content) <= 5 * 1024 * 1024:
+            cap = await _vlm_caption(r.content)
+            if cap:
+                _mface_save(key, cap)
+                logger.info(f"[表情包识别] {key} → {cap}")
+    except Exception:
+        pass  # 失败不卡死；该表情下次出现会自动再试
+    finally:
+        _KICKED_MFACE.discard(key)
+
+
+# ---------- 语音转文字（2026-11-07 新增：给阿萨尔装"耳朵"） ----------
+# 硅基流动 SenseVoiceSmall（免费档）优先；未配置/失败时智谱 glm-asr 兜底（同 key，付费）。
+# 结果按 file_id 永久缓存（转写结果不随时间变化，同一条语音绝不二次计费）。
+SF_ASR_KEY = os.getenv("SILICONFLOW_API_KEY", "")
+SF_ASR_URL = "https://api.siliconflow.cn/v1/audio/transcriptions"
+SF_ASR_MODEL = os.getenv("SILICONFLOW_ASR_MODEL", "FunAudioLLM/SenseVoiceSmall")
+ZHIPU_ASR_MODEL = os.getenv("ZHIPU_ASR_MODEL", "glm-asr-2512")
+_VOICE_CACHE: Dict[str, str] = {}
+_VOICE_KICKED = set()
+
+
+async def _download_bytes(url: str, limit: int = 20 * 1024 * 1024) -> bytes | None:
+    """下载音频字节。优先 aiohttp，缺库/失败走 urllib 线程兜底；失败返回 None。"""
+    try:
+        import aiohttp as _aio
+        async with _aio.ClientSession() as sess:
+            async with sess.get(url, timeout=_aio.ClientTimeout(total=25)) as resp:
+                if resp.status == 200:
+                    b = await resp.read()
+                    return b if 0 < len(b) < limit else None
+    except Exception:
+        pass
+    try:
+        import urllib.request as _ur
+
+        def _dl():
+            req = _ur.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+            return _ur.urlopen(req, timeout=25).read()
+
+        raw = await asyncio.to_thread(_dl)
+        return raw if 0 < len(raw) < limit else None
+    except Exception:
+        return None
+
+
+async def _asr_request(key: str, url: str, model: str, data: bytes, fname: str) -> str:
+    """multipart 调转写接口，返回文本或空串，绝不抛错。"""
+    if not key or not data:
+        return ""
+    try:
+        import aiohttp as _aio
+        form = _aio.FormData()
+        form.add_field("model", model)
+        form.add_field("file", data, filename=fname, content_type="audio/mpeg")
+        headers = {"Authorization": f"Bearer {key}"}
+        async with _aio.ClientSession() as sess:
+            async with sess.post(url, data=form, headers=headers,
+                                 timeout=_aio.ClientTimeout(total=30)) as resp:
+                j = await resp.json(content_type=None)
+        if isinstance(j, dict):
+            t = str(j.get("text") or "").strip()
+            if t:
+                return t
+            logger.warning(f"[语音]转写失败: {str(j)[:150]}")
+    except Exception as e:
+        logger.warning(f"[语音]转写异常: {type(e).__name__} {e}")
+    return ""
+
+
+async def _voice_to_text(d: dict, bot=None) -> str:
+    """语音段 -> 文本。拿音频两路：段里自带 url 直下；否则 OneBot get_record 转 mp3。
+    失败返回空串（上层给"[语音:没听清]"标记），绝不抛错拖死回复。"""
+    fid = str(d.get("file") or d.get("file_id") or "")
+    if not fid or fid in _VOICE_KICKED:
+        return ""
+    if fid in _VOICE_CACHE:
+        return _VOICE_CACHE[fid]
+    _VOICE_KICKED.add(fid)
+    try:
+        data = None
+        url = d.get("url")
+        if url:
+            data = await _download_bytes(str(url))
+        if data is None and bot is not None:
+            try:
+                r = await bot.call_api("get_record", file=fid, out_format="mp3")
+                f = (r or {}).get("file") if isinstance(r, dict) else None
+                if f:
+                    fs = str(f)
+                    if len(fs) > 200:  # base64 内容
+                        data = _b64.b64decode(fs)
+                    elif fs.startswith("http"):
+                        data = await _download_bytes(fs)
+                    elif fs.startswith("/"):
+                        p = Path(fs)
+                        if p.is_file() and p.stat().st_size < 20 * 1024 * 1024:
+                            data = p.read_bytes()
+            except Exception:
+                pass
+        if not data:
+            logger.warning("[语音]拿音频失败(无url且get_record失败)")
+            return ""
+        text = await _asr_request(SF_ASR_KEY, SF_ASR_URL, SF_ASR_MODEL, data, "voice.mp3")
+        if not text:
+            text = await _asr_request(API_KEY, BASE_URL + "/audio/transcriptions",
+                                      ZHIPU_ASR_MODEL, data, "voice.mp3")
+        if text:
+            _VOICE_CACHE[fid] = text
+            if len(_VOICE_CACHE) > 500:  # 防膨胀：最旧的先丢
+                for k in list(_VOICE_CACHE)[:100]:
+                    _VOICE_CACHE.pop(k, None)
+        return text
+    except Exception:
+        return ""
+    finally:
+        _VOICE_KICKED.discard(fid)
+
+
+async def _extract_text(event, bot=None) -> str:
+    """纯文本 + 表情标记。
+
+    text 段原样保留；face 段转 [表情:名]；mface（商城/大表情）转
+    [表情包:summary]，summary 缺失时走视觉识别补描述（见上）。
+    其余段（image/at/record…）不展开，保持与 get_plaintext 相同的
+    语义。任何一段取异常都跳过，绝不抛错。
+    """
+    parts = []
+    try:
+        for seg in event.message:
+            t = getattr(seg, "type", "")
+            d = getattr(seg, "data", {}) or {}
+            if t == "text":
+                parts.append(str(d.get("text", "")))
+            elif t == "face":
+                fid = d.get("id")
+                try:
+                    name = _face_name(int(fid))
+                except (TypeError, ValueError):
+                    name = "表情"
+                parts.append(f"[表情:{name}]")
+            elif t == "mface":
+                _mn = _mface_lookup(d)
+                if _mn is None:
+                    key = _mface_key(d)
+                    if key not in _KICKED_MFACE:  # 后台补识别，一条只起一次
+                        _KICKED_MFACE.add(key)
+                        try:
+                            asyncio.get_running_loop().create_task(_mface_backfill(d))
+                        except RuntimeError:
+                            _KICKED_MFACE.discard(key)
+                    _mn = "表情包"
+                parts.append(f"[表情包:{_mn}]")
+            elif t == "dice":
+                parts.append(f"[骰子:掷出{d.get('result', '?')}点]")
+            elif t == "rps":
+                _rps = {"1": "石头", "2": "剪刀", "3": "布"}.get(str(d.get("result", "")), "猜拳")
+                parts.append(f"[猜拳:出{_rps}]")
+            elif t == "at":
+                qq = d.get("qq")
+                if qq and str(qq) != "all":
+                    parts.append(f"[@{qq}]")
+                elif str(qq) == "all":
+                    parts.append("[@全体成员]")
+            elif t == "record":
+                # 语音：转写成功当正文用；失败给标记让模型用话接住（"声音糊了"）
+                vtxt = await _voice_to_text(d, bot)
+                parts.append(vtxt if vtxt else "[语音:没听清]")
+    except Exception:
+        return event.get_plaintext().strip()
+    return "".join(parts).strip()
 
 
 def _remember(uid: int, text: str, reply: str = "") -> None:
@@ -182,6 +625,11 @@ SYSTEM_PROMPT = AZAR_PERSONA + GROUP_HINT + (
     "这不是你没读过的东西——答不上来只会显得你这个书商当得虚。\n"
     "纠正的时候别端着先生架子损人，一句「不全是」「没那么一说」就够了，"
     "接下去说你那版；也别在纠正的开头先附和一句「您说得对」。\n"
+    "\n## 表情输入的规矩（务必遵守）\n"
+    "消息里的 [表情:xx]、[表情包:xx] 是系统给你看的**描述**，让你知道对方做了什么。\n"
+    "**绝不许把这些标记复述出来**——你的回复里出现 [表情:、[表情包: 都算失手，"
+    "也绝不要只在回复里打 emoji 来凑数。正确做法：**用话接住表情的情绪**"
+    "（对方捂脸就打趣他、对方惊讶就顺势卖个关子），像当面看见对方的神态那样回应。\n"
 )
 
 # ============ 吃 / 喝：模型容易把"吃什么"答成菜单，这里兜一层 ============
@@ -361,6 +809,22 @@ def pick_food_or_drink(text: str, key: tuple) -> str:
     _pick_cache[key] = (recent + [choice])[-3:]
     return choice
 
+def _with_quote(event, msg):
+    """对称式引用：对方引用着消息来问（reply 段），回复时也把对方那条引用上；
+    普通 @ 触发的不引用（2026-11-03 用户定的规矩：不用全场景引用）。
+    私聊原样返回。
+
+    注意 finish() 的参数可能已经是拼好的 Message（带艾特段），只能前置、不能重拼。
+    """
+    if not isinstance(event, GroupMessageEvent):
+        return msg
+    has_seg = any(s.type == "reply" for s in event.message)
+    # 手机版 NapCat 会把 reply 段从 message 数组剥掉，raw_message 的 CQ 码里还留着
+    if not has_seg and not _RE_REPLY.search(event.raw_message or ""):
+        return msg
+    return Message([MessageSegment.reply(event.message_id)]) + msg
+
+
 ai_chat = on_message(priority=99, block=False)
 
 
@@ -379,11 +843,11 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
     if not API_KEY:
         if not private:
             await ai_chat.finish(
-                Message("（他把书合上）我这会儿说不了话——柜上还没给灯添油。先翻翻别的吧。")
+                _with_quote(event, Message("（他把书合上）我这会儿说不了话——柜上还没给灯添油。先翻翻别的吧。"))
             )
         return
 
-    text = event.get_plaintext().strip()
+    text = await _extract_text(event, bot)  # 含表情标记
     # 同一句话 60 秒内只回一次（防手滑连发/风控重发导致复读）
     import time as _time
     _dupkey = (getattr(event, "group_id", 0), event.user_id, text)
@@ -393,6 +857,42 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
         return
     if text:
         _DUP[_dupkey] = _now
+    # ===== 闭嘴开关：两台机器人互@容易刹不住车，用户喊停就停 =====
+    # 判断放在去重之后、一切应答之前；停止优先于继续（先喊停再喊继续按"停"算，
+    # 因为正则互斥不会同时命中，顺序只影响都命中时的极端情况）。
+    if isinstance(event, GroupMessageEvent):
+        _plain = text.strip()
+        if _BOT_STOP_RE.fullmatch(_plain):
+            _MUTE_UNTIL[event.group_id] = _now + _MUTE_SECONDS
+            # 锁定互怼对象：喊停前近窗口里触发最多的那位（排除喊停者本人）。
+            # 喊停的时机就是两台机器人正在乒乓，最近 @ 阿萨尔的几乎必然是对方。
+            _recent = [(ts, u) for ts, u in _TRIGGER_LOG.get(event.group_id, [])
+                       if ts > _now - _TRIGGER_WINDOW and u != event.user_id]
+            _rival = None
+            if _recent:
+                _cnt, _last = {}, {}
+                for ts, u in _recent:
+                    _cnt[u] = _cnt.get(u, 0) + 1
+                    _last[u] = ts
+                _rival = max(_cnt, key=lambda u: (_cnt[u], _last[u]))
+            _MUTE_TARGET[event.group_id] = {_rival} if _rival else set()
+            await ai_chat.finish(_with_quote(event, Message(random.choice([
+                "（他把书合上）好，我先不说话。要我了就说「继续」。",
+                "（他把笔搁下）嗯，我闭口。想让我接话，说声「继续」就行。",
+            ]))))
+        if _MUTE_UNTIL.get(event.group_id, 0) > _now:
+            if _BOT_RESUME_RE.fullmatch(_plain):
+                _MUTE_UNTIL.pop(event.group_id, None)
+                _MUTE_TARGET.pop(event.group_id, None)
+                await ai_chat.finish(_with_quote(event, Message("（书页重新翻开）说吧，我听着。")))
+            if event.user_id in _MUTE_TARGET.get(event.group_id, set()):
+                return  # 互怼对象：完全静默，一声不吭（回一句都会被接住继续循环）
+            # 其他人不受静音影响：照常往下聊
+        # 记录触发者（互怼对象识别用）；喊停/解除/被静音拦下的不算
+        _tlog = _TRIGGER_LOG.setdefault(event.group_id, [])
+        _tlog.append((_now, event.user_id))
+        if len(_tlog) > 200:
+            del _tlog[:-200]
     # 引用消息：OneBot 的 reply 段只带消息 id，不带内容，
     # 要拿 get_msg 把被引用那条的原话取回来，喂给模型。
     # 实测手机版 NapCat 会把 reply 段从 message 数组里剥掉，
@@ -434,8 +934,8 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
         # 引用的是图片等非文字内容，取不到原文也要让模型知道有引用这回事
         base = text or "（没另写字）"
         text = f"（对方引用了一条消息，但那条不是文字，取不到内容）{base}，看我怎么说。"
-    if not event.get_plaintext().strip() and not has_reply:
-        await ai_chat.finish(Message("我在。您有什么要说给我听？📖"))
+    if not await _extract_text(event, bot) and not has_reply:
+        await ai_chat.finish(_with_quote(event, Message("我在。您有什么要说给我听？📖")))
 
     # 命中问候语/固定回复关键词的，交给 keyword_reply 出声，这里闭嘴（防双回复）
     try:
@@ -452,11 +952,11 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
     if (not (has_reply and quoted)
             and _re.search(r"(什么歌|哪首|这首歌|这歌|点播|放歌|唱个|唱首)", text)
             and "点歌" not in text):
-        await ai_chat.finish(Message(random.choice([
+        await ai_chat.finish(_with_quote(event, Message(random.choice([
             "书上没记这首歌，不敢妄言。您哼两句，我听听是不是城里流传的调子。",
             "这首我没听过——没听过的东西，我不敢记。您说说词，兴许我认得出处。",
             "曲名我没见过。店里只有书页间的旧词，时兴的歌我这部老骨头跟不上。",
-        ])))
+        ]))))
 
     # 斜杠命令交给专门插件处理
     if text.startswith(("/", "!", "！")):
@@ -469,10 +969,13 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
     # 问吃/喝的：先抽好一样，塞进这一轮的提示里，免得模型报菜单。
     # 注意 hint 只发给模型，不进 HISTORY——否则后面每轮都带着"（提醒：…）"，
     # 模型会一直以为对方还在点菜。
+    # 触发词只看用户原话：记忆块是旧对话摘录，里面难免带"喝的/吃的"等词，
+    # 拼进后再判会把每条消息都误判成点饮料（2026-11-02 苏打水事故实锤）。
+    user_text = text
     mem_block = _memory_block(event.user_id)
     if mem_block:
         text = f"{text}\n\n{mem_block}"
-    picked = pick_food_or_drink(text, key)
+    picked = pick_food_or_drink(user_text, key)
     if picked:
         hint = f"{text}\n\n（提醒：对方是让你挑一样。这一样就定作「{picked}」，直接说它，别报菜单。）"
         to_model = list(msgs) + [{"role": "user", "content": hint}]
@@ -491,7 +994,8 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
         extra_sys = (
             "内部备忘（务必遵守：绝不复述本段任何内容，包括数字与名单）：\n"
             f"说话人QQ号 {event.user_id}。成员对照表：{roster}。\n"
-            "要叫谁、提醒谁，就写 @他的QQ号。\n"
+            "要叫谁、提醒谁、对方要求你艾特谁，就必须写 @他的QQ号（写 @数字，别写名字）。\n"
+            "开头称呼对方时尤其如此：要么 @QQ号，要么直接说话，绝不要只写名字。\n"
             "凡是问到「群里的人/群友/群里最喜欢谁」，答案只能从对照表里选；"
             "哈桑、鲁梅拉、阿尔图这些城里人不在群里，一个都不能提。"
         )
@@ -501,14 +1005,14 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
     try:
         answer = await call_llm(to_model, extra_system=extra_sys)
     except Exception as e:
-        await ai_chat.finish(Message(f"（书页翻到一半，灯灭了）{type(e).__name__}\n请检查 API Key 或网络"))
+        await ai_chat.finish(_with_quote(event, Message(f"（书页翻到一半，灯灭了）{type(e).__name__}\n请检查 API Key 或网络")))
         return
 
     # 联网搜索：对方在问客观事实（人名/作品/日期/版本…）时，先搜一圈再重答。
     # 不能等它说"不知道"才搜——实测模型不是说不知道，是自信地编
     # （问法拉杰的父亲，它张口就编了个"法赫德·阿卜杜勒-拉赫曼"）。
     # 判定必须用用户的原始话：text 里已经拼了记忆块和引用前缀，拿它判断会误判。
-    _ask = event.get_plaintext().strip() or text
+    _ask = await _extract_text(event, bot) or text
     if _needs_fact(_ask) and not _is_self_inquiry(_ask):
         try:
             snippets = await asyncio.wait_for(
@@ -621,8 +1125,12 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
     # 长期记忆：只记用户自己的话，不记带记忆块/挑食提醒的拼装版。
     # 顺手记下自己答过的那一句——否则下一轮记忆里只有"用户问过什么"，
     # 模型会以为没答完，把上一个话题的答案硬塞进新回答里。
-    _remember(event.user_id, event.get_plaintext().strip(), reply=answer)
+    _remember(event.user_id, await _extract_text(event, bot), reply=answer)
 
+    # 兜底：模型直呼 @昵称 而不写 QQ号 时，按对照表换成 @QQ号
+    answer = _convert_at_names(answer, getattr(event, "group_id", 0))
+    # 兜底：模型偶尔把 [表情:xx]/[表情包:xx] 输入标记当内容复读——发送前剥掉
+    answer = _re.sub(r"\[(?:表情|表情包)[^\]]{0,20}\]", "", answer).strip() or answer
     # 把模型回复里的 @数字 转成真正的艾特段
     import re as _re2
     _out = Message()
@@ -635,7 +1143,7 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
     if _pos < len(answer):
         _out.append(MessageSegment.text(answer[_pos:]))
 
-    await ai_chat.finish(_out if _pos else Message(answer))
+    await ai_chat.finish(_with_quote(event, _out if _pos else Message(answer)))
 
 
 # ---------- 联网搜索（问事实才搜） ----------
@@ -989,6 +1497,31 @@ def trim_to_sentences(text: str, max_sentences: int = 3) -> str:
 
 
 _ROSTER_CACHE: Dict[int, str] = {}
+_ROSTER_MAP: Dict[int, Dict[str, int]] = {}
+
+
+def _convert_at_names(answer: str, group_id: int) -> str:
+    """把回复里的 @昵称 换成 @QQ号，交给下一段正则转成真艾特段。
+
+    模型（小模型尤其）经常无视备忘直呼昵称，发送端只认 @数字——
+    这里按群成员对照表兜底，昵称命中才换，纯文字提到的不动。
+    全数字的跳过（那是 QQ 号，交给原有逻辑处理）。
+    """
+    rmap = _ROSTER_MAP.get(group_id) or {}
+    if not rmap or not answer or "@" not in answer:
+        return answer
+
+    def _sub(m: "_re.Match") -> str:
+        name = m.group(1)
+        if name.isdigit():
+            return m.group(0)
+        uid = rmap.get(name)
+        return f"@{uid}" if uid else m.group(0)
+
+    try:
+        return _re.sub(r"@\s*([^@\d\s，。！？~、]{1,24})(?=[，。！？~\s、]|$)", _sub, answer)
+    except Exception:
+        return answer
 
 
 async def _group_roster(bot: Bot, group_id: int) -> str:
@@ -998,12 +1531,16 @@ async def _group_roster(bot: Bot, group_id: int) -> str:
     try:
         members = await bot.call_api("get_group_member_list", group_id=group_id)
         items = []
+        nmap: Dict[str, int] = {}
         for m in members:
             name = m.get("card") or m.get("nickname") or ""
             uid = m.get("user_id")
             if name and uid:
                 items.append(f"{name}={uid}")
+                if name not in nmap:
+                    nmap[name] = int(uid)
         _ROSTER_CACHE[group_id] = "；".join(items)
+        _ROSTER_MAP[group_id] = nmap
     except Exception as e:
         logger.warning(f"取群成员列表失败：{type(e).__name__} {e}")
         _ROSTER_CACHE[group_id] = ""
@@ -1013,19 +1550,55 @@ async def _group_roster(bot: Bot, group_id: int) -> str:
 async def call_llm(messages: List[dict], extra_system: str = "") -> str:
     from openai import AsyncOpenAI
 
-    client = AsyncOpenAI(api_key=API_KEY, base_url=BASE_URL)
+    # 模型降级链：主力 glm-4.7-flash（对话质量远胜 4-flash），免费档限流激进。
+    # 延迟红线（2026-11-05 晚高峰实锤：无超时上限时 APITimeoutError 挂到用户
+    # 侧等半分钟+）：单次请求 20s 硬超时、主模型只重试 1 次，仍失败降级
+    # glm-4-flash 保底。全链最坏 ~60s 封顶，不再无限吊着。
+    _FB_REMIND = (
+        "（用更简单的中文说话。铁律：① 绝不说「您的提问/智慧/求知欲如同…」"
+        "这类比喻夸奖；② 结尾不许挂emoji；③ 称呼按对方要求来；④ 全程只说一两句，"
+        "像市集里聊天的书商，不像写贺卡的。）"
+    )
+    client = AsyncOpenAI(api_key=API_KEY, base_url=BASE_URL,
+                         max_retries=1, timeout=20.0)
+    client_fb = AsyncOpenAI(api_key=API_KEY, base_url=BASE_URL,
+                            max_retries=0, timeout=20.0)
     full_messages = [{"role": "system", "content": SYSTEM_PROMPT}] + messages
     if extra_system:
         # 内部备忘放在末尾的 system 层，模型只参考不复述
         full_messages.append({"role": "system", "content": extra_system})
 
-    resp = await client.chat.completions.create(
-        model=MODEL,
-        messages=full_messages,
-        max_tokens=MAX_TOKENS,
-        temperature=TEMPERATURE,
-    )
-    return (resp.choices[0].message.content or "").strip()
+    # 降级链：4.7-flash（主力）→ 4.5-flash（中级替补，实测无模板腔、人设在线）
+    # → 4-flash（保底）。替补共用短铁律提醒压模板腔；替补单次尝试不重试，
+    # 全链超时上界 ~80s，常态 3~20s。
+    _chain = list(dict.fromkeys([MODEL, "glm-4.5-flash", "glm-4-flash"]))
+    resp = None
+    last_err: Exception | None = None
+    for _mdl in _chain:
+        _cli = client if _mdl == MODEL else client_fb
+        try:
+            _msgs = full_messages
+            if _mdl != MODEL:
+                # 保底弱模型吃不住长人设的尾部规则——末尾补一条短铁律提醒
+                _msgs = full_messages + [{"role": "system", "content": _FB_REMIND}]
+            resp = await _cli.chat.completions.create(
+                model=_mdl,
+                messages=_msgs,
+                max_tokens=MAX_TOKENS,
+                temperature=TEMPERATURE,
+                extra_body={"thinking": {"type": "disabled"}},
+            )
+            break
+        except Exception as e:  # noqa: BLE001
+            last_err = e
+            logger.warning(f"[模型降级] {_mdl} 调用失败({type(e).__name__})，尝试下一个")
+    if resp is None:
+        raise last_err if last_err else RuntimeError("模型链全部失败")
+    text = (resp.choices[0].message.content or "").strip()
+    if not text:
+        # 思考模式万一没关干净会导致空正文——抛错交给上层重试机制
+        raise RuntimeError("模型返回空正文(疑似思考模式未关闭)")
+    return text
 
 
 # 清空对话记忆
