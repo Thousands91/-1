@@ -1,12 +1,16 @@
-270
-echo "== 账号级 napcat_3427943187.json =="
-cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json
+271
+echo "== 1. 备份配置 =="
+cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json.bak_1108
+cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json.bak_1108
+echo 备份完成
 echo ""
-echo "== 协议配置 =="
-cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_protocol_3427943187.json 2>/dev/null
+echo "== 2. 脚本化修改 bypass 六项 =="
+python3 -c "import json; ks=[\"hook\",\"window\",\"module\",\"process\",\"container\",\"js\"]; paths=[\"/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json\",\"/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json\"]; [json.dump({**json.load(open(p)),\"bypass\":{k:True for k in ks}}, open(p,\"w\"), indent=2) for p in paths]; print(\"两份配置已改写\")"
 echo ""
-echo "== NapCat 版本（从启动日志找）=="
-grep -aoE "NapCat[/ ]v?[0-9]+\.[0-9]+\.[0-9]+" /root/napcat.log /root/napcat-restart.log 2>/dev/null | head -3
+echo "== 3. 回读验证 =="
+grep -A7 bypass /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json
 echo ""
-echo "== QQ 当前是否在等扫码 =="
-tail -5 /root/napcat.log
+grep -A7 bypass /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json
+echo ""
+echo "== 4. azar_guard.sh 全文 =="
+cat /root/azar_guard.sh
