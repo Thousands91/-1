@@ -714,10 +714,18 @@ _EMOJI_LAZY_RE = re.compile(r"表情|像是在说|像是|似乎在说|仿佛在�
 _EMOJI_TAIL_RE = re.compile(r"[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF\uFE0F\u203C\u2049\u3030\u303D\u3297\u3299\u00A9\u00AE\u2122]+\s*$")
 
 def _emoji_scrub(a: str, fname: str) -> str:
-    """兜底洗词：剥复述标记、把漏网的解说腔硬替换掉、剥 emoji 尾巴。"""
+    """兜底洗词：剥复述标记、把漏网的解说腔硬替换掉、剥 emoji 尾巴。
+
+    坑58（用户抓包）：替换词里原来自带「你」，模型明明写的是「您这动作」，
+    被硬拼成「您你这架势」——称呼混用是洗词自己造出来的。教训：兜底替换
+    绝不许引入新的人称，先保住句子里已有的「您/你」，替换词只补缺省的。
+    """
     a = re.sub(r"^\s*\[(表情|表情包|动作):[^\]]*\]\s*", "", a or "").strip()
-    a = a.replace("这表情，", "你这样子，").replace("这表情", "你这一出")
-    a = a.replace("这动作，", "你这架势，").replace("这动作嘛", "你这架势")
+    # 带人称的先整体替换（保留原称呼）；不带人称的才用缺省词「您」补
+    a = re.sub(r"[你您]这表情[，,]?", "您这样子，", a)
+    a = re.sub(r"[你您]这动作[嘛，,]?", "您这架势，", a)
+    a = a.replace("这表情，", "您这样子，").replace("这表情", "您这一出")
+    a = a.replace("这动作，", "您这架势，").replace("这动作嘛", "您这架势")
     if fname and fname != "未知":
         a = re.sub(rf"^{re.escape(fname)}\s*[?？!！，,]?\s*", "", a)
     return _EMOJI_TAIL_RE.sub("", a).rstrip()
