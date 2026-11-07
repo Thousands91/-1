@@ -1082,7 +1082,9 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
     # system 里的规矩压不住它，就在近处（本轮 user 消息末尾）直接点名——
     # 小模型只听得见眼前的指令。表情名从消息里抠出来，一个词都不许模型猜。
     _face_m = _re.search(r"\[(表情|表情包):([^\]]+)\]", text)
+    _hist_text = None   # 进历史的干净版（不带提醒——坑55b回归修复：提醒只发给模型）
     if _face_m:
+        _hist_text = text
         _fname = _face_m.group(2)
         # 坑55b：提示里绝不出现"表情"二字（实测一说它就学舌"这表情…"），对模型只叫"动作"
         text = _re.sub(r"\[(表情|表情包):", "[动作:", text)
@@ -1275,7 +1277,7 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
     # 后面追问时模型会以为自己说过——所以先截断，存和发用同一份。
     answer = trim_to_sentences(answer, max_sentences=3)
 
-    msgs.append({"role": "user", "content": text})
+    msgs.append({"role": "user", "content": _hist_text if _hist_text is not None else text})
     msgs.append({"role": "assistant", "content": answer})
 
     # 长期记忆：只记用户自己的话，不记带记忆块/挑食提醒的拼装版。
