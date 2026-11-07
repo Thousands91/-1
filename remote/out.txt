@@ -1,13 +1,13 @@
-<<<task_192.txt>>>
-===== 任务192 11-07 11:56:24 =====
+<<<task_193.txt>>>
+===== 任务193 11-07 12:04:15 =====
 --- 命令 ---
-echo "现在时间: $(date +%H:%M:%S)"
+echo "执行时间: $(date +%H:%M:%S)"
 PID=$(cat /root/.remote_pid 2>/dev/null); echo "循环PID: $PID"; ps -o etime= -p $PID 2>/dev/null
 grep -c "?v=" /root/remote_ctl.sh
 echo "待发箱: $(ls -A /root/.remote_pending 2>/dev/null | wc -l) 个文件"
 --- 输出 ---
-现在时间: 11:56:24
+执行时间: 12:04:15
 循环PID: 8420
-      05:59
+      13:50
 2
 待发箱: 1 个文件
