@@ -1,6 +1,8 @@
-202
-echo "--- Pillow ---"
-/root/bot/venv/bin/python -c "import PIL; print('Pillow', PIL.__version__)" 2>&1
-echo "--- 中文字体 ---"
-ls /usr/share/fonts/ 2>/dev/null
-find /usr/share/fonts /root -maxdepth 3 -name "*.ttf" -o -name "*.otf" -o -name "*.ttc" 2>/dev/null | head -8
+203
+apt-get install -y fonts-wqy-zenhei 2>&1 | tail -2
+echo "--- 验证 ---"
+find /usr/share/fonts -name "*wqy*" 2>/dev/null
+/root/bot/venv/bin/python -c "
+from PIL import ImageFont
+f = ImageFont.truetype('/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc', 40)
+print('字体加载OK:', f.getbbox('阿萨尔签卡')[2], 'px宽')" 2>&1
