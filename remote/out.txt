@@ -1,6 +1,6 @@
-<<<task_245.txt>>>
-===== 任务245 11-07 20:39:59 =====
+<<<task_246.txt>>>
+===== 任务246 11-07 20:40:19 =====
 --- 命令 ---
-grep -oE "https://txz.qq.com/p\?k=[^ \"]*" /root/napcat-run.log | tail -1
+cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null && chmod 644 /sdcard/DCIM/Camera/asar_qr.png && echo 相册已更新
 --- 输出 ---
-https://txz.qq.com/p?k=mu1H2mw08QlcN3dxxfFAUB4SfQhHmsyK&f=1600001615
+相册已更新
