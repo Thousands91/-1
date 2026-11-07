@@ -1,8 +1,11 @@
-218
-echo "== find bot.py =="
-find /root -name "bot.py" -not -path "*/node_modules/*" 2>/dev/null | head -5
-echo "== find fortune.py =="
-find /root -name "fortune.py" 2>/dev/null | head -5
-echo "== /root/bot 结构 =="
-ls /root/bot 2>/dev/null
-ls /root/bot/bot 2>/dev/null | head -20
+219
+echo "== 所有python进程 =="
+ps aux 2>/dev/null | grep -i python | grep -v grep | head -8
+echo "== main.py进程 =="
+pgrep -af "main.py" || echo "无main.py进程"
+echo "== fortune.py 版本 =="
+grep -c "_readable" /root/bot/bot/plugins/fortune.py || echo "旧版"
+echo "== 启动脚本 =="
+cat /root/bot/bot/azar_watch.sh 2>/dev/null | head -20
+echo "== 启动过的命令记录 =="
+ls /root/bot/bot/装 2>/dev/null | head; cat /root/bot/bot/装 2>/dev/null | head -10
