@@ -1,4 +1,6 @@
-185
-ls -la /root/bot/bot/bot.log /root/napcat-run.log 2>&1
+186
+ls -lat /root/*.log /root/bot/*.log /root/bot/bot/*.log 2>/dev/null | head -12
 echo ---
-tail -2 /root/bot/bot/bot.log 2>/dev/null
+grep -n "main.py" /root/remote_ctl.sh | head -4
+echo ---
+pgrep -f "[m]ain.py" | head -2
