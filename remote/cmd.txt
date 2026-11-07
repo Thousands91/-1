@@ -1,14 +1,7 @@
-216
-set -e
-cd /root/bot/bot
-TOKEN=$(grep -o '[^:]*@github.com' /root/.git-credentials | head -1 | sed 's/@github.com//')
-curl -s --max-time 60 -H "Authorization: token $TOKEN" -L "https://raw.githubusercontent.com/Thousands91/qq-bot/main/bot/plugins/fortune.py?v=$(date +%s)$RANDOM" -o bot/plugins/fortune.py
-cmp -s bot/plugins/fortune.py <(curl -s --max-time 60 -H "Authorization: token $TOKEN" -L "https://raw.githubusercontent.com/Thousands91/qq-bot/main/bot/plugins/fortune.py?v=$(date +%s)$RANDOM") && echo "下载自校验OK" || echo "WARN:两次下载不一致"
-grep -c "_readable" bot/plugins/fortune.py
-ls -la bot/plugins/fortune.py
-pkill -f "python.*bot.py" 2>/dev/null || true
-sleep 3
-cd /root/bot/bot && nohup python3 bot.py > /tmp/bot_run.log 2>&1 &
-sleep 12
-tail -5 /tmp/bot_run.log
-pgrep -f "python.*bot.py" && echo "BOT_RUNNING"
+217
+echo "STEP1 版本检查"
+grep -c "_readable" /root/bot/bot/bot/plugins/fortune.py || echo "无_readable=旧版"
+echo "STEP2 进程"
+pgrep -f "python.*bot.py" || echo "无bot进程"
+echo "STEP3 日志尾"
+tail -8 /tmp/bot_run.log 2>/dev/null || tail -8 /root/bot/bot/bot.log 2>/dev/null || echo "无日志"
