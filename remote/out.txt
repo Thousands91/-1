@@ -1,12 +1,25 @@
-<<<task_185.txt>>>
-===== 任务185 11-07 11:01:23 =====
+<<<task_186.txt>>>
+===== 任务186 11-07 11:09:40 =====
 --- 命令 ---
-ls -la /root/bot/bot/bot.log /root/napcat-run.log 2>&1
+ls -lat /root/*.log /root/bot/*.log /root/bot/bot/*.log 2>/dev/null | head -12
 echo ---
-tail -2 /root/bot/bot/bot.log 2>/dev/null
+grep -n "main.py" /root/remote_ctl.sh | head -4
+echo ---
+pgrep -f "[m]ain.py" | head -2
 --- 输出 ---
+-rw-r--r--. 1 root root 2891569 Nov  7 11:09 /root/napcat-run.log
+-rw-r--r--. 1 root root   53986 Nov  7 11:09 /root/netmon.log
+-rw-r--r--. 1 root root  789704 Nov  7 11:08 /root/remote_ctl.log
+-rw-r--r--. 1 root root    2224 Nov  6 20:57 /root/bot.log
+-rw-r--r--. 1 root root 1635096 Nov  6 18:24 /root/napcat-restart.log
+-rw-r--r--. 1 root root  143541 Nov  5 23:41 /root/napcat.log
+-rw-r--r--. 1 root root     623 Nov  5 00:58 /root/watcher.log
+-rw-r--r--. 1 root root      22 Nov  4 21:47 /root/guard.log
+-rw-r--r--. 1 root root   50865 Nov  2 18:17 /root/bot/bot.log
+-rw-r--r--. 1 root root    1455 Nov  2 00:44 /root/azar_login_run.log
 -rw-r--r--. 1 root root    7870 Nov  1 15:31 /root/bot/bot/bot.log
--rw-r--r--. 1 root root 2865909 Nov  7 11:01 /root/napcat-run.log
+-rw-r--r--. 1 root root      26 Oct 30 22:55 /root/asar_sync.log
 ---
-11-01 13:57:47 [INFO] uvicorn | 127.0.0.1:43686 - "GET / HTTP/1.1" 404
-11-01 15:31:41 [INFO] uvicorn | 127.0.0.1:47326 - "GET / HTTP/1.1" 404
+104:  pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & cd "$REPO"; }
+---
+9134
