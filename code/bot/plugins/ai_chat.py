@@ -917,11 +917,20 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
             quoted_raw = src.get("message") or src.get("raw_message") or ""
             quoted_sender = (src.get("sender") or {}).get("user_id")
             if isinstance(quoted_raw, list):
-                quoted = "".join(
-                    s.get("data", {}).get("text", "")
-                    for s in quoted_raw
-                    if isinstance(s, dict) and s.get("type") == "text"
-                )
+                # 文字段直接拼；语音段就地转写（引用语音=把耳朵伸到被引用那条上）
+                _qparts = []
+                for s in quoted_raw:
+                    if not isinstance(s, dict):
+                        continue
+                    if s.get("type") == "text":
+                        _qparts.append(s.get("data", {}).get("text", ""))
+                    elif s.get("type") == "record":
+                        try:
+                            _vt = await _voice_to_text(s.get("data") or {}, bot)
+                        except Exception:
+                            _vt = ""
+                        _qparts.append(f"[语音:{_vt}]" if _vt else "[语音:没听清]")
+                quoted = "".join(_qparts)
             else:
                 quoted = str(quoted_raw)
             quoted = quoted.strip()
