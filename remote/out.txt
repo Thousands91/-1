@@ -1,13 +1,28 @@
-<<<task_233.txt>>>
-===== 任务233 11-07 19:46:18 =====
+<<<task_234.txt>>>
+===== 任务234 11-07 20:02:14 =====
 --- 命令 ---
-grep -aE "call_api|send_msg|image" /root/bot/bot/bot.log 2>/dev/null | tail -4
-echo "== 抽签处理时段有没有异常 =="
-grep -a "19:45:2" /root/bot/bot/bot.log | grep -iaE "error|fail|traceback" || echo "无报错"
+echo "STEP1 下载"
+cd /root/bot/bot
+TOKEN=$(grep -o '[^:]*@github.com' /root/.git-credentials | head -1 | sed 's/@github.com//')
+curl -s --max-time 60 -H "Authorization: token $TOKEN" -L "https://raw.githubusercontent.com/Thousands91/qq-bot/main/bot/plugins/fortune.py?v=$(date +%s)$RANDOM" -o plugins/fortune.py
+echo "STEP2 验证"
+ls -la plugins/fortune.py
+grep -c "_fit\|advice" plugins/fortune.py
+python3 -c "import ast; ast.parse(open('plugins/fortune.py').read()); print('语法OK')"
+echo "STEP3 重启（只重启bot，不动NapCat，登录态不受影响）"
+kill $(pgrep -f "venv/bin/python main.py") 2>/dev/null; sleep 4
+nohup /root/bot/venv/bin/python main.py >> bot.log 2>&1 &
+sleep 15
+pgrep -af "main.py" || echo "启动失败"
+tail -3 bot.log
 --- 输出 ---
-11-07 17:57:54 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
-11-07 18:01:50 [SUCCESS] nonebot | Succeeded to load plugin "image_search_web" from "plugins.image_search_web"
-11-07 18:01:50 [SUCCESS] nonebot | Succeeded to load plugin "image_see" from "plugins.image_see"
-11-07 18:01:50 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
-== 抽签处理时段有没有异常 ==
-无报错
+STEP1 下载
+STEP2 验证
+-rw-r--r--. 1 root root 23426 Nov  7 20:02 plugins/fortune.py
+12
+语法OK
+STEP3 重启（只重启bot，不动NapCat，登录态不受影响）
+11107 /root/bot/venv/bin/python main.py
+11-07 20:02:26 [INFO] uvicorn | 127.0.0.1:46718 - "WebSocket /onebot/v11/ws" [accepted]
+11-07 20:02:26 [INFO] websockets | connection open
+11-07 20:02:26 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
