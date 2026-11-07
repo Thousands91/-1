@@ -1,22 +1,6 @@
-<<<task_244.txt>>>
-===== 任务244 11-07 20:38:11 =====
+<<<task_245.txt>>>
+===== 任务245 11-07 20:39:59 =====
 --- 命令 ---
-echo "STEP1 重启NapCat（保登录态）"
-pkill -9 -x Xvfb; pkill -9 -f "opt/QQ/[q]q"; sleep 2
-cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat-run.log 2>&1 < /dev/null &
-sleep 28
-echo "STEP2 登录态检查（出新二维码=要扫码，登录成功=免扫恢复）"
-grep -aE "登录成功|Login success|二维码已保存|快速登录" /root/napcat-run.log | tail -3
-echo "STEP3 bot侧连接"
-sleep 8
-grep -a "connected" /root/bot/bot/bot.log | tail -1
-ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null || echo "无新二维码"
+grep -oE "https://txz.qq.com/p\?k=[^ \"]*" /root/napcat-run.log | tail -1
 --- 输出 ---
-STEP1 重启NapCat（保登录态）
-STEP2 登录态检查（出新二维码=要扫码，登录成功=免扫恢复）
-11-07 20:38:19 [[32minfo[39m] 没有 -q 指令指定快速登录，将使用二维码登录方式
-11-07 20:38:19 [[32minfo[39m] 可用于快速登录 of QQ：
-11-07 20:38:20 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-STEP3 bot侧连接
-11-07 20:02:26 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
--rw-r--r--. 1 root root 600 Nov  7 20:38 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+https://txz.qq.com/p?k=mu1H2mw08QlcN3dxxfFAUB4SfQhHmsyK&f=1600001615
