@@ -1,22 +1,24 @@
-<<<task_249.txt>>>
-===== 任务249 11-07 21:08:40 =====
+<<<task_250.txt>>>
+===== 任务250 11-07 21:21:56 =====
 --- 命令 ---
-echo "== 1. 登录与WS =="
-grep -a "connected" /root/bot/bot/bot.log | tail -1
-echo "== 2. 扫码后处理过的消息（最近几条） =="
-grep -aE "2[01]:[0-9]{2}:[0-9]{2}" /root/bot/bot/bot.log | grep -aE "核对|recv|收到|call_api" | tail -5
-echo "== 3. 扫码后有无报错 =="
-grep -a "21:0" /root/bot/bot/bot.log | grep -aiE "error|traceback|exception" | tail -3 || echo "无报错"
-echo "== 4. 进程三件套 =="
-pgrep -af "main.py" | head -1
-pgrep -f "opt/QQ/qq" >/dev/null && echo "NapCat:活" || echo "NapCat:死"
+echo "== 1. 21:1x 表情消息的核对日志 =="
+grep -a "21:1" /root/bot/bot/bot.log | grep -aE "核对|表情" | tail -6
+echo ""
+echo "== 2. 21:0x~21:2x 全部ai_chat日志 =="
+grep -a "ai_chat" /root/bot/bot/bot.log | grep -aE "21:0|21:1|21:2" | tail -8
 --- 输出 ---
-== 1. 登录与WS ==
-11-07 21:05:14 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
-== 2. 扫码后处理过的消息（最近几条） ==
-11-07 20:00:06 [INFO] ai_chat | [核对·调试] ask='[表情:菜汪]' lead=False contra=False agree=False dodge=False ans='牛肉面吧，油重的汤底，配点辣子，正好提神。'
-11-07 20:00:45 [INFO] ai_chat | [核对·调试] ask='[表情:无语]' lead=False contra=False agree=False dodge=False ans='冰美式，苦得提神。'
-== 3. 扫码后有无报错 ==
-== 4. 进程三件套 ==
-18396 /root/bot/venv/bin/python main.py
-NapCat:活
+== 1. 21:1x 表情消息的核对日志 ==
+11-07 21:15:52 [INFO] ai_chat | [核对·调试] ask='[表情:略]' lead=False contra=False agree=False dodge=False ans='[表情:略] 这表情，似乎在说“故事先放一放，我有话要说”。📖🤔'
+11-07 21:16:07 [INFO] ai_chat | [核对·调试] ask='[表情:知识增加]' lead=False contra=False agree=False dodge=False ans='[表情:知识增加] 您的提问如同夜空中闪烁的星辰，照亮了我知识的海洋。🌟'
+11-07 21:17:16 [INFO] ai_chat | [核对·调试] ask='[表情:无语]' lead=False contra=False agree=False dodge=False ans='[表情:无语] 这表情，似乎在说“这事情，实在让人难以置信”。📚😕'
+11-07 21:19:10 [INFO] ai_chat | [核对·调试] ask='[表情:散味儿]' lead=False contra=False agree=False dodge=False ans='[表情:散味儿] 这表情，像是在说“这件事情，真是让人闻所未闻”。📚🥂'
+
+== 2. 21:0x~21:2x 全部ai_chat日志 ==
+11-07 21:19:18 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=893)
+11-07 21:19:18 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=893) running complete
+11-07 21:19:38 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=893)
+11-07 21:19:38 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=893) running complete
+11-07 21:19:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=893)
+11-07 21:19:41 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=893) running complete
+11-07 21:19:50 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=893)
+11-07 21:19:50 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=893) running complete
