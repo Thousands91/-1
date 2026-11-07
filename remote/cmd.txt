@@ -1,7 +1,8 @@
-217
-echo "STEP1 版本检查"
-grep -c "_readable" /root/bot/bot/bot/plugins/fortune.py || echo "无_readable=旧版"
-echo "STEP2 进程"
-pgrep -f "python.*bot.py" || echo "无bot进程"
-echo "STEP3 日志尾"
-tail -8 /tmp/bot_run.log 2>/dev/null || tail -8 /root/bot/bot/bot.log 2>/dev/null || echo "无日志"
+218
+echo "== find bot.py =="
+find /root -name "bot.py" -not -path "*/node_modules/*" 2>/dev/null | head -5
+echo "== find fortune.py =="
+find /root -name "fortune.py" 2>/dev/null | head -5
+echo "== /root/bot 结构 =="
+ls /root/bot 2>/dev/null
+ls /root/bot/bot 2>/dev/null | head -20
