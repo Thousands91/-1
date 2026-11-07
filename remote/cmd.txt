@@ -1,2 +1,2 @@
-245
-grep -oE "https://txz.qq.com/p\?k=[^ \"]*" /root/napcat-run.log | tail -1
+246
+cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null && chmod 644 /sdcard/DCIM/Camera/asar_qr.png && echo 相册已更新
