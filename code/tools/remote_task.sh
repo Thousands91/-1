@@ -58,16 +58,17 @@ done
 
 # 4. 更新本地号状态并轮询 out.txt
 echo "$NEXT" > "$STATE"
-echo "[4/4] 轮询 out.txt 等待 task_$NEXT 回传（最长 ${WAIT}s）..."
+echo "[4/4] 轮询 out.txt 等待 task_$NEXT 回传（最长 ${WAIT}s，走API防缓存）..."
 DEADLINE=$(( $(date +%s) + WAIT ))
 while [ "$(date +%s)" -lt "$DEADLINE" ]; do
-  curl -s --max-time 30 -H "Authorization: token $TOKEN" "https://raw.githubusercontent.com/$REPO/main/remote/out.txt?v=$(date +%s)" -o /tmp/remote_out.txt || { sleep 20; continue; }
+  # 走 contents API + 随机参数（raw.githubusercontent CDN 会无视查询参数缓存旧内容数分钟，11-07 实测踩坑）
+  curl -s --max-time 30 -H "Authorization: token $TOKEN" -H "Accept: application/vnd.github.raw" "$API/remote/out.txt?v=$(date +%s)$RANDOM" -o /tmp/remote_out.txt || { sleep 15; continue; }
   if grep -q "task_$NEXT.txt" /tmp/remote_out.txt; then
     echo "=== task_$NEXT 回传 ==="
     cat /tmp/remote_out.txt
     exit 0
   fi
-  sleep 20
+  sleep 15
 done
-echo "TIMEOUT: ${WAIT}s 内未见 task_$NEXT 回传（手机轮询周期90s，可稍后重跑本脚本查看，或下发查询任务）"
+echo "TIMEOUT: ${WAIT}s 内未见 task_$NEXT 回传（可稍后手动重查，或手机侧循环未运行）"
 exit 2
