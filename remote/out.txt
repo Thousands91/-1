@@ -1,73 +1,123 @@
-<<<task_258.txt>>>
-===== 任务258 11-08 00:30:57 =====
+<<<task_259.txt>>>
+===== 任务259 11-08 00:34:31 =====
 --- 命令 ---
-echo "== 当前还活着的进程 =="
-ps aux 2>/dev/null | grep -vE "ps aux|grep" | head -15
+echo "== bot.log 00:05 之后的关键事件 =="
+awk "/^11-08 00:0[5-9]|^11-08 00:[1-9]/" /root/bot/bot/bot.log | grep -aE "WebSocket|connect|failed|error|Error" | tail -10
 echo ""
-echo "== start_nap.sh 内容 =="
-cat /root/start_nap.sh
+echo "== napcat-restart.log 最后15行 =="
+tail -15 /root/napcat-restart.log 2>/dev/null
 echo ""
-echo "== azar_guard.sh 前几行 =="
-head -20 /root/azar_guard.sh
+echo "== napcat.log 最后10行 =="
+tail -10 /root/napcat.log 2>/dev/null
 echo ""
-echo "== restart_bot.sh 内容 =="
-cat /root/restart_bot.sh
+echo "== 守护状态 =="
+cat /root/guard_status.txt 2>/dev/null
+ls -la /root/.guard_kicked 2>/dev/null || echo 无被踢标记
 echo ""
-echo "== Napcat 目录还在吗 =="
-ls -d /root/Napcat 2>/dev/null && ls /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/ 2>/dev/null | head
+echo "== 二维码文件时间 =="
+stat -c "%y %n" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null || echo 无二维码文件
+date "+现在: %F %H:%M:%S"
 --- 输出 ---
-== 当前还活着的进程 ==
-USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-aid_u0_+  3375  1.2  0.0 636944  3156 ?        S<l   2023   1:35 /root/bot/venv/bin/python main.py
-aid_u0_+  4489  0.0  0.0   4456   116 ?        S<    2023   0:00 bash /root/remote_ctl.sh
-aid_u0_+  4501  0.0  0.0   2396   152 ?        S<    2023   0:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
-aid_u0_+  4624  0.0  0.0  27912   140 ?        S<    2023   0:00 Xvfb :177 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.bVYULr/Xauthority
-aid_u0_+  4655  2.0  0.0 205568400 5684 ?      S<l   2023   0:30 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
-aid_u0_+  4853  0.0  0.0 50707504 340 ?        S<    2023   0:00 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-aid_u0_+  4860  0.0  0.0 50707504 208 ?        S<    2023   0:00 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
-aid_u0_+  5924  0.0  0.0 50749172 1200 ?       S<l   2023   0:00 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-aid_u0_+  5982 27.6  0.8 205820808 97128 ?     Sl    2023   6:49 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --no-sandbox --disable-dev-shm-usage --enable-crash-reporter=066ad494-c96d-4e6a-9b3c-edaba4b49dd8,no_channel --user-data-dir=/root/.config/QQ --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,18120144560474979789,10109345285666371594,262144 --enable-features=PdfUseShowSaveFilePicker --disable-features=LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708989122997041
-aid_u0_+  5996  0.0  0.0 50665400 1100 ?       Sl    2023   0:00 /proc/self/exe --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --no-sandbox --disable-dev-shm-usage --enable-crash-reporter=066ad494-c96d-4e6a-9b3c-edaba4b49dd8,no_channel --user-data-dir=/root/.config/QQ --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,18120144560474979789,10109345285666371594,262144 --enable-features=PdfUseShowSaveFilePicker --disable-features=LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708990060038890
-aid_u0_+  6959  0.0  0.0   4048   136 ?        S<s   2023   0:00 bash -c sleep 25; OP=$(cat /root/.remote_pid 2>/dev/null); [ -n "$OP" ] && kill "$OP" 2>/dev/null; sleep 2; rm -f /root/.remote_pid; cd /root && setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1
-aid_u0_+  7727  0.0  0.0   4180   860 pts/0    S<    2023   0:19 bash /root/azar_guard.sh
-aid_u0_+  8420  0.0  0.0   4456  1204 ?        S<s   2023   0:24 bash /root/remote_ctl.sh
-aid_u0_+  9220 30.8  0.0 12405472 3092 pts/0   R<    2023 1086:22 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/data/misc/apexdata/com.android.art/dalvik-cache --bind=/storage/self/primary:/mnt/sdcard --bind=/storage/self/primary:/sdcard --bind=/storage/self/primary:/storage/emulated/0 --bind=/storage/self/primary:/storage/self/primary --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/product --bind=/system --bind=/system_ext --bind=/vendor --bind=/linkerconfig/ld.config.txt --bind=/linkerconfig/com.android.art/ld.config.txt --bind=/data/data/com.termux/files/usr /bin/bash -l
+== bot.log 00:05 之后的关键事件 ==
+11-08 00:05:58 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
 
-== start_nap.sh 内容 ==
-pkill -f "opt/QQ/[q]q"; sleep 2; cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & sleep 25; cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册,去QQ扫 || echo 码未生成,稍后再拷
-== azar_guard.sh 前几行 ==
-#!/bin/bash
-# 阿萨尔掉线守护 v1.1 (2026-11-02)
-# v1.1 修复: 被踢后二维码变旧会被误判普通断线而白重启 —— 加"被踢标记"
-# 规则1: QQ进程死了且无近期二维码 -> 自动拉起
-# 规则2: WS断开+会话在(重启后未出新码) -> 自动重启NapCat免扫码恢复
-# 规则3: 重启后仍出新款二维码(=真被踢) -> 记被踢标记,6小时内不再自动重启
-# 规则4: 每小时最多重启3次,重启后冷却5分钟;登录成功(connected)自动清被踢标记
-LOG=/root/bot.log
-QR=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-STATE=/root/guard_status.txt
-LAST_RESTART=/root/.guard_last
-CNT_FILE=/root/.guard_cnt
-KICKED=/root/.guard_kicked
-TS() { stat -c %Y "$1" 2>/dev/null || echo 0; }
-start_qq() {
-  cd /root && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 &
-}
-can_restart() {
-  NOW=$(date +%s)
-  LR=$(cat "$LAST_RESTART" 2>/dev/null || echo 0)
+== napcat-restart.log 最后15行 ==
+49921a90110d7f4b0c0bbeeb1b368123e99215ac3e441bb09aca513f14fad422
+c5461f5c0eeed91de620f1e129a143f979f5d1d627189f37a6606680a67ed46a
+b41bf5fc3f26536da4c91ff4d46ddd4395342adefd276fdf97e61399187efe3d
+dac6f46523431ba442ac7a4f4cc6ef15e1a442bef96ae1409718c5d14a1ec779
+dd20de0f2f3df3b7b1d4d0be6b2c70ff5d68129e076bce9e8f43025eb7c16267
+52a357bd2ed554a711e58b71967c6bb25fabe540d6e475453359f6cdea3c8a31
+aa07c9b1aa3e89eed6ae078d7166ed8c741a7706d4e1f1133aaf2a6ab7f78466
+a5ea92a5403596b3187fd68733a28027e5d933ac503999a0218ca8fcfa6ea798
+009817ec71c7f2342142a122fd54fdf4cb91d8be6c7fd4110c6722edfc2a008a
+9f8ed0a8a33056fb9491cc1facb666d17b1e2507f56cc1a2dd8e3370f1c0e6ff
+[13435:1106/182424.231388:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
+[13435:1106/182424.292289:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[13435:1106/182424.295683:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[13435:1106/182424.297993:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[13435:1106/182424.298040:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
 
-== restart_bot.sh 内容 ==
-pkill -f main.py; sleep 2; cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & sleep 12; echo ==加载验证==; tail -n 60 /root/bot.log | grep -c Succeeded; tail -n 60 /root/bot.log | grep -c Duplicated; tail -n 60 /root/bot.log | grep -ciE "failed|traceback"
-== Napcat 目录还在吗 ==
-/root/Napcat
-KillQQ.bat
-NapCatWinBootHook.dll
-NapCatWinBootMain.exe
-cache
-config
-conout-wiJ7YKRd.js
-launcher-elevate.ps1
-launcher-user.bat
-launcher-win10-user.bat
-launcher-win10.bat
+== napcat.log 最后10行 ==
+11-08 00:05:05 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [长太息以笑希希，乐希希之多艰(553414459)] ❤
+11-08 00:05:13 [[32minfo[39m] 阿萨尔 | [ServerTime] 时间同步完成，偏差 411ms
+478f89d109687318292a19b1d51794045e7654847fb1d438547aa0c207424121
+11-08 00:05:54 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+c9ef99ffa8e934d4f7a97166741cb5e9499f30a41aa8a52a91fa5c4d7d3d5387
+[28575:1108/000558.158712:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
+[28575:1108/000558.328216:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[28575:1108/000558.356795:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[28575:1108/000558.381270:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[28575:1108/000558.381380:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+
+== 守护状态 ==
+11-02 00:43:24 守护启动
+11-02 00:44:25 NapCat在等扫码(被踢),等人工处理
+11-02 00:45:25 NapCat在等扫码(被踢),等人工处理
+11-02 00:45:46 守护v1.1启动
+11-02 01:06:49 WS断开,尝试重启NapCat免扫码恢复
+11-02 01:07:53 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-02 12:32:02 守护v1.1启动
+11-02 12:33:02 被踢标记超6小时,允许再试
+11-02 12:33:02 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-02 16:24:29 QQ进程消失,自动拉起
+11-02 18:33:49 被踢标记超6小时,允许再试
+11-02 18:33:49 WS断开,尝试重启NapCat免扫码恢复
+11-02 18:34:52 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-02 20:59:42 守护v1.1启动
+11-03 00:35:13 被踢标记超6小时,允许再试
+11-03 00:35:13 WS断开,尝试重启NapCat免扫码恢复
+11-03 00:36:16 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-03 06:37:13 被踢标记超6小时,允许再试
+11-03 06:37:13 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-03 12:38:00 被踢标记超6小时,允许再试
+11-03 12:38:00 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-03 12:47:04 守护v1.1启动
+11-03 17:48:19 守护v1.1启动
+11-03 20:23:43 守护v1.1启动
+11-03 20:24:46 被踢标记超6小时,允许再试
+11-03 20:24:47 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-03 22:13:00 守护v1.1启动
+11-04 02:25:42 被踢标记超6小时,允许再试
+11-04 02:25:42 WS断开,尝试重启NapCat免扫码恢复
+11-04 02:30:46 WS断开,尝试重启NapCat免扫码恢复
+11-04 02:35:51 WS断开,尝试重启NapCat免扫码恢复
+11-04 03:01:00 WS断开,尝试重启NapCat免扫码恢复
+11-04 03:06:04 WS断开,尝试重启NapCat免扫码恢复
+11-04 03:11:08 WS断开,尝试重启NapCat免扫码恢复
+11-04 03:17:13 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-04 09:18:03 被踢标记超6小时,允许再试
+11-04 09:18:03 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-04 15:18:45 被踢标记超6小时,允许再试
+11-04 15:18:45 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-04 21:47:18 守护v1.1启动
+11-04 21:48:18 被踢标记超6小时,允许再试
+11-04 21:48:18 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-05 18:23:15 守护v1.1启动
+11-05 18:24:15 被踢标记超6小时,允许再试
+11-05 18:24:15 WS断开,尝试重启NapCat免扫码恢复
+11-05 18:25:19 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-06 00:25:22 被踢标记超6小时,允许再试
+11-06 00:25:22 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-06 06:26:16 被踢标记超6小时,允许再试
+11-06 06:26:16 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-06 12:26:59 被踢标记超6小时,允许再试
+11-06 12:26:59 WS断开,尝试重启NapCat免扫码恢复
+11-06 12:28:03 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-06 18:29:00 被踢标记超6小时,允许再试
+11-06 18:29:00 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-07 00:29:56 被踢标记超6小时,允许再试
+11-07 00:29:56 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-07 06:29:57 被踢标记超6小时,允许再试
+11-07 06:29:57 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-07 12:30:53 被踢标记超6小时,允许再试
+11-07 12:30:53 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-07 18:31:08 被踢标记超6小时,允许再试
+11-07 18:31:08 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+11-08 00:31:14 被踢标记超6小时,允许再试
+11-08 00:31:14 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
+-rw-r--r--. 1 root root 11 Nov  8 00:31 /root/.guard_kicked
+
+== 二维码文件时间 ==
+2026-11-08 00:34:30.280332669 +0800 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+现在: 2026-11-08 00:34:32
