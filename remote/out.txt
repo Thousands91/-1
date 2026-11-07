@@ -1,17 +1,36 @@
-<<<task_207.txt>>>
-===== 任务207 11-07 15:18:13 =====
+<<<task_208.txt>>>
+===== 任务208 11-07 15:20:58 =====
 --- 命令 ---
-set -e
-TOKEN=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
-[ -n "$TOKEN" ] || { echo "FAIL:无token"; exit 1; }
-curl -s --max-time 60 -H "Authorization: token $TOKEN" "https://raw.githubusercontent.com/Thousands91/-1/main/code/bot/plugins/fortune.py" -o /root/fortune_new.py
-wc -c /root/fortune_new.py
-/root/bot/venv/bin/python -m py_compile /root/fortune_new.py && echo "语法通过" || { echo "语法失败"; exit 1; }
-cp /root/bot/bot/plugins/fortune.py /root/fortune.py.bak_1107b
-mv /root/fortune_new.py /root/bot/bot/plugins/fortune.py
-for p in $(pgrep -f "[m]ain.py"); do kill $p; done
-echo "DEPLOY-OK"
+echo "验证时间: $(date +%H:%M:%S)"
+PID=$(pgrep -f "[m]ain.py" | head -1)
+if [ -n "$PID" ]; then ps -o pid,etime -p $PID | tail -1; else echo "bot未运行!"; fi
+grep -icE "error|traceback" /root/bot.log 2>/dev/null || true
+md5sum /root/bot/bot/plugins/fortune.py | cut -c1-12
+echo "--- 真机活体:白底卡重画 ---"
+cd /root/bot/bot && /root/bot/venv/bin/python - <<'PYEOF'
+import sys
+sys.path.insert(0, "/root/bot/bot/plugins")
+import nonebot
+nonebot.init()
+import fortune as F
+b = F._render_card(F.SIGNS[0], F.CARD_TYPES["征服"], F.TIERS["金"], {"才学":84,"财货":70,"情缘":91,"体魄":92,"见识":82}, 83, "白底测试", "11月07日")
+open("/root/test_card2.png","wb").write(b)
+from PIL import Image
+img = Image.open("/root/test_card2.png")
+px = img.getpixel((360, 550))
+print("中心背景像素:", px, "白色?" , all(c>240 for c in px))
+print("PNG:", img.size)
+PYEOF
+rm -f /root/test_card2.png
+echo "LIVE-OK"
 --- 输出 ---
-19519 /root/fortune_new.py
-语法通过
-DEPLOY-OK
+验证时间: 15:20:58
+12249       01:46
+0
+cf12f04ebe62
+--- 真机活体:白底卡重画 ---
+11-07 15:21:00 [SUCCESS] nonebot | NoneBot is initializing...
+11-07 15:21:00 [INFO] nonebot | Current Env: prod
+中心背景像素: (155, 149, 139) 白色? False
+PNG: (720, 1080)
+LIVE-OK
