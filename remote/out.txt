@@ -1,34 +1,21 @@
-<<<task_269.txt>>>
-===== 任务269 11-08 06:17:24 =====
+<<<task_270.txt>>>
+===== 任务270 11-08 06:19:51 =====
 --- 命令 ---
-echo "== napcat 安装目录下的 config =="
-ls /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/
+echo "== 账号级 napcat_3427943187.json =="
+cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json
 echo ""
-echo "== napcat.json =="
-cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json 2>/dev/null
+echo "== 协议配置 =="
+cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_protocol_3427943187.json 2>/dev/null
 echo ""
-echo "== onebot11 配置 =="
-for f in /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11*.json; do [ -f "$f" ] && echo "--- $f ---" && cat "$f"; done
+echo "== NapCat 版本（从启动日志找）=="
+grep -aoE "NapCat[/ ]v?[0-9]+\.[0-9]+\.[0-9]+" /root/napcat.log /root/napcat-restart.log 2>/dev/null | head -3
 echo ""
-echo "== NapCat data 目录 =="
-ls /root/.config/QQ/NapCat/data/ | head
-echo ""
-echo "== NapCat 版本（找更新器常量）=="
-grep -roE "\"[0-9]+\.[0-9]+\.[0-9]+\"" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/static/dist/version.json 2>/dev/null | head -3
-ls /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/static 2>/dev/null | head -8
+echo "== QQ 当前是否在等扫码 =="
+tail -5 /root/napcat.log
 --- 输出 ---
-== napcat 安装目录下的 config ==
-napcat.json
-napcat.json.bak_1106
-napcat_3427943187.json
-napcat_protocol_3427943187.json
-onebot11_3427943187.json
-passkey.json
-webui.json
-
-== napcat.json ==
+== 账号级 napcat_3427943187.json ==
 {
-  "fileLog": true,
+  "fileLog": false,
   "consoleLog": true,
   "fileLogLevel": "debug",
   "consoleLogLevel": "info",
@@ -42,42 +29,23 @@ webui.json
     "process": false,
     "container": false,
     "js": false
+  },
+  "autoTimeSync": true
+}
+== 协议配置 ==
+{
+  "enable": false,
+  "network": {
+    "httpServers": [],
+    "websocketServers": [],
+    "websocketClients": []
   }
 }
-== onebot11 配置 ==
---- /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json ---
-{
-  "network": {
-    "websocketClients": [
-      {
-        "name": "nonebot",
-        "enable": true,
-        "url": "ws://127.0.0.1:8080/onebot/v11/ws",
-        "messagePostFormat": "array",
-        "reportSelfMessage": false,
-        "token": "",
-        "debug": false,
-        "heartInterval": 30000,
-        "reconnectInterval": 5000
-      }
-    ],
-    "websocketServers": [],
-    "httpServers": [],
-    "httpClients": [],
-    "httpSseServers": [],
-    "plugins": []
-  },
-  "musicSignUrl": "",
-  "enableLocalFile2Url": false,
-  "parseMultMsg": false
-}
-== NapCat data 目录 ==
+== NapCat 版本（从启动日志找）==
 
-== NapCat 版本（找更新器常量）==
-assets
-favicon.ico
-fonts
-index.html
-robots.txt
-sw_template.js
-vercel.json
+== QQ 当前是否在等扫码 ==
+b459f7b5809786084a5c727d12c744e9ecb53d99dde771cfde7a338c02c9fcc1
+9792b3e83cedd319fd7f355dbe8e196e94e6f90f6ae5932ae2d3803e58326cfa
+514f76773992984b620d07e9cb062d05f1265aa2abe26103bef9075066bffddc
+5a271110868a71bfb9b1680b8f4182f2b0b7b3d7937fcbd671880729e3ac42f8
+d878f8a07143a4e0679a7bd7fd9aae06aea815b05476bf7d60469ae296b5654e
