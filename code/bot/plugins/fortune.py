@@ -70,6 +70,11 @@ def _wrap_cn(draw, text, font, maxw):
     return lines
 
 
+def _mix(c1, c2, t):
+    """颜色 c1 向 c2 混合 t（0=全c1，1=全c2）。"""
+    return tuple(round(a + (b - a) * t) for a, b in zip(c1, c2))
+
+
 def _render_card(sign, card, tier, scores, avg, user, date_str):
     """把这一签画成一张卡牌图，返回 png 字节；任何一步失败返回 None。"""
     try:
@@ -79,9 +84,11 @@ def _render_card(sign, card, tier, scores, avg, user, date_str):
             return None
         W, H = 720, 1080
         tc = _TIER_RGB[tier["name"]]
-        tc_text = tuple(int(c * 0.72) for c in tc)   # 品级色文字用（白底上加深）
+        tc_text = tuple(int(c * 0.72) for c in tc)   # 品级色文字用（加深）
         kc = _KEY_RGB.get(sign["key"], (110, 102, 88))
-        img = Image.new("RGB", (W, H), (252, 250, 246))
+        # 卡面底色 = 品级色的柔和版（对齐原作：金卡金面、石卡赭面），文字保持深色可读
+        bg = _mix(tc, (255, 253, 249), 0.55)
+        img = Image.new("RGB", (W, H), bg)
         d = ImageDraw.Draw(img)
         # 双层边框：外粗内细，品级色
         d.rectangle([8, 8, W - 9, H - 9], outline=tc, width=5)
@@ -101,7 +108,7 @@ def _render_card(sign, card, tier, scores, avg, user, date_str):
         # 品级行
         tierline = f"{tier['name']}品 · {sign['card']}卡 · 应在{card['realm']}　签力 {int(avg)}"
         d.text(((W - d.textlength(tierline, font=f_small)) / 2, 318), tierline, font=f_small, fill=tc_text)
-        d.line([70, 372, W - 70, 372], fill=(185, 176, 160), width=2)
+        d.line([70, 372, W - 70, 372], fill=_mix(bg, (40, 30, 20), 0.35), width=2)
         # 签诗（自动折行，居中）
         y = 400
         for ln in _wrap_cn(d, sign["line"], f_body, W - 160):
@@ -118,7 +125,7 @@ def _render_card(sign, card, tier, scores, avg, user, date_str):
         bar_x, bar_w = 210, 330
         for dim, v in scores.items():
             d.text((70, y), dim, font=f_dim, fill=(85, 76, 66))
-            d.rounded_rectangle([bar_x, y + 4, bar_x + bar_w, y + 26], radius=8, fill=(228, 223, 215))
+            d.rounded_rectangle([bar_x, y + 4, bar_x + bar_w, y + 26], radius=8, fill=_mix(bg, (40, 30, 20), 0.14))
             fill_w = int(bar_w * (v - 20) / 80)
             d.rounded_rectangle([bar_x, y + 4, bar_x + max(fill_w, 14), y + 26], radius=8, fill=tc)
             d.text((bar_x + bar_w + 18, y), str(v), font=f_dim, fill=(62, 54, 46))
