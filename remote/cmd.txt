@@ -1,5 +1,10 @@
-231
-echo "== azar_login.sh 是否在 =="
-ls -la /root/azar_login.sh 2>/dev/null || echo "不在了"
-echo "== 内容 =="
-cat /root/azar_login.sh 2>/dev/null | head -40
+232
+echo "== 1. 登录状态 =="
+grep -aE "Login success|登录成功|账号.*上线|websocket" /root/napcat-run.log 2>/dev/null | tail -3
+echo "== 2. NapCat 连接大脑的WS =="
+grep -aE "connect|WebSocket" /root/napcat-run.log 2>/dev/null | tail -3
+echo "== 3. bot 日志尾（看有没有收到消息的痕迹） =="
+tail -8 /root/bot/bot/bot.log
+echo "== 4. 进程三件套 =="
+pgrep -af "main.py" | head -1
+pgrep -f "opt/QQ/qq" >/dev/null && echo "NapCat:活" || echo "NapCat:死"
