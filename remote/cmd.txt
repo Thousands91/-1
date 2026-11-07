@@ -1,15 +1,17 @@
-258
-echo "== 当前还活着的进程 =="
-ps aux 2>/dev/null | grep -vE "ps aux|grep" | head -15
+259
+echo "== bot.log 00:05 之后的关键事件 =="
+awk "/^11-08 00:0[5-9]|^11-08 00:[1-9]/" /root/bot/bot/bot.log | grep -aE "WebSocket|connect|failed|error|Error" | tail -10
 echo ""
-echo "== start_nap.sh 内容 =="
-cat /root/start_nap.sh
+echo "== napcat-restart.log 最后15行 =="
+tail -15 /root/napcat-restart.log 2>/dev/null
 echo ""
-echo "== azar_guard.sh 前几行 =="
-head -20 /root/azar_guard.sh
+echo "== napcat.log 最后10行 =="
+tail -10 /root/napcat.log 2>/dev/null
 echo ""
-echo "== restart_bot.sh 内容 =="
-cat /root/restart_bot.sh
+echo "== 守护状态 =="
+cat /root/guard_status.txt 2>/dev/null
+ls -la /root/.guard_kicked 2>/dev/null || echo 无被踢标记
 echo ""
-echo "== Napcat 目录还在吗 =="
-ls -d /root/Napcat 2>/dev/null && ls /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/ 2>/dev/null | head
+echo "== 二维码文件时间 =="
+stat -c "%y %n" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null || echo 无二维码文件
+date "+现在: %F %H:%M:%S"
