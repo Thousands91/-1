@@ -1,13 +1,9 @@
-<<<task_205.txt>>>
-===== 任务205 11-07 14:59:57 =====
+<<<task_206.txt>>>
+===== 任务206 11-07 15:01:27 =====
 --- 命令 ---
-echo "验证时间: $(date +%H:%M:%S)"
-echo "--- bot重启确认 ---"
-PID=$(pgrep -f "[m]ain.py" | head -1)
-if [ -n "$PID" ]; then ps -o pid,etime -p $PID | tail -1; else echo "bot未运行!"; fi
-grep -icE "error|traceback" /root/bot.log 2>/dev/null || echo 0
-echo "--- 真机活体:画卡+记账 ---"
 cd /root/bot/bot && /root/bot/venv/bin/python - <<'PYEOF'
+import sys
+sys.path.insert(0, "/root/bot/bot/plugins")
 import nonebot
 nonebot.init()
 import fortune as F
@@ -18,18 +14,17 @@ print("卡牌PNG字节数:", len(b))
 F._log_draw(99999, F.SIGNS[0])
 import json, pathlib
 print("记账:", json.loads(pathlib.Path("/root/bot/bot/data/fortune_log.json").read_text()).get("99999"))
+from PIL import Image
+img = Image.open("/root/test_card.png"); img.verify()
+print("PNG校验:", img.size, img.format)
 PYEOF
-ls -la /root/test_card.png
+ls -la /root/test_card.png && rm -f /root/test_card.png
+echo "LIVE-OK"
 --- 输出 ---
-验证时间: 14:59:57
---- bot重启确认 ---
-22067       00:38
-0
-0
---- 真机活体:画卡+记账 ---
-11-07 14:59:59 [SUCCESS] nonebot | NoneBot is initializing...
-11-07 14:59:59 [INFO] nonebot | Current Env: prod
-Traceback (most recent call last):
-  File "<stdin>", line 3, in <module>
-ModuleNotFoundError: No module named 'fortune'
-ls: cannot access '/root/test_card.png': No such file or directory
+11-07 15:01:29 [SUCCESS] nonebot | NoneBot is initializing...
+11-07 15:01:29 [INFO] nonebot | Current Env: prod
+卡牌PNG字节数: 83519
+记账: [{'d': '2026-11-07', 'key': '大吉', 'name': '破城'}]
+PNG校验: (720, 1080) PNG
+-rw-r--r--. 1 root root 83519 Nov  7 15:01 /root/test_card.png
+LIVE-OK
