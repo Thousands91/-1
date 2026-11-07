@@ -52,8 +52,8 @@ _CARD_FONT_CANDIDATES = [
     "/usr/share/fonts/truetype/wqy/wqy-microhei.ttc",
 ]
 _TIER_RGB = {"金": (222, 184, 92), "银": (186, 196, 206), "铜": (194, 140, 80), "石": (150, 150, 142)}
-_KEY_RGB = {"大吉": (255, 198, 84), "吉": (232, 214, 152), "小吉": (214, 202, 162),
-            "平": (188, 188, 178), "小凶": (148, 160, 182), "凶": (224, 96, 74), "未定": (172, 162, 152)}
+_KEY_RGB = {"大吉": (168, 108, 10), "吉": (128, 100, 22), "小吉": (108, 92, 44),
+            "平": (108, 108, 100), "小凶": (64, 96, 140), "凶": (172, 36, 20), "未定": (118, 110, 98)}
 
 
 def _wrap_cn(draw, text, font, maxw):
@@ -78,8 +78,9 @@ def _render_card(sign, card, tier, scores, avg, user, date_str):
             return None
         W, H = 720, 1080
         tc = _TIER_RGB[tier["name"]]
-        kc = _KEY_RGB.get(sign["key"], (220, 210, 190))
-        img = Image.new("RGB", (W, H), (26, 21, 16))
+        tc_text = tuple(int(c * 0.72) for c in tc)   # 品级色文字用（白底上加深）
+        kc = _KEY_RGB.get(sign["key"], (110, 102, 88))
+        img = Image.new("RGB", (W, H), (252, 250, 246))
         d = ImageDraw.Draw(img)
         # 双层边框：外粗内细，品级色
         d.rectangle([8, 8, W - 9, H - 9], outline=tc, width=5)
@@ -91,39 +92,39 @@ def _render_card(sign, card, tier, scores, avg, user, date_str):
         f_dim = ImageFont.truetype(font_path, 27)
         # 顶部戳记
         stamp = "阿萨尔书店 · 命书"
-        d.text(((W - d.textlength(stamp, font=f_small)) / 2, 52), stamp, font=f_small, fill=(150, 138, 120))
+        d.text(((W - d.textlength(stamp, font=f_small)) / 2, 52), stamp, font=f_small, fill=(140, 128, 110))
         # 吉凶 + 卡名
         d.text(((W - d.textlength(sign["key"], font=f_key)) / 2, 108), sign["key"], font=f_key, fill=kc)
         name = f"「{sign['name']}」"
-        d.text(((W - d.textlength(name, font=f_name)) / 2, 190), name, font=f_name, fill=(238, 230, 214))
+        d.text(((W - d.textlength(name, font=f_name)) / 2, 190), name, font=f_name, fill=(50, 43, 36))
         # 品级行
         tierline = f"{tier['name']}品 · {sign['card']}卡 · 应在{card['realm']}　签力 {int(avg)}"
-        d.text(((W - d.textlength(tierline, font=f_small)) / 2, 318), tierline, font=f_small, fill=tc)
-        d.line([70, 372, W - 70, 372], fill=(90, 78, 62), width=2)
+        d.text(((W - d.textlength(tierline, font=f_small)) / 2, 318), tierline, font=f_small, fill=tc_text)
+        d.line([70, 372, W - 70, 372], fill=(185, 176, 160), width=2)
         # 签诗（自动折行，居中）
         y = 400
         for ln in _wrap_cn(d, sign["line"], f_body, W - 160):
-            d.text(((W - d.textlength(ln, font=f_body)) / 2, y), ln, font=f_body, fill=(224, 214, 196))
+            d.text(((W - d.textlength(ln, font=f_body)) / 2, y), ln, font=f_body, fill=(62, 54, 46))
             y += 44
         y += 8
         for ln in _wrap_cn(d, sign["note"], f_body, W - 160):
-            d.text(((W - d.textlength(ln, font=f_body)) / 2, y), ln, font=f_body, fill=(196, 186, 168))
+            d.text(((W - d.textlength(ln, font=f_body)) / 2, y), ln, font=f_body, fill=(105, 96, 84))
             y += 44
         # 五维条
         y = max(y + 28, 620)
-        d.text((70, y - 6), "五维", font=f_dim, fill=(150, 138, 120))
+        d.text((70, y - 6), "五维", font=f_dim, fill=(140, 128, 110))
         y += 44
         bar_x, bar_w = 210, 330
         for dim, v in scores.items():
-            d.text((70, y), dim, font=f_dim, fill=(200, 192, 176))
-            d.rounded_rectangle([bar_x, y + 4, bar_x + bar_w, y + 26], radius=8, fill=(58, 50, 40))
+            d.text((70, y), dim, font=f_dim, fill=(85, 76, 66))
+            d.rounded_rectangle([bar_x, y + 4, bar_x + bar_w, y + 26], radius=8, fill=(228, 223, 215))
             fill_w = int(bar_w * (v - 20) / 80)
             d.rounded_rectangle([bar_x, y + 4, bar_x + max(fill_w, 14), y + 26], radius=8, fill=tc)
-            d.text((bar_x + bar_w + 18, y), str(v), font=f_dim, fill=(224, 216, 200))
+            d.text((bar_x + bar_w + 18, y), str(v), font=f_dim, fill=(62, 54, 46))
             y += 46
         # 底部：人 + 日期
         foot = f"{user}　{date_str}"
-        d.text(((W - d.textlength(foot, font=f_small)) / 2, H - 96), foot, font=f_small, fill=(150, 138, 120))
+        d.text(((W - d.textlength(foot, font=f_small)) / 2, H - 96), foot, font=f_small, fill=(140, 128, 110))
         buf = _io.BytesIO()
         img.save(buf, format="PNG")
         return buf.getvalue()
