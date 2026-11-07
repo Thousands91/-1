@@ -1,11 +1,13 @@
-<<<task_196.txt>>>
-===== 任务196 11-07 13:33:51 =====
+<<<task_197.txt>>>
+===== 任务197 11-07 13:35:06 =====
 --- 命令 ---
 set -e
-echo "--- 1.写入API key到.env ---"
+TOKEN=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
+[ -n "$TOKEN" ] || { echo "FAIL:无token"; exit 1; }
+echo "--- 1.key写入 ---"
 if grep -q "SILICONFLOW_API_KEY" /root/bot/bot/.env 2>/dev/null; then echo "key已存在,跳过"; else echo 'SILICONFLOW_API_KEY="sk-veyzzthgrrlhuircmfzcnkpqwpxppchezxhqfjaggmqdummg"' >> /root/bot/bot/.env && echo "key已追加"; fi
 echo "--- 2.下载新代码 ---"
-curl -s --max-time 60 -H "Authorization: token $(grep -oE '[A-Za-z0-9_]{36,}' /root/remote_ctl.sh | head -1)" "https://raw.githubusercontent.com/Thousands91/-1/main/code/bot/plugins/ai_chat.py" -o /root/ai_chat_new.py
+curl -s --max-time 60 -H "Authorization: token $TOKEN" "https://raw.githubusercontent.com/Thousands91/-1/main/code/bot/plugins/ai_chat.py" -o /root/ai_chat_new.py
 wc -c /root/ai_chat_new.py
 echo "--- 3.语法检查 ---"
 if python3 -m py_compile /root/ai_chat_new.py; then echo "语法通过"; else echo "语法失败"; exit 1; fi
@@ -17,13 +19,13 @@ for p in $(pgrep -f "[m]ain.py"); do kill $p; done
 echo "bot已杀,看护60秒内自动拉起"
 echo "DEPLOY-OK"
 --- 输出 ---
---- 1.写入API key到.env ---
-key已追加
+--- 1.key写入 ---
+key已存在,跳过
 --- 2.下载新代码 ---
-14 /root/ai_chat_new.py
+78575 /root/ai_chat_new.py
 --- 3.语法检查 ---
-  File "/root/ai_chat_new.py", line 1
-    404: Not Found
-    ^^^
-SyntaxError: illegal target for annotation
-语法失败
+语法通过
+--- 4.备份并替换 ---
+--- 5.杀bot让看护循环拉起新版 ---
+bot已杀,看护60秒内自动拉起
+DEPLOY-OK
