@@ -1,44 +1,43 @@
-<<<task_218.txt>>>
-===== 任务218 11-07 17:54:40 =====
+<<<task_219.txt>>>
+===== 任务219 11-07 17:56:34 =====
 --- 命令 ---
-echo "== find bot.py =="
-find /root -name "bot.py" -not -path "*/node_modules/*" 2>/dev/null | head -5
-echo "== find fortune.py =="
-find /root -name "fortune.py" 2>/dev/null | head -5
-echo "== /root/bot 结构 =="
-ls /root/bot 2>/dev/null
-ls /root/bot/bot 2>/dev/null | head -20
+echo "== 所有python进程 =="
+ps aux 2>/dev/null | grep -i python | grep -v grep | head -8
+echo "== main.py进程 =="
+pgrep -af "main.py" || echo "无main.py进程"
+echo "== fortune.py 版本 =="
+grep -c "_readable" /root/bot/bot/plugins/fortune.py || echo "旧版"
+echo "== 启动脚本 =="
+cat /root/bot/bot/azar_watch.sh 2>/dev/null | head -20
+echo "== 启动过的命令记录 =="
+ls /root/bot/bot/装 2>/dev/null | head; cat /root/bot/bot/装 2>/dev/null | head -10
 --- 输出 ---
-== find bot.py ==
-/root/bot/venv/lib/python3.12/site-packages/nonebot/adapters/onebot/v11/bot.py
-/root/bot/venv/lib/python3.12/site-packages/nonebot/adapters/onebot/v12/bot.py
-/root/bot/venv/lib/python3.12/site-packages/nonebot/internal/adapter/bot.py
-== find fortune.py ==
-/root/bot/bot/plugins/fortune.py
-== /root/bot 结构 ==
-README.md
-bot
-bot.log
-cqhttp
-cqhttp-config.yml
-docker
-docs
-scripts
-termux
-ven
-venv
-venv③
-装
-__pycache__
-assets
-azar_watch.sh
-bot.log
-config
-config.py
-data
-guild1.db
-main.py
-persona
-plugins
-pyproject.toml
-requirements.txt
+== 所有python进程 ==
+aid_u0_+ 16618  0.5  0.0 190304  3476 ?        S<l   2023   0:35 /root/bot/venv/bin/python main.py
+== main.py进程 ==
+16618 /root/bot/venv/bin/python main.py
+== fortune.py 版本 ==
+0
+旧版
+== 启动脚本 ==
+#!/bin/bash
+# NapCat 扫码监控：新码自动进相册，盯住扫描/成功/断线
+QR="/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png"
+DST="/sdcard/DCIM/Camera/asar_qr.png"
+LOG="/root/napcat.log"
+
+echo "监控中，等待新二维码（保持此窗口，不要关闭）..."
+tail -f -n 0 "$LOG" | while IFS= read -r line; do
+    case "$line" in
+        *二维码已保存*)
+            cp "$QR" "$DST" 2>/dev/null && chmod 644 "$DST" 2>/dev/null
+            echo "=== 新码已进相册 $(date +%H:%M:%S) 快扫 ==="
+            ;;
+        *已被扫描*)
+            echo ">>> 扫码送达 等待确认"
+            ;;
+        *"Login success"*|*登录成功*|*online*)
+            echo "*** 登录成功 ***"
+            ;;
+        *已断开*)
+== 启动过的命令记录 ==
