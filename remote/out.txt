@@ -1,4 +1,21 @@
-<<<task_188.txt>>>
+<<<task_189.txt>>>
+===== 任务189 11-07 11:38:19 =====
+--- 命令 ---
+grep -n "sleep" /root/remote_ctl.sh
+echo ---对比本地v2---
+md5sum /root/remote_ctl.sh 2>/dev/null
+echo ---近1小时循环日志节奏---
+tail -20 /root/remote_ctl.log | head -20
+--- 输出 ---
+67:  pkill -f "opt/QQ/qq" 2>/dev/null; sleep 3
+107:  sleep 15
+---对比本地v2---
+080d4bc54d4f9f3ee79e32bcaf04aa9d  /root/remote_ctl.sh
+---近1小时循环日志节奏---
+List of devices attached
+
+failed to connect to '192.168.31.28:39837': Connection refused
+[11-07 11:26] report:API回传成功
 ===== 任务188 11-07 11:31:17 =====
 --- 命令 ---
 adb connect 192.168.31.28:38491 2>&1
@@ -13,3 +30,5 @@ List of devices attached
 
 ---杀手配置核查---
 2147483647
+[11-07 11:31] report:API回传成功
+[11-07 11:31] 心跳:循环正常,LAST=188
