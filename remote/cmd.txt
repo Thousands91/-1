@@ -1,10 +1,6 @@
-249
-echo "== 1. 登录与WS =="
-grep -a "connected" /root/bot/bot/bot.log | tail -1
-echo "== 2. 扫码后处理过的消息（最近几条） =="
-grep -aE "2[01]:[0-9]{2}:[0-9]{2}" /root/bot/bot/bot.log | grep -aE "核对|recv|收到|call_api" | tail -5
-echo "== 3. 扫码后有无报错 =="
-grep -a "21:0" /root/bot/bot/bot.log | grep -aiE "error|traceback|exception" | tail -3 || echo "无报错"
-echo "== 4. 进程三件套 =="
-pgrep -af "main.py" | head -1
-pgrep -f "opt/QQ/qq" >/dev/null && echo "NapCat:活" || echo "NapCat:死"
+250
+echo "== 1. 21:1x 表情消息的核对日志 =="
+grep -a "21:1" /root/bot/bot/bot.log | grep -aE "核对|表情" | tail -6
+echo ""
+echo "== 2. 21:0x~21:2x 全部ai_chat日志 =="
+grep -a "ai_chat" /root/bot/bot/bot.log | grep -aE "21:0|21:1|21:2" | tail -8
