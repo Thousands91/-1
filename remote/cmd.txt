@@ -1,4 +1,6 @@
-187
-which adb 2>/dev/null || echo no-adb-in-path
+188
+adb connect 192.168.31.28:38491 2>&1
 adb devices 2>&1 | tail -3
-adb connect 192.168.31.28:39837 2>&1 | head -1
+echo ---杀手配置核查---
+adb shell device_config get activity_manager max_phantom_processes 2>&1
+adb shell settings get global settings_enable_monitor_phantom_procs 2>&1
