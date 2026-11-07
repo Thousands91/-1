@@ -1,13 +1,15 @@
-257
-echo "== 找 NapCat 日志文件 =="
-find /root/Napcat -name "*.log" -mtime -1 2>/dev/null | head -10
+258
+echo "== 当前还活着的进程 =="
+ps aux 2>/dev/null | grep -vE "ps aux|grep" | head -15
 echo ""
-echo "== 找启动脚本 =="
-ls -la /root/*.sh 2>/dev/null
-grep -l napcat /root/*.sh 2>/dev/null
+echo "== start_nap.sh 内容 =="
+cat /root/start_nap.sh
 echo ""
-echo "== 内存情况 =="
-free -m 2>/dev/null | head -3
+echo "== azar_guard.sh 前几行 =="
+head -20 /root/azar_guard.sh
 echo ""
-echo "== boot 时间（看手机是否重启过）=="
-uptime
+echo "== restart_bot.sh 内容 =="
+cat /root/restart_bot.sh
+echo ""
+echo "== Napcat 目录还在吗 =="
+ls -d /root/Napcat 2>/dev/null && ls /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/ 2>/dev/null | head
