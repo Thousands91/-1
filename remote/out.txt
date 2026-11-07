@@ -1,15 +1,6 @@
-<<<task_227.txt>>>
-===== 任务227 11-07 19:12:56 =====
+<<<task_228.txt>>>
+===== 任务228 11-07 19:14:21 =====
 --- 命令 ---
-grep -B1 "txz.qq.com/p?k=" /root/napcat-run.log | tail -4
-echo "== 日志最后修改时间 =="
-ls -la /root/napcat-run.log
-date "+现在: %F %H:%M:%S"
+grep -oE "https://txz.qq.com/p\?k=[^ \"]*" /root/napcat-run.log | tail -1
 --- 输出 ---
-二维码解码URL: https://txz.qq.com/p?k=rS4KndGxqWQauFMSekJkhQZzR7l6xc7a&f=1600001615
---
-
-二维码解码URL: https://txz.qq.com/p?k=DcSii2-AVIkfYOi*720K4y6Do1G5cR-7&f=1600001615
-== 日志最后修改时间 ==
--rw-r--r--. 1 root root 4398867 Nov  7 19:12 /root/napcat-run.log
-现在: 2026-11-07 19:12:56
+https://txz.qq.com/p?k=Mwvv4AhGBnBo1NHnPutYkjcM0HD-urp8&f=1600001615
