@@ -184,18 +184,25 @@ def _render_card(sign, card, tier, scores, avg, user, date_str, advice=None):
                 return ImageFont.truetype(font_path, size)
             line1 = f"{advice['top_label']}　{advice['top_dim']} · {advice['top_adv']}"
             line2 = f"所短　{advice['low_dim']} · {advice['low_adv']}"
+            fill_c = _readable(bg, (62, 54, 46), 4.0)
             f_dim2 = ImageFont.truetype(font_path, 25)
-            d.text((70, y), line1, font=_fit(line1, 26, W - 140), fill=_readable(bg, (62, 54, 46), 4.0))
+            # 坑54b（用户定稿）：建议区整块居中，与卡面上半部分版式统一
+            d.text(((W - d.textlength(line1, font=_fit(line1, 26, W - 140))) / 2, y), line1,
+                   font=_fit(line1, 26, W - 140), fill=fill_c)
             y += 40
-            d.text((70, y), line2, font=_fit(line2, 26, W - 140), fill=_readable(bg, (62, 54, 46), 4.0))
+            d.text(((W - d.textlength(line2, font=_fit(line2, 26, W - 140))) / 2, y), line2,
+                   font=_fit(line2, 26, W - 140), fill=fill_c)
             y += 44
             d.line([70, y, W - 70, y], fill=_mix(bg, (40, 30, 20), 0.35), width=2)
             y += 20
-            d.text((70, y), f"宜　{advice['yi']}", font=f_dim, fill=_readable(bg, (62, 54, 46), 4.0))
+            _yl = f"宜　{advice['yi']}"
+            d.text(((W - d.textlength(_yl, font=f_dim)) / 2, y), _yl, font=f_dim, fill=fill_c)
             y += 42
-            d.text((70, y), f"忌　{advice['ji']}", font=f_dim, fill=_readable(bg, (62, 54, 46), 4.0))
+            _jl = f"忌　{advice['ji']}"
+            d.text(((W - d.textlength(_jl, font=f_dim)) / 2, y), _jl, font=f_dim, fill=fill_c)
             y += 40
-            d.text((70, y), advice['deadline'], font=f_dim2, fill=_readable(bg, (105, 96, 84), 3.0))
+            d.text(((W - d.textlength(advice['deadline'], font=f_dim2)) / 2, y), advice['deadline'],
+                   font=f_dim2, fill=_readable(bg, (105, 96, 84), 3.0))
         # 底部：人 + 日期
         foot = f"{user}　{date_str}"
         d.text(((W - d.textlength(foot, font=f_small)) / 2, H - 96), foot, font=f_small, fill=c_muted)
