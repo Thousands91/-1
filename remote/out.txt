@@ -1,20 +1,13 @@
-<<<task_235.txt>>>
-===== 任务235 11-07 20:10:01 =====
+<<<task_236.txt>>>
+===== 任务236 11-07 20:18:50 =====
 --- 命令 ---
-echo "== 1. mface 缓存内容 =="
-cat /root/bot/bot/data/mface_names.json 2>/dev/null | head -c 1500
-echo ""
-echo "== 2. 最近的表情消息日志 =="
-grep -aE "表情包识别|mface|表情动态层" /root/bot/bot/bot.log | tail -8
-echo "== 3. 今晚20:00左右带表情消息的实际文本 =="
-grep -a "20:0" /root/bot/bot/bot.log | grep -aE "\[表情" | tail -6
-echo "== 4. NapCat 收到的原始消息里的 mface 段 =="
-grep -a "mface" /root/bot/bot/bot.log | tail -4
+grep -oE '^[A-Z_]+' /root/bot/bot/.env 2>/dev/null
 --- 输出 ---
-== 1. mface 缓存内容 ==
-
-== 2. 最近的表情消息日志 ==
-== 3. 今晚20:00左右带表情消息的实际文本 ==
-11-07 20:00:06 [INFO] ai_chat | [核对·调试] ask='[表情:菜汪]' lead=False contra=False agree=False dodge=False ans='牛肉面吧，油重的汤底，配点辣子，正好提神。'
-11-07 20:00:45 [INFO] ai_chat | [核对·调试] ask='[表情:无语]' lead=False contra=False agree=False dodge=False ans='冰美式，苦得提神。'
-== 4. NapCat 收到的原始消息里的 mface 段 ==
+COMMAND_START
+OPENAI_API_KEY
+OPENAI_BASE_URL
+OPENAI_MODEL
+ENABLE_AI_CHAT
+HOST
+PORT
+SILICONFLOW_API_KEY
