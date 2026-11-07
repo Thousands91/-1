@@ -1,20 +1,14 @@
-264
-echo "== 找 napcat.json 配置 =="
-find /root/.config/QQ /root/Napcat -name "napcat.json" 2>/dev/null | head -5
+265
+echo "== QQ数据目录顶层 =="
+timeout 10 ls /root/.config/QQ/ | head -20
 echo ""
-echo "== 全局 napcat.json 内容 =="
-cat /root/.config/QQ/napcat.json 2>/dev/null || find /root -maxdepth 6 -name "napcat.json" -exec cat {} \; 2>/dev/null | head -40
+echo "== napcat.json 各候选路径 =="
+for p in /root/.config/QQ/napcat.json /root/.config/QQ/napcat/napcat.json /root/Napcat/napcat.json; do [ -f "$p" ] && echo "--- $p ---" && timeout 5 cat "$p"; done
 echo ""
-echo "== 账号配置目录 =="
-ls /root/.config/QQ/ 2>/dev/null | head -15
+echo "== onebot11 配置 =="
+timeout 5 cat /root/.config/QQ/onebot11_3427943187.json 2>/dev/null | head -30
+timeout 5 cat /root/.config/QQ/3427943187/onebot11_3427943187.json 2>/dev/null | head -30
 echo ""
-echo "== onebot11 账号配置 =="
-ls /root/.config/QQ/*/onebot11_*.json 2>/dev/null | head -3
-cat /root/.config/QQ/3427943187/onebot11_3427943187.json 2>/dev/null | head -30
-echo ""
-echo "== NapCat 版本 =="
-cat /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null | grep -E version | head -3
-ls /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/package.json 2>/dev/null && grep -m1 version /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/package.json
-echo ""
-echo "== QQ 版本 =="
-ls /root/Napcat/opt/QQ/qq 2>/dev/null && /root/Napcat/opt/QQ/qq --version 2>/dev/null | head -1 || grep -m2 -r version /root/Napcat/opt/QQ/version 2>/dev/null
+echo "== NapCat 版本文件 =="
+timeout 5 grep -m1 version /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/package.json 2>/dev/null
+timeout 5 cat /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null | grep -m2 version
