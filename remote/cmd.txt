@@ -1,10 +1,2 @@
-235
-echo "== 1. mface 缓存内容 =="
-cat /root/bot/bot/data/mface_names.json 2>/dev/null | head -c 1500
-echo ""
-echo "== 2. 最近的表情消息日志 =="
-grep -aE "表情包识别|mface|表情动态层" /root/bot/bot/bot.log | tail -8
-echo "== 3. 今晚20:00左右带表情消息的实际文本 =="
-grep -a "20:0" /root/bot/bot/bot.log | grep -aE "\[表情" | tail -6
-echo "== 4. NapCat 收到的原始消息里的 mface 段 =="
-grep -a "mface" /root/bot/bot/bot.log | tail -4
+236
+grep -oE '^[A-Z_]+' /root/bot/bot/.env 2>/dev/null
