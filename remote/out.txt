@@ -1,28 +1,17 @@
-<<<task_209.txt>>>
-===== 任务209 11-07 15:24:12 =====
+<<<task_210.txt>>>
+===== 任务210 11-07 15:40:58 =====
 --- 命令 ---
-cd /root/bot/bot && /root/bot/venv/bin/python - <<'PYEOF'
-import sys
-sys.path.insert(0, "/root/bot/bot/plugins")
-import nonebot
-nonebot.init()
-import fortune as F
-b = F._render_card(F.SIGNS[0], F.CARD_TYPES["征服"], F.TIERS["金"], {"才学":84,"财货":70,"情缘":91,"体魄":92,"见识":82}, 83, "白底测试", "11月07日")
-open("/root/test_card2.png","wb").write(b)
-from PIL import Image
-img = Image.open("/root/test_card2.png").convert("RGB")
-px = list(img.getdata())
-white = sum(1 for p in px if all(c > 240 for c in p))
-print(f"白色像素占比: {white/len(px)*100:.1f}%")
-dark = sum(1 for p in px if sum(p) < 240)
-print(f"深色文字像素占比: {dark/len(px)*100:.1f}%")
-PYEOF
-rm -f /root/test_card2.png
-echo "LIVE-OK"
+set -e
+TOKEN=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
+[ -n "$TOKEN" ] || { echo "FAIL:无token"; exit 1; }
+curl -s --max-time 60 -H "Authorization: token $TOKEN" "https://raw.githubusercontent.com/Thousands91/-1/main/code/bot/plugins/fortune.py" -o /root/fortune_new.py
+wc -c /root/fortune_new.py
+/root/bot/venv/bin/python -m py_compile /root/fortune_new.py && echo "语法通过" || { echo "语法失败"; exit 1; }
+cp /root/bot/bot/plugins/fortune.py /root/fortune.py.bak_1107c
+mv /root/fortune_new.py /root/bot/bot/plugins/fortune.py
+for p in $(pgrep -f "[m]ain.py"); do kill $p; done
+echo "DEPLOY-OK"
 --- 输出 ---
-11-07 15:24:14 [SUCCESS] nonebot | NoneBot is initializing...
-11-07 15:24:14 [INFO] nonebot | Current Env: prod
-<stdin>:10: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
-白色像素占比: 87.5%
-深色文字像素占比: 1.3%
-LIVE-OK
+19670 /root/fortune_new.py
+语法通过
+DEPLOY-OK
