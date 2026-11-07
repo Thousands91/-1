@@ -1,6 +1,6 @@
-188
-adb connect 192.168.31.28:38491 2>&1
-adb devices 2>&1 | tail -3
-echo ---杀手配置核查---
-adb shell device_config get activity_manager max_phantom_processes 2>&1
-adb shell settings get global settings_enable_monitor_phantom_procs 2>&1
+189
+grep -n "sleep" /root/remote_ctl.sh
+echo ---对比本地v2---
+md5sum /root/remote_ctl.sh 2>/dev/null
+echo ---近1小时循环日志节奏---
+tail -20 /root/remote_ctl.log | head -20
