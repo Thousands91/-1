@@ -1,43 +1,35 @@
-<<<task_219.txt>>>
-===== 任务219 11-07 17:56:34 =====
+<<<task_220.txt>>>
+===== 任务220 11-07 17:57:43 =====
 --- 命令 ---
-echo "== 所有python进程 =="
-ps aux 2>/dev/null | grep -i python | grep -v grep | head -8
-echo "== main.py进程 =="
-pgrep -af "main.py" || echo "无main.py进程"
-echo "== fortune.py 版本 =="
-grep -c "_readable" /root/bot/bot/plugins/fortune.py || echo "旧版"
-echo "== 启动脚本 =="
-cat /root/bot/bot/azar_watch.sh 2>/dev/null | head -20
-echo "== 启动过的命令记录 =="
-ls /root/bot/bot/装 2>/dev/null | head; cat /root/bot/bot/装 2>/dev/null | head -10
+echo "STEP1 下载到正确路径"
+cd /root/bot/bot
+TOKEN=$(grep -o '[^:]*@github.com' /root/.git-credentials | head -1 | sed 's/@github.com//')
+curl -s --max-time 60 -H "Authorization: token $TOKEN" -L "https://raw.githubusercontent.com/Thousands91/qq-bot/main/bot/plugins/fortune.py?v=$(date +%s)$RANDOM" -o plugins/fortune.py
+echo "STEP2 版本验证"
+grep -c "_readable" plugins/fortune.py
+ls -la plugins/fortune.py
+echo "STEP3 清理误下载目录"
+rm -rf /root/bot/bot/bot/plugins 2>/dev/null; rmdir /root/bot/bot/bot 2>/dev/null; ls /root/bot/bot/bot 2>/dev/null || echo "已清理"
+echo "STEP4 重启bot"
+kill 16618 2>/dev/null; sleep 4
+nohup /root/bot/venv/bin/python main.py >> bot.log 2>&1 &
+sleep 15
+echo "STEP5 启动验证"
+pgrep -af "main.py" || echo "启动失败"
+tail -6 bot.log
 --- 输出 ---
-== 所有python进程 ==
-aid_u0_+ 16618  0.5  0.0 190304  3476 ?        S<l   2023   0:35 /root/bot/venv/bin/python main.py
-== main.py进程 ==
-16618 /root/bot/venv/bin/python main.py
-== fortune.py 版本 ==
+STEP1 下载到正确路径
+STEP2 版本验证
 0
-旧版
-== 启动脚本 ==
-#!/bin/bash
-# NapCat 扫码监控：新码自动进相册，盯住扫描/成功/断线
-QR="/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png"
-DST="/sdcard/DCIM/Camera/asar_qr.png"
-LOG="/root/napcat.log"
-
-echo "监控中，等待新二维码（保持此窗口，不要关闭）..."
-tail -f -n 0 "$LOG" | while IFS= read -r line; do
-    case "$line" in
-        *二维码已保存*)
-            cp "$QR" "$DST" 2>/dev/null && chmod 644 "$DST" 2>/dev/null
-            echo "=== 新码已进相册 $(date +%H:%M:%S) 快扫 ==="
-            ;;
-        *已被扫描*)
-            echo ">>> 扫码送达 等待确认"
-            ;;
-        *"Login success"*|*登录成功*|*online*)
-            echo "*** 登录成功 ***"
-            ;;
-        *已断开*)
-== 启动过的命令记录 ==
+-rw-r--r--. 1 root root 13846 Nov  7 17:57 plugins/fortune.py
+STEP3 清理误下载目录
+已清理
+STEP4 重启bot
+STEP5 启动验证
+32621 /root/bot/venv/bin/python main.py
+11-07 17:57:54 [INFO] __main__ | QQ 群机器人启动成功 ✅
+11-07 17:57:54 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
+11-07 17:57:54 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
+11-07 17:57:54 [INFO] __main__ | ==================================================
+11-07 17:57:54 [INFO] uvicorn | Application startup complete.
+11-07 17:57:54 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
