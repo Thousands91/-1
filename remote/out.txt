@@ -1,13 +1,41 @@
-<<<task_193.txt>>>
-===== 任务193 11-07 12:04:15 =====
+<<<task_194.txt>>>
+===== 任务194 11-07 12:20:15 =====
 --- 命令 ---
-echo "执行时间: $(date +%H:%M:%S)"
-PID=$(cat /root/.remote_pid 2>/dev/null); echo "循环PID: $PID"; ps -o etime= -p $PID 2>/dev/null
-grep -c "?v=" /root/remote_ctl.sh
-echo "待发箱: $(ls -A /root/.remote_pending 2>/dev/null | wc -l) 个文件"
+echo "--- 插件清单 ---"; ls /root/bot/bot/plugins/ 2>/dev/null
+echo "--- 是否有语音处理 ---"; grep -rn "record\|Record\|语音\|Silk\|语音识别" /root/bot/bot/plugins/ 2>/dev/null | grep -v ".bak" | head -8
+echo "--- 收到语音时会发生什么(看兜底逻辑) ---"; grep -n "extract_text\|纯文本\|get_plaintext" /root/bot/bot/plugins/ai_chat.py 2>/dev/null | head -5
 --- 输出 ---
-执行时间: 12:04:15
-循环PID: 8420
-      13:50
-2
-待发箱: 1 个文件
+--- 插件清单 ---
+__pycache__
+ai_chat.py
+ai_chat.py.bak_1102
+ai_chat.py.bak_1103_1133
+ai_chat.py.bak_1105
+book_find.py
+chess_game.py
+fortune.py
+games.py
+image_search.py.bak_1102
+image_search_multisource.py
+image_search_web.py
+image_see.py
+image_see.py.bak_1103_1133
+keyword_reply.py
+news.py
+song_request.py
+weather.py
+--- 是否有语音处理 ---
+/root/bot/bot/plugins/ai_chat.py:370:    其余段（image/at/record…）不展开，保持与 get_plaintext 相同的
+/root/bot/bot/plugins/song_request.py:4:群里发 /点歌 晴天  → 机器人找到歌，发一条语音 / 分享卡片
+/root/bot/bot/plugins/song_request.py:14:1. 取流 → 有音频 → 发语音
+/root/bot/bot/plugins/song_request.py:40:# 语音时长上限：先设很宽，等实测出 QQ 到底卡在哪一秒再收紧。
+/root/bot/bot/plugins/song_request.py:97:            # 长到这个地步，语音条肯定装不下了
+/root/bot/bot/plugins/song_request.py:99:                Message(f"{build_card(s)}\n\n这首 {sec} 秒，一条语音装不下。点开听吧。")
+/root/bot/bot/plugins/song_request.py:105:            await song_cmd.send(MessageSegment.record(audio), _timeout=_t)
+/root/bot/bot/plugins/song_request.py:117:                Message(f"{build_card(s)}\n\n这首 {sec} 秒，语音条递不过去。点开听吧。")
+--- 收到语音时会发生什么(看兜底逻辑) ---
+103:# get_plaintext() 只取纯文本，QQ 小表情/商城表情整段被丢，
+365:async def _extract_text(event) -> str:
+366:    """纯文本 + 表情标记。
+370:    其余段（image/at/record…）不展开，保持与 get_plaintext 相同的
+411:        return event.get_plaintext().strip()
