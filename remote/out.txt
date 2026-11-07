@@ -1,13 +1,35 @@
-<<<task_236.txt>>>
-===== 任务236 11-07 20:18:50 =====
+<<<task_237.txt>>>
+===== 任务237 11-07 20:25:41 =====
 --- 命令 ---
-grep -oE '^[A-Z_]+' /root/bot/bot/.env 2>/dev/null
+echo "STEP1 下载两文件"
+cd /root/bot/bot
+TOKEN=$(grep -o '[^:]*@github.com' /root/.git-credentials | head -1 | sed 's/@github.com//')
+cp plugins/ai_chat.py plugins/ai_chat.py.bak_1107b
+cp plugins/fortune.py plugins/fortune.py.bak_1107b
+V=$(date +%s)$RANDOM
+curl -s --max-time 60 -H "Authorization: token $TOKEN" -L "https://raw.githubusercontent.com/Thousands91/qq-bot/main/bot/plugins/ai_chat.py?v=$V" -o plugins/ai_chat.py
+curl -s --max-time 60 -H "Authorization: token $TOKEN" -L "https://raw.githubusercontent.com/Thousands91/qq-bot/main/bot/plugins/fortune.py?v=$V" -o plugins/fortune.py
+echo "STEP2 验证"
+ls -la plugins/ai_chat.py plugins/fortune.py
+grep -c "表情输入的规矩\|_face_m\|提醒：对方刚发了一个" plugins/ai_chat.py
+grep -c "建议区整块居中" plugins/fortune.py
+python3 -c "import ast; ast.parse(open('plugins/ai_chat.py').read()); ast.parse(open('plugins/fortune.py').read()); print('语法OK')"
+echo "STEP3 只重启bot"
+kill $(pgrep -f "venv/bin/python main.py") 2>/dev/null; sleep 4
+nohup /root/bot/venv/bin/python main.py >> bot.log 2>&1 &
+sleep 15
+pgrep -af "main.py" || echo "启动失败"
+tail -3 bot.log
 --- 输出 ---
-COMMAND_START
-OPENAI_API_KEY
-OPENAI_BASE_URL
-OPENAI_MODEL
-ENABLE_AI_CHAT
-HOST
-PORT
-SILICONFLOW_API_KEY
+STEP1 下载两文件
+STEP2 验证
+-rw-r--r--. 1 root root 84347 Nov  7 20:25 plugins/ai_chat.py
+-rw-r--r--. 1 root root 23819 Nov  7 20:25 plugins/fortune.py
+6
+1
+语法OK
+STEP3 只重启bot
+18396 /root/bot/venv/bin/python main.py
+11-07 20:25:55 [INFO] __main__ | ==================================================
+11-07 20:25:55 [INFO] uvicorn | Application startup complete.
+11-07 20:25:55 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
