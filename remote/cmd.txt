@@ -1,16 +1,6 @@
-199
-set -e
-TOKEN=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
-[ -n "$TOKEN" ] || { echo "FAIL:无token"; exit 1; }
-echo "--- 下载 ---"
-curl -s --max-time 60 -H "Authorization: token $TOKEN" "https://raw.githubusercontent.com/Thousands91/-1/main/code/bot/plugins/ai_chat.py" -o /root/ai_chat_new.py
-wc -c /root/ai_chat_new.py
-echo "--- 语法检查 ---"
-python3 -m py_compile /root/ai_chat_new.py && echo "语法通过" || { echo "语法失败"; exit 1; }
-echo "--- 引用语音新逻辑在位确认 ---"
-grep -c "type\") == \"record\"" /root/ai_chat_new.py
-echo "--- 替换并重启 ---"
-cp /root/bot/bot/plugins/ai_chat.py /root/ai_chat.py.bak_1107b
-mv /root/ai_chat_new.py /root/bot/bot/plugins/ai_chat.py
-for p in $(pgrep -f "[m]ain.py"); do kill $p; done
-echo "DEPLOY-OK"
+200
+echo "验证时间: $(date +%H:%M:%S)"
+PID=$(pgrep -f "[m]ain.py" | head -1)
+if [ -n "$PID" ]; then ps -o pid,etime -p $PID | tail -1; else echo "bot未运行!"; fi
+grep -iE "error|traceback" /root/bot.log 2>/dev/null | tail -3 || true
+md5sum /root/bot/bot/plugins/ai_chat.py | cut -c1-12
