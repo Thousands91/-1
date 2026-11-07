@@ -1,15 +1,11 @@
-221
-echo "STEP1 重新下载"
-cd /root/bot/bot
-TOKEN=$(grep -o '[^:]*@github.com' /root/.git-credentials | head -1 | sed 's/@github.com//')
-curl -s --max-time 60 -H "Authorization: token $TOKEN" -L "https://raw.githubusercontent.com/Thousands91/qq-bot/main/bot/plugins/fortune.py?v=$(date +%s)$RANDOM" -o plugins/fortune.py
-echo "STEP2 验证"
-ls -la plugins/fortune.py
-grep -c "_readable" plugins/fortune.py
-python3 -c "import ast; ast.parse(open('plugins/fortune.py').read()); print('语法OK')"
-echo "STEP3 重启"
-kill $(pgrep -f "venv/bin/python main.py") 2>/dev/null; sleep 4
-nohup /root/bot/venv/bin/python main.py >> bot.log 2>&1 &
-sleep 15
-pgrep -af "main.py" || echo "启动失败"
-tail -3 bot.log
+222
+echo "== 进程 =="
+pgrep -af "main.py" || echo "无进程"
+echo "== 启动后日志中的报错/异常 =="
+grep -iE "error|traceback|exception|失败" /root/bot/bot/bot.log 2>/dev/null | tail -5 || echo "无报错"
+echo "== 最新日志 =="
+tail -6 /root/bot/bot/bot.log
+echo "== 插件文件在位 =="
+ls -la /root/bot/bot/plugins/fortune.py /root/bot/bot/plugins/ai_chat.py 2>/dev/null
+echo "== NapCat 状态 =="
+tail -3 /root/napcat.log 2>/dev/null | head -3
