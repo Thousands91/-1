@@ -1,12 +1,6 @@
-<<<task_208.txt>>>
-===== 任务208 11-07 15:20:58 =====
+<<<task_209.txt>>>
+===== 任务209 11-07 15:24:12 =====
 --- 命令 ---
-echo "验证时间: $(date +%H:%M:%S)"
-PID=$(pgrep -f "[m]ain.py" | head -1)
-if [ -n "$PID" ]; then ps -o pid,etime -p $PID | tail -1; else echo "bot未运行!"; fi
-grep -icE "error|traceback" /root/bot.log 2>/dev/null || true
-md5sum /root/bot/bot/plugins/fortune.py | cut -c1-12
-echo "--- 真机活体:白底卡重画 ---"
 cd /root/bot/bot && /root/bot/venv/bin/python - <<'PYEOF'
 import sys
 sys.path.insert(0, "/root/bot/bot/plugins")
@@ -16,21 +10,19 @@ import fortune as F
 b = F._render_card(F.SIGNS[0], F.CARD_TYPES["征服"], F.TIERS["金"], {"才学":84,"财货":70,"情缘":91,"体魄":92,"见识":82}, 83, "白底测试", "11月07日")
 open("/root/test_card2.png","wb").write(b)
 from PIL import Image
-img = Image.open("/root/test_card2.png")
-px = img.getpixel((360, 550))
-print("中心背景像素:", px, "白色?" , all(c>240 for c in px))
-print("PNG:", img.size)
+img = Image.open("/root/test_card2.png").convert("RGB")
+px = list(img.getdata())
+white = sum(1 for p in px if all(c > 240 for c in p))
+print(f"白色像素占比: {white/len(px)*100:.1f}%")
+dark = sum(1 for p in px if sum(p) < 240)
+print(f"深色文字像素占比: {dark/len(px)*100:.1f}%")
 PYEOF
 rm -f /root/test_card2.png
 echo "LIVE-OK"
 --- 输出 ---
-验证时间: 15:20:58
-12249       01:46
-0
-cf12f04ebe62
---- 真机活体:白底卡重画 ---
-11-07 15:21:00 [SUCCESS] nonebot | NoneBot is initializing...
-11-07 15:21:00 [INFO] nonebot | Current Env: prod
-中心背景像素: (155, 149, 139) 白色? False
-PNG: (720, 1080)
+11-07 15:24:14 [SUCCESS] nonebot | NoneBot is initializing...
+11-07 15:24:14 [INFO] nonebot | Current Env: prod
+<stdin>:10: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+白色像素占比: 87.5%
+深色文字像素占比: 1.3%
 LIVE-OK
