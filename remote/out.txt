@@ -1,32 +1,22 @@
-<<<task_243.txt>>>
-===== 任务243 11-07 20:35:36 =====
+<<<task_244.txt>>>
+===== 任务244 11-07 20:38:11 =====
 --- 命令 ---
-echo "== guard 状态 =="
-tail -6 /root/guard_status.txt 2>/dev/null
-echo "== guard 进程 =="
-pgrep -af "azar_guard" || echo "guard未运行"
-echo "== bot 8080 监听 =="
-netstat -tnp 2>/dev/null | grep 8080 | head -3
-echo "== NapCat 日志最新5行 =="
-tail -5 /root/napcat-run.log 2>/dev/null | cut -c1-120
-echo "== 手动测NapCat API（看登录态还在不在） =="
-TOKEN=$(python3 -c "import json; print(json.load(open('/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json')).get('token',''))" 2>/dev/null)
-curl -s --max-time 8 "http://127.0.0.1:3001/get_login_info" 2>/dev/null | head -c 200 || echo "3001无响应"
+echo "STEP1 重启NapCat（保登录态）"
+pkill -9 -x Xvfb; pkill -9 -f "opt/QQ/[q]q"; sleep 2
+cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat-run.log 2>&1 < /dev/null &
+sleep 28
+echo "STEP2 登录态检查（出新二维码=要扫码，登录成功=免扫恢复）"
+grep -aE "登录成功|Login success|二维码已保存|快速登录" /root/napcat-run.log | tail -3
+echo "STEP3 bot侧连接"
+sleep 8
+grep -a "connected" /root/bot/bot/bot.log | tail -1
+ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null || echo "无新二维码"
 --- 输出 ---
-== guard 状态 ==
-11-07 06:29:57 被踢标记超6小时,允许再试
-11-07 06:29:57 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
-11-07 12:30:53 被踢标记超6小时,允许再试
-11-07 12:30:53 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
-11-07 18:31:08 被踢标记超6小时,允许再试
-11-07 18:31:08 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码
-== guard 进程 ==
-7727 bash /root/azar_guard.sh
-== bot 8080 监听 ==
-== NapCat 日志最新5行 ==
-78e45a0ee584f6348568736bd55340219b86ab6d94fe2ef7be0f77a1d9bb238f
-1da103a141e7d327d801b7fba8045ef6451b487f3e3963950392a544e8de2654
-f9c29beb32a425fcb5c7ff2e39a5b2b68949a0350e3a14a91fad15c180d1813f
-f9c135f8ec88b197099425c82849d6ddd241560e65177084a3dba3ffc3973955
-ac1dc86007aacb60fbffc45455d7b78e16824a5110d8aeb531fa3be8a8c37375
-== 手动测NapCat API（看登录态还在不在） ==
+STEP1 重启NapCat（保登录态）
+STEP2 登录态检查（出新二维码=要扫码，登录成功=免扫恢复）
+11-07 20:38:19 [[32minfo[39m] 没有 -q 指令指定快速登录，将使用二维码登录方式
+11-07 20:38:19 [[32minfo[39m] 可用于快速登录 of QQ：
+11-07 20:38:20 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+STEP3 bot侧连接
+11-07 20:02:26 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+-rw-r--r--. 1 root root 600 Nov  7 20:38 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
