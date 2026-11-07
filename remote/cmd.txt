@@ -1,19 +1,9 @@
-224
-echo "== 1. 复制新码进相册 =="
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null && chmod 644 /sdcard/DCIM/Camera/asar_qr.png && echo "新码已进相册" || echo "复制失败"
-ls -la /sdcard/DCIM/Camera/asar_qr.png
-echo "== 2. 启动监控脚本（有nohup后台版则用之） =="
-if [ -f /root/azar_watchd.sh ]; then
-  nohup bash /root/azar_watchd.sh > /root/azar_watchd.log 2>&1 & 
-  echo "用后台守护版启动"
-else
-  nohup bash /root/bot/bot/azar_watch.sh > /root/azar_watch.log 2>&1 &
-  echo "用bot目录版启动"
-fi
-sleep 3
-pgrep -af "azar_watch" || echo "启动失败"
-echo "== 3. NapCat 进程确认（换个搜法） =="
-ps aux 2>/dev/null | grep -iE "napcat|NapCat" | grep -v grep | head -3 || echo "ps里未见"
-ls /proc/*/cmdline 2>/dev/null | head -1 >/dev/null && for p in /proc/[0-9]*/cmdline; do tr '\0' ' ' < "$p" 2>/dev/null | grep -qi napcat && echo "活: $(cat /proc/${p//[!0-9]/}/cmdline 2>/dev/null | tr '\0' ' ' | head -c 80)"; done | head -3
-echo "== 4. NapCat 当前是否在等扫码 =="
-tail -3 /root/napcat.log 2>/dev/null
+225
+echo "== proot/沙箱启动命令 =="
+ps aux 2>/dev/null | grep -iE "proot" | grep -v grep | head -2
+echo "== 从Termux视角看沙箱根 =="
+mount 2>/dev/null | grep -E "proot|/root" | head -3
+echo "== NapCat 出新码的日志特征确认 =="
+grep "二维码" /root/napcat.log 2>/dev/null | tail -3
+echo "== 二维码缓存当前位置与时间 =="
+ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
