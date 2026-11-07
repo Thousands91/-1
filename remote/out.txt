@@ -1,6 +1,6 @@
-<<<task_228.txt>>>
-===== 任务228 11-07 19:14:21 =====
+<<<task_229.txt>>>
+===== 任务229 11-07 19:17:24 =====
 --- 命令 ---
 grep -oE "https://txz.qq.com/p\?k=[^ \"]*" /root/napcat-run.log | tail -1
 --- 输出 ---
-https://txz.qq.com/p?k=Mwvv4AhGBnBo1NHnPutYkjcM0HD-urp8&f=1600001615
+https://txz.qq.com/p?k=WAO9tdA6doWMJVr4aiUhMP8BLDrH1kOD&f=1600001615
