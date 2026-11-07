@@ -1,20 +1,27 @@
-<<<task_198.txt>>>
-===== 任务198 11-07 13:37:02 =====
+<<<task_199.txt>>>
+===== 任务199 11-07 13:48:07 =====
 --- 命令 ---
-echo "验证时间: $(date +%H:%M:%S)"
-PID=$(pgrep -f "[m]ain.py" | head -1)
-if [ -n "$PID" ]; then ps -o pid,etime -p $PID | tail -1; else echo "bot未运行!"; fi
-echo "--- 启动日志检查(有无import报错) ---"
-grep -iE "error|traceback|failed" /root/bot.log 2>/dev/null | tail -3
-echo "--- 语音模块加载确认 ---"
-grep -c "voice\|语音" /root/bot/bot/plugins/ai_chat.py
-echo "--- env确认 ---"
-grep -c "SILICONFLOW_API_KEY" /root/bot/bot/.env
+set -e
+TOKEN=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
+[ -n "$TOKEN" ] || { echo "FAIL:无token"; exit 1; }
+echo "--- 下载 ---"
+curl -s --max-time 60 -H "Authorization: token $TOKEN" "https://raw.githubusercontent.com/Thousands91/-1/main/code/bot/plugins/ai_chat.py" -o /root/ai_chat_new.py
+wc -c /root/ai_chat_new.py
+echo "--- 语法检查 ---"
+python3 -m py_compile /root/ai_chat_new.py && echo "语法通过" || { echo "语法失败"; exit 1; }
+echo "--- 引用语音新逻辑在位确认 ---"
+grep -c "type\") == \"record\"" /root/ai_chat_new.py
+echo "--- 替换并重启 ---"
+cp /root/bot/bot/plugins/ai_chat.py /root/ai_chat.py.bak_1107b
+mv /root/ai_chat_new.py /root/bot/bot/plugins/ai_chat.py
+for p in $(pgrep -f "[m]ain.py"); do kill $p; done
+echo "DEPLOY-OK"
 --- 输出 ---
-验证时间: 13:37:02
-15800       01:07
---- 启动日志检查(有无import报错) ---
---- 语音模块加载确认 ---
-13
---- env确认 ---
+--- 下载 ---
+79114 /root/ai_chat_new.py
+--- 语法检查 ---
+语法通过
+--- 引用语音新逻辑在位确认 ---
 1
+--- 替换并重启 ---
+DEPLOY-OK
