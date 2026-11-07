@@ -1,6 +1,4 @@
-186
-ls -lat /root/*.log /root/bot/*.log /root/bot/bot/*.log 2>/dev/null | head -12
-echo ---
-grep -n "main.py" /root/remote_ctl.sh | head -4
-echo ---
-pgrep -f "[m]ain.py" | head -2
+187
+which adb 2>/dev/null || echo no-adb-in-path
+adb devices 2>&1 | tail -3
+adb connect 192.168.31.28:39837 2>&1 | head -1
