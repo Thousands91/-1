@@ -1,48 +1,73 @@
-<<<task_257.txt>>>
-===== 任务257 11-08 00:29:02 =====
+<<<task_258.txt>>>
+===== 任务258 11-08 00:30:57 =====
 --- 命令 ---
-echo "== 找 NapCat 日志文件 =="
-find /root/Napcat -name "*.log" -mtime -1 2>/dev/null | head -10
+echo "== 当前还活着的进程 =="
+ps aux 2>/dev/null | grep -vE "ps aux|grep" | head -15
 echo ""
-echo "== 找启动脚本 =="
-ls -la /root/*.sh 2>/dev/null
-grep -l napcat /root/*.sh 2>/dev/null
+echo "== start_nap.sh 内容 =="
+cat /root/start_nap.sh
 echo ""
-echo "== 内存情况 =="
-free -m 2>/dev/null | head -3
+echo "== azar_guard.sh 前几行 =="
+head -20 /root/azar_guard.sh
 echo ""
-echo "== boot 时间（看手机是否重启过）=="
-uptime
+echo "== restart_bot.sh 内容 =="
+cat /root/restart_bot.sh
+echo ""
+echo "== Napcat 目录还在吗 =="
+ls -d /root/Napcat 2>/dev/null && ls /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/ 2>/dev/null | head
 --- 输出 ---
-== 找 NapCat 日志文件 ==
+== 当前还活着的进程 ==
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+aid_u0_+  3375  1.2  0.0 636944  3156 ?        S<l   2023   1:35 /root/bot/venv/bin/python main.py
+aid_u0_+  4489  0.0  0.0   4456   116 ?        S<    2023   0:00 bash /root/remote_ctl.sh
+aid_u0_+  4501  0.0  0.0   2396   152 ?        S<    2023   0:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+aid_u0_+  4624  0.0  0.0  27912   140 ?        S<    2023   0:00 Xvfb :177 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.bVYULr/Xauthority
+aid_u0_+  4655  2.0  0.0 205568400 5684 ?      S<l   2023   0:30 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+aid_u0_+  4853  0.0  0.0 50707504 340 ?        S<    2023   0:00 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+aid_u0_+  4860  0.0  0.0 50707504 208 ?        S<    2023   0:00 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
+aid_u0_+  5924  0.0  0.0 50749172 1200 ?       S<l   2023   0:00 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+aid_u0_+  5982 27.6  0.8 205820808 97128 ?     Sl    2023   6:49 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --no-sandbox --disable-dev-shm-usage --enable-crash-reporter=066ad494-c96d-4e6a-9b3c-edaba4b49dd8,no_channel --user-data-dir=/root/.config/QQ --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,18120144560474979789,10109345285666371594,262144 --enable-features=PdfUseShowSaveFilePicker --disable-features=LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708989122997041
+aid_u0_+  5996  0.0  0.0 50665400 1100 ?       Sl    2023   0:00 /proc/self/exe --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --no-sandbox --disable-dev-shm-usage --enable-crash-reporter=066ad494-c96d-4e6a-9b3c-edaba4b49dd8,no_channel --user-data-dir=/root/.config/QQ --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,18120144560474979789,10109345285666371594,262144 --enable-features=PdfUseShowSaveFilePicker --disable-features=LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708990060038890
+aid_u0_+  6959  0.0  0.0   4048   136 ?        S<s   2023   0:00 bash -c sleep 25; OP=$(cat /root/.remote_pid 2>/dev/null); [ -n "$OP" ] && kill "$OP" 2>/dev/null; sleep 2; rm -f /root/.remote_pid; cd /root && setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1
+aid_u0_+  7727  0.0  0.0   4180   860 pts/0    S<    2023   0:19 bash /root/azar_guard.sh
+aid_u0_+  8420  0.0  0.0   4456  1204 ?        S<s   2023   0:24 bash /root/remote_ctl.sh
+aid_u0_+  9220 30.8  0.0 12405472 3092 pts/0   R<    2023 1086:22 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/data/misc/apexdata/com.android.art/dalvik-cache --bind=/storage/self/primary:/mnt/sdcard --bind=/storage/self/primary:/sdcard --bind=/storage/self/primary:/storage/emulated/0 --bind=/storage/self/primary:/storage/self/primary --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/product --bind=/system --bind=/system_ext --bind=/vendor --bind=/linkerconfig/ld.config.txt --bind=/linkerconfig/com.android.art/ld.config.txt --bind=/data/data/com.termux/files/usr /bin/bash -l
 
-== 找启动脚本 ==
--rwxr-xr-x. 1 root root 3045 Nov  3 20:24 /root/azar_guard.sh
--rw-r--r--. 1 root root 3460 Nov  3 20:24 /root/azar_login.sh
--rwxr-xr-x. 1 root root 1612 Oct 30 01:28 /root/check.sh
--rwxr-xr-x. 1 root root 1036 Nov  1 01:23 /root/logincheck.sh
--rwxr-xr-x. 1 root root 3050 Nov  3 20:24 /root/morning.sh
--rwxr-xr-x. 1 root root  566 Nov  6 07:37 /root/netmon.sh
--rwxr-xr-x. 1 root root 1326 Nov  6 07:37 /root/offline_watch.sh
--rw-r--r--. 1 root root   96 Nov  5 00:43 /root/p.sh
--rw-r--r--. 1 root root 5113 Nov  7 11:49 /root/remote_ctl.sh
--rw-------. 1 root root  299 Nov  5 20:10 /root/restart_bot.sh
--rw-r--r--. 1 root root  899 Nov  3 20:24 /root/st.sh
--rw-------. 1 root root  442 Nov  5 07:55 /root/start_nap.sh
--rw-r--r--. 1 root root 1807 Nov  5 00:54 /root/watcher.sh
-/root/azar_guard.sh
-/root/azar_login.sh
-/root/logincheck.sh
-/root/morning.sh
-/root/offline_watch.sh
-/root/remote_ctl.sh
-/root/st.sh
-/root/start_nap.sh
+== start_nap.sh 内容 ==
+pkill -f "opt/QQ/[q]q"; sleep 2; cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & sleep 25; cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册,去QQ扫 || echo 码未生成,稍后再拷
+== azar_guard.sh 前几行 ==
+#!/bin/bash
+# 阿萨尔掉线守护 v1.1 (2026-11-02)
+# v1.1 修复: 被踢后二维码变旧会被误判普通断线而白重启 —— 加"被踢标记"
+# 规则1: QQ进程死了且无近期二维码 -> 自动拉起
+# 规则2: WS断开+会话在(重启后未出新码) -> 自动重启NapCat免扫码恢复
+# 规则3: 重启后仍出新款二维码(=真被踢) -> 记被踢标记,6小时内不再自动重启
+# 规则4: 每小时最多重启3次,重启后冷却5分钟;登录成功(connected)自动清被踢标记
+LOG=/root/bot.log
+QR=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+STATE=/root/guard_status.txt
+LAST_RESTART=/root/.guard_last
+CNT_FILE=/root/.guard_cnt
+KICKED=/root/.guard_kicked
+TS() { stat -c %Y "$1" 2>/dev/null || echo 0; }
+start_qq() {
+  cd /root && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 &
+}
+can_restart() {
+  NOW=$(date +%s)
+  LR=$(cat "$LAST_RESTART" 2>/dev/null || echo 0)
 
-== 内存情况 ==
-               total        used        free      shared  buff/cache   available
-Mem:           11296        9453         191         135        2440        1843
-Swap:          11296        6685        4610
-
-== boot 时间（看手机是否重启过）==
- 00:29:03 up 2 min,  0 user,  load average: 0.12, 0.07, 0.02
+== restart_bot.sh 内容 ==
+pkill -f main.py; sleep 2; cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & sleep 12; echo ==加载验证==; tail -n 60 /root/bot.log | grep -c Succeeded; tail -n 60 /root/bot.log | grep -c Duplicated; tail -n 60 /root/bot.log | grep -ciE "failed|traceback"
+== Napcat 目录还在吗 ==
+/root/Napcat
+KillQQ.bat
+NapCatWinBootHook.dll
+NapCatWinBootMain.exe
+cache
+config
+conout-wiJ7YKRd.js
+launcher-elevate.ps1
+launcher-user.bat
+launcher-win10-user.bat
+launcher-win10.bat
