@@ -1,6 +1,17 @@
-250
-echo "== 1. 21:1x 表情消息的核对日志 =="
-grep -a "21:1" /root/bot/bot/bot.log | grep -aE "核对|表情" | tail -6
-echo ""
-echo "== 2. 21:0x~21:2x 全部ai_chat日志 =="
-grep -a "ai_chat" /root/bot/bot/bot.log | grep -aE "21:0|21:1|21:2" | tail -8
+251
+echo "STEP1 下载"
+cd /root/bot/bot
+TOKEN=$(grep -o '[^:]*@github.com' /root/.git-credentials | head -1 | sed 's/@github.com//')
+cp plugins/ai_chat.py plugins/ai_chat.py.bak_1107c
+V=$(date +%s)$RANDOM
+curl -s --max-time 60 -H "Authorization: token $TOKEN" -L "https://raw.githubusercontent.com/Thousands91/qq-bot/main/bot/plugins/ai_chat.py?v=$V" -o plugins/ai_chat.py
+echo "STEP2 验证（下载源落地字节）"
+ls -la plugins/ai_chat.py
+grep -c "_emoji_scrub\|_EMOJI_OPENERS\|系统提示：对方刚冲你做了个动作" plugins/ai_chat.py
+python3 -c "import ast; ast.parse(open('plugins/ai_chat.py').read()); print('语法OK')"
+echo "STEP3 只重启bot（不动NapCat）"
+kill $(pgrep -f "venv/bin/python main.py") 2>/dev/null; sleep 4
+nohup /root/bot/venv/bin/python main.py >> bot.log 2>&1 &
+sleep 15
+pgrep -af "main.py" || echo "启动失败"
+tail -3 bot.log
