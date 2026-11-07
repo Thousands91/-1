@@ -1,84 +1,22 @@
-<<<task_272.txt>>>
-===== 任务272 11-08 06:32:06 =====
+<<<task_273.txt>>>
+===== 任务273 11-08 06:40:43 =====
 --- 命令 ---
-echo "== 1. 送达 v1.2 并语法检查 =="
-echo IyEvYmluL2Jhc2gKIyDpmL/okKjlsJTmjonnur/lrojmiqQgdjEuMiAoMjAyNi0xMS0wOCkKIyB2MS4yIOaUueWKqCjkvp3mja4yMDI2LTExLTA456S+5Yy66LCD56CUKTog6KKr6LiiL+etieaJq+eggeacn+mXtOWujOWFqOWBnOatouiHquWKqOmHjeWQrwojICAg4oCU4oCUIOS8muivneW3suiiq+acjeWKoeerr+S9nOW6nyzku7vkvZXlrprml7bph43or5Xpg73mmK8i6aKR57mB5peg5pWI55m75b2VIizlj6rkvJrliqDph43po47mjqcKIyAgIOKAlOKAlCDljp92MS4x55qEIuiiq+i4ouagh+iusOi2hTblsI/ml7blhYHorrjlho3or5Ui5bey56e76ZmkLOiiq+i4ouWQjuWPquetieS6uuW3peaJq+eggQojICAg4oCU4oCUIOS6uuW3peaBouWkjemAlOW+hDog5omr56CB5ZCOIGNvbm5lY3RlZCDoh6rliqjmuIXmoIforrA75oiWIHJtIC9yb290Ly5ndWFyZF9raWNrZWQKIyDop4TliJkxOiBRUei/m+eoi+atu+S6huS4lOaXoOi/keacn+S6jOe7tOeggSAtPiDoh6rliqjmi4notbco5bSp5rqD5oGi5aSNLOS/neeVmSkKIyDop4TliJkyOiBXU+aWreW8gCvmnKrooqvouKLmoIforrAgLT4g5bCd6K+V6YeN5ZCvTmFwQ2F05YWN5omr56CB5oGi5aSNKOeZu+W9leaAgeWPr+iDvei/mOWcqCzkv53nlZkpCiMg6KeE5YiZMzog6YeN5ZCv5ZCO5LuN5Ye65paw5qy+5LqM57u056CBKD3nnJ/ooqvouKIpIC0+IOiusOiiq+i4ouagh+iusCzmraTlkI7kuI3lho3oh6rliqjph43lkK8s562J5Lq65bel5omr56CBCiMg6KeE5YiZNDog5q+P5bCP5pe25pyA5aSa6YeN5ZCvM+asoSzph43lkK/lkI7lhrfljbQ15YiG6ZKfO+eZu+W9leaIkOWKnyhjb25uZWN0ZWQp6Ieq5Yqo5riF6KKr6Lii5qCH6K6wCkxPRz0vcm9vdC9ib3QubG9nClFSPS9yb290L05hcGNhdC9vcHQvUVEvcmVzb3VyY2VzL2FwcC9hcHBfbGF1bmNoZXIvbmFwY2F0L2NhY2hlL3FyY29kZS5wbmcKU1RBVEU9L3Jvb3QvZ3VhcmRfc3RhdHVzLnR4dApMQVNUX1JFU1RBUlQ9L3Jvb3QvLmd1YXJkX2xhc3QKQ05UX0ZJTEU9L3Jvb3QvLmd1YXJkX2NudApLSUNLRUQ9L3Jvb3QvLmd1YXJkX2tpY2tlZApUUygpIHsgc3RhdCAtYyAlWSAiJDEiIDI+L2Rldi9udWxsIHx8IGVjaG8gMDsgfQpzdGFydF9xcSgpIHsKICBjZCAvcm9vdCAmJiBub2h1cCB4dmZiLXJ1biAtYSAvcm9vdC9OYXBjYXQvb3B0L1FRL3FxIC0tbm8tc2FuZGJveCAtLWRpc2FibGUtZ3B1IC0tZGlzYWJsZS1zb2Z0d2FyZS1yYXN0ZXJpemVyIC0tZGlzYWJsZS1kZXYtc2htLXVzYWdlIC0tanMtZmxhZ3M9LS1tYXgtb2xkLXNwYWNlLXNpemU9NTEyID4+IC9yb290L25hcGNhdC1yZXN0YXJ0LmxvZyAyPiYxICYKfQpjYW5fcmVzdGFydCgpIHsKICBOT1c9JChkYXRlICslcykKICBMUj0kKGNhdCAiJExBU1RfUkVTVEFSVCIgMj4vZGV2L251bGwgfHwgZWNobyAwKQogIFsgJCgoIE5PVyAtIExSICkpIC1sdCAzMDAgXSAmJiByZXR1cm4gMQogIEg9JChkYXRlICslSCkKICByZWFkIEMgSDIgPCAiJENOVF9GSUxFIiAyPi9kZXYvbnVsbCB8fCB7IEM9MDsgSDI9JEg7IH0KICBbICIkSCIgIT0gIiRIMiIgXSAmJiBDPTAKICBbICIkQyIgLWdlIDMgXSAmJiByZXR1cm4gMQogIGVjaG8gIiQoKEMrMSkpICRIIiA+ICIkQ05UX0ZJTEUiCiAgZWNobyAiJE5PVyIgPiAiJExBU1RfUkVTVEFSVCIKICByZXR1cm4gMAp9CmVjaG8gIiQoZGF0ZSAnKyVtLSVkICVIOiVNOiVTJykg5a6I5oqkdjEuMuWQr+WKqCIgPj4gIiRTVEFURSIKd2hpbGUgdHJ1ZTsgZG8KICBzbGVlcCA2MAogIExBU1Q9JChncmVwICJXZWJTb2NrZXQgZm9yIEJvdCAzNDI3OTQzMTg3IiAiJExPRyIgMj4vZGV2L251bGwgfCB0YWlsIC0xKQogIGNhc2UgIiRMQVNUIiBpbgogICAgKmNvbm5lY3RlZCopCiAgICAgIFsgLWYgIiRLSUNLRUQiIF0gJiYgcm0gLWYgIiRLSUNLRUQiICYmIGVjaG8gIiQoZGF0ZSAnKyVtLSVkICVIOiVNOiVTJykg5bey6YeN5paw5LiK57q/LOa4hemZpOiiq+i4ouagh+iusCIgPj4gIiRTVEFURSIKICAgICAgY29udGludWUKICAgICAgOzsKICBlc2FjCiAgUVFfTj0kKHBncmVwIC1mYyAib3B0L1FRL1txXXEiIDI+L2Rldi9udWxsKQogIGlmIFsgIiRRUV9OIiA9ICIwIiBdIHx8IFsgLXogIiRRUV9OIiBdOyB0aGVuCiAgICBBR0U9OTk5OTk5CiAgICBbIC1mICIkUVIiIF0gJiYgQUdFPSQoKCAkKGRhdGUgKyVzKSAtICQoVFMgIiRRUiIpICkpCiAgICBpZiBbICRBR0UgLWd0IDYwMCBdOyB0aGVuCiAgICAgIGlmIGNhbl9yZXN0YXJ0OyB0aGVuCiAgICAgICAgZWNobyAiJChkYXRlICcrJW0tJWQgJUg6JU06JVMnKSBRUei/m+eoi+a2iOWksSzoh6rliqjmi4notbciID4+ICIkU1RBVEUiCiAgICAgICAgc3RhcnRfcXEKICAgICAgZmkKICAgIGZpCiAgICBjb250aW51ZQogIGZpCiAgIyBRUea0u+edgOS9hldT5LiN5ZyoY29ubmVjdGVk5oCBCiAgIyB2MS4yOiDooqvouKLmoIforrDlrZjlnKjml7Ys5LiN5YGa5Lu75L2V6Ieq5Yqo6YeN5ZCvLOmdmeetieS6uuW3peaJq+eggQogIGlmIFsgLWYgIiRLSUNLRUQiIF07IHRoZW4KICAgIGNvbnRpbnVlCiAgZmkKICBBR0U9OTk5OTk5CiAgWyAtZiAiJFFSIiBdICYmIEFHRT0kKCggJChkYXRlICslcykgLSAkKFRTICIkUVIiKSApKQogIExSPSQoY2F0ICIkTEFTVF9SRVNUQVJUIiAyPi9kZXYvbnVsbCB8fCBlY2hvIDApCiAgUVJUPSQoVFMgIiRRUiIpCiAgaWYgWyAkQUdFIC1sdCAzMDAgXTsgdGhlbgogICAgIyDmlrDpspzkuoznu7TnoIE6IOWImuiiq+i4ouaIluWImumHjeWQr+WHuuadpSzlhYjmoIforrAo6Iul5q2k56CB5Zyo5pyA6L+R5LiA5qyh6YeN5ZCv5LmL5ZCO5Ye6546wLOWfuuacrOWdkOWunuiiq+i4oikKICAgIGlmIFsgIiRRUlQiIC1ndCAiJExSIiBdICYmIFsgIiRMUiIgIT0gIjAiIF07IHRoZW4KICAgICAgZWNobyAiJChkYXRlICslcykiID4gIiRLSUNLRUQiCiAgICAgIGVjaG8gIiQoZGF0ZSAnKyVtLSVkICVIOiVNOiVTJykg6YeN5ZCv5ZCO5LuN5Ye65paw5LqM57u056CBOiDnoa7orqTooqvohb7orq/ouKLnur8s5qCH6K6w5ZCO562J5Lq65bel5omr56CBKHYxLjLkuI3lho3oh6rliqjph43or5UpIiA+PiAiJFNUQVRFIgogICAgZmkKICAgIGNvbnRpbnVlCiAgZmkKICBpZiBjYW5fcmVzdGFydDsgdGhlbgogICAgZWNobyAiJChkYXRlICcrJW0tJWQgJUg6JU06JVMnKSBXU+aWreW8gCzlsJ3or5Xph43lkK9OYXBDYXTlhY3miavnoIHmgaLlpI0iID4+ICIkU1RBVEUiCiAgICBwa2lsbCAtZiAib3B0L1FRL3FxIiAyPi9kZXYvbnVsbAogICAgc2xlZXAgMwogICAgc3RhcnRfcXEKICBmaQpkb25lCg== | base64 -d > /root/azar_guard.sh.v12
-bash -n /root/azar_guard.sh.v12 && echo 语法OK
+echo "== napcat.log 里 sign/签名 相关记录 =="
+grep -aiE "sign|签名" /root/napcat.log 2>/dev/null | head -8
 echo ""
-echo "== 2. 与旧版差异摘要 =="
-diff /root/azar_guard.sh /root/azar_guard.sh.v12 | head -30
+echo "== packet 相关配置与日志 =="
+grep -aiE "packet|PacketBackend" /root/napcat.log 2>/dev/null | head -5
 echo ""
-echo "== 3. 备份并替换 =="
-cp /root/azar_guard.sh /root/azar_guard.sh.bak_v11_1108
-mv /root/azar_guard.sh.v12 /root/azar_guard.sh
-echo 替换完成
-echo ""
-echo "== 4. 重启守护进程 ="
-pkill -f "azar_[g]uard"; sleep 1
-cd /root && setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 &
-sleep 2
-pgrep -af "azar_[g]uard" && echo 守护已重启
-echo ""
-echo "== 5. 重启NapCat使bypass生效并出新码 =="
-pkill -f "opt/QQ/[q]q"; sleep 2
-cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null &
-sleep 25
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png && echo 新码已放进相册
-echo ""
-echo "== 6. NapCat 版本与启动日志头 =="
-head -30 /root/napcat.log | grep -aiE "napcat|version|启动" | head -8
-date "+完成时间: %H:%M:%S"
+echo "== QQ Android 版本探测 =="
+getprop ro.build.version.release 2>/dev/null || echo proot内无getprop
+cat /proc/version 2>/dev/null | head -1
 --- 输出 ---
-== 1. 送达 v1.2 并语法检查 ==
-语法OK
+== napcat.log 里 sign/签名 相关记录 ==
 
-== 2. 与旧版差异摘要 ==
-2,6c2,9
-< # 阿萨尔掉线守护 v1.1 (2026-11-02)
-< # v1.1 修复: 被踢后二维码变旧会被误判普通断线而白重启 —— 加"被踢标记"
-< # 规则1: QQ进程死了且无近期二维码 -> 自动拉起
-< # 规则2: WS断开+会话在(重启后未出新码) -> 自动重启NapCat免扫码恢复
-< # 规则3: 重启后仍出新款二维码(=真被踢) -> 记被踢标记,6小时内不再自动重启
----
-> # 阿萨尔掉线守护 v1.2 (2026-11-08)
-> # v1.2 改动(依据2026-11-08社区调研): 被踢/等扫码期间完全停止自动重启
-> #   —— 会话已被服务端作废,任何定时重试都是"频繁无效登录",只会加重风控
-> #   —— 原v1.1的"被踢标记超6小时允许再试"已移除,被踢后只等人工扫码
-> #   —— 人工恢复途径: 扫码后 connected 自动清标记;或 rm /root/.guard_kicked
-> # 规则1: QQ进程死了且无近期二维码 -> 自动拉起(崩溃恢复,保留)
-> # 规则2: WS断开+未被踢标记 -> 尝试重启NapCat免扫码恢复(登录态可能还在,保留)
-> # 规则3: 重启后仍出新款二维码(=真被踢) -> 记被踢标记,此后不再自动重启,等人工扫码
-30c33
-< echo "$(date '+%m-%d %H:%M:%S') 守护v1.1启动" >> "$STATE"
----
-> echo "$(date '+%m-%d %H:%M:%S') 守护v1.2启动" >> "$STATE"
-52a56
->   # v1.2: 被踢标记存在时,不做任何自动重启,静等人工扫码
-54,61c58
-<     K=$(cat "$KICKED")
-<     NOW=$(date +%s)
-<     if [ $(( NOW - K )) -gt 21600 ]; then
-<       rm -f "$KICKED"
-<       echo "$(date '+%m-%d %H:%M:%S') 被踢标记超6小时,允许再试" >> "$STATE"
-<     else
-<       continue
-<     fi
+== packet 相关配置与日志 ==
+11-08 06:32:19 [[32minfo[39m] [PacketHandler] 加载成功
+11-08 06:32:20 [[32minfo[39m] [PacketHandler] 初始化成功
 
-== 3. 备份并替换 ==
-替换完成
-
-== 4. 重启守护进程 =
-20437 bash /root/azar_guard.sh
-守护已重启
-
-== 5. 重启NapCat使bypass生效并出新码 ==
-新码已放进相册
-
-== 6. NapCat 版本与启动日志头 ==
-[preload] succeeded. /root/Napcat/opt/QQ/resources/app/major.node
-[preload] succeeded. /root/Napcat/opt/QQ/resources/app/major.node
-resourcesPath: /root/Napcat/opt/QQ/resources
-NapCat Shell App Loading...
-11-08 06:32:20 [[32minfo[39m] [NapCat] [Core] NapCat.Core Version: 4.18.41
-[I] <MMKV_IO.cpp:92::loadFromFile> loading [nt_mmkv_global_misc] with crc 363666145 sequence 1 version 4
-完成时间: 06:32:37
+== QQ Android 版本探测 ==
+15
+Linux version 6.17.0-PRoot-Distro (proot@termux) (gcc (GCC) 13.3.0, GNU ld (GNU Binutils) 2.42) #1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000
