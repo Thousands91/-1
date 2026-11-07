@@ -1,12 +1,11 @@
-243
-echo "== guard 状态 =="
-tail -6 /root/guard_status.txt 2>/dev/null
-echo "== guard 进程 =="
-pgrep -af "azar_guard" || echo "guard未运行"
-echo "== bot 8080 监听 =="
-netstat -tnp 2>/dev/null | grep 8080 | head -3
-echo "== NapCat 日志最新5行 =="
-tail -5 /root/napcat-run.log 2>/dev/null | cut -c1-120
-echo "== 手动测NapCat API（看登录态还在不在） =="
-TOKEN=$(python3 -c "import json; print(json.load(open('/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json')).get('token',''))" 2>/dev/null)
-curl -s --max-time 8 "http://127.0.0.1:3001/get_login_info" 2>/dev/null | head -c 200 || echo "3001无响应"
+244
+echo "STEP1 重启NapCat（保登录态）"
+pkill -9 -x Xvfb; pkill -9 -f "opt/QQ/[q]q"; sleep 2
+cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat-run.log 2>&1 < /dev/null &
+sleep 28
+echo "STEP2 登录态检查（出新二维码=要扫码，登录成功=免扫恢复）"
+grep -aE "登录成功|Login success|二维码已保存|快速登录" /root/napcat-run.log | tail -3
+echo "STEP3 bot侧连接"
+sleep 8
+grep -a "connected" /root/bot/bot/bot.log | tail -1
+ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null || echo "无新二维码"
