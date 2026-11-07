@@ -1,10 +1,4 @@
-208
-echo "验证时间: $(date +%H:%M:%S)"
-PID=$(pgrep -f "[m]ain.py" | head -1)
-if [ -n "$PID" ]; then ps -o pid,etime -p $PID | tail -1; else echo "bot未运行!"; fi
-grep -icE "error|traceback" /root/bot.log 2>/dev/null || true
-md5sum /root/bot/bot/plugins/fortune.py | cut -c1-12
-echo "--- 真机活体:白底卡重画 ---"
+209
 cd /root/bot/bot && /root/bot/venv/bin/python - <<'PYEOF'
 import sys
 sys.path.insert(0, "/root/bot/bot/plugins")
@@ -14,10 +8,12 @@ import fortune as F
 b = F._render_card(F.SIGNS[0], F.CARD_TYPES["征服"], F.TIERS["金"], {"才学":84,"财货":70,"情缘":91,"体魄":92,"见识":82}, 83, "白底测试", "11月07日")
 open("/root/test_card2.png","wb").write(b)
 from PIL import Image
-img = Image.open("/root/test_card2.png")
-px = img.getpixel((360, 550))
-print("中心背景像素:", px, "白色?" , all(c>240 for c in px))
-print("PNG:", img.size)
+img = Image.open("/root/test_card2.png").convert("RGB")
+px = list(img.getdata())
+white = sum(1 for p in px if all(c > 240 for c in p))
+print(f"白色像素占比: {white/len(px)*100:.1f}%")
+dark = sum(1 for p in px if sum(p) < 240)
+print(f"深色文字像素占比: {dark/len(px)*100:.1f}%")
 PYEOF
 rm -f /root/test_card2.png
 echo "LIVE-OK"
