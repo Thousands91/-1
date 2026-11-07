@@ -1,2 +1,13 @@
-246
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null && chmod 644 /sdcard/DCIM/Camera/asar_qr.png && echo 相册已更新
+247
+echo "== 1. NapCat 日志中断线/掉线原话 =="
+grep -aE "offline|Offline|踢|kick|断开|disconnect|close|下线|forced|挤掉" /root/napcat-run.log 2>/dev/null | tail -8
+echo ""
+echo "== 2. napcat-run.log 最后修改时间与开头时间 =="
+ls -la /root/napcat-run.log
+head -3 /root/napcat-run.log | cut -c1-100
+echo ""
+echo "== 3. bot.log 里 20:0x~20:25 的断线痕迹 =="
+grep -aE "20:(0[0-9]|1[0-9]|2[0-9])" /root/bot/bot/bot.log | grep -aiE "disconnect|close|error|offline|ws" | tail -6
+echo ""
+echo "== 4. 今晚我下发部署任务的时间（对照） =="
+grep -a "20:1[0-9]\|20:2[0-9]" /root/bot/bot/bot.log | grep -aiE "start|启动|加载" | head -4
