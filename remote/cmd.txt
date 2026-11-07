@@ -1,15 +1,19 @@
-223
-echo "== 1. NapCat/QQ 进程 =="
-pgrep -af "napcat\|NapCat\|qq" 2>/dev/null | grep -v grep | head -4 || echo "未见NapCat进程"
-echo "== 2. 二维码监控脚本是否在跑 =="
-pgrep -af "azar_watch" || echo "监控脚本未运行"
-echo "== 3. NapCat 最近登录相关日志 =="
-grep -E "二维码|扫码|Login|登录|offline|离线|账号" /root/napcat.log 2>/dev/null | tail -6
-echo "== 4. 二维码文件与时间 =="
-ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null || echo "缓存无二维码文件"
-ls -la /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null || echo "相册暂无二维码副本"
-date "+当前时间 %H:%M:%S"
-echo "== 5. bot端就绪 =="
-pgrep -af "main.py" || echo "bot未运行"
-echo "== 6. NapCat webui/端口 =="
-netstat -tlnp 2>/dev/null | grep -E "6099|8080|3001" | head -4
+224
+echo "== 1. 复制新码进相册 =="
+cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null && chmod 644 /sdcard/DCIM/Camera/asar_qr.png && echo "新码已进相册" || echo "复制失败"
+ls -la /sdcard/DCIM/Camera/asar_qr.png
+echo "== 2. 启动监控脚本（有nohup后台版则用之） =="
+if [ -f /root/azar_watchd.sh ]; then
+  nohup bash /root/azar_watchd.sh > /root/azar_watchd.log 2>&1 & 
+  echo "用后台守护版启动"
+else
+  nohup bash /root/bot/bot/azar_watch.sh > /root/azar_watch.log 2>&1 &
+  echo "用bot目录版启动"
+fi
+sleep 3
+pgrep -af "azar_watch" || echo "启动失败"
+echo "== 3. NapCat 进程确认（换个搜法） =="
+ps aux 2>/dev/null | grep -iE "napcat|NapCat" | grep -v grep | head -3 || echo "ps里未见"
+ls /proc/*/cmdline 2>/dev/null | head -1 >/dev/null && for p in /proc/[0-9]*/cmdline; do tr '\0' ' ' < "$p" 2>/dev/null | grep -qi napcat && echo "活: $(cat /proc/${p//[!0-9]/}/cmdline 2>/dev/null | tr '\0' ' ' | head -c 80)"; done | head -3
+echo "== 4. NapCat 当前是否在等扫码 =="
+tail -3 /root/napcat.log 2>/dev/null
