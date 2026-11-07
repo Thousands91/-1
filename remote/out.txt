@@ -1,8 +1,36 @@
-<<<task_261.txt>>>
-===== 任务261 11-08 00:40:06 =====
+<<<task_262.txt>>>
+===== 任务262 11-08 00:44:37 =====
 --- 命令 ---
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png && echo 码已放进相册去QQ扫
-stat -c "%y" /sdcard/DCIM/Camera/asar_qr.png
+echo "== napcat.log 覆盖的时间范围 =="
+head -3 /root/napcat.log | grep -aoE "11-0[0-9] [0-9:]+" | head -2
+tail -5 /root/napcat.log | grep -aoE "11-0[0-9] [0-9:]+" | head -2
+echo ""
+echo "== 所有 账号状态 变更记录 =="
+grep -an "账号状态" /root/napcat.log
+echo ""
+echo "== 00:05:40 到 00:06:10 完整现场 =="
+grep -an "^11-08 00:05:5\|^11-08 00:06:0" /root/napcat.log
+echo ""
+echo "== 有没有 他处登录/踢下线/安全 相关字样 =="
+grep -acn "其他设备\|他处\|安全中心\|下线\|kick" /root/napcat.log
+grep -an "其他设备\|他处\|安全中心\|kick" /root/napcat.log | head -5
+echo ""
+echo "== 内存现在的样子 =="
+free -m | head -2
+date "+现在: %F %H:%M:%S"
 --- 输出 ---
-码已放进相册去QQ扫
-2026-11-08 00:40:06.468332541 +0800
+== napcat.log 覆盖的时间范围 ==
+
+== 所有 账号状态 变更记录 ==
+1200:11-08 00:05:54 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+
+== 00:05:40 到 00:06:10 完整现场 ==
+1200:11-08 00:05:54 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+
+== 有没有 他处登录/踢下线/安全 相关字样 ==
+0
+
+== 内存现在的样子 ==
+               total        used        free      shared  buff/cache   available
+Mem:           11296        9125         160         134        2784        2171
+现在: 2026-11-08 00:44:39
