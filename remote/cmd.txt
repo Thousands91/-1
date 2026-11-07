@@ -1,4 +1,2 @@
-194
-echo "--- 插件清单 ---"; ls /root/bot/bot/plugins/ 2>/dev/null
-echo "--- 是否有语音处理 ---"; grep -rn "record\|Record\|语音\|Silk\|语音识别" /root/bot/bot/plugins/ 2>/dev/null | grep -v ".bak" | head -8
-echo "--- 收到语音时会发生什么(看兜底逻辑) ---"; grep -n "extract_text\|纯文本\|get_plaintext" /root/bot/bot/plugins/ai_chat.py 2>/dev/null | head -5
+195
+grep -E "OPENAI_API_KEY|OPENAI_BASE_URL|OPENAI_MODEL" /root/bot/bot/.env 2>/dev/null || find /root/bot -maxdepth 2 -name ".env" 2>/dev/null
