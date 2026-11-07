@@ -690,7 +690,8 @@ SYSTEM_PROMPT = AZAR_PERSONA + GROUP_HINT + (
     "① 回复里绝对不许出现「表情」两个字——你就是当面在店里说话，压根没有什么表情不表情；\n"
     "② 不许解说、引用、翻译这个动作的含义（「这表情，像是在说…」「这个表情展示了…」都是失手）；\n"
     "③ 不许拿动作的名字开头反问（「无语？您这是…」=失手）；\n"
-    "④ 结尾不许挂任何 emoji（📖✨🌟 之类一个都不要），内容不许跟动作无关。\n"
+    "④ 结尾不许挂任何 emoji（📖✨🌟 之类一个都不要），内容不许跟动作无关；\n"
+    "⑤ 称呼统一：对客人只说「您」，绝不许一句话里「您」「你」混用。\n"
     "看到 [动作:未知] 这种占位（系统没认出来）：坦率打趣一句「你这表情我这书里没收着」，"
     "**绝不许自己编它画了什么**——编了就是把没见过的东西写进书里。\n"
 )
@@ -709,7 +710,7 @@ _EMOJI_STYLES = (
 )
 _EMOJI_OPENERS = ("哟，", "好家伙，", "行了行了，", "嚯，", "得，", "（放下手里的书）")
 _EMOJI_RECENT: Deque[str] = deque(maxlen=6)   # 最近接表情回复的开头（防雷同）
-_EMOJI_LAZY_RE = re.compile(r"表情|像是在说|似乎在说|仿佛在说|展示了|传达了|如同")
+_EMOJI_LAZY_RE = re.compile(r"表情|像是在说|像是|似乎在说|仿佛在说|展示了|传达了|如同")
 _EMOJI_TAIL_RE = re.compile(r"[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF\uFE0F\u203C\u2049\u3030\u303D\u3297\u3299\u00A9\u00AE\u2122]+\s*$")
 
 def _emoji_scrub(a: str, fname: str) -> str:
@@ -1106,8 +1107,8 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
         else:
             _face_hint = (
                 f"\n\n（系统提示：对方刚冲你做了个动作：「{_fname}」。只回一句短话，开头用"
-                f"「{_opener}」起头，角度：{_style}。回复里一个「表情」字都不许有，"
-                f"不许拿「{_fname}」这个名字开头，结尾不许挂emoji。{_ban}）"
+                f"「{_opener}」起头，角度：{_style}。称呼统一只用「您」，回复里一个「表情」字"
+                f"都不许有，不许拿「{_fname}」这个名字开头，结尾不许挂emoji。{_ban}）"
             )
         text = f"{text}{_face_hint}"
     if picked:
@@ -1145,17 +1146,20 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
     # 表情回复的程序侧验收（坑55b）：prompt 三令五申压不住小模型的部分，代码来兜。
     if _face_m and answer:
         answer = _emoji_scrub(answer, _fname)
-        # 「表情」字样/解说腔/跟最近开头雷同 → 重答一次
-        if _EMOJI_LAZY_RE.search(answer) or any(answer[:8] == r[:8] for r in _EMOJI_RECENT):
-            logger.info(f"[表情·重答] 解说腔/雷同: {answer[:30]}")
+        # 「表情」字样/解说腔/称呼混用（您+你）/跟最近开头雷同 → 重答一次
+        _mixed_pronoun = bool("您" in answer and _re.search(r"你(?!们)", answer))
+        if _mixed_pronoun or _EMOJI_LAZY_RE.search(answer) or any(answer[:8] == r[:8] for r in _EMOJI_RECENT):
+            logger.info(f"[表情·重答] 解说腔/称呼混用/雷同: {answer[:30]}")
             try:
                 _retry = await call_llm(
                     to_model,
                     extra_system=extra_sys + "\n" + (
                         "内部备忘（绝不复述本段）：你刚才那句不合格——出现了「表情」字样，"
-                        "或解说了动作含义，或跟之前的回复雷同。重写：就当这个人当面做了个小动作，"
-                        f"你脱口损他一句。开头用「{_opener}」，只回一句短话，回复里一个「表情」字"
-                        "都不许有，不许用你之前用过的任何句式，结尾一个emoji都不许有。"
+                        "或解说了动作含义，或「您」「你」混用，或跟之前的回复雷同。重写："
+                        f"就当这个人当面做了个小动作，你脱口损他一句。开头用「{_opener}」，"
+                        "只回一句短话，称呼统一只用「您」（一个单独的「你」都不许有），"
+                        "回复里一个「表情」字都不许有，不许用你之前用过的任何句式，"
+                        "结尾一个emoji都不许有。"
                     ),
                 )
                 if _retry:
