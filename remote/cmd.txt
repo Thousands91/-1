@@ -1,3 +1,4 @@
-184
-echo "remote_task.sh 工具自检 $(date)"
-pgrep -f "[r]emote_ctl.sh" | wc -l
+185
+ls -la /root/bot/bot/bot.log /root/napcat-run.log 2>&1
+echo ---
+tail -2 /root/bot/bot/bot.log 2>/dev/null
