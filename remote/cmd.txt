@@ -1,5 +1,5 @@
-192
-echo "现在时间: $(date +%H:%M:%S)"
+193
+echo "执行时间: $(date +%H:%M:%S)"
 PID=$(cat /root/.remote_pid 2>/dev/null); echo "循环PID: $PID"; ps -o etime= -p $PID 2>/dev/null
 grep -c "?v=" /root/remote_ctl.sh
 echo "待发箱: $(ls -A /root/.remote_pending 2>/dev/null | wc -l) 个文件"
