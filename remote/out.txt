@@ -1,17 +1,38 @@
-<<<task_212.txt>>>
-===== 任务212 11-07 15:58:41 =====
+<<<task_213.txt>>>
+===== 任务213 11-07 16:01:33 =====
 --- 命令 ---
-set -e
-TOKEN=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
-[ -n "$TOKEN" ] || { echo "FAIL:无token"; exit 1; }
-curl -s --max-time 60 -H "Authorization: token $TOKEN" "https://raw.githubusercontent.com/Thousands91/-1/main/code/bot/plugins/fortune.py" -o /root/fortune_new.py
-wc -c /root/fortune_new.py
-/root/bot/venv/bin/python -m py_compile /root/fortune_new.py && echo "语法通过" || { echo "语法失败"; exit 1; }
-cp /root/bot/bot/plugins/fortune.py /root/fortune.py.bak_1107d
-mv /root/fortune_new.py /root/bot/bot/plugins/fortune.py
-for p in $(pgrep -f "[m]ain.py"); do kill $p; done
-echo "DEPLOY-OK"
+echo "验证时间: $(date +%H:%M:%S)"
+PID=$(pgrep -f "[m]ain.py" | head -1)
+if [ -n "$PID" ]; then ps -o pid,etime -p $PID | tail -1; else echo "bot未运行!"; fi
+grep -icE "error|traceback" /root/bot.log 2>/dev/null || true
+md5sum /root/bot/bot/plugins/fortune.py | cut -c1-12
+echo "--- 活体:四品级卡面底色像素 ---"
+cd /root/bot/bot && /root/bot/venv/bin/python - <<'PYEOF'
+import sys
+sys.path.insert(0, "/root/bot/bot/plugins")
+import nonebot
+nonebot.init()
+import fortune as F
+from PIL import Image
+import io
+for tier in ["金","银","铜","石"]:
+    t = F.TIERS[tier]
+    b = F._render_card(F.SIGNS[0], F.CARD_TYPES["征服"], t, {d:60 for d in F.DIMENSIONS}, 60, "底色测试", "11月07日")
+    img = Image.open(io.BytesIO(b))
+    px = img.getpixel((360, 570))
+    print(tier, "卡面中心像素:", px)
+PYEOF
+echo "LIVE-OK"
 --- 输出 ---
-19991 /root/fortune_new.py
-语法通过
-DEPLOY-OK
+验证时间: 16:01:33
+21411       01:54
+0
+f23be7ce0080
+--- 活体:四品级卡面底色像素 ---
+11-07 16:01:34 [SUCCESS] nonebot | NoneBot is initializing...
+11-07 16:01:34 [INFO] nonebot | Current Env: prod
+金 卡面中心像素: (215, 198, 156)
+银 卡面中心像素: (204, 205, 206)
+铜 卡面中心像素: (199, 175, 151)
+石 卡面中心像素: (190, 165, 147)
+LIVE-OK
