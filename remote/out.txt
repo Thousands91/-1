@@ -1,11 +1,15 @@
-<<<task_187.txt>>>
-===== 任务187 11-07 11:26:54 =====
+<<<task_188.txt>>>
+===== 任务188 11-07 11:31:17 =====
 --- 命令 ---
-which adb 2>/dev/null || echo no-adb-in-path
+adb connect 192.168.31.28:38491 2>&1
 adb devices 2>&1 | tail -3
-adb connect 192.168.31.28:39837 2>&1 | head -1
+echo ---杀手配置核查---
+adb shell device_config get activity_manager max_phantom_processes 2>&1
+adb shell settings get global settings_enable_monitor_phantom_procs 2>&1
 --- 输出 ---
-/usr/bin/adb
+connected to 192.168.31.28:38491
 List of devices attached
+192.168.31.28:38491	device
 
-failed to connect to '192.168.31.28:39837': Connection refused
+---杀手配置核查---
+2147483647
