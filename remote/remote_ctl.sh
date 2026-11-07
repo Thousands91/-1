@@ -38,7 +38,7 @@ api_report() {
   for f in $F; do echo "<<<$f>>>" >> /tmp/remote_bundle.txt; cat "$PBOX/$f" >> /tmp/remote_bundle.txt; done
   [ -n "$TOK" ] || TOK=$(get_tok)
   [ -n "$TOK" ] || { echo "[$(date '+%m-%d %H:%M')] report:无token,留待下轮" >> "$LOG"; return 1; }
-  SHA=$(timeout 30 curl -s -H "Authorization: token $TOK" "$OUT_URL" | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+  SHA=$(timeout 30 curl -s -H "Authorization: token $TOK" "$OUT_URL?v=$(date +%s)$RANDOM" | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
   B64=$(base64 -w0 /tmp/remote_bundle.txt) || return 1
   R=$(timeout 60 curl -s -X PUT -H "Authorization: token $TOK" -d "{\"message\":\"遥控输出(API) $(date '+%m-%d %H:%M')\",\"content\":\"$B64\"${SHA:+,\"sha\":\"$SHA\"}}" "$OUT_URL")
   if echo "$R" | grep -q '"content"'; then
@@ -65,13 +65,13 @@ restart_napcat() {
   echo "$NOW" >> /tmp/napf && cp /tmp/napf "$NAP_FUSE"
   echo "[$(date '+%m-%d %H:%M')] 看护:自动拉起NapCat(24h内第$((CNT+1))次)" >> "$LOG"
   pkill -f "opt/QQ/qq" 2>/dev/null; sleep 3
-  cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 &
+  cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-run.log 2>&1 &
   cd "$REPO"
 }
 
 while true; do
   [ -n "$TOK" ] || TOK=$(get_tok)
-  RAW=$(timeout 30 curl -s -H "Accept: application/vnd.github.raw" ${TOK:+-H "Authorization: token $TOK"} "$CMD_URL")
+  RAW=$(timeout 30 curl -s -H "Accept: application/vnd.github.raw" ${TOK:+-H "Authorization: token $TOK"} "$CMD_URL?v=$(date +%s)$RANDOM")
   case "$RAW" in
     [0-9]*)
       RID=$(printf '%s\n' "$RAW" | head -1 | tr -dc 0-9)
@@ -88,6 +88,7 @@ while true; do
   C=$((C+1))
   # 看护检查每 4 轮跑一次（约 60s），任务拉取每轮都跑（15s）——拉任务轻、看护重，分开节流
   if [ $((C % 4)) -eq 0 ]; then
+  [ -f /root/napcat-run.log ] && [ "$(stat -c %s /root/napcat-run.log 2>/dev/null)" -gt 104857600 ] && : > /root/napcat-run.log
   ST=$(bash /root/logincheck.sh 2>/dev/null | grep -c "\[未登录\]\|\[掉线\]")
   if [ "$ST" = "1" ] && [ -f "$QR" ]; then
     NOW=$(date +%s); MT=$(stat -c %Y "$QR" 2>/dev/null || echo "$NOW")
@@ -98,6 +99,8 @@ while true; do
     fi
   fi
   pgrep -f "opt/QQ/qq" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：NapCat不在" >> "$LOG"; restart_napcat; }
+  pgrep -f "netmon.sh" >/dev/null || { nohup bash /root/netmon.sh > /dev/null 2>&1 & echo "[$(date '+%m-%d %H:%M')] 看护:拉起netmon" >> "$LOG"; }
+  pgrep -f "offline_watch.sh" >/dev/null || { nohup bash /root/offline_watch.sh > /dev/null 2>&1 & echo "[$(date '+%m-%d %H:%M')] 看护:拉起offline_watch" >> "$LOG"; }
   pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & cd "$REPO"; }
   [ $((C % 40)) -eq 0 ] && echo "[$(date '+%m-%d %H:%M')] 心跳:循环正常,LAST=$LAST" >> "$LOG"
   fi
