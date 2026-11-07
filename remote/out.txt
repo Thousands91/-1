@@ -1,8 +1,12 @@
-<<<task_184.txt>>>
-===== 任务184 11-06 13:35:49 =====
+<<<task_185.txt>>>
+===== 任务185 11-07 11:01:23 =====
 --- 命令 ---
-echo "remote_task.sh 工具自检 $(date)"
-pgrep -f "[r]emote_ctl.sh" | wc -l
+ls -la /root/bot/bot/bot.log /root/napcat-run.log 2>&1
+echo ---
+tail -2 /root/bot/bot/bot.log 2>/dev/null
 --- 输出 ---
-remote_task.sh 工具自检 Fri Nov  6 13:35:49 CST 2026
-1
+-rw-r--r--. 1 root root    7870 Nov  1 15:31 /root/bot/bot/bot.log
+-rw-r--r--. 1 root root 2865909 Nov  7 11:01 /root/napcat-run.log
+---
+11-01 13:57:47 [INFO] uvicorn | 127.0.0.1:43686 - "GET / HTTP/1.1" 404
+11-01 15:31:41 [INFO] uvicorn | 127.0.0.1:47326 - "GET / HTTP/1.1" 404
