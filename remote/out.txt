@@ -1,7 +1,23 @@
-<<<task_240.txt>>>
-===== 任务240 11-07 20:31:15 =====
+<<<task_241.txt>>>
+===== 任务241 11-07 20:32:23 =====
 --- 命令 ---
-grep -a "connected\|Bot 3427943187" /root/bot/bot/bot.log | tail -2
+tail -12 /root/bot/bot/bot.log
+echo "== NapCat 侧 =="
+grep -aE "connect|WebSocket|ws" /root/napcat-run.log 2>/dev/null | tail -3
 --- 输出 ---
-11-07 20:02:26 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
-11-07 20:23:45 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+11-07 20:25:55 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+11-07 20:25:55 [SUCCESS] nonebot | Running NoneBot...
+11-07 20:25:55 [SUCCESS] nonebot | Loaded adapters: OneBot V11
+11-07 20:25:55 [INFO] uvicorn | Started server process [18396]
+11-07 20:25:55 [INFO] uvicorn | Waiting for application startup.
+11-07 20:25:55 [INFO] __main__ | ==================================================
+11-07 20:25:55 [INFO] __main__ | QQ 群机器人启动成功 ✅
+11-07 20:25:55 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
+11-07 20:25:55 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
+11-07 20:25:55 [INFO] __main__ | ==================================================
+11-07 20:25:55 [INFO] uvicorn | Application startup complete.
+11-07 20:25:55 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+== NapCat 侧 ==
+[11267:1107/202351.508228:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[11267:1107/202351.740850:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[11267:1107/202351.741646:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
