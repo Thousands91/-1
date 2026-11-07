@@ -1,5 +1,4 @@
-193
-echo "执行时间: $(date +%H:%M:%S)"
-PID=$(cat /root/.remote_pid 2>/dev/null); echo "循环PID: $PID"; ps -o etime= -p $PID 2>/dev/null
-grep -c "?v=" /root/remote_ctl.sh
-echo "待发箱: $(ls -A /root/.remote_pending 2>/dev/null | wc -l) 个文件"
+194
+echo "--- 插件清单 ---"; ls /root/bot/bot/plugins/ 2>/dev/null
+echo "--- 是否有语音处理 ---"; grep -rn "record\|Record\|语音\|Silk\|语音识别" /root/bot/bot/plugins/ 2>/dev/null | grep -v ".bak" | head -8
+echo "--- 收到语音时会发生什么(看兜底逻辑) ---"; grep -n "extract_text\|纯文本\|get_plaintext" /root/bot/bot/plugins/ai_chat.py 2>/dev/null | head -5
