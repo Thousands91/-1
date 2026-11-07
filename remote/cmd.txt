@@ -1,6 +1,2 @@
-189
-grep -n "sleep" /root/remote_ctl.sh
-echo ---对比本地v2---
-md5sum /root/remote_ctl.sh 2>/dev/null
-echo ---近1小时循环日志节奏---
-tail -20 /root/remote_ctl.log | head -20
+190
+cat /root/remote_ctl.sh
