@@ -1,4 +1,2 @@
-241
-tail -12 /root/bot/bot/bot.log
-echo "== NapCat 侧 =="
-grep -aE "connect|WebSocket|ws" /root/napcat-run.log 2>/dev/null | tail -3
+242
+grep -a "connected\|Bot 3427943187" /root/bot/bot/bot.log | tail -2
