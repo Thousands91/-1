@@ -1,15 +1,13 @@
-256
-echo "== 1. bot 进程 =="
-pgrep -af "python" | grep -v pgrep | head -5
+257
+echo "== 找 NapCat 日志文件 =="
+find /root/Napcat -name "*.log" -mtime -1 2>/dev/null | head -10
 echo ""
-echo "== 2. NapCat 进程 =="
-pgrep -af "napcat\|QQ" | grep -v pgrep | head -5
+echo "== 找启动脚本 =="
+ls -la /root/*.sh 2>/dev/null
+grep -l napcat /root/*.sh 2>/dev/null
 echo ""
-echo "== 3. bot.log 最后15行 =="
-tail -15 /root/bot/bot/bot.log 2>/dev/null
+echo "== 内存情况 =="
+free -m 2>/dev/null | head -3
 echo ""
-echo "== 4. NapCat 日志最后20行 =="
-tail -20 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat-run.log 2>/dev/null || find /root/Napcat -name "napcat-run.log" 2>/dev/null
-echo ""
-echo "== 5. 现在时间 =="
-date "+%F %H:%M:%S"
+echo "== boot 时间（看手机是否重启过）=="
+uptime
