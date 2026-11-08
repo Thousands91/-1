@@ -1,69 +1,57 @@
-<<<task_285304.txt>>>
-===== 任务285304 11-09 00:14:14 =====
+<<<task_285305.txt>>>
+===== 任务285305 11-09 00:19:54 =====
 --- 命令 ---
-echo "==QQ相关进程明细=="
-pgrep -fa "opt/QQ/[q]q"
-echo "==NapCat日志尾20行=="
-tail -20 /root/napcat-restart.log 2>/dev/null
-echo "==worker日志尾15行=="
-tail -15 /root/remote_ctl.log
-echo "==guard日志尾8行=="
-tail -8 /root/azar_guard.log 2>/dev/null
-echo "==内存=="
-free -m | head -2
+echo "==案发时段NapCat日志(23:40-00:06)=="
+grep -n "23:4\|23:5\|00:0" /root/napcat-restart.log 2>/dev/null | grep -v "^.*█" | tail -30
+echo "==错误关键字搜索=="
+grep -i -E "error|kick|offline|closed|disconnect|失败|错误|踢" /root/napcat-restart.log 2>/dev/null | tail -15
 date "+%H:%M:%S"
 --- 输出 ---
-==QQ相关进程明细==
-29564 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox
-29609 /root/Napcat/opt/QQ/qq --no-sandbox
-29635 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-29638 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
-29875 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-==NapCat日志尾20行==
-█ █▄▄▄█ █▀█ █▄█▄▀▀▄ ▄ ▀▀▄▀█ █▄▄▄█ █
-█▄▄▄▄▄▄▄█▄█▄█ █▄▀ █ ▀▄▀▄▀ █▄▄▄▄▄▄▄█
-█ ▄▄ ▄▀▄ ▄ ▄█▄▄▀█▄▄▄█▀▀ ▄█▄▀▄█▄▀ ▀█
-██▀▀▄▀▄▄▀▀ ▀ ▄██▄▀▄▀██▀▀█▄▀▀▄ ▄▀▄██
-█ ▀▄ █▀▄ ▀▄▀▄▀▄▀▄▀██▀ ▀▀▄▄▄▀ ▄▄█▀▀█
-█ ▄ █  ▄ ▀█ █▀██▄▀▄ ▀▄▀ ██  ▀██▀▄██
-█▄█ ▄ ▄▄▀█▄██▄▄▀▄█▀██▀▀▀▀█▄▀█▄▀█ ▀█
-█▀█ ███▄▀ ▀▄ ▄██ ██ ██▀ ██ ▄▀█▄▀▄██
-█ ▄▄ █▄▄▀▀ ▀▄▀▄▀▀ ██ ▄▀  ▀█▀█▄▀█ ▀█
-█ █▀ ▄▀▄▀  ▀█▀█▀▄██ █▄ █▀▀  ▄  ▀▄██
-█▄███▄█▄█ █▄█▄▄▀▀ █▀ ▄▀▀▄ ▄▄▄  ▀█ █
-█ ▄▄▄▄▄ █▄█▀ ▄▄▄ ▄▄█▀█ ▄  █▄█ ▀ ▄██
-█ █   █ █ ▄▀▄ ▄▀▄▄▄██ █▀▀▄ ▄  ▄█▄██
-█ █▄▄▄█ █ █▄███▀ ██▄██ ▀ █▄▄ ▀▀ ▄██
-█▄▄▄▄▄▄▄█▄█▄██▄███▄█▄██▄█▄██▄▄▄█▄██
-
-二维码解码URL: https://txz.qq.com/p?k=uLZpkls77p49hR98CpCqKH6RXPGqh1ZX&f=1600001615
-如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
-11-09 00:14:11 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-256f4d09e82e1bbea28e5d99578e7c256b4ff332c40f8a8c39709ed98a9d6a6b
-==worker日志尾15行==
-[11-08 23:58] intake:槽位=1108_2355/1108_2350 命中ID=285303
-[11-09 00:00] intake:槽位=1109_0000/1108_2355 命中ID=285303
-[11-09 00:01] intake:槽位=1109_0000/1108_2355 命中ID=285303
-[11-09 00:02] intake:槽位=1109_0000/1108_2355 命中ID=285303
-[11-09 00:04] intake:槽位=1109_0000/1108_2355 命中ID=285303
-[11-09 00:05] 看护：未登录且码6306s未刷新，尝试重启NapCat
-[11-09 00:05] 看护:自动拉起NapCat(24h内第3次)
-[11-09 00:05] intake:槽位=1109_0005/1109_0000 命中ID=285303
-[11-09 00:07] intake:槽位=1109_0005/1109_0000 命中ID=285303
-[11-09 00:08] intake:槽位=1109_0005/1109_0000 命中ID=285303
-[11-09 00:10] intake:槽位=1109_0010/1109_0005 命中ID=285303
-[11-09 00:11] intake:槽位=1109_0010/1109_0005 命中ID=285303
-[11-09 00:12] 心跳:循环正常,LAST=285303
-[11-09 00:12] intake:槽位=1109_0010/1109_0005 命中ID=285303
-[11-09 00:14] intake:槽位=1109_0010/1109_0005 命中ID=285304
-==guard日志尾8行==
-nohup: ignoring input
-nohup: ignoring input
-nohup: ignoring input
-nohup: ignoring input
-nohup: ignoring input
-nohup: ignoring input
-==内存==
-               total        used        free      shared  buff/cache   available
-Mem:           11296        9393         218         177        2413        1903
-00:14:14
+==案发时段NapCat日志(23:40-00:06)==
+28910:11-08 23:58:03 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爱上齐豫是我的福报(1561950850)] ？
+28911:11-08 23:58:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爱上齐豫是我的福报(1561950850)] 链接呢？
+28912:11-09 00:01:30 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [长太息以笑希希，乐希希之多艰(553414459)] @幽幽子 (3889001246)  /今日猪猪 
+28913:11-09 00:01:32 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [幽幽子(3889001246)] [未实现 (ElementType = 17)] [Markdown 消息] @长太息以笑希希，乐希希之多艰   🎉 抓到一只新猪猪啦！ ...
+28914:11-09 00:01:45 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [长太息以笑希希，乐希希之多艰(553414459)] 猪上吊
+28917:11-09 00:03:16 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] @幽幽子 (3889001246)  /今日猪猪 
+28918:11-09 00:03:18 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [幽幽子(3889001246)] [未实现 (ElementType = 17)] [Markdown 消息] @七嘻ttl   💫 这是你第2次抓到这只猪猪啦~ ...
+28919:11-09 00:04:27 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+28921:11-09 00:04:34 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爱上齐豫是我的福报(1561950850)] @幽幽子 (3889001246)  /今日猪猪 
+28922:11-09 00:04:35 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [幽幽子(3889001246)] [未实现 (ElementType = 17)] [Markdown 消息] @爱上齐豫是我的福报   🎉 抓到一只新猪猪啦！ ...
+28954:11-09 00:05:53 [[32minfo[39m] [PacketHandler] 加载成功
+28955:11-09 00:05:53 [[32minfo[39m] [Napi2NativeLoader] 加载成功
+28956:11-09 00:05:53 [[32minfo[39m] [FFmpeg] 检查 Native Addon 可用性...
+28957:11-09 00:05:53 [[32minfo[39m] [FFmpeg] ✓ 使用 Native Addon 适配器
+28958:11-09 00:05:53 [[32minfo[39m] [PacketHandler] 初始化成功
+28959:11-09 00:05:54 [[32minfo[39m] [NapCat] [Core] NapCat.Core Version: 4.18.41
+28972:11-09 00:05:57 [[32minfo[39m] [NapCat] [WebUi] WebUi Token: 072bb0cc960e
+28973:11-09 00:05:57 [[32minfo[39m] [NapCat] [WebUi] WebUi User Panel Url: http://127.0.0.1:6099/webui?token=072bb0cc960e
+28974:11-09 00:05:57 [[32minfo[39m] [NapCat] [WebUi] WebUi User Panel Url: http://[::]:6099/webui?token=072bb0cc960e
+28975:11-09 00:05:57 [[32minfo[39m] 等待网络连接...
+28976:11-09 00:05:57 [[32minfo[39m] 网络已连接
+28977:11-09 00:05:57 [[32minfo[39m] 没有 -q 指令指定快速登录，将使用二维码登录方式
+28978:11-09 00:05:57 [[32minfo[39m] 可用于快速登录 of QQ：
+28981:11-09 00:05:58 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+28983:11-09 00:05:58 [[33mwarn[39m] 
+29006:11-09 00:05:58 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+29066:11-09 00:08:02 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+29068:11-09 00:08:08 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+29070:11-09 00:08:09 [[33mwarn[39m] 
+29093:11-09 00:08:09 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+==错误关键字搜索==
+[29609:1109/000523.775207:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[29609:1109/000523.777625:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+[29609:1109/000523.886879:ERROR:device/udev_linux/udev_watcher.cc:51] Failed to initialize a udev monitor.
+[29609:1109/000524.067635:ERROR:dbus/object_proxy.cc:573] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[29609:1109/000524.068057:ERROR:dbus/object_proxy.cc:573] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[29609:1109/000524.068863:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[29609:1109/000524.073190:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[29609:1109/000524.073265:ERROR:dbus/object_proxy.cc:573] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[29609:1109/000524.190227:ERROR:dbus/object_proxy.cc:573] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+11-09 00:08:02 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-09 00:10:08 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-09 00:12:09 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-09 00:14:11 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-09 00:16:11 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-09 00:18:14 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+00:19:54
