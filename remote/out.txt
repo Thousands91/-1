@@ -1,12 +1,12 @@
-<<<task_285297.txt>>>
-===== 任务285297 11-08 21:04:34 =====
+<<<task_285298.txt>>>
+===== 任务285298 11-08 21:07:31 =====
 --- 命令 ---
-echo ==执行wake-lock(全路径)==
-/data/data/com.termux/files/usr/bin/termux-wake-lock && echo wake-lock获取成功 || echo wake-lock失败
-echo ==验证wake-lock状态==
-/data/data/com.termux/files/usr/bin/termux-wake-lock-status 2>/dev/null || cat /data/data/com.termux/files/home/.termux/termux.properties 2>/dev/null || echo 无状态工具
-echo ==当前时间==
+echo "==wake-lock获取=="
+/data/data/com.termux/files/usr/bin/termux-wake-lock && echo "wake-lock获取成功" || echo "wake-lock失败"
+echo "==当前时间=="
 date "+%H:%M:%S"
 --- 输出 ---
-bash: line 1: syntax error near unexpected token `('
-bash: line 1: `echo ==执行wake-lock(全路径)=='
+==wake-lock获取==
+wake-lock获取成功
+==当前时间==
+21:07:32
