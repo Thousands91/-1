@@ -1,0 +1,11 @@
+285288
+echo ==bot.log尾20行==
+tail -20 /root/bot.log
+echo ==bot进程==
+pgrep -fa "mai[n].py" || echo 不在
+echo ==NapCat进程==
+pgrep -fa "opt/QQ/[q]q" | head -3 || echo 不在
+echo ==NapCat最近日志==
+tail -8 /root/napcat-restart.log 2>/dev/null
+echo ==logincheck完整输出==
+bash /root/logincheck.sh 2>/dev/null
