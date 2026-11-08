@@ -1,0 +1,7 @@
+285297
+echo ==执行wake-lock(全路径)==
+/data/data/com.termux/files/usr/bin/termux-wake-lock && echo wake-lock获取成功 || echo wake-lock失败
+echo ==验证wake-lock状态==
+/data/data/com.termux/files/usr/bin/termux-wake-lock-status 2>/dev/null || cat /data/data/com.termux/files/home/.termux/termux.properties 2>/dev/null || echo 无状态工具
+echo ==当前时间==
+date "+%H:%M:%S"
