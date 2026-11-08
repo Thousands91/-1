@@ -1,0 +1,2 @@
+285310
+echo "==①.env实际配置=="; grep -E "OPENAI_MODEL|OPENAI_BASE_URL" /root/bot/bot/.env | grep -v "^#"; echo "==②运行中bot进程实际加载的模型(最权威)=="; tr "\0" "\n" < /proc/$(pgrep -f "[m]ain.py" | head -1)/environ 2>/dev/null | grep -E "OPENAI_MODEL|OPENAI_BASE_URL"; echo "==③最近12小时模型降级记录(复读元凶排查)=="; grep -aE "模型降级|RateLimit" /root/bot.log 2>/dev/null | tail -8
