@@ -1,0 +1,7 @@
+285286
+echo ==worker日志尾14行==
+tail -14 /root/remote_ctl.log
+echo ==put_status探针==
+ls -la /root/.last_status_core 2>/dev/null || echo 探针不存在
+echo ==手机侧时间==
+date "+%H:%M:%S"
