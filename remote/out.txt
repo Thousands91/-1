@@ -1,25 +1,12 @@
-<<<task_285296.txt>>>
-===== 任务285296 11-08 21:00:25 =====
+<<<task_285297.txt>>>
+===== 任务285297 11-08 21:04:34 =====
 --- 命令 ---
-echo ==bot进程==
-pgrep -fa "mai[n].py" || echo bot不在
-echo ==bot.log尾10行==
-tail -10 /root/bot.log
-echo ==NapCat在==
-pgrep -f "opt/QQ/[q]q" >/dev/null && echo 在 || echo 不在
+echo ==执行wake-lock(全路径)==
+/data/data/com.termux/files/usr/bin/termux-wake-lock && echo wake-lock获取成功 || echo wake-lock失败
+echo ==验证wake-lock状态==
+/data/data/com.termux/files/usr/bin/termux-wake-lock-status 2>/dev/null || cat /data/data/com.termux/files/home/.termux/termux.properties 2>/dev/null || echo 无状态工具
+echo ==当前时间==
+date "+%H:%M:%S"
 --- 输出 ---
-==bot进程==
-11300 /root/bot/venv/bin/python main.py
-==bot.log尾10行==
-11-08 20:53:37 [SUCCESS] nonebot | Loaded adapters: OneBot V11
-11-08 20:53:37 [INFO] uvicorn | Started server process [11300]
-11-08 20:53:37 [INFO] uvicorn | Waiting for application startup.
-11-08 20:53:37 [INFO] __main__ | ==================================================
-11-08 20:53:37 [INFO] __main__ | QQ 群机器人启动成功 ✅
-11-08 20:53:37 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
-11-08 20:53:37 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
-11-08 20:53:37 [INFO] __main__ | ==================================================
-11-08 20:53:37 [INFO] uvicorn | Application startup complete.
-11-08 20:53:37 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-==NapCat在==
-在
+bash: line 1: syntax error near unexpected token `('
+bash: line 1: `echo ==执行wake-lock(全路径)=='
