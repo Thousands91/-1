@@ -1,17 +1,7 @@
-285295
-python3 << 'PYEOF'
-import json, shutil
-p = '/root/bot/bot/data/memory/1561950850.json'
-shutil.copy(p, p + '.bak_1108手术前')
-d = json.load(open(p, encoding='utf-8'))
-keep = list(range(0, 29)) + list(range(54, 80))
-new = [d[i] for i in keep if i < len(d)]
-json.dump(new, open(p, 'w', encoding='utf-8'), ensure_ascii=False)
-print('手术完成: 原', len(d), '条 -> 保留', len(new), '条, 备份已存 .bak_1108手术前')
-PYEOF
-echo ==重启bot清短期上下文==
-pkill -f "mai[n].py" 2>/dev/null; sleep 3
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
-sleep 15
-pgrep -f "mai[n].py" >/dev/null && echo bot重启OK || echo bot没起来
-tail -3 /root/bot.log
+285296
+echo ==bot进程==
+pgrep -fa "mai[n].py" || echo bot不在
+echo ==bot.log尾10行==
+tail -10 /root/bot.log
+echo ==NapCat在==
+pgrep -f "opt/QQ/[q]q" >/dev/null && echo 在 || echo 不在
