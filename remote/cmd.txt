@@ -1,12 +1,14 @@
-274
-echo "== Termux侧 adb 探测 =="
-ls -la /data/data/com.termux/files/usr/bin/adb 2>/dev/null || echo Termux侧无adb二进制
+275
+echo "== A. adb 二进制存在性 =="
+ls -la /data/data/com.termux/files/usr/bin/adb 2>/dev/null || echo 无此文件
 echo ""
-echo "== 从proot容器内尝试运行Termux的adb =="
-/data/data/com.termux/files/usr/bin/adb version 2>&1 | head -3
+echo "== B. adb version 加超时 =="
+timeout 6 /data/data/com.termux/files/usr/bin/adb version 2>&1 | head -3 || echo 挂起或失败退出码$?
 echo ""
-echo "== 容器内是否有自带adb =="
-which adb 2>/dev/null || echo 容器内无adb
+echo "== C. adb devices 加超时 =="
+timeout 6 /data/data/com.termux/files/usr/bin/adb devices 2>&1 | head -5 || echo 挂起或失败退出码$?
 echo ""
-echo "== 当前adb可见设备 =="
-/data/data/com.termux/files/usr/bin/adb devices 2>&1 | head -5
+echo "== D. Termux侧 adb server 端口监听检查 =="
+timeout 5 grep -c 5037 /proc/net/tcp 2>/dev/null; timeout 5 python3 -c "print(open(\"/proc/net/tcp\").read().find(\":13A3\")>=0 and \"5037端口在监听\" or \"5037未见监听\")" 2>&1
+echo ""
+date "+%H:%M:%S"
