@@ -1,0 +1,2 @@
+285307
+echo "==①所有断线/离线记录(bot.log)=="; grep -anE "账号状态变更为离线|closed by peer|ws closed|WebSocket.*close|断开" /root/bot.log 2>/dev/null | tail -15; echo "==②bot.log 00:04:20-00:08=="; grep -aE "00:0[4-8]:[0-9]{2}" /root/bot.log 2>/dev/null | head -30; echo "==③日志文件清单=="; ls -la /root/*.log 2>/dev/null; echo "==④napcat日志中重连痕迹=="; grep -aE "reconnect|重连|network|网络" /root/napcat-run.log /root/napcat.log 2>/dev/null | tail -15
