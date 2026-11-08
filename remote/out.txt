@@ -1,24 +1,33 @@
-<<<task_285299.txt>>>
-===== 任务285299 11-08 21:27:37 =====
+<<<task_285300.txt>>>
+===== 任务285300 11-08 21:39:15 =====
 --- 命令 ---
 ADB=/data/data/com.termux/files/usr/bin/adb
-timeout 15 $ADB connect 127.0.0.1:37775 2>&1 | tail -1
-timeout 15 $ADB connect 192.168.50.193:37775 2>&1 | tail -1
+timeout 15 $ADB connect 127.0.0.1:41227 2>&1 | tail -1
+timeout 15 $ADB connect 192.168.50.193:41227 2>&1 | tail -1
 SER=$(timeout 10 $ADB devices 2>/dev/null | grep -m1 "device$" | awk '{print $1}')
 if [ -n "$SER" ]; then
   echo "==adb已连 $SER=="
-  echo "==把Termux加入doze白名单=="
+  echo "==Termux加入doze白名单=="
   $ADB -s $SER shell dumpsys deviceidle whitelist +com.termux 2>&1 | tail -2
-  echo "==临时禁用doze深度休眠=="
+  echo "==禁用doze深度休眠=="
   $ADB -s $SER shell dumpsys deviceidle disable 2>&1 | tail -2
-  echo "==复查=="
+  echo "==复查doze状态=="
   $ADB -s $SER shell dumpsys deviceidle 2>/dev/null | head -4
 else
-  echo "adb未连上，无线调试端口可能已变"
+  echo "adb仍未连上"
 fi
 date "+%H:%M:%S"
 --- 输出 ---
-failed to connect to '127.0.0.1:37775': Connection refused
-failed to connect to '192.168.50.193:37775': Connection refused
-adb未连上，无线调试端口可能已变
-21:27:38
+connected to 127.0.0.1:41227
+connected to 192.168.50.193:41227
+==adb已连 127.0.0.1:41227==
+==Termux加入doze白名单==
+Added: com.termux
+==禁用doze深度休眠==
+Deep idle mode disabled
+Light idle mode disabled
+==复查doze状态==
+  Settings:
+    flex_time_short=+1m0s0ms
+    light_after_inactive_to=+1m0s0ms
+    light_idle_to=+5m0s0ms
