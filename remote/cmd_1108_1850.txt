@@ -1,0 +1,10 @@
+285289
+ADB=/data/data/com.termux/files/usr/bin/adb
+timeout 15 $ADB connect 127.0.0.1:37775 2>&1 | tail -1
+SER=$(timeout 10 $ADB devices | grep -m1 "device$" | awk '{print $1}')
+echo ==Termux前台服务状态==
+timeout 20 $ADB -s $SER shell dumpsys activity services com.termux 2>/dev/null | grep -A2 -i "foreground\|startForeground" | head -20
+echo ==手机侧目标进程==
+timeout 15 $ADB -s $SER shell "ps -A 2>/dev/null | grep -E 'com.termux|com.tencent.mobileqq' | head -6" 2>&1
+echo ==doze状态==
+timeout 15 $ADB -s $SER shell dumpsys deviceidle 2>/dev/null | head -6
