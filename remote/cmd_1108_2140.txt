@@ -1,17 +1,10 @@
-285300
-ADB=/data/data/com.termux/files/usr/bin/adb
-timeout 15 $ADB connect 127.0.0.1:41227 2>&1 | tail -1
-timeout 15 $ADB connect 192.168.50.193:41227 2>&1 | tail -1
-SER=$(timeout 10 $ADB devices 2>/dev/null | grep -m1 "device$" | awk '{print $1}')
-if [ -n "$SER" ]; then
-  echo "==adb已连 $SER=="
-  echo "==Termux加入doze白名单=="
-  $ADB -s $SER shell dumpsys deviceidle whitelist +com.termux 2>&1 | tail -2
-  echo "==禁用doze深度休眠=="
-  $ADB -s $SER shell dumpsys deviceidle disable 2>&1 | tail -2
-  echo "==复查doze状态=="
-  $ADB -s $SER shell dumpsys deviceidle 2>/dev/null | head -4
-else
-  echo "adb仍未连上"
-fi
+285301
+echo "==登录判定=="
+bash /root/logincheck.sh 2>/dev/null | tail -2
+echo "==NapCat日志尾12行=="
+tail -12 /root/napcat-restart.log 2>/dev/null
+echo "==bot.log尾6行=="
+tail -6 /root/bot.log
+echo "==网络连接数=="
+ss -t 2>/dev/null | grep -c ESTAB
 date "+%H:%M:%S"
