@@ -1,0 +1,2 @@
+285308
+echo "==①napcat-restart.log起止时间=="; head -3 /root/napcat-restart.log; echo ...; tail -2 /root/napcat-restart.log; echo "==②其中离线/重连/msf记录=="; grep -anE "账号状态变更为离线|登录服务重连|重连|offline|msf|强制下线|kick" /root/napcat-restart.log | head -30; echo "==③20点时段离线痕迹=="; grep -anE "^11-08 20:.*(离线|closed|重连|断开)" /root/napcat-restart.log | head -20; echo "==④bot.log开头时间(本轮bot何时启动)=="; head -3 /root/bot.log
