@@ -1,10 +1,16 @@
-282
-echo == 自检 ==
-bash /root/selfcheck.sh 2>/dev/null || echo selfcheck脚本不在
-echo
-echo == 当前遥控脚本版本 ==
-grep -c "commits?path=remote/cmd" /root/remote_ctl.sh
-echo
-echo == 日志尾10行（看status上传失败记录）==
-tail -10 /root/remote_ctl.log
-date "+%H:%M:%S"
+283
+ADB=/data/data/com.termux/files/usr/bin/adb
+echo "== adb 可用性 =="
+ls -la $ADB 2>/dev/null || { echo 无adb二进制; exit 0; }
+echo "== 启动adb server =="
+timeout 15 $ADB start-server 2>&1 | head -2
+echo "== 连接无线调试 192.168.31.28:38519 =="
+timeout 12 $ADB connect 192.168.31.28:38519 2>&1
+echo "== 设备列表 =="
+timeout 10 $ADB devices 2>&1
+echo "== 关闭幻影进程杀手 =="
+timeout 12 $ADB shell settings put global settings_enable_monitor_phantom_procs false 2>&1
+timeout 12 $ADB shell device_config put activity_manager max_phantom_processes 2147483647 2>&1
+echo "== 验证 =="
+timeout 12 $ADB shell settings get global settings_enable_monitor_phantom_procs 2>&1
+date "+完成: %H:%M:%S"
