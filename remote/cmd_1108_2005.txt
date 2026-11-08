@@ -1,0 +1,7 @@
+285291
+echo ==登录判定==
+bash /root/logincheck.sh 2>/dev/null | tail -3
+echo ==bot.log尾15行==
+tail -15 /root/bot.log
+echo ==NapCat日志尾10行==
+tail -10 /root/napcat-restart.log 2>/dev/null
