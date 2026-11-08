@@ -1,0 +1,2 @@
+285311
+echo "==每天模型降级次数(11-06上线降级链后才有此日志)=="; for d in 11-03 11-04 11-05 11-06 11-07 11-08; do echo -n "$d 降级: "; grep -ac "^$d.*模型降级" /root/bot.log 2>/dev/null; done; echo "==11-08逐小时降级分布=="; grep -a "^11-08.*模型降级" /root/bot.log | cut -c1-14 | sort | uniq -c | tail -15; echo "==11-05(纯4-flash时代)有无超时报错=="; grep -ac "^11-05.*Timeout" /root/bot.log; echo "==bot.log最早日期=="; head -1 /root/bot.log | cut -c1-20; tail -1 /root/bot.log | cut -c1-20
