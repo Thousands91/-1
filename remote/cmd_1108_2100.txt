@@ -1,0 +1,7 @@
+285296
+echo ==bot进程==
+pgrep -fa "mai[n].py" || echo bot不在
+echo ==bot.log尾10行==
+tail -10 /root/bot.log
+echo ==NapCat在==
+pgrep -f "opt/QQ/[q]q" >/dev/null && echo 在 || echo 不在
