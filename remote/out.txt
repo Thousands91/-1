@@ -1,37 +1,47 @@
-<<<task_278.txt>>>
-===== 任务278 11-08 11:27:56 =====
+<<<task_279.txt>>>
+===== 任务279 11-08 12:39:16 =====
 --- 命令 ---
-echo == 1. 重置看护保险丝 ==
-rm -f /root/.napcat_pulls && echo 保险丝已重置
-echo == 2. 清场 ==
-pkill -f "mai[n].py" 2>/dev/null
-pkill -f "opt/QQ/[q]q" 2>/dev/null
-pkill -f "azar_guar[d].sh" 2>/dev/null
-sleep 2
-echo == 3. 拉起 NapCat ==
-cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null &
-cd /root
-sleep 30
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null && echo 新码已拷到相册
-echo == 4. 拉起 bot 与守护 ==
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-cd /root
-setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 &
-sleep 3
-echo == 5. 验证 ==
-N1=$(pgrep -fc "opt/QQ/[q]q"); echo QQ进程数: $N1
-N2=$(pgrep -f "mai[n].py" | head -1); [ -n "$N2" ] && echo bot在 || echo bot不在
-N3=$(pgrep -f "azar_guar[d]" | head -1); [ -n "$N3" ] && echo 守护在 || echo 守护不在
-date "+完成时间: %H:%M:%S"
+echo == 1. 部署 selfcheck.sh ==
+echo IyEvYmluL2Jhc2gKIyDpmL/okKjlsJToh6rmo4AgdjEgKDIwMjYtMTEtMDgpCmVjaG8gIj09IOiHquajgCAkKGRhdGUgJyslRiAlSDolTTolUycpID09IgplY2hvICItLSDmnI3liqEgLS0iClFRX049JChwZ3JlcCAtZmMgIm9wdC9RUS9bcV1xIiAyPi9kZXYvbnVsbCk7IGVjaG8gIlFR6L+b56iL5pWwOiAke1FRX046LTB9IgpwZ3JlcCAtZiAibWFpW25dLnB5IiA+L2Rldi9udWxsICYmIGVjaG8gImJvdDog5ZyoIiB8fCBlY2hvICJib3Q6IOS4jeWcqCIKcGdyZXAgLWYgInJlbW90ZV9jdFtsXS5zaCIgPi9kZXYvbnVsbCAmJiBlY2hvICLpgaXmjqc6IOWcqCIgfHwgZWNobyAi6YGl5o6nOiDkuI3lnKgiCnBncmVwIC1mICJhemFyX2d1YXJbZF0uc2giID4vZGV2L251bGwgJiYgZWNobyAi5a6I5oqkOiDlnKgiIHx8IGVjaG8gIuWuiOaKpDog5LiN5ZyoIgplY2hvICItLSDnmbvlvZXmgIEgLS0iCmJhc2ggL3Jvb3QvbG9naW5jaGVjay5zaCAyPi9kZXYvbnVsbCB8IHRhaWwgLTIKZWNobyAiLS0g6LWE5rqQIC0tIgpmcmVlIC1tIDI+L2Rldi9udWxsIHwgYXdrICdOUj09MntwcmludCAi5YaF5a2YOiAiJDMiTSDlt7LnlKggLyAiJDIiTSDmgLvph48ifScKZWNobyAiLS0gYm90LmxvZyDlsL4z6KGMIC0tIgp0YWlsIC0zIC9yb290L2JvdC5sb2cgMj4vZGV2L251bGwKZWNobyAiLS0gZ3VhcmRfc3RhdHVzIOWwvjPooYwgLS0iCnRhaWwgLTMgL3Jvb3QvZ3VhcmRfc3RhdHVzLnR4dCAyPi9kZXYvbnVsbAplY2hvICI9PSDoh6rmo4DlrowgPT0iCg== | base64 -d > /root/selfcheck.sh
+chmod +x /root/selfcheck.sh
+bash /root/selfcheck.sh
+echo
+echo == 2. Termux home 可见性探测 ==
+BOOTDIR=/data/data/com.termux/files/home/.termux/boot
+if [ -d /data/data/com.termux/files/home ]; then
+  echo Termux_home可见
+  mkdir -p $BOOTDIR
+  echo IyEvZGF0YS9kYXRhL2NvbS50ZXJtdXgvZmlsZXMvdXNyL2Jpbi9iYXNoCiMg6Zi/6JCo5bCU5byA5py66Ieq5ZCvICgyMDI2LTExLTA4KSAtIOeUsSBUZXJtdXg6Qm9vdCDop6blj5EKc2xlZXAgMjUKdGVybXV4LXdha2UtbG9jayAyPi9kZXYvbnVsbApzZXRzaWQgbm9odXAgcHJvb3QtZGlzdHJvIGxvZ2luIHVidW50dSAtLSBiYXNoIC1jICdwa2lsbCAtZiAibWFpW25dLnB5IiAyPi9kZXYvbnVsbDsgcGtpbGwgLWYgIm9wdC9RUS9bcV1xIiAyPi9kZXYvbnVsbDsgc2xlZXAgMjsgY2QgL3Jvb3QvTmFwY2F0ICYmIHNldHNpZCBub2h1cCB4dmZiLXJ1biAtYSAvcm9vdC9OYXBjYXQvb3B0L1FRL3FxIC0tbm8tc2FuZGJveCAtLWRpc2FibGUtZ3B1IC0tZGlzYWJsZS1zb2Z0d2FyZS1yYXN0ZXJpemVyIC0tZGlzYWJsZS1kZXYtc2htLXVzYWdlIC0tanMtZmxhZ3M9LS1tYXgtb2xkLXNwYWNlLXNpemU9NTEyID4gL3Jvb3QvbmFwY2F0LmxvZyAyPiYxIDwgL2Rldi9udWxsICYgY2QgL3Jvb3QvYm90L2JvdCAmJiBzZXRzaWQgbm9odXAgL3Jvb3QvYm90L3ZlbnYvYmluL3B5dGhvbiBtYWluLnB5ID4+IC9yb290L2JvdC5sb2cgMj4mMSAmIHNldHNpZCBub2h1cCBiYXNoIC9yb290L3JlbW90ZV9jdGwuc2ggPj4gL3Jvb3QvcmVtb3RlX2N0bC5sb2cgMj4mMSAmIHNldHNpZCBub2h1cCBiYXNoIC9yb290L2F6YXJfZ3VhcmQuc2ggPj4gL3Jvb3QvZ3VhcmRfcnVuLmxvZyAyPiYxICYgZXhlYyBzbGVlcCBpbmZpbml0eScgPiAvZGV2L251bGwgMj4mMSAmCmVjaG8gIiQoZGF0ZSAnKyVGICVIOiVNJykgYm9vdOiHquWQr+W3suinpuWPkSIgPj4gL2RhdGEvZGF0YS9jb20udGVybXV4L2ZpbGVzL2hvbWUvYXNhcl9ib290LmxvZwo= | base64 -d > $BOOTDIR/asar_boot.sh && chmod +x $BOOTDIR/asar_boot.sh && echo boot脚本已写入
+  ls -la $BOOTDIR/
+else
+  echo Termux_home不可见 - boot脚本改存容器内待手动转移
+  echo IyEvZGF0YS9kYXRhL2NvbS50ZXJtdXgvZmlsZXMvdXNyL2Jpbi9iYXNoCiMg6Zi/6JCo5bCU5byA5py66Ieq5ZCvICgyMDI2LTExLTA4KSAtIOeUsSBUZXJtdXg6Qm9vdCDop6blj5EKc2xlZXAgMjUKdGVybXV4LXdha2UtbG9jayAyPi9kZXYvbnVsbApzZXRzaWQgbm9odXAgcHJvb3QtZGlzdHJvIGxvZ2luIHVidW50dSAtLSBiYXNoIC1jICdwa2lsbCAtZiAibWFpW25dLnB5IiAyPi9kZXYvbnVsbDsgcGtpbGwgLWYgIm9wdC9RUS9bcV1xIiAyPi9kZXYvbnVsbDsgc2xlZXAgMjsgY2QgL3Jvb3QvTmFwY2F0ICYmIHNldHNpZCBub2h1cCB4dmZiLXJ1biAtYSAvcm9vdC9OYXBjYXQvb3B0L1FRL3FxIC0tbm8tc2FuZGJveCAtLWRpc2FibGUtZ3B1IC0tZGlzYWJsZS1zb2Z0d2FyZS1yYXN0ZXJpemVyIC0tZGlzYWJsZS1kZXYtc2htLXVzYWdlIC0tanMtZmxhZ3M9LS1tYXgtb2xkLXNwYWNlLXNpemU9NTEyID4gL3Jvb3QvbmFwY2F0LmxvZyAyPiYxIDwgL2Rldi9udWxsICYgY2QgL3Jvb3QvYm90L2JvdCAmJiBzZXRzaWQgbm9odXAgL3Jvb3QvYm90L3ZlbnYvYmluL3B5dGhvbiBtYWluLnB5ID4+IC9yb290L2JvdC5sb2cgMj4mMSAmIHNldHNpZCBub2h1cCBiYXNoIC9yb290L3JlbW90ZV9jdGwuc2ggPj4gL3Jvb3QvcmVtb3RlX2N0bC5sb2cgMj4mMSAmIHNldHNpZCBub2h1cCBiYXNoIC9yb290L2F6YXJfZ3VhcmQuc2ggPj4gL3Jvb3QvZ3VhcmRfcnVuLmxvZyAyPiYxICYgZXhlYyBzbGVlcCBpbmZpbml0eScgPiAvZGV2L251bGwgMj4mMSAmCmVjaG8gIiQoZGF0ZSAnKyVGICVIOiVNJykgYm9vdOiHquWQr+W3suinpuWPkSIgPj4gL2RhdGEvZGF0YS9jb20udGVybXV4L2ZpbGVzL2hvbWUvYXNhcl9ib290LmxvZwo= | base64 -d > /root/asar_boot.sh.pending
+fi
 --- 输出 ---
-== 1. 重置看护保险丝 ==
-保险丝已重置
-== 2. 清场 ==
-== 3. 拉起 NapCat ==
-新码已拷到相册
-== 4. 拉起 bot 与守护 ==
-== 5. 验证 ==
-QQ进程数: 5
-bot在
-守护在
-完成时间: 11:28:31
+== 1. 部署 selfcheck.sh ==
+== 自检 2026-11-08 12:39:16 ==
+-- 服务 --
+QQ进程数: 0
+bot: 不在
+遥控: 在
+守护: 不在
+-- 登录态 --
+-- 资源 --
+内存: 9287M 已用 / 11296M 总量
+-- bot.log 尾3行 --
+11-08 11:28:32 [INFO] __main__ | ==================================================
+11-08 11:28:32 [INFO] uvicorn | Application startup complete.
+11-08 11:28:32 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+-- guard_status 尾3行 --
+11-08 06:13:11 守护v1.1启动
+11-08 06:32:07 守护v1.2启动
+11-08 11:28:28 守护v1.2启动
+== 自检完 ==
+
+== 2. Termux home 可见性探测 ==
+Termux_home可见
+boot脚本已写入
+total 11
+drwxr-xr-x. 2 root root 3452 Nov  8 12:39 .
+drwx------. 3 root root 3452 Nov  8 12:39 ..
+-rwxr-xr-x. 1 root root  860 Nov  8 12:39 asar_boot.sh
