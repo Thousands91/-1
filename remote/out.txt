@@ -1,41 +1,27 @@
-<<<task_285291.txt>>>
-===== 任务285291 11-08 20:12:09 =====
+<<<task_285292.txt>>>
+===== 任务285292 11-08 20:39:57 =====
 --- 命令 ---
-echo ==登录判定==
-bash /root/logincheck.sh 2>/dev/null | tail -3
-echo ==bot.log尾15行==
-tail -15 /root/bot.log
-echo ==NapCat日志尾10行==
-tail -10 /root/napcat-restart.log 2>/dev/null
+echo ==记忆文件列表==
+ls -la /root/bot/bot/data/memory/ 2>/dev/null || echo 目录不存在
+echo ==你的记忆文件内容==
+cat /root/bot/bot/data/memory/3427943187.json 2>/dev/null | head -c 3000
+echo
+echo ==worker日志尾3行==
+tail -3 /root/remote_ctl.log
 --- 输出 ---
-==登录判定==
-[在线] 已登录，一切正常
-阶段: ready
-最近错误: 无
-==bot.log尾15行==
-11-08 20:12:07 [SUCCESS] nonebot | Succeeded to load plugin "image_see" from "plugins.image_see"
-11-08 20:12:07 [SUCCESS] nonebot | Running NoneBot...
-11-08 20:12:07 [SUCCESS] nonebot | Loaded adapters: OneBot V11
-11-08 20:12:07 [INFO] uvicorn | Started server process [31450]
-11-08 20:12:07 [INFO] uvicorn | Waiting for application startup.
-11-08 20:12:08 [INFO] __main__ | ==================================================
-11-08 20:12:08 [INFO] __main__ | QQ 群机器人启动成功 ✅
-11-08 20:12:08 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
-11-08 20:12:08 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
-11-08 20:12:08 [INFO] __main__ | ==================================================
-11-08 20:12:08 [INFO] uvicorn | Application startup complete.
-11-08 20:12:08 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-11-08 20:12:08 [INFO] uvicorn | 127.0.0.1:44568 - "WebSocket /onebot/v11/ws" [accepted]
-11-08 20:12:08 [INFO] websockets | connection open
-11-08 20:12:08 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
-==NapCat日志尾10行==
-11-08 20:11:48 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
-11-08 20:11:53 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接错误 Error: connect ECONNREFUSED 127.0.0.1:8080
-    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
-11-08 20:11:53 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
-11-08 20:11:58 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接错误 Error: connect ECONNREFUSED 127.0.0.1:8080
-    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
-11-08 20:11:58 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
-11-08 20:12:03 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接错误 Error: connect ECONNREFUSED 127.0.0.1:8080
-    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
-11-08 20:12:03 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
+==记忆文件列表==
+total 47
+drwxr-xr-x. 2 root root  3452 Nov  4 16:10 .
+drwxr-xr-x. 3 root root  3452 Nov  7 15:01 ..
+-rw-r--r--. 1 root root    85 Nov  2 16:15 1062461846.json
+-rw-r--r--. 1 root root 19254 Nov  8 20:36 1561950850.json
+-rw-r--r--. 1 root root   133 Oct 30 01:34 22222.json
+-rw-r--r--. 1 root root  3846 Nov  4 16:45 2419770062.json
+-rw-r--r--. 1 root root   133 Nov  1 20:40 2423816346.json
+-rw-r--r--. 1 root root   298 Nov  4 16:10 649203747.json
+==你的记忆文件内容==
+
+==worker日志尾3行==
+[11-08 20:37] 心跳:循环正常,LAST=285291
+[11-08 20:38] intake:槽位=1108_2035/1108_2030 命中ID=285291
+[11-08 20:39] intake:槽位=1108_2035/1108_2030 命中ID=285291
