@@ -1,39 +1,13 @@
-<<<task_285301.txt>>>
-===== 任务285301 11-08 21:45:06 =====
+<<<task_285302.txt>>>
+===== 任务285302 11-08 21:50:20 =====
 --- 命令 ---
-echo "==登录判定=="
-bash /root/logincheck.sh 2>/dev/null | tail -2
-echo "==NapCat日志尾12行=="
-tail -12 /root/napcat-restart.log 2>/dev/null
-echo "==bot.log尾6行=="
-tail -6 /root/bot.log
-echo "==网络连接数=="
-ss -t 2>/dev/null | grep -c ESTAB
+echo "==出码=="
+mkdir -p /sdcard/Pictures
+cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/Pictures/asar_qrcode.png && echo "新码已拷贝到相册"
+ls -l --time-style=+%H:%M:%S /sdcard/Pictures/asar_qrcode.png
 date "+%H:%M:%S"
 --- 输出 ---
-==登录判定==
-阶段: waiting_qrcode
-最近错误: 无
-==NapCat日志尾12行==
-█▄▄▄▄▄▄▄█▄██████▄███▄▄▄██▄▄█▄█▄████
-
-二维码解码URL: https://txz.qq.com/p?k=FBbibD9abcuIUIxUy8GwTPnSBtSLVGx8&f=1600001615
-如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
-11-08 21:44:51 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-7f32a329bd9fa911fedf30154aa76d192ba0cc45480fd1f9a0bb65434bc4070e
-48d5fe7836463b23300d866456acdc81c8732aeb42f926797075e71d4d80aa3a
-df0a81cda9299b10583fef1737192975bad3676e848255767104e2ebac20ef08
-f6b7a99d44fef97050b1e1d9bded8d28c77890ba58661e6cc1550ba6a80fa522
-40e350e478507f6f85ee7b905fa8439c9686614aa8626d4f30903a2fb20ec780
-84d756ffdae7a95c2cc2380cb6cea3556b2ff0a47f2f7a662a602a8eadc0d5ad
-de9a6b7da824168c9d4472d6b91f14ad38f4fb1df8b2505f17cb878a3f8b0bbe
-==bot.log尾6行==
-11-08 20:53:37 [INFO] __main__ | QQ 群机器人启动成功 ✅
-11-08 20:53:37 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
-11-08 20:53:37 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
-11-08 20:53:37 [INFO] __main__ | ==================================================
-11-08 20:53:37 [INFO] uvicorn | Application startup complete.
-11-08 20:53:37 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-==网络连接数==
-0
-21:45:06
+==出码==
+新码已拷贝到相册
+-rw-rw----. 1 10155 1023 586 21:50:20 /sdcard/Pictures/asar_qrcode.png
+21:50:20
