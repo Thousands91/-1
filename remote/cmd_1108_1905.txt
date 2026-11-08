@@ -1,0 +1,6 @@
+285290
+echo ==通道验证OK==
+date "+手机时间: %H:%M:%S"
+echo "登录态: $(bash /root/logincheck.sh 2>/dev/null | tail -1)"
+echo ==bot.log尾8行==
+tail -8 /root/bot.log
