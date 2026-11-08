@@ -1,0 +1,10 @@
+285301
+echo "==登录判定=="
+bash /root/logincheck.sh 2>/dev/null | tail -2
+echo "==NapCat日志尾12行=="
+tail -12 /root/napcat-restart.log 2>/dev/null
+echo "==bot.log尾6行=="
+tail -6 /root/bot.log
+echo "==网络连接数=="
+ss -t 2>/dev/null | grep -c ESTAB
+date "+%H:%M:%S"
