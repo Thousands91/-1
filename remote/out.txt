@@ -1,45 +1,69 @@
-<<<task_285303.txt>>>
-===== 任务285303 11-08 21:56:53 =====
+<<<task_285304.txt>>>
+===== 任务285304 11-09 00:14:14 =====
 --- 命令 ---
-echo "==1 四进程=="
-pgrep -f "^bash /root/remote_ctl.sh$" >/dev/null && echo worker在 || echo worker不在
-pgrep -f "^bash /root/azar_guard.sh$" >/dev/null && echo guard在 || echo guard不在
-pgrep -f "opt/QQ/[q]q" >/dev/null && echo NapCat在 || echo NapCat不在
-pgrep -f "mai[n].py" >/dev/null && echo bot在 || echo bot不在
-echo "==2 保活锚sleep infinity=="
-pgrep -f "^sleep infinity$" >/dev/null && echo 锚在 || echo 锚不在
-echo "==3 wake-lock=="
-/data/data/com.termux/files/usr/bin/termux-wake-lock >/dev/null 2>&1 && echo wake-lock已获取 || echo wake-lock失败
-echo "==4 doze状态=="
-ADB=/data/data/com.termux/files/usr/bin/adb
-SER=$(timeout 10 $ADB devices 2>/dev/null | grep -m1 "device$" | awk '{print $1}')
-if [ -n "$SER" ]; then
-  $ADB -s $SER shell dumpsys deviceidle 2>/dev/null | head -3
-  echo "白名单含termux: $($ADB -s $SER shell dumpsys deviceidle whitelist 2>/dev/null | grep -c com.termux)"
-else
-  echo "adb未连(白名单是持久的,不影响)"
-fi
-echo "==5 电池/充电=="
-cat /sys/class/power_supply/battery/status 2>/dev/null
-cat /sys/class/power_supply/battery/capacity 2>/dev/null
-echo "==6 开机自启资产=="
-ls ~/.termux/boot/asar_boot.sh >/dev/null 2>&1 && echo boot脚本在 || echo boot脚本不在
-ls ~/start_all.sh >/dev/null 2>&1 && echo start_all在 || echo start_all不在
-echo "==7 worker任务指针=="
-cat /root/.remote_last 2>/dev/null
+echo "==QQ相关进程明细=="
+pgrep -fa "opt/QQ/[q]q"
+echo "==NapCat日志尾20行=="
+tail -20 /root/napcat-restart.log 2>/dev/null
+echo "==worker日志尾15行=="
+tail -15 /root/remote_ctl.log
+echo "==guard日志尾8行=="
+tail -8 /root/azar_guard.log 2>/dev/null
+echo "==内存=="
+free -m | head -2
 date "+%H:%M:%S"
 --- 输出 ---
-==1 四进程==
-worker在
-guard在
-NapCat在
-bot在
-==2 保活锚sleep infinity==
-锚在
-==3 wake-lock==
-wake-lock已获取
-==4 doze状态==
-  Settings:
-    flex_time_short=+1m0s0ms
-    light_after_inactive_to=+1m0s0ms
-白名单含termux: 1
+==QQ相关进程明细==
+29564 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox
+29609 /root/Napcat/opt/QQ/qq --no-sandbox
+29635 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+29638 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
+29875 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+==NapCat日志尾20行==
+█ █▄▄▄█ █▀█ █▄█▄▀▀▄ ▄ ▀▀▄▀█ █▄▄▄█ █
+█▄▄▄▄▄▄▄█▄█▄█ █▄▀ █ ▀▄▀▄▀ █▄▄▄▄▄▄▄█
+█ ▄▄ ▄▀▄ ▄ ▄█▄▄▀█▄▄▄█▀▀ ▄█▄▀▄█▄▀ ▀█
+██▀▀▄▀▄▄▀▀ ▀ ▄██▄▀▄▀██▀▀█▄▀▀▄ ▄▀▄██
+█ ▀▄ █▀▄ ▀▄▀▄▀▄▀▄▀██▀ ▀▀▄▄▄▀ ▄▄█▀▀█
+█ ▄ █  ▄ ▀█ █▀██▄▀▄ ▀▄▀ ██  ▀██▀▄██
+█▄█ ▄ ▄▄▀█▄██▄▄▀▄█▀██▀▀▀▀█▄▀█▄▀█ ▀█
+█▀█ ███▄▀ ▀▄ ▄██ ██ ██▀ ██ ▄▀█▄▀▄██
+█ ▄▄ █▄▄▀▀ ▀▄▀▄▀▀ ██ ▄▀  ▀█▀█▄▀█ ▀█
+█ █▀ ▄▀▄▀  ▀█▀█▀▄██ █▄ █▀▀  ▄  ▀▄██
+█▄███▄█▄█ █▄█▄▄▀▀ █▀ ▄▀▀▄ ▄▄▄  ▀█ █
+█ ▄▄▄▄▄ █▄█▀ ▄▄▄ ▄▄█▀█ ▄  █▄█ ▀ ▄██
+█ █   █ █ ▄▀▄ ▄▀▄▄▄██ █▀▀▄ ▄  ▄█▄██
+█ █▄▄▄█ █ █▄███▀ ██▄██ ▀ █▄▄ ▀▀ ▄██
+█▄▄▄▄▄▄▄█▄█▄██▄███▄█▄██▄█▄██▄▄▄█▄██
+
+二维码解码URL: https://txz.qq.com/p?k=uLZpkls77p49hR98CpCqKH6RXPGqh1ZX&f=1600001615
+如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+11-09 00:14:11 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+256f4d09e82e1bbea28e5d99578e7c256b4ff332c40f8a8c39709ed98a9d6a6b
+==worker日志尾15行==
+[11-08 23:58] intake:槽位=1108_2355/1108_2350 命中ID=285303
+[11-09 00:00] intake:槽位=1109_0000/1108_2355 命中ID=285303
+[11-09 00:01] intake:槽位=1109_0000/1108_2355 命中ID=285303
+[11-09 00:02] intake:槽位=1109_0000/1108_2355 命中ID=285303
+[11-09 00:04] intake:槽位=1109_0000/1108_2355 命中ID=285303
+[11-09 00:05] 看护：未登录且码6306s未刷新，尝试重启NapCat
+[11-09 00:05] 看护:自动拉起NapCat(24h内第3次)
+[11-09 00:05] intake:槽位=1109_0005/1109_0000 命中ID=285303
+[11-09 00:07] intake:槽位=1109_0005/1109_0000 命中ID=285303
+[11-09 00:08] intake:槽位=1109_0005/1109_0000 命中ID=285303
+[11-09 00:10] intake:槽位=1109_0010/1109_0005 命中ID=285303
+[11-09 00:11] intake:槽位=1109_0010/1109_0005 命中ID=285303
+[11-09 00:12] 心跳:循环正常,LAST=285303
+[11-09 00:12] intake:槽位=1109_0010/1109_0005 命中ID=285303
+[11-09 00:14] intake:槽位=1109_0010/1109_0005 命中ID=285304
+==guard日志尾8行==
+nohup: ignoring input
+nohup: ignoring input
+nohup: ignoring input
+nohup: ignoring input
+nohup: ignoring input
+nohup: ignoring input
+==内存==
+               total        used        free      shared  buff/cache   available
+Mem:           11296        9393         218         177        2413        1903
+00:14:14
