@@ -1,0 +1,5 @@
+285298
+echo "==wake-lock获取=="
+/data/data/com.termux/files/usr/bin/termux-wake-lock && echo "wake-lock获取成功" || echo "wake-lock失败"
+echo "==当前时间=="
+date "+%H:%M:%S"
