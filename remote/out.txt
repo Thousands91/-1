@@ -1,12 +1,24 @@
-<<<task_285298.txt>>>
-===== 任务285298 11-08 21:07:31 =====
+<<<task_285299.txt>>>
+===== 任务285299 11-08 21:27:37 =====
 --- 命令 ---
-echo "==wake-lock获取=="
-/data/data/com.termux/files/usr/bin/termux-wake-lock && echo "wake-lock获取成功" || echo "wake-lock失败"
-echo "==当前时间=="
+ADB=/data/data/com.termux/files/usr/bin/adb
+timeout 15 $ADB connect 127.0.0.1:37775 2>&1 | tail -1
+timeout 15 $ADB connect 192.168.50.193:37775 2>&1 | tail -1
+SER=$(timeout 10 $ADB devices 2>/dev/null | grep -m1 "device$" | awk '{print $1}')
+if [ -n "$SER" ]; then
+  echo "==adb已连 $SER=="
+  echo "==把Termux加入doze白名单=="
+  $ADB -s $SER shell dumpsys deviceidle whitelist +com.termux 2>&1 | tail -2
+  echo "==临时禁用doze深度休眠=="
+  $ADB -s $SER shell dumpsys deviceidle disable 2>&1 | tail -2
+  echo "==复查=="
+  $ADB -s $SER shell dumpsys deviceidle 2>/dev/null | head -4
+else
+  echo "adb未连上，无线调试端口可能已变"
+fi
 date "+%H:%M:%S"
 --- 输出 ---
-==wake-lock获取==
-wake-lock获取成功
-==当前时间==
-21:07:32
+failed to connect to '127.0.0.1:37775': Connection refused
+failed to connect to '192.168.50.193:37775': Connection refused
+adb未连上，无线调试端口可能已变
+21:27:38
