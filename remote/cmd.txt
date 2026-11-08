@@ -1,10 +1,12 @@
-273
-echo "== napcat.log 里 sign/签名 相关记录 =="
-grep -aiE "sign|签名" /root/napcat.log 2>/dev/null | head -8
+274
+echo "== Termux侧 adb 探测 =="
+ls -la /data/data/com.termux/files/usr/bin/adb 2>/dev/null || echo Termux侧无adb二进制
 echo ""
-echo "== packet 相关配置与日志 =="
-grep -aiE "packet|PacketBackend" /root/napcat.log 2>/dev/null | head -5
+echo "== 从proot容器内尝试运行Termux的adb =="
+/data/data/com.termux/files/usr/bin/adb version 2>&1 | head -3
 echo ""
-echo "== QQ Android 版本探测 =="
-getprop ro.build.version.release 2>/dev/null || echo proot内无getprop
-cat /proc/version 2>/dev/null | head -1
+echo "== 容器内是否有自带adb =="
+which adb 2>/dev/null || echo 容器内无adb
+echo ""
+echo "== 当前adb可见设备 =="
+/data/data/com.termux/files/usr/bin/adb devices 2>&1 | head -5
