@@ -1,1 +1,1 @@
-285|echo ==worker日志尾15行==; tail -15 /root/remote_ctl.log; echo ==手动触发put_status==; source /root/remote_ctl.sh 2>/dev/null || true; echo 完成: $(date "+%H:%M:%S")
+285|echo 任务285已作废(防嵌套),直接跳过
