@@ -1,0 +1,7 @@
+285287
+echo ==bot.log尾15行==
+tail -15 /root/bot.log
+echo ==NapCat连接状态==
+grep -c "WebSocket" /root/napcat-restart.log 2>/dev/null | tail -1
+echo ==当前时间==
+date "+%H:%M:%S"
