@@ -1,0 +1,6 @@
+285302
+echo "==出码=="
+mkdir -p /sdcard/Pictures
+cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/Pictures/asar_qrcode.png && echo "新码已拷贝到相册"
+ls -l --time-style=+%H:%M:%S /sdcard/Pictures/asar_qrcode.png
+date "+%H:%M:%S"
