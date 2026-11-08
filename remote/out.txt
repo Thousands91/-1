@@ -1,33 +1,39 @@
-<<<task_285300.txt>>>
-===== 任务285300 11-08 21:39:15 =====
+<<<task_285301.txt>>>
+===== 任务285301 11-08 21:45:06 =====
 --- 命令 ---
-ADB=/data/data/com.termux/files/usr/bin/adb
-timeout 15 $ADB connect 127.0.0.1:41227 2>&1 | tail -1
-timeout 15 $ADB connect 192.168.50.193:41227 2>&1 | tail -1
-SER=$(timeout 10 $ADB devices 2>/dev/null | grep -m1 "device$" | awk '{print $1}')
-if [ -n "$SER" ]; then
-  echo "==adb已连 $SER=="
-  echo "==Termux加入doze白名单=="
-  $ADB -s $SER shell dumpsys deviceidle whitelist +com.termux 2>&1 | tail -2
-  echo "==禁用doze深度休眠=="
-  $ADB -s $SER shell dumpsys deviceidle disable 2>&1 | tail -2
-  echo "==复查doze状态=="
-  $ADB -s $SER shell dumpsys deviceidle 2>/dev/null | head -4
-else
-  echo "adb仍未连上"
-fi
+echo "==登录判定=="
+bash /root/logincheck.sh 2>/dev/null | tail -2
+echo "==NapCat日志尾12行=="
+tail -12 /root/napcat-restart.log 2>/dev/null
+echo "==bot.log尾6行=="
+tail -6 /root/bot.log
+echo "==网络连接数=="
+ss -t 2>/dev/null | grep -c ESTAB
 date "+%H:%M:%S"
 --- 输出 ---
-connected to 127.0.0.1:41227
-connected to 192.168.50.193:41227
-==adb已连 127.0.0.1:41227==
-==Termux加入doze白名单==
-Added: com.termux
-==禁用doze深度休眠==
-Deep idle mode disabled
-Light idle mode disabled
-==复查doze状态==
-  Settings:
-    flex_time_short=+1m0s0ms
-    light_after_inactive_to=+1m0s0ms
-    light_idle_to=+5m0s0ms
+==登录判定==
+阶段: waiting_qrcode
+最近错误: 无
+==NapCat日志尾12行==
+█▄▄▄▄▄▄▄█▄██████▄███▄▄▄██▄▄█▄█▄████
+
+二维码解码URL: https://txz.qq.com/p?k=FBbibD9abcuIUIxUy8GwTPnSBtSLVGx8&f=1600001615
+如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+11-08 21:44:51 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+7f32a329bd9fa911fedf30154aa76d192ba0cc45480fd1f9a0bb65434bc4070e
+48d5fe7836463b23300d866456acdc81c8732aeb42f926797075e71d4d80aa3a
+df0a81cda9299b10583fef1737192975bad3676e848255767104e2ebac20ef08
+f6b7a99d44fef97050b1e1d9bded8d28c77890ba58661e6cc1550ba6a80fa522
+40e350e478507f6f85ee7b905fa8439c9686614aa8626d4f30903a2fb20ec780
+84d756ffdae7a95c2cc2380cb6cea3556b2ff0a47f2f7a662a602a8eadc0d5ad
+de9a6b7da824168c9d4472d6b91f14ad38f4fb1df8b2505f17cb878a3f8b0bbe
+==bot.log尾6行==
+11-08 20:53:37 [INFO] __main__ | QQ 群机器人启动成功 ✅
+11-08 20:53:37 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
+11-08 20:53:37 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
+11-08 20:53:37 [INFO] __main__ | ==================================================
+11-08 20:53:37 [INFO] uvicorn | Application startup complete.
+11-08 20:53:37 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+==网络连接数==
+0
+21:45:06
