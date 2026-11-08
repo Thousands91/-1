@@ -1,14 +1,50 @@
-<<<task_285306.txt>>>
-===== 任务285306 11-09 00:26:21 =====
+<<<task_285307.txt>>>
+===== 任务285307 11-09 00:40:23 =====
 --- 命令 ---
-echo "==快速登录测试 285306=="; pkill -9 -x Xvfb; pkill -9 -f "opt/QQ/[q]q"; sleep 2; cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox -q 3427943187 --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & sleep 35; echo "--登录结果--"; grep -aiE "快速登录|Login|online|二维码|ErrCode" /root/napcat.log | tail -15
+echo "==①所有断线/离线记录(bot.log)=="; grep -anE "账号状态变更为离线|closed by peer|ws closed|WebSocket.*close|断开" /root/bot.log 2>/dev/null | tail -15; echo "==②bot.log 00:04:20-00:08=="; grep -aE "00:0[4-8]:[0-9]{2}" /root/bot.log 2>/dev/null | head -30; echo "==③日志文件清单=="; ls -la /root/*.log 2>/dev/null; echo "==④napcat日志中重连痕迹=="; grep -aE "reconnect|重连|network|网络" /root/napcat-run.log /root/napcat.log 2>/dev/null | tail -15
 --- 输出 ---
-==快速登录测试 285306==
---登录结果--
-11-09 00:26:43 [[32minfo[39m] 正在快速登录  3427943187
-11-09 00:26:44 [[31merror[39m] 快速登录错误： 登录需要手Q验证。
-11-09 00:26:44 [[32minfo[39m] QQ 3427943187 未配置回退密码环境变量，建议优先使用 ACCOUNT + NAPCAT_QUICK_PASSWORD（NAPCAT_QUICK_PASSWORD_MD5 作为备用），将使用二维码登录方式
-11-09 00:26:44 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
-二维码解码URL: https://txz.qq.com/p?k=TvKpAAH-RTcEeXNvA3FVhVyQKy1oirKZ&f=1600001615
-如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
-11-09 00:26:44 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+==①所有断线/离线记录(bot.log)==
+632:11-09 00:05:13 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+==②bot.log 00:04:20-00:08==
+11-09 00:04:34 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 876225452 from 1561950850@[群:590454333] '[at:qq=3889001246] /今日猪猪 '
+11-09 00:04:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-09 00:04:34 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-09 00:04:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=926)
+11-09 00:04:34 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=926) running complete
+11-09 00:04:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 813855414 from 3889001246@[群:590454333] '[markdown:content=[](%7B%22version%22%3A2%7D)\n[@爱上齐豫是我的福报](mqqapi://markdown/mention?...]@爱上齐豫是我的福报 🎉 抓到一只新猪猪啦！\n【电锯猪】\n汪\n> 你是猪圈里的电锯恶魔——鼻子上嗡嗡作响的锯条让所有猪都绕道走，但你其实只是一只想要被摸肚子的忠犬型小猪。你和饲养员签了契约：你把心脏借给他，他负责每天给你加一份猪饲料。这笔交易你觉得血赚。\n> 🐝不需要@就可以玩幽幽子的方法'
+11-09 00:04:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-09 00:04:35 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-09 00:04:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=926)
+11-09 00:04:35 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=926) running complete
+11-09 00:05:13 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+==③日志文件清单==
+-rw-r--r--. 1 root root      26 Oct 30 22:55 /root/asar_sync.log
+-rw-r--r--. 1 root root     132 Nov  8 20:12 /root/azar_guard.log
+-rw-r--r--. 1 root root    1455 Nov  2 00:44 /root/azar_login_run.log
+-rw-r--r--. 1 root root     294 Nov  7 21:05 /root/azar_watch.log
+-rw-r--r--. 1 root root   95421 Nov  9 00:05 /root/bot.log
+-rw-r--r--. 1 root root      22 Nov  4 21:47 /root/guard.log
+-rw-r--r--. 1 root root      22 Nov  8 06:13 /root/guard_run.log
+-rw-r--r--. 1 root root 2212679 Nov  9 00:26 /root/napcat-restart.log
+-rw-r--r--. 1 root root  433313 Nov  8 10:43 /root/napcat-run.log
+-rw-r--r--. 1 root root   10835 Nov  9 00:28 /root/napcat.log
+-rw-r--r--. 1 root root   91599 Nov  8 10:42 /root/netmon.log
+-rw-r--r--. 1 root root 1040184 Nov  9 00:39 /root/remote_ctl.log
+-rw-r--r--. 1 root root   20871 Nov  8 15:32 /root/remote_xtrace.log
+-rw-r--r--. 1 root root     623 Nov  5 00:58 /root/watcher.log
+==④napcat日志中重连痕迹==
+/root/napcat-run.log:11-08 00:21:41 [[32minfo[39m] 网络已连接
+/root/napcat-run.log:11-08 00:21:41 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
+/root/napcat-run.log:11-08 00:22:24 [[32minfo[39m] 等待网络连接...
+/root/napcat-run.log:11-08 00:22:25 [[32minfo[39m] 网络已连接
+/root/napcat-run.log:11-08 00:22:25 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
+/root/napcat-run.log:11-08 00:23:43 [[32minfo[39m] 等待网络连接...
+/root/napcat-run.log:11-08 00:23:44 [[32minfo[39m] 网络已连接
+/root/napcat-run.log:11-08 00:23:44 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
+/root/napcat-run.log:11-08 00:28:22 [[32minfo[39m] 等待网络连接...
+/root/napcat-run.log:11-08 00:28:23 [[32minfo[39m] 网络已连接
+/root/napcat-run.log:11-08 00:28:23 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
+/root/napcat-run.log:11-08 10:36:29 [[32minfo[39m] 等待网络连接...
+/root/napcat-run.log:11-08 10:36:29 [[32minfo[39m] 网络已连接
+/root/napcat.log:11-09 00:26:43 [[32minfo[39m] 等待网络连接...
+/root/napcat.log:11-09 00:26:43 [[32minfo[39m] 网络已连接
