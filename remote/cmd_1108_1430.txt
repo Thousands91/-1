@@ -1,0 +1,9 @@
+285286
+echo ==v4.4存活确认==
+date "+手机时间: %H:%M:%S"
+echo "QQ进程数: $(pgrep -fc "opt/QQ/[q]q" 2>/dev/null || echo 0)"
+echo "bot进程: $(pgrep -f "mai[n].py" >/dev/null && echo 在 || echo 不在)"
+echo ==NapCat拉起保险丝计数==
+wc -l < /root/.napcat_pulls 2>/dev/null || echo 0
+echo ==worker日志尾12行==
+tail -12 /root/remote_ctl.log
