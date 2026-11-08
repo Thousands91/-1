@@ -1,10 +1,8 @@
-285293
-echo ==记忆条目总数==
-python3 -c "import json;d=json.load(open('/root/bot/bot/data/memory/1561950850.json'));print(len(d),'条')"
-echo ==全部条目预览==
+285294
 python3 -c "
 import json
 d=json.load(open('/root/bot/bot/data/memory/1561950850.json'))
 for i,e in enumerate(d):
-    m=e.get('m','')[:30]; r=e.get('r','')[:30]
-    print(i, '|', m, '||', r)"
+    if i>=54:
+        m=e.get('m','')[:30]; r=e.get('r','')[:30]
+        print(i,'|',m,'||',r)"
