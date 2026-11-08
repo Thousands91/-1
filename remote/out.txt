@@ -1,53 +1,18 @@
-<<<task_285308.txt>>>
-===== 任务285308 11-09 00:50:09 =====
+<<<task_285310.txt>>>
+===== 任务285310 11-09 02:11:29 =====
 --- 命令 ---
-echo "==①napcat-restart.log起止时间=="; head -3 /root/napcat-restart.log; echo ...; tail -2 /root/napcat-restart.log; echo "==②其中离线/重连/msf记录=="; grep -anE "账号状态变更为离线|登录服务重连|重连|offline|msf|强制下线|kick" /root/napcat-restart.log | head -30; echo "==③20点时段离线痕迹=="; grep -anE "^11-08 20:.*(离线|closed|重连|断开)" /root/napcat-restart.log | head -20; echo "==④bot.log开头时间(本轮bot何时启动)=="; head -3 /root/bot.log
+echo "==①.env实际配置=="; grep -E "OPENAI_MODEL|OPENAI_BASE_URL" /root/bot/bot/.env | grep -v "^#"; echo "==②运行中bot进程实际加载的模型(最权威)=="; tr "\0" "\n" < /proc/$(pgrep -f "[m]ain.py" | head -1)/environ 2>/dev/null | grep -E "OPENAI_MODEL|OPENAI_BASE_URL"; echo "==③最近12小时模型降级记录(复读元凶排查)=="; grep -aE "模型降级|RateLimit" /root/bot.log 2>/dev/null | tail -8
 --- 输出 ---
-==①napcat-restart.log起止时间==
-not mini app. 
-[preload] succeeded. /root/Napcat/opt/QQ/resources/app/major.node
-[preload] succeeded. /root/Napcat/opt/QQ/resources/app/major.node
-...
-[29875:1109/002621.982856:ERROR:ui/gfx/x/connection.cc:66] X connection error received.
-Trace/breakpoint trap
-==②其中离线/重连/msf记录==
-300:11-06 00:22:45 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-370:11-06 00:23:48 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-554:11-06 00:27:43 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-623:11-06 00:28:45 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-1779:11-06 01:05:43 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-2954:11-06 03:33:40 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-3003:11-06 03:34:02 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-3055:11-06 03:34:46 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-3110:11-06 03:35:25 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-3548:11-06 04:01:52 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-3596:11-06 04:02:13 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-3647:11-06 04:02:54 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-3823:11-06 04:34:37 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-3923:11-06 05:05:49 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-3967:11-06 05:06:16 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-4119:11-06 06:10:07 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-4154:11-06 06:10:15 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-4585:11-06 06:19:38 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-7921:11-06 07:35:20 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-9658:1d655e6d9a4c48730903f7bddcffd96aca11-06 12:57:52 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-10353:11-06 13:13:16 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-17422:11-06 16:10:31 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-18720:11-06 16:39:33 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-23034:11-08 15:58:49 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-24099:11-08 20:42:38 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-24594:11-08 20:53:17 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-24645:11-08 20:53:45 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-25135:11-08 21:04:10 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-28919:11-09 00:04:27 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-29588:11-09 00:19:54 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-==③20点时段离线痕迹==
-24099:11-08 20:42:38 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-24583:11-08 20:53:16 [[33mwarn[39m] [Core] [Login] 登录服务已断开，将允许重新获取二维码
-24594:11-08 20:53:17 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-24635:11-08 20:53:45 [[33mwarn[39m] [Core] [Login] 登录服务已断开，将允许重新获取二维码
-24645:11-08 20:53:45 [[33mwarn[39m] [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":1}
-==④bot.log开头时间(本轮bot何时启动)==
-11-08 20:53:34 [SUCCESS] nonebot | NoneBot is initializing...
-11-08 20:53:34 [INFO] nonebot | Current Env: prod
-11-08 20:53:36 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
+==①.env实际配置==
+OPENAI_BASE_URL=https://open.bigmodel.cn/api/paas/v4
+OPENAI_MODEL=glm-4.7-flash
+==②运行中bot进程实际加载的模型(最权威)==
+==③最近12小时模型降级记录(复读元凶排查)==
+11-08 23:14:07 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
+11-08 23:14:57 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-08 23:15:25 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-08 23:15:34 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-08 23:16:03 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-08 23:16:16 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-08 23:16:36 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+11-08 23:17:44 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
