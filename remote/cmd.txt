@@ -1,3 +1,14 @@
-276
-echo 遥控存活测试
-date "+%H:%M:%S"
+277
+echo "== 四服务存活 =="
+pgrep -fc "opt/QQ/[q]q" && echo QQ进程在 || echo QQ进程不在
+pgrep -f "mai[n].py" && echo bot在 || echo bot不在
+pgrep -f "remote_ct[l]" && echo 遥控在 || echo 遥控不在
+pgrep -f "azar_guar[d]" && echo 守护在 || echo 守护不在
+echo ""
+echo "== 启动状态标记 =="
+cat /root/boot_status.txt 2>/dev/null || echo 尚无boot_status
+echo ""
+echo "== NapCat 出码情况 =="
+tail -3 /root/napcat.log 2>/dev/null | head -3
+stat -c "码生成时间: %y" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null
+date "+现在: %H:%M:%S"
