@@ -1,0 +1,2 @@
+285306
+echo "==快速登录测试 285306=="; pkill -9 -x Xvfb; pkill -9 -f "opt/QQ/[q]q"; sleep 2; cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox -q 3427943187 --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & sleep 35; echo "--登录结果--"; grep -aiE "快速登录|Login|online|二维码|ErrCode" /root/napcat.log | tail -15
