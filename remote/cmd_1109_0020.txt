@@ -1,0 +1,6 @@
+285305
+echo "==案发时段NapCat日志(23:40-00:06)=="
+grep -n "23:4\|23:5\|00:0" /root/napcat-restart.log 2>/dev/null | grep -v "^.*█" | tail -30
+echo "==错误关键字搜索=="
+grep -i -E "error|kick|offline|closed|disconnect|失败|错误|踢" /root/napcat-restart.log 2>/dev/null | tail -15
+date "+%H:%M:%S"
