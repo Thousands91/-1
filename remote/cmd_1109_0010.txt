@@ -1,0 +1,12 @@
+285304
+echo "==QQ相关进程明细=="
+pgrep -fa "opt/QQ/[q]q"
+echo "==NapCat日志尾20行=="
+tail -20 /root/napcat-restart.log 2>/dev/null
+echo "==worker日志尾15行=="
+tail -15 /root/remote_ctl.log
+echo "==guard日志尾8行=="
+tail -8 /root/azar_guard.log 2>/dev/null
+echo "==内存=="
+free -m | head -2
+date "+%H:%M:%S"
