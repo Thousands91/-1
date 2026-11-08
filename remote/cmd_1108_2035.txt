@@ -1,0 +1,8 @@
+285292
+echo ==记忆文件列表==
+ls -la /root/bot/bot/data/memory/ 2>/dev/null || echo 目录不存在
+echo ==你的记忆文件内容==
+cat /root/bot/bot/data/memory/3427943187.json 2>/dev/null | head -c 3000
+echo
+echo ==worker日志尾3行==
+tail -3 /root/remote_ctl.log
