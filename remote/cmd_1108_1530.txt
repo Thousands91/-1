@@ -1,7 +1,7 @@
-285286
-echo ==worker日志尾14行==
-tail -14 /root/remote_ctl.log
-echo ==put_status探针==
-ls -la /root/.last_status_core 2>/dev/null || echo 探针不存在
-echo ==手机侧时间==
+285287
+echo ==bot.log尾15行==
+tail -15 /root/bot.log
+echo ==NapCat连接状态==
+grep -c "WebSocket" /root/napcat-restart.log 2>/dev/null | tail -1
+echo ==当前时间==
 date "+%H:%M:%S"
