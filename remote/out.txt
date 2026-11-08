@@ -1,37 +1,37 @@
-<<<task_277.txt>>>
-===== 任务277 11-08 11:12:20 =====
+<<<task_278.txt>>>
+===== 任务278 11-08 11:27:56 =====
 --- 命令 ---
-echo "== 四服务存活 =="
-pgrep -fc "opt/QQ/[q]q" && echo QQ进程在 || echo QQ进程不在
-pgrep -f "mai[n].py" && echo bot在 || echo bot不在
-pgrep -f "remote_ct[l]" && echo 遥控在 || echo 遥控不在
-pgrep -f "azar_guar[d]" && echo 守护在 || echo 守护不在
-echo ""
-echo "== 启动状态标记 =="
-cat /root/boot_status.txt 2>/dev/null || echo 尚无boot_status
-echo ""
-echo "== NapCat 出码情况 =="
-tail -3 /root/napcat.log 2>/dev/null | head -3
-stat -c "码生成时间: %y" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null
-date "+现在: %H:%M:%S"
+echo == 1. 重置看护保险丝 ==
+rm -f /root/.napcat_pulls && echo 保险丝已重置
+echo == 2. 清场 ==
+pkill -f "mai[n].py" 2>/dev/null
+pkill -f "opt/QQ/[q]q" 2>/dev/null
+pkill -f "azar_guar[d].sh" 2>/dev/null
+sleep 2
+echo == 3. 拉起 NapCat ==
+cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null &
+cd /root
+sleep 30
+cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null && echo 新码已拷到相册
+echo == 4. 拉起 bot 与守护 ==
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+cd /root
+setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 &
+sleep 3
+echo == 5. 验证 ==
+N1=$(pgrep -fc "opt/QQ/[q]q"); echo QQ进程数: $N1
+N2=$(pgrep -f "mai[n].py" | head -1); [ -n "$N2" ] && echo bot在 || echo bot不在
+N3=$(pgrep -f "azar_guar[d]" | head -1); [ -n "$N3" ] && echo 守护在 || echo 守护不在
+date "+完成时间: %H:%M:%S"
 --- 输出 ---
-== 四服务存活 ==
-0
-QQ进程不在
-bot不在
-13274
-13280
-13295
-13297
-遥控在
-守护不在
-
-== 启动状态标记 ==
-尚无boot_status
-
-== NapCat 出码情况 ==
-[20645:1108/103616.240449:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[20645:1108/103616.244490:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[20645:1108/103616.244561:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
-码生成时间: 2026-11-08 10:42:34.932993450 +0800
-现在: 11:12:21
+== 1. 重置看护保险丝 ==
+保险丝已重置
+== 2. 清场 ==
+== 3. 拉起 NapCat ==
+新码已拷到相册
+== 4. 拉起 bot 与守护 ==
+== 5. 验证 ==
+QQ进程数: 5
+bot在
+守护在
+完成时间: 11:28:31
