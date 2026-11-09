@@ -1,0 +1,2 @@
+285312
+cd /root/asar-sync && mkdir -p export && cd /root/bot/bot/data && tar czf /root/asar-sync/export/asar_memory.tar.gz memory/ fortune_log* mface_names.json 2>/dev/null; ls -la /root/asar-sync/export/; cd /root/asar-sync && git add export/ 2>/dev/null && git commit -m "export memory for cloud migration" --quiet && git push origin HEAD:main --quiet 2>&1 | head -3; echo "push退出码: $?"; ls -la /root/asar-sync/export/asar_memory.tar.gz
