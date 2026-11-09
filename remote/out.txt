@@ -1,33 +1,14 @@
-<<<task_285311.txt>>>
-===== 任务285311 11-09 02:30:08 =====
+<<<task_285312.txt>>>
+===== 任务285312 11-09 11:53:15 =====
 --- 命令 ---
-echo "==每天模型降级次数(11-06上线降级链后才有此日志)=="; for d in 11-03 11-04 11-05 11-06 11-07 11-08; do echo -n "$d 降级: "; grep -ac "^$d.*模型降级" /root/bot.log 2>/dev/null; done; echo "==11-08逐小时降级分布=="; grep -a "^11-08.*模型降级" /root/bot.log | cut -c1-14 | sort | uniq -c | tail -15; echo "==11-05(纯4-flash时代)有无超时报错=="; grep -ac "^11-05.*Timeout" /root/bot.log; echo "==bot.log最早日期=="; head -1 /root/bot.log | cut -c1-20; tail -1 /root/bot.log | cut -c1-20
+cd /root/asar-sync && mkdir -p export && cd /root/bot/bot/data && tar czf /root/asar-sync/export/asar_memory.tar.gz memory/ fortune_log* mface_names.json 2>/dev/null; ls -la /root/asar-sync/export/; cd /root/asar-sync && git add export/ 2>/dev/null && git commit -m "export memory for cloud migration" --quiet && git push origin HEAD:main --quiet 2>&1 | head -3; echo "push退出码: $?"; ls -la /root/asar-sync/export/asar_memory.tar.gz
 --- 输出 ---
-==每天模型降级次数(11-06上线降级链后才有此日志)==
-11-03 降级: 0
-11-04 降级: 0
-11-05 降级: 0
-11-06 降级: 0
-11-07 降级: 0
-11-08 降级: 21
-==11-08逐小时降级分布==
-      1 11-08 22:54:04
-      1 11-08 22:54:24
-      1 11-08 22:55:27
-      1 11-08 23:10:29
-      1 11-08 23:11:27
-      1 11-08 23:11:47
-      1 11-08 23:13:42
-      1 11-08 23:14:07
-      1 11-08 23:14:57
-      1 11-08 23:15:25
-      1 11-08 23:15:34
-      1 11-08 23:16:03
-      1 11-08 23:16:16
-      1 11-08 23:16:36
-      1 11-08 23:17:44
-==11-05(纯4-flash时代)有无超时报错==
-0
-==bot.log最早日期==
-11-08 20:53:34 [SUCC
-11-09 02:25:26 [INFO
+total 19
+drwxr-xr-x. 2 root root  3452 Nov  9 11:53 .
+drwxr-xr-x. 7 root root  3452 Nov  9 11:53 ..
+-rw-r--r--. 1 root root 10040 Nov  9 11:53 asar_memory.tar.gz
+To https://github.com/Thousands91/-1.git
+ ! [rejected]        HEAD -> main (fetch first)
+error: failed to push some refs to 'https://github.com/Thousands91/-1.git'
+push退出码: 0
+-rw-r--r--. 1 root root 10040 Nov  9 11:53 /root/asar-sync/export/asar_memory.tar.gz
