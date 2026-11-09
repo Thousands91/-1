@@ -1,14 +1,10 @@
-<<<task_285312.txt>>>
-===== 任务285312 11-09 11:53:15 =====
+<<<task_285313.txt>>>
+===== 任务285313 11-09 12:00:17 =====
 --- 命令 ---
-cd /root/asar-sync && mkdir -p export && cd /root/bot/bot/data && tar czf /root/asar-sync/export/asar_memory.tar.gz memory/ fortune_log* mface_names.json 2>/dev/null; ls -la /root/asar-sync/export/; cd /root/asar-sync && git add export/ 2>/dev/null && git commit -m "export memory for cloud migration" --quiet && git push origin HEAD:main --quiet 2>&1 | head -3; echo "push退出码: $?"; ls -la /root/asar-sync/export/asar_memory.tar.gz
+cd /root/asar-sync && TOKEN=$(git remote get-url origin | sed "s|.*:\(ghp_[^@]*\)@.*|\1|"); B64=$(base64 -w0 export/asar_memory.tar.gz); SHA=$(curl -s --max-time 15 -H "Authorization: token $TOKEN" "https://api.github.com/repos/Thousands91/-1/contents/export/asar_memory.tar.gz" | python3 -c "import sys,json;print(json.load(sys.stdin).get(\"sha\",\"\"))" 2>/dev/null); printf "{\"message\":\"memory export v1\",\"content\":\"%s\",\"branch\":\"main\"%s}" "$B64" "$( [ -n \"$SHA\" ] && printf \",\\\"sha\\\":\\\"%s\\\"\" \"$SHA\" )" > /tmp/payload.json; curl -s --max-time 40 -X PUT -H "Authorization: token $TOKEN" "https://api.github.com/repos/Thousands91/-1/contents/export/asar_memory.tar.gz" -d @/tmp/payload.json | head -c 200
 --- 输出 ---
-total 19
-drwxr-xr-x. 2 root root  3452 Nov  9 11:53 .
-drwxr-xr-x. 7 root root  3452 Nov  9 11:53 ..
--rw-r--r--. 1 root root 10040 Nov  9 11:53 asar_memory.tar.gz
-To https://github.com/Thousands91/-1.git
- ! [rejected]        HEAD -> main (fetch first)
-error: failed to push some refs to 'https://github.com/Thousands91/-1.git'
-push退出码: 0
--rw-r--r--. 1 root root 10040 Nov  9 11:53 /root/asar-sync/export/asar_memory.tar.gz
+{
+  "message": "Problems parsing JSON",
+  "documentation_url": "https://docs.github.com/rest/repos/contents#create-or-update-file-contents",
+  "status": "400"
+}
