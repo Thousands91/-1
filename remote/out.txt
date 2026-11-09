@@ -1,6 +1,22 @@
-<<<task_285314.txt>>>
-===== 任务285314 11-09 12:15:18 =====
+<<<task_285315.txt>>>
+===== 任务285315 11-09 12:35:28 =====
 --- 命令 ---
-cd /root/asar-sync && export GTOK=$(git remote get-url origin | sed "s|.*:\(ghp_[^@]*\)@.*|\1|") && python3 -c "import os,json,base64,urllib.request;data=base64.b64encode(open(\"/root/asar-sync/export/asar_memory.tar.gz\",\"rb\").read()).decode();body=json.dumps({\"message\":\"memory export v1\",\"content\":data,\"branch\":\"main\"});req=urllib.request.Request(\"https://api.github.com/repos/Thousands91/-1/contents/export/asar_memory.tar.gz\",data=body.encode(),method=\"PUT\",headers={\"Authorization\":\"token \"+os.environ[\"GTOK\"],\"Content-Type\":\"application/json\"});r=urllib.request.urlopen(req);print(\"UPLOAD OK\", r.status)"
+grep -vE "^#|^$" /root/bot/bot/.env | sed "s/\(=.\{6\}\).*/\1***/" ; echo ==完整键值对键名==; grep -oE "^[A-Z_]+" /root/bot/bot/.env
 --- 输出 ---
-UPLOAD OK 201
+COMMAND_START=["", "***
+OPENAI_API_KEY=1ce530***
+OPENAI_BASE_URL=https:***
+OPENAI_MODEL=glm-4.***
+ENABLE_AI_CHAT=true
+HOST=0.0.0.***
+PORT=8080
+SILICONFLOW_API_KEY="sk-ve***
+==完整键值对键名==
+COMMAND_START
+OPENAI_API_KEY
+OPENAI_BASE_URL
+OPENAI_MODEL
+ENABLE_AI_CHAT
+HOST
+PORT
+SILICONFLOW_API_KEY
