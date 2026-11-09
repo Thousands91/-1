@@ -1,0 +1,2 @@
+285315
+grep -vE "^#|^$" /root/bot/bot/.env | sed "s/\(=.\{6\}\).*/\1***/" ; echo ==完整键值对键名==; grep -oE "^[A-Z_]+" /root/bot/bot/.env
