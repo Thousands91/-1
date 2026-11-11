@@ -1,0 +1,5 @@
+285330
+cd /root/asar-sync && git fetch --quiet origin && git reset --quiet --hard origin/main
+echo "脚本已同步，启动一键登录（后台）"
+nohup bash /root/asar-sync/x10/azar_login_x10.sh > /root/azar_login_run.log 2>&1 &
+echo "已后台启动，日志在 /root/azar_login_run.log"
