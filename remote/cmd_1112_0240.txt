@@ -1,0 +1,6 @@
+285331
+cd /root/asar-sync && git fetch --quiet origin && git reset --quiet --hard origin/main
+nohup bash /root/asar-sync/x10/azar_login_x10.sh > /root/azar_login_run.log 2>&1 &
+sleep 8
+echo "=== 一键登录已后台启动，日志前8行 ==="
+head -8 /root/azar_login_run.log 2>/dev/null
