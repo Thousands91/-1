@@ -1,6 +1,7 @@
-285331
-cd /root/asar-sync && git fetch --quiet origin && git reset --quiet --hard origin/main
-nohup bash /root/asar-sync/x10/azar_login_x10.sh > /root/azar_login_run.log 2>&1 &
-sleep 8
-echo "=== 一键登录已后台启动，日志前8行 ==="
-head -8 /root/azar_login_run.log 2>/dev/null
+285332
+echo "=== $(date '+%H:%M:%S') 登录进度 ==="
+tail -12 /root/azar_login_run.log 2>/dev/null
+echo "--- 相册码 ---"
+ls -l /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null || echo 相册还没码
+echo "--- QQ进程 ---"
+ps aux | grep -c '[o]pt/QQ/qq'
