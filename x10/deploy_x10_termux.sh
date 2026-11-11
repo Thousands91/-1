@@ -12,7 +12,13 @@ pkg install -y proot-distro git curl >/dev/null 2>&1
 termux-setup-storage >/dev/null 2>&1 || true
 
 echo "===== [2/6] 安装 Ubuntu 容器 ====="
-proot-distro install ubuntu 2>/dev/null || echo "容器已存在，跳过"
+# 坑81：旧写法 `install 2>/dev/null || echo 已存在` 把安装失败误报成已存在
+# （github releases 下载超时是常见死法）。改为显式判断，失败就大声报错。
+if [ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu" ]; then
+  echo "容器已存在，跳过"
+else
+  proot-distro install ubuntu || { echo "!! 容器安装失败——把上面的报错截图发我"; exit 1; }
+fi
 
 echo "===== [3/6] 容器内部署（约10-20分钟）====="
 proot-distro login ubuntu -- bash -c "
