@@ -1,13 +1,27 @@
-<<<task_285324.txt>>>
-===== 任务285324 11-12 00:55:20 =====
+<<<task_285327.txt>>>
+===== 任务285327 11-12 02:16:39 =====
 --- 命令 ---
-[ -d /root/Napcat/opt/00 ] || exit 0
-echo "【X10】$(date +%H:%M:%S) 槽位命令285324收到"
-echo "--- 登录自检 ---"
-timeout 20 bash /root/logincheck.sh 2>/dev/null | tail -3
-echo "--- NapCat日志尾部 ---"
-L=$(find /root -path "*napcat*" -name "*.log" 2>/dev/null | head -1)
-tail -10 "$L" 2>/dev/null
-echo "--- 大脑日志尾部 ---"
-tail -8 /root/bot.log 2>/dev/null
+O=/root/asar-sync/x10_diag.txt
+{
+echo "=== $(date '+%m-%d %H:%M:%S') X10诊断 285327 ==="
+echo "--- napcat.log尾部40行 ---"
+tail -40 /root/napcat.log 2>/dev/null || echo 无napcat.log
+echo "--- 进程清单 ---"
+ps aux | grep -E '[o]pt/00/qq|[x]vfb-run|[r]emote_ctl.sh' | head -6
+echo "--- 二维码文件 ---"
+ls -l /root/Napcat/opt/00/resources/app/app_Launcher/napcat/cache/qrcode.png 2>/dev/null || echo 无码
+echo "--- 诊断结束 ---"
+} > "$O" 2>&1
+echo "diag已写入 $O"
+cd /root/asar-sync && git add -A x10_diag.txt && git commit -m "x10 diag 285327" --quiet && git push --quiet origin main && echo pushOK || echo pushFAIL
 --- 输出 ---
+diag已写入 /root/asar-sync/x10_diag.txt
+To https://github.com/Thousands91/-1.git
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'https://github.com/Thousands91/-1.git'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+pushFAIL
