@@ -1,15 +1,9 @@
-<<<task_285318.txt>>>
-===== 任务285318 11-11 14:34:51 =====
+<<<task_285319.txt>>>
+===== 任务285319 11-11 14:45:19 =====
 --- 命令 ---
-echo "==voice_probe.log 全文=="; cat /root/bot/bot/data/voice_probe.log 2>/dev/null || echo 无此文件; echo "==NapCat文件上传API自检=="; grep -c upload_group_file /root/Napcat/napcat/src 2>/dev/null || true; echo "==napcat版本=="; cat /root/Napcat/napcat/package.json 2>/dev/null | grep -m1 version
+echo "==部署点歌v2=="; bash /root/asar_sync.sh pull 2>&1 | tail -4; grep -c "MAX_VOICE_SEC = 600" /root/bot/bot/plugins/song_request.py && grep -c "upload_group_file" /root/bot/bot/plugins/song_request.py && echo 新代码已就位; pkill -f "mai[n].py"; sleep 1; echo 大脑已停,等看护拉起新版
 --- 输出 ---
-==voice_probe.log 全文==
-2026-10-28 21:47:47	254s	9937KB	ok	
-2026-10-28 21:51:49	211s	3298KB	ok	
-2026-10-28 22:57:42	300s	11740KB	ok	
-2026-10-28 22:58:44	264s	10349KB	ok	
-2026-11-08 22:36:44	256s	10023KB	ok	
-2026-11-08 22:39:59	281s	10979KB	ok	
-2026-11-08 23:14:58	264s	10329KB	ok	
-==NapCat文件上传API自检==
-==napcat版本==
+==部署点歌v2==
+bash: /root/asar_sync.sh: No such file or directory
+0
+大脑已停,等看护拉起新版
