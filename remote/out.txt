@@ -1,36 +1,15 @@
-<<<task_285317.txt>>>
-===== 任务285317 11-11 13:21:32 =====
+<<<task_285318.txt>>>
+===== 任务285318 11-11 14:34:51 =====
 --- 命令 ---
-echo "==进程清单=="; ps -eo args | grep -E "[r]emote_ctl|[o]pt/QQ/qq|[m]ain.py|[n]etmon|[o]ffline_watch|[a]zar_guard"; echo "==容器进程总数=="; ps -e 2>/dev/null | wc -l; echo "==bot日志尾=="; tail -3 /root/bot.log 2>/dev/null; tail -3 /root/bot/bot/bot.log 2>/dev/null; echo "==NapCat日志尾=="; tail -3 /root/napcat.log 2>/dev/null; tail -3 /root/napcat-run.log 2>/dev/null; echo "==登录检查=="; bash /root/logincheck.sh 2>/dev/null | tail -5
+echo "==voice_probe.log 全文=="; cat /root/bot/bot/data/voice_probe.log 2>/dev/null || echo 无此文件; echo "==NapCat文件上传API自检=="; grep -c upload_group_file /root/Napcat/napcat/src 2>/dev/null || true; echo "==napcat版本=="; cat /root/Napcat/napcat/package.json 2>/dev/null | grep -m1 version
 --- 输出 ---
-==进程清单==
-/data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/data/misc/apexdata/com.android.art/dalvik-cache --bind=/storage/self/primary:/mnt/sdcard --bind=/storage/self/primary:/sdcard --bind=/storage/self/primary:/storage/emulated/0 --bind=/storage/self/primary:/storage/self/primary --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/product --bind=/system --bind=/system_ext --bind=/vendor --bind=/linkerconfig/ld.config.txt --bind=/linkerconfig/com.android.art/ld.config.txt --bind=/data/data/com.termux/files/usr /bin/bash -c bash -c 'cd /root && setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & exec sleep infinity'
-bash -c cd /root && setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & exec sleep infinity
-bash /root/azar_guard.sh
-bash -c cd /root && setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & exec sleep infinity
-bash -c cd /root && setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & exec sleep infinity
-/root/bot/venv/bin/python main.py
-bash /root/remote_ctl.sh
-/bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
-/root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
-/root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-/root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
-/root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-==容器进程总数==
-25
-==bot日志尾==
-11-11 13:16:19 [INFO] __main__ | ==================================================
-11-11 13:16:19 [INFO] uvicorn | Application startup complete.
-11-11 13:16:19 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-11-08 01:12:17 [INFO] uvicorn | 127.0.0.1:39738 - "GET / HTTP/1.1" 404
-11-08 01:31:13 [INFO] uvicorn | 127.0.0.1:38780 - "GET / HTTP/1.1" 404
-11-08 01:32:17 [INFO] uvicorn | 127.0.0.1:40182 - "GET / HTTP/1.1" 404
-==NapCat日志尾==
-17dbd190187cc2fc6b22c0ad0ec3d7a8829fb461eee2274f44a289d3dd992a26
-ed1ac9802f4ecb032a9ead695c91eba5e34679fdd99306b2c7e813c0ea726164
-272e5776ee597177e43ce7ec2d6a30b8ed15bf56f70f4fc05fa80f26740a5065
-==登录检查==
-=== 登录状态（权威判定）===
-[未登录] 当前没有有效会话
-阶段: waiting_qrcode
-最近错误: 无
+==voice_probe.log 全文==
+2026-10-28 21:47:47	254s	9937KB	ok	
+2026-10-28 21:51:49	211s	3298KB	ok	
+2026-10-28 22:57:42	300s	11740KB	ok	
+2026-10-28 22:58:44	264s	10349KB	ok	
+2026-11-08 22:36:44	256s	10023KB	ok	
+2026-11-08 22:39:59	281s	10979KB	ok	
+2026-11-08 23:14:58	264s	10329KB	ok	
+==NapCat文件上传API自检==
+==napcat版本==
