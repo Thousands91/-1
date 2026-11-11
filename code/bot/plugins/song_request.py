@@ -10,14 +10,19 @@
 - 单曲可能只返回 45 秒试听片段（版权方限制），也可能给整首
 - 接口本身是公益性质的，随时可能失效
 
-发送策略（2026-11-11 版，见手册坑80）：
-1. 默认发语音；语音失败 → 自动改传群文件 → 再不行才退卡片
-2. 歌曲超过 MAX_VOICE_SEC（600s）或用户加了"文件"后缀 → 直接传文件
-3. 文件的动机：QQ 语音条是客户端行为，离开聊天界面就停；
-   mp3 文件下载后随便什么播放器都能后台播、能拖进度条
+发送策略（2026-11-11 v3，见手册坑80）：
+1. 默认"语音 + QQ音乐卡片"双发：
+   - 语音条：群里即点即听，0 秒操作
+   - QQ音乐卡片：离开聊天界面后继续听的正解——点卡片跳 QQ 音乐
+     App 播放，切界面/锁屏都不断（语音条和 QQ 内置网页都做不到后台，
+     物理上只有"QQ音乐App"和"本地文件"两个后台出口，见坑80）
+2. 卡片上的歌是 QQ 音乐版权库的：payplay=1 的要 VIP，点进去只能
+   试听——如实备注，不装作没看见
+3. 语音失败 → 自动改传群文件；歌超过 600s 或用户加了"文件"后缀 →
+   直接传文件
 4. 长度红线从 300s 放宽到 600s：voice_probe.log 里 7 次成功都在
-   300s 以内纯属"代码没敢试"，11.7MB 都发出去过，10 分钟的 128k
-   歌才 9.6MB——先试再说，probe 会记下真实上限在哪
+   300s 以内纯属"代码没敢试"，11.7MB 都发出去过——先试再说，
+   probe 会记下真实上限在哪
 """
 import re
 from datetime import datetime
@@ -37,6 +42,9 @@ song_cmd = on_command("点歌", aliases={"听歌", "来首歌"}, rule=to_me(), p
 SEARCH = "https://music.163.com/api/search/get"
 # 第三方取流：给了 id 就返回 mp3 二进制
 STREAM = "https://api.injahow.cn/meting/"
+# QQ 音乐搜索（公开接口，无需 key）：拿 songmid 发官方分享卡片用。
+# 2026-11-11 实测可用，返回里有 songmid / pay.payplay（1=要VIP）
+QQ_SEARCH = "https://c.y.qq.com/soso/fcgi-bin/client_search_cp"
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
 
 # 超过这个大小就不下载了，QQ 传大文件容易超时
@@ -117,13 +125,31 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, arg: Messa
                 Message(f"{build_card(s)}\n\n这首 {sec} 秒，文件没传上去。点上面的链接听吧。")
             )
 
-        # ---- 语音模式：失败自动降级文件，再不行退卡片 ----
+        # ---- 语音模式：先附 QQ 音乐卡片（后台听的正解），再发语音条 ----
+        card_note = ""
+        mid, vip = await qq_card_mid(kw)
+        if mid:
+            try:
+                await song_cmd.send(MessageSegment.music("qq", mid))
+                card_note = (
+                    "上面这张卡片是 QQ 音乐的同一首歌——离开聊天界面还想继续听就点它，"
+                    "用 QQ 音乐放，切界面、锁屏都不会停。"
+                    if not vip else
+                    "上面这张卡片是 QQ 音乐的同一首歌，点它也能后台听；"
+                    "不过这首在 QQ 音乐要 VIP，点进去可能只能试听几十秒，听整首还是趁语音条。"
+                )
+            except Exception:
+                # 卡片发不出去不影响主线，静默跳过
+                card_note = ""
+
         try:
             # 长音频发过去要等 NapCat 转 silk 再上传，默认 30 秒的 api_timeout
             # 根本不够，按体积给个宽裕的余量。
             _t = 60 + len(audio) // (200 * 1024)
             await song_cmd.send(MessageSegment.record(audio), _timeout=_t)
             probe(sec, len(audio), "ok", "")
+            if card_note:
+                await song_cmd.send(card_note)
             return
         except FinishedException:
             # finish() 是靠抛这个异常结束的，别当成"发送失败"记进日志
@@ -134,6 +160,8 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, arg: Messa
             # 否则异常漏出去就是一个红色堆栈，用户那边什么也收不到。
             probe(sec, len(audio), "fail", f"{type(e).__name__}|{_t if '_t' in dir() else '?'}")
             note = f"这首 {sec} 秒，语音条递不过去"
+            if card_note:
+                note += "；卡片照发，去 QQ 音乐点着听也行"
             if await send_file(bot, event, s, audio):
                 await song_cmd.finish(Message(f"{build_card(s)}\n\n{note}，改成传文件了——下载后切界面也能听。"))
             await song_cmd.finish(
@@ -162,6 +190,48 @@ def probe(sec: int, size: int, result: str, err: str) -> None:
                     f"{size // 1024}KB\t{result}\t{err}\n")
     except Exception:
         pass
+
+
+async def qq_card_mid(keyword: str):
+    """查 QQ 音乐，返回 (songmid, 是否VIP) 或 (None, False)。
+
+    卡片是发给 QQ 音乐版权库的，和网易云搜索结果不是一家——按完整
+    关键词（歌名+歌手）在 QQ 音乐再搜一次，取第一条。搜不到就放弃
+    卡片，退回纯语音，不让用户看见半残体验。
+
+    ⚠️ QQ 音乐搜索同样"宽容"：乱码也能返回不相干的歌（实测"9zq"
+    返回了《珍惜对你例外的人》），所以第一条必须过相关性检查才准发。
+    """
+    try:
+        async with aiohttp.ClientSession(
+            headers={"User-Agent": UA, "Referer": "https://y.qq.com/"},
+        ) as sess:
+            async with sess.get(
+                QQ_SEARCH,
+                params={"w": keyword, "format": "json", "n": 5},
+                timeout=aiohttp.ClientTimeout(total=8),
+            ) as r:
+                d = await r.json(content_type=None)
+        lst = ((d.get("data") or {}).get("song") or {}).get("list") or []
+        for s in lst:
+            if _qq_relevant(s, keyword):
+                return s.get("songmid"), bool((s.get("pay") or {}).get("payplay"))
+        return None, False
+    except Exception:
+        return None, False
+
+
+def _qq_relevant(s: dict, keyword: str) -> bool:
+    """QQ 音乐结果和关键词沾边才发卡片，比对逻辑和 usable() 同款。"""
+    name = _norm(s.get("songname", ""))
+    singer = _norm("".join(x.get("name", "") for x in s.get("singer") or []))
+    album = _norm(s.get("albumname", ""))
+    fields = (name, singer, album)
+    words = [_norm(w) for w in re.split(r"[\s,，、/]+", keyword.strip()) if w]
+    full = _norm(keyword)
+    if full and (full in name or (name and name in full)):
+        return True
+    return any(w and any(w in f for f in fields) for w in words)
 
 
 async def search(keyword: str) -> list:
