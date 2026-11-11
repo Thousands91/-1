@@ -1,27 +1,27 @@
-<<<task_285332.txt>>>
-===== 任务285332 11-12 02:40:10 =====
+<<<task_285333.txt>>>
+===== 任务285333 11-12 02:45:16 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') 登录进度 ==="
-tail -12 /root/azar_login_run.log 2>/dev/null
-echo "--- 相册码 ---"
-ls -l /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null || echo 相册还没码
-echo "--- QQ进程 ---"
-ps aux | grep -c '[o]pt/QQ/qq'
+H=/data/data/com.termux/files/home
+cat > "$H/x10_watchdog.sh" <<'WD'
+#!/bin/bash
+# X10 遥控自动拉活看门狗（Termux层运行，每分钟巡检）
+while true; do
+  proot-distro login ubuntu -- bash -c 'pgrep -f "remote_ctl.sh" >/dev/null || { rm -f /root/.remote_pid; setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & echo "[$(date +%m-%d %H:%M)] watchdog拉活remote_ctl" >> /root/watchdog.log; }'
+  sleep 60
+done
+WD
+chmod +x "$H/x10_watchdog.sh"
+echo "=== 看门狗已写入 ==="
+ls -l "$H/x10_watchdog.sh"
+if ! grep -q "x10_watchdog" "$H/.termux/boot/asar_boot.sh" 2>/dev/null; then
+  echo 'nohup bash "$HOME/x10_watchdog.sh" >/dev/null 2>&1 &' >> "$H/.termux/boot/asar_boot.sh"
+  echo "boot自启已追加"
+else
+  echo "boot自启已存在"
+fi
+tail -3 "$H/.termux/boot/asar_boot.sh" 2>/dev/null
 --- 输出 ---
-=== 02:40:10 登录进度 ===
-==> 第 4 步：复制二维码到相册
-   二维码已就位（生成于 1 秒前），有效期约 110 秒
-
-############################################################
-#   现在抓紧时间（剩约 109 秒）：                        #
-#   打开X10相册 -> DCIM/Camera -> asar_qr.png 全屏显示       #
-#   用另一台手机的QQ扫一扫 -> 确认登录                       #
-############################################################
-
-==> 第 5 步：盯着登录结果
-[02:36:47] 二维码刷新了，已复制新的到相册，请重新扫码
-[02:38:47] 二维码刷新了，已复制新的到相册，请重新扫码
---- 相册码 ---
--rw-rw---- 1 root aid_everybody 596 Nov 12 02:38 /sdcard/DCIM/Camera/asar_qr.png
---- QQ进程 ---
-10
+=== 看门狗已写入 ===
+-rwxr-xr-x 1 root root 372 Nov 12 02:45 /data/data/com.termux/files/home/x10_watchdog.sh
+bash: line 14: /data/data/com.termux/files/home/.termux/boot/asar_boot.sh: No such file or directory
+boot自启已追加
