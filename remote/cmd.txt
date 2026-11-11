@@ -1,2 +1,2 @@
-285317
-echo "==进程清单=="; ps -eo args | grep -E "[r]emote_ctl|[o]pt/QQ/qq|[m]ain.py|[n]etmon|[o]ffline_watch|[a]zar_guard"; echo "==容器进程总数=="; ps -e 2>/dev/null | wc -l; echo "==bot日志尾=="; tail -3 /root/bot.log 2>/dev/null; tail -3 /root/bot/bot/bot.log 2>/dev/null; echo "==NapCat日志尾=="; tail -3 /root/napcat.log 2>/dev/null; tail -3 /root/napcat-run.log 2>/dev/null; echo "==登录检查=="; bash /root/logincheck.sh 2>/dev/null | tail -5
+285318
+echo "==voice_probe.log 全文=="; cat /root/bot/bot/data/voice_probe.log 2>/dev/null || echo 无此文件; echo "==NapCat文件上传API自检=="; grep -c upload_group_file /root/Napcat/napcat/src 2>/dev/null || true; echo "==napcat版本=="; cat /root/Napcat/napcat/package.json 2>/dev/null | grep -m1 version
