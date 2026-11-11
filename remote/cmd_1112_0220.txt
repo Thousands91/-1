@@ -1,0 +1,14 @@
+285328
+echo "=== $(date '+%H:%M:%S') 诊断285328 ==="
+echo "--- Napcat/opt目录 ---"
+ls /root/Napcat/opt/ 2>/dev/null || echo opt不存在
+ls -la /root/Napcat/opt/00/ 2>/dev/null | head -15
+echo "--- 查找qq可执行 ---"
+find /root/Napcat -maxdepth 3 -name "qq*" 2>/dev/null | head -5
+echo "--- napcat.log尾部15行 ---"
+tail -15 /root/napcat.log 2>/dev/null
+echo "--- napcat-restart.log尾部5行 ---"
+tail -5 /root/napcat-restart.log 2>/dev/null
+echo "--- 内存 ---"
+free -m | head -2
+echo "--- 诊断结束 ---"
