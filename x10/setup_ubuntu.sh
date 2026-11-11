@@ -23,8 +23,13 @@ cd /root
 [ -d bot/.git ] || git clone --depth 1 "https://x-access-token:${GTOK}@github.com/Thousands91/qq-bot.git" bot
 
 echo "===== [容器 4/7] venv + 依赖（清华源防超时）====="
-# 坑82：proot 容器里 ensurepip 引导必挂（exit status 1）。
-# 绕法：venv 加 --without-pip 跳过引导 + --system-site-packages 借用系统 pip。
+# 坑82：proot 容器里 ensurepip 引导必挂（exit status 1），绕法=venv --without-pip + 借系统 pip。
+# 坑83：pip 22 的 vendored platformdirs 在 proot 里扫不到安卓 App 路径，直接
+#       OSError: Cannot find path to android app folder（import 时就算缓存目录，无环境变量后门）。
+#       绕法=PYTHONPATH 塞一个匹配检测正则(/data/(data|user/\d+)/(.+)/files)的假路径，
+#       让 _android_folder 命中并落盘到容器内自建的 /data/data/com.termux。
+mkdir -p /data/data/com.termux/cache/pip
+export PYTHONPATH=/data/data/com.termux/files/usr/lib/python3/dist-packages
 rm -rf /root/bot/venv
 cd /root/bot
 python3 -m venv --without-pip --system-site-packages venv
