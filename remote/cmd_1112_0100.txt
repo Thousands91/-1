@@ -1,0 +1,10 @@
+285324
+[ -d /root/Napcat/opt/00 ] || exit 0
+echo "【X10】$(date +%H:%M:%S) 槽位命令285324收到"
+echo "--- 登录自检 ---"
+timeout 20 bash /root/logincheck.sh 2>/dev/null | tail -3
+echo "--- NapCat日志尾部 ---"
+L=$(find /root -path "*napcat*" -name "*.log" 2>/dev/null | head -1)
+tail -10 "$L" 2>/dev/null
+echo "--- 大脑日志尾部 ---"
+tail -8 /root/bot.log 2>/dev/null
