@@ -10,14 +10,13 @@
 - 单曲可能只返回 45 秒试听片段（版权方限制），也可能给整首
 - 接口本身是公益性质的，随时可能失效
 
-发送策略（2026-11-11 v3，见手册坑80）：
-1. 默认"语音 + QQ音乐卡片"双发：
-   - 语音条：群里即点即听，0 秒操作
-   - QQ音乐卡片：离开聊天界面后继续听的正解——点卡片跳 QQ 音乐
-     App 播放，切界面/锁屏都不断（语音条和 QQ 内置网页都做不到后台，
-     物理上只有"QQ音乐App"和"本地文件"两个后台出口，见坑80）
-2. 卡片上的歌是 QQ 音乐版权库的：payplay=1 的要 VIP，点进去只能
-   试听——如实备注，不装作没看见
+发送策略（2026-11-11 v4，见手册坑80续）：
+1. 默认"语音 + 音乐卡片"双发，卡片双源择优：
+   - 语音条：网易云免费源给的完整版（网易云 VIP 的歌早被过滤）
+   - 卡片：网易云这首免费 → 发网易云卡片（点开去网易云 App 听完整
+     版，后台不断）；网易云 VIP 但 QQ 音乐免费 → 发 QQ 音乐卡片；
+     两边都 VIP → 不发假承诺，如实告知
+2. 卡片发 QQ 音乐版时，优先挑 QQ 音乐里免费的那条结果
 3. 语音失败 → 自动改传群文件；歌超过 600s 或用户加了"文件"后缀 →
    直接传文件
 4. 长度红线从 300s 放宽到 600s：voice_probe.log 里 7 次成功都在
@@ -95,8 +94,21 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, arg: Messa
                     free_original = True
         if vip_original and not free_original:
             s = vip_original
+            # 网易云拿不来，先问 QQ 音乐有没有免费的（坑80续：哪边免费用哪边）
+            mid, vip = await qq_card_mid(kw)
+            if mid and not vip:
+                try:
+                    await song_cmd.send(MessageSegment.music("qq", mid))
+                    await song_cmd.finish(
+                        Message(f"{build_card(s)}\n\n这首在网易云要 VIP，但 QQ 音乐有免费的"
+                                f"——点上面这张卡片去 QQ 音乐听完整版，切界面、锁屏都不会停。")
+                    )
+                except FinishedException:
+                    raise
+                except Exception:
+                    pass  # 卡片没发出去就走下面的诚实告知
             await song_cmd.finish(
-                Message(f"{build_card(s)}\n\n这首是「{s['artists']}」的原曲，但它是 VIP 曲目，"
+                Message(f"{build_card(s)}\n\n这首是「{s['artists']}」的原曲，两边平台都要 VIP，"
                         f"柜上拿不来整首的音频，翻唱的又不肯糊弄您——点上面的链接去听吧。")
             )
 
@@ -125,22 +137,35 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, arg: Messa
                 Message(f"{build_card(s)}\n\n这首 {sec} 秒，文件没传上去。点上面的链接听吧。")
             )
 
-        # ---- 语音模式：先附 QQ 音乐卡片（后台听的正解），再发语音条 ----
+        # ---- 语音模式：先发卡片（双源择优），再发语音条 ----
+        # 网易云这首免费 → 网易云卡片（点开听的就是语音条同源的完整版）；
+        # 网易云 VIP → 试 QQ 音乐卡片（优先免费那条）；两边都 VIP → 无卡
         card_note = ""
-        mid, vip = await qq_card_mid(kw)
-        if mid:
+        ne_card_done = False
+        if s.get("fee") != 1:
             try:
-                await song_cmd.send(MessageSegment.music("qq", mid))
-                card_note = (
-                    "上面这张卡片是 QQ 音乐的同一首歌——离开聊天界面还想继续听就点它，"
-                    "用 QQ 音乐放，切界面、锁屏都不会停。"
-                    if not vip else
-                    "上面这张卡片是 QQ 音乐的同一首歌，点它也能后台听；"
-                    "不过这首在 QQ 音乐要 VIP，点进去可能只能试听几十秒，听整首还是趁语音条。"
-                )
+                await song_cmd.send(MessageSegment.music("163", str(s["id"])))
+                card_note = ("点这张卡片去网易云音乐听完整版——切界面、锁屏都不会停，"
+                             "跟语音条是同一个音源。")
+                ne_card_done = True
             except Exception:
-                # 卡片发不出去不影响主线，静默跳过
                 card_note = ""
+        if not ne_card_done:
+            mid, vip = await qq_card_mid(kw)
+            if mid:
+                try:
+                    await song_cmd.send(MessageSegment.music("qq", mid))
+                    if vip:
+                        card_note = ("上面这张卡片是 QQ 音乐的同一首歌，点它也能后台听；"
+                                     "不过这首在 QQ 音乐要 VIP，点进去可能只能试听几十秒，"
+                                     "听整首还是趁语音条。")
+                    elif s.get("fee") == 1:
+                        card_note = ("这首在网易云要 VIP，但 QQ 音乐有免费的——点这张卡片"
+                                     "去 QQ 音乐听完整版，切界面、锁屏都不会停。")
+                    else:
+                        card_note = ("点这张卡片去 QQ 音乐听——切界面、锁屏都不会停。")
+                except Exception:
+                    card_note = ""
 
         try:
             # 长音频发过去要等 NapCat 转 silk 再上传，默认 30 秒的 api_timeout
@@ -196,11 +221,11 @@ async def qq_card_mid(keyword: str):
     """查 QQ 音乐，返回 (songmid, 是否VIP) 或 (None, False)。
 
     卡片是发给 QQ 音乐版权库的，和网易云搜索结果不是一家——按完整
-    关键词（歌名+歌手）在 QQ 音乐再搜一次，取第一条。搜不到就放弃
-    卡片，退回纯语音，不让用户看见半残体验。
+    关键词（歌名+歌手）在 QQ 音乐再搜一次。**优先挑免费的那条**
+    （坑80续：哪边免费用哪边），全是 VIP 才退回第一条。
 
     ⚠️ QQ 音乐搜索同样"宽容"：乱码也能返回不相干的歌（实测"9zq"
-    返回了《珍惜对你例外的人》），所以第一条必须过相关性检查才准发。
+    返回了《珍惜对你例外的人》），所以必须过相关性检查才准发。
     """
     try:
         async with aiohttp.ClientSession(
@@ -213,10 +238,14 @@ async def qq_card_mid(keyword: str):
             ) as r:
                 d = await r.json(content_type=None)
         lst = ((d.get("data") or {}).get("song") or {}).get("list") or []
-        for s in lst:
-            if _qq_relevant(s, keyword):
-                return s.get("songmid"), bool((s.get("pay") or {}).get("payplay"))
-        return None, False
+        relevant = [s for s in lst if _qq_relevant(s, keyword)]
+        if not relevant:
+            return None, False
+        for s in relevant:
+            if not (s.get("pay") or {}).get("payplay"):
+                return s.get("songmid"), False
+        s = relevant[0]
+        return s.get("songmid"), True
     except Exception:
         return None, False
 
