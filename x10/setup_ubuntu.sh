@@ -6,6 +6,9 @@ GTOK="$(printf 'Z2hwX2Nab3N0VEo3QnBlWVU3VEM=' | base64 -d)$(printf 'QXZtRGNBT2U3
 RAW="https://raw.githubusercontent.com/Thousands91/-1/main"
 
 echo "===== [容器 1/7] 系统依赖 ====="
+# 坑81姊妹坑：ubuntu-base 的默认源是 ports.ubuntu.com，国内龟速。
+# 换清华 ubuntu-ports 镜像（arm64 官方镜像），速度提升数倍。
+sed -i 's|http://ports.ubuntu.com/ubuntu-ports|https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports|g; s|http://ports.ubuntu.com/|https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/|g' /etc/apt/sources.list 2>/dev/null || true
 apt-get update -y >/dev/null 2>&1 || true
 apt-get install -y git python3 python3-venv python3-pip curl xvfb \
   fonts-wqy-zenhei locales tzdata ca-certificates >/dev/null 2>&1
