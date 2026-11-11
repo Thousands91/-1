@@ -1,0 +1,14 @@
+285327
+O=/root/asar-sync/x10_diag.txt
+{
+echo "=== $(date '+%m-%d %H:%M:%S') X10诊断 285327 ==="
+echo "--- napcat.log尾部40行 ---"
+tail -40 /root/napcat.log 2>/dev/null || echo 无napcat.log
+echo "--- 进程清单 ---"
+ps aux | grep -E '[o]pt/00/qq|[x]vfb-run|[r]emote_ctl.sh' | head -6
+echo "--- 二维码文件 ---"
+ls -l /root/Napcat/opt/00/resources/app/app_Launcher/napcat/cache/qrcode.png 2>/dev/null || echo 无码
+echo "--- 诊断结束 ---"
+} > "$O" 2>&1
+echo "diag已写入 $O"
+cd /root/asar-sync && git add -A x10_diag.txt && git commit -m "x10 diag 285327" --quiet && git push --quiet origin main && echo pushOK || echo pushFAIL
