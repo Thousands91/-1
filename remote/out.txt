@@ -1,27 +1,74 @@
-<<<task_285327.txt>>>
-===== 任务285327 11-12 02:16:39 =====
+<<<task_285329.txt>>>
+<<<task_285329.txt>>>
+===== 任务285329 11-12 02:27:37 =====
 --- 命令 ---
-O=/root/asar-sync/x10_diag.txt
-{
-echo "=== $(date '+%m-%d %H:%M:%S') X10诊断 285327 ==="
-echo "--- napcat.log尾部40行 ---"
-tail -40 /root/napcat.log 2>/dev/null || echo 无napcat.log
-echo "--- 进程清单 ---"
-ps aux | grep -E '[o]pt/00/qq|[x]vfb-run|[r]emote_ctl.sh' | head -6
-echo "--- 二维码文件 ---"
-ls -l /root/Napcat/opt/00/resources/app/app_Launcher/napcat/cache/qrcode.png 2>/dev/null || echo 无码
-echo "--- 诊断结束 ---"
-} > "$O" 2>&1
-echo "diag已写入 $O"
-cd /root/asar-sync && git add -A x10_diag.txt && git commit -m "x10 diag 285327" --quiet && git push --quiet origin main && echo pushOK || echo pushFAIL
+echo "=== $(date '+%H:%M:%S') 诊断285329 ==="
+echo "--- opt目录 ---"
+ls /root/Napcat/opt/ 2>/dev/null
+ls -la /root/Napcat/opt/00/ 2>/dev/null | head -12
+echo "--- find qq ---"
+find /root/Napcat -maxdepth 3 -name "qq*" 2>/dev/null | head -5
+echo "--- napcat.log尾部 ---"
+tail -12 /root/napcat.log 2>/dev/null
+echo "--- remote_ctl.log尾部8行 ---"
+tail -8 /root/remote_ctl.log 2>/dev/null
+echo "--- 内存 ---"
+free -m | head -2
+echo "--- 结束 ---"
 --- 输出 ---
-diag已写入 /root/asar-sync/x10_diag.txt
-To https://github.com/Thousands91/-1.git
- ! [rejected]        main -> main (fetch first)
-error: failed to push some refs to 'https://github.com/Thousands91/-1.git'
-hint: Updates were rejected because the remote contains work that you do
-hint: not have locally. This is usually caused by another repository pushing
+=== 02:27:37 诊断285329 ===
+--- opt目录 ---
+QQ
+--- find qq ---
+/root/Napcat/opt/QQ/qq
+--- napcat.log尾部 ---
+/usr/bin/xvfb-run: 184: /root/Napcat/opt/00/qq: not found
+--- remote_ctl.log尾部8行 ---
 hint: to the same ref. You may want to first integrate the remote changes
 hint: (e.g., 'git pull ...') before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 pushFAIL
+[11-12 02:16] report:API回传成功
+nohup: ignoring input
+[11-12 02:17] intake:槽位=1112_0215/1112_0210 命中ID=285327
+[11-12 02:27] intake:槽位=1112_0225/1112_0220 命中ID=285329
+--- 内存 ---
+               total        used        free      shared  buff/cache   available
+Mem:            5571        4158          77          58        1335        1033
+--- 结束 ---
+===== 任务285329 11-12 02:27:37 =====
+--- 命令 ---
+echo "=== $(date '+%H:%M:%S') 诊断285329 ==="
+echo "--- opt目录 ---"
+ls /root/Napcat/opt/ 2>/dev/null
+ls -la /root/Napcat/opt/00/ 2>/dev/null | head -12
+echo "--- find qq ---"
+find /root/Napcat -maxdepth 3 -name "qq*" 2>/dev/null | head -5
+echo "--- napcat.log尾部 ---"
+tail -12 /root/napcat.log 2>/dev/null
+echo "--- remote_ctl.log尾部8行 ---"
+tail -8 /root/remote_ctl.log 2>/dev/null
+echo "--- 内存 ---"
+free -m | head -2
+echo "--- 结束 ---"
+--- 输出 ---
+=== 02:27:37 诊断285329 ===
+--- opt目录 ---
+QQ
+--- find qq ---
+/root/Napcat/opt/QQ/qq
+--- napcat.log尾部 ---
+/usr/bin/xvfb-run: 184: /root/Napcat/opt/00/qq: not found
+--- remote_ctl.log尾部8行 ---
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+pushFAIL
+[11-12 02:16] report:API回传成功
+nohup: ignoring input
+[11-12 02:17] intake:槽位=1112_0215/1112_0210 命中ID=285327
+[11-12 02:27] intake:槽位=1112_0225/1112_0220 命中ID=285329
+--- 内存 ---
+               total        used        free      shared  buff/cache   available
+Mem:            5571        4158          77          58        1335        1033
+--- 结束 ---
