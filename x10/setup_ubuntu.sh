@@ -23,10 +23,13 @@ cd /root
 [ -d bot/.git ] || git clone --depth 1 "https://x-access-token:${GTOK}@github.com/Thousands91/qq-bot.git" bot
 
 echo "===== [容器 4/7] venv + 依赖（清华源防超时）====="
+# 坑82：proot 容器里 ensurepip 引导必挂（exit status 1）。
+# 绕法：venv 加 --without-pip 跳过引导 + --system-site-packages 借用系统 pip。
+rm -rf /root/bot/venv
 cd /root/bot
-[ -d venv ] || python3 -m venv venv
-./venv/bin/pip install -q -U pip -i https://pypi.tuna.tsinghua.edu.cn/simple
-./venv/bin/pip install -q -r bot/requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+python3 -m venv --without-pip --system-site-packages venv
+./venv/bin/python3 -m pip install -q -U pip -i https://pypi.tuna.tsinghua.edu.cn/simple
+./venv/bin/python3 -m pip install -q -r bot/requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 echo "===== [容器 5/7] .env 与记忆 ====="
 if curl -sfL -H "Authorization: token ${GTOK}" "${RAW}/x10/env.env" -o /root/bot/bot/.env; then
