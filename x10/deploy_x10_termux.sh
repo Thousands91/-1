@@ -12,12 +12,24 @@ pkg install -y proot-distro git curl >/dev/null 2>&1
 termux-setup-storage >/dev/null 2>&1 || true
 
 echo "===== [2/6] 安装 Ubuntu 容器 ====="
-# 坑81：旧写法 `install 2>/dev/null || echo 已存在` 把安装失败误报成已存在
-# （github releases 下载超时是常见死法）。改为显式判断，失败就大声报错。
-if [ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu" ]; then
-  echo "容器已存在，跳过"
+# 坑81：新版 proot-distro 从 docker registry 拉 Ubuntu，国内网络直连
+# 不通（Errno 101）。改走清华镜像下载官方 rootfs tarball 再本地安装，
+# 阿里镜像兜底。login 实测可用才算装好，别的都不可信。
+if proot-distro login ubuntu -- true >/dev/null 2>&1; then
+  echo "容器已存在且可用，跳过"
 else
-  proot-distro install ubuntu || { echo "!! 容器安装失败——把上面的报错截图发我"; exit 1; }
+  rm -rf "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu"
+  echo "从清华镜像下载 Ubuntu rootfs（约30MB）..."
+  curl -fL --retry 3 -o ~/ubuntu-rootfs.tar.gz \
+    "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-cdimage/ubuntu-base/releases/22.04/release/ubuntu-base-22.04.5-base-arm64.tar.gz" \
+  || curl -fL --retry 3 -o ~/ubuntu-rootfs.tar.gz \
+    "https://mirrors.aliyun.com/ubuntu-cdimage/ubuntu-base/releases/22.04/release/ubuntu-base-22.04.5-base-arm64.tar.gz" \
+  || { echo "!! 两个镜像都下载失败——截图发我"; exit 1; }
+  proot-distro install ~/ubuntu-rootfs.tar.gz --name ubuntu \
+    || { echo "!! 本地安装失败——截图发我"; exit 1; }
+  rm -f ~/ubuntu-rootfs.tar.gz
+  echo "容器装好，login 自检..."
+  proot-distro login ubuntu -- true || { echo "!! 容器装了但进不去——截图发我"; exit 1; }
 fi
 
 echo "===== [3/6] 容器内部署（约10-20分钟）====="
