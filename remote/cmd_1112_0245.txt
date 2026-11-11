@@ -1,7 +1,20 @@
-285332
-echo "=== $(date '+%H:%M:%S') 登录进度 ==="
-tail -12 /root/azar_login_run.log 2>/dev/null
-echo "--- 相册码 ---"
-ls -l /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null || echo 相册还没码
-echo "--- QQ进程 ---"
-ps aux | grep -c '[o]pt/QQ/qq'
+285333
+H=/data/data/com.termux/files/home
+cat > "$H/x10_watchdog.sh" <<'WD'
+#!/bin/bash
+# X10 遥控自动拉活看门狗（Termux层运行，每分钟巡检）
+while true; do
+  proot-distro login ubuntu -- bash -c 'pgrep -f "remote_ctl.sh" >/dev/null || { rm -f /root/.remote_pid; setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & echo "[$(date +%m-%d %H:%M)] watchdog拉活remote_ctl" >> /root/watchdog.log; }'
+  sleep 60
+done
+WD
+chmod +x "$H/x10_watchdog.sh"
+echo "=== 看门狗已写入 ==="
+ls -l "$H/x10_watchdog.sh"
+if ! grep -q "x10_watchdog" "$H/.termux/boot/asar_boot.sh" 2>/dev/null; then
+  echo 'nohup bash "$HOME/x10_watchdog.sh" >/dev/null 2>&1 &' >> "$H/.termux/boot/asar_boot.sh"
+  echo "boot自启已追加"
+else
+  echo "boot自启已存在"
+fi
+tail -3 "$H/.termux/boot/asar_boot.sh" 2>/dev/null
