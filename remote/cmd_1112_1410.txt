@@ -1,0 +1,19 @@
+285354
+echo "=== $(date '+%H:%M:%S') unicode转义决定性检查 ==="
+python3 << 'PYEOF'
+import json
+p='/root/bot/bot/data/memory/1561950850.json'
+b=p+'.bak_1112手术前'
+import os
+for f in (p,b):
+    if not os.path.exists(f): print(f,'不存在'); continue
+    raw=open(f,encoding='utf-8').read()
+    print(f.split('/')[-1], '| 比心:', raw.count('\u6bd4\u5fc3'), '| 爱心:', raw.count('\u7231\u5fc3'), '| 手:', raw.count('\u624b'), '| 掀:', raw.count('\u63c5'))
+    d=json.loads(raw)
+    hits=[e for e in d if '\u6bd4\u5fc3' in (e.get('m','')+e.get('r','')) or '\u7231\u5fc3' in (e.get('m','')+e.get('r',''))]
+    print('  含比心/爱心的问答条目数:', len(hits))
+    for e in hits[:4]:
+        print('   Q:', e.get('m','')[:36])
+        print('   A:', e.get('r','')[:36])
+PYEOF
+date +%H:%M:%S
