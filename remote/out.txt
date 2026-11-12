@@ -1,56 +1,28 @@
-<<<task_285342.txt>>>
-===== 任务285342 11-12 12:30:21 =====
+<<<task_285343.txt>>>
+===== 任务285343 11-12 12:40:20 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') WS链路体检v2 ==="
-echo "--- 8080端口状态(/proc/net/tcp) ---"
-grep -i ":1F90" /proc/net/tcp 2>/dev/null | awk '{print $2,$3,$4}' | head -8
-echo "--- NapCat onebot11配置 ---"
-C=$(find /root/Napcat -name "onebot11*.json" 2>/dev/null | head -2); for f in $C; do echo "[$f]"; cat "$f"; done
-echo "--- napcat.log尾部 ---"
-tail -12 /root/napcat.log 2>/dev/null || echo napcat.log不存在
-echo "--- 大脑日志 ---"
-ls -t /root/bot/*.log /root/bot/logs/*.log 2>/dev/null | head -3
-B=$(ls -t /root/bot/*.log /root/bot/logs/*.log 2>/dev/null | head -1); echo "文件:$B"; tail -12 "$B" 2>/dev/null
-echo "--- 8080 HTTP探测 ---"
-curl -s -m 5 -o /dev/null -w "HTTP %{http_code}" http://127.0.0.1:8080/ || echo 8080不通
+echo "=== $(date '+%H:%M:%S') 修复NapCat WS配置 ==="
+P=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json
+cp "$P" "$P.bak" && echo 已备份
+python3 -c "import json;p='/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json';d=json.load(open(p));d['network']['websocketClients']=[{'enable':True,'url':'ws://127.0.0.1:8080/onebot/v11/ws','messagePostFormat':'array','reportSelfMessage':False,'token':'','debug':False,'heartInterval':30000,'reconnectInterval':5000}];json.dump(d,open(p,'w'),ensure_ascii=False,indent=2);print('WS配置已写入')"
+grep -B1 -A9 websocketClients "$P"
+pkill -f "opt/QQ/qq"; sleep 2; echo NapCat已停止，开始重启
+nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 &
+echo "NapCat重启指令已发出 $(date +%H:%M:%S)"
 --- 输出 ---
-=== 12:30:21 WS链路体检v2 ===
---- 8080端口状态(/proc/net/tcp) ---
---- NapCat onebot11配置 ---
-[/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json]
-{
-  "network": {
-    "httpServers": [],
-    "httpSseServers": [],
-    "httpClients": [],
+=== 12:40:20 修复NapCat WS配置 ===
+已备份
+WS配置已写入
     "websocketServers": [],
-    "websocketClients": [],
-    "plugins": []
-  },
-  "musicSignUrl": "",
-  "enableLocalFile2Url": false,
-  "parseMultMsg": false,
-  "imageDownloadProxy": "",
-  "timeout": {
-    "baseTimeout": 10000,
-    "uploadSpeedKBps": 256,
-    "downloadSpeedKBps": 256,
-    "maxTimeout": 1800000
-  }
-}--- napcat.log尾部 ---
-[I] <MMKV_IO.cpp:433::expandAndWriteBack> extending [nt_mmkv_united_config_no_login_v3] file size from 16384 to 32768, incoming size:35, future usage:8036
-[I] <MMKV_IO.cpp:516::writeActualSize> [nt_mmkv_united_config_no_login_v3] increase sequence to 4, crc 3029345214, actualSize 15945
-[I] <MMKV.cpp:1178::sync> MMKV::sync, SyncFlag = 1
-11-12 12:21:14 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [小冉(3819642626)] [语音 6s]
-11-12 12:21:39 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [M250通用机枪-烽火地带-6LJO4T40AMN4BFKBN7S74(3611220879)] 就是呀
-11-12 12:21:43 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [M250通用机枪-烽火地带-6LJO4T40AMN4BFKBN7S74(3611220879)] 要多记点别的
-11-12 12:21:46 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [M250通用机枪-烽火地带-6LJO4T40AMN4BFKBN7S74(3611220879)] 比如身份证号
-11-12 12:21:47 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [M250通用机枪-烽火地带-6LJO4T40AMN4BFKBN7S74(3611220879)] 手机号
-11-12 12:21:49 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [M250通用机枪-烽火地带-6LJO4T40AMN4BFKBN7S74(3611220879)] 家庭住址
-11-12 12:22:02 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [M250通用机枪-烽火地带-6LJO4T40AMN4BFKBN7S74(3611220879)] 支付密码
-11-12 12:22:37 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [M250通用机枪-烽火地带-6LJO4T40AMN4BFKBN7S74(3611220879)] @小冉 (3819642626)  来吧小冉
-11-12 12:22:39 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [M250通用机枪-烽火地带-6LJO4T40AMN4BFKBN7S74(3611220879)] 这些你可以告诉我了
---- 大脑日志 ---
-文件:
---- 8080 HTTP探测 ---
-HTTP 404
+    "websocketClients": [
+      {
+        "enable": true,
+        "url": "ws://127.0.0.1:8080/onebot/v11/ws",
+        "messagePostFormat": "array",
+        "reportSelfMessage": false,
+        "token": "",
+        "debug": false,
+        "heartInterval": 30000,
+        "reconnectInterval": 5000
+NapCat已停止，开始重启
+NapCat重启指令已发出 12:40:23
