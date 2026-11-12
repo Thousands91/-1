@@ -1,9 +1,5 @@
-285377
-cd /root/bot/bot && timeout 150 git fetch origin main && git reset --hard origin/main && echo "SYNC: $(git log --oneline -1)"
-BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
-sleep 3
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 8
-echo "MD5: $(md5sum /root/bot/bot/plugins/ai_chat.py)"
-echo "NEWFUN: $(grep -c '_baidu_asr\|_xfyun_asr' /root/bot/bot/plugins/ai_chat.py)"
-tail -3 /root/bot.log
+285378
+sleep 10
+grep "connected" /root/bot.log | tail -1
+grep -c "ERROR\|Traceback" /root/bot.log | tail -1
+tail -2 /root/bot.log
