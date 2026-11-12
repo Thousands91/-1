@@ -1,0 +1,11 @@
+285348
+echo "=== $(date '+%H:%M:%S') 抽签退化+记忆版本核查 ==="
+echo "--- 字体文件 ---"
+for f in /usr/share/fonts/truetype/wqy/wqy-zenhei.ttc /usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc /usr/share/fonts/truetype/wqy/wqy-microhei.ttc; do [ -f "$f" ] && echo "存在 $f" || echo "缺失 $f"; done
+echo "--- PIL ---"
+/root/bot/venv/bin/python -c "import PIL; print('PIL正常', PIL.__version__)" 2>&1 | tail -1
+echo "--- 插件md5（对照：fortune=a6604753f220afb36e79cf0b4fee40ff ai_chat=44dade2ce9e092e2cabd6088230e2b9f） ---"
+md5sum /root/bot/plugins/fortune.py /root/bot/plugins/ai_chat.py 2>/dev/null
+echo "--- bot.log里抽签/渲染报错 ---"
+grep -i "fortune\|渲染\|render\|font" /root/bot.log | tail -6
+date +%H:%M:%S
