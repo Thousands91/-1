@@ -1,0 +1,20 @@
+285363
+echo "=== $(date '+%H:%M:%S') 三项定向复测 ==="
+echo "[meting正确姿势 type=url]" && curl -s -m 12 "https://api.injahow.cn/meting/?type=url&id=186016" | head -c 150; echo ""
+echo "[gutenberg正确书号1342]" && curl -s -o /dev/null -m 12 -w "HTTP %{http_code} %{size_download}B" -r 0-2000 "https://gutenberg.pglaf.org/1/3/4/1342/1342-0.txt"; echo ""
+echo "[硅基流动精确复核]"
+python3 -c "
+import re, urllib.request
+line = [l for l in open('/root/bot/bot/.env') if l.startswith('SILICONFLOW_API_KEY')][0]
+key = line.split('=', 1)[1].strip().strip('"').strip("'")
+print('key长度:', len(key), '掩码:', key[:6]+'***'+key[-4:] if len(key) > 12 else '异常')
+req = urllib.request.Request('https://api.siliconflow.cn/v1/models', headers={'Authorization': 'Bearer ' + key})
+try:
+    r = urllib.request.urlopen(req, timeout=12)
+    print('HTTP', r.status, 'key有效')
+except Exception as e:
+    print('HTTP', getattr(e, 'code', '?'), str(e)[:80])
+"
+echo "--- 语音ASR真实链路（拿今天日志验证） ---"
+grep -i "语音\|transcription\|asr" /root/bot.log | tail -3 || echo 今日无语音使用记录
+date +%H:%M:%S
