@@ -1,0 +1,9 @@
+285371
+echo "=== $(date '+%H:%M:%S') ASR双链实测(X10真key) ==="
+cd /root/bot/bot
+ZP=$(grep '^ZHIPU_API_KEY' .env | head -1 | cut -d= -f2 | tr -d '\" ')
+SFK=$(grep '^SILICONFLOW_API_KEY' .env | head -1 | cut -d= -f2 | tr -d '\" ')
+echo "[SF账户余额]" && curl -s -m 10 -H "Authorization: Bearer $SFK" https://api.siliconflow.cn/v1/user/info | head -c 200; echo ""
+echo "[Zhipu glm-asr实测]" && curl -s -m 20 -o /tmp/zasr.json -w "HTTP %{http_code}" -X POST "https://open.bigmodel.cn/api/paas/v4/audio/transcriptions" -H "Authorization: Bearer $ZP" -F "model=glm-asr-2512" -F "file=@/tmp/t.wav"; echo ""; head -c 250 /tmp/zasr.json; echo ""
+echo "[SF ASR再确认]" && curl -s -m 15 -o /tmp/sfasr.json -w "HTTP %{http_code}" -X POST "https://api.siliconflow.cn/v1/audio/transcriptions" -H "Authorization: Bearer $SFK" -F "model=FunAudioLLM/SenseVoiceSmall" -F "file=@/tmp/t.wav"; echo ""; head -c 150 /tmp/sfasr.json
+date +%H:%M:%S
