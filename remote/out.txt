@@ -1,11 +1,20 @@
-<<<task_285432.txt>>>
-===== 任务285432 11-13 02:45:34 =====
+<<<task_285433.txt>>>
+===== 任务285433 11-13 02:51:56 =====
 --- 命令 ---
-grep -a "连接\|connected\|WebSocket" /root/bot.log | tail -2
-tail -3 /root/bot.log
+echo "=== 苏丹/阿萨尔搜索记录(bot.log) ==="
+grep -an "苏丹\|阿萨尔" /root/bot.log | grep -av "收到\|阿萨尔来" | tail -15
+echo "=== 搜词缓存文件 ==="
+grep -a "sultan\|sudan\|asar\|assal\|asghar\|assar" /root/data/search_tag_cache.json 2>/dev/null | head -10
+echo "=== 最近色图插件日志(搜词链各步) ==="
+grep -a "image_search\|候选\|对齐\|final\|tag=" /root/bot.log | tail -30
 --- 输出 ---
-11-13 02:44:55 [INFO] uvicorn | 127.0.0.1:40516 - "WebSocket /onebot/v11/ws" [accepted]
-11-13 02:44:55 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
-11-13 02:45:00 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=39)
-11-13 02:45:05 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794509105, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
-11-13 02:45:24 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=39) running complete
+=== 苏丹/阿萨尔搜索记录(bot.log) ===
+39:11-13 02:47:50 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 186096855 from 1561950850 '色图 苏丹'
+48:11-13 02:49:44 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1668264347 from 1561950850 '色图 阿萨尔'
+=== 搜词缓存文件 ===
+=== 最近色图插件日志(搜词链各步) ===
+11-13 02:44:50 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+11-13 02:47:50 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.image_search_multisource, lineno=58)
+11-13 02:48:27 [INFO] nonebot | Matcher(type='message', module=plugins.image_search_multisource, lineno=58) running complete
+11-13 02:49:44 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.image_search_multisource, lineno=58)
+11-13 02:50:16 [INFO] nonebot | Matcher(type='message', module=plugins.image_search_multisource, lineno=58) running complete
