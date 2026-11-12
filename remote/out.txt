@@ -1,32 +1,42 @@
-<<<task_285368.txt>>>
-===== 任务285368 11-12 17:05:11 =====
+<<<task_285369.txt>>>
+===== 任务285369 11-12 17:15:09 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') 色图源海选第二批 ==="
-echo "[0基准 lolicon]" && curl -s -m 10 "https://api.lolicon.app/setu/v2?r18=1&num=1" | head -c 80; echo ""
-echo "[0基准 tbib]" && curl -s -m 15 "https://tbib.org/index.php?page=dapi&s=post&q=index&json=1&limit=1&tags=rating:explicit" | head -c 80; echo ""
-echo "[1 nekos.best端点表]" && curl -s -m 12 "https://nekos.best/api/v2/endpoints" | head -c 400; echo ""
-echo "[2 hypnohub]" && curl -s -m 20 "https://hypnohub.net/index.php?page=dapi&s=post&q=index&json=1&limit=1&tags=rating:explicit" | head -c 100; echo ""
-echo "[3 danbooru 25秒]" && curl -s -m 25 -w "(%{http_code} %{time_total}s)" -A "Mozilla/5.0" "https://danbooru.donmai.us/posts.json?tags=rating:explicit&limit=1" | head -c 100; echo ""
-echo "[4 rule34 25秒]" && curl -s -m 25 -w "(%{http_code} %{time_total}s)" "https://rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&limit=1&tags=rating:explicit" | head -c 100; echo ""
-echo "[5 jitsu api模式]" && curl -s -m 15 -o /dev/null -w "HTTP %{http_code} ctype %{content_type}" "https://moe.jitsu.top/api/?r18=1"; echo ""
-echo "[6 jitsu img r18]" && curl -s -m 15 -o /dev/null -w "HTTP %{http_code} size %{size_download}B ctype %{content_type}" -L "https://moe.jitsu.top/img/?r18=1"; echo ""
+echo "=== $(date '+%H:%M:%S') hypnohub部署+图床下载验证 ==="
+cd /root/bot/bot && git fetch --quiet origin && git reset --quiet --hard origin/main && git log -1 --format='%h %s'
+grep -c "fetch_hypnohub_bytes" plugins/image_search_multisource.py
+echo "[API验证]" && curl -s -m 15 "https://hypnohub.net/index.php?page=dapi&s=post&q=index&json=1&limit=3&tags=rating:explicit" | python3 -c "
+import json,sys
+arr=json.load(sys.stdin)
+ok=0
+import urllib.request
+for p in arr[:2]:
+    fu=p.get('file_url','')
+    if not fu: continue
+    try:
+        req=urllib.request.Request(fu, headers={'User-Agent':'Mozilla/5.0'})
+        d=urllib.request.urlopen(req, timeout=20).read()
+        print('下载', fu[-24:], len(d)//1024, 'KB', 'OK' if 2048<len(d)<=8*1024*1024 else '超尺寸跳过')
+        ok+=1
+    except Exception as e:
+        print('下载失败', str(e)[:60])
+print('图床可达', ok, '/2')
+"
+echo "--- 重启大脑 ---"
+pkill -f "venv/bin/python main.py"; sleep 3
+cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 14
+grep "connected" /root/bot.log | tail -1
+pgrep -f "venv/bin/python main.py" >/dev/null && echo ALIVE || echo DEAD
 date +%H:%M:%S
 --- 输出 ---
-=== 17:05:11 色图源海选第二批 ===
-[0基准 lolicon]
-{"error":"","data":[{"pid":85047830,"p":1,"uid":17332140,"title":"みくえっ�
-[0基准 tbib]
-[{"directory":4907,"hash":"bc06ea38da3e1d638508df0157bc25c2","height":3150,"id":
-[1 nekos.best端点表]
-{"lurk":{"format":"gif"},"shoot":{"format":"gif"},"sleep":{"format":"gif"},"clap":{"format":"gif"},"shrug":{"format":"gif"},"stare":{"format":"gif"},"wave":{"format":"gif"},"poke":{"format":"gif"},"confused":{"format":"gif"},"smile":{"format":"gif"},"peck":{"format":"gif"},"wink":{"format":"gif"},"sip":{"format":"gif"},"blush":{"format":"gif"},"smug":{"format":"gif"},"tickle":{"format":"gif"},"yee
-[2 hypnohub]
-[{"preview_url":"https:\/\/hypnohub.net\/thumbnails\/9d\/88\/thumbnail_9d88e84b76b0c967b6c75d1b5ac40
-[3 danbooru 25秒]
-(000 12.717026s)
-[4 rule34 25秒]
-(000 16.231513s)
-[5 jitsu api模式]
-HTTP 302 ctype text/html; charset=UTF-8
-[6 jitsu img r18]
-HTTP 200 size 769547B ctype image/jpeg
-17:05:54
+=== 17:15:09 hypnohub部署+图床下载验证 ===
+1f26e63 第三硬池hypnohub接入:随机兜底tbib/hypnohub双链+带词搜索三连
+3
+[API验证]
+下载 c967b6c75d1b5ac40fc0.png 22933 KB 超尺寸跳过
+下载 045cc8db3d101a7a38a5.png 4967 KB OK
+图床可达 2 /2
+--- 重启大脑 ---
+11-12 17:15:37 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+ALIVE
+17:15:39
