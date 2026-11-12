@@ -1,132 +1,43 @@
-<<<task_285410.txt>>>
-===== 任务285410 11-13 00:32:04 =====
+<<<task_285411.txt>>>
+===== 任务285411 11-13 00:43:09 =====
 --- 命令 ---
-echo "=== v5心跳时间线(每10分钟一条,断档=冻结) ==="
-grep -a "v5-git" /root/remote_ctl.log | tail -30
-echo "=== 看门狗关键字事件(接管/看护/保险丝/report) ==="
-grep -aE "接管|看护|保险丝|intake|report|致命" /root/remote_ctl.log | grep -av "Message" | tail -40
-echo "=== 当前进程清单 ==="
-ps -ef 2>/dev/null | grep -aE "remote_ctl|main\.py|opt/QQ" | grep -av grep
-echo "=== 日志文件修改时间对照当前时间 ==="
-stat -c "%n %y" /root/remote_ctl.log /root/bot.log 2>/dev/null
+echo "=== 00:08解冻后的心跳连续性 ==="
+grep -a "v5-git" /root/remote_ctl.log | tail -4
+echo "=== 最近消息时间线(22:50后) ==="
+grep -a "message.private.friend\|message.group" /root/bot.log | grep -aE "^11-13 00:" | awk '{print $1,$2,$NF}' | tail -15
+echo "=== bot.log最后写入时间 ==="
+stat -c "%y" /root/bot.log
 date "+现在: %F %T"
-echo "=== bot.log今晚21点后全部消息时间线 ==="
-grep -a "message.private.friend\|message.group" /root/bot.log | grep -aE "^11-12 (2[1-3]):|^11-13 00:" | awk '{print $1,$2,$NF}' | tail -45
+echo "=== 大脑/NapCat进程与登录态 ==="
+pgrep -f "main.py" >/dev/null && echo 大脑在 || echo 大脑不在
+pgrep -f "opt/QQ/qq" >/dev/null && echo NapCat在 || echo NapCat不在
+bash /root/logincheck.sh 2>/dev/null | head -5
+echo "=== 手机充电/电池状态 ==="
+dumpsys battery 2>/dev/null | grep -E "powered|status|level" | head -4
+echo "=== Termux待机桶(1=active最松,10=restricted最严) ==="
+am get-standby-bucket com.termux 2>/dev/null || echo 查询失败
+echo "=== doze状态 ==="
+dumpsys deviceidle 2>/dev/null | grep -E "mState|mLightState" | head -2
 --- 输出 ---
-=== v5心跳时间线(每10分钟一条,断档=冻结) ===
-[11-12 20:07] 心跳:循环正常(v5-git,LAST=285382)
-[11-12 20:23] 心跳:循环正常(v5-git,LAST=285382)
-[11-12 20:38] 心跳:循环正常(v5-git,LAST=285382)
-[11-12 20:54] 心跳:循环正常(v5-git,LAST=285382)
-[11-12 21:10] 心跳:循环正常(v5-git,LAST=285382)
-[11-12 21:26] 心跳:循环正常(v5-git,LAST=285382)
-[11-12 21:42] 心跳:循环正常(v5-git,LAST=285382)
-[11-12 21:59] 心跳:循环正常(v5-git,LAST=285384)
-[11-12 22:16] 心跳:循环正常(v5-git,LAST=285384)
-[11-12 22:33] 心跳:循环正常(v5-git,LAST=285384)
-[11-12 22:52] 心跳:循环正常(v5-git,LAST=285388)
+=== 00:08解冻后的心跳连续性 ===
 [11-12 23:12] 心跳:循环正常(v5-git,LAST=285393)
 [11-12 23:33] 心跳:循环正常(v5-git,LAST=285400)
 [11-12 23:57] 心跳:循环正常(v5-git,LAST=285407)
 [11-13 00:30] 心跳:循环正常(v5-git,LAST=285409)
-=== 看门狗关键字事件(接管/看护/保险丝/report) ===
-[11-12 19:55] intake:槽位=1112_1950/1112_1945 命中ID=285379
-[11-12 19:55] report:API回传成功
-[11-12 20:00] report:API回传成功
-[11-12 21:54] report:API回传成功
-[11-12 21:56] report:API回传成功
-[11-12 22:36] report:API回传成功
-[11-12 22:37] report:API回传成功
-[11-12 22:42] report:API回传成功
-[11-12 22:46] report:API回传成功
-[11-12 22:52] report:API回传成功
-[11-12 22:55] report:API回传成功
-[11-12 22:58] report:API回传成功
-[11-12 23:02] report:API回传成功
-[11-12 23:07] report:API回传成功
-[11-12 23:14] report:API回传成功
-[11-12 23:15] report:API回传成功
-[11-12 23:17] report:API回传成功
-[11-12 23:21] report:API回传成功
-[11-12 23:24] report:API回传成功
-[11-12 23:27] report:API回传成功
-[11-12 23:32] report:API回传成功
-[11-12 23:35] report:API回传成功
-[11-12 23:37] report:API回传成功
-[11-12 23:41] report:API回传成功
-[11-12 23:45] report:API回传成功
-[11-12 23:49] report:API回传成功
-{"cand": {"奶奶": ["grandma", "grandmother", "old woman"], "女仆": ["maid", "maid uniform", "maid costume"]}, "tag": {}, "cnt": {}}[11-12 23:51] report:API回传成功
-[11-12 23:53] intake:API无响应
-[11-12 23:57] report:API回传成功
-[11-12 23:57] 看护：未登录且码39552s未刷新，尝试重启NapCat
-[11-12 23:57] 保险丝熔断:NapCat 24h内已自动拉起3次,停止自动重启,需人工排查
-[11-13 00:08] report:API回传成功
-[11-13 00:19] intake:API无响应
-[11-13 00:19] 看护：未登录且码40903s未刷新，尝试重启NapCat
-[11-13 00:19] 看护:自动拉起NapCat(24h内第3次)
-[11-13 00:08] report:API回传成功
-[11-13 00:19] intake:API无响应
-[11-13 00:19] 看护：未登录且码40903s未刷新，尝试重启NapCat
-[11-13 00:19] 看护:自动拉起NapCat(24h内第3次)
-[11-13 00:29] report:API回传成功
-=== 当前进程清单 ===
-aid_u0_+  1637  1635  0  2023 ?        00:00:12 /root/bot/venv/bin/python main.py
-aid_u0_+  8180 28326  0  2023 ?        00:00:00 bash /root/remote_ctl_v5.sh
-aid_u0_+  8184  8180  0  2023 ?        00:00:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox
-aid_u0_+  8199  8184  0  2023 ?        00:00:20 /root/Napcat/opt/QQ/qq --no-sandbox
-aid_u0_+  8201  8199  0  2023 ?        00:00:00 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-aid_u0_+  8202  8199  0  2023 ?        00:00:00 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
-aid_u0_+  8235  8201  0  2023 ?        00:00:00 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-aid_u0_+ 11545 11518  0  2023 pts/0    00:17:43 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/storage --bind=/storage/emulated/0:/sdcard --bind=/storage/emulated/0:/mnt/sdcard --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/system/product --bind=/system --bind=/vendor --bind=/data/data/com.termux/files/usr /bin/bash -c bash -c ' setsid bash /root/remote_ctl.sh >> /root/remote_boot.log 2>&1 < /dev/null & setsid bash /root/asar_sync.sh loop >> /root/asar_sync_boot.log 2>&1 < /dev/null & sleep infinity '
-aid_u0_+ 28326     1  0  2023 ?        00:00:11 bash /root/remote_ctl_v5.sh
-=== 日志文件修改时间对照当前时间 ===
-/root/remote_ctl.log 2026-11-13 00:30:36.040000000 +0800
-/root/bot.log 2026-11-13 00:19:41.590000000 +0800
-现在: 2026-11-13 00:32:04
-=== bot.log今晚21点后全部消息时间线 ===
-11-12 21:56:53 '[image:summary=,file=7DB1838B67DECB10D38ED2CE6D65EDDB.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQ3pBQ2...,file_size=203769]'
-11-12 21:57:02 '喜茶开面馆了'
-11-12 22:07:55 行'
-11-12 22:09:42 恭喜你发明了助眠音声'
-11-12 22:18:15 '呜呜呜呜'
-11-12 22:22:40 你咋的了'
-11-12 22:27:11 '鸣鸣鸣'
-11-12 22:27:49 '你又咋的了'
-11-12 22:27:52 '我要死了吗'
-11-12 22:27:55 '都给我哭坟'
-11-12 22:27:57 '[image:summary=[动画表情],file=390435C282C155B75378DBFD854CDA31.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSrQNTl...,file_size=4059]'
-11-12 22:28:26 '[reply:id=1160236214]想老公了'
-11-12 22:28:35 'QAQ'
-11-12 22:28:55 '（思考）'
-11-12 22:28:58 '帮我复习吧'
-11-12 22:29:04 '这样就没时间念想了'
-11-12 22:29:08 '那再见。'
-11-12 22:29:08 '[image:summary=[动画表情],file=92ED7769E9C68C7A3DFAE37C8FFCEC39.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhRKAar5...,file_size=91640]'
-11-12 22:29:46 '三句治好相思病'
-11-12 22:30:01 '老师我是事业型'
-11-12 22:37:35 '色图'
-11-12 22:37:52 爷爷'
-11-12 22:38:50 奶奶'
-11-12 22:40:18 奶奶'
-11-12 22:42:19 姨'
-11-12 22:54:47 谁把水箭龟放出去了'
-11-12 22:55:01 '父子分离了'
-11-12 22:55:04 '[image:summary=[动画表情],file=6B9A734802BF72B45CC9C41EFFA84EB2.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhT61fvv...,file_size=8306]'
-11-12 23:00:15 '略无聊'
-11-12 23:04:46 '猪猪'
-11-12 23:47:58 牛'
-11-12 23:48:46 人兽'
-11-12 23:49:42 '人呢'
-11-12 23:50:33 人兽'
-11-12 23:51:06 '色图'
-11-12 23:52:19 '色图'
-11-12 23:52:55 马'
-11-12 23:56:39 '
-11-12 23:56:39 奶奶'
-11-12 23:56:39 '为什么你回复这么慢'
-11-12 23:57:25 奶奶'
-11-12 23:58:29 马'
-11-12 23:59:49 牛'
+=== 最近消息时间线(22:50后) ===
 11-13 00:08:45 '你在干什么'
 11-13 00:19:36 '[record:file=003931f4c1527912cb50a3211555b094.amr,path=/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt...,url=/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt...,file_size=91899]'
+=== bot.log最后写入时间 ===
+2026-11-13 00:19:41.590000000 +0800
+现在: 2026-11-13 00:43:09
+=== 大脑/NapCat进程与登录态 ===
+大脑在
+NapCat在
+=== 登录状态（权威判定）===
+[未登录] 当前没有有效会话
+阶段: waiting_qrcode
+最近错误: 无
+=== 手机充电/电池状态 ===
+=== Termux待机桶(1=active最松,10=restricted最严) ===
+查询失败
+=== doze状态 ===
