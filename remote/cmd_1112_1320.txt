@@ -1,0 +1,8 @@
+285347
+echo "--- 大脑日志尾部 ---"
+tail -12 /root/bot.log
+echo "--- NapCat WS连接迹象 ---"
+grep -i "websocket\|连接成功\|connected" /root/napcat.log 2>/dev/null | tail -5
+echo "--- 8080内核连接表 ---"
+grep -i ":1F90" /proc/net/tcp 2>/dev/null | awk '{print $2,$3,$4}' | head -6
+date +%H:%M:%S
