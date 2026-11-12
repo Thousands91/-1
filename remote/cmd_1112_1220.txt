@@ -1,0 +1,14 @@
+285341
+echo "=== $(date '+%H:%M:%S') 链路体检 ==="
+echo "--- 大脑进程 ---"
+pgrep -af "main.py" || echo 大脑进程不在
+echo "--- NapCat进程 ---"
+pgrep -af "opt/QQ/qq" | head -2
+echo "--- WS/8080连接 ---"
+(ss -tnp 2>/dev/null || netstat -tnp 2>/dev/null) | grep 8080 | head -6
+echo "--- 30分钟内活跃日志 ---"
+find /root -name "*.log" -mmin -30 2>/dev/null | head -6
+echo "--- NapCat最新日志尾部 ---"
+N=$(find /root -path "*napcat*" -name "*.log" -mmin -30 2>/dev/null | head -1); echo "文件:$N"; tail -15 "$N" 2>/dev/null
+echo "--- 大脑日志尾部 ---"
+B=$(find /root -name "*.log" -mmin -30 2>/dev/null | grep -vi napcat | grep -v remote_ctl | grep -v azar_login | head -1); echo "文件:$B"; tail -15 "$B" 2>/dev/null
