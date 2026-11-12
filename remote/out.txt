@@ -1,35 +1,24 @@
-<<<task_285436.txt>>>
-===== 任务285436 11-13 02:56:03 =====
+<<<task_285437.txt>>>
+===== 任务285437 11-13 03:02:19 =====
 --- 命令 ---
-find /root -name "search_tag_cache.json" 2>/dev/null
-F=$(find /root -name "search_tag_cache.json" 2>/dev/null | head -1)
-if [ -n "$F" ]; then
-python3 -c "
-import json
-d=json.load(open('$F'))
-for k in ('cand','tag','final'):
-    for q,v in d.get(k,{}).items():
-        print(k,'|',q,'->',v)
-"
-else
-echo "全盘没找到缓存文件"
-find /root -name "data" -type d -newer /root/bot.log 2>/dev/null | head -5
-ls /root/bot/bot/data/ 2>/dev/null | head
-fi
+cd /root/bot && git pull 2>&1 | tail -2
+git log --oneline -1
+pkill -f "venv/bin/python main.py"; sleep 2
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 < /dev/null &
+sleep 12
+echo "=== 插件加载 ==="
+grep -ac "Succeeded to load plugin" /root/bot.log
+grep -a "image_search_multisource" /root/bot.log | head -1
+echo "=== 新逻辑就位 ==="
+grep -c "guro" /root/bot/bot/plugins/image_search_multisource.py
+pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑已拉起 || echo 大脑没起来
 --- 输出 ---
-/root/bot/bot/data/search_tag_cache.json
-cand | 奶奶 -> ['grandma', 'grandmother', 'old lady']
-cand | 马 -> ['horse', 'pony', 'equine']
-cand | 牛 -> ['cow', 'bull', 'cattle']
-cand | 爷爷 -> ['grandfather', 'grandpa', 'grandpa in traditional chinese clothes']
-cand | 苏丹 -> ['sudan', 'sudanese', 'africa']
-cand | 阿萨尔 -> ['assassin', 'asal', 'asalr']
-cand | 多人 -> ['group of people', 'crowd', 'many people']
-cand | 李仙花 -> ['li xianhua', 'chinese opera', 'li xianhua opera']
-final | 奶奶 -> ['grandma', 'old_lady', 'grandmother']
-final | 马 -> ['equine', 'horse', 'pony']
-final | 牛 -> ['cattle', 'bull']
-final | 爷爷 -> ['grandpa_longneck', 'grandfather']
-final | 苏丹 -> ['africa']
-final | 阿萨尔 -> ['assassin', 'asal']
-final | 多人 -> ['crowd']
+ bot/plugins/image_search_multisource.py | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+addfe79 色图:explicit排除guro/blood;撞车重试4次
+=== 插件加载 ===
+10
+11-13 03:02:32 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+=== 新逻辑就位 ===
+7
+大脑已拉起
