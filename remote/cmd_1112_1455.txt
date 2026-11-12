@@ -1,0 +1,13 @@
+285356
+echo "=== $(date '+%H:%M:%S') 搬家完整性盘点 ==="
+cd /root/bot/bot 2>/dev/null || { echo bot目录不存在; exit; }
+echo "--- 文件清单（路径|大小|md5） ---"
+find . -type f \( -name "*.py" -o -name "*.json" -o -name "*.txt" -o -name "*.md" -o -name ".env*" -o -name "*.sh" \) -not -path "./venv/*" -not -path "./.git/*" -not -path "*__pycache__*" | sort | while read f; do echo "$f|$(stat -c%s "$f")|$(md5sum "$f" | cut -d' ' -f1)"; done
+echo "--- 定时任务 ---"
+crontab -l 2>/dev/null || echo 无crontab
+ls /root/morning.sh /root/*.sh 2>/dev/null
+echo "--- Termux侧看门狗 ---"
+ls ~/x10_watchdog.sh ~/.termux/boot/ 2>/dev/null
+echo "--- 字体 ---"
+ls /usr/share/fonts/truetype/wqy/ 2>/dev/null
+date +%H:%M:%S
