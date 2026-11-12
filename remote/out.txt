@@ -1,13 +1,18 @@
-<<<task_285416.txt>>>
-===== 任务285416 11-13 01:08:20 =====
+<<<task_285417.txt>>>
+===== 任务285417 11-13 01:11:19 =====
 --- 命令 ---
-echo "=== 找历史adb配对密钥 ==="
-ls -l /root/.android/ 2>&1 | head -6
-ls -l /data/data/com.termux/files/home/.android/ 2>&1 | head -6
-find / -name "adbkey" -o -name "*pairing*" 2>/dev/null | grep -v proc | head -6
+export PATH=/data/data/com.termux/files/usr/bin:$PATH
+export LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib
+export HOME=/data/data/com.termux/files/home
+echo "=== Termux原生pkg装android-tools(新adb带pair) ==="
+yes | pkg install -y android-tools 2>&1 | grep -E "Setting up|installed|E:|Err" | tail -3
+echo "=== 新adb版本 ==="
+/data/data/com.termux/files/usr/bin/adb version 2>&1 | head -1
+echo "=== 确认有pair命令 ==="
+/data/data/com.termux/files/usr/bin/adb help 2>&1 | grep -E "pair|connect" | head -4
 --- 输出 ---
-=== 找历史adb配对密钥 ===
-ls: cannot access '/root/.android/': No such file or directory
-total 0
--rw-r--r-- 1 root root   39 Nov 13 01:07 adb.5037
--rw------- 1 root root 1704 Nov 13 01:07 adbkey
+=== Termux原生pkg装android-tools(新adb带pair) ===
+Error: Cannot run 'pkg' command as root
+=== 新adb版本 ===
+bash: line 7: /data/data/com.termux/files/usr/bin/adb: No such file or directory
+=== 确认有pair命令 ===
