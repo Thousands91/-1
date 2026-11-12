@@ -1,2 +1,10 @@
-285384
-tail -3 /root/bot.log
+285385
+cd /root/bot/bot && timeout 150 git fetch origin main && git reset --hard origin/main && echo "SYNC: $(git log --oneline -1)"
+echo "智能链特征: $(grep -c '_search_tag_candidates\|_rank_by_explicit' /root/bot/bot/plugins/image_search_multisource.py)处"
+echo "兜底残留: $(grep -c '随机镇架之作' /root/bot/bot/plugins/image_search_multisource.py)处(应为0)"
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/image_search_multisource.py && echo 语法OK
+BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
+sleep 3
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 12
+grep "connected" /root/bot.log | tail -1
