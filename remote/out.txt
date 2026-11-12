@@ -1,45 +1,27 @@
-<<<task_285357.txt>>>
-===== 任务285357 11-12 15:01:52 =====
+<<<task_285358.txt>>>
+===== 任务285358 11-12 15:05:06 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') 补漏搬家部署 ==="
-cd /root/bot/bot && git fetch --quiet origin && git reset --quiet --hard origin/main
-echo "同步到: $(git log -1 --format='%h %s')"
-echo "--- 新文件md5（对照本地: news=7a66d0bf0673ee0f00191d38efd10b8f keyword=cff3795ab97fcbe903e581a8a71afad7 req=60ba865b491b1c4735dbe207a054b763 mface=774f90866f573760fa022e5f26619e83） ---"
-md5sum plugins/news.py plugins/keyword_reply.py requirements.txt data/mface_names.json 2>/dev/null
-echo "--- env键名（只打键不打印值） ---"
-grep -o "^[A-Z_]*" .env | tr '\n' ' '; echo ""
-echo "--- 装ddgs(坑83姿势) ---"
-mkdir -p /data/data/com.termux/cache/pip
-export PYTHONPATH=/data/data/com.termux/files/usr/lib/python3/dist-packages
-pip3 install -q ddgs -i https://pypi.tuna.tsinghua.edu.cn/simple 2>&1 | tail -1
-/root/bot/venv/bin/python -c "from ddgs import DDGS; print('ddgs可用')" 2>&1 | tail -1
-echo "--- 重启大脑 ---"
-pkill -f "venv/bin/python main.py"; sleep 3
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 15
-tail -6 /root/bot.log
-pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑存活 || echo 大脑没起来
+echo "=== $(date '+%H:%M:%S') 最终验证 ==="
+echo "--- 插件加载/报错检查 ---"
+grep -i "error\|failed\|_exception" /root/bot.log | tail -5 || echo 无报错
+echo "--- WS连接 ---"
+grep "connected" /root/bot.log | tail -2
+echo "--- 15:02后是否有消息处理 ---"
+tail -3 /root/bot.log
 date +%H:%M:%S
 --- 输出 ---
-=== 15:01:52 补漏搬家部署 ===
-同步到: 495d5cb 补mface表情名缓存
---- 新文件md5（对照本地: news=7a66d0bf0673ee0f00191d38efd10b8f keyword=cff3795ab97fcbe903e581a8a71afad7 req=60ba865b491b1c4735dbe207a054b763 mface=774f90866f573760fa022e5f26619e83） ---
-7a66d0bf0673ee0f00191d38efd10b8f  plugins/news.py
-cff3795ab97fcbe903e581a8a71afad7  plugins/keyword_reply.py
-60ba865b491b1c4735dbe207a054b763  requirements.txt
-774f90866f573760fa022e5f26619e83  data/mface_names.json
---- env键名（只打键不打印值） ---
-COMMAND_START OPENAI_API_KEY OPENAI_BASE_URL OPENAI_MODEL ENABLE_AI_CHAT HOST PORT SILICONFLOW_API_KEY 
---- 装ddgs(坑83姿势) ---
-WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
-ddgs可用
---- 重启大脑 ---
-Terminated
-11-12 15:02:10 [INFO] __main__ | QQ 群机器人启动成功 ✅
-11-12 15:02:10 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
-11-12 15:02:10 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
-11-12 15:02:10 [INFO] __main__ | ==================================================
-11-12 15:02:10 [INFO] uvicorn | Application startup complete.
-11-12 15:02:10 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-大脑存活
-15:02:11
+=== 15:05:06 最终验证 ===
+--- 插件加载/报错检查 ---
+11-12 15:01:12 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-12 15:02:22 [ERROR] nonebot | Running Matcher(type='message', module=plugins.fortune, lineno=25) failed.
+    raise NetworkError(f"WebSocket call api {api} timeout") from None
+nonebot.adapters.onebot.v11.exception.NetworkError: NetWorkError(message='WebSocket call api send_msg timeout')
+11-12 15:02:39 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+--- WS连接 ---
+11-12 14:23:20 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+11-12 15:02:14 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+--- 15:02后是否有消息处理 ---
+11-12 15:04:59 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1994348508 from 2959186535@[群:1109952783] '[at:qq=3427943187] 抽签'
+11-12 15:04:59 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.fortune, lineno=25)
+11-12 15:05:02 [INFO] nonebot | Matcher(type='message', module=plugins.fortune, lineno=25) running complete
+15:05:06
