@@ -1,11 +1,14 @@
-285348
-echo "=== $(date '+%H:%M:%S') 抽签退化+记忆版本核查 ==="
-echo "--- 字体文件 ---"
-for f in /usr/share/fonts/truetype/wqy/wqy-zenhei.ttc /usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc /usr/share/fonts/truetype/wqy/wqy-microhei.ttc; do [ -f "$f" ] && echo "存在 $f" || echo "缺失 $f"; done
-echo "--- PIL ---"
-/root/bot/venv/bin/python -c "import PIL; print('PIL正常', PIL.__version__)" 2>&1 | tail -1
-echo "--- 插件md5（对照：fortune=a6604753f220afb36e79cf0b4fee40ff ai_chat=44dade2ce9e092e2cabd6088230e2b9f） ---"
-md5sum /root/bot/plugins/fortune.py /root/bot/plugins/ai_chat.py 2>/dev/null
-echo "--- bot.log里抽签/渲染报错 ---"
-grep -i "fortune\|渲染\|render\|font" /root/bot.log | tail -6
+285349
+echo "=== $(date '+%H:%M:%S') 补PIL+重启大脑 ==="
+BOTD=$(dirname $(find /root -maxdepth 3 -name "main.py" -not -path "*/venv/*" 2>/dev/null | head -1)); echo "bot目录:$BOTD"
+echo "--- 插件md5核对 ---"
+md5sum $BOTD/plugins/fortune.py $BOTD/plugins/ai_chat.py 2>/dev/null
+echo "--- 补装pillow ---"
+pip3 install -q pillow 2>&1 | tail -1 || python3 -m pip install -q pillow 2>&1 | tail -1
+/root/bot/venv/bin/python -c "import PIL; print('venv内PIL可用', PIL.__version__)"
+echo "--- 重启大脑 ---"
+pkill -f "venv/bin/python main.py"; sleep 2
+cd "$BOTD" && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 12
+tail -6 /root/bot.log
 date +%H:%M:%S
