@@ -1,25 +1,20 @@
-<<<task_285399.txt>>>
-===== 任务285399 11-12 23:26:54 =====
+<<<task_285400.txt>>>
+===== 任务285400 11-12 23:31:57 =====
 --- 命令 ---
-cd /root/bot/bot && /root/bot/venv/bin/python -c "
-import json, urllib.request
-env = {}
-for line in open('/root/bot/bot/.env'):
-    line = line.strip()
-    if '=' in line and not line.startswith('#'):
-        k, v = line.split('=', 1); env[k] = v
-body = json.dumps({'model': env.get('OPENAI_MODEL'),'max_tokens':20,'temperature':0,
- 'thinking':{'type':'disabled'},'messages':[{'role':'user','content':'说ok'}]}).encode()
-req = urllib.request.Request(env['OPENAI_BASE_URL']+'/chat/completions', data=body,
- headers={'Authorization':'Bearer '+env['OPENAI_API_KEY'],'Content-Type':'application/json'})
-try:
-    r = urllib.request.urlopen(req, timeout=20)
-    print('status:', r.status)
-    print('body:', r.read().decode()[:300])
-except urllib.error.HTTPError as e:
-    print('HTTP', e.code)
-    print('body:', e.read().decode()[:300])
-"
+cd /root/bot/bot && timeout 150 git fetch origin main && git reset --hard origin/main && echo "SYNC: $(git log --oneline -1)"
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/image_search_multisource.py && echo 语法OK
+BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
+sleep 3
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 15
+grep "connected" /root/bot.log | tail -1
+grep "Succeeded to load plugin \"image_search" /root/bot.log | tail -1
 --- 输出 ---
-HTTP 429
-body: {"error":{"code":"1305","message":"该模型当前访问量过大，请您稍后再试"}}
+From https://github.com/Thousands91/qq-bot
+ * branch            main       -> FETCH_HEAD
+   44ae561..001c831  main       -> origin/main
+HEAD is now at 001c831 AI调用全形态防御+hypnohub超时收紧
+SYNC: 001c831 AI调用全形态防御+hypnohub超时收紧
+语法OK
+11-12 23:32:15 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+11-12 23:32:11 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
