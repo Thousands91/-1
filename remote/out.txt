@@ -1,32 +1,23 @@
-<<<task_285354.txt>>>
-===== 任务285354 11-12 14:10:14 =====
+<<<task_285355.txt>>>
+===== 任务285355 11-12 14:22:31 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') unicode转义决定性检查 ==="
-python3 << 'PYEOF'
-import json
-p='/root/bot/bot/data/memory/1561950850.json'
-b=p+'.bak_1112手术前'
-import os
-for f in (p,b):
-    if not os.path.exists(f): print(f,'不存在'); continue
-    raw=open(f,encoding='utf-8').read()
-    print(f.split('/')[-1], '| 比心:', raw.count('\u6bd4\u5fc3'), '| 爱心:', raw.count('\u7231\u5fc3'), '| 手:', raw.count('\u624b'), '| 掀:', raw.count('\u63c5'))
-    d=json.loads(raw)
-    hits=[e for e in d if '\u6bd4\u5fc3' in (e.get('m','')+e.get('r','')) or '\u7231\u5fc3' in (e.get('m','')+e.get('r',''))]
-    print('  含比心/爱心的问答条目数:', len(hits))
-    for e in hits[:4]:
-        print('   Q:', e.get('m','')[:36])
-        print('   A:', e.get('r','')[:36])
-PYEOF
+echo "=== $(date '+%H:%M:%S') 坑91修复部署 ==="
+cd /root/bot/bot && git fetch --quiet origin && git reset --quiet --hard origin/main
+echo "同步完成 $(git log -1 --format='%h %s' 2>/dev/null | head -1)"
+pkill -f "venv/bin/python main.py"; sleep 3
+cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 15
+tail -5 /root/bot.log
+pgrep -f "venv/bin/python main.py" && echo 大脑存活 || echo 大脑没起来
 date +%H:%M:%S
 --- 输出 ---
-=== 14:10:14 unicode转义决定性检查 ===
-1561950850.json | 比心: 0 | 爱心: 1 | 手: 6 | 掀: 0
-  含比心/爱心的问答条目数: 1
-   Q: [表情:比爱心]
-   A: 得，这心倒是比墨水还浓。
-1561950850.json.bak_1112手术前 | 比心: 0 | 爱心: 1 | 手: 6 | 掀: 0
-  含比心/爱心的问答条目数: 1
-   Q: [表情:比爱心]
-   A: 得，这心倒是比墨水还浓。
-14:10:14
+=== 14:22:31 坑91修复部署 ===
+同步完成 7db75fc 坑91:纯表情消息不入记忆+加载时滤旧档(动作幻觉循环根治)
+11-12 14:22:50 [INFO] uvicorn | Application startup complete.
+11-12 14:22:50 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+11-12 14:22:52 [INFO] uvicorn | 127.0.0.1:58064 - "WebSocket /onebot/v11/ws" [accepted]
+11-12 14:22:52 [INFO] websockets | connection open
+11-12 14:22:52 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+25435
+大脑存活
+14:22:55
