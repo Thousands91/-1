@@ -1,12 +1,54 @@
-<<<task_285408.txt>>>
-===== 任务285408 11-13 00:08:45 =====
+<<<task_285409.txt>>>
+===== 任务285409 11-13 00:29:27 =====
 --- 命令 ---
-echo "=== 近30分钟消息时间线(收vs回) ==="
-grep -E "message.(group|private)" /root/bot.log | tail -25
-echo "=== wakelock状态 ==="
-termux-wake-lock 2>&1 || echo "termux-wake-lock不可用"
-echo "=== 大脑/NapCat存活 ==="
-pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑在 || echo 大脑不在
+echo "=== 看门狗心跳时间线(10分钟一条,断档=冻结窗口) ==="
+grep "心跳" /root/remote_ctl.log | tail -25
+echo "=== 看门狗全部事件尾部 ==="
+tail -40 /root/remote_ctl.log
+echo "=== 遥控循环进程 ==="
+pgrep -af remote_ctl || echo 遥控循环不在
+echo "LAST任务号: $(cat /root/.remote_last)"
+echo "=== uptime ==="
+uptime
+echo "=== 大脑/NapCat进程状态 ==="
+for p in $(pgrep -f "main.py" | head -1) $(pgrep -f "opt/QQ/qq" | head -1); do echo "pid=$p cgroup: $(cat /proc/$p/cgroup 2>/dev/null | tail -1)"; done
+echo "=== 电池优化白名单里的Termux ==="
+dumpsys deviceidle whitelist 2>/dev/null | grep -ci "termux" || echo "dumpsys不可用"
+echo "=== phantom进程查杀设置 ==="
+settings get global phantom_process_killer_settings 2>/dev/null || echo 不可用
+echo "=== bot.log近期ERROR(6条) ==="
+grep "ERROR\|Traceback" /root/bot.log | tail -6
+echo "=== 系统wake_lock持有者 ==="
+cat /sys/power/wake_lock 2>/dev/null | head -c 400 || echo 不可读
+--- 输出 ---
+=== 看门狗心跳时间线(10分钟一条,断档=冻结窗口) ===
+grep: /root/remote_ctl.log: binary file matches
+[11-12 07:43] 心跳:循环正常,LAST=285333
+[11-12 07:53] 心跳:循环正常,LAST=285333
+[11-12 07:55] 心跳:循环正常,LAST=285333
+[11-12 08:05] 心跳:循环正常,LAST=285333
+[11-12 08:07] 心跳:循环正常,LAST=285333
+[11-12 08:17] 心跳:循环正常,LAST=285333
+[11-12 08:19] 心跳:循环正常,LAST=285333
+[11-12 08:29] 心跳:循环正常,LAST=285333
+[11-12 08:32] 心跳:循环正常,LAST=285333
+[11-12 08:42] 心跳:循环正常,LAST=285333
+[11-12 08:44] 心跳:循环正常,LAST=285333
+[11-12 08:54] 心跳:循环正常,LAST=285333
+[11-12 08:56] 心跳:循环正常,LAST=285333
+[11-12 09:07] 心跳:循环正常,LAST=285333
+[11-12 09:09] 心跳:循环正常,LAST=285333
+[11-12 09:20] 心跳:循环正常,LAST=285333
+[11-12 09:22] 心跳:循环正常,LAST=285333
+[11-12 09:32] 心跳:循环正常,LAST=285333
+[11-12 09:35] 心跳:循环正常,LAST=285333
+[11-12 09:46] 心跳:循环正常,LAST=285333
+[11-12 09:48] 心跳:循环正常,LAST=285333
+[11-12 09:59] 心跳:循环正常,LAST=285333
+[11-12 10:02] 心跳:循环正常,LAST=285333
+[11-12 10:13] 心跳:循环正常,LAST=285333
+[11-12 10:16] 心跳:循环正常,LAST=285333
+=== 看门狗全部事件尾部 ===
 pgrep -f "opt/QQ/qq" >/dev/null && echo NapCat在 || echo NapCat不在
 echo "=== 近10分钟有无ERROR ==="
 tail -300 /root/bot.log | grep -c "ERROR\|Traceback"
@@ -43,3 +85,30 @@ tail -300 /root/bot.log | grep -c "ERROR\|Traceback"
 NapCat在
 === 近10分钟有无ERROR ===
 6
+[11-13 00:08] report:API回传成功
+[11-13 00:19] intake:API无响应
+[11-13 00:19] 看护：未登录且码40903s未刷新，尝试重启NapCat
+[11-13 00:19] 看护:自动拉起NapCat(24h内第3次)
+=== 遥控循环进程 ===
+8180 bash /root/remote_ctl_v5.sh
+11545 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/storage --bind=/storage/emulated/0:/sdcard --bind=/storage/emulated/0:/mnt/sdcard --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/system/product --bind=/system --bind=/vendor --bind=/data/data/com.termux/files/usr /bin/bash -c bash -c ' setsid bash /root/remote_ctl.sh >> /root/remote_boot.log 2>&1 < /dev/null & setsid bash /root/asar_sync.sh loop >> /root/asar_sync_boot.log 2>&1 < /dev/null & sleep infinity '
+28326 bash /root/remote_ctl_v5.sh
+LAST任务号: 285409
+=== uptime ===
+ 00:29:27 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
+=== 大脑/NapCat进程状态 ===
+pid=1637 cgroup: 0::/
+pid=8184 cgroup: 0::/
+=== 电池优化白名单里的Termux ===
+0
+dumpsys不可用
+=== phantom进程查杀设置 ===
+不可用
+=== bot.log近期ERROR(6条) ===
+11-12 23:49:34 [ERROR] nonebot | Running Matcher(type='message', module=plugins.image_search_multisource, lineno=57) failed.
+Traceback (most recent call last):
+11-12 23:57:04 [ERROR] nonebot | Running Matcher(type='message', module=plugins.image_search_multisource, lineno=58) failed.
+Traceback (most recent call last):
+11-12 23:57:58 [ERROR] nonebot | Running Matcher(type='message', module=plugins.image_search_multisource, lineno=58) failed.
+Traceback (most recent call last):
+=== 系统wake_lock持有者 ===
