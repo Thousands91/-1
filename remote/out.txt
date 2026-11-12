@@ -1,20 +1,21 @@
-<<<task_285438.txt>>>
-===== 任务285438 11-13 03:06:38 =====
+<<<task_285439.txt>>>
+===== 任务285439 11-13 03:10:53 =====
 --- 命令 ---
 cd /root/bot && git pull 2>&1 | tail -2
 git log --oneline -1
 pkill -f "venv/bin/python main.py"; sleep 2
 cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 < /dev/null &
 sleep 12
-echo "=== 插件加载与新逻辑就位 ==="
+echo "=== 插件加载与排除表版本确认 ==="
 grep -ac "Succeeded to load plugin" /root/bot.log
-grep -c "_R18_EXCLUDE" /root/bot/bot/plugins/image_search_multisource.py
+grep -A1 "_R18_EXCLUDE = " /root/bot/bot/plugins/image_search_multisource.py
 pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑已拉起 || echo 大脑没起来
 --- 输出 ---
- bot/plugins/image_search_multisource.py | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
-36de663 色图:R18池统一排除表
-=== 插件加载与新逻辑就位 ===
+ bot/plugins/image_search_multisource.py | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+a962c67 色图:排除表收窄guro/scat/vore,放开男同兽人
+=== 插件加载与排除表版本确认 ===
 10
-6
+_R18_EXCLUDE = ["-guro", "-scat", "-vore"]
+
 大脑已拉起
