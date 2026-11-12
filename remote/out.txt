@@ -1,27 +1,54 @@
-<<<task_285424.txt>>>
-===== 任务285424 11-13 01:34:38 =====
+<<<task_285425.txt>>>
+===== 任务285425 11-13 01:36:52 =====
 --- 命令 ---
 PREFIX=/data/data/com.termux/files/usr
-echo "=== android-tools的依赖声明 ==="
-dpkg -I /tmp/at.deb 2>/dev/null | grep -E "Depends|Package|Version"
-echo "=== protobuf包内容 ==="
-dpkg -c /tmp/protobuf.deb 2>/dev/null | grep -E "\.so" | awk '{print $NF}' | head -8
-echo "=== 急救:lite充全量 ==="
-ln -sf libprotobuf-lite.so $PREFIX/lib/libprotobuf.so 2>/dev/null
-export LD_LIBRARY_PATH=$PREFIX/lib
+U=https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main
+IDX=/tmp/termux_packages.idx
+[ -f $IDX ] || curl -sL --max-time 60 "$U/dists/stable/main/binary-aarch64/Packages" > $IDX
+mkdir -p /root/adblibs
+for PKG in libprotobuf fmt brotli liblz4 pcre2 zstd; do
+  F=$(grep -A8 "^Package: $PKG$" $IDX | grep "^Filename:" | head -1 | awk '{print $2}')
+  [ -z "$F" ] && { echo "跳过 $PKG(无此包)"; continue; }
+  ENC=$(echo "$F" | sed 's/:/%3a/g')
+  curl -sL --max-time 120 -o /tmp/p.deb "$U/$ENC" && dpkg -x /tmp/p.deb /tmp/pkgx 2>/dev/null
+  find /tmp/pkgx -path "*/lib/*" \( -name "*.so*" -o -name "fmt*" \) -exec cp -a {} /root/adblibs/ \; 2>/dev/null
+  rm -rf /tmp/pkgx
+  echo "$PKG 完成"
+done
+echo "=== adblibs清单 ==="
+ls /root/adblibs/ | head -25
 echo "=== adb终试 ==="
-$PREFIX/bin/adb version 2>&1 | head -2
-echo "=== pair命令 ==="
-$PREFIX/bin/adb help 2>&1 | grep -E "pair|connect" | head -4
+export LD_LIBRARY_PATH=/root/adblibs:$PREFIX/lib
+cp /data/data/com.termux/files/usr/bin/adb /root/adblibs/adb 2>/dev/null
+/root/adblibs/adb version 2>&1 | head -2
+echo "=== pair命令确认 ==="
+/root/adblibs/adb help 2>&1 | grep -E "pair|connect" | head -4
 --- 输出 ---
-=== android-tools的依赖声明 ===
- Package: android-tools
- Version: 37.0.0p1-3
- Depends: abseil-cpp, brotli, fmt, libc++, liblz4, libprotobuf, pcre2, zlib, zstd
-=== protobuf包内容 ===
-./data/data/com.termux/files/usr/lib/libprotobuf-lite.so
-./data/data/com.termux/files/usr/lib/libprotoc.so
-=== 急救:lite充全量 ===
+跳过 libprotobuf(无此包)
+fmt 完成
+brotli 完成
+liblz4 完成
+pcre2 完成
+zstd 完成
+=== adblibs清单 ===
+fmt
+fmt-config-version.cmake
+fmt-config.cmake
+fmt-targets-release.cmake
+fmt-targets.cmake
+fmt.pc
+libbrotlicommon.so
+libbrotlidec.so
+libbrotlienc.so
+libfmt.so
+liblz4.so
+libpcre2-16.so
+libpcre2-32.so
+libpcre2-8.so
+libpcre2-posix.so
+libzstd.so
+libzstd.so.1
+libzstd.so.1.5.7
 === adb终试 ===
-CANNOT LINK EXECUTABLE "/data/data/com.termux/files/usr/bin/adb": library "libfmt.so" not found
-=== pair命令 ===
+CANNOT LINK EXECUTABLE "/root/adblibs/adb": library "libutf8_validity.so" not found
+=== pair命令确认 ===
