@@ -1,29 +1,38 @@
-<<<task_285426.txt>>>
-===== 任务285426 11-13 01:38:45 =====
+<<<task_285427.txt>>>
+===== 任务285427 11-13 01:40:39 =====
 --- 命令 ---
 PREFIX=/data/data/com.termux/files/usr
 U=https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main
-IDX=/tmp/termux_packages.idx
-echo "=== idx里搜utf8相关包 ==="
-grep -B1 "utf8" $IDX | grep -E "^Package|^Filename" | head -6
-F=$(grep -A8 "^Package: libprotobuf$" $IDX | grep "^Filename:" | head -1 | awk '{print $2}')
+F=$(python3 -c "
+import re
+t=open('/tmp/termux_packages.idx').read()
+for blk in t.split('\n\n'):
+    if re.search(r'^Package: libprotobuf$', blk, re.M):
+        m=re.search(r'^Filename: (.+)$', blk, re.M)
+        if m: print(m.group(1)); break
+")
+echo "libprotobuf路径: [$F]"
 ENC=$(echo "$F" | sed 's/:/%3a/g')
-curl -sL --max-time 120 -o /tmp/lp.deb "$U/$ENC" && echo "=== libprotobuf包完整文件清单 ===" && dpkg -c /tmp/lp.deb | awk '{print $NF}' | grep lib
-dpkg -x /tmp/lp.deb /tmp/lpx 2>/dev/null
+curl -sL --max-time 120 -o /tmp/lp.deb "$U/$ENC" && ls -l /tmp/lp.deb && dpkg -x /tmp/lp.deb /tmp/lpx && echo 解包OK
+dpkg -c /tmp/lp.deb | grep -E "\.so" | awk '{print $NF}' | head -8
 find /tmp/lpx -name "*.so*" -exec cp -a {} /root/adblibs/ \; 2>/dev/null
 echo "=== adb终试 ==="
 export LD_LIBRARY_PATH=/root/adblibs:$PREFIX/lib
 /root/adblibs/adb version 2>&1 | head -2
+echo "=== pair命令 ==="
 /root/adblibs/adb help 2>&1 | grep -E "pair|connect" | head -4
 --- 输出 ---
-=== idx里搜utf8相关包 ===
-Package: utf8cpp
-Filename: pool/main/u/utf8cpp/utf8cpp_1:4.2.1_all.deb
-Package: utf8proc
-Filename: pool/main/u/utf8proc/utf8proc_2.12.0_aarch64.deb
-Package: utf8proc-static
-Filename: pool/main/u/utf8proc-static/utf8proc-static_2.12.0_aarch64.deb
-=== libprotobuf包完整文件清单 ===
-dpkg-deb: error: '/tmp/lp.deb' is not a Debian format archive
+libprotobuf路径: [pool/main/libp/libprotobuf/libprotobuf_2:36.2-1_aarch64.deb]
+-rw-r--r-- 1 root root 1433000 Nov 13 01:40 /tmp/lp.deb
+解包OK
+./data/data/com.termux/files/usr/lib/libprotobuf.so
+./data/data/com.termux/files/usr/lib/libutf8_range.so
+./data/data/com.termux/files/usr/lib/libutf8_validity.so
 === adb终试 ===
-CANNOT LINK EXECUTABLE "/root/adblibs/adb": library "libutf8_validity.so" not found
+Android Debug Bridge version 1.0.41
+Version 37.0.0p1-android-tools
+=== pair命令 ===
+ -d                       use USB device (error if multiple devices connected)
+ --one-device SERIAL|USB  only allowed with 'start-server' or 'server nodaemon', server will only connect to one USB device, specified by a serial number or USB device address.
+ devices [-l]             list connected devices (-l for long output)
+ connect HOST[:PORT]      connect to a device via TCP/IP [default port=5555]
