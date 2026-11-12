@@ -1,33 +1,33 @@
-<<<task_285429.txt>>>
-===== 任务285429 11-13 02:16:52 =====
+<<<task_285430.txt>>>
+===== 任务285430 11-13 02:24:38 =====
 --- 命令 ---
-echo "=== 部署1分钟精度冻结秒表 ==="
-cat > /root/tick.sh << 'TICK'
-#!/bin/bash
-# 冻结取证秒表:每60秒写一行时间戳,断档=冻结窗口
-while true; do
-  echo "$(date '+%F %T')" >> /root/tick.log
-  sleep 60
-done
-TICK
-chmod +x /root/tick.sh
-setsid nohup /root/tick.sh > /dev/null 2>&1 < /dev/null &
-sleep 3
-echo "=== 验证打点 ==="
-tail -3 /root/tick.log 2>/dev/null
-pgrep -f tick.sh >/dev/null && echo "秒表进程在跑" || echo "秒表没起来"
-echo "=== 现有记录仪清单 ==="
-echo "1. /root/remote_ctl.log 心跳(10分钟精度)"
-echo "2. /root/tick.log 秒表(1分钟精度,新装)"
-echo "3. /root/bot.log 消息时间戳"
-echo "4. /root/napcat-restart.log NapCat事件"
+echo "=== 登录态权威判定 ==="
+bash /root/logincheck.sh 2>/dev/null | head -5
+echo "=== 最近收到的消息 ==="
+grep -a "message.private.friend\|message.group" /root/bot.log | tail -4 | awk '{print $1,$2,$NF}'
+echo "=== 四进程存活 ==="
+pgrep -f "main.py" >/dev/null && echo 大脑在 || echo 大脑不在
+pgrep -f "opt/QQ/qq" >/dev/null && echo NapCat在 || echo NapCat不在
+pgrep -f remote_ctl >/dev/null && echo 遥控循环在 || echo 遥控循环不在
+pgrep -f tick.sh >/dev/null && echo 取证秒表在 || echo 秒表不在
+echo "=== NapCat掉线事件留痕 ==="
+grep -a "二维码已保存\|Error\|offline" /root/napcat-restart.log 2>/dev/null | tail -2
 --- 输出 ---
-=== 部署1分钟精度冻结秒表 ===
-=== 验证打点 ===
-2026-11-13 02:16:52
-秒表进程在跑
-=== 现有记录仪清单 ===
-1. /root/remote_ctl.log 心跳(10分钟精度)
-2. /root/tick.log 秒表(1分钟精度,新装)
-3. /root/bot.log 消息时间戳
-4. /root/napcat-restart.log NapCat事件
+=== 登录态权威判定 ===
+=== 登录状态（权威判定）===
+[在线] 已登录，一切正常
+阶段: ready
+最近错误: 无
+=== 最近收到的消息 ===
+11-13 00:19:36 '[record:file=003931f4c1527912cb50a3211555b094.amr,path=/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt...,url=/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt...,file_size=91899]'
+11-13 02:23:25 'hi'
+11-13 02:23:36 '
+11-13 02:23:47 抽签'
+=== 四进程存活 ===
+大脑在
+NapCat在
+遥控循环在
+取证秒表在
+=== NapCat掉线事件留痕 ===
+11-13 02:22:16 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-13 02:22:16 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
