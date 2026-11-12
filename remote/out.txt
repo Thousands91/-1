@@ -1,33 +1,11 @@
-<<<task_285431.txt>>>
-===== 任务285431 11-13 02:44:37 =====
+<<<task_285432.txt>>>
+===== 任务285432 11-13 02:45:34 =====
 --- 命令 ---
-cd /root/bot && git pull 2>&1 | tail -2
-echo "=== 当前版本 ==="
-git log --oneline -1
-echo "=== 重启大脑 ==="
-pkill -f "venv/bin/python main.py"; sleep 2
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 < /dev/null &
-sleep 12
-echo "=== 插件加载检查 ==="
-grep -ac "Succeeded to load plugin" /root/bot.log
-echo "=== WS重连检查 ==="
-grep -a "WebSocket" /root/bot.log | tail -1
-echo "=== 新文案就位验证 ==="
-echo "告假新文案: $(grep -c '风月册页这会儿翻不动' /root/bot/bot/plugins/image_search_multisource.py) 处"
-echo "网易云说明句残留: $(grep -c '点这张卡片去网易云音乐' /root/bot/bot/plugins/song_request.py) 处"
-echo "=== 进程 ==="
-pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑已拉起 || echo 大脑没起来
+grep -a "连接\|connected\|WebSocket" /root/bot.log | tail -2
+tail -3 /root/bot.log
 --- 输出 ---
- bot/plugins/song_request.py             | 2 --
- 2 files changed, 2 insertions(+), 4 deletions(-)
-=== 当前版本 ===
-101aed1 文案:点歌卡去说明句;告假文案统一风月册页文风 (local 272095a)
-=== 重启大脑 ===
-=== 插件加载检查 ===
-10
-=== WS重连检查 ===
-=== 新文案就位验证 ===
-告假新文案: 2 处
-网易云说明句残留: 0 处
-=== 进程 ===
-大脑已拉起
+11-13 02:44:55 [INFO] uvicorn | 127.0.0.1:40516 - "WebSocket /onebot/v11/ws" [accepted]
+11-13 02:44:55 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+11-13 02:45:00 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=39)
+11-13 02:45:05 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794509105, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+11-13 02:45:24 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=39) running complete
