@@ -1,21 +1,12 @@
-<<<task_285377.txt>>>
-===== 任务285377 11-12 19:36:49 =====
+<<<task_285378.txt>>>
+===== 任务285378 11-12 19:41:27 =====
 --- 命令 ---
-cd /root/bot/bot && timeout 150 git fetch origin main && git reset --hard origin/main && echo "SYNC: $(git log --oneline -1)"
-BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
-sleep 3
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 8
-echo "MD5: $(md5sum /root/bot/bot/plugins/ai_chat.py)"
-echo "NEWFUN: $(grep -c '_baidu_asr\|_xfyun_asr' /root/bot/bot/plugins/ai_chat.py)"
-tail -3 /root/bot.log
+sleep 10
+grep "connected" /root/bot.log | tail -1
+grep -c "ERROR\|Traceback" /root/bot.log | tail -1
+tail -2 /root/bot.log
 --- 输出 ---
-From https://github.com/Thousands91/qq-bot
- * branch            main       -> FETCH_HEAD
-HEAD is now at aa76511 语音识别链定版：真·免费云端优先（百度5万次永久/讯飞每日500）→本地离线保底→SF/智谱垫底；新增_pcm16k统一转码，未配key自动跳过零影响
-SYNC: aa76511 语音识别链定版：真·免费云端优先（百度5万次永久/讯飞每日500）→本地离线保底→SF/智谱垫底；新增_pcm16k统一转码，未配key自动跳过零影响
-MD5: 0068d8ce3264c1252a111ad69b9242d0  /root/bot/bot/plugins/ai_chat.py
-NEWFUN: 4
-11-12 19:36:54 [INFO] uvicorn | Finished server process [24062]
-11-12 19:37:00 [SUCCESS] nonebot | NoneBot is initializing...
-11-12 19:37:00 [INFO] nonebot | Current Env: prod
+11-12 19:37:09 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+0
+11-12 19:37:54 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-12 19:37:54 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
