@@ -1,43 +1,133 @@
-<<<task_285411.txt>>>
-===== 任务285411 11-13 00:43:09 =====
+<<<task_285412.txt>>>
+===== 任务285412 11-13 00:44:43 =====
 --- 命令 ---
-echo "=== 00:08解冻后的心跳连续性 ==="
-grep -a "v5-git" /root/remote_ctl.log | tail -4
-echo "=== 最近消息时间线(22:50后) ==="
-grep -a "message.private.friend\|message.group" /root/bot.log | grep -aE "^11-13 00:" | awk '{print $1,$2,$NF}' | tail -15
-echo "=== bot.log最后写入时间 ==="
-stat -c "%y" /root/bot.log
+echo "=== QR码文件状态 ==="
+ls -l --time-style=full-iso /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null
 date "+现在: %F %T"
-echo "=== 大脑/NapCat进程与登录态 ==="
-pgrep -f "main.py" >/dev/null && echo 大脑在 || echo 大脑不在
-pgrep -f "opt/QQ/qq" >/dev/null && echo NapCat在 || echo NapCat不在
-bash /root/logincheck.sh 2>/dev/null | head -5
-echo "=== 手机充电/电池状态 ==="
-dumpsys battery 2>/dev/null | grep -E "powered|status|level" | head -4
-echo "=== Termux待机桶(1=active最松,10=restricted最严) ==="
-am get-standby-bucket com.termux 2>/dev/null || echo 查询失败
-echo "=== doze状态 ==="
-dumpsys deviceidle 2>/dev/null | grep -E "mState|mLightState" | head -2
+echo "=== NapCat进程启动时间与掉线原因 ==="
+ps -o pid,etime,cmd -p $(pgrep -f "opt/QQ/qq" | head -1) 2>/dev/null
+tail -30 /root/napcat-restart.log 2>/dev/null | tail -15
+echo "=== NapCat日志尾部(找掉线原因) ==="
+NLOG=$(ls -t /root/Napcat/napcat/logs/*.log 2>/dev/null | head -1)
+echo "日志: $NLOG"
+tail -25 "$NLOG" 2>/dev/null | grep -aE "offline|token|expire|error|logout|reconnect|QR|扫码|下线|掉线" | tail -10
+tail -5 "$NLOG" 2>/dev/null
+echo "=== 把新QR复制到同步区 ==="
+cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /root/asar-sync/remote/qrcode.png 2>/dev/null && echo 已复制 || echo 复制失败
+ls -l /root/asar-sync/remote/ 2>/dev/null
 --- 输出 ---
-=== 00:08解冻后的心跳连续性 ===
-[11-12 23:12] 心跳:循环正常(v5-git,LAST=285393)
-[11-12 23:33] 心跳:循环正常(v5-git,LAST=285400)
-[11-12 23:57] 心跳:循环正常(v5-git,LAST=285407)
-[11-13 00:30] 心跳:循环正常(v5-git,LAST=285409)
-=== 最近消息时间线(22:50后) ===
-11-13 00:08:45 '你在干什么'
-11-13 00:19:36 '[record:file=003931f4c1527912cb50a3211555b094.amr,path=/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt...,url=/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt...,file_size=91899]'
-=== bot.log最后写入时间 ===
-2026-11-13 00:19:41.590000000 +0800
-现在: 2026-11-13 00:43:09
-=== 大脑/NapCat进程与登录态 ===
-大脑在
-NapCat在
-=== 登录状态（权威判定）===
-[未登录] 当前没有有效会话
-阶段: waiting_qrcode
-最近错误: 无
-=== 手机充电/电池状态 ===
-=== Termux待机桶(1=active最松,10=restricted最严) ===
-查询失败
-=== doze状态 ===
+=== QR码文件状态 ===
+-rw-r--r-- 1 root root 594 2026-11-13 00:44:15.030000000 +0800 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+现在: 2026-11-13 00:44:43
+=== NapCat进程启动时间与掉线原因 ===
+  PID     ELAPSED CMD
+ 8184       00:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox
+11-13 00:44:15 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+5933e158778830060567ee23141a6a6d2687dd72ecddd2c882141a5481712b12
+4529f4e33433e838c810fe6e61c4ceeb5af02aa86c43a35332a52b962fda0e67
+34daef0a538d66b4dc4ee88fb7efd72e13e1c13df12f9d2ba2de7223f7a6a9bd
+2edb3c2840c4e820da3dbdbf838b2b347a3d83ccd6a5c91fa07109ff9488dc81
+088dd8a27ca71c45a46228b3d2a52484d54f424dae1467c081c80902e94c4e7b
+3ce9c28155377c63c5ad97684804c6ce1ad02c57e07997a4c0a403207a416fb0
+e50e55f53c765ccdb51b0545c78b06e2e68fa9a1ecbb325da6cb8dc94ee41071
+b94191de553d81d9eb2b98d2329e47e35273d05d110eac19e81961edf575c496
+7817a787f6341114e6c3cb76f3abb7dce8ba2473c4589e99f0b4c6c29440a0b0
+0f6f1604b81885ef8486679d83523d68aa559aa234754c2287924aacd4914740
+2c9c6372a59af0778c0b945310138445a27fe846bd418e30f820a11563acd86f
+c72eff122d31cc95a10b65ff969845bc233e8630320c8e46c068619ea404bad6
+d277edcef2e541601d0f26f3e22a629a29bc8db62b564daeb9c56bf80a3b84eb
+58800dde5244bc3e221e652340980b647fb500a61e2f9fd158dfac6fdd157e67
+=== NapCat日志尾部(找掉线原因) ===
+日志: 
+=== 把新QR复制到同步区 ===
+已复制
+total 0
+-rw-r--r-- 1 root root  2951 Nov 11 23:33 azar_guard.sh
+-rw-r--r-- 1 root root   198 Nov 12 02:03 cmd.txt
+-rw-r--r-- 1 root root   360 Nov 11 23:33 cmd_1108_1430.txt
+-rw-r--r-- 1 root root   360 Nov 11 23:33 cmd_1108_1435.txt
+-rw-r--r-- 1 root root   202 Nov 11 23:33 cmd_1108_1525.txt
+-rw-r--r-- 1 root root   189 Nov 11 23:33 cmd_1108_1530.txt
+-rw-r--r-- 1 root root   189 Nov 11 23:33 cmd_1108_1535.txt
+-rw-r--r-- 1 root root   324 Nov 11 23:33 cmd_1108_1540.txt
+-rw-r--r-- 1 root root   324 Nov 11 23:33 cmd_1108_1545.txt
+-rw-r--r-- 1 root root   324 Nov 11 23:33 cmd_1108_1600.txt
+-rw-r--r-- 1 root root   324 Nov 11 23:33 cmd_1108_1605.txt
+-rw-r--r-- 1 root root   576 Nov 11 23:33 cmd_1108_1850.txt
+-rw-r--r-- 1 root root   576 Nov 11 23:33 cmd_1108_1855.txt
+-rw-r--r-- 1 root root   176 Nov 11 23:33 cmd_1108_1905.txt
+-rw-r--r-- 1 root root   176 Nov 11 23:33 cmd_1108_1910.txt
+-rw-r--r-- 1 root root   200 Nov 11 23:33 cmd_1108_2005.txt
+-rw-r--r-- 1 root root   200 Nov 11 23:33 cmd_1108_2010.txt
+-rw-r--r-- 1 root root   275 Nov 11 23:33 cmd_1108_2035.txt
+-rw-r--r-- 1 root root   362 Nov 11 23:33 cmd_1108_2040.txt
+-rw-r--r-- 1 root root   216 Nov 11 23:33 cmd_1108_2045.txt
+-rw-r--r-- 1 root root   706 Nov 11 23:33 cmd_1108_2050.txt
+-rw-r--r-- 1 root root   194 Nov 11 23:33 cmd_1108_2055.txt
+-rw-r--r-- 1 root root   394 Nov 11 23:33 cmd_1108_2100.txt
+-rw-r--r-- 1 root root   186 Nov 11 23:33 cmd_1108_2105.txt
+-rw-r--r-- 1 root root   186 Nov 11 23:33 cmd_1108_2110.txt
+-rw-r--r-- 1 root root   686 Nov 11 23:33 cmd_1108_2125.txt
+-rw-r--r-- 1 root root   686 Nov 11 23:33 cmd_1108_2130.txt
+-rw-r--r-- 1 root root   657 Nov 11 23:33 cmd_1108_2135.txt
+-rw-r--r-- 1 root root   282 Nov 11 23:33 cmd_1108_2140.txt
+-rw-r--r-- 1 root root   272 Nov 11 23:33 cmd_1108_2145.txt
+-rw-r--r-- 1 root root   272 Nov 11 23:33 cmd_1108_2150.txt
+-rw-r--r-- 1 root root  1431 Nov 11 23:33 cmd_1108_2155.txt
+-rw-r--r-- 1 root root  1431 Nov 11 23:33 cmd_1108_2200.txt
+-rw-r--r-- 1 root root   327 Nov 11 23:33 cmd_1109_0010.txt
+-rw-r--r-- 1 root root   316 Nov 11 23:33 cmd_1109_0015.txt
+-rw-r--r-- 1 root root   316 Nov 11 23:33 cmd_1109_0020.txt
+-rw-r--r-- 1 root root   454 Nov 11 23:33 cmd_1109_0025.txt
+-rw-r--r-- 1 root root   454 Nov 11 23:33 cmd_1109_0030.txt
+-rw-r--r-- 1 root root   503 Nov 11 23:33 cmd_1109_0040.txt
+-rw-r--r-- 1 root root   503 Nov 11 23:33 cmd_1109_0045.txt
+-rw-r--r-- 1 root root   519 Nov 11 23:33 cmd_1109_0050.txt
+-rw-r--r-- 1 root root   519 Nov 11 23:33 cmd_1109_0055.txt
+-rw-r--r-- 1 root root  1242 Nov 11 23:33 cmd_1109_0125.txt
+-rw-r--r-- 1 root root  1242 Nov 11 23:33 cmd_1109_0130.txt
+-rw-r--r-- 1 root root   434 Nov 11 23:33 cmd_1109_0210.txt
+-rw-r--r-- 1 root root   434 Nov 11 23:33 cmd_1109_0215.txt
+-rw-r--r-- 1 root root   543 Nov 11 23:33 cmd_1109_0230.txt
+-rw-r--r-- 1 root root   543 Nov 11 23:33 cmd_1109_0235.txt
+-rw-r--r-- 1 root root   445 Nov 11 23:33 cmd_1109_1150.txt
+-rw-r--r-- 1 root root   445 Nov 11 23:33 cmd_1109_1155.txt
+-rw-r--r-- 1 root root   739 Nov 11 23:33 cmd_1109_1200.txt
+-rw-r--r-- 1 root root   739 Nov 11 23:33 cmd_1109_1205.txt
+-rw-r--r-- 1 root root   648 Nov 11 23:33 cmd_1109_1215.txt
+-rw-r--r-- 1 root root   648 Nov 11 23:33 cmd_1109_1220.txt
+-rw-r--r-- 1 root root   147 Nov 11 23:33 cmd_1109_1235.txt
+-rw-r--r-- 1 root root   147 Nov 11 23:33 cmd_1109_1240.txt
+-rw-r--r-- 1 root root   223 Nov 12 02:03 cmd_1112_0055.txt
+-rw-r--r-- 1 root root   223 Nov 12 02:03 cmd_1112_0100.txt
+-rw-r--r-- 1 root root   620 Nov 12 02:03 cmd_1112_0110.txt
+-rw-r--r-- 1 root root   620 Nov 12 02:03 cmd_1112_0115.txt
+-rw-r--r-- 1 root root   645 Nov 12 02:31 cmd_1112_0205.txt
+-rw-r--r-- 1 root root   645 Nov 12 02:31 cmd_1112_0210.txt
+-rw-r--r-- 1 root root   521 Nov 12 02:31 cmd_1112_0220.txt
+-rw-r--r-- 1 root root   464 Nov 12 02:31 cmd_1112_0225.txt
+-rw-r--r-- 1 root root   293 Nov 12 02:31 cmd_1112_0230.txt
+-rw-r--r-- 1 root root   293 Nov 12 02:31 cmd_1112_0235.txt
+-rw-r--r-- 1 root root   255 Nov 12 10:30 cmd_1112_0240.txt
+-rw-r--r-- 1 root root   832 Nov 12 10:30 cmd_1112_0245.txt
+-rw-r--r-- 1 root root   832 Nov 12 10:30 cmd_1112_0250.txt
+-rw-r--r-- 1 root root  1240 Nov 12 10:30 cmd_1112_1025.txt
+-rw-r--r-- 1 root root   297 Nov 12 10:30 cmd_1112_1030.txt
+-rw-r--r-- 1 root root   175 Nov 12 12:55 cmd_1112_1035.txt
+-rw-r--r-- 1 root root   175 Nov 12 12:55 cmd_1112_1040.txt
+-rw-r--r-- 1 root root   379 Nov 12 12:55 cmd_1112_1210.txt
+-rw-r--r-- 1 root root   379 Nov 12 12:55 cmd_1112_1215.txt
+-rw-r--r-- 1 root root   752 Nov 12 12:55 cmd_1112_1220.txt
+-rw-r--r-- 1 root root   761 Nov 12 12:55 cmd_1112_1230.txt
+-rw-r--r-- 1 root root   761 Nov 12 12:55 cmd_1112_1235.txt
+-rw-r--r-- 1 root root   961 Nov 12 12:55 cmd_1112_1240.txt
+-rw-r--r-- 1 root root   961 Nov 12 12:55 cmd_1112_1245.txt
+-rw-r--r-- 1 root root   307 Nov 12 12:55 cmd_1112_1250.txt
+-rw-r--r-- 1 root root   307 Nov 12 12:55 cmd_1112_1255.txt
+-rw-r--r-- 1 root root 30328 Nov 11 23:33 lessons.md
+-rw-r--r-- 1 root root  2171 Nov 12 12:55 out.txt
+-rw-r--r-- 1 root root    26 Nov 11 23:33 pin.txt
+-rw-r--r-- 1 root root   599 Nov 11 23:33 qr.png
+-rw-r--r-- 1 root root   594 Nov 13 00:44 qrcode.png
+-rw-r--r-- 1 root root  5113 Nov 11 23:33 remote_ctl.sh
+-rw-r--r-- 1 root root    60 Nov 12 12:55 status.txt
