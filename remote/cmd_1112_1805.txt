@@ -1,0 +1,27 @@
+285372
+echo "=== $(date '+%H:%M:%S') 离线ASR部署 ==="
+mkdir -p /data/data/com.termux/cache/pip
+export PYTHONPATH=/data/data/com.termux/files/usr/lib/python3/dist-packages
+echo "--- pip装sherpa-onnx ---"
+pip3 install -q sherpa-onnx -i https://pypi.tuna.tsinghua.edu.cn/simple 2>&1 | tail -1
+python3 -c "import sherpa_onnx; print('sherpa-onnx', sherpa_onnx.__version__)" 2>&1 | tail -1
+echo "--- 下载模型(78MB) ---"
+mkdir -p /root/asr_model
+cd /tmp
+if [ ! -f /root/asr_model/model.int8.onnx ]; then
+  curl -sL -m 280 -o para.tar.bz2 "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-paraformer-zh-small-2024-03-09.tar.bz2" || echo 下载失败
+  ls -l para.tar.bz2 2>/dev/null
+  tar xjf para.tar.bz2 2>/dev/null
+  cp sherpa-onnx-paraformer-zh-small-2024-03-09/model.int8.onnx /root/asr_model/ 2>/dev/null
+  cp sherpa-onnx-paraformer-zh-small-2024-03-09/tokens.txt /root/asr_model/ 2>/dev/null
+  rm -f para.tar.bz2
+fi
+ls -l /root/asr_model/
+echo "--- 代码同步+重启大脑 ---"
+cd /root/bot/bot && git fetch --quiet origin && git reset --quiet --hard origin/main && git log -1 --format='%h %s'
+pkill -f "venv/bin/python main.py"; sleep 3
+cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 14
+grep "connected" /root/bot.log | tail -1
+pgrep -f "venv/bin/python main.py" >/dev/null && echo ALIVE || echo DEAD
+date +%H:%M:%S
