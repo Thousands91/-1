@@ -1,13 +1,39 @@
-285373
-echo "=== $(date '+%H:%M:%S') 卡点诊断 ==="
-echo "--- 相关进程 ---"
-pgrep -af "pip3|curl|wget|tar |cc1plus|cmake|make" | head -6 || echo 无相关进程
-echo "--- 模型文件 ---"
-ls -l /root/asr_model/ 2>/dev/null
-ls -l /tmp/para.tar.bz2 2>/dev/null || echo 临时包不存在
-echo "--- sherpa import ---"
-timeout 15 python3 -c "import sherpa_onnx; print('OK', sherpa_onnx.__version__)" 2>&1 | tail -1
-echo "--- 大脑状态 ---"
-pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑在 || echo 大脑不在
+285374
+echo "=== $(date '+%H:%M:%S') 镜像测速+模型部署 ==="
+MODEL="k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-paraformer-zh-small-2024-03-09.tar.bz2"
+BEST=""; BESTSP=0
+for m in "https://ghfast.top/https://github.com" "https://gh-proxy.com/https://github.com" "https://ghproxy.net/https://github.com" "https://github.com"; do
+  sp=$(curl -sL -m 30 -r 0-2097151 -o /dev/null -w "%{speed_download}" "$m/$MODEL" 2>/dev/null)
+  sp=${sp%.*}
+  echo "$m -> ${sp}B/s"
+  if awk "BEGIN{exit !($sp > $BESTSP)}" 2>/dev/null; then BEST="$m"; BESTSP=$sp; fi
+done
+echo "最快镜像: $BEST (${BESTSP}B/s)"
+if [ -n "$BEST" ]; then
+  echo "--- 全量下载 ---"
+  curl -sL -m 500 -o /tmp/para.tar.bz2 "$BEST/$MODEL"
+  SZ=$(stat -c%s /tmp/para.tar.bz2 2>/dev/null || echo 0)
+  echo "下载大小: $SZ (期望77920048)"
+  if tar xjf /tmp/para.tar.bz2 -C /tmp 2>/dev/null; then
+    cp /tmp/sherpa-onnx-paraformer-zh-small-2024-03-09/model.int8.onnx /root/asr_model/
+    cp /tmp/sherpa-onnx-paraformer-zh-small-2024-03-09/tokens.txt /root/asr_model/
+    rm -f /tmp/para.tar.bz2
+  else
+    echo "解压失败(包不完整)"
+  fi
+fi
+ls -l /root/asr_model/
+echo "--- 模型加载验证 ---"
+timeout 60 python3 -c "
+import sherpa_onnx
+r = sherpa_onnx.OfflineRecognizer.from_paraformer('/root/asr_model/model.int8.onnx','/root/asr_model/tokens.txt',num_threads=2,sample_rate=16000,feature_dim=80)
+print('模型加载OK')
+" 2>&1 | tail -1
+echo "--- 代码同步+重启大脑 ---"
+cd /root/bot/bot && git fetch --quiet origin && git reset --quiet --hard origin/main && git log -1 --format='%h %s'
+pkill -f "venv/bin/python main.py"; sleep 3
+cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 14
 grep "connected" /root/bot.log | tail -1
+pgrep -f "venv/bin/python main.py" >/dev/null && echo ALIVE || echo DEAD
 date +%H:%M:%S
