@@ -1,22 +1,8 @@
-<<<task_285383.txt>>>
-===== 任务285383 11-12 21:54:13 =====
+<<<task_285384.txt>>>
+===== 任务285384 11-12 21:55:48 =====
 --- 命令 ---
-cd /root/bot/bot && timeout 150 git fetch origin main && git reset --hard origin/main && echo "SYNC: $(git log --oneline -1)"
-echo "特征: $(grep -c '随机镇架之作' /root/bot/bot/plugins/image_search_multisource.py)处"
-echo "映射: $(grep -c 'grandma' /root/bot/bot/plugins/image_search_multisource.py)处"
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/image_search_multisource.py && echo 语法OK
-BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
-sleep 3
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 8
-grep "connected" /root/bot.log | tail -1
+tail -3 /root/bot.log
 --- 输出 ---
-From https://github.com/Thousands91/qq-bot
- * branch            main       -> FETCH_HEAD
-   aa76511..32a69d2  main       -> origin/main
-HEAD is now at 32a69d2 色图带词搜空不拿文字打发:亲属词直写映射绕AI翻译+硬池随机图如实告知(100%出图定版)
-SYNC: 32a69d2 色图带词搜空不拿文字打发:亲属词直写映射绕AI翻译+硬池随机图如实告知(100%出图定版)
-特征: 2处
-映射: 2处
-语法OK
-11-12 19:37:09 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+11-12 21:54:34 [INFO] uvicorn | 127.0.0.1:47980 - "WebSocket /onebot/v11/ws" [accepted]
+11-12 21:54:34 [INFO] websockets | connection open
+11-12 21:54:34 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
