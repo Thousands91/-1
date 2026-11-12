@@ -1,32 +1,32 @@
-<<<task_285367.txt>>>
-===== 任务285367 11-12 16:57:38 =====
+<<<task_285368.txt>>>
+===== 任务285368 11-12 17:05:11 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') X10侧色图源海选 ==="
-echo "[1 konachan.com]" && curl -s -m 15 -A "Mozilla/5.0" "https://konachan.com/post.json?tags=rating:explicit+order:random&limit=1" | head -c 130; echo ""
-echo "[2 danbooru]" && curl -s -m 15 -A "Mozilla/5.0" "https://danbooru.donmai.us/posts.json?tags=rating:explicit+order:random&limit=1" | head -c 130; echo ""
-echo "[3 rule34.xxx]" && curl -s -m 15 "https://rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&limit=1&tags=rating:explicit" | head -c 130; echo ""
-echo "[4 waifu.pics]" && curl -s -m 15 "https://api.waifu.pics/nsfw/waifu" | head -c 120; echo ""
-echo "[5 waifu.im]" && curl -s -m 15 "https://api.waifu.im/search?included_tags=waifu&is_nsfw=true" | head -c 120; echo ""
-echo "[6 nekos.best]" && curl -s -m 15 "https://nekos.best/api/v2/hneko?results=1" | head -c 120; echo ""
-echo "[7 gelbooru]" && curl -s -m 15 "https://gelbooru.com/index.php?page=dapi&s=post&q=index&json=1&limit=1&tags=rating:explicit" | head -c 130; echo ""
-echo "[8 xbooru]" && curl -s -m 15 "https://xbooru.com/index.php?page=dapi&s=post&q=index&json=1&limit=1&tags=rating:explicit" | head -c 130; echo ""
+echo "=== $(date '+%H:%M:%S') 色图源海选第二批 ==="
+echo "[0基准 lolicon]" && curl -s -m 10 "https://api.lolicon.app/setu/v2?r18=1&num=1" | head -c 80; echo ""
+echo "[0基准 tbib]" && curl -s -m 15 "https://tbib.org/index.php?page=dapi&s=post&q=index&json=1&limit=1&tags=rating:explicit" | head -c 80; echo ""
+echo "[1 nekos.best端点表]" && curl -s -m 12 "https://nekos.best/api/v2/endpoints" | head -c 400; echo ""
+echo "[2 hypnohub]" && curl -s -m 20 "https://hypnohub.net/index.php?page=dapi&s=post&q=index&json=1&limit=1&tags=rating:explicit" | head -c 100; echo ""
+echo "[3 danbooru 25秒]" && curl -s -m 25 -w "(%{http_code} %{time_total}s)" -A "Mozilla/5.0" "https://danbooru.donmai.us/posts.json?tags=rating:explicit&limit=1" | head -c 100; echo ""
+echo "[4 rule34 25秒]" && curl -s -m 25 -w "(%{http_code} %{time_total}s)" "https://rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&limit=1&tags=rating:explicit" | head -c 100; echo ""
+echo "[5 jitsu api模式]" && curl -s -m 15 -o /dev/null -w "HTTP %{http_code} ctype %{content_type}" "https://moe.jitsu.top/api/?r18=1"; echo ""
+echo "[6 jitsu img r18]" && curl -s -m 15 -o /dev/null -w "HTTP %{http_code} size %{size_download}B ctype %{content_type}" -L "https://moe.jitsu.top/img/?r18=1"; echo ""
 date +%H:%M:%S
 --- 输出 ---
-=== 16:57:38 X10侧色图源海选 ===
-[1 konachan.com]
-
-[2 danbooru]
-
-[3 rule34.xxx]
-
-[4 waifu.pics]
-
-[5 waifu.im]
-
-[6 nekos.best]
-{"message":"This route doesn't exist. Refer to the list of endpoints at /api/v2/endpoints. If you need more help, read o
-[7 gelbooru]
-
-[8 xbooru]
-
-16:58:19
+=== 17:05:11 色图源海选第二批 ===
+[0基准 lolicon]
+{"error":"","data":[{"pid":85047830,"p":1,"uid":17332140,"title":"みくえっ�
+[0基准 tbib]
+[{"directory":4907,"hash":"bc06ea38da3e1d638508df0157bc25c2","height":3150,"id":
+[1 nekos.best端点表]
+{"lurk":{"format":"gif"},"shoot":{"format":"gif"},"sleep":{"format":"gif"},"clap":{"format":"gif"},"shrug":{"format":"gif"},"stare":{"format":"gif"},"wave":{"format":"gif"},"poke":{"format":"gif"},"confused":{"format":"gif"},"smile":{"format":"gif"},"peck":{"format":"gif"},"wink":{"format":"gif"},"sip":{"format":"gif"},"blush":{"format":"gif"},"smug":{"format":"gif"},"tickle":{"format":"gif"},"yee
+[2 hypnohub]
+[{"preview_url":"https:\/\/hypnohub.net\/thumbnails\/9d\/88\/thumbnail_9d88e84b76b0c967b6c75d1b5ac40
+[3 danbooru 25秒]
+(000 12.717026s)
+[4 rule34 25秒]
+(000 16.231513s)
+[5 jitsu api模式]
+HTTP 302 ctype text/html; charset=UTF-8
+[6 jitsu img r18]
+HTTP 200 size 769547B ctype image/jpeg
+17:05:54
