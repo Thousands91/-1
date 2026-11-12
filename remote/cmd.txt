@@ -1,18 +1,15 @@
-285411
-echo "=== 00:08解冻后的心跳连续性 ==="
-grep -a "v5-git" /root/remote_ctl.log | tail -4
-echo "=== 最近消息时间线(22:50后) ==="
-grep -a "message.private.friend\|message.group" /root/bot.log | grep -aE "^11-13 00:" | awk '{print $1,$2,$NF}' | tail -15
-echo "=== bot.log最后写入时间 ==="
-stat -c "%y" /root/bot.log
+285412
+echo "=== QR码文件状态 ==="
+ls -l --time-style=full-iso /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null
 date "+现在: %F %T"
-echo "=== 大脑/NapCat进程与登录态 ==="
-pgrep -f "main.py" >/dev/null && echo 大脑在 || echo 大脑不在
-pgrep -f "opt/QQ/qq" >/dev/null && echo NapCat在 || echo NapCat不在
-bash /root/logincheck.sh 2>/dev/null | head -5
-echo "=== 手机充电/电池状态 ==="
-dumpsys battery 2>/dev/null | grep -E "powered|status|level" | head -4
-echo "=== Termux待机桶(1=active最松,10=restricted最严) ==="
-am get-standby-bucket com.termux 2>/dev/null || echo 查询失败
-echo "=== doze状态 ==="
-dumpsys deviceidle 2>/dev/null | grep -E "mState|mLightState" | head -2
+echo "=== NapCat进程启动时间与掉线原因 ==="
+ps -o pid,etime,cmd -p $(pgrep -f "opt/QQ/qq" | head -1) 2>/dev/null
+tail -30 /root/napcat-restart.log 2>/dev/null | tail -15
+echo "=== NapCat日志尾部(找掉线原因) ==="
+NLOG=$(ls -t /root/Napcat/napcat/logs/*.log 2>/dev/null | head -1)
+echo "日志: $NLOG"
+tail -25 "$NLOG" 2>/dev/null | grep -aE "offline|token|expire|error|logout|reconnect|QR|扫码|下线|掉线" | tail -10
+tail -5 "$NLOG" 2>/dev/null
+echo "=== 把新QR复制到同步区 ==="
+cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png /root/asar-sync/remote/qrcode.png 2>/dev/null && echo 已复制 || echo 复制失败
+ls -l /root/asar-sync/remote/ 2>/dev/null
