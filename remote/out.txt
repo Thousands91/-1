@@ -1,43 +1,26 @@
-<<<task_285389.txt>>>
-===== 任务285389 11-12 22:52:19 =====
+<<<task_285390.txt>>>
+===== 任务285390 11-12 22:54:44 =====
 --- 命令 ---
-cd /root/bot/bot && timeout 150 git fetch origin main && git reset --hard origin/main && echo "SYNC: $(git log --oneline -1)"
-echo "特征: $(grep -c '_ai_post' /root/bot/bot/plugins/image_search_multisource.py)处"
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/image_search_multisource.py && echo 语法OK
-BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
-sleep 3
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 12
-grep "connected" /root/bot.log | tail -1
-echo "=== 智谱翻译复测(20s超时视角) ==="
-T0=$(date +%s)
-/root/bot/venv/bin/python -c "
-import os, json, urllib.request, time
+cd /root/bot/bot && /root/bot/venv/bin/python -c "
+import json, urllib.request, time
 env = {}
 for line in open('/root/bot/bot/.env'):
     line = line.strip()
     if '=' in line and not line.startswith('#'):
         k, v = line.split('=', 1); env[k] = v
-body = json.dumps({'model': env.get('OPENAI_MODEL','glm-4.7-flash'),'max_tokens':60,'temperature':0,'thinking':{'type':'disabled'},
- 'messages':[{'role':'system','content':'你把中文搜索词翻译成二次元图库的英文检索词。只输出英文,最多3个候选,逗号分隔,全小写,朴素常见词,不要解释。'},{'role':'user','content':'奶奶'}]}).encode()
-req = urllib.request.Request(env['OPENAI_BASE_URL']+'/chat/completions', data=body,
- headers={'Authorization':'Bearer '+env['OPENAI_API_KEY'],'Content-Type':'application/json'})
-try:
-    r = json.load(urllib.request.urlopen(req, timeout=20))
-    print('翻译OK:', r['choices'][0]['message']['content'])
-except Exception as e:
-    print('仍失败:', type(e).__name__, str(e)[:120])
+for i in range(4):
+    body = json.dumps({'model': env.get('OPENAI_MODEL','glm-4.7-flash'),'max_tokens':20,'temperature':0,'thinking':{'type':'disabled'},'messages':[{'role':'user','content':'说ok'}]}).encode()
+    req = urllib.request.Request(env['OPENAI_BASE_URL']+'/chat/completions', data=body,
+     headers={'Authorization':'Bearer '+env['OPENAI_API_KEY'],'Content-Type':'application/json'})
+    try:
+        r = json.load(urllib.request.urlopen(req, timeout=20))
+        print(f'第{i+1}次: OK')
+    except Exception as e:
+        print(f'第{i+1}次:', type(e).__name__, str(e)[:80])
+    time.sleep(8)
 "
-echo "耗时$(( $(date +%s) - T0 ))秒"
 --- 输出 ---
-From https://github.com/Thousands91/qq-bot
- * branch            main       -> FETCH_HEAD
-   73fc313..a2ca319  main       -> origin/main
-HEAD is now at a2ca319 搜词链修复:X10到智谱偶发读超时+静默吞异常=翻译链无声死亡;AI调用统一20s超时+重试1次+必打日志,tbib超时放宽15s
-SYNC: a2ca319 搜词链修复:X10到智谱偶发读超时+静默吞异常=翻译链无声死亡;AI调用统一20s超时+重试1次+必打日志,tbib超时放宽15s
-特征: 3处
-语法OK
-11-12 22:36:21 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
-=== 智谱翻译复测(20s超时视角) ===
-仍失败: HTTPError HTTP Error 429: Too Many Requests
-耗时1秒
+第1次: HTTPError HTTP Error 429: Too Many Requests
+第2次: HTTPError HTTP Error 429: Too Many Requests
+第3次: HTTPError HTTP Error 429: Too Many Requests
+第4次: OK
