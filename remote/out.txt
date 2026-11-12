@@ -1,5 +1,5 @@
 <<<task_285373.txt>>>
-===== 任务285373 11-12 18:22:38 =====
+===== 任务285373 11-12 18:22:44 =====
 --- 命令 ---
 echo "=== $(date '+%H:%M:%S') 卡点诊断 ==="
 echo "--- 相关进程 ---"
@@ -14,10 +14,8 @@ pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑在 || echo 大脑�
 grep "connected" /root/bot.log | tail -1
 date +%H:%M:%S
 --- 输出 ---
-=== 18:22:38 卡点诊断 ===
+=== 18:22:44 卡点诊断 ===
 --- 相关进程 ---
-2918 timeout 15 curl -s https://raw.githubusercontent.com/Thousands91/-1/main/remote/cmd_1112_1815.txt?cb=1794478958048250699
-2924 curl -s https://raw.githubusercontent.com/Thousands91/-1/main/remote/cmd_1112_1815.txt?cb=1794478958048250699
 --- 模型文件 ---
 total 0
 -rw-r--r-- 1 root root 5914624 Nov 12 18:07 /tmp/para.tar.bz2
@@ -26,4 +24,4 @@ OK 2.0.1
 --- 大脑状态 ---
 大脑在
 11-12 17:16:55 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
-18:22:38
+18:22:45
