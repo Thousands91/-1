@@ -1,27 +1,20 @@
-<<<task_285358.txt>>>
-===== 任务285358 11-12 15:05:13 =====
+<<<task_285359.txt>>>
+===== 任务285359 11-12 15:26:08 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') 最终验证 ==="
-echo "--- 插件加载/报错检查 ---"
-grep -i "error\|failed\|_exception" /root/bot.log | tail -5 || echo 无报错
-echo "--- WS连接 ---"
-grep "connected" /root/bot.log | tail -2
-echo "--- 15:02后是否有消息处理 ---"
-tail -3 /root/bot.log
+echo "=== $(date '+%H:%M:%S') 表情识别修复+色图源体检 ==="
+cd /root/bot/bot && git fetch --quiet origin && git reset --quiet --hard origin/main
+echo "代码: $(git log -1 --format='%h %s')"
+grep -q "^ZHIPU_API_KEY" .env || echo "ZHIPU_API_KEY=1ce5306c565b43a2958fad031004e4d9.ETXDC9mjwhzVXVbu" >> .env
+echo "env键: $(grep -o '^[A-Z_]*' .env | tr '\n' ' ')"
+echo "--- 色图三源实测（X10网络） ---"
+echo "[lolicon匿名r18]" && curl -s -m 10 "https://api.lolicon.app/setu/v2?r18=1&num=1" | head -c 260; echo ""
+echo "[jitsu r18]" && curl -s -o /dev/null -m 15 -w "%{http_code} %{size_download}B -> %{url_effective}" -L "https://moe.jitsu.top/img/?r18=1"; echo ""
+echo "[tbib explicit]" && curl -s -m 15 "https://tbib.org/index.php?page=dapi&s=post&q=index&json=1&limit=3&tags=rating:explicit" | head -c 180; echo ""
+echo "--- 重启大脑 ---"
+pkill -f "venv/bin/python main.py"; sleep 3
+cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 15
+grep "connected" /root/bot.log | tail -1
 date +%H:%M:%S
 --- 输出 ---
-=== 15:05:13 最终验证 ===
---- 插件加载/报错检查 ---
-11-12 15:01:12 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-12 15:02:22 [ERROR] nonebot | Running Matcher(type='message', module=plugins.fortune, lineno=25) failed.
-    raise NetworkError(f"WebSocket call api {api} timeout") from None
-nonebot.adapters.onebot.v11.exception.NetworkError: NetWorkError(message='WebSocket call api send_msg timeout')
-11-12 15:02:39 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
---- WS连接 ---
-11-12 14:23:20 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
-11-12 15:02:14 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
---- 15:02后是否有消息处理 ---
-11-12 15:04:59 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.fortune, lineno=25)
-11-12 15:05:02 [INFO] nonebot | Matcher(type='message', module=plugins.fortune, lineno=25) running complete
-11-12 15:05:13 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 700351389 from 1062461846@[群:590454333] '画师悦女有功'
-15:05:13
+=== 15:26:08 表情识别修复+色图源体检 ===
