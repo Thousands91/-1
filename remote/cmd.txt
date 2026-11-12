@@ -1,5 +1,13 @@
-285423
+285424
 PREFIX=/data/data/com.termux/files/usr
-U=https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main
-echo "=== android-tools历史版本清单 ==="
-curl -sL --max-time 30 "$U/pool/main/a/android-tools/" | grep -oE 'android-tools_[0-9][^"]*aarch64\.deb' | sort -uV | tail -12
+echo "=== android-tools的依赖声明 ==="
+dpkg -I /tmp/at.deb 2>/dev/null | grep -E "Depends|Package|Version"
+echo "=== protobuf包内容 ==="
+dpkg -c /tmp/protobuf.deb 2>/dev/null | grep -E "\.so" | awk '{print $NF}' | head -8
+echo "=== 急救:lite充全量 ==="
+ln -sf libprotobuf-lite.so $PREFIX/lib/libprotobuf.so 2>/dev/null
+export LD_LIBRARY_PATH=$PREFIX/lib
+echo "=== adb终试 ==="
+$PREFIX/bin/adb version 2>&1 | head -2
+echo "=== pair命令 ==="
+$PREFIX/bin/adb help 2>&1 | grep -E "pair|connect" | head -4
