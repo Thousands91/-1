@@ -1,20 +1,12 @@
-285409
-echo "=== 看门狗心跳时间线(10分钟一条,断档=冻结窗口) ==="
-grep "心跳" /root/remote_ctl.log | tail -25
-echo "=== 看门狗全部事件尾部 ==="
-tail -40 /root/remote_ctl.log
-echo "=== 遥控循环进程 ==="
-pgrep -af remote_ctl || echo 遥控循环不在
-echo "LAST任务号: $(cat /root/.remote_last)"
-echo "=== uptime ==="
-uptime
-echo "=== 大脑/NapCat进程状态 ==="
-for p in $(pgrep -f "main.py" | head -1) $(pgrep -f "opt/QQ/qq" | head -1); do echo "pid=$p cgroup: $(cat /proc/$p/cgroup 2>/dev/null | tail -1)"; done
-echo "=== 电池优化白名单里的Termux ==="
-dumpsys deviceidle whitelist 2>/dev/null | grep -ci "termux" || echo "dumpsys不可用"
-echo "=== phantom进程查杀设置 ==="
-settings get global phantom_process_killer_settings 2>/dev/null || echo 不可用
-echo "=== bot.log近期ERROR(6条) ==="
-grep "ERROR\|Traceback" /root/bot.log | tail -6
-echo "=== 系统wake_lock持有者 ==="
-cat /sys/power/wake_lock 2>/dev/null | head -c 400 || echo 不可读
+285410
+echo "=== v5心跳时间线(每10分钟一条,断档=冻结) ==="
+grep -a "v5-git" /root/remote_ctl.log | tail -30
+echo "=== 看门狗关键字事件(接管/看护/保险丝/report) ==="
+grep -aE "接管|看护|保险丝|intake|report|致命" /root/remote_ctl.log | grep -av "Message" | tail -40
+echo "=== 当前进程清单 ==="
+ps -ef 2>/dev/null | grep -aE "remote_ctl|main\.py|opt/QQ" | grep -av grep
+echo "=== 日志文件修改时间对照当前时间 ==="
+stat -c "%n %y" /root/remote_ctl.log /root/bot.log 2>/dev/null
+date "+现在: %F %T"
+echo "=== bot.log今晚21点后全部消息时间线 ==="
+grep -a "message.private.friend\|message.group" /root/bot.log | grep -aE "^11-12 (2[1-3]):|^11-13 00:" | awk '{print $1,$2,$NF}' | tail -45
