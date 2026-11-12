@@ -1,42 +1,55 @@
-<<<task_285414.txt>>>
-===== 任务285414 11-13 01:05:24 =====
+<<<task_285415.txt>>>
+===== 任务285415 11-13 01:06:50 =====
 --- 命令 ---
-ADB=/data/data/com.termux/files/usr/bin/adb
+echo "=== Termux usr可见性探测 ==="
+ls /data/data/com.termux/files/usr/bin/ 2>&1 | grep -E "^adb$|^pkg$" || echo "usr/bin不可见或无adb/pkg"
+ls /data/data/com.termux/files/home/.android/ 2>&1 | head -4
+echo "=== 安装adb ==="
+apt-get install -y android-tools-adb 2>&1 | grep -E "Setting up|newly installed|E:" | tail -2
 export HOME=/data/data/com.termux/files/home
-echo "=== adb服务与已连设备 ==="
-$ADB start-server 2>/dev/null; $ADB devices
-echo "=== mdns发现(无线调试是否在线) ==="
-timeout 15 $ADB mdns services 2>&1
-echo "=== 尝试旧端口41181 ==="
-timeout 8 $ADB connect 127.0.0.1:41181 2>&1
-timeout 8 $ADB connect 192.168.31.28:41181 2>&1
-echo "=== 设备清单(终) ==="
-$ADB devices
-if $ADB get-state 2>/dev/null | grep -q device; then
-  echo "=== 幻影杀手缴械状态验证 ==="
-  $ADB shell device_config get activity_manager max_phantom_processes 2>&1
+adb version 2>&1 | head -1
+echo "=== mdns发现(无线调试在线?) ==="
+timeout 15 adb mdns services 2>&1 | head -8
+echo "=== 设备清单 ==="
+adb devices
+echo "=== 尝试旧端口 ==="
+timeout 8 adb connect 127.0.0.1:41181 2>&1
+timeout 8 adb connect 192.168.31.28:41181 2>&1
+adb devices
+if adb get-state 2>/dev/null | grep -q device; then
+  echo "=== 幻影缴械状态 ==="
+  adb shell device_config get activity_manager max_phantom_processes 2>&1
   echo "=== 待机桶(改前) ==="
-  $ADB shell am get-standby-bucket com.termux 2>&1
-  $ADB shell am set-standby-bucket com.termux active 2>&1
-  echo "=== 待机桶(改后,应为10=active) ==="
-  $ADB shell am get-standby-bucket com.termux 2>&1
-  echo "=== doze当前状态与关闭 ==="
-  $ADB shell dumpsys deviceidle 2>/dev/null | grep mState | head -1
-  $ADB shell dumpsys deviceidle disable 2>&1
-  $ADB shell dumpsys deviceidle 2>/dev/null | grep mState | head -1
-  echo "=== 电池/充电状态 ==="
-  $ADB shell dumpsys battery 2>/dev/null | grep -E "powered|status|level" | head -4
+  adb shell am get-standby-bucket com.termux 2>&1
+  adb shell am set-standby-bucket com.termux active 2>&1
+  echo "=== 待机桶(改后) ==="
+  adb shell am get-standby-bucket com.termux 2>&1
+  echo "=== doze状态与关闭 ==="
+  adb shell dumpsys deviceidle disable 2>&1
+  adb shell dumpsys deviceidle 2>/dev/null | grep mState | head -1
+  echo "=== 电池/充电 ==="
+  adb shell dumpsys battery 2>/dev/null | grep -E "powered|status|level" | head -4
 else
-  echo "未连上,需要用户开无线调试页面拿端口"
+  echo "ADB未连上:需要用户打开无线调试开关(或读出页面上的端口)"
 fi
 --- 输出 ---
-=== adb服务与已连设备 ===
-bash: line 4: /data/data/com.termux/files/usr/bin/adb: No such file or directory
-=== mdns发现(无线调试是否在线) ===
-timeout: failed to run command '/data/data/com.termux/files/usr/bin/adb': No such file or directory
-=== 尝试旧端口41181 ===
-timeout: failed to run command '/data/data/com.termux/files/usr/bin/adb': No such file or directory
-timeout: failed to run command '/data/data/com.termux/files/usr/bin/adb': No such file or directory
-=== 设备清单(终) ===
-bash: line 11: /data/data/com.termux/files/usr/bin/adb: No such file or directory
-未连上,需要用户开无线调试页面拿端口
+=== Termux usr可见性探测 ===
+pkg
+ls: cannot access '/data/data/com.termux/files/home/.android/': No such file or directory
+=== 安装adb ===
+Setting up android-libadb (1:10.0.0+r36-9) ...
+Setting up adb (1:10.0.0+r36-9) ...
+Android Debug Bridge version 1.0.41
+=== mdns发现(无线调试在线?) ===
+adb: unknown command mdns
+=== 设备清单 ===
+* daemon not running; starting now at tcp:5037
+* daemon started successfully
+List of devices attached
+
+=== 尝试旧端口 ===
+failed to connect to '127.0.0.1:41181': Connection refused
+failed to connect to '192.168.31.28:41181': Connection refused
+List of devices attached
+
+ADB未连上:需要用户打开无线调试开关(或读出页面上的端口)
