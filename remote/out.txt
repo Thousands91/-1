@@ -1,32 +1,28 @@
-<<<task_285434.txt>>>
-===== 任务285434 11-13 02:52:37 =====
+<<<task_285435.txt>>>
+===== 任务285435 11-13 02:55:20 =====
 --- 命令 ---
-echo "=== 缓存文件全文(可能小) ==="
-ls -l /root/data/search_tag_cache.json 2>/dev/null
-head -c 2500 /root/data/search_tag_cache.json 2>/dev/null
-echo ""
-echo "=== 插件里发送图片的日志行样式 ==="
-grep -an "发送\|pic\|url" /root/bot.log | grep -a "02:4[78]\|02:50" | tail -10
-echo "=== tbib出图日志:找发图记录 ==="
-grep -a "02:47\|02:48\|02:49\|02:50" /root/bot.log | grep -av "heartbeat\|心跳" | head -30
+echo "=== 搜词缓存(正确路径) ==="
+ls -l /root/bot/data/search_tag_cache.json 2>/dev/null
+python3 -c "
+import json
+d=json.load(open('/root/bot/data/search_tag_cache.json'))
+for k in ('cand','tag','final'):
+    for q,v in d.get(k,{}).items():
+        if '苏丹' in q or '阿萨尔' in q:
+            print(k, q, '->', v)
+" 2>&1 | head -10
+echo "=== 缓存全部键 ==="
+python3 -c "
+import json
+d=json.load(open('/root/bot/data/search_tag_cache.json'))
+print(list(d.get('final',{}).keys()))
+" 2>&1
 --- 输出 ---
-=== 缓存文件全文(可能小) ===
-
-=== 插件里发送图片的日志行样式 ===
-=== tbib出图日志:找发图记录 ===
-11-13 02:47:47 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794509267, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
-11-13 02:47:50 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794509270, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-13 02:47:50 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794509270, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-13 02:47:50 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 186096855 from 1561950850 '色图 苏丹'
-11-13 02:47:50 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.image_search_multisource, lineno=58)
-11-13 02:47:52 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794509272, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
-11-13 02:47:55 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794509275, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-13 02:48:27 [INFO] nonebot | Matcher(type='message', module=plugins.image_search_multisource, lineno=58) running complete
-11-13 02:49:38 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794509378, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
-11-13 02:49:43 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794509383, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
-11-13 02:49:44 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794509384, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-13 02:49:44 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794509384, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-13 02:49:44 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1668264347 from 1561950850 '色图 阿萨尔'
-11-13 02:49:44 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.image_search_multisource, lineno=58)
-11-13 02:49:46 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794509386, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-13 02:50:16 [INFO] nonebot | Matcher(type='message', module=plugins.image_search_multisource, lineno=58) running complete
+=== 搜词缓存(正确路径) ===
+Traceback (most recent call last):
+  File "<string>", line 3, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: '/root/bot/data/search_tag_cache.json'
+=== 缓存全部键 ===
+Traceback (most recent call last):
+  File "<string>", line 3, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: '/root/bot/data/search_tag_cache.json'
