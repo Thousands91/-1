@@ -1,3 +1,7 @@
-285432
-grep -a "连接\|connected\|WebSocket" /root/bot.log | tail -2
-tail -3 /root/bot.log
+285433
+echo "=== 苏丹/阿萨尔搜索记录(bot.log) ==="
+grep -an "苏丹\|阿萨尔" /root/bot.log | grep -av "收到\|阿萨尔来" | tail -15
+echo "=== 搜词缓存文件 ==="
+grep -a "sultan\|sudan\|asar\|assal\|asghar\|assar" /root/data/search_tag_cache.json 2>/dev/null | head -10
+echo "=== 最近色图插件日志(搜词链各步) ==="
+grep -a "image_search\|候选\|对齐\|final\|tag=" /root/bot.log | tail -30
