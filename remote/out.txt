@@ -1,5 +1,5 @@
 <<<task_285342.txt>>>
-===== 任务285342 11-12 12:30:19 =====
+===== 任务285342 11-12 12:30:21 =====
 --- 命令 ---
 echo "=== $(date '+%H:%M:%S') WS链路体检v2 ==="
 echo "--- 8080端口状态(/proc/net/tcp) ---"
@@ -14,7 +14,7 @@ B=$(ls -t /root/bot/*.log /root/bot/logs/*.log 2>/dev/null | head -1); echo "文
 echo "--- 8080 HTTP探测 ---"
 curl -s -m 5 -o /dev/null -w "HTTP %{http_code}" http://127.0.0.1:8080/ || echo 8080不通
 --- 输出 ---
-=== 12:30:19 WS链路体检v2 ===
+=== 12:30:21 WS链路体检v2 ===
 --- 8080端口状态(/proc/net/tcp) ---
 --- NapCat onebot11配置 ---
 [/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json]
