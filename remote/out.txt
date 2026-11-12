@@ -1,20 +1,45 @@
-<<<task_285407.txt>>>
-===== 任务285407 11-12 23:56:42 =====
+<<<task_285408.txt>>>
+===== 任务285408 11-13 00:08:45 =====
 --- 命令 ---
-cd /root/bot/bot && timeout 150 git fetch origin main && git reset --hard origin/main && echo "SYNC: $(git log --oneline -1)"
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/image_search_multisource.py && echo 语法OK
-BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
-sleep 3
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 15
-grep "Succeeded to load plugin \"image_search" /root/bot.log | tail -1
-grep "connected" /root/bot.log | tail -1
+echo "=== 近30分钟消息时间线(收vs回) ==="
+grep -E "message.(group|private)" /root/bot.log | tail -25
+echo "=== wakelock状态 ==="
+termux-wake-lock 2>&1 || echo "termux-wake-lock不可用"
+echo "=== 大脑/NapCat存活 ==="
+pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑在 || echo 大脑不在
+pgrep -f "opt/QQ/qq" >/dev/null && echo NapCat在 || echo NapCat不在
+echo "=== 近10分钟有无ERROR ==="
+tail -300 /root/bot.log | grep -c "ERROR\|Traceback"
 --- 输出 ---
-From https://github.com/Thousands91/qq-bot
- * branch            main       -> FETCH_HEAD
-   9c5ec78..609b568  main       -> origin/main
-HEAD is now at 609b568 目录重试+终版对齐缓存落盘
-SYNC: 609b568 目录重试+终版对齐缓存落盘
-语法OK
-11-12 23:56:52 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
-11-12 23:56:56 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+=== 近30分钟消息时间线(收vs回) ===
+11-12 22:30:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1453391357 from 3819642626@[群:590454333] '老师我是事业型'
+11-12 22:37:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1125843207 from 1561950850 '色图'
+11-12 22:37:52 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 866533745 from 1561950850 '色图 爷爷'
+11-12 22:38:50 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2066899901 from 1561950850 '色图 奶奶'
+11-12 22:40:18 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2036397969 from 1561950850 '色图 奶奶'
+11-12 22:42:19 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 492041926 from 1561950850 '色图 姨'
+11-12 22:54:47 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 590631598 from 2045344206@[群:590454333] '[reply:id=238402623][at:qq=1617095026] 谁把水箭龟放出去了'
+11-12 22:55:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 790561344 from 2045344206@[群:590454333] '父子分离了'
+11-12 22:55:04 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 885138510 from 2045344206@[群:590454333] '[image:summary=[动画表情],file=6B9A734802BF72B45CC9C41EFFA84EB2.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhT61fvv...,file_size=8306]'
+11-12 23:00:15 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 57050443 from 1561950850@[群:1109952783] '略无聊'
+11-12 23:04:46 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1737449131 from 553414459@[群:1109952783] '猪猪'
+11-12 23:47:58 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1197097751 from 1561950850 '色图 牛'
+11-12 23:48:46 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 716076955 from 1561950850 ' 色图 人兽'
+11-12 23:49:42 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 901199478 from 1561950850 '人呢'
+11-12 23:50:33 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1136341936 from 1561950850 '色图 人兽'
+11-12 23:51:06 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1675384645 from 1561950850 '色图'
+11-12 23:52:19 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 832261143 from 1561950850 '色图'
+11-12 23:52:55 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 970896859 from 1561950850 '色图 马'
+11-12 23:56:39 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1095201674 from 1561950850@[群:590454333] '[at:qq=3427943187] '
+11-12 23:56:39 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1240605349 from 1561950850 '色图 奶奶'
+11-12 23:56:39 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 337281820 from 1561950850 '为什么你回复这么慢'
+11-12 23:57:25 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1208748487 from 1561950850 '色图 奶奶'
+11-12 23:58:29 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1325076882 from 1561950850 '色图 马'
+11-12 23:59:49 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 273865292 from 1561950850 '色图 牛'
+11-13 00:08:45 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 519963756 from 1561950850 '你在干什么'
+=== wakelock状态 ===
+=== 大脑/NapCat存活 ===
+大脑在
+NapCat在
+=== 近10分钟有无ERROR ===
+6
