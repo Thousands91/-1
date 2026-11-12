@@ -1,57 +1,10 @@
-<<<task_285334.txt>>>
-===== 任务285334 11-12 10:25:30 =====
+<<<task_285335.txt>>>
+===== 任务285335 11-12 10:30:14 =====
 --- 命令 ---
-echo "=== $(date '+%m-%d %H:%M') 扫码前全面体检 ==="
-echo "--- 1.遥控本体 ---"
-pgrep -f "bash /root/remote_ctl.sh" >/dev/null && echo remote_ctl活着 || echo remote_ctl死了
-echo "--- 2.bot大脑 ---"
-ps aux | grep "[m]ain.py" | awk '{print $2, $9, $11, $12}' | head -2
-tail -5 /root/bot.log 2>/dev/null
-echo "--- 3.NapCat进程与日志 ---"
-ps aux | grep -c "[o]pt/QQ/qq"
-tail -4 /root/napcat.log 2>/dev/null
-echo "--- 4.登录态 ---"
-timeout 20 bash /root/logincheck.sh 2>/dev/null | tail -2
-echo "--- 5.看门狗与boot自启 ---"
-ls -l /data/data/com.termux/files/home/x10_watchdog.sh 2>/dev/null || echo 看门狗脚本缺失
-tail -3 /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null || echo boot脚本容器内不可见
-echo "--- 6.凭据与记忆 ---"
-grep -c "=" /root/bot/.env 2>/dev/null || echo bot根无env
-ls /root/bot/data/memory/ 2>/dev/null | head -3
-echo "--- 7.一键登录脚本版本(应为opt/QQ) ---"
-grep -c "opt/QQ" /root/asar-sync/x10/azar_login_x10.sh 2>/dev/null
-grep -c "opt/00" /root/asar-sync/x10/azar_login_x10.sh 2>/dev/null
-echo "--- 8.记忆同步 ---"
-pgrep -f "asar[_]sync" >/dev/null && echo asar_sync在跑 || echo asar_sync不在
-echo "=== 体检结束 ==="
+cd /root/asar-sync && git fetch --quiet origin && git reset --quiet --hard origin/main
+pkill -f "bash /root/asar-sync/x10/azar_login" 2>/dev/null
+sleep 1
+nohup bash /root/asar-sync/x10/azar_login_x10.sh > /root/azar_login_run.log 2>&1 &
+echo "一键登录已后台启动 $(date +%H:%M:%S)"
 --- 输出 ---
-=== 11-12 10:25 扫码前全面体检 ===
---- 1.遥控本体 ---
-remote_ctl活着
---- 2.bot大脑 ---
-11694 2023 /root/bot/venv/bin/python main.py
-11-12 00:07:02 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
-11-12 00:07:02 [INFO] __main__ | ==================================================
-11-12 00:07:02 [INFO] uvicorn | Application startup complete.
-11-12 00:07:02 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-11-12 00:07:04 [INFO] ai_chat | [表情动态层] 已加载 QFace 全量表 372 条（来源 koishi.js.org）
---- 3.NapCat进程与日志 ---
-5
-[19613:1112/060635.050205:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[19613:1112/060635.057502:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[19613:1112/060635.063501:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[19613:1112/060635.063589:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
---- 4.登录态 ---
-阶段: waiting_qrcode
-最近错误: 无
---- 5.看门狗与boot自启 ---
--rwxr-xr-x 1 root root 372 Nov 12 02:45 /data/data/com.termux/files/home/x10_watchdog.sh
-boot脚本容器内不可见
---- 6.凭据与记忆 ---
-bot根无env
---- 7.一键登录脚本版本(应为opt/QQ) ---
-6
-0
---- 8.记忆同步 ---
-asar_sync在跑
-=== 体检结束 ===
+一键登录已后台启动 10:30:18
