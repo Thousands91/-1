@@ -1,0 +1,27 @@
+285370
+echo "=== $(date '+%H:%M:%S') 语音链路诊断+补ffmpeg ==="
+echo "--- ffmpeg ---"
+which ffmpeg && ffmpeg -version 2>/dev/null | head -1 || echo "ffmpeg缺失"
+echo "--- bot.log 语音报错(16:50-17:00) ---"
+grep "语音" /root/bot.log | tail -5
+echo "--- napcat.log record/ffmpeg报错 ---"
+grep -i "record\|ffmpeg\|silk" /root/napcat.log 2>/dev/null | tail -5
+echo "--- 安装ffmpeg(容器内) ---"
+if ! which ffmpeg >/dev/null 2>&1; then
+  apt-get update -qq 2>&1 | tail -1
+  DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg 2>&1 | tail -2
+fi
+which ffmpeg && ffmpeg -version 2>/dev/null | head -1 || echo "ffmpeg仍缺失"
+echo "--- SF ASR鉴权sanity(合成静音wav) ---"
+python3 -c "
+import wave, struct, math
+w = wave.open('/tmp/t.wav', 'w')
+w.setnchannels(1); w.setsampwidth(2); w.setframerate(16000)
+w.writeframes(b''.join(struct.pack('<h', int(800*math.sin(i/20))) for i in range(16000)))
+w.close()
+print('wav生成OK')
+"
+SFK=$(grep '^SILICONFLOW_API_KEY' /root/bot/bot/.env | head -1 | cut -d= -f2 | tr -d '\" ')
+curl -s -m 15 -o /tmp/asr.json -w "HTTP %{http_code}" -X POST "https://api.siliconflow.cn/v1/audio/transcriptions" -H "Authorization: Bearer $SFK" -F "model=FunAudioLLM/SenseVoiceSmall" -F "file=@/tmp/t.wav"
+echo ""; head -c 200 /tmp/asr.json
+date +%H:%M:%S
