@@ -1,38 +1,24 @@
-<<<task_285427.txt>>>
-===== 任务285427 11-13 01:40:39 =====
+<<<task_285428.txt>>>
+===== 任务285428 11-13 01:41:49 =====
 --- 命令 ---
-PREFIX=/data/data/com.termux/files/usr
-U=https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main
-F=$(python3 -c "
-import re
-t=open('/tmp/termux_packages.idx').read()
-for blk in t.split('\n\n'):
-    if re.search(r'^Package: libprotobuf$', blk, re.M):
-        m=re.search(r'^Filename: (.+)$', blk, re.M)
-        if m: print(m.group(1)); break
-")
-echo "libprotobuf路径: [$F]"
-ENC=$(echo "$F" | sed 's/:/%3a/g')
-curl -sL --max-time 120 -o /tmp/lp.deb "$U/$ENC" && ls -l /tmp/lp.deb && dpkg -x /tmp/lp.deb /tmp/lpx && echo 解包OK
-dpkg -c /tmp/lp.deb | grep -E "\.so" | awk '{print $NF}' | head -8
-find /tmp/lpx -name "*.so*" -exec cp -a {} /root/adblibs/ \; 2>/dev/null
-echo "=== adb终试 ==="
-export LD_LIBRARY_PATH=/root/adblibs:$PREFIX/lib
-/root/adblibs/adb version 2>&1 | head -2
-echo "=== pair命令 ==="
-/root/adblibs/adb help 2>&1 | grep -E "pair|connect" | head -4
+export HOME=/data/data/com.termux/files/home
+export LD_LIBRARY_PATH=/root/adblibs:/data/data/com.termux/files/usr/lib
+ADB=/root/adblibs/adb
+echo "=== pair命令确认 ==="
+$ADB help 2>&1 | grep -E "^ *(pair| Pair)" | head -3
+$ADB pair 2>&1 | head -2
+echo "=== 客户端密钥 ==="
+$ADB start-server 2>/dev/null
+ls -l $HOME/.android/ 2>/dev/null | grep adbkey
+echo "=== 设备清单 ==="
+$ADB devices
 --- 输出 ---
-libprotobuf路径: [pool/main/libp/libprotobuf/libprotobuf_2:36.2-1_aarch64.deb]
--rw-r--r-- 1 root root 1433000 Nov 13 01:40 /tmp/lp.deb
-解包OK
-./data/data/com.termux/files/usr/lib/libprotobuf.so
-./data/data/com.termux/files/usr/lib/libutf8_range.so
-./data/data/com.termux/files/usr/lib/libutf8_validity.so
-=== adb终试 ===
-Android Debug Bridge version 1.0.41
-Version 37.0.0p1-android-tools
-=== pair命令 ===
- -d                       use USB device (error if multiple devices connected)
- --one-device SERIAL|USB  only allowed with 'start-server' or 'server nodaemon', server will only connect to one USB device, specified by a serial number or USB device address.
- devices [-l]             list connected devices (-l for long output)
- connect HOST[:PORT]      connect to a device via TCP/IP [default port=5555]
+=== pair命令确认 ===
+ pair HOST[:PORT] [PAIRING CODE]
+     pair with a device for secure TCP/IP communication
+adb: usage: adb pair HOST[:PORT] [PAIRING CODE]
+=== 客户端密钥 ===
+-rw------- 1 root root 1704 Nov 13 01:07 adbkey
+=== 设备清单 ===
+List of devices attached
+
