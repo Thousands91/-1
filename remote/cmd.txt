@@ -1,9 +1,17 @@
-285434
-echo "=== 缓存文件全文(可能小) ==="
-ls -l /root/data/search_tag_cache.json 2>/dev/null
-head -c 2500 /root/data/search_tag_cache.json 2>/dev/null
-echo ""
-echo "=== 插件里发送图片的日志行样式 ==="
-grep -an "发送\|pic\|url" /root/bot.log | grep -a "02:4[78]\|02:50" | tail -10
-echo "=== tbib出图日志:找发图记录 ==="
-grep -a "02:47\|02:48\|02:49\|02:50" /root/bot.log | grep -av "heartbeat\|心跳" | head -30
+285435
+echo "=== 搜词缓存(正确路径) ==="
+ls -l /root/bot/data/search_tag_cache.json 2>/dev/null
+python3 -c "
+import json
+d=json.load(open('/root/bot/data/search_tag_cache.json'))
+for k in ('cand','tag','final'):
+    for q,v in d.get(k,{}).items():
+        if '苏丹' in q or '阿萨尔' in q:
+            print(k, q, '->', v)
+" 2>&1 | head -10
+echo "=== 缓存全部键 ==="
+python3 -c "
+import json
+d=json.load(open('/root/bot/data/search_tag_cache.json'))
+print(list(d.get('final',{}).keys()))
+" 2>&1
