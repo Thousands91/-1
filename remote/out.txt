@@ -1,26 +1,20 @@
-<<<task_285390.txt>>>
-===== 任务285390 11-12 22:54:44 =====
+<<<task_285391.txt>>>
+===== 任务285391 11-12 22:58:25 =====
 --- 命令 ---
-cd /root/bot/bot && /root/bot/venv/bin/python -c "
-import json, urllib.request, time
-env = {}
-for line in open('/root/bot/bot/.env'):
-    line = line.strip()
-    if '=' in line and not line.startswith('#'):
-        k, v = line.split('=', 1); env[k] = v
-for i in range(4):
-    body = json.dumps({'model': env.get('OPENAI_MODEL','glm-4.7-flash'),'max_tokens':20,'temperature':0,'thinking':{'type':'disabled'},'messages':[{'role':'user','content':'说ok'}]}).encode()
-    req = urllib.request.Request(env['OPENAI_BASE_URL']+'/chat/completions', data=body,
-     headers={'Authorization':'Bearer '+env['OPENAI_API_KEY'],'Content-Type':'application/json'})
-    try:
-        r = json.load(urllib.request.urlopen(req, timeout=20))
-        print(f'第{i+1}次: OK')
-    except Exception as e:
-        print(f'第{i+1}次:', type(e).__name__, str(e)[:80])
-    time.sleep(8)
-"
+cd /root/bot/bot && timeout 150 git fetch origin main && git reset --hard origin/main && echo "SYNC: $(git log --oneline -1)"
+echo "特征: $(grep -c '递增退避\|3 + 3 \* i' /root/bot/bot/plugins/image_search_multisource.py)处"
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/image_search_multisource.py && echo 语法OK
+BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
+sleep 3
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 12
+grep "connected" /root/bot.log | tail -1
 --- 输出 ---
-第1次: HTTPError HTTP Error 429: Too Many Requests
-第2次: HTTPError HTTP Error 429: Too Many Requests
-第3次: HTTPError HTTP Error 429: Too Many Requests
-第4次: OK
+From https://github.com/Thousands91/qq-bot
+ * branch            main       -> FETCH_HEAD
+   a2ca319..600dbda  main       -> origin/main
+HEAD is now at 600dbda 搜词链抗限流:AI调用429递增退避重试最多4次
+SYNC: 600dbda 搜词链抗限流:AI调用429递增退避重试最多4次
+特征: 2处
+语法OK
+11-12 22:52:40 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
