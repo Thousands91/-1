@@ -1,28 +1,35 @@
-<<<task_285435.txt>>>
-===== 任务285435 11-13 02:55:20 =====
+<<<task_285436.txt>>>
+===== 任务285436 11-13 02:56:03 =====
 --- 命令 ---
-echo "=== 搜词缓存(正确路径) ==="
-ls -l /root/bot/data/search_tag_cache.json 2>/dev/null
+find /root -name "search_tag_cache.json" 2>/dev/null
+F=$(find /root -name "search_tag_cache.json" 2>/dev/null | head -1)
+if [ -n "$F" ]; then
 python3 -c "
 import json
-d=json.load(open('/root/bot/data/search_tag_cache.json'))
+d=json.load(open('$F'))
 for k in ('cand','tag','final'):
     for q,v in d.get(k,{}).items():
-        if '苏丹' in q or '阿萨尔' in q:
-            print(k, q, '->', v)
-" 2>&1 | head -10
-echo "=== 缓存全部键 ==="
-python3 -c "
-import json
-d=json.load(open('/root/bot/data/search_tag_cache.json'))
-print(list(d.get('final',{}).keys()))
-" 2>&1
+        print(k,'|',q,'->',v)
+"
+else
+echo "全盘没找到缓存文件"
+find /root -name "data" -type d -newer /root/bot.log 2>/dev/null | head -5
+ls /root/bot/bot/data/ 2>/dev/null | head
+fi
 --- 输出 ---
-=== 搜词缓存(正确路径) ===
-Traceback (most recent call last):
-  File "<string>", line 3, in <module>
-FileNotFoundError: [Errno 2] No such file or directory: '/root/bot/data/search_tag_cache.json'
-=== 缓存全部键 ===
-Traceback (most recent call last):
-  File "<string>", line 3, in <module>
-FileNotFoundError: [Errno 2] No such file or directory: '/root/bot/data/search_tag_cache.json'
+/root/bot/bot/data/search_tag_cache.json
+cand | 奶奶 -> ['grandma', 'grandmother', 'old lady']
+cand | 马 -> ['horse', 'pony', 'equine']
+cand | 牛 -> ['cow', 'bull', 'cattle']
+cand | 爷爷 -> ['grandfather', 'grandpa', 'grandpa in traditional chinese clothes']
+cand | 苏丹 -> ['sudan', 'sudanese', 'africa']
+cand | 阿萨尔 -> ['assassin', 'asal', 'asalr']
+cand | 多人 -> ['group of people', 'crowd', 'many people']
+cand | 李仙花 -> ['li xianhua', 'chinese opera', 'li xianhua opera']
+final | 奶奶 -> ['grandma', 'old_lady', 'grandmother']
+final | 马 -> ['equine', 'horse', 'pony']
+final | 牛 -> ['cattle', 'bull']
+final | 爷爷 -> ['grandpa_longneck', 'grandfather']
+final | 苏丹 -> ['africa']
+final | 阿萨尔 -> ['assassin', 'asal']
+final | 多人 -> ['crowd']
