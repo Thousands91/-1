@@ -1,10 +1,20 @@
-285408
-echo "=== 近30分钟消息时间线(收vs回) ==="
-grep -E "message.(group|private)" /root/bot.log | tail -25
-echo "=== wakelock状态 ==="
-termux-wake-lock 2>&1 || echo "termux-wake-lock不可用"
-echo "=== 大脑/NapCat存活 ==="
-pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑在 || echo 大脑不在
-pgrep -f "opt/QQ/qq" >/dev/null && echo NapCat在 || echo NapCat不在
-echo "=== 近10分钟有无ERROR ==="
-tail -300 /root/bot.log | grep -c "ERROR\|Traceback"
+285409
+echo "=== 看门狗心跳时间线(10分钟一条,断档=冻结窗口) ==="
+grep "心跳" /root/remote_ctl.log | tail -25
+echo "=== 看门狗全部事件尾部 ==="
+tail -40 /root/remote_ctl.log
+echo "=== 遥控循环进程 ==="
+pgrep -af remote_ctl || echo 遥控循环不在
+echo "LAST任务号: $(cat /root/.remote_last)"
+echo "=== uptime ==="
+uptime
+echo "=== 大脑/NapCat进程状态 ==="
+for p in $(pgrep -f "main.py" | head -1) $(pgrep -f "opt/QQ/qq" | head -1); do echo "pid=$p cgroup: $(cat /proc/$p/cgroup 2>/dev/null | tail -1)"; done
+echo "=== 电池优化白名单里的Termux ==="
+dumpsys deviceidle whitelist 2>/dev/null | grep -ci "termux" || echo "dumpsys不可用"
+echo "=== phantom进程查杀设置 ==="
+settings get global phantom_process_killer_settings 2>/dev/null || echo 不可用
+echo "=== bot.log近期ERROR(6条) ==="
+grep "ERROR\|Traceback" /root/bot.log | tail -6
+echo "=== 系统wake_lock持有者 ==="
+cat /sys/power/wake_lock 2>/dev/null | head -c 400 || echo 不可读
