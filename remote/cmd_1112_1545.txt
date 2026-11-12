@@ -1,0 +1,24 @@
+285362
+echo "=== $(date '+%H:%M:%S') 全服务冒烟体检 ==="
+echo "[1新闻主源]" && curl -s -m 10 "https://news.topurl.cn/api" | head -c 120; echo ""
+echo "[2新闻备源]" && curl -s -m 10 "https://uapis.cn/api/v1/misc/hotboard?type=weibo" | head -c 120; echo ""
+echo "[3天气地理编码]" && curl -s -m 10 "https://geocoding-api.open-meteo.com/v1/search?name=Beijing&count=1" | head -c 100; echo ""
+echo "[4天气预报]" && curl -s -m 10 "https://api.open-meteo.com/v1/forecast?latitude=39.9&longitude=116.4&daily=weathercode&timezone=Asia%2FShanghai" | head -c 100; echo ""
+echo "[5点歌meting]" && curl -s -m 12 "https://api.injahow.cn/meting/?type=search&server=netease&id=%E6%99%B4%E5%A4%A9" | head -c 120; echo ""
+echo "[6网易云搜索]" && curl -s -m 10 "https://music.163.com/api/search/get?s=%E6%99%B4%E5%A4%A9&type=1&limit=1" | head -c 100; echo ""
+echo "[7豆瓣找书]" && curl -s -m 10 "https://book.douban.com/j/subject_suggest?q=%E7%BA%A2%E6%A5%BC%E6%A2%A6" | head -c 100; echo ""
+echo "[8古登堡镜像]" && curl -s -o /dev/null -m 12 -w "HTTP %{http_code}" "https://gutenberg.pglaf.org/1/0/1/101/101-0.txt"; echo ""
+echo "[9QQ表情表]" && curl -s -m 10 "https://koishi.js.org/QFace/assets/qq_emoji/_index.v2.json" | head -c 80; echo ""
+echo "[10智谱视觉key]" && curl -s -m 12 -o /dev/null -w "HTTP %{http_code}" -X POST "https://open.bigmodel.cn/api/paas/v4/chat/completions" -H "Content-Type: application/json" -H "Authorization: Bearer 1ce5306c565b43a2958fad031004e4d9.ETXDC9mjwhzVXVbu" -d '{"model":"glm-4-flash","messages":[{"role":"user","content":"hi"}]}'; echo ""
+echo "[11硅基流动key]" && curl -s -m 12 -o /dev/null -w "HTTP %{http_code}" "https://api.siliconflow.cn/v1/models" -H "Authorization: Bearer $(grep SILICONFLOW /root/bot/bot/.env | cut -d= -f2)"; echo ""
+echo "[12国际象棋库]" && /root/bot/venv/bin/python -c "import chess; print('chess OK')"
+echo "[13表情名查询]" && /root/bot/venv/bin/python -c "
+import json
+idx=json.load(open('/root/bot/bot/data/qface_index.json'))
+ks=list(idx)[:3]; print('qface条目数', len(idx), '样例', ks)
+"
+echo "--- 大脑与NapCat ---"
+pgrep -f "main.py" >/dev/null && echo 大脑在 || echo 大脑不在
+pgrep -f "opt/QQ" >/dev/null && echo NapCat在 || echo NapCat不在
+grep "connected" /root/bot.log | tail -1
+date +%H:%M:%S
