@@ -1,10 +1,19 @@
-<<<task_285335.txt>>>
-===== 任务285335 11-12 10:30:14 =====
+<<<task_285336.txt>>>
+===== 任务285336 11-12 10:35:13 =====
 --- 命令 ---
-cd /root/asar-sync && git fetch --quiet origin && git reset --quiet --hard origin/main
-pkill -f "bash /root/asar-sync/x10/azar_login" 2>/dev/null
-sleep 1
-nohup bash /root/asar-sync/x10/azar_login_x10.sh > /root/azar_login_run.log 2>&1 &
-echo "一键登录已后台启动 $(date +%H:%M:%S)"
+echo "=== $(date '+%H:%M:%S') 出码进度 ==="
+tail -10 /root/azar_login_run.log 2>/dev/null
+ls -l /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null || echo 相册还没码
 --- 输出 ---
-一键登录已后台启动 10:30:18
+=== 10:35:13 出码进度 ===
+
+############################################################
+#   现在抓紧时间（剩约 108 秒）：                        #
+#   打开X10相册 -> DCIM/Camera -> asar_qr.png 全屏显示       #
+#   用另一台手机的QQ扫一扫 -> 确认登录                       #
+############################################################
+
+==> 第 5 步：盯着登录结果
+[10:32:35] 二维码刷新了，已复制新的到相册，请重新扫码
+[10:34:38] 二维码刷新了，已复制新的到相册，请重新扫码
+-rw-rw---- 1 root aid_everybody 594 Nov 12 10:34 /sdcard/DCIM/Camera/asar_qr.png
