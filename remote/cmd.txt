@@ -1,5 +1,6 @@
-285380
-echo "=== v5接管验证 ==="
-ps -eo pid,args | grep "[r]emote_ctl" | head -3
-tail -3 /root/remote_ctl.log
-echo "pid_file: $(cat /root/.remote_pid 2>/dev/null)"
+285381
+pkill -f "bash /root/remote_ctl.sh"; echo "pkill退出码=$?"
+sleep 1
+echo "=== 存活循环 ==="
+ps -eo pid,args | grep "[r]emote_ctl" | grep -v proot
+echo "---"; tail -2 /root/remote_ctl.log
