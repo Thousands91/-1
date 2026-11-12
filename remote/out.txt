@@ -1,30 +1,32 @@
-<<<task_285353.txt>>>
-===== 任务285353 11-12 14:05:28 =====
+<<<task_285354.txt>>>
+===== 任务285354 11-12 14:10:10 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') 比心藏身处+UID确认 ==="
-M=/root/bot/bot/data/memory/1561950850.json
-echo "--- 比心出现的上下文 ---"
-grep -o '.\{30\}比心.\{30\}' "$M" | head -4
-echo "--- JSON顶层结构与键 ---"
-python3 -c "
+echo "=== $(date '+%H:%M:%S') unicode转义决定性检查 ==="
+python3 << 'PYEOF'
 import json
-d=json.load(open('$M'))
-print('类型:', type(d).__name__, '长度:', len(d))
-ks=set()
-for e in (d if isinstance(d,list) else d.values()):
-    if isinstance(e,dict): ks.update(e.keys())
-print('所有键:', sorted(ks))
-"
-echo "--- 你的私聊UID ---"
-grep "private" /root/bot.log | tail -3
+p='/root/bot/bot/data/memory/1561950850.json'
+b=p+'.bak_1112手术前'
+import os
+for f in (p,b):
+    if not os.path.exists(f): print(f,'不存在'); continue
+    raw=open(f,encoding='utf-8').read()
+    print(f.split('/')[-1], '| 比心:', raw.count('\u6bd4\u5fc3'), '| 爱心:', raw.count('\u7231\u5fc3'), '| 手:', raw.count('\u624b'), '| 掀:', raw.count('\u63c5'))
+    d=json.loads(raw)
+    hits=[e for e in d if '\u6bd4\u5fc3' in (e.get('m','')+e.get('r','')) or '\u7231\u5fc3' in (e.get('m','')+e.get('r',''))]
+    print('  含比心/爱心的问答条目数:', len(hits))
+    for e in hits[:4]:
+        print('   Q:', e.get('m','')[:36])
+        print('   A:', e.get('r','')[:36])
+PYEOF
 date +%H:%M:%S
 --- 输出 ---
-=== 14:05:28 比心藏身处+UID确认 ===
---- 比心出现的上下文 ---
---- JSON顶层结构与键 ---
-类型: list 长度: 62
-所有键: ['m', 'r', 't']
---- 你的私聊UID ---
-11-12 12:59:26 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1288269939 from 1561950850 'hi'
-11-12 13:36:48 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1036172873 from 1561950850 '你在干什么'
-14:05:28
+=== 14:10:10 unicode转义决定性检查 ===
+1561950850.json | 比心: 0 | 爱心: 1 | 手: 6 | 掀: 0
+  含比心/爱心的问答条目数: 1
+   Q: [表情:比爱心]
+   A: 得，这心倒是比墨水还浓。
+1561950850.json.bak_1112手术前 | 比心: 0 | 爱心: 1 | 手: 6 | 掀: 0
+  含比心/爱心的问答条目数: 1
+   Q: [表情:比爱心]
+   A: 得，这心倒是比墨水还浓。
+14:10:11
