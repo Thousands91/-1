@@ -1,0 +1,9 @@
+285343
+echo "=== $(date '+%H:%M:%S') 修复NapCat WS配置 ==="
+P=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json
+cp "$P" "$P.bak" && echo 已备份
+python3 -c "import json;p='/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json';d=json.load(open(p));d['network']['websocketClients']=[{'enable':True,'url':'ws://127.0.0.1:8080/onebot/v11/ws','messagePostFormat':'array','reportSelfMessage':False,'token':'','debug':False,'heartInterval':30000,'reconnectInterval':5000}];json.dump(d,open(p,'w'),ensure_ascii=False,indent=2);print('WS配置已写入')"
+grep -B1 -A9 websocketClients "$P"
+pkill -f "opt/QQ/qq"; sleep 2; echo NapCat已停止，开始重启
+nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 &
+echo "NapCat重启指令已发出 $(date +%H:%M:%S)"
