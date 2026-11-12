@@ -1,34 +1,22 @@
-<<<task_285376.txt>>>
-===== 任务285376 11-12 18:58:35 =====
+<<<task_285377.txt>>>
+===== 任务285377 11-12 19:36:22 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') venv终验 ==="
-echo "--- venv内sherpa+模型加载+转写管线 ---"
-timeout 120 /root/bot/venv/bin/python << 'PYEOF'
-import sherpa_onnx, subprocess, wave, array
-r = sherpa_onnx.OfflineRecognizer.from_paraformer('/root/asr_model/model.int8.onnx','/root/asr_model/tokens.txt',num_threads=2,sample_rate=16000,feature_dim=80)
-print('模型加载OK')
-subprocess.run(['ffmpeg','-y','-i','/tmp/t.wav','-ar','16000','-ac','1','-f','wav','/tmp/t16.wav'],capture_output=True)
-with wave.open('/tmp/t16.wav','rb') as w:
-    frames = w.readframes(w.getnframes())
-samples = list(array.array('h', frames))
-s = r.create_stream()
-s.accept_waveform(16000, [x/32768.0 for x in samples])
-r.decode_stream(s)
-print('转写管线OK, 输出:', repr(s.result.text))
-PYEOF
-echo "--- 大脑真实状态 ---"
-pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑在 || { pkill -f "venv/bin/python main.py"; sleep 3; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & sleep 15; }
-grep "connected" /root/bot.log | tail -1
-tail -2 /root/bot.log
-date +%H:%M:%S
+cd /root/bot/bot && timeout 150 git fetch origin main && git reset --hard origin/main && echo "SYNC: $(git log --oneline -1)"
+BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
+sleep 3
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 8
+echo "MD5: $(md5sum /root/bot/bot/plugins/ai_chat.py)"
+echo "NEWFUN: $(grep -c '_baidu_asr\|_xfyun_asr' /root/bot/bot/plugins/ai_chat.py)"
+tail -3 /root/bot.log
 --- 输出 ---
-=== 18:58:35 venv终验 ===
---- venv内sherpa+模型加载+转写管线 ---
-模型加载OK
-转写管线OK, 输出: '我没有'
---- 大脑真实状态 ---
-大脑在
-11-12 18:50:46 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
-11-12 18:58:25 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1137)
-11-12 18:58:25 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1137) running complete
-18:58:41
+From https://github.com/Thousands91/qq-bot
+ * branch            main       -> FETCH_HEAD
+   9536322..aa76511  main       -> origin/main
+HEAD is now at aa76511 语音识别链定版：真·免费云端优先（百度5万次永久/讯飞每日500）→本地离线保底→SF/智谱垫底；新增_pcm16k统一转码，未配key自动跳过零影响
+SYNC: aa76511 语音识别链定版：真·免费云端优先（百度5万次永久/讯飞每日500）→本地离线保底→SF/智谱垫底；新增_pcm16k统一转码，未配key自动跳过零影响
+MD5: 0068d8ce3264c1252a111ad69b9242d0  /root/bot/bot/plugins/ai_chat.py
+NEWFUN: 4
+11-12 19:36:34 [INFO] nonebot | Current Env: prod
+11-12 19:36:39 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
+11-12 19:36:39 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
