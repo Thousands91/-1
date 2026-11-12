@@ -1,28 +1,28 @@
-<<<task_285347.txt>>>
-===== 任务285347 11-12 13:15:26 =====
+<<<task_285348.txt>>>
+===== 任务285348 11-12 13:42:41 =====
 --- 命令 ---
-echo "--- 大脑日志尾部 ---"
-tail -12 /root/bot.log
-echo "--- NapCat WS连接迹象 ---"
-grep -i "websocket\|连接成功\|connected" /root/napcat.log 2>/dev/null | tail -5
-echo "--- 8080内核连接表 ---"
-grep -i ":1F90" /proc/net/tcp 2>/dev/null | awk '{print $2,$3,$4}' | head -6
+echo "=== $(date '+%H:%M:%S') 抽签退化+记忆版本核查 ==="
+echo "--- 字体文件 ---"
+for f in /usr/share/fonts/truetype/wqy/wqy-zenhei.ttc /usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc /usr/share/fonts/truetype/wqy/wqy-microhei.ttc; do [ -f "$f" ] && echo "存在 $f" || echo "缺失 $f"; done
+echo "--- PIL ---"
+/root/bot/venv/bin/python -c "import PIL; print('PIL正常', PIL.__version__)" 2>&1 | tail -1
+echo "--- 插件md5（对照：fortune=a6604753f220afb36e79cf0b4fee40ff ai_chat=44dade2ce9e092e2cabd6088230e2b9f） ---"
+md5sum /root/bot/plugins/fortune.py /root/bot/plugins/ai_chat.py 2>/dev/null
+echo "--- bot.log里抽签/渲染报错 ---"
+grep -i "fortune\|渲染\|render\|font" /root/bot.log | tail -6
 date +%H:%M:%S
 --- 输出 ---
---- 大脑日志尾部 ---
-11-12 13:00:59 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=947)
-11-12 13:00:59 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=947) running complete
-11-12 13:06:34 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 14873850 from 1617095026@[群:590454333] '[image:summary=,file=B6AA073C9E7574FF8FCBC8E827B7465C.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSUIn2i...,file_size=123296]'
-11-12 13:06:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=139)
-11-12 13:06:34 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=139) running complete
-11-12 13:06:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=947)
-11-12 13:06:34 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=947) running complete
-11-12 13:12:56 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2106599565 from 1561950850@[群:590454333] '[reply:id=14873850][at:qq=1617095026] 报吃'
-11-12 13:12:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=139)
-11-12 13:12:57 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=139) running complete
-11-12 13:12:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=947)
-11-12 13:12:57 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=947) running complete
---- NapCat WS连接迹象 ---
-WebSocket反向服务: ws://127.0.0.1:8080/onebot/v11/ws, : 已启动
---- 8080内核连接表 ---
-13:15:27
+=== 13:42:41 抽签退化+记忆版本核查 ===
+--- 字体文件 ---
+存在 /usr/share/fonts/truetype/wqy/wqy-zenhei.ttc
+缺失 /usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc
+缺失 /usr/share/fonts/truetype/wqy/wqy-microhei.ttc
+--- PIL ---
+ModuleNotFoundError: No module named 'PIL'
+--- 插件md5（对照：fortune=a6604753f220afb36e79cf0b4fee40ff ai_chat=44dade2ce9e092e2cabd6088230e2b9f） ---
+--- bot.log里抽签/渲染报错 ---
+11-12 00:07:02 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
+    from PIL import Image, ImageDraw, ImageFont
+11-12 12:59:56 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.fortune, lineno=25)
+11-12 12:59:56 [INFO] nonebot | Matcher(type='message', module=plugins.fortune, lineno=25) running complete
+13:42:41
