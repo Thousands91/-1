@@ -1,17 +1,42 @@
-<<<task_285413.txt>>>
-===== 任务285413 11-13 00:51:48 =====
+<<<task_285414.txt>>>
+===== 任务285414 11-13 01:05:24 =====
 --- 命令 ---
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo "码已放进相册DCIM/Camera/asar_qr.png"
-ls -l --time-style=+%H:%M:%S /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-date "+出码对照: %T"
-echo "=== QR_BASE64_START ==="
-base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-echo ""
-echo "=== QR_BASE64_END ==="
+ADB=/data/data/com.termux/files/usr/bin/adb
+export HOME=/data/data/com.termux/files/home
+echo "=== adb服务与已连设备 ==="
+$ADB start-server 2>/dev/null; $ADB devices
+echo "=== mdns发现(无线调试是否在线) ==="
+timeout 15 $ADB mdns services 2>&1
+echo "=== 尝试旧端口41181 ==="
+timeout 8 $ADB connect 127.0.0.1:41181 2>&1
+timeout 8 $ADB connect 192.168.31.28:41181 2>&1
+echo "=== 设备清单(终) ==="
+$ADB devices
+if $ADB get-state 2>/dev/null | grep -q device; then
+  echo "=== 幻影杀手缴械状态验证 ==="
+  $ADB shell device_config get activity_manager max_phantom_processes 2>&1
+  echo "=== 待机桶(改前) ==="
+  $ADB shell am get-standby-bucket com.termux 2>&1
+  $ADB shell am set-standby-bucket com.termux active 2>&1
+  echo "=== 待机桶(改后,应为10=active) ==="
+  $ADB shell am get-standby-bucket com.termux 2>&1
+  echo "=== doze当前状态与关闭 ==="
+  $ADB shell dumpsys deviceidle 2>/dev/null | grep mState | head -1
+  $ADB shell dumpsys deviceidle disable 2>&1
+  $ADB shell dumpsys deviceidle 2>/dev/null | grep mState | head -1
+  echo "=== 电池/充电状态 ==="
+  $ADB shell dumpsys battery 2>/dev/null | grep -E "powered|status|level" | head -4
+else
+  echo "未连上,需要用户开无线调试页面拿端口"
+fi
 --- 输出 ---
-码已放进相册DCIM/Camera/asar_qr.png
--rw-r--r-- 1 root root 602 00:50:20 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-出码对照: 00:51:48
-=== QR_BASE64_START ===
-iVBORw0KGgoAAAANSUhEUgAAAJMAAACTAQAAAACinha4AAAACXBIWXMAAAsTAAALEwEAmpwYAAACDElEQVRIid2WPa7kIBCE2yIgG18AiWuQcSX7Av65wPOVyLgGki9gMgLk3mI80nvSJvRqg9WiSeYLkLu7qhri3w/91+wimou6vDoKrYEGCctcF23Wwnupc8RfCQtmcvZgu8c6RJqFbA4nR0OO/oAt/jxKWpxZpYwr7ru1vciM37V1sda/aD6/Hz3tYTg5VCI+4pm/Z9nFbpfIWUYdnjdKs4iRzVFxUJunyctYZjP5ShoVmJHTKmEX2U2fe7Qb1cWbQcJub8aAFtrb0xDULmGXs7dTXFQbu+ZDxnBZmlx6OYzO7hKWi+VYobIXviUqGQtmiPbSuJiP8sy8l90eClVHqGNAMx6ddjMNaeMT1O3rpJ86elkuZ34LHL4cYVARi29fNnOkheooYsV+OXohDLiu5dFLL4Mvx9Y/Wtm8oB0Jy61nGHt9wSj8yc5OdmlDGu6kyZ0XffzRy+i8tM0tttMYz0PGEuw4F2gNLeRdwm7fxr4GxrqA3GQMkcnnl8PM4bDHW72M24Yh0khf3vyj016WI41F5XAiUZruJAxJwBHqrNiQX04dEpYjokshwy6kIJlZwnAud24tPuvMZpCwtmc4TVpduplslTDst4loIuxGNEDI2l6FwPGIeK9HIZugcZ3wiMB2ZSFbnMLEtmZKm0UMdXisGixGRP7jj16G/mE1ofRc0kRKxP72W+/fZr8AwJYyK4lwx4IAAAAASUVORK5CYII=
-=== QR_BASE64_END ===
+=== adb服务与已连设备 ===
+bash: line 4: /data/data/com.termux/files/usr/bin/adb: No such file or directory
+=== mdns发现(无线调试是否在线) ===
+timeout: failed to run command '/data/data/com.termux/files/usr/bin/adb': No such file or directory
+=== 尝试旧端口41181 ===
+timeout: failed to run command '/data/data/com.termux/files/usr/bin/adb': No such file or directory
+timeout: failed to run command '/data/data/com.termux/files/usr/bin/adb': No such file or directory
+=== 设备清单(终) ===
+bash: line 11: /data/data/com.termux/files/usr/bin/adb: No such file or directory
+未连上,需要用户开无线调试页面拿端口
