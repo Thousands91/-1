@@ -1,20 +1,28 @@
-<<<task_285346.txt>>>
-===== 任务285346 11-12 13:13:32 =====
+<<<task_285347.txt>>>
+===== 任务285347 11-12 13:15:10 =====
 --- 命令 ---
-timeout 20 bash /root/logincheck.sh 2>/dev/null | tail -4
-if timeout 20 bash /root/logincheck.sh 2>/dev/null | grep -q 在线; then
-echo "已在线，无需重新出码"
-else
-cd /root/asar-sync && git fetch --quiet origin && git reset --quiet --hard origin/main
-pkill -f "bash /root/asar-sync/x10/azar_login" 2>/dev/null
-nohup bash /root/asar-sync/x10/azar_login_x10.sh > /root/azar_login_run.log 2>&1 &
-echo "未登录，已重启一键登录，约90秒后新码进相册"
-fi
+echo "--- 大脑日志尾部 ---"
+tail -12 /root/bot.log
+echo "--- NapCat WS连接迹象 ---"
+grep -i "websocket\|连接成功\|connected" /root/napcat.log 2>/dev/null | tail -5
+echo "--- 8080内核连接表 ---"
+grep -i ":1F90" /proc/net/tcp 2>/dev/null | awk '{print $2,$3,$4}' | head -6
 date +%H:%M:%S
 --- 输出 ---
-=== 登录状态（权威判定）===
-[在线] 已登录，一切正常
-阶段: ready
-最近错误: 无
-已在线，无需重新出码
-13:13:33
+--- 大脑日志尾部 ---
+11-12 13:00:59 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=947)
+11-12 13:00:59 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=947) running complete
+11-12 13:06:34 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 14873850 from 1617095026@[群:590454333] '[image:summary=,file=B6AA073C9E7574FF8FCBC8E827B7465C.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSUIn2i...,file_size=123296]'
+11-12 13:06:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=139)
+11-12 13:06:34 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=139) running complete
+11-12 13:06:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=947)
+11-12 13:06:34 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=947) running complete
+11-12 13:12:56 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2106599565 from 1561950850@[群:590454333] '[reply:id=14873850][at:qq=1617095026] 报吃'
+11-12 13:12:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=139)
+11-12 13:12:57 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=139) running complete
+11-12 13:12:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=947)
+11-12 13:12:57 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=947) running complete
+--- NapCat WS连接迹象 ---
+WebSocket反向服务: ws://127.0.0.1:8080/onebot/v11/ws, : 已启动
+--- 8080内核连接表 ---
+13:15:11
