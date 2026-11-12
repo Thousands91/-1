@@ -1,19 +1,63 @@
-<<<task_285361.txt>>>
-===== 任务285361 11-12 15:40:18 =====
+<<<task_285362.txt>>>
+===== 任务285362 11-12 15:47:41 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') deploy 285361 ==="
-cd /root/bot/bot && git fetch --quiet origin && git reset --quiet --hard origin/main && git log -1 --format='%h %s'
-pkill -f "venv/bin/python main.py"; sleep 3
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 14
+echo "=== $(date '+%H:%M:%S') 全服务冒烟体检 ==="
+echo "[1新闻主源]" && curl -s -m 10 "https://news.topurl.cn/api" | head -c 120; echo ""
+echo "[2新闻备源]" && curl -s -m 10 "https://uapis.cn/api/v1/misc/hotboard?type=weibo" | head -c 120; echo ""
+echo "[3天气地理编码]" && curl -s -m 10 "https://geocoding-api.open-meteo.com/v1/search?name=Beijing&count=1" | head -c 100; echo ""
+echo "[4天气预报]" && curl -s -m 10 "https://api.open-meteo.com/v1/forecast?latitude=39.9&longitude=116.4&daily=weathercode&timezone=Asia%2FShanghai" | head -c 100; echo ""
+echo "[5点歌meting]" && curl -s -m 12 "https://api.injahow.cn/meting/?type=search&server=netease&id=%E6%99%B4%E5%A4%A9" | head -c 120; echo ""
+echo "[6网易云搜索]" && curl -s -m 10 "https://music.163.com/api/search/get?s=%E6%99%B4%E5%A4%A9&type=1&limit=1" | head -c 100; echo ""
+echo "[7豆瓣找书]" && curl -s -m 10 "https://book.douban.com/j/subject_suggest?q=%E7%BA%A2%E6%A5%BC%E6%A2%A6" | head -c 100; echo ""
+echo "[8古登堡镜像]" && curl -s -o /dev/null -m 12 -w "HTTP %{http_code}" "https://gutenberg.pglaf.org/1/0/1/101/101-0.txt"; echo ""
+echo "[9QQ表情表]" && curl -s -m 10 "https://koishi.js.org/QFace/assets/qq_emoji/_index.v2.json" | head -c 80; echo ""
+echo "[10智谱视觉key]" && curl -s -m 12 -o /dev/null -w "HTTP %{http_code}" -X POST "https://open.bigmodel.cn/api/paas/v4/chat/completions" -H "Content-Type: application/json" -H "Authorization: Bearer 1ce5306c565b43a2958fad031004e4d9.ETXDC9mjwhzVXVbu" -d '{"model":"glm-4-flash","messages":[{"role":"user","content":"hi"}]}'; echo ""
+echo "[11硅基流动key]" && curl -s -m 12 -o /dev/null -w "HTTP %{http_code}" "https://api.siliconflow.cn/v1/models" -H "Authorization: Bearer $(grep SILICONFLOW /root/bot/bot/.env | cut -d= -f2)"; echo ""
+echo "[12国际象棋库]" && /root/bot/venv/bin/python -c "import chess; print('chess OK')"
+echo "[13表情名查询]" && /root/bot/venv/bin/python -c "
+import json
+idx=json.load(open('/root/bot/bot/data/qface_index.json'))
+ks=list(idx)[:3]; print('qface条目数', len(idx), '样例', ks)
+"
+echo "--- 大脑与NapCat ---"
+pgrep -f "main.py" >/dev/null && echo 大脑在 || echo 大脑不在
+pgrep -f "opt/QQ" >/dev/null && echo NapCat在 || echo NapCat不在
 grep "connected" /root/bot.log | tail -1
-pgrep -f "venv/bin/python main.py" >/dev/null && echo OK_ALIVE || echo DEAD
 date +%H:%M:%S
 --- 输出 ---
-=== 15:40:18 deploy 285361 ===
-608f49b 色图纯随机权重调整:lolicon 70%(用户反馈不色)
+=== 15:47:41 全服务冒烟体检 ===
+[1新闻主源]
+{"code":200,"data":{"_intro":"特性：1、支持传入ip参数,获取指定ip地址所在城市的天气预报. 例如h
+[2新闻备源]
+{"type":"weibo","update_time":"2026-11-12T03:48:29.748Z","list":[{"index":1,"title":"熊出没官方辟谣熊大被写�
+[3天气地理编码]
+{"results":[{"id":1816670,"name":"Beijing","latitude":39.9075,"longitude":116.39723,"elevation":49.0
+[4天气预报]
+{"latitude":39.89455,"longitude":116.35983,"generationtime_ms":0.09644031524658203,"utc_offset_secon
+[5点歌meting]
+{"error":"unknown type"}
+[6网易云搜索]
+{"result":{"songs":[{"album":{"publishTime":1738684800000,"size":1,"artist":{"img1v1Url":"https://p1
+[7豆瓣找书]
+[{"title":"红楼梦","url":"https:\/\/book.douban.com\/subject\/1007305\/","pic":"https://img3.doub
+[8古登堡镜像]
+HTTP 404
+[9QQ表情表]
+{
+  "syncedAt": "2026-11-12T01:59:11.360Z",
+  "emojis": {
+    "0": {
+      "emoj
+[10智谱视觉key]
+HTTP 200
+[11硅基流动key]
+HTTP 401
+[12国际象棋库]
+chess OK
+[13表情名查询]
+qface条目数 2 样例 ['names', 'syncedAt']
+--- 大脑与NapCat ---
+大脑在
+NapCat在
 11-12 15:40:32 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
-OK_ALIVE
-15:40:37
-E
-15:40:34
+15:48:00
