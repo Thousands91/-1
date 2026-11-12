@@ -1,23 +1,15 @@
-285425
+285426
 PREFIX=/data/data/com.termux/files/usr
 U=https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main
 IDX=/tmp/termux_packages.idx
-[ -f $IDX ] || curl -sL --max-time 60 "$U/dists/stable/main/binary-aarch64/Packages" > $IDX
-mkdir -p /root/adblibs
-for PKG in libprotobuf fmt brotli liblz4 pcre2 zstd; do
-  F=$(grep -A8 "^Package: $PKG$" $IDX | grep "^Filename:" | head -1 | awk '{print $2}')
-  [ -z "$F" ] && { echo "跳过 $PKG(无此包)"; continue; }
-  ENC=$(echo "$F" | sed 's/:/%3a/g')
-  curl -sL --max-time 120 -o /tmp/p.deb "$U/$ENC" && dpkg -x /tmp/p.deb /tmp/pkgx 2>/dev/null
-  find /tmp/pkgx -path "*/lib/*" \( -name "*.so*" -o -name "fmt*" \) -exec cp -a {} /root/adblibs/ \; 2>/dev/null
-  rm -rf /tmp/pkgx
-  echo "$PKG 完成"
-done
-echo "=== adblibs清单 ==="
-ls /root/adblibs/ | head -25
+echo "=== idx里搜utf8相关包 ==="
+grep -B1 "utf8" $IDX | grep -E "^Package|^Filename" | head -6
+F=$(grep -A8 "^Package: libprotobuf$" $IDX | grep "^Filename:" | head -1 | awk '{print $2}')
+ENC=$(echo "$F" | sed 's/:/%3a/g')
+curl -sL --max-time 120 -o /tmp/lp.deb "$U/$ENC" && echo "=== libprotobuf包完整文件清单 ===" && dpkg -c /tmp/lp.deb | awk '{print $NF}' | grep lib
+dpkg -x /tmp/lp.deb /tmp/lpx 2>/dev/null
+find /tmp/lpx -name "*.so*" -exec cp -a {} /root/adblibs/ \; 2>/dev/null
 echo "=== adb终试 ==="
 export LD_LIBRARY_PATH=/root/adblibs:$PREFIX/lib
-cp /data/data/com.termux/files/usr/bin/adb /root/adblibs/adb 2>/dev/null
 /root/adblibs/adb version 2>&1 | head -2
-echo "=== pair命令确认 ==="
 /root/adblibs/adb help 2>&1 | grep -E "pair|connect" | head -4
