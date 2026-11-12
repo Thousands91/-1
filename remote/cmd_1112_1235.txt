@@ -1,0 +1,13 @@
+285342
+echo "=== $(date '+%H:%M:%S') WS链路体检v2 ==="
+echo "--- 8080端口状态(/proc/net/tcp) ---"
+grep -i ":1F90" /proc/net/tcp 2>/dev/null | awk '{print $2,$3,$4}' | head -8
+echo "--- NapCat onebot11配置 ---"
+C=$(find /root/Napcat -name "onebot11*.json" 2>/dev/null | head -2); for f in $C; do echo "[$f]"; cat "$f"; done
+echo "--- napcat.log尾部 ---"
+tail -12 /root/napcat.log 2>/dev/null || echo napcat.log不存在
+echo "--- 大脑日志 ---"
+ls -t /root/bot/*.log /root/bot/logs/*.log 2>/dev/null | head -3
+B=$(ls -t /root/bot/*.log /root/bot/logs/*.log 2>/dev/null | head -1); echo "文件:$B"; tail -12 "$B" 2>/dev/null
+echo "--- 8080 HTTP探测 ---"
+curl -s -m 5 -o /dev/null -w "HTTP %{http_code}" http://127.0.0.1:8080/ || echo 8080不通
