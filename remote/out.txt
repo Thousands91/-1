@@ -1,5 +1,5 @@
 <<<task_285340.txt>>>
-===== 任务285340 11-12 12:10:12 =====
+===== 任务285340 11-12 12:10:23 =====
 --- 命令 ---
 echo "=== $(date '+%H:%M:%S') 登录验证 ==="
 timeout 20 bash /root/logincheck.sh 2>/dev/null | tail -8
@@ -9,7 +9,7 @@ echo "--- NapCat日志尾部 ---"
 L=$(find /root -path "*napcat*" -name "*.log" 2>/dev/null | head -1); tail -12 "$L" 2>/dev/null
 ls -l /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null
 --- 输出 ---
-=== 12:10:12 登录验证 ===
+=== 12:10:23 登录验证 ===
 === 登录状态（权威判定）===
 [在线] 已登录，一切正常
 阶段: ready
