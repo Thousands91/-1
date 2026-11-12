@@ -1,6 +1,6 @@
-285381
-pkill -f "bash /root/remote_ctl.sh"; echo "pkill退出码=$?"
-sleep 1
-echo "=== 存活循环 ==="
-ps -eo pid,args | grep "[r]emote_ctl" | grep -v proot
-echo "---"; tail -2 /root/remote_ctl.log
+285382
+echo "大脑: $(pgrep -f 'venv/bin/python main.py' >/dev/null && echo 在 || echo 不在)"
+echo "NapCat: $(pgrep -f 'opt/QQ/qq' >/dev/null && echo 在 || echo 不在)"
+echo "遥控循环: $(ps -eo args | grep -c '[r]emote_ctl_v5.sh')"
+echo "ASR模型: $(du -sh /root/asr_model 2>/dev/null | cut -f1)"
+tail -1 /root/bot.log
