@@ -1,114 +1,132 @@
-<<<task_285409.txt>>>
-===== 任务285409 11-13 00:29:27 =====
+<<<task_285410.txt>>>
+===== 任务285410 11-13 00:32:04 =====
 --- 命令 ---
-echo "=== 看门狗心跳时间线(10分钟一条,断档=冻结窗口) ==="
-grep "心跳" /root/remote_ctl.log | tail -25
-echo "=== 看门狗全部事件尾部 ==="
-tail -40 /root/remote_ctl.log
-echo "=== 遥控循环进程 ==="
-pgrep -af remote_ctl || echo 遥控循环不在
-echo "LAST任务号: $(cat /root/.remote_last)"
-echo "=== uptime ==="
-uptime
-echo "=== 大脑/NapCat进程状态 ==="
-for p in $(pgrep -f "main.py" | head -1) $(pgrep -f "opt/QQ/qq" | head -1); do echo "pid=$p cgroup: $(cat /proc/$p/cgroup 2>/dev/null | tail -1)"; done
-echo "=== 电池优化白名单里的Termux ==="
-dumpsys deviceidle whitelist 2>/dev/null | grep -ci "termux" || echo "dumpsys不可用"
-echo "=== phantom进程查杀设置 ==="
-settings get global phantom_process_killer_settings 2>/dev/null || echo 不可用
-echo "=== bot.log近期ERROR(6条) ==="
-grep "ERROR\|Traceback" /root/bot.log | tail -6
-echo "=== 系统wake_lock持有者 ==="
-cat /sys/power/wake_lock 2>/dev/null | head -c 400 || echo 不可读
+echo "=== v5心跳时间线(每10分钟一条,断档=冻结) ==="
+grep -a "v5-git" /root/remote_ctl.log | tail -30
+echo "=== 看门狗关键字事件(接管/看护/保险丝/report) ==="
+grep -aE "接管|看护|保险丝|intake|report|致命" /root/remote_ctl.log | grep -av "Message" | tail -40
+echo "=== 当前进程清单 ==="
+ps -ef 2>/dev/null | grep -aE "remote_ctl|main\.py|opt/QQ" | grep -av grep
+echo "=== 日志文件修改时间对照当前时间 ==="
+stat -c "%n %y" /root/remote_ctl.log /root/bot.log 2>/dev/null
+date "+现在: %F %T"
+echo "=== bot.log今晚21点后全部消息时间线 ==="
+grep -a "message.private.friend\|message.group" /root/bot.log | grep -aE "^11-12 (2[1-3]):|^11-13 00:" | awk '{print $1,$2,$NF}' | tail -45
 --- 输出 ---
-=== 看门狗心跳时间线(10分钟一条,断档=冻结窗口) ===
-grep: /root/remote_ctl.log: binary file matches
-[11-12 07:43] 心跳:循环正常,LAST=285333
-[11-12 07:53] 心跳:循环正常,LAST=285333
-[11-12 07:55] 心跳:循环正常,LAST=285333
-[11-12 08:05] 心跳:循环正常,LAST=285333
-[11-12 08:07] 心跳:循环正常,LAST=285333
-[11-12 08:17] 心跳:循环正常,LAST=285333
-[11-12 08:19] 心跳:循环正常,LAST=285333
-[11-12 08:29] 心跳:循环正常,LAST=285333
-[11-12 08:32] 心跳:循环正常,LAST=285333
-[11-12 08:42] 心跳:循环正常,LAST=285333
-[11-12 08:44] 心跳:循环正常,LAST=285333
-[11-12 08:54] 心跳:循环正常,LAST=285333
-[11-12 08:56] 心跳:循环正常,LAST=285333
-[11-12 09:07] 心跳:循环正常,LAST=285333
-[11-12 09:09] 心跳:循环正常,LAST=285333
-[11-12 09:20] 心跳:循环正常,LAST=285333
-[11-12 09:22] 心跳:循环正常,LAST=285333
-[11-12 09:32] 心跳:循环正常,LAST=285333
-[11-12 09:35] 心跳:循环正常,LAST=285333
-[11-12 09:46] 心跳:循环正常,LAST=285333
-[11-12 09:48] 心跳:循环正常,LAST=285333
-[11-12 09:59] 心跳:循环正常,LAST=285333
-[11-12 10:02] 心跳:循环正常,LAST=285333
-[11-12 10:13] 心跳:循环正常,LAST=285333
-[11-12 10:16] 心跳:循环正常,LAST=285333
-=== 看门狗全部事件尾部 ===
-pgrep -f "opt/QQ/qq" >/dev/null && echo NapCat在 || echo NapCat不在
-echo "=== 近10分钟有无ERROR ==="
-tail -300 /root/bot.log | grep -c "ERROR\|Traceback"
---- 输出 ---
-=== 近30分钟消息时间线(收vs回) ===
-11-12 22:30:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1453391357 from 3819642626@[群:590454333] '老师我是事业型'
-11-12 22:37:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1125843207 from 1561950850 '色图'
-11-12 22:37:52 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 866533745 from 1561950850 '色图 爷爷'
-11-12 22:38:50 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2066899901 from 1561950850 '色图 奶奶'
-11-12 22:40:18 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2036397969 from 1561950850 '色图 奶奶'
-11-12 22:42:19 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 492041926 from 1561950850 '色图 姨'
-11-12 22:54:47 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 590631598 from 2045344206@[群:590454333] '[reply:id=238402623][at:qq=1617095026] 谁把水箭龟放出去了'
-11-12 22:55:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 790561344 from 2045344206@[群:590454333] '父子分离了'
-11-12 22:55:04 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 885138510 from 2045344206@[群:590454333] '[image:summary=[动画表情],file=6B9A734802BF72B45CC9C41EFFA84EB2.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhT61fvv...,file_size=8306]'
-11-12 23:00:15 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 57050443 from 1561950850@[群:1109952783] '略无聊'
-11-12 23:04:46 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1737449131 from 553414459@[群:1109952783] '猪猪'
-11-12 23:47:58 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1197097751 from 1561950850 '色图 牛'
-11-12 23:48:46 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 716076955 from 1561950850 ' 色图 人兽'
-11-12 23:49:42 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 901199478 from 1561950850 '人呢'
-11-12 23:50:33 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1136341936 from 1561950850 '色图 人兽'
-11-12 23:51:06 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1675384645 from 1561950850 '色图'
-11-12 23:52:19 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 832261143 from 1561950850 '色图'
-11-12 23:52:55 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 970896859 from 1561950850 '色图 马'
-11-12 23:56:39 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1095201674 from 1561950850@[群:590454333] '[at:qq=3427943187] '
-11-12 23:56:39 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1240605349 from 1561950850 '色图 奶奶'
-11-12 23:56:39 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 337281820 from 1561950850 '为什么你回复这么慢'
-11-12 23:57:25 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1208748487 from 1561950850 '色图 奶奶'
-11-12 23:58:29 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1325076882 from 1561950850 '色图 马'
-11-12 23:59:49 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 273865292 from 1561950850 '色图 牛'
-11-13 00:08:45 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 519963756 from 1561950850 '你在干什么'
-=== wakelock状态 ===
-=== 大脑/NapCat存活 ===
-大脑在
-NapCat在
-=== 近10分钟有无ERROR ===
-6
+=== v5心跳时间线(每10分钟一条,断档=冻结) ===
+[11-12 20:07] 心跳:循环正常(v5-git,LAST=285382)
+[11-12 20:23] 心跳:循环正常(v5-git,LAST=285382)
+[11-12 20:38] 心跳:循环正常(v5-git,LAST=285382)
+[11-12 20:54] 心跳:循环正常(v5-git,LAST=285382)
+[11-12 21:10] 心跳:循环正常(v5-git,LAST=285382)
+[11-12 21:26] 心跳:循环正常(v5-git,LAST=285382)
+[11-12 21:42] 心跳:循环正常(v5-git,LAST=285382)
+[11-12 21:59] 心跳:循环正常(v5-git,LAST=285384)
+[11-12 22:16] 心跳:循环正常(v5-git,LAST=285384)
+[11-12 22:33] 心跳:循环正常(v5-git,LAST=285384)
+[11-12 22:52] 心跳:循环正常(v5-git,LAST=285388)
+[11-12 23:12] 心跳:循环正常(v5-git,LAST=285393)
+[11-12 23:33] 心跳:循环正常(v5-git,LAST=285400)
+[11-12 23:57] 心跳:循环正常(v5-git,LAST=285407)
+[11-13 00:30] 心跳:循环正常(v5-git,LAST=285409)
+=== 看门狗关键字事件(接管/看护/保险丝/report) ===
+[11-12 19:55] intake:槽位=1112_1950/1112_1945 命中ID=285379
+[11-12 19:55] report:API回传成功
+[11-12 20:00] report:API回传成功
+[11-12 21:54] report:API回传成功
+[11-12 21:56] report:API回传成功
+[11-12 22:36] report:API回传成功
+[11-12 22:37] report:API回传成功
+[11-12 22:42] report:API回传成功
+[11-12 22:46] report:API回传成功
+[11-12 22:52] report:API回传成功
+[11-12 22:55] report:API回传成功
+[11-12 22:58] report:API回传成功
+[11-12 23:02] report:API回传成功
+[11-12 23:07] report:API回传成功
+[11-12 23:14] report:API回传成功
+[11-12 23:15] report:API回传成功
+[11-12 23:17] report:API回传成功
+[11-12 23:21] report:API回传成功
+[11-12 23:24] report:API回传成功
+[11-12 23:27] report:API回传成功
+[11-12 23:32] report:API回传成功
+[11-12 23:35] report:API回传成功
+[11-12 23:37] report:API回传成功
+[11-12 23:41] report:API回传成功
+[11-12 23:45] report:API回传成功
+[11-12 23:49] report:API回传成功
+{"cand": {"奶奶": ["grandma", "grandmother", "old woman"], "女仆": ["maid", "maid uniform", "maid costume"]}, "tag": {}, "cnt": {}}[11-12 23:51] report:API回传成功
+[11-12 23:53] intake:API无响应
+[11-12 23:57] report:API回传成功
+[11-12 23:57] 看护：未登录且码39552s未刷新，尝试重启NapCat
+[11-12 23:57] 保险丝熔断:NapCat 24h内已自动拉起3次,停止自动重启,需人工排查
 [11-13 00:08] report:API回传成功
 [11-13 00:19] intake:API无响应
 [11-13 00:19] 看护：未登录且码40903s未刷新，尝试重启NapCat
 [11-13 00:19] 看护:自动拉起NapCat(24h内第3次)
-=== 遥控循环进程 ===
-8180 bash /root/remote_ctl_v5.sh
-11545 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/storage --bind=/storage/emulated/0:/sdcard --bind=/storage/emulated/0:/mnt/sdcard --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/system/product --bind=/system --bind=/vendor --bind=/data/data/com.termux/files/usr /bin/bash -c bash -c ' setsid bash /root/remote_ctl.sh >> /root/remote_boot.log 2>&1 < /dev/null & setsid bash /root/asar_sync.sh loop >> /root/asar_sync_boot.log 2>&1 < /dev/null & sleep infinity '
-28326 bash /root/remote_ctl_v5.sh
-LAST任务号: 285409
-=== uptime ===
- 00:29:27 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
-=== 大脑/NapCat进程状态 ===
-pid=1637 cgroup: 0::/
-pid=8184 cgroup: 0::/
-=== 电池优化白名单里的Termux ===
-0
-dumpsys不可用
-=== phantom进程查杀设置 ===
-不可用
-=== bot.log近期ERROR(6条) ===
-11-12 23:49:34 [ERROR] nonebot | Running Matcher(type='message', module=plugins.image_search_multisource, lineno=57) failed.
-Traceback (most recent call last):
-11-12 23:57:04 [ERROR] nonebot | Running Matcher(type='message', module=plugins.image_search_multisource, lineno=58) failed.
-Traceback (most recent call last):
-11-12 23:57:58 [ERROR] nonebot | Running Matcher(type='message', module=plugins.image_search_multisource, lineno=58) failed.
-Traceback (most recent call last):
-=== 系统wake_lock持有者 ===
+[11-13 00:08] report:API回传成功
+[11-13 00:19] intake:API无响应
+[11-13 00:19] 看护：未登录且码40903s未刷新，尝试重启NapCat
+[11-13 00:19] 看护:自动拉起NapCat(24h内第3次)
+[11-13 00:29] report:API回传成功
+=== 当前进程清单 ===
+aid_u0_+  1637  1635  0  2023 ?        00:00:12 /root/bot/venv/bin/python main.py
+aid_u0_+  8180 28326  0  2023 ?        00:00:00 bash /root/remote_ctl_v5.sh
+aid_u0_+  8184  8180  0  2023 ?        00:00:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox
+aid_u0_+  8199  8184  0  2023 ?        00:00:20 /root/Napcat/opt/QQ/qq --no-sandbox
+aid_u0_+  8201  8199  0  2023 ?        00:00:00 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+aid_u0_+  8202  8199  0  2023 ?        00:00:00 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
+aid_u0_+  8235  8201  0  2023 ?        00:00:00 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+aid_u0_+ 11545 11518  0  2023 pts/0    00:17:43 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/storage --bind=/storage/emulated/0:/sdcard --bind=/storage/emulated/0:/mnt/sdcard --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/system/product --bind=/system --bind=/vendor --bind=/data/data/com.termux/files/usr /bin/bash -c bash -c ' setsid bash /root/remote_ctl.sh >> /root/remote_boot.log 2>&1 < /dev/null & setsid bash /root/asar_sync.sh loop >> /root/asar_sync_boot.log 2>&1 < /dev/null & sleep infinity '
+aid_u0_+ 28326     1  0  2023 ?        00:00:11 bash /root/remote_ctl_v5.sh
+=== 日志文件修改时间对照当前时间 ===
+/root/remote_ctl.log 2026-11-13 00:30:36.040000000 +0800
+/root/bot.log 2026-11-13 00:19:41.590000000 +0800
+现在: 2026-11-13 00:32:04
+=== bot.log今晚21点后全部消息时间线 ===
+11-12 21:56:53 '[image:summary=,file=7DB1838B67DECB10D38ED2CE6D65EDDB.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQ3pBQ2...,file_size=203769]'
+11-12 21:57:02 '喜茶开面馆了'
+11-12 22:07:55 行'
+11-12 22:09:42 恭喜你发明了助眠音声'
+11-12 22:18:15 '呜呜呜呜'
+11-12 22:22:40 你咋的了'
+11-12 22:27:11 '鸣鸣鸣'
+11-12 22:27:49 '你又咋的了'
+11-12 22:27:52 '我要死了吗'
+11-12 22:27:55 '都给我哭坟'
+11-12 22:27:57 '[image:summary=[动画表情],file=390435C282C155B75378DBFD854CDA31.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSrQNTl...,file_size=4059]'
+11-12 22:28:26 '[reply:id=1160236214]想老公了'
+11-12 22:28:35 'QAQ'
+11-12 22:28:55 '（思考）'
+11-12 22:28:58 '帮我复习吧'
+11-12 22:29:04 '这样就没时间念想了'
+11-12 22:29:08 '那再见。'
+11-12 22:29:08 '[image:summary=[动画表情],file=92ED7769E9C68C7A3DFAE37C8FFCEC39.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhRKAar5...,file_size=91640]'
+11-12 22:29:46 '三句治好相思病'
+11-12 22:30:01 '老师我是事业型'
+11-12 22:37:35 '色图'
+11-12 22:37:52 爷爷'
+11-12 22:38:50 奶奶'
+11-12 22:40:18 奶奶'
+11-12 22:42:19 姨'
+11-12 22:54:47 谁把水箭龟放出去了'
+11-12 22:55:01 '父子分离了'
+11-12 22:55:04 '[image:summary=[动画表情],file=6B9A734802BF72B45CC9C41EFFA84EB2.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhT61fvv...,file_size=8306]'
+11-12 23:00:15 '略无聊'
+11-12 23:04:46 '猪猪'
+11-12 23:47:58 牛'
+11-12 23:48:46 人兽'
+11-12 23:49:42 '人呢'
+11-12 23:50:33 人兽'
+11-12 23:51:06 '色图'
+11-12 23:52:19 '色图'
+11-12 23:52:55 马'
+11-12 23:56:39 '
+11-12 23:56:39 奶奶'
+11-12 23:56:39 '为什么你回复这么慢'
+11-12 23:57:25 奶奶'
+11-12 23:58:29 马'
+11-12 23:59:49 牛'
+11-13 00:08:45 '你在干什么'
+11-13 00:19:36 '[record:file=003931f4c1527912cb50a3211555b094.amr,path=/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt...,url=/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt...,file_size=91899]'
