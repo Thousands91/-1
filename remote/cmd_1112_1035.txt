@@ -1,0 +1,6 @@
+285335
+cd /root/asar-sync && git fetch --quiet origin && git reset --quiet --hard origin/main
+pkill -f "bash /root/asar-sync/x10/azar_login" 2>/dev/null
+sleep 1
+nohup bash /root/asar-sync/x10/azar_login_x10.sh > /root/azar_login_run.log 2>&1 &
+echo "一键登录已后台启动 $(date +%H:%M:%S)"
