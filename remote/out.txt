@@ -1,36 +1,32 @@
-<<<task_285363.txt>>>
-===== 任务285363 11-12 15:53:01 =====
+<<<task_285364.txt>>>
+===== 任务285364 11-12 16:00:25 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') 三项定向复测 ==="
-echo "[meting正确姿势 type=url]" && curl -s -m 12 "https://api.injahow.cn/meting/?type=url&id=186016" | head -c 150; echo ""
-echo "[gutenberg正确书号1342]" && curl -s -o /dev/null -m 12 -w "HTTP %{http_code} %{size_download}B" -r 0-2000 "https://gutenberg.pglaf.org/1/3/4/1342/1342-0.txt"; echo ""
-echo "[硅基流动精确复核]"
-python3 -c "
-import re, urllib.request
-line = [l for l in open('/root/bot/bot/.env') if l.startswith('SILICONFLOW_API_KEY')][0]
-key = line.split('=', 1)[1].strip().strip('"').strip("'")
-print('key长度:', len(key), '掩码:', key[:6]+'***'+key[-4:] if len(key) > 12 else '异常')
-req = urllib.request.Request('https://api.siliconflow.cn/v1/models', headers={'Authorization': 'Bearer ' + key})
-try:
-    r = urllib.request.urlopen(req, timeout=12)
-    print('HTTP', r.status, 'key有效')
-except Exception as e:
-    print('HTTP', getattr(e, 'code', '?'), str(e)[:80])
-"
-echo "--- 语音ASR真实链路（拿今天日志验证） ---"
-grep -i "语音\|transcription\|asr" /root/bot.log | tail -3 || echo 今日无语音使用记录
+echo "=== $(date '+%H:%M:%S') key与音源复测 ==="
+SFK=$(grep '^SILICONFLOW_API_KEY' /root/bot/bot/.env | head -1 | cut -d= -f2 | tr -d '" ' )
+echo "SFkey长度: ${#SFK}"
+echo "[SF models]" && curl -s -m 12 -o /dev/null -w "HTTP %{http_code}" -H "Authorization: Bearer $SFK" https://api.siliconflow.cn/v1/models; echo ""
+OK=$(grep '^OPENAI_API_KEY' /root/bot/bot/.env | head -1 | cut -d= -f2 | tr -d '" ')
+echo "OPENAI key长度: ${#OK}"
+BASE=$(grep '^OPENAI_BASE_URL' /root/bot/bot/.env | head -1 | cut -d= -f2 | tr -d '" ')
+echo "BASE: $BASE"
+echo "[OPENAI key对SF验]" && curl -s -m 12 -o /dev/null -w "HTTP %{http_code}" -H "Authorization: Bearer $OK" https://api.siliconflow.cn/v1/models; echo ""
+echo "[网易outer直链(X10家宽)]" && curl -s -m 15 -o /dev/null -w "HTTP %{http_code} size %{size_download}B ctype %{content_type}" -L "https://music.163.com/song/media/outer/url?id=186016.mp3" -A "Mozilla/5.0"; echo ""
+echo "[wuenci meting]" && curl -s -m 15 -o /dev/null -w "HTTP %{http_code} size %{size_download}B ctype %{content_type}" -L "https://api.wuenci.com/meting/api/?type=url&server=netease&id=186016"; echo ""
+echo "[injahow再确认]" && curl -s -m 10 -o /dev/null -w "HTTP %{http_code} size %{size_download}B" "https://api.injahow.cn/meting/?type=url&id=186016"; echo ""
 date +%H:%M:%S
 --- 输出 ---
-=== 15:53:01 三项定向复测 ===
-[meting正确姿势 type=url]
-
-[gutenberg正确书号1342]
-HTTP 206 2001B
-[硅基流动精确复核]
-  File "<string>", line 4
-    key = line.split('=', 1)[1].strip().strip(').strip(")
-                                              ^
-SyntaxError: unterminated string literal (detected at line 4)
---- 语音ASR真实链路（拿今天日志验证） ---
-11-12 13:00:48 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2054990964 from 2419770062@[群:590454333] "♪ Geordie - 齐豫\n专辑：C'est La Vie\n音质：高清环绕声 jyeffect\n正在下载并发送语音/文件…"
-15:53:08
+=== 16:00:25 key与音源复测 ===
+SFkey长度: 51
+[SF models]
+HTTP 200
+OPENAI key长度: 49
+BASE: https://open.bigmodel.cn/api/paas/v4
+[OPENAI key对SF验]
+HTTP 401
+[网易outer直链(X10家宽)]
+HTTP 200 size 107191B ctype text/html;charset=utf8
+[wuenci meting]
+HTTP 000 size 0B ctype 
+[injahow再确认]
+HTTP 200 size 0B
+16:00:29
