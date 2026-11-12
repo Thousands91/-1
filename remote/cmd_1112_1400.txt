@@ -1,10 +1,19 @@
-285351
-echo "=== $(date '+%H:%M:%S') 记忆污染排查 ==="
-echo "--- 记忆/历史文件在哪 ---"
-find /root/bot/bot/data /root/bot/bot/persona -type f 2>/dev/null | head -12
-echo "--- 记忆库里搜比心/爱心 ---"
-grep -rln "比心" /root/bot/bot/data /root/bot/bot/persona 2>/dev/null | head -3
-grep -rn "爱心" /root/bot/bot/data 2>/dev/null | head -4
-echo "--- ai_chat历史持久化机制 ---"
-grep -n "history\|历史\|json.dump\|save" /root/bot/bot/plugins/ai_chat.py | head -10
+285352
+echo "=== $(date '+%H:%M:%S') 记忆手术：摘除比心幻觉条目 ==="
+M=/root/bot/bot/data/memory/1561950850.json
+cp "$M" "$M.bak_1112手术前" && echo 已备份
+python3 -c "
+import json
+p='/root/bot/bot/data/memory/1561950850.json'
+d=json.load(open(p))
+print('手术前条目数:', len(d))
+bad=[e for e in d if ('比心' in e.get('m','') or '比心' in e.get('r','') or '爱心' in e.get('r',''))]
+print('命中幻觉条目:', len(bad))
+for e in bad[:5]: print(' -', e.get('m','')[:40], '=>', e.get('r','')[:40])
+keep=[e for e in d if e not in bad]
+json.dump(keep, open(p,'w'), ensure_ascii=False)
+print('手术后条目数:', len(keep))
+"
+echo "--- ai_chat记忆注入方式 ---"
+grep -n "memory" /root/bot/bot/plugins/ai_chat.py | head -8
 date +%H:%M:%S
