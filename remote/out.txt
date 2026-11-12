@@ -1,5 +1,5 @@
 <<<task_285358.txt>>>
-===== 任务285358 11-12 15:05:06 =====
+===== 任务285358 11-12 15:05:13 =====
 --- 命令 ---
 echo "=== $(date '+%H:%M:%S') 最终验证 ==="
 echo "--- 插件加载/报错检查 ---"
@@ -10,7 +10,7 @@ echo "--- 15:02后是否有消息处理 ---"
 tail -3 /root/bot.log
 date +%H:%M:%S
 --- 输出 ---
-=== 15:05:06 最终验证 ===
+=== 15:05:13 最终验证 ===
 --- 插件加载/报错检查 ---
 11-12 15:01:12 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
 11-12 15:02:22 [ERROR] nonebot | Running Matcher(type='message', module=plugins.fortune, lineno=25) failed.
@@ -21,7 +21,7 @@ nonebot.adapters.onebot.v11.exception.NetworkError: NetWorkError(message='WebSoc
 11-12 14:23:20 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
 11-12 15:02:14 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
 --- 15:02后是否有消息处理 ---
-11-12 15:04:59 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1994348508 from 2959186535@[群:1109952783] '[at:qq=3427943187] 抽签'
 11-12 15:04:59 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.fortune, lineno=25)
 11-12 15:05:02 [INFO] nonebot | Matcher(type='message', module=plugins.fortune, lineno=25) running complete
-15:05:06
+11-12 15:05:13 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 700351389 from 1062461846@[群:590454333] '画师悦女有功'
+15:05:13
