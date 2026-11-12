@@ -1,12 +1,21 @@
-285428
-export HOME=/data/data/com.termux/files/home
-export LD_LIBRARY_PATH=/root/adblibs:/data/data/com.termux/files/usr/lib
-ADB=/root/adblibs/adb
-echo "=== pair命令确认 ==="
-$ADB help 2>&1 | grep -E "^ *(pair| Pair)" | head -3
-$ADB pair 2>&1 | head -2
-echo "=== 客户端密钥 ==="
-$ADB start-server 2>/dev/null
-ls -l $HOME/.android/ 2>/dev/null | grep adbkey
-echo "=== 设备清单 ==="
-$ADB devices
+285429
+echo "=== 部署1分钟精度冻结秒表 ==="
+cat > /root/tick.sh << 'TICK'
+#!/bin/bash
+# 冻结取证秒表:每60秒写一行时间戳,断档=冻结窗口
+while true; do
+  echo "$(date '+%F %T')" >> /root/tick.log
+  sleep 60
+done
+TICK
+chmod +x /root/tick.sh
+setsid nohup /root/tick.sh > /dev/null 2>&1 < /dev/null &
+sleep 3
+echo "=== 验证打点 ==="
+tail -3 /root/tick.log 2>/dev/null
+pgrep -f tick.sh >/dev/null && echo "秒表进程在跑" || echo "秒表没起来"
+echo "=== 现有记录仪清单 ==="
+echo "1. /root/remote_ctl.log 心跳(10分钟精度)"
+echo "2. /root/tick.log 秒表(1分钟精度,新装)"
+echo "3. /root/bot.log 消息时间戳"
+echo "4. /root/napcat-restart.log NapCat事件"
