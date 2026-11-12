@@ -1,3 +1,10 @@
-285401
-echo "aW1wb3J0IGFzeW5jaW8sIHN5cywgdGltZQpzeXMucGF0aC5pbnNlcnQoMCwgJy9yb290L2JvdCcpCmltcG9ydCBub25lYm90Cm5vbmVib3QuaW5pdCgpCmZyb20gYm90LnBsdWdpbnMgaW1wb3J0IGltYWdlX3NlYXJjaF9tdWx0aXNvdXJjZSBhcyBtCgpkZWYgbG9nKG5hbWUsIG9rLCBleHRyYT0iIik6CiAgICBwcmludChmIlt7J09LJyBpZiBvayBlbHNlICdGQUlMJ31dIHtuYW1lfSB7ZXh0cmF9IikKCmFzeW5jIGRlZiBtYWluKCk6CiAgICAjIGxvbGljb24g5Li75rGg5aSN5rWL77yI5LiK6L2uMjBz6LaF5pe277yM57uZNDBz77yJCiAgICB0cnk6CiAgICAgICAgaXQgPSBhd2FpdCBhc3luY2lvLndhaXRfZm9yKG0uZmV0Y2hfbG9saWNvbihyMTg9MSksIDQwKQogICAgICAgIGxvZygibG9saWNvbuS4u+axoCIsIGJvb2woaXQgYW5kIGl0WzBdKSkKICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICBsb2coImxvbGljb27kuLvmsaAiLCBGYWxzZSwgcmVwcihlKVs6OTBdKQogICAgIyDmmbrog73pk77lpI3mtYvvvIjnnIvmlrDml6Xlv5fmiZPlh7rku4DkuYjlvaLmgIHvvIkKICAgIHRyeToKICAgICAgICBjID0gYXdhaXQgYXN5bmNpby53YWl0X2ZvcihtLl90cmFuc2xhdGVfY2FuZGlkYXRlcygi5aW25aW2IiksIDEyMCkKICAgICAgICBsb2coIuaZuuiDvemTvue/u+ivkSjlpbblpbYpIiwgYm9vbChjKSwgZiJ7Y30iKQogICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgIGxvZygi5pm66IO96ZO+57+76K+RKOWltuWltikiLCBGYWxzZSwgcmVwcihlKVs6OTBdKQogICAgIyDmir3nrb7muLLmn5PvvIjmraPnoa7lj4LmlbDvvIkKICAgIHRyeToKICAgICAgICBmcm9tIGJvdC5wbHVnaW5zIGltcG9ydCBmb3J0dW5lIGFzIGYKICAgICAgICByID0gZi5fcmVuZGVyX2NhcmQoIuWkp+WQiSIsICLmtYvor5Xnrb7mlociLCAi5LiK562+IiwgeyLkuovkuJoiOiA5MCwgIuaEn+aDhSI6IDg1LCAi6LSi6L+QIjogODB9LCA4NSwgIua1i+ivleiAhSIsICIyMDI2LTExLTEyIikKICAgICAgICBsb2coIuaKveetvuWbvueJh+a4suafkyIsIGJvb2wociBhbmQgbGVuKHIpID4gMTAwMCksIGYie2xlbihyKSBpZiByIGVsc2UgMH1CIikKICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICBsb2coIuaKveetvuWbvueJh+a4suafkyIsIEZhbHNlLCByZXByKGUpWzoxMjBdKQoKYXN5bmNpby5ydW4obWFpbigpKQo=" | base64 -d > /tmp/retest.py
-cd /root/bot && timeout 400 /root/bot/venv/bin/python /tmp/retest.py 2>&1 | tail -15
+285402
+PID=$(pgrep -f 'venv/bin/python main.py' | head -1)
+echo "大脑PID: $PID"
+echo "=== 大脑进程环境变量 ==="
+cat /proc/$PID/environ | tr '\0' '\n' | grep -E "^OPENAI_|^ZHIPU_|^SILICONFLOW" | sed 's/\(=.\{12\}\).*/\1***/'
+echo "=== .env 原文（含重复键检查） ==="
+grep -n "OPENAI\|ZHIPU\|SILICONFLOW" /root/bot/bot/.env | sed 's/\(=.\{12\}\).*/\1***/'
+echo "=== .env.prod / .env.other 检查 ==="
+ls /root/bot/bot/.env* 2>/dev/null
+for f in /root/bot/bot/.env.*; do [ -f "$f" ] && echo "--$f--" && grep -E "OPENAI|ZHIPU" "$f" | sed 's/\(=.\{12\}\).*/\1***/'; done
