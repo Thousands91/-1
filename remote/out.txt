@@ -1,11 +1,21 @@
-<<<task_285336.txt>>>
-===== 任务285336 11-12 10:35:21 =====
+<<<task_285340.txt>>>
+===== 任务285340 11-12 12:10:12 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') 出码进度 ==="
-tail -10 /root/azar_login_run.log 2>/dev/null
-ls -l /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null || echo 相册还没码
+echo "=== $(date '+%H:%M:%S') 登录验证 ==="
+timeout 20 bash /root/logincheck.sh 2>/dev/null | tail -8
+echo "--- 登录脚本日志尾部 ---"
+tail -15 /root/azar_login_run.log 2>/dev/null
+echo "--- NapCat日志尾部 ---"
+L=$(find /root -path "*napcat*" -name "*.log" 2>/dev/null | head -1); tail -12 "$L" 2>/dev/null
+ls -l /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null
 --- 输出 ---
-=== 10:35:21 出码进度 ===
+=== 12:10:12 登录验证 ===
+=== 登录状态（权威判定）===
+[在线] 已登录，一切正常
+阶段: ready
+最近错误: 无
+--- 登录脚本日志尾部 ---
+   二维码已就位（生成于 2 秒前），有效期约 110 秒
 
 ############################################################
 #   现在抓紧时间（剩约 108 秒）：                        #
@@ -16,4 +26,21 @@ ls -l /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null || echo 相册还没码
 ==> 第 5 步：盯着登录结果
 [10:32:35] 二维码刷新了，已复制新的到相册，请重新扫码
 [10:34:38] 二维码刷新了，已复制新的到相册，请重新扫码
--rw-rw---- 1 root aid_everybody 594 Nov 12 10:34 /sdcard/DCIM/Camera/asar_qr.png
+[10:36:37] 二维码刷新了，已复制新的到相册，请重新扫码
+[10:38:41] 二维码刷新了，已复制新的到相册，请重新扫码
+[10:40:39] 二维码刷新了，已复制新的到相册，请重新扫码
+!! 10 分钟没等到登录成功。重新运行本脚本再试一轮。
+--- NapCat日志尾部 ---
+6259d97fc9e411668ad9ec05fa9a239cd2eab4f6b6016f3730935d89cda893e7
+94305a603d4e9bc533e726dbb1d278b81220bc74a674ad28fe59112470e319f1
+ca00db0234e9ad706d5855e5544caf41dc1d24aa400c0e973a17319986540624
+20aceb212d2d22ee48994b5533d35e374071ea86a2b5d4bb504c030c9f1dedf1
+[31321:1112/103017.238712:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
+[31321:1112/103017.260058:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[31321:1112/103017.278357:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[31321:1112/103017.308665:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[31321:1112/103017.324195:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[31321:1112/103017.331349:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[31321:1112/103017.336402:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[31321:1112/103017.336482:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+-rw-rw---- 1 root aid_everybody 595 Nov 12 12:03 /sdcard/DCIM/Camera/asar_qr.png
