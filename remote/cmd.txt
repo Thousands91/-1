@@ -1,18 +1,14 @@
-285420
-export HOME=/data/data/com.termux/files/home
+285421
 PREFIX=/data/data/com.termux/files/usr
-U=https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main
-for PKG in abseil-cpp protobuf; do
-  F=$(curl -sL --max-time 30 "$U/dists/stable/main/binary-aarch64/Packages" | grep -A8 "^Package: $PKG$" | grep "^Filename:" | head -1 | awk '{print $2}')
-  [ -z "$F" ] && continue
-  echo "取 $PKG: $F"
-  curl -sL --max-time 120 -o /tmp/$PKG.deb "$U/$F" && dpkg -x /tmp/$PKG.deb /tmp/${PKG}x
-  cp -a /tmp/${PKG}x/data/data/com.termux/files/usr/lib/* $PREFIX/lib/ 2>/dev/null
-done
+echo "=== protobuf解包结构 ==="
+find /tmp/protobufx -name "libprotobuf*" 2>/dev/null | head -4
+find /tmp/abseilx -name "libabsl*" 2>/dev/null | head -2
+echo "=== PREFIX现有 ==="
+ls $PREFIX/lib/ | grep -E "protobuf|absl" | head -6
+echo "=== 修正拷贝 ==="
+find /tmp/protobufx /tmp/abseilx -path "*/lib/*" -name "*.so*" -exec cp -a {} $PREFIX/lib/ \; 2>/dev/null
+ls $PREFIX/lib/ | grep -E "protobuf|absl" | head -8
 echo "=== adb重试 ==="
 export LD_LIBRARY_PATH=$PREFIX/lib
 $PREFIX/bin/adb version 2>&1 | head -1
-echo "=== pair/connect命令确认 ==="
 $PREFIX/bin/adb help 2>&1 | grep -E "pair|connect" | head -4
-echo "=== 缺库体检 ==="
-ldd $PREFIX/bin/adb 2>/dev/null | grep "not found" | head -5
