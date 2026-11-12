@@ -1,24 +1,28 @@
-<<<task_285403.txt>>>
-===== 任务285403 11-12 23:41:25 =====
+<<<task_285404.txt>>>
+===== 任务285404 11-12 23:44:53 =====
 --- 命令 ---
 cd /root/bot/bot && /root/bot/venv/bin/python -c "
+import sys
+sys.path.insert(0, '/root/bot')
 import os
-print('init前 BASE_URL:', repr(os.getenv('OPENAI_BASE_URL')))
-print('init前 KEY:', repr((os.getenv('OPENAI_API_KEY') or '')[:12]))
-import nonebot
-nonebot.init()
-print('init后 BASE_URL:', repr(os.getenv('OPENAI_BASE_URL')))
-print('init后 KEY:', repr((os.getenv('OPENAI_API_KEY') or '')[:12]))
-cfg = nonebot.get_driver().config
-print('config BASE_URL:', repr(getattr(cfg, 'OPENAI_BASE_URL', None)))
-print('config KEY:', repr((getattr(cfg, 'OPENAI_API_KEY', '') or '')[:12]))
+from dotenv import load_dotenv
+from pathlib import Path
+load_dotenv(Path('/root/bot/bot/.env'))
+print('load_dotenv后 BASE_URL:', repr(os.getenv('OPENAI_BASE_URL')))
+print('load_dotenv后 KEY:', repr((os.getenv('OPENAI_API_KEY') or '')[:14]))
+import json, urllib.request
+url = os.getenv('OPENAI_BASE_URL'); key = os.getenv('OPENAI_API_KEY')
+body = json.dumps({'model': os.getenv('OPENAI_MODEL'),'max_tokens':20,'temperature':0,
+ 'thinking':{'type':'disabled'},'messages':[{'role':'user','content':'说ok'}]}).encode()
+req = urllib.request.Request(url+'/chat/completions', data=body,
+ headers={'Authorization':'Bearer '+key,'Content-Type':'application/json'})
+try:
+    r = urllib.request.urlopen(req, timeout=20)
+    print('请求', url[:40], '结果:', r.read().decode()[:150])
+except urllib.error.HTTPError as e:
+    print('请求', url[:40], 'HTTP', e.code, e.read().decode()[:200])
 "
 --- 输出 ---
-init前 BASE_URL: None
-init前 KEY: ''
-11-12 23:41:28 [SUCCESS] nonebot | NoneBot is initializing...
-11-12 23:41:28 [INFO] nonebot | Current Env: prod
-init后 BASE_URL: None
-init后 KEY: ''
-config BASE_URL: None
-config KEY: ''
+load_dotenv后 BASE_URL: 'https://open.bigmodel.cn/api/paas/v4'
+load_dotenv后 KEY: '1ce5306c565b43'
+请求 https://open.bigmodel.cn/api/paas/v4 结果: {"choices":[{"finish_reason":"stop","index":0,"message":{"content":"OK! 😊","role":"assistant"}}],"created":1794498296,"id":"2026111223445525fec5fe36a9
