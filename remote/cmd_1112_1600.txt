@@ -1,0 +1,14 @@
+285364
+echo "=== $(date '+%H:%M:%S') key与音源复测 ==="
+SFK=$(grep '^SILICONFLOW_API_KEY' /root/bot/bot/.env | head -1 | cut -d= -f2 | tr -d '" ' )
+echo "SFkey长度: ${#SFK}"
+echo "[SF models]" && curl -s -m 12 -o /dev/null -w "HTTP %{http_code}" -H "Authorization: Bearer $SFK" https://api.siliconflow.cn/v1/models; echo ""
+OK=$(grep '^OPENAI_API_KEY' /root/bot/bot/.env | head -1 | cut -d= -f2 | tr -d '" ')
+echo "OPENAI key长度: ${#OK}"
+BASE=$(grep '^OPENAI_BASE_URL' /root/bot/bot/.env | head -1 | cut -d= -f2 | tr -d '" ')
+echo "BASE: $BASE"
+echo "[OPENAI key对SF验]" && curl -s -m 12 -o /dev/null -w "HTTP %{http_code}" -H "Authorization: Bearer $OK" https://api.siliconflow.cn/v1/models; echo ""
+echo "[网易outer直链(X10家宽)]" && curl -s -m 15 -o /dev/null -w "HTTP %{http_code} size %{size_download}B ctype %{content_type}" -L "https://music.163.com/song/media/outer/url?id=186016.mp3" -A "Mozilla/5.0"; echo ""
+echo "[wuenci meting]" && curl -s -m 15 -o /dev/null -w "HTTP %{http_code} size %{size_download}B ctype %{content_type}" -L "https://api.wuenci.com/meting/api/?type=url&server=netease&id=186016"; echo ""
+echo "[injahow再确认]" && curl -s -m 10 -o /dev/null -w "HTTP %{http_code} size %{size_download}B" "https://api.injahow.cn/meting/?type=url&id=186016"; echo ""
+date +%H:%M:%S
