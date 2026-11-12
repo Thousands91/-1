@@ -1,69 +1,45 @@
-<<<task_285356.txt>>>
-===== 任务285356 11-12 14:53:47 =====
+<<<task_285357.txt>>>
+===== 任务285357 11-12 15:01:52 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') 搬家完整性盘点 ==="
-cd /root/bot/bot 2>/dev/null || { echo bot目录不存在; exit; }
-echo "--- 文件清单（路径|大小|md5） ---"
-find . -type f \( -name "*.py" -o -name "*.json" -o -name "*.txt" -o -name "*.md" -o -name ".env*" -o -name "*.sh" \) -not -path "./venv/*" -not -path "./.git/*" -not -path "*__pycache__*" | sort | while read f; do echo "$f|$(stat -c%s "$f")|$(md5sum "$f" | cut -d' ' -f1)"; done
-echo "--- 定时任务 ---"
-crontab -l 2>/dev/null || echo 无crontab
-ls /root/morning.sh /root/*.sh 2>/dev/null
-echo "--- Termux侧看门狗 ---"
-ls ~/x10_watchdog.sh ~/.termux/boot/ 2>/dev/null
-echo "--- 字体 ---"
-ls /usr/share/fonts/truetype/wqy/ 2>/dev/null
+echo "=== $(date '+%H:%M:%S') 补漏搬家部署 ==="
+cd /root/bot/bot && git fetch --quiet origin && git reset --quiet --hard origin/main
+echo "同步到: $(git log -1 --format='%h %s')"
+echo "--- 新文件md5（对照本地: news=7a66d0bf0673ee0f00191d38efd10b8f keyword=cff3795ab97fcbe903e581a8a71afad7 req=60ba865b491b1c4735dbe207a054b763 mface=774f90866f573760fa022e5f26619e83） ---"
+md5sum plugins/news.py plugins/keyword_reply.py requirements.txt data/mface_names.json 2>/dev/null
+echo "--- env键名（只打键不打印值） ---"
+grep -o "^[A-Z_]*" .env | tr '\n' ' '; echo ""
+echo "--- 装ddgs(坑83姿势) ---"
+mkdir -p /data/data/com.termux/cache/pip
+export PYTHONPATH=/data/data/com.termux/files/usr/lib/python3/dist-packages
+pip3 install -q ddgs -i https://pypi.tuna.tsinghua.edu.cn/simple 2>&1 | tail -1
+/root/bot/venv/bin/python -c "from ddgs import DDGS; print('ddgs可用')" 2>&1 | tail -1
+echo "--- 重启大脑 ---"
+pkill -f "venv/bin/python main.py"; sleep 3
+cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 15
+tail -6 /root/bot.log
+pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑存活 || echo 大脑没起来
 date +%H:%M:%S
 --- 输出 ---
-=== 14:53:47 搬家完整性盘点 ===
---- 文件清单（路径|大小|md5） ---
-./.env|454|01f0853442ad08d73564532c529cb7ff
-./.env.example|1218|6875fede0eb4020e229c09a2e4e9df2c
-./config.py|705|f938bfa2eeebf829764e5dd801033d5d
-./data/fortune_log.json|195|a2b4a0fc3b072983d1714058a6d71916
-./data/gutenberg_zh.json|25369|eac2b956031fce365765ad8df87f86e8
-./data/memory/1062461846.json|85|3ee5bc0481188384af8294a9e25a3317
-./data/memory/1561950850.json|14468|069d62bdf15c802f0d2f5221f47b2928
-./data/memory/22222.json|133|b975f79377a313e12d24c7e5e2175c92
-./data/memory/2419770062.json|3846|d5c225963872126503c4eb18df969475
-./data/memory/2423816346.json|133|ec21436cd06508e0ef7a48abfccac193
-./data/memory/649203747.json|298|8402c6741fcd00e5afd4eb634e9ec486
-./data/qface_index.json|6807|84edec6c67c989c962c0c3ff44465572
-./main.py|979|2ce3f1afeafe29cc2d9e596df1f58e9c
-./persona/__init__.py|31065|1b5727cc9f448f4292379acda604e8cd
-./plugins/ai_chat.py|93272|102d9fa7bfe6aa7e46bb75d6eb1674cf
-./plugins/book_find.py|25498|2316c160d14f865d6d571f6bea6bbf7c
-./plugins/chess_game.py|11359|4e5d51512130aea3470b5b09ba00ca8c
-./plugins/fortune.py|23819|a6604753f220afb36e79cf0b4fee40ff
-./plugins/games.py|11055|ca96803f2706672c82095d2772467558
-./plugins/image_search_multisource.py|27107|d465c601d444a4b7e90037a15745709d
-./plugins/keyword_reply.py|9524|370110433da6d40a654ef6bee3999269
-./plugins/news.py|2432|4c7f7d19cac1a655cedc4c25b5068506
-./plugins/song_request.py|19736|45d8c0974aa3ba3729463268db829bc0
-./plugins/weather.py|7047|0b78a02b1f6dc1c353224e94fc6e1e6a
-./requirements.txt|522|6267acbb77c0e8b95d87ac42f91c872d
-./tests_test_games_full.py|7540|0e7c84009d9227b582944f0ddcb388e1
-./tests_test_mute_v2.py|4909|c34edb2c129e4a8b7cca568f87d2f233
---- 定时任务 ---
-无crontab
-/root/azar_guard.sh
-/root/azar_login.sh
-/root/check.sh
-/root/logincheck.sh
-/root/morning.sh
-/root/morning.sh
-/root/napcat.sh
-/root/netmon.sh
-/root/offline_watch.sh
-/root/p.sh
-/root/remote_ctl.sh
-/root/restart_bot.sh
-/root/selfcheck.sh
-/root/setup.sh
-/root/st.sh
-/root/start_all.sh
-/root/start_nap.sh
-/root/watcher.sh
---- Termux侧看门狗 ---
---- 字体 ---
-wqy-zenhei.ttc
-14:53:48
+=== 15:01:52 补漏搬家部署 ===
+同步到: 495d5cb 补mface表情名缓存
+--- 新文件md5（对照本地: news=7a66d0bf0673ee0f00191d38efd10b8f keyword=cff3795ab97fcbe903e581a8a71afad7 req=60ba865b491b1c4735dbe207a054b763 mface=774f90866f573760fa022e5f26619e83） ---
+7a66d0bf0673ee0f00191d38efd10b8f  plugins/news.py
+cff3795ab97fcbe903e581a8a71afad7  plugins/keyword_reply.py
+60ba865b491b1c4735dbe207a054b763  requirements.txt
+774f90866f573760fa022e5f26619e83  data/mface_names.json
+--- env键名（只打键不打印值） ---
+COMMAND_START OPENAI_API_KEY OPENAI_BASE_URL OPENAI_MODEL ENABLE_AI_CHAT HOST PORT SILICONFLOW_API_KEY 
+--- 装ddgs(坑83姿势) ---
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+ddgs可用
+--- 重启大脑 ---
+Terminated
+11-12 15:02:10 [INFO] __main__ | QQ 群机器人启动成功 ✅
+11-12 15:02:10 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
+11-12 15:02:10 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
+11-12 15:02:10 [INFO] __main__ | ==================================================
+11-12 15:02:10 [INFO] uvicorn | Application startup complete.
+11-12 15:02:10 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+大脑存活
+15:02:11
