@@ -1,16 +1,15 @@
-<<<task_285380.txt>>>
-===== 任务285380 11-12 19:53:11 =====
+<<<task_285381.txt>>>
+===== 任务285381 11-12 19:55:39 =====
 --- 命令 ---
-echo "=== v5接管验证 ==="
-ps -eo pid,args | grep "[r]emote_ctl" | head -3
-tail -3 /root/remote_ctl.log
-echo "pid_file: $(cat /root/.remote_pid 2>/dev/null)"
+pkill -f "bash /root/remote_ctl.sh"; echo "pkill退出码=$?"
+sleep 1
+echo "=== 存活循环 ==="
+ps -eo pid,args | grep "[r]emote_ctl" | grep -v proot
+echo "---"; tail -2 /root/remote_ctl.log
 --- 输出 ---
-=== v5接管验证 ===
-11545 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/storage --bind=/storage/emulated/0:/sdcard --bind=/storage/emulated/0:/mnt/sdcard --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/system/product --bind=/system --bind=/vendor --bind=/data/data/com.termux/files/usr /bin/bash -c bash -c ' setsid bash /root/remote_ctl.sh >> /root/remote_boot.log 2>&1 < /dev/null & setsid bash /root/asar_sync.sh loop >> /root/asar_sync_boot.log 2>&1 < /dev/null & sleep infinity '
+pkill退出码=0
+=== 存活循环 ===
 28326 bash /root/remote_ctl_v5.sh
-31310 bash /root/remote_ctl.sh
-[11-12 19:52] v5接管:杀掉旧循环pid=28168
-[11-12 19:52] 心跳:循环正常,LAST=285379
-[11-12 19:52] intake:槽位=1112_1950/1112_1945 命中ID=285379
-pid_file: 28326
+---
+[11-12 19:53] report:API回传成功
+[11-12 19:55] intake:槽位=1112_1950/1112_1945 命中ID=285379
