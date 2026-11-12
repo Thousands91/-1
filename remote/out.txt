@@ -1,48 +1,21 @@
-<<<task_285370.txt>>>
-===== 任务285370 11-12 17:42:31 =====
+<<<task_285371.txt>>>
+===== 任务285371 11-12 17:51:17 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') 语音链路诊断+补ffmpeg ==="
-echo "--- ffmpeg ---"
-which ffmpeg && ffmpeg -version 2>/dev/null | head -1 || echo "ffmpeg缺失"
-echo "--- bot.log 语音报错(16:50-17:00) ---"
-grep "语音" /root/bot.log | tail -5
-echo "--- napcat.log record/ffmpeg报错 ---"
-grep -i "record\|ffmpeg\|silk" /root/napcat.log 2>/dev/null | tail -5
-echo "--- 安装ffmpeg(容器内) ---"
-if ! which ffmpeg >/dev/null 2>&1; then
-  apt-get update -qq 2>&1 | tail -1
-  DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg 2>&1 | tail -2
-fi
-which ffmpeg && ffmpeg -version 2>/dev/null | head -1 || echo "ffmpeg仍缺失"
-echo "--- SF ASR鉴权sanity(合成静音wav) ---"
-python3 -c "
-import wave, struct, math
-w = wave.open('/tmp/t.wav', 'w')
-w.setnchannels(1); w.setsampwidth(2); w.setframerate(16000)
-w.writeframes(b''.join(struct.pack('<h', int(800*math.sin(i/20))) for i in range(16000)))
-w.close()
-print('wav生成OK')
-"
-SFK=$(grep '^SILICONFLOW_API_KEY' /root/bot/bot/.env | head -1 | cut -d= -f2 | tr -d '\" ')
-curl -s -m 15 -o /tmp/asr.json -w "HTTP %{http_code}" -X POST "https://api.siliconflow.cn/v1/audio/transcriptions" -H "Authorization: Bearer $SFK" -F "model=FunAudioLLM/SenseVoiceSmall" -F "file=@/tmp/t.wav"
-echo ""; head -c 200 /tmp/asr.json
+echo "=== $(date '+%H:%M:%S') ASR双链实测(X10真key) ==="
+cd /root/bot/bot
+ZP=$(grep '^ZHIPU_API_KEY' .env | head -1 | cut -d= -f2 | tr -d '\" ')
+SFK=$(grep '^SILICONFLOW_API_KEY' .env | head -1 | cut -d= -f2 | tr -d '\" ')
+echo "[SF账户余额]" && curl -s -m 10 -H "Authorization: Bearer $SFK" https://api.siliconflow.cn/v1/user/info | head -c 200; echo ""
+echo "[Zhipu glm-asr实测]" && curl -s -m 20 -o /tmp/zasr.json -w "HTTP %{http_code}" -X POST "https://open.bigmodel.cn/api/paas/v4/audio/transcriptions" -H "Authorization: Bearer $ZP" -F "model=glm-asr-2512" -F "file=@/tmp/t.wav"; echo ""; head -c 250 /tmp/zasr.json; echo ""
+echo "[SF ASR再确认]" && curl -s -m 15 -o /tmp/sfasr.json -w "HTTP %{http_code}" -X POST "https://api.siliconflow.cn/v1/audio/transcriptions" -H "Authorization: Bearer $SFK" -F "model=FunAudioLLM/SenseVoiceSmall" -F "file=@/tmp/t.wav"; echo ""; head -c 150 /tmp/sfasr.json
 date +%H:%M:%S
 --- 输出 ---
-=== 17:42:31 语音链路诊断+补ffmpeg ===
---- ffmpeg ---
-/usr/bin/ffmpeg
-ffmpeg version 4.4.2-0ubuntu0.22.04.1 Copyright (c) 2000-2021 the FFmpeg developers
---- bot.log 语音报错(16:50-17:00) ---
---- napcat.log record/ffmpeg报错 ---
-[FFmpegAddonAdapter] Converting file: /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/1120ec27ffde5e81d13bba390e8c7658.amr to /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/1120ec27ffde5e81d13bba390e8c7658.amr.mp3 as mp3
-[FFmpegAddonAdapter] Converting file: /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/b86d704dfd79a5bf28aa618a274dddeb.amr to /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/b86d704dfd79a5bf28aa618a274dddeb.amr.mp3 as mp3
-[FFmpegAddonAdapter] Converting file: /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/c19fca287f42b1c206ad2dde919d0d29.amr to /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/c19fca287f42b1c206ad2dde919d0d29.amr.mp3 as mp3
-[FFmpegAddonAdapter] Converting file: /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/3a2f52065cb05d571095b220f87008f7.amr to /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/3a2f52065cb05d571095b220f87008f7.amr.mp3 as mp3
-[FFmpegAddonAdapter] Converting file: /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/51a7941ffe172e00ce32c60ddb933670.amr to /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/51a7941ffe172e00ce32c60ddb933670.amr.mp3 as mp3
---- 安装ffmpeg(容器内) ---
-/usr/bin/ffmpeg
-ffmpeg version 4.4.2-0ubuntu0.22.04.1 Copyright (c) 2000-2021 the FFmpeg developers
---- SF ASR鉴权sanity(合成静音wav) ---
-wav生成OK
+=== 17:51:17 ASR双链实测(X10真key) ===
+[SF账户余额]
+{"code":20092,"message":"This endpoint is deprecated and is no longer available.","data":null}
+[Zhipu glm-asr实测]
+HTTP 429
+{"error":{"code":"1113","message":"余额不足或无可用资源包,请充值。"}}
+[SF ASR再确认]
 HTTP 402
-{"code":30001,"message":"Sorry, your account balance is insufficient","data":null}17:42:34
+{"code":30001,"message":"Sorry, your account balance is insufficient","data":null}17:51:20
