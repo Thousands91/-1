@@ -1,12 +1,17 @@
-285430
-echo "=== 登录态权威判定 ==="
-bash /root/logincheck.sh 2>/dev/null | head -5
-echo "=== 最近收到的消息 ==="
-grep -a "message.private.friend\|message.group" /root/bot.log | tail -4 | awk '{print $1,$2,$NF}'
-echo "=== 四进程存活 ==="
-pgrep -f "main.py" >/dev/null && echo 大脑在 || echo 大脑不在
-pgrep -f "opt/QQ/qq" >/dev/null && echo NapCat在 || echo NapCat不在
-pgrep -f remote_ctl >/dev/null && echo 遥控循环在 || echo 遥控循环不在
-pgrep -f tick.sh >/dev/null && echo 取证秒表在 || echo 秒表不在
-echo "=== NapCat掉线事件留痕 ==="
-grep -a "二维码已保存\|Error\|offline" /root/napcat-restart.log 2>/dev/null | tail -2
+285431
+cd /root/bot && git pull 2>&1 | tail -2
+echo "=== 当前版本 ==="
+git log --oneline -1
+echo "=== 重启大脑 ==="
+pkill -f "venv/bin/python main.py"; sleep 2
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 < /dev/null &
+sleep 12
+echo "=== 插件加载检查 ==="
+grep -ac "Succeeded to load plugin" /root/bot.log
+echo "=== WS重连检查 ==="
+grep -a "WebSocket" /root/bot.log | tail -1
+echo "=== 新文案就位验证 ==="
+echo "告假新文案: $(grep -c '风月册页这会儿翻不动' /root/bot/bot/plugins/image_search_multisource.py) 处"
+echo "网易云说明句残留: $(grep -c '点这张卡片去网易云音乐' /root/bot/bot/plugins/song_request.py) 处"
+echo "=== 进程 ==="
+pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑已拉起 || echo 大脑没起来
