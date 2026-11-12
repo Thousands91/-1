@@ -1,8 +1,29 @@
-285413
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo "码已放进相册DCIM/Camera/asar_qr.png"
-ls -l --time-style=+%H:%M:%S /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-date "+出码对照: %T"
-echo "=== QR_BASE64_START ==="
-base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-echo ""
-echo "=== QR_BASE64_END ==="
+285414
+ADB=/data/data/com.termux/files/usr/bin/adb
+export HOME=/data/data/com.termux/files/home
+echo "=== adb服务与已连设备 ==="
+$ADB start-server 2>/dev/null; $ADB devices
+echo "=== mdns发现(无线调试是否在线) ==="
+timeout 15 $ADB mdns services 2>&1
+echo "=== 尝试旧端口41181 ==="
+timeout 8 $ADB connect 127.0.0.1:41181 2>&1
+timeout 8 $ADB connect 192.168.31.28:41181 2>&1
+echo "=== 设备清单(终) ==="
+$ADB devices
+if $ADB get-state 2>/dev/null | grep -q device; then
+  echo "=== 幻影杀手缴械状态验证 ==="
+  $ADB shell device_config get activity_manager max_phantom_processes 2>&1
+  echo "=== 待机桶(改前) ==="
+  $ADB shell am get-standby-bucket com.termux 2>&1
+  $ADB shell am set-standby-bucket com.termux active 2>&1
+  echo "=== 待机桶(改后,应为10=active) ==="
+  $ADB shell am get-standby-bucket com.termux 2>&1
+  echo "=== doze当前状态与关闭 ==="
+  $ADB shell dumpsys deviceidle 2>/dev/null | grep mState | head -1
+  $ADB shell dumpsys deviceidle disable 2>&1
+  $ADB shell dumpsys deviceidle 2>/dev/null | grep mState | head -1
+  echo "=== 电池/充电状态 ==="
+  $ADB shell dumpsys battery 2>/dev/null | grep -E "powered|status|level" | head -4
+else
+  echo "未连上,需要用户开无线调试页面拿端口"
+fi
