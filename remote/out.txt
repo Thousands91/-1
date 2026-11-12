@@ -1,32 +1,19 @@
-<<<task_285374.txt>>>
-===== 任务285374 11-12 18:30:22 =====
+<<<task_285375.txt>>>
+===== 任务285375 11-12 18:49:57 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') 镜像测速+模型部署 ==="
-MODEL="k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-paraformer-zh-small-2024-03-09.tar.bz2"
-BEST=""; BESTSP=0
-for m in "https://ghfast.top/https://github.com" "https://gh-proxy.com/https://github.com" "https://ghproxy.net/https://github.com" "https://github.com"; do
-  sp=$(curl -sL -m 30 -r 0-2097151 -o /dev/null -w "%{speed_download}" "$m/$MODEL" 2>/dev/null)
-  sp=${sp%.*}
-  echo "$m -> ${sp}B/s"
-  if awk "BEGIN{exit !($sp > $BESTSP)}" 2>/dev/null; then BEST="$m"; BESTSP=$sp; fi
-done
-echo "最快镜像: $BEST (${BESTSP}B/s)"
-if [ -n "$BEST" ]; then
-  echo "--- 全量下载 ---"
-  curl -sL -m 500 -o /tmp/para.tar.bz2 "$BEST/$MODEL"
-  SZ=$(stat -c%s /tmp/para.tar.bz2 2>/dev/null || echo 0)
-  echo "下载大小: $SZ (期望77920048)"
-  if tar xjf /tmp/para.tar.bz2 -C /tmp 2>/dev/null; then
-    cp /tmp/sherpa-onnx-paraformer-zh-small-2024-03-09/model.int8.onnx /root/asr_model/
-    cp /tmp/sherpa-onnx-paraformer-zh-small-2024-03-09/tokens.txt /root/asr_model/
-    rm -f /tmp/para.tar.bz2
-  else
-    echo "解压失败(包不完整)"
-  fi
+echo "=== $(date '+%H:%M:%S') 解压状态诊断 ==="
+pgrep -af "tar |cp |python3 -c" | head -5 || echo 无解压相关进程
+ls -l /root/asr_model/ 2>/dev/null || echo asr_model空
+ls -l /tmp/para.tar.bz2 /tmp/sherpa-onnx-paraformer-zh-small-2024-03-09/ 2>/dev/null | head -8
+echo "--- 手工完成解压(若未完成) ---"
+if [ ! -f /root/asr_model/model.int8.onnx ]; then
+  cd /tmp && timeout 240 tar xjf para.tar.bz2 2>/dev/null
+  cp -f sherpa-onnx-paraformer-zh-small-2024-03-09/model.int8.onnx /root/asr_model/ 2>/dev/null
+  cp -f sherpa-onnx-paraformer-zh-small-2024-03-09/tokens.txt /root/asr_model/ 2>/dev/null
 fi
 ls -l /root/asr_model/
 echo "--- 模型加载验证 ---"
-timeout 60 python3 -c "
+timeout 90 python3 -c "
 import sherpa_onnx
 r = sherpa_onnx.OfflineRecognizer.from_paraformer('/root/asr_model/model.int8.onnx','/root/asr_model/tokens.txt',num_threads=2,sample_rate=16000,feature_dim=80)
 print('模型加载OK')
@@ -40,8 +27,33 @@ grep "connected" /root/bot.log | tail -1
 pgrep -f "venv/bin/python main.py" >/dev/null && echo ALIVE || echo DEAD
 date +%H:%M:%S
 --- 输出 ---
-=== 18:30:22 镜像测速+模型部署 ===
-https://ghfast.top/https://github.com -> 133B/s
-https://gh-proxy.com/https://github.com -> 319997B/shhttps://ghproxy.net/https://github.com -> 33732B/shhttps://github.com -> 60707B/s
-最快镜像: https://gh-proxy.com/https://github.com (319997B/s)
---- 全量下载 ---下载大小: 77920048 (期望77920048)
+=== 18:49:57 解压状态诊断 ===
+11701 Xvfb :106 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.7QP2vJ/Xauthority
+11733 Xvfb :107 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.YCbybi/Xauthority
+11945 Xvfb :99 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.CeyUj3/Xauthority
+12852 timeout 240 tar xjf para.tar.bz2
+12853 tar xjf para.tar.bz2
+total 0
+-rw-r--r-- 1 root root 77920048 Nov 12 18:31 /tmp/para.tar.bz2
+
+/tmp/sherpa-onnx-paraformer-zh-small-2024-03-09/:
+total 0
+-rw-r--r-- 1 root root      152 Mar 10  2024 README.md
+-rwxr-xr-x 1 root root     2542 Mar 10  2024 add-model-metadata.py
+-rw-r--r-- 1 root root    11203 Mar 10  2024 am.mvn
+-rw-r--r-- 1 root root    56290 Mar 10  2024 config.yaml
+--- 手工完成解压(若未完成) ---
+total 0
+-rw------- 1 root root 81828675 Nov 12 18:50 model.int8.onnx
+-rw-r--r-- 1 root root    75352 Nov 12 18:50 tokens.txt
+--- 模型加载验证 ---
+模型加载OK
+--- 代码同步+重启大脑 ---
+9536322 离线语音识别:sherpa-onnx paraformer本地优先(双ASR API余额双灭)
+model from /root/asr_model/model.int8.onnx failed:Protobuf parsing failed.
+--- 代码同步+重启大脑 ---
+9536322 离线语音识别:sherpa-onnx paraformer本地优先(双ASR API余额双灭)
+Terminated
+11-12 17:16:55 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+ALIVE
+18:50:43
