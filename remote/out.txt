@@ -1,20 +1,16 @@
-<<<task_285400.txt>>>
-===== 任务285400 11-12 23:31:57 =====
+<<<task_285401.txt>>>
+===== 任务285401 11-12 23:34:06 =====
 --- 命令 ---
-cd /root/bot/bot && timeout 150 git fetch origin main && git reset --hard origin/main && echo "SYNC: $(git log --oneline -1)"
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/image_search_multisource.py && echo 语法OK
-BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
-sleep 3
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 15
-grep "connected" /root/bot.log | tail -1
-grep "Succeeded to load plugin \"image_search" /root/bot.log | tail -1
+echo "aW1wb3J0IGFzeW5jaW8sIHN5cywgdGltZQpzeXMucGF0aC5pbnNlcnQoMCwgJy9yb290L2JvdCcpCmltcG9ydCBub25lYm90Cm5vbmVib3QuaW5pdCgpCmZyb20gYm90LnBsdWdpbnMgaW1wb3J0IGltYWdlX3NlYXJjaF9tdWx0aXNvdXJjZSBhcyBtCgpkZWYgbG9nKG5hbWUsIG9rLCBleHRyYT0iIik6CiAgICBwcmludChmIlt7J09LJyBpZiBvayBlbHNlICdGQUlMJ31dIHtuYW1lfSB7ZXh0cmF9IikKCmFzeW5jIGRlZiBtYWluKCk6CiAgICAjIGxvbGljb24g5Li75rGg5aSN5rWL77yI5LiK6L2uMjBz6LaF5pe277yM57uZNDBz77yJCiAgICB0cnk6CiAgICAgICAgaXQgPSBhd2FpdCBhc3luY2lvLndhaXRfZm9yKG0uZmV0Y2hfbG9saWNvbihyMTg9MSksIDQwKQogICAgICAgIGxvZygibG9saWNvbuS4u+axoCIsIGJvb2woaXQgYW5kIGl0WzBdKSkKICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICBsb2coImxvbGljb27kuLvmsaAiLCBGYWxzZSwgcmVwcihlKVs6OTBdKQogICAgIyDmmbrog73pk77lpI3mtYvvvIjnnIvmlrDml6Xlv5fmiZPlh7rku4DkuYjlvaLmgIHvvIkKICAgIHRyeToKICAgICAgICBjID0gYXdhaXQgYXN5bmNpby53YWl0X2ZvcihtLl90cmFuc2xhdGVfY2FuZGlkYXRlcygi5aW25aW2IiksIDEyMCkKICAgICAgICBsb2coIuaZuuiDvemTvue/u+ivkSjlpbblpbYpIiwgYm9vbChjKSwgZiJ7Y30iKQogICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgIGxvZygi5pm66IO96ZO+57+76K+RKOWltuWltikiLCBGYWxzZSwgcmVwcihlKVs6OTBdKQogICAgIyDmir3nrb7muLLmn5PvvIjmraPnoa7lj4LmlbDvvIkKICAgIHRyeToKICAgICAgICBmcm9tIGJvdC5wbHVnaW5zIGltcG9ydCBmb3J0dW5lIGFzIGYKICAgICAgICByID0gZi5fcmVuZGVyX2NhcmQoIuWkp+WQiSIsICLmtYvor5Xnrb7mlociLCAi5LiK562+IiwgeyLkuovkuJoiOiA5MCwgIuaEn+aDhSI6IDg1LCAi6LSi6L+QIjogODB9LCA4NSwgIua1i+ivleiAhSIsICIyMDI2LTExLTEyIikKICAgICAgICBsb2coIuaKveetvuWbvueJh+a4suafkyIsIGJvb2wociBhbmQgbGVuKHIpID4gMTAwMCksIGYie2xlbihyKSBpZiByIGVsc2UgMH1CIikKICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICBsb2coIuaKveetvuWbvueJh+a4suafkyIsIEZhbHNlLCByZXByKGUpWzoxMjBdKQoKYXN5bmNpby5ydW4obWFpbigpKQo=" | base64 -d > /tmp/retest.py
+cd /root/bot && timeout 400 /root/bot/venv/bin/python /tmp/retest.py 2>&1 | tail -15
 --- 输出 ---
-From https://github.com/Thousands91/qq-bot
- * branch            main       -> FETCH_HEAD
-   44ae561..001c831  main       -> origin/main
-HEAD is now at 001c831 AI调用全形态防御+hypnohub超时收紧
-SYNC: 001c831 AI调用全形态防御+hypnohub超时收紧
-语法OK
-11-12 23:32:15 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
-11-12 23:32:11 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+11-12 23:34:09 [SUCCESS] nonebot | NoneBot is initializing...
+11-12 23:34:09 [INFO] nonebot | Current Env: prod
+[OK] lolicon主池 
+11-12 23:34:16 [WARNING] bot | [搜图]AI响应异常(候选词)第1次 status=401 body={'code': 30014, 'data': None, 'message': 'Token is invalid.'}
+11-12 23:34:20 [WARNING] bot | [搜图]AI响应异常(候选词)第2次 status=401 body={'code': 30014, 'data': None, 'message': 'Token is invalid.'}
+11-12 23:34:26 [WARNING] bot | [搜图]AI响应异常(候选词)第3次 status=401 body={'code': 30014, 'data': None, 'message': 'Token is invalid.'}
+11-12 23:34:46 [WARNING] bot | [搜图]AI响应异常(候选词)第4次 status=401 body={'code': 30014, 'data': None, 'message': 'Token is invalid.'}
+11-12 23:34:58 [WARNING] bot | [搜图]AI响应异常(候选词)第5次 status=401 body={'code': 30014, 'data': None, 'message': 'Token is invalid.'}
+[FAIL] 智能链翻译(奶奶) []
+[FAIL] 抽签图片渲染 0B
