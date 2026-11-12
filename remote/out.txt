@@ -1,5 +1,5 @@
 <<<task_285363.txt>>>
-===== 任务285363 11-12 15:52:34 =====
+===== 任务285363 11-12 15:53:01 =====
 --- 命令 ---
 echo "=== $(date '+%H:%M:%S') 三项定向复测 ==="
 echo "[meting正确姿势 type=url]" && curl -s -m 12 "https://api.injahow.cn/meting/?type=url&id=186016" | head -c 150; echo ""
@@ -21,7 +21,7 @@ echo "--- 语音ASR真实链路（拿今天日志验证） ---"
 grep -i "语音\|transcription\|asr" /root/bot.log | tail -3 || echo 今日无语音使用记录
 date +%H:%M:%S
 --- 输出 ---
-=== 15:52:34 三项定向复测 ===
+=== 15:53:01 三项定向复测 ===
 [meting正确姿势 type=url]
 
 [gutenberg正确书号1342]
@@ -33,4 +33,4 @@ HTTP 206 2001B
 SyntaxError: unterminated string literal (detected at line 4)
 --- 语音ASR真实链路（拿今天日志验证） ---
 11-12 13:00:48 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2054990964 from 2419770062@[群:590454333] "♪ Geordie - 齐豫\n专辑：C'est La Vie\n音质：高清环绕声 jyeffect\n正在下载并发送语音/文件…"
-15:52:41
+15:53:08
