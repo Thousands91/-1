@@ -1,16 +1,15 @@
-285359
-echo "=== $(date '+%H:%M:%S') 表情识别修复+色图源体检 ==="
-cd /root/bot/bot && git fetch --quiet origin && git reset --quiet --hard origin/main
-echo "代码: $(git log -1 --format='%h %s')"
-grep -q "^ZHIPU_API_KEY" .env || echo "ZHIPU_API_KEY=1ce5306c565b43a2958fad031004e4d9.ETXDC9mjwhzVXVbu" >> .env
-echo "env键: $(grep -o '^[A-Z_]*' .env | tr '\n' ' ')"
-echo "--- 色图三源实测（X10网络） ---"
-echo "[lolicon匿名r18]" && curl -s -m 10 "https://api.lolicon.app/setu/v2?r18=1&num=1" | head -c 260; echo ""
-echo "[jitsu r18]" && curl -s -o /dev/null -m 15 -w "%{http_code} %{size_download}B -> %{url_effective}" -L "https://moe.jitsu.top/img/?r18=1"; echo ""
-echo "[tbib explicit]" && curl -s -m 15 "https://tbib.org/index.php?page=dapi&s=post&q=index&json=1&limit=3&tags=rating:explicit" | head -c 180; echo ""
+285360
+echo "=== $(date '+%H:%M:%S') 收尾：重启大脑+补测两源 ==="
+cd /root/bot/bot
+echo "代码HEAD: $(git log -1 --format='%h')"
+echo "[jitsu r18]" && curl -s -o /dev/null -m 12 -w "%{http_code} %{size_download}B" -L "https://moe.jitsu.top/img/?r18=1"; echo ""
+echo "[tbib explicit]" && curl -s -m 12 "https://tbib.org/index.php?page=dapi&s=post&q=index&json=1&limit=2&tags=rating:explicit" | head -c 160; echo ""
+echo "[lolicon]" && curl -s -m 6 -w "|HTTP %{http_code}" "https://api.lolicon.app/setu/v2?r18=1&num=1" | head -c 200; echo ""
 echo "--- 重启大脑 ---"
+pgrep -f "venv/bin/python main.py" >/dev/null && echo 旧大脑在跑 || echo 大脑不在
 pkill -f "venv/bin/python main.py"; sleep 3
 cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
 sleep 15
 grep "connected" /root/bot.log | tail -1
+pgrep -f "venv/bin/python main.py" >/dev/null && echo 新大脑存活 || echo 大脑没起来
 date +%H:%M:%S
