@@ -1,0 +1,4 @@
+285336
+echo "=== $(date '+%H:%M:%S') 出码进度 ==="
+tail -10 /root/azar_login_run.log 2>/dev/null
+ls -l /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null || echo 相册还没码
