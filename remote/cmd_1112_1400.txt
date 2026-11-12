@@ -1,0 +1,10 @@
+285351
+echo "=== $(date '+%H:%M:%S') 记忆污染排查 ==="
+echo "--- 记忆/历史文件在哪 ---"
+find /root/bot/bot/data /root/bot/bot/persona -type f 2>/dev/null | head -12
+echo "--- 记忆库里搜比心/爱心 ---"
+grep -rln "比心" /root/bot/bot/data /root/bot/bot/persona 2>/dev/null | head -3
+grep -rn "爱心" /root/bot/bot/data 2>/dev/null | head -4
+echo "--- ai_chat历史持久化机制 ---"
+grep -n "history\|历史\|json.dump\|save" /root/bot/bot/plugins/ai_chat.py | head -10
+date +%H:%M:%S
