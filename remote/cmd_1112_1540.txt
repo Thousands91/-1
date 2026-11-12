@@ -1,0 +1,9 @@
+285361
+echo "=== $(date '+%H:%M:%S') deploy 285361 ==="
+cd /root/bot/bot && git fetch --quiet origin && git reset --quiet --hard origin/main && git log -1 --format='%h %s'
+pkill -f "venv/bin/python main.py"; sleep 3
+cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 14
+grep "connected" /root/bot.log | tail -1
+pgrep -f "venv/bin/python main.py" >/dev/null && echo OK_ALIVE || echo DEAD
+date +%H:%M:%S
