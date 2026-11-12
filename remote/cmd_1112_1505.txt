@@ -1,20 +1,9 @@
-285357
-echo "=== $(date '+%H:%M:%S') 补漏搬家部署 ==="
-cd /root/bot/bot && git fetch --quiet origin && git reset --quiet --hard origin/main
-echo "同步到: $(git log -1 --format='%h %s')"
-echo "--- 新文件md5（对照本地: news=7a66d0bf0673ee0f00191d38efd10b8f keyword=cff3795ab97fcbe903e581a8a71afad7 req=60ba865b491b1c4735dbe207a054b763 mface=774f90866f573760fa022e5f26619e83） ---"
-md5sum plugins/news.py plugins/keyword_reply.py requirements.txt data/mface_names.json 2>/dev/null
-echo "--- env键名（只打键不打印值） ---"
-grep -o "^[A-Z_]*" .env | tr '\n' ' '; echo ""
-echo "--- 装ddgs(坑83姿势) ---"
-mkdir -p /data/data/com.termux/cache/pip
-export PYTHONPATH=/data/data/com.termux/files/usr/lib/python3/dist-packages
-pip3 install -q ddgs -i https://pypi.tuna.tsinghua.edu.cn/simple 2>&1 | tail -1
-/root/bot/venv/bin/python -c "from ddgs import DDGS; print('ddgs可用')" 2>&1 | tail -1
-echo "--- 重启大脑 ---"
-pkill -f "venv/bin/python main.py"; sleep 3
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 15
-tail -6 /root/bot.log
-pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑存活 || echo 大脑没起来
+285358
+echo "=== $(date '+%H:%M:%S') 最终验证 ==="
+echo "--- 插件加载/报错检查 ---"
+grep -i "error\|failed\|_exception" /root/bot.log | tail -5 || echo 无报错
+echo "--- WS连接 ---"
+grep "connected" /root/bot.log | tail -2
+echo "--- 15:02后是否有消息处理 ---"
+tail -3 /root/bot.log
 date +%H:%M:%S
