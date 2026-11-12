@@ -1,0 +1,11 @@
+285367
+echo "=== $(date '+%H:%M:%S') X10侧色图源海选 ==="
+echo "[1 konachan.com]" && curl -s -m 15 -A "Mozilla/5.0" "https://konachan.com/post.json?tags=rating:explicit+order:random&limit=1" | head -c 130; echo ""
+echo "[2 danbooru]" && curl -s -m 15 -A "Mozilla/5.0" "https://danbooru.donmai.us/posts.json?tags=rating:explicit+order:random&limit=1" | head -c 130; echo ""
+echo "[3 rule34.xxx]" && curl -s -m 15 "https://rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&limit=1&tags=rating:explicit" | head -c 130; echo ""
+echo "[4 waifu.pics]" && curl -s -m 15 "https://api.waifu.pics/nsfw/waifu" | head -c 120; echo ""
+echo "[5 waifu.im]" && curl -s -m 15 "https://api.waifu.im/search?included_tags=waifu&is_nsfw=true" | head -c 120; echo ""
+echo "[6 nekos.best]" && curl -s -m 15 "https://nekos.best/api/v2/hneko?results=1" | head -c 120; echo ""
+echo "[7 gelbooru]" && curl -s -m 15 "https://gelbooru.com/index.php?page=dapi&s=post&q=index&json=1&limit=1&tags=rating:explicit" | head -c 130; echo ""
+echo "[8 xbooru]" && curl -s -m 15 "https://xbooru.com/index.php?page=dapi&s=post&q=index&json=1&limit=1&tags=rating:explicit" | head -c 130; echo ""
+date +%H:%M:%S
