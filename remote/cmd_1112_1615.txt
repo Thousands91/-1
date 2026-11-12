@@ -1,0 +1,13 @@
+285365
+echo "=== $(date '+%H:%M:%S') 点歌语音修复部署+终验 ==="
+cd /root/bot/bot && git fetch --quiet origin && git reset --quiet --hard origin/main && git log -1 --format='%h %s'
+grep -n "server=netease" plugins/song_request.py | head -1
+echo "[X10侧 meting带server实测]"
+curl -s -m 15 -L -A "Mozilla/5.0" -o /dev/null -w "HTTP %{http_code} size %{size_download}B ctype %{content_type}" "https://api.injahow.cn/meting/?type=url&server=netease&id=25906124"; echo ""
+echo "--- 重启大脑 ---"
+pkill -f "venv/bin/python main.py"; sleep 3
+cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 14
+grep "connected" /root/bot.log | tail -1
+pgrep -f "venv/bin/python main.py" >/dev/null && echo ALIVE || echo DEAD
+date +%H:%M:%S
