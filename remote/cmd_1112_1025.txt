@@ -1,0 +1,24 @@
+285334
+echo "=== $(date '+%m-%d %H:%M') 扫码前全面体检 ==="
+echo "--- 1.遥控本体 ---"
+pgrep -f "bash /root/remote_ctl.sh" >/dev/null && echo remote_ctl活着 || echo remote_ctl死了
+echo "--- 2.bot大脑 ---"
+ps aux | grep "[m]ain.py" | awk '{print $2, $9, $11, $12}' | head -2
+tail -5 /root/bot.log 2>/dev/null
+echo "--- 3.NapCat进程与日志 ---"
+ps aux | grep -c "[o]pt/QQ/qq"
+tail -4 /root/napcat.log 2>/dev/null
+echo "--- 4.登录态 ---"
+timeout 20 bash /root/logincheck.sh 2>/dev/null | tail -2
+echo "--- 5.看门狗与boot自启 ---"
+ls -l /data/data/com.termux/files/home/x10_watchdog.sh 2>/dev/null || echo 看门狗脚本缺失
+tail -3 /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null || echo boot脚本容器内不可见
+echo "--- 6.凭据与记忆 ---"
+grep -c "=" /root/bot/.env 2>/dev/null || echo bot根无env
+ls /root/bot/data/memory/ 2>/dev/null | head -3
+echo "--- 7.一键登录脚本版本(应为opt/QQ) ---"
+grep -c "opt/QQ" /root/asar-sync/x10/azar_login_x10.sh 2>/dev/null
+grep -c "opt/00" /root/asar-sync/x10/azar_login_x10.sh 2>/dev/null
+echo "--- 8.记忆同步 ---"
+pgrep -f "asar[_]sync" >/dev/null && echo asar_sync在跑 || echo asar_sync不在
+echo "=== 体检结束 ==="
