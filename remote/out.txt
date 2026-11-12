@@ -1,24 +1,32 @@
-<<<task_285359.txt>>>
-===== 任务285359 11-12 15:26:35 =====
+<<<task_285360.txt>>>
+===== 任务285360 11-12 15:35:12 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') 表情识别修复+色图源体检 ==="
-cd /root/bot/bot && git fetch --quiet origin && git reset --quiet --hard origin/main
-echo "代码: $(git log -1 --format='%h %s')"
-grep -q "^ZHIPU_API_KEY" .env || echo "ZHIPU_API_KEY=1ce5306c565b43a2958fad031004e4d9.ETXDC9mjwhzVXVbu" >> .env
-echo "env键: $(grep -o '^[A-Z_]*' .env | tr '\n' ' ')"
-echo "--- 色图三源实测（X10网络） ---"
-echo "[lolicon匿名r18]" && curl -s -m 10 "https://api.lolicon.app/setu/v2?r18=1&num=1" | head -c 260; echo ""
-echo "[jitsu r18]" && curl -s -o /dev/null -m 15 -w "%{http_code} %{size_download}B -> %{url_effective}" -L "https://moe.jitsu.top/img/?r18=1"; echo ""
-echo "[tbib explicit]" && curl -s -m 15 "https://tbib.org/index.php?page=dapi&s=post&q=index&json=1&limit=3&tags=rating:explicit" | head -c 180; echo ""
+echo "=== $(date '+%H:%M:%S') 收尾：重启大脑+补测两源 ==="
+cd /root/bot/bot
+echo "代码HEAD: $(git log -1 --format='%h')"
+echo "[jitsu r18]" && curl -s -o /dev/null -m 12 -w "%{http_code} %{size_download}B" -L "https://moe.jitsu.top/img/?r18=1"; echo ""
+echo "[tbib explicit]" && curl -s -m 12 "https://tbib.org/index.php?page=dapi&s=post&q=index&json=1&limit=2&tags=rating:explicit" | head -c 160; echo ""
+echo "[lolicon]" && curl -s -m 6 -w "|HTTP %{http_code}" "https://api.lolicon.app/setu/v2?r18=1&num=1" | head -c 200; echo ""
 echo "--- 重启大脑 ---"
+pgrep -f "venv/bin/python main.py" >/dev/null && echo 旧大脑在跑 || echo 大脑不在
 pkill -f "venv/bin/python main.py"; sleep 3
 cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
 sleep 15
 grep "connected" /root/bot.log | tail -1
+pgrep -f "venv/bin/python main.py" >/dev/null && echo 新大脑存活 || echo 大脑没起来
 date +%H:%M:%S
 --- 输出 ---
-=== 15:26:35 表情识别修复+色图源体检 ===
-代码: 6bb6b42 相册图片表情包识别(md5缓存+视觉回填)+extract_text记忆化
-env键: COMMAND_START OPENAI_API_KEY OPENAI_BASE_URL OPENAI_MODEL ENABLE_AI_CHAT HOST PORT SILICONFLOW_API_KEY ZHIPU_API_KEY 
---- 色图三源实测（X10网络） ---
-[lolicon匿名r18]
+=== 15:35:12 收尾：重启大脑+补测两源 ===
+代码HEAD: 6bb6b42
+[jitsu r18]
+200 426324B
+[tbib explicit]
+[{"directory":4907,"hash":"d093797862143f3e63f841b392a30a61","height":743,"id":28912799,"image":"6879c4b663ee3f47ef256867cb52d6e8c9ddaf7c.jpg","change":17944693
+[lolicon]
+{"error":"","data":[{"pid":140170298,"p":3,"uid":102659495,"title":"先生だけ特別なケイちゃん","author":"ふらっしゃー","r18":true,"width":2866,"height":4047,"tags":["R-18","ブルー�
+--- 重启大脑 ---
+大脑不在
+11-12 15:35:36 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+新大脑存活
+15:35:39
+38
