@@ -1,0 +1,18 @@
+285353
+echo "=== $(date '+%H:%M:%S') 比心藏身处+UID确认 ==="
+M=/root/bot/bot/data/memory/1561950850.json
+echo "--- 比心出现的上下文 ---"
+grep -o '.\{30\}比心.\{30\}' "$M" | head -4
+echo "--- JSON顶层结构与键 ---"
+python3 -c "
+import json
+d=json.load(open('$M'))
+print('类型:', type(d).__name__, '长度:', len(d))
+ks=set()
+for e in (d if isinstance(d,list) else d.values()):
+    if isinstance(e,dict): ks.update(e.keys())
+print('所有键:', sorted(ks))
+"
+echo "--- 你的私聊UID ---"
+grep "private" /root/bot.log | tail -3
+date +%H:%M:%S
