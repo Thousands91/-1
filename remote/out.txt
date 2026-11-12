@@ -1,23 +1,69 @@
-<<<task_285355.txt>>>
-===== 任务285355 11-12 14:22:31 =====
+<<<task_285356.txt>>>
+===== 任务285356 11-12 14:53:32 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') 坑91修复部署 ==="
-cd /root/bot/bot && git fetch --quiet origin && git reset --quiet --hard origin/main
-echo "同步完成 $(git log -1 --format='%h %s' 2>/dev/null | head -1)"
-pkill -f "venv/bin/python main.py"; sleep 3
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 15
-tail -5 /root/bot.log
-pgrep -f "venv/bin/python main.py" && echo 大脑存活 || echo 大脑没起来
+echo "=== $(date '+%H:%M:%S') 搬家完整性盘点 ==="
+cd /root/bot/bot 2>/dev/null || { echo bot目录不存在; exit; }
+echo "--- 文件清单（路径|大小|md5） ---"
+find . -type f \( -name "*.py" -o -name "*.json" -o -name "*.txt" -o -name "*.md" -o -name ".env*" -o -name "*.sh" \) -not -path "./venv/*" -not -path "./.git/*" -not -path "*__pycache__*" | sort | while read f; do echo "$f|$(stat -c%s "$f")|$(md5sum "$f" | cut -d' ' -f1)"; done
+echo "--- 定时任务 ---"
+crontab -l 2>/dev/null || echo 无crontab
+ls /root/morning.sh /root/*.sh 2>/dev/null
+echo "--- Termux侧看门狗 ---"
+ls ~/x10_watchdog.sh ~/.termux/boot/ 2>/dev/null
+echo "--- 字体 ---"
+ls /usr/share/fonts/truetype/wqy/ 2>/dev/null
 date +%H:%M:%S
 --- 输出 ---
-=== 14:22:31 坑91修复部署 ===
-同步完成 7db75fc 坑91:纯表情消息不入记忆+加载时滤旧档(动作幻觉循环根治)
-11-12 14:22:50 [INFO] uvicorn | Application startup complete.
-11-12 14:22:50 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-11-12 14:22:52 [INFO] uvicorn | 127.0.0.1:58064 - "WebSocket /onebot/v11/ws" [accepted]
-11-12 14:22:52 [INFO] websockets | connection open
-11-12 14:22:52 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
-25435
-大脑存活
-14:22:55
+=== 14:53:32 搬家完整性盘点 ===
+--- 文件清单（路径|大小|md5） ---
+./.env|454|01f0853442ad08d73564532c529cb7ff
+./.env.example|1218|6875fede0eb4020e229c09a2e4e9df2c
+./config.py|705|f938bfa2eeebf829764e5dd801033d5d
+./data/fortune_log.json|195|a2b4a0fc3b072983d1714058a6d71916
+./data/gutenberg_zh.json|25369|eac2b956031fce365765ad8df87f86e8
+./data/memory/1062461846.json|85|3ee5bc0481188384af8294a9e25a3317
+./data/memory/1561950850.json|14468|069d62bdf15c802f0d2f5221f47b2928
+./data/memory/22222.json|133|b975f79377a313e12d24c7e5e2175c92
+./data/memory/2419770062.json|3846|d5c225963872126503c4eb18df969475
+./data/memory/2423816346.json|133|ec21436cd06508e0ef7a48abfccac193
+./data/memory/649203747.json|298|8402c6741fcd00e5afd4eb634e9ec486
+./data/qface_index.json|6807|84edec6c67c989c962c0c3ff44465572
+./main.py|979|2ce3f1afeafe29cc2d9e596df1f58e9c
+./persona/__init__.py|31065|1b5727cc9f448f4292379acda604e8cd
+./plugins/ai_chat.py|93272|102d9fa7bfe6aa7e46bb75d6eb1674cf
+./plugins/book_find.py|25498|2316c160d14f865d6d571f6bea6bbf7c
+./plugins/chess_game.py|11359|4e5d51512130aea3470b5b09ba00ca8c
+./plugins/fortune.py|23819|a6604753f220afb36e79cf0b4fee40ff
+./plugins/games.py|11055|ca96803f2706672c82095d2772467558
+./plugins/image_search_multisource.py|27107|d465c601d444a4b7e90037a15745709d
+./plugins/keyword_reply.py|9524|370110433da6d40a654ef6bee3999269
+./plugins/news.py|2432|4c7f7d19cac1a655cedc4c25b5068506
+./plugins/song_request.py|19736|45d8c0974aa3ba3729463268db829bc0
+./plugins/weather.py|7047|0b78a02b1f6dc1c353224e94fc6e1e6a
+./requirements.txt|522|6267acbb77c0e8b95d87ac42f91c872d
+./tests_test_games_full.py|7540|0e7c84009d9227b582944f0ddcb388e1
+./tests_test_mute_v2.py|4909|c34edb2c129e4a8b7cca568f87d2f233
+--- 定时任务 ---
+无crontab
+/root/azar_guard.sh
+/root/azar_login.sh
+/root/check.sh
+/root/logincheck.sh
+/root/morning.sh
+/root/morning.sh
+/root/napcat.sh
+/root/netmon.sh
+/root/offline_watch.sh
+/root/p.sh
+/root/remote_ctl.sh
+/root/restart_bot.sh
+/root/selfcheck.sh
+/root/setup.sh
+/root/st.sh
+/root/start_all.sh
+/root/start_nap.sh
+/root/watcher.sh
+--- Termux侧看门狗 ---
+--- 字体 ---
+wqy-zenhei.ttc
+14:53:33
