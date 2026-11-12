@@ -1,2 +1,35 @@
-285386
-tail -3 /root/bot.log
+285387
+echo "=== .env 翻译相关配置 ==="
+grep -E "OPENAI_|ZHIPU_" /root/bot/bot/.env | sed 's/\(KEY=.\{8\}\).*/\1***/'
+echo "=== 实测翻译调用(SF) ==="
+/root/bot/venv/bin/python - <<'PYEOF'
+import os, json, urllib.request
+key = os.getenv("OPENAI_API_KEY", "")
+url = os.getenv("OPENAI_BASE_URL", "https://api.siliconflow.cn/v1")
+print("url:", url, "model:", os.getenv("OPENAI_MODEL", "Qwen/Qwen2.5-7B-Instruct"))
+try:
+    body = json.dumps({"model": os.getenv("OPENAI_MODEL","Qwen/Qwen2.5-7B-Instruct"),
+        "max_tokens":60,"temperature":0,"thinking":{"type":"disabled"},
+        "messages":[{"role":"system","content":"把中文搜索词翻译成二次元图库英文标签,只输出英文逗号分隔"},
+                    {"role":"user","content":"奶奶"}]}).encode()
+    req = urllib.request.Request(url+"/chat/completions", data=body,
+        headers={"Authorization":"Bearer "+key,"Content-Type":"application/json"})
+    r = json.load(urllib.request.urlopen(req, timeout=15))
+    print("SF结果:", r["choices"][0]["message"]["content"])
+except Exception as e:
+    print("SF失败:", type(e).__name__, str(e)[:200])
+zp = os.getenv("ZHIPU_API_KEY", "")
+try:
+    body = json.dumps({"model":"glm-4.7-flash","max_tokens":60,"temperature":0,
+        "thinking":{"type":"disabled"},
+        "messages":[{"role":"system","content":"你把中文搜索词翻译成二次元图库的英文检索词。只输出英文,最多3个不同说法的候选,用逗号分隔,全小写,用最朴素的常见英文单词或词组,不要自造复合词,不要解释。"},
+                    {"role":"user","content":"奶奶"}]}).encode()
+    req = urllib.request.Request("https://open.bigmodel.cn/api/paas/v4/chat/completions", data=body,
+        headers={"Authorization":"Bearer "+zp,"Content-Type":"application/json"})
+    r = json.load(urllib.request.urlopen(req, timeout=15))
+    print("智谱结果:", r["choices"][0]["message"]["content"])
+except Exception as e:
+    print("智谱失败:", type(e).__name__, str(e)[:200])
+PYEOF
+echo "=== bot.log 近期翻译/搜图日志 ==="
+grep -E "搜图|翻译|tbib|lolicon" /root/bot.log | tail -5
