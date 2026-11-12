@@ -1,17 +1,16 @@
-285435
-echo "=== 搜词缓存(正确路径) ==="
-ls -l /root/bot/data/search_tag_cache.json 2>/dev/null
+285436
+find /root -name "search_tag_cache.json" 2>/dev/null
+F=$(find /root -name "search_tag_cache.json" 2>/dev/null | head -1)
+if [ -n "$F" ]; then
 python3 -c "
 import json
-d=json.load(open('/root/bot/data/search_tag_cache.json'))
+d=json.load(open('$F'))
 for k in ('cand','tag','final'):
     for q,v in d.get(k,{}).items():
-        if '苏丹' in q or '阿萨尔' in q:
-            print(k, q, '->', v)
-" 2>&1 | head -10
-echo "=== 缓存全部键 ==="
-python3 -c "
-import json
-d=json.load(open('/root/bot/data/search_tag_cache.json'))
-print(list(d.get('final',{}).keys()))
-" 2>&1
+        print(k,'|',q,'->',v)
+"
+else
+echo "全盘没找到缓存文件"
+find /root -name "data" -type d -newer /root/bot.log 2>/dev/null | head -5
+ls /root/bot/bot/data/ 2>/dev/null | head
+fi
