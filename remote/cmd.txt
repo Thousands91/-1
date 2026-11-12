@@ -1,10 +1,10 @@
-285438
+285439
 cd /root/bot && git pull 2>&1 | tail -2
 git log --oneline -1
 pkill -f "venv/bin/python main.py"; sleep 2
 cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 < /dev/null &
 sleep 12
-echo "=== 插件加载与新逻辑就位 ==="
+echo "=== 插件加载与排除表版本确认 ==="
 grep -ac "Succeeded to load plugin" /root/bot.log
-grep -c "_R18_EXCLUDE" /root/bot/bot/plugins/image_search_multisource.py
+grep -A1 "_R18_EXCLUDE = " /root/bot/bot/plugins/image_search_multisource.py
 pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑已拉起 || echo 大脑没起来
