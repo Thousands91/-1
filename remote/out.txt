@@ -1,26 +1,27 @@
-<<<task_285419.txt>>>
-===== 任务285419 11-13 01:14:37 =====
+<<<task_285420.txt>>>
+===== 任务285420 11-13 01:16:36 =====
 --- 命令 ---
 export HOME=/data/data/com.termux/files/home
 PREFIX=/data/data/com.termux/files/usr
-echo "=== TUNA镜像取Termux android-tools ==="
 U=https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main
-F=$(curl -sL --max-time 30 "$U/dists/stable/main/binary-aarch64/Packages" | grep -A8 "^Package: android-tools$" | grep "^Filename:" | head -1 | awk '{print $2}')
-echo "deb路径: $F"
-if [ -n "$F" ]; then
-  curl -sL --max-time 120 -o /tmp/at.deb "$U/$F" && ls -l /tmp/at.deb
-  dpkg -x /tmp/at.deb /tmp/atx && echo 解包OK
-  cp -a /tmp/atx/data/data/com.termux/files/usr/bin/* $PREFIX/bin/ 2>/dev/null
-  cp -a /tmp/atx/data/data/com.termux/files/usr/lib/* $PREFIX/lib/ 2>/dev/null
-fi
-echo "=== adb版本与pair确认 ==="
+for PKG in abseil-cpp protobuf; do
+  F=$(curl -sL --max-time 30 "$U/dists/stable/main/binary-aarch64/Packages" | grep -A8 "^Package: $PKG$" | grep "^Filename:" | head -1 | awk '{print $2}')
+  [ -z "$F" ] && continue
+  echo "取 $PKG: $F"
+  curl -sL --max-time 120 -o /tmp/$PKG.deb "$U/$F" && dpkg -x /tmp/$PKG.deb /tmp/${PKG}x
+  cp -a /tmp/${PKG}x/data/data/com.termux/files/usr/lib/* $PREFIX/lib/ 2>/dev/null
+done
+echo "=== adb重试 ==="
 export LD_LIBRARY_PATH=$PREFIX/lib
 $PREFIX/bin/adb version 2>&1 | head -1
+echo "=== pair/connect命令确认 ==="
 $PREFIX/bin/adb help 2>&1 | grep -E "pair|connect" | head -4
+echo "=== 缺库体检 ==="
+ldd $PREFIX/bin/adb 2>/dev/null | grep "not found" | head -5
 --- 输出 ---
-=== TUNA镜像取Termux android-tools ===
-deb路径: pool/main/a/android-tools/android-tools_37.0.0p1-3_aarch64.deb
--rw-r--r-- 1 root root 2374720 Nov 13 01:14 /tmp/at.deb
-解包OK
-=== adb版本与pair确认 ===
-CANNOT LINK EXECUTABLE "/data/data/com.termux/files/usr/bin/adb": library "libabsl_log_internal_message.so" not found
+取 abseil-cpp: pool/main/a/abseil-cpp/abseil-cpp_20260817.0_aarch64.deb
+取 protobuf: pool/main/p/protobuf/protobuf_2:36.2-1_aarch64.deb
+=== adb重试 ===
+CANNOT LINK EXECUTABLE "/data/data/com.termux/files/usr/bin/adb": library "libprotobuf.so" not found
+=== pair/connect命令确认 ===
+=== 缺库体检 ===
