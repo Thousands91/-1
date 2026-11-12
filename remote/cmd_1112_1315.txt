@@ -1,11 +1,8 @@
-285346
-timeout 20 bash /root/logincheck.sh 2>/dev/null | tail -4
-if timeout 20 bash /root/logincheck.sh 2>/dev/null | grep -q 在线; then
-echo "已在线，无需重新出码"
-else
-cd /root/asar-sync && git fetch --quiet origin && git reset --quiet --hard origin/main
-pkill -f "bash /root/asar-sync/x10/azar_login" 2>/dev/null
-nohup bash /root/asar-sync/x10/azar_login_x10.sh > /root/azar_login_run.log 2>&1 &
-echo "未登录，已重启一键登录，约90秒后新码进相册"
-fi
+285347
+echo "--- 大脑日志尾部 ---"
+tail -12 /root/bot.log
+echo "--- NapCat WS连接迹象 ---"
+grep -i "websocket\|连接成功\|connected" /root/napcat.log 2>/dev/null | tail -5
+echo "--- 8080内核连接表 ---"
+grep -i ":1F90" /proc/net/tcp 2>/dev/null | awk '{print $2,$3,$4}' | head -6
 date +%H:%M:%S
