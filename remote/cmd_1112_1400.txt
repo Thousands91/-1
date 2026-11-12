@@ -1,19 +1,18 @@
-285352
-echo "=== $(date '+%H:%M:%S') 记忆手术：摘除比心幻觉条目 ==="
+285353
+echo "=== $(date '+%H:%M:%S') 比心藏身处+UID确认 ==="
 M=/root/bot/bot/data/memory/1561950850.json
-cp "$M" "$M.bak_1112手术前" && echo 已备份
+echo "--- 比心出现的上下文 ---"
+grep -o '.\{30\}比心.\{30\}' "$M" | head -4
+echo "--- JSON顶层结构与键 ---"
 python3 -c "
 import json
-p='/root/bot/bot/data/memory/1561950850.json'
-d=json.load(open(p))
-print('手术前条目数:', len(d))
-bad=[e for e in d if ('比心' in e.get('m','') or '比心' in e.get('r','') or '爱心' in e.get('r',''))]
-print('命中幻觉条目:', len(bad))
-for e in bad[:5]: print(' -', e.get('m','')[:40], '=>', e.get('r','')[:40])
-keep=[e for e in d if e not in bad]
-json.dump(keep, open(p,'w'), ensure_ascii=False)
-print('手术后条目数:', len(keep))
+d=json.load(open('$M'))
+print('类型:', type(d).__name__, '长度:', len(d))
+ks=set()
+for e in (d if isinstance(d,list) else d.values()):
+    if isinstance(e,dict): ks.update(e.keys())
+print('所有键:', sorted(ks))
 "
-echo "--- ai_chat记忆注入方式 ---"
-grep -n "memory" /root/bot/bot/plugins/ai_chat.py | head -8
+echo "--- 你的私聊UID ---"
+grep "private" /root/bot.log | tail -3
 date +%H:%M:%S
