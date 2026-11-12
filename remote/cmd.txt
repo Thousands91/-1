@@ -1,7 +1,9 @@
-285433
-echo "=== 苏丹/阿萨尔搜索记录(bot.log) ==="
-grep -an "苏丹\|阿萨尔" /root/bot.log | grep -av "收到\|阿萨尔来" | tail -15
-echo "=== 搜词缓存文件 ==="
-grep -a "sultan\|sudan\|asar\|assal\|asghar\|assar" /root/data/search_tag_cache.json 2>/dev/null | head -10
-echo "=== 最近色图插件日志(搜词链各步) ==="
-grep -a "image_search\|候选\|对齐\|final\|tag=" /root/bot.log | tail -30
+285434
+echo "=== 缓存文件全文(可能小) ==="
+ls -l /root/data/search_tag_cache.json 2>/dev/null
+head -c 2500 /root/data/search_tag_cache.json 2>/dev/null
+echo ""
+echo "=== 插件里发送图片的日志行样式 ==="
+grep -an "发送\|pic\|url" /root/bot.log | grep -a "02:4[78]\|02:50" | tail -10
+echo "=== tbib出图日志:找发图记录 ==="
+grep -a "02:47\|02:48\|02:49\|02:50" /root/bot.log | grep -av "heartbeat\|心跳" | head -30
