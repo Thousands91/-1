@@ -1,14 +1,5 @@
-285422
+285423
 PREFIX=/data/data/com.termux/files/usr
 U=https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main
-F=$(curl -sL --max-time 30 "$U/dists/stable/main/binary-aarch64/Packages" | grep -A8 "^Package: protobuf$" | grep "^Filename:" | head -1 | awk '{print $2}')
-echo "原始路径: $F"
-ENC=$(echo "$F" | sed 's/:/%3a/g')
-echo "转义后: $ENC"
-curl -sL --max-time 120 -o /tmp/protobuf.deb "$U/$ENC" && ls -l /tmp/protobuf.deb && dpkg -x /tmp/protobuf.deb /tmp/protobufx && echo 解包OK
-find /tmp/protobufx -name "libprotobuf*" | head -3
-find /tmp/protobufx -path "*/lib/*" -name "*.so*" -exec cp -a {} $PREFIX/lib/ \; 2>/dev/null
-echo "=== adb终试 ==="
-export LD_LIBRARY_PATH=$PREFIX/lib
-$PREFIX/bin/adb version 2>&1 | head -1
-$PREFIX/bin/adb help 2>&1 | grep -E "^\s+(pair|connect)" | head -4
+echo "=== android-tools历史版本清单 ==="
+curl -sL --max-time 30 "$U/pool/main/a/android-tools/" | grep -oE 'android-tools_[0-9][^"]*aarch64\.deb' | sort -uV | tail -12
