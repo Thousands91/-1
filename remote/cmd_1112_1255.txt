@@ -1,11 +1,5 @@
-285344
-echo "=== $(date '+%H:%M:%S') WS链路验证 ==="
-sleep 15
-echo "--- 登录状态 ---"
-timeout 20 bash /root/logincheck.sh 2>/dev/null | tail -5
-echo "--- 8080连接(/proc/net/tcp, 01=已建立) ---"
-grep -i ":1F90" /proc/net/tcp 2>/dev/null | awk '{print $2,$3,$4}' | head -6
-echo "--- NapCat日志尾部 ---"
-tail -10 /root/napcat.log
-echo "--- 大脑日志尾部 ---"
-B=$(ls -t /root/bot.log /root/bot/*.log /root/bot/logs/*.log 2>/dev/null | head -1); echo "文件:$B"; tail -8 "$B" 2>/dev/null
+285345
+cd /root/asar-sync && git fetch --quiet origin && git reset --quiet --hard origin/main
+pkill -f "bash /root/asar-sync/x10/azar_login" 2>/dev/null
+nohup bash /root/asar-sync/x10/azar_login_x10.sh > /root/azar_login_run.log 2>&1 &
+echo "一键登录已启动 $(date +%H:%M:%S)，等出新码进相册"
