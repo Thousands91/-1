@@ -1,20 +1,90 @@
-<<<task_285391.txt>>>
-===== 任务285391 11-12 22:58:25 =====
+<<<task_285392.txt>>>
+===== 任务285392 11-12 23:00:46 =====
 --- 命令 ---
-cd /root/bot/bot && timeout 150 git fetch origin main && git reset --hard origin/main && echo "SYNC: $(git log --oneline -1)"
-echo "特征: $(grep -c '递增退避\|3 + 3 \* i' /root/bot/bot/plugins/image_search_multisource.py)处"
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/image_search_multisource.py && echo 语法OK
-BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
-sleep 3
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 12
 grep "connected" /root/bot.log | tail -1
+echo "=== 端到端复测:模拟新搜词链(含429退避) ==="
+cd /root/bot/bot && /root/bot/venv/bin/python -c "
+import json, urllib.request, urllib.parse, html, time, difflib
+env = {}
+for line in open('/root/bot/bot/.env'):
+    line = line.strip()
+    if '=' in line and not line.startswith('#'):
+        k, v = line.split('=', 1); env[k] = v
+
+def ai(prompt, q):
+    for i in range(4):
+        body = json.dumps({'model': env.get('OPENAI_MODEL','glm-4.7-flash'),'max_tokens':60,'temperature':0,
+         'thinking':{'type':'disabled'},'messages':[{'role':'system','content':prompt},{'role':'user','content':q}]}).encode()
+        req = urllib.request.Request(env['OPENAI_BASE_URL']+'/chat/completions', data=body,
+         headers={'Authorization':'Bearer '+env['OPENAI_API_KEY'],'Content-Type':'application/json'})
+        try:
+            r = json.load(urllib.request.urlopen(req, timeout=20))
+            return r['choices'][0]['message']['content'].strip()
+        except Exception as e:
+            print(f'  AI第{i+1}次失败: {type(e).__name__}')
+            time.sleep(3 + 3*i)
+    return ''
+
+def idx(p):
+    arr = json.load(urllib.request.urlopen(urllib.request.Request(
+        f'https://tbib.org/autocomplete.php?q={urllib.parse.quote(p)}', headers={'User-Agent':'Mozilla/5.0'}), timeout=15))
+    out = []
+    for it in arr or []:
+        v = html.unescape(str(it.get('value',''))).strip()
+        try: c = int(html.unescape(str(it.get('label',''))).rsplit('(',1)[-1].rstrip(') ').strip())
+        except Exception: c = 0
+        out.append((v, c))
+    return out
+
+def cnt(tag):
+    d = urllib.request.urlopen(urllib.request.Request(
+        f'https://tbib.org/index.php?page=dapi&s=post&q=index&limit=1&tags=rating:explicit+{urllib.parse.quote(tag)}',
+        headers={'User-Agent':'Mozilla/5.0'}), timeout=15).read().decode()
+    import re
+    m = re.search(r'count=\"(\d+)\"', d)
+    return int(m.group(1)) if m else 0
+
+CAND = '你把中文搜索词翻译成二次元图库的英文检索词。只输出英文,最多3个不同说法的候选,用逗号分隔,全小写,用最朴素的常见英文单词或词组,不要自造复合词,不要解释。'
+BLOCK = {'son','grandson','boy','child','kid','loli','shota','teen','young','brother'}
+for word in ['奶奶','爷爷']:
+    raw = ai(CAND, word)
+    cands = [c.strip().strip(chr(34)).lower() for c in raw.split(',') if c.strip()]
+    print(f'{word}: AI候选={cands}')
+    tags = []
+    for w in cands:
+        w = w.replace(' ','_')
+        if len(w) < 3: continue
+        for n,c in idx(w):
+            if n == w and c >= 3: tags.append(n); break
+        else:
+            best = {}
+            prefix = w[:-1] if len(w) > 5 else w
+            while len(prefix) >= 4:
+                for n,c in idx(prefix):
+                    if c < 3 or not n.startswith(prefix): continue
+                    parts = n.split('_')
+                    if w not in parts and not n.startswith(w+'_') and not n.endswith('_'+w): continue
+                    if any(p in BLOCK for p in parts): continue
+                    if difflib.SequenceMatcher(None, w, n).ratio() >= 0.6:
+                        best[n] = max(best.get(n,0), c)
+                prefix = prefix[:-1]
+            for n,_ in sorted(best.items(), key=lambda kv:-kv[1])[:2]:
+                if n not in tags: tags.append(n)
+    for t in tags[:3]:
+        print(f'  {t} explicit库存={cnt(t)}')
+    time.sleep(2)
+"
 --- 输出 ---
-From https://github.com/Thousands91/qq-bot
- * branch            main       -> FETCH_HEAD
-   a2ca319..600dbda  main       -> origin/main
-HEAD is now at 600dbda 搜词链抗限流:AI调用429递增退避重试最多4次
-SYNC: 600dbda 搜词链抗限流:AI调用429递增退避重试最多4次
-特征: 2处
-语法OK
-11-12 22:52:40 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+11-12 22:58:45 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+=== 端到端复测:模拟新搜词链(含429退避) ===
+  AI第1次失败: HTTPError
+  AI第2次失败: HTTPError
+  AI第3次失败: HTTPError
+  AI第4次失败: HTTPError
+奶奶: AI候选=[]
+  AI第1次失败: HTTPError
+  AI第2次失败: HTTPError
+爷爷: AI候选=['grandpa', 'old man', 'grandfather']
+  grandpa_gohan explicit库存=0
+  grandpa_longneck explicit库存=23
+  old_man explicit库存=2813
