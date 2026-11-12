@@ -1,8 +1,22 @@
-<<<task_285384.txt>>>
-===== 任务285384 11-12 21:55:48 =====
+<<<task_285385.txt>>>
+===== 任务285385 11-12 22:35:49 =====
 --- 命令 ---
-tail -3 /root/bot.log
+cd /root/bot/bot && timeout 150 git fetch origin main && git reset --hard origin/main && echo "SYNC: $(git log --oneline -1)"
+echo "智能链特征: $(grep -c '_search_tag_candidates\|_rank_by_explicit' /root/bot/bot/plugins/image_search_multisource.py)处"
+echo "兜底残留: $(grep -c '随机镇架之作' /root/bot/bot/plugins/image_search_multisource.py)处(应为0)"
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/image_search_multisource.py && echo 语法OK
+BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
+sleep 3
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 12
+grep "connected" /root/bot.log | tail -1
 --- 输出 ---
-11-12 21:54:34 [INFO] uvicorn | 127.0.0.1:47980 - "WebSocket /onebot/v11/ws" [accepted]
-11-12 21:54:34 [INFO] websockets | connection open
+From https://github.com/Thousands91/qq-bot
+ * branch            main       -> FETCH_HEAD
+   32a69d2..73fc313  main       -> origin/main
+HEAD is now at 73fc313 色图搜词智能链定版:AI朴素候选词→图库目录词元边界反查→explicit库存排序(词元黑名单挡未成年红线);撤硬池随机兜底改如实告知(用户定版)
+SYNC: 73fc313 色图搜词智能链定版:AI朴素候选词→图库目录词元边界反查→explicit库存排序(词元黑名单挡未成年红线);撤硬池随机兜底改如实告知(用户定版)
+智能链特征: 6处
+兜底残留: 0处(应为0)
+语法OK
 11-12 21:54:34 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
