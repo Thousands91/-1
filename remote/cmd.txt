@@ -1,5 +1,9 @@
-285406
-echo "aW1wb3J0IGFzeW5jaW8sIHN5cwpzeXMucGF0aC5pbnNlcnQoMCwgJy9yb290L2JvdCcpCmltcG9ydCBib3QuY29uZmlnICAjIG5vcWE6IOaooeaLn+Wkp+iEkeecn+WunmltcG9ydOmTvihsb2FkX2RvdGVudikKaW1wb3J0IG5vbmVib3QKbm9uZWJvdC5pbml0KCkKZnJvbSBib3QucGx1Z2lucyBpbXBvcnQgaW1hZ2Vfc2VhcmNoX211bHRpc291cmNlIGFzIG0KCmFzeW5jIGRlZiBtYWluKCk6CiAgICBjID0gYXdhaXQgYXN5bmNpby53YWl0X2ZvcihtLl90cmFuc2xhdGVfY2FuZGlkYXRlcygi5aW25aW2IiksIDEyMCkKICAgIHByaW50KCLnv7vor5Eo5aW25aW2KToiLCBjKQogICAgdGcgPSBhd2FpdCBhc3luY2lvLndhaXRfZm9yKG0uX3NlYXJjaF90YWdfY2FuZGlkYXRlcygi5aWz5LuGIiksIDEyMCkKICAgIHByaW50KCLmmbrog73pk74o5aWz5LuGKToiLCB0ZykKICAgIGIgPSBhd2FpdCBhc3luY2lvLndhaXRfZm9yKG0uZmV0Y2hfdGJpYl9ieXRlcyhbIm1haWQiXSksIDMwKQogICAgcHJpbnQoInRiaWLlh7rlm74obWFpZCk6IiwgbGVuKGIpIGlmIGIgZWxzZSAwLCAiQiIpCgphc3luY2lvLnJ1bihtYWluKCkpCg==" | base64 -d > /tmp/finaltest.py
-cd /root/bot && timeout 400 /root/bot/venv/bin/python /tmp/finaltest.py 2>&1 | tail -5
-echo "=== 缓存落盘确认 ==="
-cat /root/bot/bot/data/search_tag_cache.json 2>/dev/null | head -c 200
+285407
+cd /root/bot/bot && timeout 150 git fetch origin main && git reset --hard origin/main && echo "SYNC: $(git log --oneline -1)"
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/image_search_multisource.py && echo 语法OK
+BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
+sleep 3
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 15
+grep "Succeeded to load plugin \"image_search" /root/bot.log | tail -1
+grep "connected" /root/bot.log | tail -1
