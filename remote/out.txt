@@ -1,33 +1,25 @@
-<<<task_285398.txt>>>
-===== 任务285398 11-12 23:21:58 =====
+<<<task_285399.txt>>>
+===== 任务285399 11-12 23:26:54 =====
 --- 命令 ---
-echo "aW1wb3J0IGFzeW5jaW8sIHN5cywgdGltZQpzeXMucGF0aC5pbnNlcnQoMCwgJy9yb290L2JvdCcpCmltcG9ydCBub25lYm90Cm5vbmVib3QuaW5pdCgpCmZyb20gYm90LnBsdWdpbnMgaW1wb3J0IGltYWdlX3NlYXJjaF9tdWx0aXNvdXJjZSBhcyBtCgpkZWYgbG9nKG5hbWUsIG9rLCBleHRyYT0iIik6CiAgICBwcmludChmIlt7J09LJyBpZiBvayBlbHNlICdGQUlMJ31dIHtuYW1lfSB7ZXh0cmF9IikKCmFzeW5jIGRlZiBtYWluKCk6CiAgICAjIDEuIOaXoOivjeehrOaxoO+8iDEwMCXoibLlm77lrprniYjvvIkKICAgIHRyeToKICAgICAgICBpbWcgPSBhd2FpdCBhc3luY2lvLndhaXRfZm9yKG0uX2hhcmRfcG9vbF9mYWxsYmFjaygpLCA0MCkKICAgICAgICBsb2coIuaXoOivjeehrOaxoCIsIGJvb2woaW1nKSwgZiJ7bGVuKGltZykgaWYgaW1nIGVsc2UgMH1CIikKICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICBsb2coIuaXoOivjeehrOaxoCIsIEZhbHNlLCByZXByKGUpWzo5MF0pCiAgICAjIDIuIGxvbGljb24g5Li75rGgCiAgICB0cnk6CiAgICAgICAgaXQgPSBhd2FpdCBhc3luY2lvLndhaXRfZm9yKG0uZmV0Y2hfbG9saWNvbihyMTg9MSksIDIwKQogICAgICAgIGxvZygibG9saWNvbuS4u+axoCIsIGJvb2woaXQgYW5kIGl0WzBdKSkKICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICBsb2coImxvbGljb27kuLvmsaAiLCBGYWxzZSwgcmVwcihlKVs6OTBdKQogICAgIyAzLiBsb2xpY29uIOS4reaWh3RhZ+ebtOaQnAogICAgdHJ5OgogICAgICAgIGl0ID0gYXdhaXQgYXN5bmNpby53YWl0X2ZvcihtLmZldGNoX2xvbGljb24ocjE4PTEsIHRhZ3M9IuWls+S7hiIpLCAyMCkKICAgICAgICBsb2coImxvbGljb27kuK3mlod0YWco5aWz5LuGKSIsIGJvb2woaXQgYW5kIGl0WzBdKSkKICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICBsb2coImxvbGljb27kuK3mlod0YWco5aWz5LuGKSIsIEZhbHNlLCByZXByKGUpWzo5MF0pCiAgICAjIDQuIOaZuuiDvemTvue/u+ivke+8iOWQqzQyOemAgOmBv++8iQogICAgdDAgPSB0aW1lLnRpbWUoKQogICAgdHJ5OgogICAgICAgIGMgPSBhd2FpdCBhc3luY2lvLndhaXRfZm9yKG0uX3RyYW5zbGF0ZV9jYW5kaWRhdGVzKCLlpbblpbYiKSwgMTIwKQogICAgICAgIGxvZygi5pm66IO96ZO+57+76K+RKOWltuWltikiLCBib29sKGMpLCBmIntjfSDogJfml7Z7dGltZS50aW1lKCktdDA6LjFmfXMiKQogICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgIGxvZygi5pm66IO96ZO+57+76K+RKOWltuWltikiLCBGYWxzZSwgcmVwcihlKVs6OTBdKQogICAgIyA1LiDmmbrog73pk77lhajpk74KICAgIHRyeToKICAgICAgICB0ZyA9IGF3YWl0IGFzeW5jaW8ud2FpdF9mb3IobS5fc2VhcmNoX3RhZ19jYW5kaWRhdGVzKCLlpbPku4YiKSwgMTIwKQogICAgICAgIGxvZygi5pm66IO96ZO+5YWo6ZO+KOWls+S7hikiLCBib29sKHRnKSwgZiJ7dGd9IikKICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICBsb2coIuaZuuiDvemTvuWFqOmTvijlpbPku4YpIiwgRmFsc2UsIHJlcHIoZSlbOjkwXSkKICAgICMgNi4gdGJpYiDlh7rlm74KICAgIHRyeToKICAgICAgICBiID0gYXdhaXQgYXN5bmNpby53YWl0X2ZvcihtLmZldGNoX3RiaWJfYnl0ZXMoWyJtYWlkIl0pLCAzMCkKICAgICAgICBsb2coInRiaWLlh7rlm74obWFpZCkiLCBib29sKGIpLCBmIntsZW4oYikgaWYgYiBlbHNlIDB9QiIpCiAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgbG9nKCJ0Ymli5Ye65Zu+KG1haWQpIiwgRmFsc2UsIHJlcHIoZSlbOjkwXSkKICAgICMgNy4gaHlwbm9odWIg5Ye65Zu+CiAgICB0cnk6CiAgICAgICAgYiA9IGF3YWl0IGFzeW5jaW8ud2FpdF9mb3IobS5mZXRjaF9oeXBub2h1Yl9ieXRlcyhbIm1haWQiXSksIDMwKQogICAgICAgIGxvZygiaHlwbm9odWLlh7rlm74obWFpZCkiLCBib29sKGIpLCBmIntsZW4oYikgaWYgYiBlbHNlIDB9QiIpCiAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgbG9nKCJoeXBub2h1YuWHuuWbvihtYWlkKSIsIEZhbHNlLCByZXByKGUpWzo5MF0pCiAgICAjIDguIOeCueatjOaQnOe0oivlj5bpn7PpopEKICAgIHRyeToKICAgICAgICBmcm9tIGJvdC5wbHVnaW5zIGltcG9ydCBzb25nX3JlcXVlc3QgYXMgcwogICAgICAgIGxzdCA9IGF3YWl0IGFzeW5jaW8ud2FpdF9mb3Iocy5zZWFyY2goIuaZtOWkqSDlkajmnbDkvKYiKSwgMjUpCiAgICAgICAgaWYgbHN0OgogICAgICAgICAgICBhdSA9IGF3YWl0IGFzeW5jaW8ud2FpdF9mb3Iocy5mZXRjaF9hdWRpbyhsc3RbMF1bImlkIl0gaWYgaXNpbnN0YW5jZShsc3RbMF0sIGRpY3QpIGFuZCAiaWQiIGluIGxzdFswXSBlbHNlIGxzdFswXVswXSksIDQ1KQogICAgICAgICAgICBvayA9IGJvb2woYXUgYW5kIGF1WzBdKQogICAgICAgICAgICBsb2coIueCueatjCjmmbTlpKkpIiwgb2ssIGYie2xlbihhdVswXSkgaWYgb2sgZWxzZSAwfUIiIGlmIG9rIGVsc2Ugc3RyKGF1KVs5MDpdIGlmIGF1IGVsc2UgIuepuiIpCiAgICAgICAgZWxzZToKICAgICAgICAgICAgbG9nKCLngrnmrYwo5pm05aSpKSIsIEZhbHNlLCAi5pCc57Si56m6IikKICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICBsb2coIueCueatjCjmmbTlpKkpIiwgRmFsc2UsIHJlcHIoZSlbOjkwXSkKICAgICMgOS4g5paw6Ze7CiAgICB0cnk6CiAgICAgICAgZnJvbSBib3QucGx1Z2lucyBpbXBvcnQgbmV3cyBhcyBuCiAgICAgICAgaCA9IGF3YWl0IGFzeW5jaW8ud2FpdF9mb3Iobi5mZXRjaF9oZWFkbGluZXMoKSwgMjUpCiAgICAgICAgbG9nKCLmlrDpl7vlpLTmnaEiLCBib29sKGgpLCBmIntsZW4oaCkgaWYgaCBlbHNlIDB95p2hIikKICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICBsb2coIuaWsOmXu+WktOadoSIsIEZhbHNlLCByZXByKGUpWzo5MF0pCiAgICAjIDEwLiDmir3nrb4gUElMCiAgICB0cnk6CiAgICAgICAgZnJvbSBib3QucGx1Z2lucyBpbXBvcnQgZm9ydHVuZSBhcyBmCiAgICAgICAgciA9IGYuX3JlbmRlcl9jYXJkKCLlpKflkIkiLCAi5rWL6K+V562+5paHIiwgIuS4iuetviIsIHsi5LqL5LiaIjogOTAsICLmhJ/mg4UiOiA4NSwgIui0oui/kCI6IDgwfSwgODUsICLmtYvor5XogIUiKQogICAgICAgIGxvZygi5oq9562+5Zu+54mH5riy5p+TIiwgYm9vbChyIGFuZCBsZW4ocikgPiAxMDAwKSwgZiJ7bGVuKHIpIGlmIHIgZWxzZSAwfUIiKQogICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgIGxvZygi5oq9562+5Zu+54mH5riy5p+TIiwgRmFsc2UsIHJlcHIoZSlbOjkwXSkKICAgICMgMTEuIOemu+e6v0FTUuaooeWeiwogICAgdHJ5OgogICAgICAgIGZyb20gYm90LnBsdWdpbnMgaW1wb3J0IGFpX2NoYXQgYXMgYQogICAgICAgIGZuID0gZ2V0YXR0cihhLCAiX2xvYWRfbG9jYWxfcmVjIiwgTm9uZSkKICAgICAgICBpZiBmbjoKICAgICAgICAgICAgcmVjID0gZm4oKQogICAgICAgICAgICBsb2coIuemu+e6v0FTUuaooeWei+WKoOi9vSIsIGJvb2wocmVjKSkKICAgICAgICBlbHNlOgogICAgICAgICAgICBsb2coIuemu+e6v0FTUuaooeWei+WKoOi9vSIsIEZhbHNlLCAi5pegX2xvYWRfbG9jYWxfcmVjIikKICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICBsb2coIuemu+e6v0FTUuaooeWei+WKoOi9vSIsIEZhbHNlLCByZXByKGUpWzo5MF0pCgphc3luY2lvLnJ1bihtYWluKCkpCg==" | base64 -d > /tmp/selftest.py
-cd /root/bot && timeout 500 /root/bot/venv/bin/python /tmp/selftest.py 2>&1 | tail -30
+cd /root/bot/bot && /root/bot/venv/bin/python -c "
+import json, urllib.request
+env = {}
+for line in open('/root/bot/bot/.env'):
+    line = line.strip()
+    if '=' in line and not line.startswith('#'):
+        k, v = line.split('=', 1); env[k] = v
+body = json.dumps({'model': env.get('OPENAI_MODEL'),'max_tokens':20,'temperature':0,
+ 'thinking':{'type':'disabled'},'messages':[{'role':'user','content':'说ok'}]}).encode()
+req = urllib.request.Request(env['OPENAI_BASE_URL']+'/chat/completions', data=body,
+ headers={'Authorization':'Bearer '+env['OPENAI_API_KEY'],'Content-Type':'application/json'})
+try:
+    r = urllib.request.urlopen(req, timeout=20)
+    print('status:', r.status)
+    print('body:', r.read().decode()[:300])
+except urllib.error.HTTPError as e:
+    print('HTTP', e.code)
+    print('body:', e.read().decode()[:300])
+"
 --- 输出 ---
-11-12 23:22:01 [SUCCESS] nonebot | NoneBot is initializing...
-11-12 23:22:01 [INFO] nonebot | Current Env: prod
-/usr/lib/python3.10/asyncio/events.py:80: RuntimeWarning: coroutine 'fetch_tbib_bytes' was never awaited
-  self._context.run(self._callback, *self._args)
-RuntimeWarning: Enable tracemalloc to get the object allocation traceback
-[OK] 无词硬池 1500477B
-[FAIL] lolicon主池 
-[OK] lolicon中文tag(女仆) 
-11-12 23:22:28 [WARNING] bot | [搜图]AI调用失败(候选词)第1次: KeyError 'choices'
-11-12 23:22:35 [WARNING] bot | [搜图]AI调用失败(候选词)第2次: KeyError 'choices'
-11-12 23:22:38 [WARNING] bot | [搜图]AI调用失败(候选词)第3次: KeyError 'choices'
-11-12 23:22:41 [WARNING] bot | [搜图]AI调用失败(候选词)第4次: KeyError 'choices'
-11-12 23:22:49 [WARNING] bot | [搜图]AI调用失败(候选词)第5次: KeyError 'choices'
-[FAIL] 智能链翻译(奶奶) [] 耗时23.6s
-11-12 23:22:56 [WARNING] bot | [搜图]AI调用失败(候选词)第1次: KeyError 'choices'
-11-12 23:22:59 [WARNING] bot | [搜图]AI调用失败(候选词)第2次: KeyError 'choices'
-11-12 23:23:02 [WARNING] bot | [搜图]AI调用失败(候选词)第3次: KeyError 'choices'
-11-12 23:23:09 [WARNING] bot | [搜图]AI调用失败(候选词)第4次: KeyError 'choices'
-11-12 23:23:12 [WARNING] bot | [搜图]AI调用失败(候选词)第5次: KeyError 'choices'
-[FAIL] 智能链全链(女仆) None
-[OK] tbib出图(maid) 325130B
-[FAIL] hypnohub出图(maid) TimeoutError()
-[OK] 点歌(晴天) 10831725B
-[OK] 新闻头条 3条
-[FAIL] 抽签图片渲染 TypeError("_render_card() missing 1 required positional argument: 'date_str'")
-11-12 23:24:22 [SUCCESS] bot | [语音]本地ASR模型已加载(paraformer-zh-small int8)
-[OK] 离线ASR模型加载 
+HTTP 429
+body: {"error":{"code":"1305","message":"该模型当前访问量过大，请您稍后再试"}}
