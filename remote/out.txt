@@ -1,32 +1,19 @@
-<<<task_285360.txt>>>
-===== 任务285360 11-12 15:35:12 =====
+<<<task_285361.txt>>>
+===== 任务285361 11-12 15:40:18 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') 收尾：重启大脑+补测两源 ==="
-cd /root/bot/bot
-echo "代码HEAD: $(git log -1 --format='%h')"
-echo "[jitsu r18]" && curl -s -o /dev/null -m 12 -w "%{http_code} %{size_download}B" -L "https://moe.jitsu.top/img/?r18=1"; echo ""
-echo "[tbib explicit]" && curl -s -m 12 "https://tbib.org/index.php?page=dapi&s=post&q=index&json=1&limit=2&tags=rating:explicit" | head -c 160; echo ""
-echo "[lolicon]" && curl -s -m 6 -w "|HTTP %{http_code}" "https://api.lolicon.app/setu/v2?r18=1&num=1" | head -c 200; echo ""
-echo "--- 重启大脑 ---"
-pgrep -f "venv/bin/python main.py" >/dev/null && echo 旧大脑在跑 || echo 大脑不在
+echo "=== $(date '+%H:%M:%S') deploy 285361 ==="
+cd /root/bot/bot && git fetch --quiet origin && git reset --quiet --hard origin/main && git log -1 --format='%h %s'
 pkill -f "venv/bin/python main.py"; sleep 3
 cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 15
+sleep 14
 grep "connected" /root/bot.log | tail -1
-pgrep -f "venv/bin/python main.py" >/dev/null && echo 新大脑存活 || echo 大脑没起来
+pgrep -f "venv/bin/python main.py" >/dev/null && echo OK_ALIVE || echo DEAD
 date +%H:%M:%S
 --- 输出 ---
-=== 15:35:12 收尾：重启大脑+补测两源 ===
-代码HEAD: 6bb6b42
-[jitsu r18]
-200 426324B
-[tbib explicit]
-[{"directory":4907,"hash":"d093797862143f3e63f841b392a30a61","height":743,"id":28912799,"image":"6879c4b663ee3f47ef256867cb52d6e8c9ddaf7c.jpg","change":17944693
-[lolicon]
-{"error":"","data":[{"pid":140170298,"p":3,"uid":102659495,"title":"先生だけ特別なケイちゃん","author":"ふらっしゃー","r18":true,"width":2866,"height":4047,"tags":["R-18","ブルー�
---- 重启大脑 ---
-大脑不在
-11-12 15:35:36 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
-新大脑存活
-15:35:39
-38
+=== 15:40:18 deploy 285361 ===
+608f49b 色图纯随机权重调整:lolicon 70%(用户反馈不色)
+11-12 15:40:32 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+OK_ALIVE
+15:40:37
+E
+15:40:34
