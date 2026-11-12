@@ -1,5 +1,5 @@
 <<<task_285379.txt>>>
-===== 任务285379 11-12 19:51:43 =====
+===== 任务285379 11-12 19:51:56 =====
 --- 命令 ---
 echo "=== 旧循环诊断 ==="
 ps -eo pid,args | grep "[r]emote_ctl" | head -3
@@ -14,7 +14,7 @@ echo "v5已后台启动,12s后接管旧循环"
 === 旧循环诊断 ===
  8239 bash /root/remote_ctl.sh
 11545 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/storage --bind=/storage/emulated/0:/sdcard --bind=/storage/emulated/0:/mnt/sdcard --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/system/product --bind=/system --bind=/vendor --bind=/data/data/com.termux/files/usr /bin/bash -c bash -c ' setsid bash /root/remote_ctl.sh >> /root/remote_boot.log 2>&1 < /dev/null & setsid bash /root/asar_sync.sh loop >> /root/asar_sync_boot.log 2>&1 < /dev/null & sleep infinity '
-31310 bash /root/remote_ctl.sh
+28168 bash /root/remote_ctl_v5.sh
 pid_file: 8239
 asar-sync仓库OK
 === 安装v5 ===
