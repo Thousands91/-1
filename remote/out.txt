@@ -1,10 +1,27 @@
-<<<task_285423.txt>>>
-===== 任务285423 11-13 01:21:29 =====
+<<<task_285424.txt>>>
+===== 任务285424 11-13 01:34:38 =====
 --- 命令 ---
 PREFIX=/data/data/com.termux/files/usr
-U=https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main
-echo "=== android-tools历史版本清单 ==="
-curl -sL --max-time 30 "$U/pool/main/a/android-tools/" | grep -oE 'android-tools_[0-9][^"]*aarch64\.deb' | sort -uV | tail -12
+echo "=== android-tools的依赖声明 ==="
+dpkg -I /tmp/at.deb 2>/dev/null | grep -E "Depends|Package|Version"
+echo "=== protobuf包内容 ==="
+dpkg -c /tmp/protobuf.deb 2>/dev/null | grep -E "\.so" | awk '{print $NF}' | head -8
+echo "=== 急救:lite充全量 ==="
+ln -sf libprotobuf-lite.so $PREFIX/lib/libprotobuf.so 2>/dev/null
+export LD_LIBRARY_PATH=$PREFIX/lib
+echo "=== adb终试 ==="
+$PREFIX/bin/adb version 2>&1 | head -2
+echo "=== pair命令 ==="
+$PREFIX/bin/adb help 2>&1 | grep -E "pair|connect" | head -4
 --- 输出 ---
-=== android-tools历史版本清单 ===
-android-tools_37.0.0p1-3_aarch64.deb
+=== android-tools的依赖声明 ===
+ Package: android-tools
+ Version: 37.0.0p1-3
+ Depends: abseil-cpp, brotli, fmt, libc++, liblz4, libprotobuf, pcre2, zlib, zstd
+=== protobuf包内容 ===
+./data/data/com.termux/files/usr/lib/libprotobuf-lite.so
+./data/data/com.termux/files/usr/lib/libprotoc.so
+=== 急救:lite充全量 ===
+=== adb终试 ===
+CANNOT LINK EXECUTABLE "/data/data/com.termux/files/usr/bin/adb": library "libfmt.so" not found
+=== pair命令 ===
