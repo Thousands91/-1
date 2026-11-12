@@ -1,14 +1,11 @@
-285349
-echo "=== $(date '+%H:%M:%S') 补PIL+重启大脑 ==="
-BOTD=$(dirname $(find /root -maxdepth 3 -name "main.py" -not -path "*/venv/*" 2>/dev/null | head -1)); echo "bot目录:$BOTD"
-echo "--- 插件md5核对 ---"
-md5sum $BOTD/plugins/fortune.py $BOTD/plugins/ai_chat.py 2>/dev/null
-echo "--- 补装pillow ---"
-pip3 install -q pillow 2>&1 | tail -1 || python3 -m pip install -q pillow 2>&1 | tail -1
+285350
+echo "=== $(date '+%H:%M:%S') 坑83姿势装PIL ==="
+mkdir -p /data/data/com.termux/cache/pip
+export PYTHONPATH=/data/data/com.termux/files/usr/lib/python3/dist-packages
+pip3 install -q pillow -i https://pypi.tuna.tsinghua.edu.cn/simple 2>&1 | tail -2
 /root/bot/venv/bin/python -c "import PIL; print('venv内PIL可用', PIL.__version__)"
-echo "--- 重启大脑 ---"
-pkill -f "venv/bin/python main.py"; sleep 2
-cd "$BOTD" && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 12
-tail -6 /root/bot.log
+echo "--- 大脑进程确认 ---"
+pgrep -af "main.py" || echo 大脑没起来，重新拉
+pgrep -f "main.py" >/dev/null || (cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & sleep 10)
+tail -4 /root/bot.log
 date +%H:%M:%S
