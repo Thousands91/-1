@@ -1,22 +1,10 @@
-285404
-cd /root/bot/bot && /root/bot/venv/bin/python -c "
-import sys
-sys.path.insert(0, '/root/bot')
-import os
-from dotenv import load_dotenv
-from pathlib import Path
-load_dotenv(Path('/root/bot/bot/.env'))
-print('load_dotenv后 BASE_URL:', repr(os.getenv('OPENAI_BASE_URL')))
-print('load_dotenv后 KEY:', repr((os.getenv('OPENAI_API_KEY') or '')[:14]))
-import json, urllib.request
-url = os.getenv('OPENAI_BASE_URL'); key = os.getenv('OPENAI_API_KEY')
-body = json.dumps({'model': os.getenv('OPENAI_MODEL'),'max_tokens':20,'temperature':0,
- 'thinking':{'type':'disabled'},'messages':[{'role':'user','content':'说ok'}]}).encode()
-req = urllib.request.Request(url+'/chat/completions', data=body,
- headers={'Authorization':'Bearer '+key,'Content-Type':'application/json'})
-try:
-    r = urllib.request.urlopen(req, timeout=20)
-    print('请求', url[:40], '结果:', r.read().decode()[:150])
-except urllib.error.HTTPError as e:
-    print('请求', url[:40], 'HTTP', e.code, e.read().decode()[:200])
-"
+285405
+cd /root/bot/bot && timeout 150 git fetch origin main && git reset --hard origin/main && echo "SYNC: $(git log --oneline -1)"
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/image_search_multisource.py && echo 语法OK
+BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}'); [ -n "$BP" ] && kill $BP
+sleep 3
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 15
+echo "=== 最终确认 ==="
+grep "Succeeded to load plugin \"image_search" /root/bot.log | tail -1
+grep "connected" /root/bot.log | tail -1
