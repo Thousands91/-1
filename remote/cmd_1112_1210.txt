@@ -1,0 +1,8 @@
+285340
+echo "=== $(date '+%H:%M:%S') 登录验证 ==="
+timeout 20 bash /root/logincheck.sh 2>/dev/null | tail -8
+echo "--- 登录脚本日志尾部 ---"
+tail -15 /root/azar_login_run.log 2>/dev/null
+echo "--- NapCat日志尾部 ---"
+L=$(find /root -path "*napcat*" -name "*.log" 2>/dev/null | head -1); tail -12 "$L" 2>/dev/null
+ls -l /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null
