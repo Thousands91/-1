@@ -1,28 +1,24 @@
-<<<task_285402.txt>>>
-===== 任务285402 11-12 23:37:42 =====
+<<<task_285403.txt>>>
+===== 任务285403 11-12 23:41:25 =====
 --- 命令 ---
-PID=$(pgrep -f 'venv/bin/python main.py' | head -1)
-echo "大脑PID: $PID"
-echo "=== 大脑进程环境变量 ==="
-cat /proc/$PID/environ | tr '\0' '\n' | grep -E "^OPENAI_|^ZHIPU_|^SILICONFLOW" | sed 's/\(=.\{12\}\).*/\1***/'
-echo "=== .env 原文（含重复键检查） ==="
-grep -n "OPENAI\|ZHIPU\|SILICONFLOW" /root/bot/bot/.env | sed 's/\(=.\{12\}\).*/\1***/'
-echo "=== .env.prod / .env.other 检查 ==="
-ls /root/bot/bot/.env* 2>/dev/null
-for f in /root/bot/bot/.env.*; do [ -f "$f" ] && echo "--$f--" && grep -E "OPENAI|ZHIPU" "$f" | sed 's/\(=.\{12\}\).*/\1***/'; done
+cd /root/bot/bot && /root/bot/venv/bin/python -c "
+import os
+print('init前 BASE_URL:', repr(os.getenv('OPENAI_BASE_URL')))
+print('init前 KEY:', repr((os.getenv('OPENAI_API_KEY') or '')[:12]))
+import nonebot
+nonebot.init()
+print('init后 BASE_URL:', repr(os.getenv('OPENAI_BASE_URL')))
+print('init后 KEY:', repr((os.getenv('OPENAI_API_KEY') or '')[:12]))
+cfg = nonebot.get_driver().config
+print('config BASE_URL:', repr(getattr(cfg, 'OPENAI_BASE_URL', None)))
+print('config KEY:', repr((getattr(cfg, 'OPENAI_API_KEY', '') or '')[:12]))
+"
 --- 输出 ---
-大脑PID: 28325
-=== 大脑进程环境变量 ===
-=== .env 原文（含重复键检查） ===
-6:OPENAI_API_KEY=1ce5306c565b***
-7:OPENAI_BASE_URL=https://open***
-8:OPENAI_MODEL=glm-4.7-flas***
-13:SILICONFLOW_API_KEY="sk-veyzzthg***
-14:ZHIPU_API_KEY=1ce5306c565b***
-=== .env.prod / .env.other 检查 ===
-/root/bot/bot/.env
-/root/bot/bot/.env.example
---/root/bot/bot/.env.example--
-OPENAI_API_KEY=
-OPENAI_BASE_URL=https://api.***
-OPENAI_MODEL=Qwen/Qwen2.5***
+init前 BASE_URL: None
+init前 KEY: ''
+11-12 23:41:28 [SUCCESS] nonebot | NoneBot is initializing...
+11-12 23:41:28 [INFO] nonebot | Current Env: prod
+init后 BASE_URL: None
+init后 KEY: ''
+config BASE_URL: None
+config KEY: ''
