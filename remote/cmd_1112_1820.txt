@@ -1,0 +1,13 @@
+285373
+echo "=== $(date '+%H:%M:%S') 卡点诊断 ==="
+echo "--- 相关进程 ---"
+pgrep -af "pip3|curl|wget|tar |cc1plus|cmake|make" | head -6 || echo 无相关进程
+echo "--- 模型文件 ---"
+ls -l /root/asr_model/ 2>/dev/null
+ls -l /tmp/para.tar.bz2 2>/dev/null || echo 临时包不存在
+echo "--- sherpa import ---"
+timeout 15 python3 -c "import sherpa_onnx; print('OK', sherpa_onnx.__version__)" 2>&1 | tail -1
+echo "--- 大脑状态 ---"
+pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑在 || echo 大脑不在
+grep "connected" /root/bot.log | tail -1
+date +%H:%M:%S
