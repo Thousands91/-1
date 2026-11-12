@@ -1,5 +1,10 @@
-285416
-echo "=== 找历史adb配对密钥 ==="
-ls -l /root/.android/ 2>&1 | head -6
-ls -l /data/data/com.termux/files/home/.android/ 2>&1 | head -6
-find / -name "adbkey" -o -name "*pairing*" 2>/dev/null | grep -v proc | head -6
+285417
+export PATH=/data/data/com.termux/files/usr/bin:$PATH
+export LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib
+export HOME=/data/data/com.termux/files/home
+echo "=== Termux原生pkg装android-tools(新adb带pair) ==="
+yes | pkg install -y android-tools 2>&1 | grep -E "Setting up|installed|E:|Err" | tail -3
+echo "=== 新adb版本 ==="
+/data/data/com.termux/files/usr/bin/adb version 2>&1 | head -1
+echo "=== 确认有pair命令 ==="
+/data/data/com.termux/files/usr/bin/adb help 2>&1 | grep -E "pair|connect" | head -4
