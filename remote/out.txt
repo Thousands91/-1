@@ -1,27 +1,57 @@
-<<<task_285333.txt>>>
-===== 任务285333 11-12 02:45:16 =====
+<<<task_285334.txt>>>
+===== 任务285334 11-12 10:25:07 =====
 --- 命令 ---
-H=/data/data/com.termux/files/home
-cat > "$H/x10_watchdog.sh" <<'WD'
-#!/bin/bash
-# X10 遥控自动拉活看门狗（Termux层运行，每分钟巡检）
-while true; do
-  proot-distro login ubuntu -- bash -c 'pgrep -f "remote_ctl.sh" >/dev/null || { rm -f /root/.remote_pid; setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & echo "[$(date +%m-%d %H:%M)] watchdog拉活remote_ctl" >> /root/watchdog.log; }'
-  sleep 60
-done
-WD
-chmod +x "$H/x10_watchdog.sh"
-echo "=== 看门狗已写入 ==="
-ls -l "$H/x10_watchdog.sh"
-if ! grep -q "x10_watchdog" "$H/.termux/boot/asar_boot.sh" 2>/dev/null; then
-  echo 'nohup bash "$HOME/x10_watchdog.sh" >/dev/null 2>&1 &' >> "$H/.termux/boot/asar_boot.sh"
-  echo "boot自启已追加"
-else
-  echo "boot自启已存在"
-fi
-tail -3 "$H/.termux/boot/asar_boot.sh" 2>/dev/null
+echo "=== $(date '+%m-%d %H:%M') 扫码前全面体检 ==="
+echo "--- 1.遥控本体 ---"
+pgrep -f "bash /root/remote_ctl.sh" >/dev/null && echo remote_ctl活着 || echo remote_ctl死了
+echo "--- 2.bot大脑 ---"
+ps aux | grep "[m]ain.py" | awk '{print $2, $9, $11, $12}' | head -2
+tail -5 /root/bot.log 2>/dev/null
+echo "--- 3.NapCat进程与日志 ---"
+ps aux | grep -c "[o]pt/QQ/qq"
+tail -4 /root/napcat.log 2>/dev/null
+echo "--- 4.登录态 ---"
+timeout 20 bash /root/logincheck.sh 2>/dev/null | tail -2
+echo "--- 5.看门狗与boot自启 ---"
+ls -l /data/data/com.termux/files/home/x10_watchdog.sh 2>/dev/null || echo 看门狗脚本缺失
+tail -3 /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null || echo boot脚本容器内不可见
+echo "--- 6.凭据与记忆 ---"
+grep -c "=" /root/bot/.env 2>/dev/null || echo bot根无env
+ls /root/bot/data/memory/ 2>/dev/null | head -3
+echo "--- 7.一键登录脚本版本(应为opt/QQ) ---"
+grep -c "opt/QQ" /root/asar-sync/x10/azar_login_x10.sh 2>/dev/null
+grep -c "opt/00" /root/asar-sync/x10/azar_login_x10.sh 2>/dev/null
+echo "--- 8.记忆同步 ---"
+pgrep -f "asar[_]sync" >/dev/null && echo asar_sync在跑 || echo asar_sync不在
+echo "=== 体检结束 ==="
 --- 输出 ---
-=== 看门狗已写入 ===
+=== 11-12 10:25 扫码前全面体检 ===
+--- 1.遥控本体 ---
+remote_ctl活着
+--- 2.bot大脑 ---
+11694 2023 /root/bot/venv/bin/python main.py
+11-12 00:07:02 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
+11-12 00:07:02 [INFO] __main__ | ==================================================
+11-12 00:07:02 [INFO] uvicorn | Application startup complete.
+11-12 00:07:02 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+11-12 00:07:04 [INFO] ai_chat | [表情动态层] 已加载 QFace 全量表 372 条（来源 koishi.js.org）
+--- 3.NapCat进程与日志 ---
+5
+[19613:1112/060635.050205:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[19613:1112/060635.057502:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[19613:1112/060635.063501:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[19613:1112/060635.063589:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+--- 4.登录态 ---
+阶段: waiting_qrcode
+最近错误: 无
+--- 5.看门狗与boot自启 ---
 -rwxr-xr-x 1 root root 372 Nov 12 02:45 /data/data/com.termux/files/home/x10_watchdog.sh
-bash: line 14: /data/data/com.termux/files/home/.termux/boot/asar_boot.sh: No such file or directory
-boot自启已追加
+boot脚本容器内不可见
+--- 6.凭据与记忆 ---
+bot根无env
+--- 7.一键登录脚本版本(应为opt/QQ) ---
+6
+0
+--- 8.记忆同步 ---
+asar_sync在跑
+=== 体检结束 ===
