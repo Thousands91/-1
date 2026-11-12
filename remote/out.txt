@@ -1,59 +1,34 @@
-<<<task_285375.txt>>>
-===== 任务285375 11-12 18:49:57 =====
+<<<task_285376.txt>>>
+===== 任务285376 11-12 18:58:35 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') 解压状态诊断 ==="
-pgrep -af "tar |cp |python3 -c" | head -5 || echo 无解压相关进程
-ls -l /root/asr_model/ 2>/dev/null || echo asr_model空
-ls -l /tmp/para.tar.bz2 /tmp/sherpa-onnx-paraformer-zh-small-2024-03-09/ 2>/dev/null | head -8
-echo "--- 手工完成解压(若未完成) ---"
-if [ ! -f /root/asr_model/model.int8.onnx ]; then
-  cd /tmp && timeout 240 tar xjf para.tar.bz2 2>/dev/null
-  cp -f sherpa-onnx-paraformer-zh-small-2024-03-09/model.int8.onnx /root/asr_model/ 2>/dev/null
-  cp -f sherpa-onnx-paraformer-zh-small-2024-03-09/tokens.txt /root/asr_model/ 2>/dev/null
-fi
-ls -l /root/asr_model/
-echo "--- 模型加载验证 ---"
-timeout 90 python3 -c "
-import sherpa_onnx
+echo "=== $(date '+%H:%M:%S') venv终验 ==="
+echo "--- venv内sherpa+模型加载+转写管线 ---"
+timeout 120 /root/bot/venv/bin/python << 'PYEOF'
+import sherpa_onnx, subprocess, wave, array
 r = sherpa_onnx.OfflineRecognizer.from_paraformer('/root/asr_model/model.int8.onnx','/root/asr_model/tokens.txt',num_threads=2,sample_rate=16000,feature_dim=80)
 print('模型加载OK')
-" 2>&1 | tail -1
-echo "--- 代码同步+重启大脑 ---"
-cd /root/bot/bot && git fetch --quiet origin && git reset --quiet --hard origin/main && git log -1 --format='%h %s'
-pkill -f "venv/bin/python main.py"; sleep 3
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 14
+subprocess.run(['ffmpeg','-y','-i','/tmp/t.wav','-ar','16000','-ac','1','-f','wav','/tmp/t16.wav'],capture_output=True)
+with wave.open('/tmp/t16.wav','rb') as w:
+    frames = w.readframes(w.getnframes())
+samples = list(array.array('h', frames))
+s = r.create_stream()
+s.accept_waveform(16000, [x/32768.0 for x in samples])
+r.decode_stream(s)
+print('转写管线OK, 输出:', repr(s.result.text))
+PYEOF
+echo "--- 大脑真实状态 ---"
+pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑在 || { pkill -f "venv/bin/python main.py"; sleep 3; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & sleep 15; }
 grep "connected" /root/bot.log | tail -1
-pgrep -f "venv/bin/python main.py" >/dev/null && echo ALIVE || echo DEAD
+tail -2 /root/bot.log
 date +%H:%M:%S
 --- 输出 ---
-=== 18:49:57 解压状态诊断 ===
-11701 Xvfb :106 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.7QP2vJ/Xauthority
-11733 Xvfb :107 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.YCbybi/Xauthority
-11945 Xvfb :99 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.CeyUj3/Xauthority
-12852 timeout 240 tar xjf para.tar.bz2
-12853 tar xjf para.tar.bz2
-total 0
--rw-r--r-- 1 root root 77920048 Nov 12 18:31 /tmp/para.tar.bz2
-
-/tmp/sherpa-onnx-paraformer-zh-small-2024-03-09/:
-total 0
--rw-r--r-- 1 root root      152 Mar 10  2024 README.md
--rwxr-xr-x 1 root root     2542 Mar 10  2024 add-model-metadata.py
--rw-r--r-- 1 root root    11203 Mar 10  2024 am.mvn
--rw-r--r-- 1 root root    56290 Mar 10  2024 config.yaml
---- 手工完成解压(若未完成) ---
-total 0
--rw------- 1 root root 81828675 Nov 12 18:50 model.int8.onnx
--rw-r--r-- 1 root root    75352 Nov 12 18:50 tokens.txt
---- 模型加载验证 ---
+=== 18:58:35 venv终验 ===
+--- venv内sherpa+模型加载+转写管线 ---
 模型加载OK
---- 代码同步+重启大脑 ---
-9536322 离线语音识别:sherpa-onnx paraformer本地优先(双ASR API余额双灭)
-model from /root/asr_model/model.int8.onnx failed:Protobuf parsing failed.
---- 代码同步+重启大脑 ---
-9536322 离线语音识别:sherpa-onnx paraformer本地优先(双ASR API余额双灭)
-Terminated
-11-12 17:16:55 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
-ALIVE
-18:50:43
+转写管线OK, 输出: '我没有'
+--- 大脑真实状态 ---
+大脑在
+11-12 18:50:46 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+11-12 18:58:25 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1137)
+11-12 18:58:25 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1137) running complete
+18:58:41
