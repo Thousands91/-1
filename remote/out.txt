@@ -1,37 +1,24 @@
-<<<task_285421.txt>>>
-===== 任务285421 11-13 01:18:31 =====
+<<<task_285422.txt>>>
+===== 任务285422 11-13 01:19:39 =====
 --- 命令 ---
 PREFIX=/data/data/com.termux/files/usr
-echo "=== protobuf解包结构 ==="
-find /tmp/protobufx -name "libprotobuf*" 2>/dev/null | head -4
-find /tmp/abseilx -name "libabsl*" 2>/dev/null | head -2
-echo "=== PREFIX现有 ==="
-ls $PREFIX/lib/ | grep -E "protobuf|absl" | head -6
-echo "=== 修正拷贝 ==="
-find /tmp/protobufx /tmp/abseilx -path "*/lib/*" -name "*.so*" -exec cp -a {} $PREFIX/lib/ \; 2>/dev/null
-ls $PREFIX/lib/ | grep -E "protobuf|absl" | head -8
-echo "=== adb重试 ==="
+U=https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main
+F=$(curl -sL --max-time 30 "$U/dists/stable/main/binary-aarch64/Packages" | grep -A8 "^Package: protobuf$" | grep "^Filename:" | head -1 | awk '{print $2}')
+echo "原始路径: $F"
+ENC=$(echo "$F" | sed 's/:/%3a/g')
+echo "转义后: $ENC"
+curl -sL --max-time 120 -o /tmp/protobuf.deb "$U/$ENC" && ls -l /tmp/protobuf.deb && dpkg -x /tmp/protobuf.deb /tmp/protobufx && echo 解包OK
+find /tmp/protobufx -name "libprotobuf*" | head -3
+find /tmp/protobufx -path "*/lib/*" -name "*.so*" -exec cp -a {} $PREFIX/lib/ \; 2>/dev/null
+echo "=== adb终试 ==="
 export LD_LIBRARY_PATH=$PREFIX/lib
 $PREFIX/bin/adb version 2>&1 | head -1
-$PREFIX/bin/adb help 2>&1 | grep -E "pair|connect" | head -4
+$PREFIX/bin/adb help 2>&1 | grep -E "^\s+(pair|connect)" | head -4
 --- 输出 ---
-=== protobuf解包结构 ===
+原始路径: pool/main/p/protobuf/protobuf_2:36.2-1_aarch64.deb
+转义后: pool/main/p/protobuf/protobuf_2%3a36.2-1_aarch64.deb
+-rw-r--r-- 1 root root 1219140 Nov 13 01:19 /tmp/protobuf.deb
+解包OK
 /tmp/protobufx/data/data/com.termux/files/usr/lib/libprotobuf-lite.so
-=== PREFIX现有 ===
-libabsl_base.so
-libabsl_base_cpu_detect.so
-libabsl_city.so
-libabsl_civil_time.so
-libabsl_clock_interface.so
-libabsl_cord.so
-=== 修正拷贝 ===
-libabsl_base.so
-libabsl_base_cpu_detect.so
-libabsl_city.so
-libabsl_civil_time.so
-libabsl_clock_interface.so
-libabsl_cord.so
-libabsl_cord_internal.so
-libabsl_cordz_functions.so
-=== adb重试 ===
+=== adb终试 ===
 CANNOT LINK EXECUTABLE "/data/data/com.termux/files/usr/bin/adb": library "libprotobuf.so" not found
