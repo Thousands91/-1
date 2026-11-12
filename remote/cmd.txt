@@ -1,17 +1,18 @@
-285419
+285420
 export HOME=/data/data/com.termux/files/home
 PREFIX=/data/data/com.termux/files/usr
-echo "=== TUNA镜像取Termux android-tools ==="
 U=https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main
-F=$(curl -sL --max-time 30 "$U/dists/stable/main/binary-aarch64/Packages" | grep -A8 "^Package: android-tools$" | grep "^Filename:" | head -1 | awk '{print $2}')
-echo "deb路径: $F"
-if [ -n "$F" ]; then
-  curl -sL --max-time 120 -o /tmp/at.deb "$U/$F" && ls -l /tmp/at.deb
-  dpkg -x /tmp/at.deb /tmp/atx && echo 解包OK
-  cp -a /tmp/atx/data/data/com.termux/files/usr/bin/* $PREFIX/bin/ 2>/dev/null
-  cp -a /tmp/atx/data/data/com.termux/files/usr/lib/* $PREFIX/lib/ 2>/dev/null
-fi
-echo "=== adb版本与pair确认 ==="
+for PKG in abseil-cpp protobuf; do
+  F=$(curl -sL --max-time 30 "$U/dists/stable/main/binary-aarch64/Packages" | grep -A8 "^Package: $PKG$" | grep "^Filename:" | head -1 | awk '{print $2}')
+  [ -z "$F" ] && continue
+  echo "取 $PKG: $F"
+  curl -sL --max-time 120 -o /tmp/$PKG.deb "$U/$F" && dpkg -x /tmp/$PKG.deb /tmp/${PKG}x
+  cp -a /tmp/${PKG}x/data/data/com.termux/files/usr/lib/* $PREFIX/lib/ 2>/dev/null
+done
+echo "=== adb重试 ==="
 export LD_LIBRARY_PATH=$PREFIX/lib
 $PREFIX/bin/adb version 2>&1 | head -1
+echo "=== pair/connect命令确认 ==="
 $PREFIX/bin/adb help 2>&1 | grep -E "pair|connect" | head -4
+echo "=== 缺库体检 ==="
+ldd $PREFIX/bin/adb 2>/dev/null | grep "not found" | head -5
