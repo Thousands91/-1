@@ -1,42 +1,48 @@
-<<<task_285369.txt>>>
-===== 任务285369 11-12 17:15:09 =====
+<<<task_285370.txt>>>
+===== 任务285370 11-12 17:42:31 =====
 --- 命令 ---
-echo "=== $(date '+%H:%M:%S') hypnohub部署+图床下载验证 ==="
-cd /root/bot/bot && git fetch --quiet origin && git reset --quiet --hard origin/main && git log -1 --format='%h %s'
-grep -c "fetch_hypnohub_bytes" plugins/image_search_multisource.py
-echo "[API验证]" && curl -s -m 15 "https://hypnohub.net/index.php?page=dapi&s=post&q=index&json=1&limit=3&tags=rating:explicit" | python3 -c "
-import json,sys
-arr=json.load(sys.stdin)
-ok=0
-import urllib.request
-for p in arr[:2]:
-    fu=p.get('file_url','')
-    if not fu: continue
-    try:
-        req=urllib.request.Request(fu, headers={'User-Agent':'Mozilla/5.0'})
-        d=urllib.request.urlopen(req, timeout=20).read()
-        print('下载', fu[-24:], len(d)//1024, 'KB', 'OK' if 2048<len(d)<=8*1024*1024 else '超尺寸跳过')
-        ok+=1
-    except Exception as e:
-        print('下载失败', str(e)[:60])
-print('图床可达', ok, '/2')
+echo "=== $(date '+%H:%M:%S') 语音链路诊断+补ffmpeg ==="
+echo "--- ffmpeg ---"
+which ffmpeg && ffmpeg -version 2>/dev/null | head -1 || echo "ffmpeg缺失"
+echo "--- bot.log 语音报错(16:50-17:00) ---"
+grep "语音" /root/bot.log | tail -5
+echo "--- napcat.log record/ffmpeg报错 ---"
+grep -i "record\|ffmpeg\|silk" /root/napcat.log 2>/dev/null | tail -5
+echo "--- 安装ffmpeg(容器内) ---"
+if ! which ffmpeg >/dev/null 2>&1; then
+  apt-get update -qq 2>&1 | tail -1
+  DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg 2>&1 | tail -2
+fi
+which ffmpeg && ffmpeg -version 2>/dev/null | head -1 || echo "ffmpeg仍缺失"
+echo "--- SF ASR鉴权sanity(合成静音wav) ---"
+python3 -c "
+import wave, struct, math
+w = wave.open('/tmp/t.wav', 'w')
+w.setnchannels(1); w.setsampwidth(2); w.setframerate(16000)
+w.writeframes(b''.join(struct.pack('<h', int(800*math.sin(i/20))) for i in range(16000)))
+w.close()
+print('wav生成OK')
 "
-echo "--- 重启大脑 ---"
-pkill -f "venv/bin/python main.py"; sleep 3
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 14
-grep "connected" /root/bot.log | tail -1
-pgrep -f "venv/bin/python main.py" >/dev/null && echo ALIVE || echo DEAD
+SFK=$(grep '^SILICONFLOW_API_KEY' /root/bot/bot/.env | head -1 | cut -d= -f2 | tr -d '\" ')
+curl -s -m 15 -o /tmp/asr.json -w "HTTP %{http_code}" -X POST "https://api.siliconflow.cn/v1/audio/transcriptions" -H "Authorization: Bearer $SFK" -F "model=FunAudioLLM/SenseVoiceSmall" -F "file=@/tmp/t.wav"
+echo ""; head -c 200 /tmp/asr.json
 date +%H:%M:%S
 --- 输出 ---
-=== 17:15:09 hypnohub部署+图床下载验证 ===
-1f26e63 第三硬池hypnohub接入:随机兜底tbib/hypnohub双链+带词搜索三连
-3
-[API验证]
-下载 c967b6c75d1b5ac40fc0.png 22933 KB 超尺寸跳过
-下载 045cc8db3d101a7a38a5.png 4967 KB OK
-图床可达 2 /2
---- 重启大脑 ---
-11-12 17:15:37 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
-ALIVE
-17:15:39
+=== 17:42:31 语音链路诊断+补ffmpeg ===
+--- ffmpeg ---
+/usr/bin/ffmpeg
+ffmpeg version 4.4.2-0ubuntu0.22.04.1 Copyright (c) 2000-2021 the FFmpeg developers
+--- bot.log 语音报错(16:50-17:00) ---
+--- napcat.log record/ffmpeg报错 ---
+[FFmpegAddonAdapter] Converting file: /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/1120ec27ffde5e81d13bba390e8c7658.amr to /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/1120ec27ffde5e81d13bba390e8c7658.amr.mp3 as mp3
+[FFmpegAddonAdapter] Converting file: /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/b86d704dfd79a5bf28aa618a274dddeb.amr to /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/b86d704dfd79a5bf28aa618a274dddeb.amr.mp3 as mp3
+[FFmpegAddonAdapter] Converting file: /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/c19fca287f42b1c206ad2dde919d0d29.amr to /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/c19fca287f42b1c206ad2dde919d0d29.amr.mp3 as mp3
+[FFmpegAddonAdapter] Converting file: /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/3a2f52065cb05d571095b220f87008f7.amr to /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/3a2f52065cb05d571095b220f87008f7.amr.mp3 as mp3
+[FFmpegAddonAdapter] Converting file: /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/51a7941ffe172e00ce32c60ddb933670.amr to /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt/2026-11/Ori/51a7941ffe172e00ce32c60ddb933670.amr.mp3 as mp3
+--- 安装ffmpeg(容器内) ---
+/usr/bin/ffmpeg
+ffmpeg version 4.4.2-0ubuntu0.22.04.1 Copyright (c) 2000-2021 the FFmpeg developers
+--- SF ASR鉴权sanity(合成静音wav) ---
+wav生成OK
+HTTP 402
+{"code":30001,"message":"Sorry, your account balance is insufficient","data":null}17:42:34
