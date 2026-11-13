@@ -1,35 +1,60 @@
-<<<task_285458.txt>>>
-===== 任务285458 11-13 15:37:15 =====
+<<<task_285459.txt>>>
+===== 任务285459 11-13 16:42:49 =====
 --- 命令 ---
-echo "==1 代码更新到最新=="
-cd /root/bot && git pull --ff-only 2>&1 | tail -2 && git log --oneline -1
-grep -c "坑102补录" /root/bot/bot/requirements.txt
-echo "==2 补装httpx=="
-export PYTHONPATH=/data/data/com.termux/files/usr/lib/python3/dist-packages
-/root/bot/venv/bin/python -m pip install -q httpx -i https://pypi.tuna.tsinghua.edu.cn/simple 2>&1 | tail -2
-/root/bot/venv/bin/python -c "import httpx; print('httpx OK', httpx.__version__)"
-echo "==3 表情识别链路实测（不启bot,直接函数级）=="
-/root/bot/venv/bin/python - <<'PYEOF'
-import asyncio, sys
-sys.path.insert(0, '/root/bot/bot')
-async def t():
-    import httpx
-    async with httpx.AsyncClient(timeout=10, follow_redirects=True) as cli:
-        r = await cli.get("https://www.baidu.com/img/flexible/logo/pc/result.png")
-    print("下载测试:", r.status_code, len(r.content), "bytes")
-asyncio.run(t())
-PYEOF
-echo "==4 进程无需重启确认=="
-pgrep -af "main.py" | head -2
+echo "==16:40前后bot日志=="
+grep -n "联网\|搜索\|sogou\|baidu\|齐豫\|检索" /root/bot.log | tail -30
+echo "==最近40行=="
+tail -40 /root/bot.log
 --- 输出 ---
-==1 代码更新到最新==
- bot/requirements.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
-31f38e6 requirements补录Pillow/requests/sherpa-onnx:坑101种子根治,代码在用但清单漏写
-1
-==2 补装httpx==
-httpx OK 0.28.1
-==3 表情识别链路实测（不启bot,直接函数级）==
-下载测试: 200 6617 bytes
-==4 进程无需重启确认==
-14801 /root/bot/venv/bin/python main.py
+==16:40前后bot日志==
+41:11-13 14:47:43 [WARNING] ai_chat | [联网] 搜狗抓取失败：ModuleNotFoundError
+42:11-13 14:47:43 [WARNING] ai_chat | [联网] 百度抓取失败：ModuleNotFoundError
+43:11-13 14:47:43 [WARNING] ai_chat | [联网] 搜狗/百度都没抓到期，五分钟后重试
+63:11-13 14:48:25 [INFO] ai_chat | [联网] 抓取冷却中，跳过
+371:11-13 15:10:16 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 539695198 from 1561950850 '齐豫是谁'
+382:11-13 15:10:34 [INFO] ai_chat | [核对·调试] ask='齐豫是谁' lead=False contra=False agree=False dodge=True ans='齐豫，这个名字我听起来有些陌生，书上没记，不敢妄言。如果她与城里的某件事'
+415:11-13 15:14:04 [INFO] ai_chat | [核对·调试] ask='可以' lead=False contra=False agree=False dodge=False ans='我会去图书馆或藏书窖查找关于齐豫的信息。这可能需要一些时间，我会尽快向您'
+1637:11-13 16:25:55 [INFO] ai_chat | [核对·调试] ask='（对方引用了一条消息，但那条不是文字，取不到内容）（没另写字），看我怎么说。\n\n（以下是历史记录，每一条都发生在标注的那个日期、都已经答完了。\n**铁律：旧账不是现状**——除非对方这一句亲口重新提起，否则：\n①不许把记录里的动作、场景、玩笑当成他现在正在做的事来接；\n②不许把旧答案续到这轮回答后面；\n③这轮回答只许针对他刚说的这句话。\n记录只是让你认得这个人，别整段复述。）\n- 11月13日，他问：「你不睡？」，你当时答：「我在读一本很难读的书。」\n- 11月13日，他问：「这是什么书」，你当时答：「一个女孩的故事。」\n- 11月13日，他问：「展开说说」，你当时答：「她从卖书起家，最后靠笔杀死了前主人。」\n- 11月13日，他问：「他为什么要杀人」，你当时答：「为了自由。」\n- 11月13日，他问：「为什么为了自由，你能详细的讲一下这书里面的故事吗」，你当时答：「前主人是个有权势的人，把她当成了替他写书、甚至帮他整理罪证的工具，却没收走她的自由。」\n- 11月13日，他问：「什么名字」，你当时答：「她的名字。」\n- 11月13日，他问：「他为什么要把他的名字从律师里面抹去」，你当时答：「因为名字是有重量的，背负着前主人的罪恶和束缚，只有抹去它，她才能在书里找到属于自己的新身份。」\n- 11月13日，他问：「她换名字了吗」，你当时答：「书里没有提到。」\n- 11月13日，他问：「她叫什么名字」，你当时答：「书里没写。」\n- 11月13日，他问：「为什么书里这么多东西没写」，你当时答：「书里只写事实，不写作者的心思，那是读者的私事。」\n- 11月13日，他问：「怎么理解这句话」，你当时答：「书是镜子，照出的是读者自己，而不是作者。」\n- 11月13日，他问：「你的意思是说女孩就是读者自己？」，你当时答：「书中的故事是镜子，每个人都能在故事中找到自己的影子，但故事本身并不属于任何一个人。」\n- 11月13日，他问：「我们来聊点书以外的话题吧」，你当时答：「好啊，您想聊什么？」\n- 11月13日，他问：「你来想话题」，你当时答：「城里的天气如何，最近有没有什么新鲜事？」\n- 11月13日，他问：「我不知道，你知道吗？」，你当时答：「我这几天都在店里，没怎么出门。」\n- 11月13日，他问：「你什么时候出门」，你当时答：「我这会儿就不出门，得守着书店。您有什么需要吗？」\n- 11月13日，他问：「我问你什么时候出门不是问你现在出不出门」，你当时答：「通常在淘书的时候出门，那得看什么时候有新鲜的书送来。」\n- 11月13日，他问：「你的生活除了书就没有别的了吗」，你当时答：「书是我的营生，也是我的生命。除此之外，还有编纂百科全书的执念。」\n- 11月13日，他问：「我们聊天的时候能不能不提书」，你当时答：「可以。那您想聊些什么呢？」\n- 11月13日，他问：「你来出话题」，你当时答：「您喜欢吃什么？喝什么？」\n- 11月13日，他问：「我喜欢吃你」，你当时答：「我这儿的红烧肉不错，配一碗白饭正好。要来一份吗？」\n- 11月13日，他问：「你书店还卖饭吗？」，你当时答：「不卖。我只是随便说说，想听听您想吃什么。」\n- 11月13日，他问：「那你来一份是什么意思」，你当时答：「抱歉，那句话只是个比喻，意思是如果您在这里，我可以为您准备一些食物。实际上，书店里不卖饭。您想吃点什么，我可以推荐一些这城的特色小吃。」\n- 11月13日，他问：「那你是什么意思，又不卖又准备」，你当时答：「抱歉造成了混淆，我的意思是如果您愿意，我可以为您推荐一些这城的特色小吃，就像您在书店里一样舒适。这不是真的准备食物，只是出于友好的一种提议。」\n- 11月13日，他问：「不行，我就要吃你的红烧肉」，你当时答：「我理解您的心情，但书店里确实不卖食物。不过，我可以为您推荐一些这城的特色小吃，您看是否愿意去尝试？」\n- 11月13日，他问：「那你能请我吃吗？」，你当时答：「很遗憾，作为书店老板，我无法请客。但我可以为您推荐几家这城最有名的餐馆，您可以选择去那里享用红烧肉。」\n- 11月13日，他问：「为什么没办法请客，你可以不当书店老板请客的时候」，你当时答：「作为书店老板，我的收入主要来自于书和相关的服务，我没有额外的资金用于请客。但如果您愿意，我可以为您推荐一些这城的餐馆，您可以在那里享用红烧肉。」\n- 11月13日，他问：「你没那么穷」，你当时答：「亏本买卖我是不做，但这书钱还得从牙缝里省出来填进百科全书里，哪还有闲钱请客？」\n- 11月13日，他问：「齐豫是谁」，你当时答：「齐豫，这个名字我听起来有些陌生，书上没记，不敢妄言。如果她与城里的某件事有关，或许我能找到一些线索。」\n- 11月13日，他问：「你不能去搜一下吗？」，你当时答：「理论上，我可以去图书馆或藏书窖查找相关信息，但那需要时间。如果您愿意，我可以尝试为您查找，但这可能需要一段时间。」' lead=False contra=False agree=False dodge=False ans='抱歉，这话题似乎有些沉重。我们换个轻松的，您想听点关于这城的趣事吗？📖'
+1787:11-13 16:40:02 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1009900129 from 1561950850 '齐豫是谁'
+1798:11-13 16:40:20 [INFO] ai_chat | [核对·调试] ask='齐豫是谁' lead=False contra=False agree=False dodge=False ans='正在查找，藏书窖里的书很多，需要一点时间。'
+==最近40行==
+11-13 16:39:20 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-13 16:39:23 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1092463566 from 1538719747@[群:1109952783] '[image:summary=[哭],file=BB399D131B6B567886C5BDD3AF3D9C09.jpg,sub_type=7,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQJfKSz...,file_size=13369]'
+11-13 16:39:24 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-13 16:39:24 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-13 16:39:24 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-13 16:39:24 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-13 16:40:02 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794559202, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+11-13 16:40:02 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794559202, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-13 16:40:02 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794559202, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-13 16:40:02 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1009900129 from 1561950850 '齐豫是谁'
+11-13 16:40:03 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=92)
+11-13 16:40:03 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=188)
+11-13 16:40:03 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=92) running complete
+11-13 16:40:03 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=188) running complete
+11-13 16:40:03 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-13 16:40:03 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-13 16:40:03 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-13 16:40:04 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794559204, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-13 16:40:07 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794559207, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+11-13 16:40:08 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-13 16:40:20 [INFO] ai_chat | [核对·调试] ask='齐豫是谁' lead=False contra=False agree=False dodge=False ans='正在查找，藏书窖里的书很多，需要一点时间。'
+11-13 16:40:20 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-13 16:41:27 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794559287, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+11-13 16:41:29 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794559288, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-13 16:41:31 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794559291, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-13 16:41:32 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 29322955 from 1561950850 '要多久'
+11-13 16:41:32 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794559292, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-13 16:41:32 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=92)
+11-13 16:41:32 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=188)
+11-13 16:41:32 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=92) running complete
+11-13 16:41:32 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=188) running complete
+11-13 16:41:33 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-13 16:41:33 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-13 16:41:33 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-13 16:41:33 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794559293, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+11-13 16:41:33 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-13 16:41:42 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+11-13 16:41:50 [INFO] ai_chat | [核对·调试] ask='要多久' lead=False contra=False agree=False dodge=False ans='藏书窖的书很多，具体需要多久很难说，可能得几天。我会尽快向您报告结果。'
+11-13 16:41:51 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-13 16:42:17 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794559337, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
