@@ -1,10 +1,14 @@
-285442
-pkill -f "opt/QQ/[q]q"; sleep 2
-cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null &
-sleep 25
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" 2>/dev/null && echo 相册已放新码
-echo "=== QR_BASE64_START ==="
-base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-echo ""
-echo "=== QR_BASE64_END ==="
-date "+出码时刻: %T"
+285443
+echo "=== ①logincheck判定依据(脚本关键段) ==="
+grep -n "waiting_qrcode\|未登录\|session\|curl" /root/logincheck.sh | head -8
+echo "=== ②bot.log 07:50-08:15全记录(找WS断连/掉线) ==="
+grep -an "07:5[0-9]\|08:0[0-9]\|08:1[0-5]" /root/bot.log | grep -avE "input_status|heartbeat" | tail -25
+echo "=== ③NapCat日志掉线证据 ==="
+NLOG=$(ls -t /root/Napcat/napcat/logs/*.log 2>/dev/null | head -1)
+echo "日志: $NLOG"
+grep -aE "offline|logout|disconnect|expire|踢|下线|掉线|Kicked|Error|error" "$NLOG" 2>/dev/null | tail -8
+tail -6 "$NLOG" 2>/dev/null
+echo "=== ④restart日志08点后 ==="
+grep -a "08:\|09:\|10:\|11:" /root/napcat-restart.log 2>/dev/null | tail -6
+echo "=== ⑤07:53后用户是否还有入站尝试(全部08点后bot.log行数) ==="
+awk '/^11-13 08:/{n++} END{print "08点后bot.log行数:",n+0}' /root/bot.log
