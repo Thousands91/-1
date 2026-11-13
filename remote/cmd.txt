@@ -1,4 +1,4 @@
-285470
+285471
 cd /root/bot/bot && timeout 100 /root/bot/venv/bin/python - <<'PYEOF' 2>&1 | grep -vE "INFO|SUCCESS"
 import time, sys, nonebot
 nonebot.init()
@@ -7,8 +7,8 @@ from dotenv import load_dotenv
 load_dotenv('/root/bot/bot/.env')
 from plugins.ai_chat import _fact_query, _web_snippets
 # 追问接力验证
-print("首问:", _fact_query("齐豫是谁", 999, time.time()))
-print("追问:", _fact_query("详细一点介绍齐豫", 999, time.time() + 5))
+print("首问:", _fact_query("齐豫是谁", 999))
+print("追问:", _fact_query("详细一点介绍齐豫", 999))
 # 真搜(单源收紧后总时长应<16s)
 t0 = time.time()
 s = _web_snippets("齐豫 是谁")
