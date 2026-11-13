@@ -1,10 +1,24 @@
-285456
-echo "=== venv目录创建/修改时间 ==="
-ls -ld --time-style=full-iso /root/bot/venv /root/bot/venv/bin/python 2>/dev/null
-ls -ld --time-style=full-iso /root/bot/venv/lib/python3.10/site-packages 2>/dev/null
-echo "=== venv里包的安装时间分布(看重建时间) ==="
-ls -l --time-style=+%F /root/bot/venv/lib/python3.10/site-packages/ 2>/dev/null | grep "^d" | awk '{print $6}' | sort | uniq -c
-echo "=== python版本 ==="
-/root/bot/venv/bin/python --version
-echo "=== site-packages完整清单(日期+包名) ==="
-ls -l --time-style=+%F /root/bot/venv/lib/python3.10/site-packages/ | grep "^d" | awk '{print $6, $NF}' | sort | head -30
+285457
+echo "==1 venv依赖逐个实测=="
+for m in nonebot aiohttp httpx loguru openai dotenv PIL requests chess ddgs sherpa_onnx pytz uvicorn apscheduler bs4; do
+  /root/bot/venv/bin/python -c "import $m" 2>/dev/null && echo "OK $m" || echo "缺失 $m"
+done
+echo "==2 代码md5与git状态=="
+cd /root/bot && git log --oneline -1 && git status -s | head -20
+find /root/bot/bot -name '*.py' -not -path '*__pycache__*' -exec md5sum {} \; | sort -k2
+echo "==3 数据文件=="
+ls -la /root/bot/bot/data/ 2>/dev/null
+ls /root/bot/bot/data/memory/ 2>/dev/null
+md5sum /root/bot/bot/data/fortune_log.json /root/bot/bot/guild1.db 2>/dev/null
+echo "==4 bot目录之外的命根=="
+ls -la /root/asr_model/ 2>/dev/null || echo "asr_model 不存在!"
+echo "--crontab--"
+crontab -l 2>/dev/null || echo "无crontab"
+echo "--战斗脚本--"
+ls /root/*.sh 2>/dev/null
+echo "==5 assets=="
+find /root/bot/bot/assets -type f 2>/dev/null
+echo "==6 .env=="
+grep -c '=' /root/bot/bot/.env 2>/dev/null
+echo "==7 进程=="
+pgrep -af "main.py|opt/QQ" | head -5
