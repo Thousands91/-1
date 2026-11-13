@@ -1,18 +1,29 @@
-<<<task_285452.txt>>>
-===== 任务285452 11-13 15:16:32 =====
+<<<task_285453.txt>>>
+===== 任务285453 11-13 15:17:44 =====
 --- 命令 ---
-echo "=== 联网搜索相关日志(今天全部) ==="
-grep -a "联网\|存疑\|检索" /root/bot.log | tail -12
-echo "=== 搜索源是什么 ==="
-grep -n "_web_snippets\|duckduckgo\|DDG\|search_url\|搜索.*url" /root/bot/bot/plugins/ai_chat.py | head -6
+V=/root/bot/venv/bin/python
+echo "=== 缺什么 ==="
+$V -c "import requests" 2>&1 | tail -1
+$V -c "import bs4" 2>&1 | tail -1
+echo "=== 补装 ==="
+/root/bot/venv/bin/pip install -q requests beautifulsoup4 2>&1 | tail -2
+echo "=== 复验 ==="
+$V -c "import requests, bs4; print('requests', requests.__version__, '/ bs4 OK')"
+echo "=== 实测搜狗抓取(齐豫是谁) ==="
+$V -c "
+import sys; sys.path.insert(0, '/root/bot/bot')
+from plugins.ai_chat import _web_snippets
+print(_web_snippets('齐豫 是谁 歌手')[:200])
+" 2>&1 | tail -4
 --- 输出 ---
-=== 联网搜索相关日志(今天全部) ===
-11-13 14:47:43 [WARNING] ai_chat | [联网] 搜狗抓取失败：ModuleNotFoundError
-11-13 14:47:43 [WARNING] ai_chat | [联网] 百度抓取失败：ModuleNotFoundError
-11-13 14:47:43 [WARNING] ai_chat | [联网] 搜狗/百度都没抓到期，五分钟后重试
-11-13 14:47:43 [INFO] ai_chat | [存疑] 「你什么时候出门」没查到线索，要求它别硬编
-11-13 14:48:25 [INFO] ai_chat | [联网] 抓取冷却中，跳过
-11-13 14:48:25 [INFO] ai_chat | [存疑] 「我问你什么时候出门不是问你现在出不出门」没查到线索，要求它别硬编
-=== 搜索源是什么 ===
-1582:                asyncio.to_thread(_web_snippets, _ask), timeout=14
-1935:def _web_snippets(query: str, max_results: int = 3) -> str:
+=== 缺什么 ===
+ModuleNotFoundError: No module named 'requests'
+ModuleNotFoundError: No module named 'bs4'
+=== 补装 ===
+=== 复验 ===
+requests 2.34.2 / bs4 OK
+=== 实测搜狗抓取(齐豫是谁) ===
+    get_driver().on_startup(_start_qface_refresh)  # 启动后异步刷新全量表
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py", line 89, in get_driver
+    raise ValueError("NoneBot has not been initialized.")
+ValueError: NoneBot has not been initialized.
