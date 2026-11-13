@@ -1,5 +1,5 @@
-<<<task_285470.txt>>>
-===== 任务285470 11-13 18:03:56 =====
+<<<task_285471.txt>>>
+===== 任务285471 11-13 18:05:57 =====
 --- 命令 ---
 cd /root/bot/bot && timeout 100 /root/bot/venv/bin/python - <<'PYEOF' 2>&1 | grep -vE "INFO|SUCCESS"
 import time, sys, nonebot
@@ -9,8 +9,8 @@ from dotenv import load_dotenv
 load_dotenv('/root/bot/bot/.env')
 from plugins.ai_chat import _fact_query, _web_snippets
 # 追问接力验证
-print("首问:", _fact_query("齐豫是谁", 999, time.time()))
-print("追问:", _fact_query("详细一点介绍齐豫", 999, time.time() + 5))
+print("首问:", _fact_query("齐豫是谁", 999))
+print("追问:", _fact_query("详细一点介绍齐豫", 999))
 # 真搜(单源收紧后总时长应<16s)
 t0 = time.time()
 s = _web_snippets("齐豫 是谁")
@@ -19,7 +19,10 @@ print(s[:100])
 PYEOF
 echo ======结束
 --- 输出 ---
-Traceback (most recent call last):
-  File "<stdin>", line 8, in <module>
-TypeError: _fact_query() takes 2 positional arguments but 3 were given
+首问: 齐豫是谁
+追问: 齐豫是谁
+搜索耗时 3.0s, 抓到 116 字
+- 齐豫 Chyi Yu(豆瓣)：此一合作使“三毛·齐豫
+- 齐豫 中国台湾女歌手、音乐人、慈善家
+- 齐豫 - 明星档案 - 写真 - 图片 - 资料 - 照片 - 中国娱乐网：齐豫 国籍:中国 地
 ======结束
