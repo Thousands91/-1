@@ -1,20 +1,7 @@
-285461
-echo "==1 代码同步=="
-cd /root/bot && git pull --ff-only 2>&1 | tail -1 && git log --oneline -1
-md5sum /root/bot/bot/plugins/ai_chat.py
-echo "==2 语法校验=="
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo 编译通过
-echo "==3 真链路实测:直接调搜索函数=="
-cd /root/bot && timeout 60 /root/bot/venv/bin/python - <<'PYEOF' 2>&1 | tail -8
-import sys, nonebot
-nonebot.init()
-sys.path.insert(0, '/root/bot/bot')
-from plugins.ai_chat import _web_snippets, _needs_fact
-print("needs_fact('齐豫是谁') =", _needs_fact('齐豫是谁'))
-print("needs_fact('好') =", _needs_fact('好'))
-s = _web_snippets('齐豫是谁')
-print("搜索结果长度:", len(s))
-print(s[:200])
-PYEOF
-echo "==4 大脑无需重启确认=="
-pgrep -af "main.py" | head -1
+285462
+echo "==重启大脑加载新代码=="
+pkill -f "venv/bin/python main.py"; sleep 12
+cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
+sleep 15
+pgrep -af "main.py" | head -2
+tail -5 /root/bot.log
