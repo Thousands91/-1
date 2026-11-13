@@ -3,6 +3,10 @@ cd /root/bot/bot && timeout 220 /root/bot/venv/bin/python - <<'PYEOF' 2>&1 | gre
 import asyncio, sys, nonebot
 nonebot.init()
 sys.path.insert(0, '/root/bot/bot')
+from dotenv import load_dotenv
+load_dotenv('/root/bot/bot/.env')  # 与正式进程同源
+import os
+assert os.getenv("OPENAI_API_KEY"), "密钥没加载"
 from plugins.ai_chat import _needs_fact, _web_snippets, call_llm
 
 async def e2e(question):
