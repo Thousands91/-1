@@ -1,4 +1,4 @@
-285463
+285464
 cd /root/bot/bot && timeout 220 /root/bot/venv/bin/python - <<'PYEOF' 2>&1 | grep -v "INFO\|SUCCESS"
 import asyncio, sys, nonebot
 nonebot.init()
