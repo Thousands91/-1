@@ -1,29 +1,20 @@
-<<<task_285468.txt>>>
-===== 任务285468 11-13 17:54:31 =====
+<<<task_285469.txt>>>
+===== 任务285469 11-13 18:02:20 =====
 --- 命令 ---
-echo "==17:42之后的联网与降级日志=="
-grep -n "联网\|灯灭\|存疑\|模型降级\|冷却" /root/bot.log | tail -25
-echo "==17:43后消息轨迹=="
-grep "17:4[3-9]\|17:5[0-3]" /root/bot.log | grep -E "message.private|message.group" | cut -c1-140 | tail -10
+cd /root/bot && git pull --ff-only 2>&1 | tail -1 && git log --oneline -1
+md5sum /root/bot/bot/plugins/ai_chat.py
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo 编译通过
+pkill -f "venv/bin/python main.py"; sleep 12
+cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 15
+pgrep -af "main.py" | head -1
+tail -3 /root/bot.log | cut -c1-120
 --- 输出 ---
-==17:42之后的联网与降级日志==
-90:11-13 17:46:35 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
-105:11-13 17:46:50 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-118:11-13 17:46:54 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-120:11-13 17:46:58 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-121:11-13 17:47:02 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-137:11-13 17:47:21 [WARNING] ai_chat | [联网] 检索失败（TimeoutError），用原答案兜底
-138:11-13 17:47:21 [INFO] ai_chat | [存疑] 「齐豫是谁」没查到线索，要求它别硬编
-139:11-13 17:47:23 [INFO] ai_chat | [联网] 走搜狗抓到 3 条
-140:11-13 17:47:30 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
-==17:43后消息轨迹==
-11-13 17:51:25 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1382857986 from 3819642626@[群:590454333] '这�
-11-13 17:51:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1788841803 from 3611220879@[群:590454333] '这�
-11-13 17:51:37 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1686785683 from 3819642626@[群:590454333] '他�
-11-13 17:51:37 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 391242342 from 3611220879@[群:590454333] '哎我
-11-13 17:51:42 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 846502449 from 3819642626@[群:590454333] '那不
-11-13 17:51:46 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1980130189 from 3611220879@[群:590454333] '对�
-11-13 17:52:05 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 534416057 from 3611220879@[群:590454333] '有钱
-11-13 17:52:15 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 911687463 from 3819642626@[群:590454333] '我没
-11-13 17:52:18 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2122797865 from 3819642626@[群:590454333] '[imag
-11-13 17:53:54 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1025756892 from 1445169274@[群:590454333] '[imag
+ 1 file changed, 29 insertions(+), 8 deletions(-)
+8d47fc3 坑105:追问式事实题接力(15分钟内沿用上次查询)+单源超时收紧(搜狗8s/百度6s)+外层14->16s;回滚报错文案(用户拍板保留技术细节)
+44b13849e8875e12994a0d6ef79ca4bc  /root/bot/bot/plugins/ai_chat.py
+编译通过
+10589 /root/bot/venv/bin/python main.py
+11-13 18:02:50 [INFO] uvicorn | 127.0.0.1:51080 - "WebSocket /onebot/v11/ws" [accepted]
+11-13 18:02:50 [INFO] websockets | connection open
+11-13 18:02:50 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
