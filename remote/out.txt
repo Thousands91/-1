@@ -1,35 +1,18 @@
-<<<task_285449.txt>>>
-===== 任务285449 11-13 14:35:16 =====
+<<<task_285450.txt>>>
+===== 任务285450 11-13 14:40:03 =====
 --- 命令 ---
-echo "=== .env实际模型配置 ==="
-grep -E "OPENAI_MODEL|OPENAI_BASE_URL|AI_MAX_TOKENS" /root/bot/.env 2>/dev/null | sed 's/\(KEY=\).*/\1***/'
-echo "=== 今日模型降级警告次数与明细 ==="
-grep -ac "模型降级" /root/bot.log
-grep -a "模型降级" /root/bot.log | tail -8
-echo "=== 今日各条聊天耗时抽查(matcher启动→complete) ==="
-grep -a "ai_chat" /root/bot.log | grep -aE "will be handled|running complete" | tail -12 | awk '{print $1,$2,$NF}'
+cd /root/bot && git pull 2>&1 | tail -2
+git log --oneline -1
+pkill -f "venv/bin/python main.py"; sleep 2
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 < /dev/null &
+sleep 12
+grep -ac "Succeeded to load plugin" /root/bot.log
+pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑已拉起 || echo 大脑没起来
+grep -c "timeout=8.0" /root/bot/bot/plugins/ai_chat.py
 --- 输出 ---
-=== .env实际模型配置 ===
-=== 今日模型降级警告次数与明细 ===
-38
-11-13 13:03:24 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-11-13 13:03:45 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-13 14:29:33 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
-11-13 14:30:27 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-13 14:30:49 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-11-13 14:32:45 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
-11-13 14:33:06 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-11-13 14:33:16 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-=== 今日各条聊天耗时抽查(matcher启动→complete) ===
-11-13 14:21:07 lineno=1311)
-11-13 14:21:07 complete
-11-13 14:29:11 lineno=1311)
-11-13 14:29:38 lineno=1311)
-11-13 14:29:39 complete
-11-13 14:29:53 complete
-11-13 14:30:20 lineno=1311)
-11-13 14:31:05 complete
-11-13 14:32:24 lineno=1311)
-11-13 14:33:43 complete
-11-13 14:34:17 lineno=1311)
-11-13 14:34:17 complete
+ bot/plugins/ai_chat.py | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+66355b0 ai_chat提速:超时8s+retries归零
+10
+大脑已拉起
+2
