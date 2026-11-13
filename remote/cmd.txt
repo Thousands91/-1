@@ -1,10 +1,23 @@
-285473
-cd /root/bot && git pull --ff-only 2>&1 | tail -1 && git log --oneline -1
-md5sum /root/bot/bot/plugins/ai_chat.py
-grep -c "SEARCH_TAG" /root/bot/bot/plugins/ai_chat.py
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo 编译通过
-pkill -f "venv/bin/python main.py"; sleep 12
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 15
-pgrep -af "main.py" | head -1
-tail -2 /root/bot.log | cut -c1-110
+285474
+cd /root/bot/bot && timeout 120 /root/bot/venv/bin/python - <<'PYEOF' 2>&1 | grep -vE "INFO|SUCCESS"
+import asyncio, sys, nonebot
+nonebot.init()
+sys.path.insert(0, '/root/bot/bot')
+from dotenv import load_dotenv
+load_dotenv('/root/bot/bot/.env')
+from plugins.ai_chat import call_llm, _SEARCH_TAG_HINT, _SEARCH_TAG_RE
+
+async def t(q, note):
+    a = await call_llm([{"role": "user", "content": q}], extra_system=_SEARCH_TAG_HINT)
+    m = _SEARCH_TAG_RE.match(a or "")
+    print(f"[{note}] 标记: {m.group(1) if m else '无'} | 答案: {(a or '')[:60]}")
+
+async def main():
+    await t("齐豫是谁", "现实人名,应标")
+    await t("《橄榄树》是谁唱的", "现实歌曲,应标")
+    await t("你店里卖什么书", "人设/买卖,不应标")
+    await t("法拉杰的父亲是谁", "人设内,不应标")
+    await t("晚上想吃点什么", "闲聊,不应标")
+asyncio.run(main())
+PYEOF
+echo ======结束
