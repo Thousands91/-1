@@ -1,8 +1,9 @@
-285449
-echo "=== .env实际模型配置 ==="
-grep -E "OPENAI_MODEL|OPENAI_BASE_URL|AI_MAX_TOKENS" /root/bot/.env 2>/dev/null | sed 's/\(KEY=\).*/\1***/'
-echo "=== 今日模型降级警告次数与明细 ==="
-grep -ac "模型降级" /root/bot.log
-grep -a "模型降级" /root/bot.log | tail -8
-echo "=== 今日各条聊天耗时抽查(matcher启动→complete) ==="
-grep -a "ai_chat" /root/bot.log | grep -aE "will be handled|running complete" | tail -12 | awk '{print $1,$2,$NF}'
+285450
+cd /root/bot && git pull 2>&1 | tail -2
+git log --oneline -1
+pkill -f "venv/bin/python main.py"; sleep 2
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 < /dev/null &
+sleep 12
+grep -ac "Succeeded to load plugin" /root/bot.log
+pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑已拉起 || echo 大脑没起来
+grep -c "timeout=8.0" /root/bot/bot/plugins/ai_chat.py
