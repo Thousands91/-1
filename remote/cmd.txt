@@ -1,46 +1,13 @@
-285464
-cd /root/bot/bot && timeout 220 /root/bot/venv/bin/python - <<'PYEOF' 2>&1 | grep -v "INFO\|SUCCESS"
-import asyncio, sys, nonebot
-nonebot.init()
-sys.path.insert(0, '/root/bot/bot')
-from dotenv import load_dotenv
-load_dotenv('/root/bot/bot/.env')  # 与正式进程同源
-import os
-assert os.getenv("OPENAI_API_KEY"), "密钥没加载"
-from plugins.ai_chat import _needs_fact, _web_snippets, call_llm
-
-async def e2e(question):
-    print()
-    print("===== 用户问:", question, "=====")
-    answer = await call_llm([{"role": "user", "content": question}])
-    print("第一答:", (answer or "")[:60])
-    if not _needs_fact(question):
-        print(">>> 判定: 非事实题,不搜索(照旧)")
-        return
-    print(">>> 判定: 事实题,触发搜索")
-    snip = await asyncio.to_thread(_web_snippets, question)
-    print(">>> 搜索: 抓到", len(snip), "字")
-    if snip:
-        print("线索首条:", snip[:80])
-        memo = ("内部备忘（绝不复述本段，也别提'搜索'这类字眼）：\n"
-                "以下是网上查到的线索，按相关度排好序。请直接采用第一条里的事实来回答，"
-                "别用你记忆里的旧版本；线索里没有的细节一个字都不要补，"
-                "宁可口吻含糊也别编。用阿萨尔的口吻说一句就够，别罗列线索：\n" + snip)
-        retry = await call_llm([{"role": "user", "content": question}], extra_system=memo)
-        print(">>> 最终答:", retry)
-        bad = [w for w in ["这我可说不准", "书上没记", "藏书窖"] if w in (retry or "")]
-        print(">>> 验收: " + ("含兜底话术[异常]:" + str(bad) if bad else "真实信息已吸收,无拖延话术 [PASS]"))
-    else:
-        print(">>> 搜索无果,走存疑分支")
-        memo = ("内部备忘：这一句问的是你没有把握的实事。你不知道确切答案。"
-                "下一句必须以「这我可说不准」开头，然后用自己的口吻说一句你确实不知道，别编。")
-        retry = await call_llm([{"role": "user", "content": question}], extra_system=memo)
-        print(">>> 最终答:", retry)
-
-async def main():
-    await e2e("齐豫是谁")
-    await e2e("邓丽君是谁")
-    await e2e("好")
-asyncio.run(main())
-PYEOF
-echo "===== 测试结束 ====="
+285465
+echo "==1 查17:34-17:37那两条详细介绍的日志=="
+sed -n '/11-13 17:3[4-7]/,$p' /root/bot.log | grep -E "17:3[4-7]" | grep -vE "will be handled|running complete" | head -25
+echo "==2 同步代码=="
+cd /root/bot && git pull --ff-only 2>&1 | tail -1 && git log --oneline -1
+md5sum /root/bot/bot/plugins/ai_chat.py
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo 编译通过
+echo "==3 重启大脑加载新代码=="
+pkill -f "venv/bin/python main.py"; sleep 12
+cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
+sleep 15
+pgrep -af "main.py" | head -1
+tail -3 /root/bot.log
