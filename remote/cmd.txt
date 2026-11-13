@@ -1,13 +1,9 @@
-285465
-echo "==1 查17:34-17:37那两条详细介绍的日志=="
-sed -n '/11-13 17:3[4-7]/,$p' /root/bot.log | grep -E "17:3[4-7]" | grep -vE "will be handled|running complete" | head -25
-echo "==2 同步代码=="
-cd /root/bot && git pull --ff-only 2>&1 | tail -1 && git log --oneline -1
-md5sum /root/bot/bot/plugins/ai_chat.py
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo 编译通过
-echo "==3 重启大脑加载新代码=="
-pkill -f "venv/bin/python main.py"; sleep 12
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
-sleep 15
+285466
+echo "==详细一点的日志=="
+grep -n "详细一点" /root/bot.log | tail -6
+echo "==17:35-17:38的处理轨迹(去超长行)=="
+grep "17:3[5-8]" /root/bot.log | grep -vE "will be handled|running complete|input_status" | cut -c1-150 | head -20
+echo "==进程与启动时刻=="
 pgrep -af "main.py" | head -1
-tail -3 /root/bot.log
+ps -o pid,lstart,cmd -p $(pgrep -f "venv/bin/python main.py" | head -1) 2>/dev/null | tail -1
+tail -2 /root/bot.log | cut -c1-150
