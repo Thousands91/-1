@@ -1,21 +1,39 @@
-<<<task_285473.txt>>>
-===== 任务285473 11-13 18:22:32 =====
+<<<task_285474.txt>>>
+===== 任务285474 11-13 18:24:18 =====
 --- 命令 ---
-cd /root/bot && git pull --ff-only 2>&1 | tail -1 && git log --oneline -1
-md5sum /root/bot/bot/plugins/ai_chat.py
-grep -c "SEARCH_TAG" /root/bot/bot/plugins/ai_chat.py
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo 编译通过
-pkill -f "venv/bin/python main.py"; sleep 12
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 15
-pgrep -af "main.py" | head -1
-tail -2 /root/bot.log | cut -c1-110
+cd /root/bot/bot && timeout 120 /root/bot/venv/bin/python - <<'PYEOF' 2>&1 | grep -vE "INFO|SUCCESS"
+import asyncio, sys, nonebot
+nonebot.init()
+sys.path.insert(0, '/root/bot/bot')
+from dotenv import load_dotenv
+load_dotenv('/root/bot/bot/.env')
+from plugins.ai_chat import call_llm, _SEARCH_TAG_HINT, _SEARCH_TAG_RE
+
+async def t(q, note):
+    a = await call_llm([{"role": "user", "content": q}], extra_system=_SEARCH_TAG_HINT)
+    m = _SEARCH_TAG_RE.match(a or "")
+    print(f"[{note}] 标记: {m.group(1) if m else '无'} | 答案: {(a or '')[:60]}")
+
+async def main():
+    await t("齐豫是谁", "现实人名,应标")
+    await t("《橄榄树》是谁唱的", "现实歌曲,应标")
+    await t("你店里卖什么书", "人设/买卖,不应标")
+    await t("法拉杰的父亲是谁", "人设内,不应标")
+    await t("晚上想吃点什么", "闲聊,不应标")
+asyncio.run(main())
+PYEOF
+echo ======结束
 --- 输出 ---
- 1 file changed, 29 insertions(+), 2 deletions(-)
-6e210f9 坑106:搜索触发改三层智能判定-模型自报【搜:词】标记为主(拿不准才搜)+白名单兜底+追问接力;lore闸防人设内误报
-10eab9bfde017299c91ab8d104c991db  /root/bot/bot/plugins/ai_chat.py
-4
-编译通过
-12954 /root/bot/venv/bin/python main.py
-11-13 18:23:01 [INFO] websockets | connection open
-11-13 18:23:01 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+11-13 18:24:33 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+[现实人名,应标] 标记: 齐豫 | 答案: 【搜:齐豫】她是一位歌手。
+11-13 18:24:51 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
+[现实歌曲,应标] 标记: 橄榄树 歌手 | 答案: 【搜:橄榄树 歌手】
+齐豫。
+11-13 18:25:00 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
+[人设/买卖,不应标] 标记: 无 | 答案: 架上四十来本，从《妖精国游记》到《印刷详解》都有，都是我亲自过目过的。您想找哪一类？📖
+11-13 18:25:13 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
+[人设内,不应标] 标记: 无 | 答案: 我没见过这个人，书上没记。
+11-13 18:25:16 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-13 18:25:24 [WARNING] plugins | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+[闲聊,不应标] 标记: 无 | 答案: 红烧肉吧，油重，配一碗白饭正好。
+======结束
