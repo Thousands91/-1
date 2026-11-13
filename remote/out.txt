@@ -1,17 +1,63 @@
-<<<task_285462.txt>>>
-===== 任务285462 11-13 16:50:52 =====
+<<<task_285463.txt>>>
+===== 任务285463 11-13 17:18:08 =====
 --- 命令 ---
-echo "==重启大脑加载新代码=="
-pkill -f "venv/bin/python main.py"; sleep 12
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
-sleep 15
-pgrep -af "main.py" | head -2
-tail -5 /root/bot.log
+cd /root/bot/bot && timeout 220 /root/bot/venv/bin/python - <<'PYEOF' 2>&1 | grep -v "INFO\|SUCCESS"
+import asyncio, sys, nonebot
+nonebot.init()
+sys.path.insert(0, '/root/bot/bot')
+from plugins.ai_chat import _needs_fact, _web_snippets, call_llm
+
+async def e2e(question):
+    print()
+    print("===== 用户问:", question, "=====")
+    answer = await call_llm([{"role": "user", "content": question}])
+    print("第一答:", (answer or "")[:60])
+    if not _needs_fact(question):
+        print(">>> 判定: 非事实题,不搜索(照旧)")
+        return
+    print(">>> 判定: 事实题,触发搜索")
+    snip = await asyncio.to_thread(_web_snippets, question)
+    print(">>> 搜索: 抓到", len(snip), "字")
+    if snip:
+        print("线索首条:", snip[:80])
+        memo = ("内部备忘（绝不复述本段，也别提'搜索'这类字眼）：\n"
+                "以下是网上查到的线索，按相关度排好序。请直接采用第一条里的事实来回答，"
+                "别用你记忆里的旧版本；线索里没有的细节一个字都不要补，"
+                "宁可口吻含糊也别编。用阿萨尔的口吻说一句就够，别罗列线索：\n" + snip)
+        retry = await call_llm([{"role": "user", "content": question}], extra_system=memo)
+        print(">>> 最终答:", retry)
+        bad = [w for w in ["这我可说不准", "书上没记", "藏书窖"] if w in (retry or "")]
+        print(">>> 验收: " + ("含兜底话术[异常]:" + str(bad) if bad else "真实信息已吸收,无拖延话术 [PASS]"))
+    else:
+        print(">>> 搜索无果,走存疑分支")
+        memo = ("内部备忘：这一句问的是你没有把握的实事。你不知道确切答案。"
+                "下一句必须以「这我可说不准」开头，然后用自己的口吻说一句你确实不知道，别编。")
+        retry = await call_llm([{"role": "user", "content": question}], extra_system=memo)
+        print(">>> 最终答:", retry)
+
+async def main():
+    await e2e("齐豫是谁")
+    await e2e("邓丽君是谁")
+    await e2e("好")
+asyncio.run(main())
+PYEOF
+echo "===== 测试结束 ====="
 --- 输出 ---
-==重启大脑加载新代码==
-32685 /root/bot/venv/bin/python main.py
-11-13 16:51:15 [INFO] uvicorn | Application startup complete.
-11-13 16:51:15 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-11-13 16:51:18 [INFO] uvicorn | 127.0.0.1:60426 - "WebSocket /onebot/v11/ws" [accepted]
-11-13 16:51:18 [INFO] websockets | connection open
-11-13 16:51:18 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+
+===== 用户问: 齐豫是谁 =====
+Traceback (most recent call last):
+  File "<stdin>", line 38, in <module>
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "<stdin>", line 35, in main
+  File "<stdin>", line 9, in e2e
+  File "/root/bot/bot/plugins/ai_chat.py", line 2154, in call_llm
+    client = AsyncOpenAI(api_key=API_KEY, base_url=BASE_URL,
+  File "/root/bot/venv/lib/python3.10/site-packages/openai/_client.py", line 850, in __init__
+    return async__init__(
+  File "/root/bot/venv/lib/python3.10/site-packages/openai/lib/_client_auth.py", line 665, in async__init__
+    raise _sdk_client.OpenAIError(
+openai.OpenAIError: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable.
+===== 测试结束 =====
