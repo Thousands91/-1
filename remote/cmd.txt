@@ -1,12 +1,8 @@
-285446
-echo "=== 四进程现状 ==="
-pgrep -f "main.py" >/dev/null && echo 大脑在 || echo 大脑不在
-pgrep -f "opt/QQ/qq" >/dev/null && echo NapCat在 || echo NapCat不在
-pgrep -f remote_ctl >/dev/null && echo 遥控循环在 || echo 遥控循环不在
-pgrep -f tick.sh >/dev/null && echo 秒表在 || echo 秒表不在
-pgrep -f ipwatch.sh >/dev/null && echo IP记录仪在 || echo IP记录仪不在
-pgrep -f login_watch.sh >/dev/null && echo 登录巡检在 || echo 登录巡检不在
-echo "=== NapCat是不是在等扫码 ==="
+285447
+echo "=== 登录态权威判定 ==="
 bash /root/logincheck.sh 2>/dev/null | head -4
-echo "=== NapCat进程详情 ==="
-ps -o pid,etime,cmd -p $(pgrep -f "opt/QQ/qq" | head -1) 2>/dev/null | tail -1 | cut -c1-80
+echo "=== 最近消息 ==="
+grep -a "message.private.friend\|message.group" /root/bot.log | tail -2 | awk '{print $1,$2,$NF}'
+echo "=== WS连接 ==="
+grep -a "WebSocket\|连接" /root/bot.log | tail -1
+date "+现在: %T"
