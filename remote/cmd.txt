@@ -1,17 +1,10 @@
-285454
-/root/bot/venv/bin/python << 'PY'
-import requests
-UA = {"User-Agent": "Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36",
-      "Accept-Language": "zh-CN,zh;q=0.9"}
-r = requests.get("https://www.sogou.com/web", params={"query": "齐豫 是谁 歌手"}, headers=UA, timeout=10)
-print("搜狗状态:", r.status_code, "长度:", len(r.text))
-import re
-blocked = any(w in r.text for w in ("安全验证","验证码","captcha"))
-print("被风控:", blocked)
-titles = re.findall(r"<h3[^>]*>(.*?)</h3>", r.text, re.S)[:3]
-for t in titles:
-    t2 = re.sub(r"<[^>]+>", "", t)
-    print("结果:", t2[:50])
-r2 = requests.get("https://www.baidu.com/s", params={"wd": "齐豫 歌手"}, headers=UA, timeout=10)
-print("百度状态:", r2.status_code, "被风控:", any(w in r2.text for w in ("安全验证","验证码")))
-PY
+285456
+echo "=== venv目录创建/修改时间 ==="
+ls -ld --time-style=full-iso /root/bot/venv /root/bot/venv/bin/python 2>/dev/null
+ls -ld --time-style=full-iso /root/bot/venv/lib/python3.10/site-packages 2>/dev/null
+echo "=== venv里包的安装时间分布(看重建时间) ==="
+ls -l --time-style=+%F /root/bot/venv/lib/python3.10/site-packages/ 2>/dev/null | grep "^d" | awk '{print $6}' | sort | uniq -c
+echo "=== python版本 ==="
+/root/bot/venv/bin/python --version
+echo "=== site-packages完整清单(日期+包名) ==="
+ls -l --time-style=+%F /root/bot/venv/lib/python3.10/site-packages/ | grep "^d" | awk '{print $6, $NF}' | sort | head -30
