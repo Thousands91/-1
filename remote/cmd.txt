@@ -1,2 +1,9 @@
-285476
-sed -n '1709,1760p' /root/bot.log | cut -c1-200
+285477
+cd /root/bot && git pull --ff-only 2>&1 | tail -1 && git log --oneline -1
+md5sum /root/bot/bot/plugins/ai_chat.py
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo 编译通过
+pkill -f "venv/bin/python main.py"; sleep 12
+cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 15
+pgrep -af "main.py" | head -1
+tail -2 /root/bot.log | cut -c1-110
