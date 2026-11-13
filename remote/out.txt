@@ -1,18 +1,67 @@
-<<<task_285450.txt>>>
-===== 任务285450 11-13 14:40:03 =====
+<<<task_285451.txt>>>
+===== 任务285451 11-13 14:59:24 =====
 --- 命令 ---
-cd /root/bot && git pull 2>&1 | tail -2
-git log --oneline -1
-pkill -f "venv/bin/python main.py"; sleep 2
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 < /dev/null &
-sleep 12
-grep -ac "Succeeded to load plugin" /root/bot.log
-pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑已拉起 || echo 大脑没起来
-grep -c "timeout=8.0" /root/bot/bot/plugins/ai_chat.py
+echo "=== 部署后(14:40+)每条聊天耗时:入站时间→complete时间 ==="
+python3 << 'PY'
+import re
+lines = open('/root/bot.log', errors='ignore').readlines()
+pairs, pend = [], None
+for l in lines:
+    m = re.match(r'11-13 (\d\d:\d\d:\d\d)', l)
+    if not m: continue
+    t = m.group(1)
+    if t < "14:40": continue
+    if 'ai_chat, lineno=1311' in l and 'will be handled' in l:
+        pend = t
+    elif 'running complete' in l and 'ai_chat' not in l and pend:
+        # complete行不带模块名,取距离最近的
+        pass
+# 换个思路:直接抓ai_chat的handle区间
+pend=None
+for l in lines:
+    m = re.match(r'11-13 (\d\d:\d\d:\d\d)', l)
+    if not m: continue
+    t = m.group(1)
+    if 'module=plugins.ai_chat' in l and 'will be handled' in l:
+        pend = t
+    elif 'running complete' in l and pend and 'will be handled' not in l:
+        h1,m1,s1 = map(int,pend.split(':')); h2,m2,s2 = map(int,t.split(':'))
+        d = (h2*3600+m2*60+s2)-(h1*3600+m1*60+s1)
+        if d > 1 and d < 300:
+            print(f"{pend} 启动 -> {t} 完成 = {d}秒")
+        pend = None
+PY
+echo "=== 同期降级警告(部署后) ==="
+grep -a "模型降级" /root/bot.log | grep -aE "14:4[0-9]|14:5[0-9]" | tail -6
+echo "=== 入站消息对照 ==="
+grep -a "message.private.friend\|message.group" /root/bot.log | grep -aE "14:4[0-9]|14:5[0-9]" | tail -6 | awk '{print $1,$2,$NF}'
 --- 输出 ---
- bot/plugins/ai_chat.py | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-66355b0 ai_chat提速:超时8s+retries归零
-10
-大脑已拉起
-2
+=== 部署后(14:40+)每条聊天耗时:入站时间→complete时间 ===
+14:47:17 启动 -> 14:47:57 完成 = 40秒
+14:48:15 启动 -> 14:48:37 完成 = 22秒
+14:48:52 启动 -> 14:48:58 完成 = 6秒
+14:51:44 启动 -> 14:51:56 完成 = 12秒
+14:52:10 启动 -> 14:52:12 完成 = 2秒
+14:53:02 启动 -> 14:53:11 完成 = 9秒
+14:53:23 启动 -> 14:53:39 完成 = 16秒
+14:53:51 启动 -> 14:54:04 完成 = 13秒
+14:54:46 启动 -> 14:55:00 完成 = 14秒
+14:55:24 启动 -> 14:55:47 完成 = 23秒
+14:57:05 启动 -> 14:57:22 完成 = 17秒
+14:57:54 启动 -> 14:58:12 完成 = 18秒
+14:58:18 启动 -> 14:58:39 完成 = 21秒
+14:59:04 启动 -> 14:59:18 完成 = 14秒
+=== 同期降级警告(部署后) ===
+11-13 14:58:03 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+11-13 14:58:11 [WARNING] ai_chat | [模型降级] glm-4-flash 调用失败(APITimeoutError)，尝试下一个
+11-13 14:58:24 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-13 14:58:32 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+11-13 14:59:05 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-13 14:59:13 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+=== 入站消息对照 ===
+11-13 14:54:46 '那你来一份是什么意思'
+11-13 14:55:24 '那你是什么意思，又不卖又准备'
+11-13 14:57:05 '不行，我就要吃你的红烧肉'
+11-13 14:57:53 '我知道你不卖，除了卖以外就没有别的方法能吃到你的食物吗？'
+11-13 14:58:18 '额'
+11-13 14:59:04 '那你能请我吃吗？'
