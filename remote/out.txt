@@ -1,26 +1,32 @@
-<<<task_285475.txt>>>
-===== 任务285475 11-13 18:40:43 =====
+<<<task_285476.txt>>>
+===== 任务285476 11-13 18:46:59 =====
 --- 命令 ---
-echo "==18:23以来的联网/降级/存疑日志=="
-grep -n "联网\|存疑\|模型降级\|灯灭" /root/bot.log | tail -25
-echo "==18:35后私聊消息=="
-grep "18:3[5-9]" /root/bot.log | grep "message.private" | cut -c1-130 | tail -8
+sed -n '1709,1760p' /root/bot.log | cut -c1-200
 --- 输出 ---
-==18:23以来的联网/降级/存疑日志==
-90:11-13 17:46:35 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
-105:11-13 17:46:50 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-118:11-13 17:46:54 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-120:11-13 17:46:58 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-121:11-13 17:47:02 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-137:11-13 17:47:21 [WARNING] ai_chat | [联网] 检索失败（TimeoutError），用原答案兜底
-138:11-13 17:47:21 [INFO] ai_chat | [存疑] 「齐豫是谁」没查到线索，要求它别硬编
-139:11-13 17:47:23 [INFO] ai_chat | [联网] 走搜狗抓到 3 条
-140:11-13 17:47:30 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
-1709:11-13 18:38:59 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-1710:11-13 18:39:05 [INFO] ai_chat | [联网] 模型自报搜词：齐豫
-1711:11-13 18:39:08 [INFO] ai_chat | [联网] 走搜狗抓到 3 条
-1712:11-13 18:39:08 [INFO] ai_chat | [联网] 「齐豫是谁」检索到线索，重答一次
-1727:11-13 18:39:42 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-==18:35后私聊消息==
-11-13 18:38:51 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 380579369 from 1561950850 '齐豫是�
+11-13 18:38:59 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-13 18:39:05 [INFO] ai_chat | [联网] 模型自报搜词：齐豫
+11-13 18:39:08 [INFO] ai_chat | [联网] 走搜狗抓到 3 条
+11-13 18:39:08 [INFO] ai_chat | [联网] 「齐豫是谁」检索到线索，重答一次
+11-13 18:39:11 [INFO] ai_chat | [核对·调试] ask='齐豫是谁' lead=False contra=False agree=False dodge=False ans='齐豫，那是外乡人的名字，我书架上没有。'
+11-13 18:39:12 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-13 18:39:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794566375, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_
+11-13 18:39:36 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794566376, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_
+11-13 18:39:36 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794566376, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_
 11-13 18:39:36 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 813432454 from 1561950850 '？'
+11-13 18:39:36 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=92)
+11-13 18:39:36 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=188)
+11-13 18:39:36 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=92) running complete
+11-13 18:39:36 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=188) running complete
+11-13 18:39:36 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-13 18:39:36 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-13 18:39:36 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-13 18:39:40 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794566380, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_
+11-13 18:39:42 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-13 18:39:44 [INFO] ai_chat | [核对·调试] ask='？' lead=False contra=False agree=False dodge=False ans='您是想继续问齐豫的事，还是有什么别的需要？'
+11-13 18:39:48 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-13 18:40:08 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794566408, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_
+11-13 18:46:32 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2020071418 from 1106690331@[群:590454333] '[record:file=26d476341417fe1f6ca1f47c91966e59.amr,path=/root/.con
+11-13 18:46:32 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-13 18:46:32 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-13 18:46:32 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-13 18:46:32 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
