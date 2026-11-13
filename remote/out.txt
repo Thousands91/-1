@@ -1,16 +1,29 @@
-<<<task_285467.txt>>>
-===== 任务285467 11-13 17:46:32 =====
+<<<task_285468.txt>>>
+===== 任务285468 11-13 17:54:31 =====
 --- 命令 ---
-cd /root/bot && git log --oneline -1
-md5sum /root/bot/bot/plugins/ai_chat.py
-grep -c "坑104" /root/bot/bot/plugins/ai_chat.py
-grep -n "_DUP: Dict" /root/bot/bot/plugins/ai_chat.py
-pgrep -af "main.py" | head -1
-tail -1 /root/bot.log | cut -c1-120
+echo "==17:42之后的联网与降级日志=="
+grep -n "联网\|灯灭\|存疑\|模型降级\|冷却" /root/bot.log | tail -25
+echo "==17:43后消息轨迹=="
+grep "17:4[3-9]\|17:5[0-3]" /root/bot.log | grep -E "message.private|message.group" | cut -c1-140 | tail -10
 --- 输出 ---
-461205e 坑104:重复拦截改判据制(答成30秒/答砸10秒放行重试)+API错误文本退出聊天进日志
-20f56daf616b3c8e9cbf0e85fe211d1b  /root/bot/bot/plugins/ai_chat.py
-2
-34:_DUP: Dict[tuple, list] = {}  # (群,人,话) -> [上次时间, 上次是否答成]
-8096 /root/bot/venv/bin/python main.py
-11-13 17:46:22 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+==17:42之后的联网与降级日志==
+90:11-13 17:46:35 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
+105:11-13 17:46:50 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+118:11-13 17:46:54 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+120:11-13 17:46:58 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+121:11-13 17:47:02 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+137:11-13 17:47:21 [WARNING] ai_chat | [联网] 检索失败（TimeoutError），用原答案兜底
+138:11-13 17:47:21 [INFO] ai_chat | [存疑] 「齐豫是谁」没查到线索，要求它别硬编
+139:11-13 17:47:23 [INFO] ai_chat | [联网] 走搜狗抓到 3 条
+140:11-13 17:47:30 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
+==17:43后消息轨迹==
+11-13 17:51:25 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1382857986 from 3819642626@[群:590454333] '这�
+11-13 17:51:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1788841803 from 3611220879@[群:590454333] '这�
+11-13 17:51:37 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1686785683 from 3819642626@[群:590454333] '他�
+11-13 17:51:37 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 391242342 from 3611220879@[群:590454333] '哎我
+11-13 17:51:42 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 846502449 from 3819642626@[群:590454333] '那不
+11-13 17:51:46 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1980130189 from 3611220879@[群:590454333] '对�
+11-13 17:52:05 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 534416057 from 3611220879@[群:590454333] '有钱
+11-13 17:52:15 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 911687463 from 3819642626@[群:590454333] '我没
+11-13 17:52:18 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2122797865 from 3819642626@[群:590454333] '[imag
+11-13 17:53:54 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1025756892 from 1445169274@[群:590454333] '[imag
