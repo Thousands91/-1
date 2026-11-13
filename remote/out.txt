@@ -1,29 +1,22 @@
-<<<task_285446.txt>>>
-===== 任务285446 11-13 11:57:18 =====
+<<<task_285447.txt>>>
+===== 任务285447 11-13 12:13:50 =====
 --- 命令 ---
-echo "=== 四进程现状 ==="
-pgrep -f "main.py" >/dev/null && echo 大脑在 || echo 大脑不在
-pgrep -f "opt/QQ/qq" >/dev/null && echo NapCat在 || echo NapCat不在
-pgrep -f remote_ctl >/dev/null && echo 遥控循环在 || echo 遥控循环不在
-pgrep -f tick.sh >/dev/null && echo 秒表在 || echo 秒表不在
-pgrep -f ipwatch.sh >/dev/null && echo IP记录仪在 || echo IP记录仪不在
-pgrep -f login_watch.sh >/dev/null && echo 登录巡检在 || echo 登录巡检不在
-echo "=== NapCat是不是在等扫码 ==="
+echo "=== 登录态权威判定 ==="
 bash /root/logincheck.sh 2>/dev/null | head -4
-echo "=== NapCat进程详情 ==="
-ps -o pid,etime,cmd -p $(pgrep -f "opt/QQ/qq" | head -1) 2>/dev/null | tail -1 | cut -c1-80
+echo "=== 最近消息 ==="
+grep -a "message.private.friend\|message.group" /root/bot.log | tail -2 | awk '{print $1,$2,$NF}'
+echo "=== WS连接 ==="
+grep -a "WebSocket\|连接" /root/bot.log | tail -1
+date "+现在: %T"
 --- 输出 ---
-=== 四进程现状 ===
-大脑在
-NapCat在
-遥控循环在
-秒表在
-IP记录仪在
-登录巡检在
-=== NapCat是不是在等扫码 ===
+=== 登录态权威判定 ===
 === 登录状态（权威判定）===
-[未登录] 当前没有有效会话
-阶段: waiting_qrcode
+[在线] 已登录，一切正常
+阶段: ready
 最近错误: 无
-=== NapCat进程详情 ===
- 7991       00:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandb
+=== 最近消息 ===
+11-13 12:13:27 '可以和我说说'
+11-13 12:13:31 '说完不烧心'
+=== WS连接 ===
+11-13 12:10:46 [INFO] uvicorn | 127.0.0.1:55062 - "WebSocket /onebot/v11/ws" [accepted]
+现在: 12:13:51
