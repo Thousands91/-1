@@ -1,9 +1,18 @@
-285469
-cd /root/bot && git pull --ff-only 2>&1 | tail -1 && git log --oneline -1
-md5sum /root/bot/bot/plugins/ai_chat.py
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo 编译通过
-pkill -f "venv/bin/python main.py"; sleep 12
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 15
-pgrep -af "main.py" | head -1
-tail -3 /root/bot.log | cut -c1-120
+285470
+cd /root/bot/bot && timeout 100 /root/bot/venv/bin/python - <<'PYEOF' 2>&1 | grep -vE "INFO|SUCCESS"
+import time, sys, nonebot
+nonebot.init()
+sys.path.insert(0, '/root/bot/bot')
+from dotenv import load_dotenv
+load_dotenv('/root/bot/bot/.env')
+from plugins.ai_chat import _fact_query, _web_snippets
+# 追问接力验证
+print("首问:", _fact_query("齐豫是谁", 999, time.time()))
+print("追问:", _fact_query("详细一点介绍齐豫", 999, time.time() + 5))
+# 真搜(单源收紧后总时长应<16s)
+t0 = time.time()
+s = _web_snippets("齐豫 是谁")
+print("搜索耗时 %.1fs, 抓到 %d 字" % (time.time() - t0, len(s)))
+print(s[:100])
+PYEOF
+echo ======结束
