@@ -1,8 +1,9 @@
-<<<task_285472.txt>>>
-===== 任务285472 11-13 18:20:20 =====
+<<<task_285473.txt>>>
+===== 任务285473 11-13 18:22:32 =====
 --- 命令 ---
-cd /root/bot && git -c credential.helper= pull -ff-only 2>&1 | tail -1 && git log --oneline -1
+cd /root/bot && git pull --ff-only 2>&1 | tail -1 && git log --oneline -1
 md5sum /root/bot/bot/plugins/ai_chat.py
+grep -c "SEARCH_TAG" /root/bot/bot/plugins/ai_chat.py
 /root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo 编译通过
 pkill -f "venv/bin/python main.py"; sleep 12
 cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
@@ -10,10 +11,11 @@ sleep 15
 pgrep -af "main.py" | head -1
 tail -2 /root/bot.log | cut -c1-110
 --- 输出 ---
-error: did you mean `--ff-only` (with two dashes)?
-8d47fc3 坑105:追问式事实题接力(15分钟内沿用上次查询)+单源超时收紧(搜狗8s/百度6s)+外层14->16s;回滚报错文案(用户拍板保留技术细节)
-44b13849e8875e12994a0d6ef79ca4bc  /root/bot/bot/plugins/ai_chat.py
+ 1 file changed, 29 insertions(+), 2 deletions(-)
+6e210f9 坑106:搜索触发改三层智能判定-模型自报【搜:词】标记为主(拿不准才搜)+白名单兜底+追问接力;lore闸防人设内误报
+10eab9bfde017299c91ab8d104c991db  /root/bot/bot/plugins/ai_chat.py
+4
 编译通过
-12731 /root/bot/venv/bin/python main.py
-11-13 18:20:45 [INFO] websockets | connection open
-11-13 18:20:45 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+12954 /root/bot/venv/bin/python main.py
+11-13 18:23:01 [INFO] websockets | connection open
+11-13 18:23:01 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
