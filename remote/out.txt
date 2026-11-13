@@ -1,29 +1,91 @@
-<<<task_285453.txt>>>
-===== 任务285453 11-13 15:17:44 =====
+<<<task_285454.txt>>>
+===== 任务285454 11-13 15:18:56 =====
 --- 命令 ---
-V=/root/bot/venv/bin/python
-echo "=== 缺什么 ==="
-$V -c "import requests" 2>&1 | tail -1
-$V -c "import bs4" 2>&1 | tail -1
-echo "=== 补装 ==="
-/root/bot/venv/bin/pip install -q requests beautifulsoup4 2>&1 | tail -2
-echo "=== 复验 ==="
-$V -c "import requests, bs4; print('requests', requests.__version__, '/ bs4 OK')"
-echo "=== 实测搜狗抓取(齐豫是谁) ==="
-$V -c "
-import sys; sys.path.insert(0, '/root/bot/bot')
-from plugins.ai_chat import _web_snippets
-print(_web_snippets('齐豫 是谁 歌手')[:200])
-" 2>&1 | tail -4
+/root/bot/venv/bin/python << 'PY'
+import requests
+UA = {"User-Agent": "Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36",
+      "Accept-Language": "zh-CN,zh;q=0.9"}
+r = requests.get("https://www.sogou.com/web", params={"query": "齐豫 是谁 歌手"}, headers=UA, timeout=10)
+print("搜狗状态:", r.status_code, "长度:", len(r.text))
+import re
+blocked = any(w in r.text for w in ("安全验证","验证码","captcha"))
+print("被风控:", blocked)
+titles = re.findall(r"<h3[^>]*>(.*?)</h3>", r.text, re.S)[:3]
+for t in titles:
+    t2 = re.sub(r"<[^>]+>", "", t)
+    print("结果:", t2[:50])
+r2 = requests.get("https://www.baidu.com/s", params={"wd": "齐豫 歌手"}, headers=UA, timeout=10)
+print("百度状态:", r2.status_code, "被风控:", any(w in r2.text for w in ("安全验证","验证码")))
+PY
 --- 输出 ---
-=== 缺什么 ===
-ModuleNotFoundError: No module named 'requests'
-ModuleNotFoundError: No module named 'bs4'
-=== 补装 ===
-=== 复验 ===
-requests 2.34.2 / bs4 OK
-=== 实测搜狗抓取(齐豫是谁) ===
-    get_driver().on_startup(_start_qface_refresh)  # 启动后异步刷新全量表
-  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py", line 89, in get_driver
-    raise ValueError("NoneBot has not been initialized.")
-ValueError: NoneBot has not been initialized.
+搜狗状态: 200 长度: 348808
+被风控: False
+结果: 
+        
+
+                
+                    齐豫
+结果: 
+        
+
+                
+                    大家
+结果: 
+        
+                
+齐豫 Chyi Yu(豆瓣)         
+Traceback (most recent call last):
+  File "/root/bot/venv/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/root/bot/venv/lib/python3.10/site-packages/urllib3/connectionpool.py", line 540, in _make_request
+    response = conn.getresponse()
+  File "/root/bot/venv/lib/python3.10/site-packages/urllib3/connection.py", line 638, in getresponse
+    httplib_response = super().getresponse()
+  File "/usr/lib/python3.10/http/client.py", line 1404, in getresponse
+    response.begin()
+  File "/usr/lib/python3.10/http/client.py", line 323, in begin
+    version, status, reason = self._read_status()
+  File "/usr/lib/python3.10/http/client.py", line 292, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/bot/venv/lib/python3.10/site-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+  File "/root/bot/venv/lib/python3.10/site-packages/urllib3/connectionpool.py", line 847, in urlopen
+    retries = retries.increment(
+  File "/root/bot/venv/lib/python3.10/site-packages/urllib3/util/retry.py", line 510, in increment
+    raise reraise(type(error), error, _stacktrace)
+  File "/root/bot/venv/lib/python3.10/site-packages/urllib3/util/util.py", line 38, in reraise
+    raise value.with_traceback(tb)
+  File "/root/bot/venv/lib/python3.10/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+  File "/root/bot/venv/lib/python3.10/site-packages/urllib3/connectionpool.py", line 540, in _make_request
+    response = conn.getresponse()
+  File "/root/bot/venv/lib/python3.10/site-packages/urllib3/connection.py", line 638, in getresponse
+    httplib_response = super().getresponse()
+  File "/usr/lib/python3.10/http/client.py", line 1404, in getresponse
+    response.begin()
+  File "/usr/lib/python3.10/http/client.py", line 323, in begin
+    version, status, reason = self._read_status()
+  File "/usr/lib/python3.10/http/client.py", line 292, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<stdin>", line 13, in <module>
+  File "/root/bot/venv/lib/python3.10/site-packages/requests/api.py", line 87, in get
+    return request("get", url, params=params, **kwargs)
+  File "/root/bot/venv/lib/python3.10/site-packages/requests/api.py", line 71, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/root/bot/venv/lib/python3.10/site-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/root/bot/venv/lib/python3.10/site-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+  File "/root/bot/venv/lib/python3.10/site-packages/requests/adapters.py", line 711, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
