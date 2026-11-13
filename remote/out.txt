@@ -1,122 +1,35 @@
-<<<task_285457.txt>>>
-===== 任务285457 11-13 15:35:07 =====
+<<<task_285458.txt>>>
+===== 任务285458 11-13 15:37:15 =====
 --- 命令 ---
-echo "==1 venv依赖逐个实测=="
-for m in nonebot aiohttp httpx loguru openai dotenv PIL requests chess ddgs sherpa_onnx pytz uvicorn apscheduler bs4; do
-  /root/bot/venv/bin/python -c "import $m" 2>/dev/null && echo "OK $m" || echo "缺失 $m"
-done
-echo "==2 代码md5与git状态=="
-cd /root/bot && git log --oneline -1 && git status -s | head -20
-find /root/bot/bot -name '*.py' -not -path '*__pycache__*' -exec md5sum {} \; | sort -k2
-echo "==3 数据文件=="
-ls -la /root/bot/bot/data/ 2>/dev/null
-ls /root/bot/bot/data/memory/ 2>/dev/null
-md5sum /root/bot/bot/data/fortune_log.json /root/bot/bot/guild1.db 2>/dev/null
-echo "==4 bot目录之外的命根=="
-ls -la /root/asr_model/ 2>/dev/null || echo "asr_model 不存在!"
-echo "--crontab--"
-crontab -l 2>/dev/null || echo "无crontab"
-echo "--战斗脚本--"
-ls /root/*.sh 2>/dev/null
-echo "==5 assets=="
-find /root/bot/bot/assets -type f 2>/dev/null
-echo "==6 .env=="
-grep -c '=' /root/bot/bot/.env 2>/dev/null
-echo "==7 进程=="
-pgrep -af "main.py|opt/QQ" | head -5
+echo "==1 代码更新到最新=="
+cd /root/bot && git pull --ff-only 2>&1 | tail -2 && git log --oneline -1
+grep -c "坑102补录" /root/bot/bot/requirements.txt
+echo "==2 补装httpx=="
+export PYTHONPATH=/data/data/com.termux/files/usr/lib/python3/dist-packages
+/root/bot/venv/bin/python -m pip install -q httpx -i https://pypi.tuna.tsinghua.edu.cn/simple 2>&1 | tail -2
+/root/bot/venv/bin/python -c "import httpx; print('httpx OK', httpx.__version__)"
+echo "==3 表情识别链路实测（不启bot,直接函数级）=="
+/root/bot/venv/bin/python - <<'PYEOF'
+import asyncio, sys
+sys.path.insert(0, '/root/bot/bot')
+async def t():
+    import httpx
+    async with httpx.AsyncClient(timeout=10, follow_redirects=True) as cli:
+        r = await cli.get("https://www.baidu.com/img/flexible/logo/pc/result.png")
+    print("下载测试:", r.status_code, len(r.content), "bytes")
+asyncio.run(t())
+PYEOF
+echo "==4 进程无需重启确认=="
+pgrep -af "main.py" | head -2
 --- 输出 ---
-==1 venv依赖逐个实测==
-OK nonebot
-OK aiohttp
-缺失 httpx
-OK loguru
-OK openai
-OK dotenv
-OK PIL
-OK requests
-OK chess
-OK ddgs
-OK sherpa_onnx
-OK pytz
-OK uvicorn
-OK apscheduler
-OK bs4
-==2 代码md5与git状态==
-66355b0 ai_chat提速:超时8s+retries归零
- M bot/data/fortune_log.json
- M bot/data/memory/1561950850.json
-f938bfa2eeebf829764e5dd801033d5d  /root/bot/bot/config.py
-2ce3f1afeafe29cc2d9e596df1f58e9c  /root/bot/bot/main.py
-1b5727cc9f448f4292379acda604e8cd  /root/bot/bot/persona/__init__.py
-c4fb48ba0bf95d4a6376e7ac6cacff90  /root/bot/bot/plugins/ai_chat.py
-2316c160d14f865d6d571f6bea6bbf7c  /root/bot/bot/plugins/book_find.py
-4e5d51512130aea3470b5b09ba00ca8c  /root/bot/bot/plugins/chess_game.py
-a6604753f220afb36e79cf0b4fee40ff  /root/bot/bot/plugins/fortune.py
-ca96803f2706672c82095d2772467558  /root/bot/bot/plugins/games.py
-969ef8f4924f0f3e0ed18879cc9cf0b5  /root/bot/bot/plugins/image_search_multisource.py
-cff3795ab97fcbe903e581a8a71afad7  /root/bot/bot/plugins/keyword_reply.py
-7a66d0bf0673ee0f00191d38efd10b8f  /root/bot/bot/plugins/news.py
-53865ba9b24c774352771a52c63f26a4  /root/bot/bot/plugins/song_request.py
-0b78a02b1f6dc1c353224e94fc6e1e6a  /root/bot/bot/plugins/weather.py
-0e7c84009d9227b582944f0ddcb388e1  /root/bot/bot/tests_test_games_full.py
-c34edb2c129e4a8b7cca568f87d2f233  /root/bot/bot/tests_test_mute_v2.py
-==3 数据文件==
-total 0
-drwxr-xr-x 3 root root  3488 Nov 12 23:50 .
-drwxr-xr-x 7 root root  3488 Nov 12 15:01 ..
--rw-r--r-- 1 root root   320 Nov 13 12:14 fortune_log.json
--rw-r--r-- 1 root root 25369 Nov 11 22:41 gutenberg_zh.json
-drwxr-xr-x 2 root root  3488 Nov 12 23:56 memory
--rw-r--r-- 1 root root    83 Nov 12 15:01 mface_names.json
--rw-r--r-- 1 root root  6807 Nov 12 00:07 qface_index.json
--rw-r--r-- 1 root root  1617 Nov 13 03:13 search_tag_cache.json
--rw-r--r-- 1 root root   147 Nov 13 13:22 voice_probe.log
-1062461846.json
-1561950850.json
-1561950850.json.bak_1108手术前
-1561950850.json.bak_1112手术前
-22222.json
-2419770062.json
-2423816346.json
-649203747.json
-42ca0f9820a68218efe5e291b1f345ad  /root/bot/bot/data/fortune_log.json
-==4 bot目录之外的命根==
-total 0
-drwxr-xr-x  2 root root     3488 Nov 12 18:50 .
-drwx------ 12 root root     3488 Nov 13 15:35 ..
--rw-------  1 root root 81828675 Nov 12 18:50 model.int8.onnx
--rw-r--r--  1 root root    75352 Nov 12 18:50 tokens.txt
---crontab--
-无crontab
---战斗脚本--
-/root/azar_guard.sh
-/root/azar_login.sh
-/root/check.sh
-/root/ipwatch.sh
-/root/login_watch.sh
-/root/logincheck.sh
-/root/morning.sh
-/root/napcat.sh
-/root/netmon.sh
-/root/offline_watch.sh
-/root/p.sh
-/root/remote_ctl.sh
-/root/remote_ctl_v5.sh
-/root/restart_bot.sh
-/root/selfcheck.sh
-/root/setup.sh
-/root/st.sh
-/root/start_all.sh
-/root/start_nap.sh
-/root/tick.sh
-/root/watcher.sh
-==5 assets==
-/root/bot/bot/assets/DejaVuSans.ttf
-==6 .env==
-10
-==7 进程==
+==1 代码更新到最新==
+ bot/requirements.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+31f38e6 requirements补录Pillow/requests/sherpa-onnx:坑101种子根治,代码在用但清单漏写
+1
+==2 补装httpx==
+httpx OK 0.28.1
+==3 表情识别链路实测（不启bot,直接函数级）==
+下载测试: 200 6617 bytes
+==4 进程无需重启确认==
 14801 /root/bot/venv/bin/python main.py
-24978 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
-24991 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
-24993 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-24994 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
