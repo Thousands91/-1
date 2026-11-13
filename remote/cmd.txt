@@ -1,5 +1,7 @@
-285459
-echo "==16:40前后bot日志=="
-grep -n "联网\|搜索\|sogou\|baidu\|齐豫\|检索" /root/bot.log | tail -30
-echo "==最近40行=="
-tail -40 /root/bot.log
+285460
+echo "==16:30以后的日志=="
+sed -n '/11-13 16:2[5-9]/,$p' /root/bot.log | grep -v "核对·调试" | head -60
+echo "==所有联网行(今天)=="
+grep "联网" /root/bot.log | tail -15
+echo "==requests在不在venv(再验一次)=="
+/root/bot/venv/bin/python -c "import requests,bs4; print('requests',requests.__version__,'bs4 ok')"
