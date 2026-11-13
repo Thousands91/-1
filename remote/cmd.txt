@@ -1,24 +1,21 @@
-285457
-echo "==1 venv依赖逐个实测=="
-for m in nonebot aiohttp httpx loguru openai dotenv PIL requests chess ddgs sherpa_onnx pytz uvicorn apscheduler bs4; do
-  /root/bot/venv/bin/python -c "import $m" 2>/dev/null && echo "OK $m" || echo "缺失 $m"
-done
-echo "==2 代码md5与git状态=="
-cd /root/bot && git log --oneline -1 && git status -s | head -20
-find /root/bot/bot -name '*.py' -not -path '*__pycache__*' -exec md5sum {} \; | sort -k2
-echo "==3 数据文件=="
-ls -la /root/bot/bot/data/ 2>/dev/null
-ls /root/bot/bot/data/memory/ 2>/dev/null
-md5sum /root/bot/bot/data/fortune_log.json /root/bot/bot/guild1.db 2>/dev/null
-echo "==4 bot目录之外的命根=="
-ls -la /root/asr_model/ 2>/dev/null || echo "asr_model 不存在!"
-echo "--crontab--"
-crontab -l 2>/dev/null || echo "无crontab"
-echo "--战斗脚本--"
-ls /root/*.sh 2>/dev/null
-echo "==5 assets=="
-find /root/bot/bot/assets -type f 2>/dev/null
-echo "==6 .env=="
-grep -c '=' /root/bot/bot/.env 2>/dev/null
-echo "==7 进程=="
-pgrep -af "main.py|opt/QQ" | head -5
+285458
+echo "==1 代码更新到最新=="
+cd /root/bot && git pull --ff-only 2>&1 | tail -2 && git log --oneline -1
+grep -c "坑102补录" /root/bot/bot/requirements.txt
+echo "==2 补装httpx=="
+export PYTHONPATH=/data/data/com.termux/files/usr/lib/python3/dist-packages
+/root/bot/venv/bin/python -m pip install -q httpx -i https://pypi.tuna.tsinghua.edu.cn/simple 2>&1 | tail -2
+/root/bot/venv/bin/python -c "import httpx; print('httpx OK', httpx.__version__)"
+echo "==3 表情识别链路实测（不启bot,直接函数级）=="
+/root/bot/venv/bin/python - <<'PYEOF'
+import asyncio, sys
+sys.path.insert(0, '/root/bot/bot')
+async def t():
+    import httpx
+    async with httpx.AsyncClient(timeout=10, follow_redirects=True) as cli:
+        r = await cli.get("https://www.baidu.com/img/flexible/logo/pc/result.png")
+    print("下载测试:", r.status_code, len(r.content), "bytes")
+asyncio.run(t())
+PYEOF
+echo "==4 进程无需重启确认=="
+pgrep -af "main.py" | head -2
