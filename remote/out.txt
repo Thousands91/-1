@@ -1,39 +1,26 @@
-<<<task_285474.txt>>>
-===== 任务285474 11-13 18:24:18 =====
+<<<task_285475.txt>>>
+===== 任务285475 11-13 18:40:43 =====
 --- 命令 ---
-cd /root/bot/bot && timeout 120 /root/bot/venv/bin/python - <<'PYEOF' 2>&1 | grep -vE "INFO|SUCCESS"
-import asyncio, sys, nonebot
-nonebot.init()
-sys.path.insert(0, '/root/bot/bot')
-from dotenv import load_dotenv
-load_dotenv('/root/bot/bot/.env')
-from plugins.ai_chat import call_llm, _SEARCH_TAG_HINT, _SEARCH_TAG_RE
-
-async def t(q, note):
-    a = await call_llm([{"role": "user", "content": q}], extra_system=_SEARCH_TAG_HINT)
-    m = _SEARCH_TAG_RE.match(a or "")
-    print(f"[{note}] 标记: {m.group(1) if m else '无'} | 答案: {(a or '')[:60]}")
-
-async def main():
-    await t("齐豫是谁", "现实人名,应标")
-    await t("《橄榄树》是谁唱的", "现实歌曲,应标")
-    await t("你店里卖什么书", "人设/买卖,不应标")
-    await t("法拉杰的父亲是谁", "人设内,不应标")
-    await t("晚上想吃点什么", "闲聊,不应标")
-asyncio.run(main())
-PYEOF
-echo ======结束
+echo "==18:23以来的联网/降级/存疑日志=="
+grep -n "联网\|存疑\|模型降级\|灯灭" /root/bot.log | tail -25
+echo "==18:35后私聊消息=="
+grep "18:3[5-9]" /root/bot.log | grep "message.private" | cut -c1-130 | tail -8
 --- 输出 ---
-11-13 18:24:33 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-[现实人名,应标] 标记: 齐豫 | 答案: 【搜:齐豫】她是一位歌手。
-11-13 18:24:51 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
-[现实歌曲,应标] 标记: 橄榄树 歌手 | 答案: 【搜:橄榄树 歌手】
-齐豫。
-11-13 18:25:00 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
-[人设/买卖,不应标] 标记: 无 | 答案: 架上四十来本，从《妖精国游记》到《印刷详解》都有，都是我亲自过目过的。您想找哪一类？📖
-11-13 18:25:13 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
-[人设内,不应标] 标记: 无 | 答案: 我没见过这个人，书上没记。
-11-13 18:25:16 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-13 18:25:24 [WARNING] plugins | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-[闲聊,不应标] 标记: 无 | 答案: 红烧肉吧，油重，配一碗白饭正好。
-======结束
+==18:23以来的联网/降级/存疑日志==
+90:11-13 17:46:35 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
+105:11-13 17:46:50 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+118:11-13 17:46:54 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+120:11-13 17:46:58 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+121:11-13 17:47:02 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+137:11-13 17:47:21 [WARNING] ai_chat | [联网] 检索失败（TimeoutError），用原答案兜底
+138:11-13 17:47:21 [INFO] ai_chat | [存疑] 「齐豫是谁」没查到线索，要求它别硬编
+139:11-13 17:47:23 [INFO] ai_chat | [联网] 走搜狗抓到 3 条
+140:11-13 17:47:30 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
+1709:11-13 18:38:59 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+1710:11-13 18:39:05 [INFO] ai_chat | [联网] 模型自报搜词：齐豫
+1711:11-13 18:39:08 [INFO] ai_chat | [联网] 走搜狗抓到 3 条
+1712:11-13 18:39:08 [INFO] ai_chat | [联网] 「齐豫是谁」检索到线索，重答一次
+1727:11-13 18:39:42 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+==18:35后私聊消息==
+11-13 18:38:51 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 380579369 from 1561950850 '齐豫是�
+11-13 18:39:36 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 813432454 from 1561950850 '？'
