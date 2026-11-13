@@ -1,9 +1,35 @@
-285450
-cd /root/bot && git pull 2>&1 | tail -2
-git log --oneline -1
-pkill -f "venv/bin/python main.py"; sleep 2
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 < /dev/null &
-sleep 12
-grep -ac "Succeeded to load plugin" /root/bot.log
-pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑已拉起 || echo 大脑没起来
-grep -c "timeout=8.0" /root/bot/bot/plugins/ai_chat.py
+285451
+echo "=== 部署后(14:40+)每条聊天耗时:入站时间→complete时间 ==="
+python3 << 'PY'
+import re
+lines = open('/root/bot.log', errors='ignore').readlines()
+pairs, pend = [], None
+for l in lines:
+    m = re.match(r'11-13 (\d\d:\d\d:\d\d)', l)
+    if not m: continue
+    t = m.group(1)
+    if t < "14:40": continue
+    if 'ai_chat, lineno=1311' in l and 'will be handled' in l:
+        pend = t
+    elif 'running complete' in l and 'ai_chat' not in l and pend:
+        # complete行不带模块名,取距离最近的
+        pass
+# 换个思路:直接抓ai_chat的handle区间
+pend=None
+for l in lines:
+    m = re.match(r'11-13 (\d\d:\d\d:\d\d)', l)
+    if not m: continue
+    t = m.group(1)
+    if 'module=plugins.ai_chat' in l and 'will be handled' in l:
+        pend = t
+    elif 'running complete' in l and pend and 'will be handled' not in l:
+        h1,m1,s1 = map(int,pend.split(':')); h2,m2,s2 = map(int,t.split(':'))
+        d = (h2*3600+m2*60+s2)-(h1*3600+m1*60+s1)
+        if d > 1 and d < 300:
+            print(f"{pend} 启动 -> {t} 完成 = {d}秒")
+        pend = None
+PY
+echo "=== 同期降级警告(部署后) ==="
+grep -a "模型降级" /root/bot.log | grep -aE "14:4[0-9]|14:5[0-9]" | tail -6
+echo "=== 入站消息对照 ==="
+grep -a "message.private.friend\|message.group" /root/bot.log | grep -aE "14:4[0-9]|14:5[0-9]" | tail -6 | awk '{print $1,$2,$NF}'
