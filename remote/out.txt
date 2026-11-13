@@ -1,18 +1,50 @@
-<<<task_285442.txt>>>
-===== 任务285442 11-13 11:24:09 =====
+<<<task_285443.txt>>>
+===== 任务285443 11-13 11:28:09 =====
 --- 命令 ---
-pkill -f "opt/QQ/[q]q"; sleep 2
-cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null &
-sleep 25
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" 2>/dev/null && echo 相册已放新码
-echo "=== QR_BASE64_START ==="
-base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-echo ""
-echo "=== QR_BASE64_END ==="
-date "+出码时刻: %T"
+echo "=== ①logincheck判定依据(脚本关键段) ==="
+grep -n "waiting_qrcode\|未登录\|session\|curl" /root/logincheck.sh | head -8
+echo "=== ②bot.log 07:50-08:15全记录(找WS断连/掉线) ==="
+grep -an "07:5[0-9]\|08:0[0-9]\|08:1[0-5]" /root/bot.log | grep -avE "input_status|heartbeat" | tail -25
+echo "=== ③NapCat日志掉线证据 ==="
+NLOG=$(ls -t /root/Napcat/napcat/logs/*.log 2>/dev/null | head -1)
+echo "日志: $NLOG"
+grep -aE "offline|logout|disconnect|expire|踢|下线|掉线|Kicked|Error|error" "$NLOG" 2>/dev/null | tail -8
+tail -6 "$NLOG" 2>/dev/null
+echo "=== ④restart日志08点后 ==="
+grep -a "08:\|09:\|10:\|11:" /root/napcat-restart.log 2>/dev/null | tail -6
+echo "=== ⑤07:53后用户是否还有入站尝试(全部08点后bot.log行数) ==="
+awk '/^11-13 08:/{n++} END{print "08点后bot.log行数:",n+0}' /root/bot.log
 --- 输出 ---
-相册已放新码
-=== QR_BASE64_START ===
-iVBORw0KGgoAAAANSUhEUgAAAJMAAACTAQAAAACinha4AAAACXBIWXMAAAsTAAALEwEAmpwYAAACCklEQVRIid2WPY6tMAyFjVKkgw1EyjbSZUuwAX42AFtKxzYisQHSpYjwO5lhNE96Tayp5qErXfEVln18bEP870P/NbuJplOtjrozDoE6CUtcZipL5i2X5cSrhAUzOrtly2fpTpqEbArXcZbRxUXOZn+lTOSKmHGpGmi7Uxm+a2tiH/qZ9/e3pg0MTwpl1tBAHd+9bGKPi+TskePsEDtOEsasdgQLamMatYylbHodyavttAfTImE32XQyghGV2ZVOwh5tuoAs0D2EREYCdju7O/s46t316LdvrQxJ6Ot2pa9J2U3CUraI8Xi1f+RyyJip8TRVs+TXf43s8XzrOh9DNkt4fdDKdBmCSnzd3oz+S9M2Bv3g0y6Y3kdIyBLGJxyqOCARmikOEnY7tTvguGQzkukkjAPqqJOxMAxrBhmri2QKZSS7ne9MN7IUYk+8eyJ/rfqdmUZ2E5pmUQ0WUo8GipiPpMuUMdkqhde7jexx1aRQYtQKPRQyM+s4ZJwaxZkPCav/WNge+vHq353YyBLGIlgosXGc8rVJGDbfwbgwAFgJn3PZyqrkHpJjZ9v19Vorw4O5XDFY2kz8OVutrN4ZaEBYCQp7iCUMuYx1jVHdnWwWEat3FVOFK1djD0KGycAOw0dEPThCVrOATz3Es0nEUAesqiG8OsJ1SBhyRx0ovfolKBH7yXfd72N/AH9DFXWhwyYEAAAAAElFTkSuQmCC
-=== QR_BASE64_END ===
-出码时刻: 11:24:36
+=== ①logincheck判定依据(脚本关键段) ===
+7:C=$(curl -s --max-time 5 -X POST http://127.0.0.1:6099/api/auth/login -H "Content-Type: application/json" -d "{\"hash\":\"$H\"}" | $PY -c "import sys,json;print(json.load(sys.stdin)['data']['Credential'])" 2>/dev/null)
+8:curl -s --max-time 5 -X POST http://127.0.0.1:6099/api/QQLogin/CheckLoginStatus -H "Authorization: Bearer $C" | $PY -c "
+12:print('[在线] 已登录，一切正常' if d['isLogin'] else ('[掉线] 登录过但已断开，需要重启NapCat' if d['isOffline'] else '[未登录] 当前没有有效会话'))
+=== ②bot.log 07:50-08:15全记录(找WS断连/掉线) ===
+355:11-13 07:50:43 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1093505615 from 2360319698@[群:590454333] '早啊早啊早啊早啊早啊早啊早啊'
+356:11-13 07:50:43 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+357:11-13 07:50:43 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+358:11-13 07:50:43 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+359:11-13 07:50:43 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+360:11-13 07:53:11 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1921991652 from 1062461846@[群:590454333] '[image:summary=,file=359EB92E392FE3EDC6B3D1D4E3AEA843.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQoevhK...,file_size=1273441]'
+361:11-13 07:53:12 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+362:11-13 07:53:12 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+363:11-13 07:53:12 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+364:11-13 07:53:12 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+365:11-13 07:53:20 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1684109295 from 1062461846@[群:590454333] '依旧神秘小面包'
+366:11-13 07:53:20 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+367:11-13 07:53:20 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+368:11-13 07:53:20 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+369:11-13 07:53:20 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+370:11-13 08:07:29 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.bot_offline]: {'time': 1794528449, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'bot_offline', 'user_id': 3427943187, 'tag': '下线通知', 'message': '你的账号当前登录已失效，请重新登录。'}
+371:11-13 08:07:33 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+=== ③NapCat日志掉线证据 ===
+日志: 
+=== ④restart日志08点后 ===
+11-13 11:20:48 [[33mwarn[39m] 
+11-13 11:20:48 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+11-13 11:22:51 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-13 11:22:51 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+11-13 11:22:51 [[33mwarn[39m] 
+11-13 11:22:51 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+=== ⑤07:53后用户是否还有入站尝试(全部08点后bot.log行数) ===
+08点后bot.log行数: 2
