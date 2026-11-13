@@ -1,80 +1,52 @@
-<<<task_285464.txt>>>
-===== 任务285464 11-13 17:25:31 =====
+<<<task_285465.txt>>>
+===== 任务285465 11-13 17:42:56 =====
 --- 命令 ---
-cd /root/bot/bot && timeout 220 /root/bot/venv/bin/python - <<'PYEOF' 2>&1 | grep -v "INFO\|SUCCESS"
-import asyncio, sys, nonebot
-nonebot.init()
-sys.path.insert(0, '/root/bot/bot')
-from dotenv import load_dotenv
-load_dotenv('/root/bot/bot/.env')  # 与正式进程同源
-import os
-assert os.getenv("OPENAI_API_KEY"), "密钥没加载"
-from plugins.ai_chat import _needs_fact, _web_snippets, call_llm
-
-async def e2e(question):
-    print()
-    print("===== 用户问:", question, "=====")
-    answer = await call_llm([{"role": "user", "content": question}])
-    print("第一答:", (answer or "")[:60])
-    if not _needs_fact(question):
-        print(">>> 判定: 非事实题,不搜索(照旧)")
-        return
-    print(">>> 判定: 事实题,触发搜索")
-    snip = await asyncio.to_thread(_web_snippets, question)
-    print(">>> 搜索: 抓到", len(snip), "字")
-    if snip:
-        print("线索首条:", snip[:80])
-        memo = ("内部备忘（绝不复述本段，也别提'搜索'这类字眼）：\n"
-                "以下是网上查到的线索，按相关度排好序。请直接采用第一条里的事实来回答，"
-                "别用你记忆里的旧版本；线索里没有的细节一个字都不要补，"
-                "宁可口吻含糊也别编。用阿萨尔的口吻说一句就够，别罗列线索：\n" + snip)
-        retry = await call_llm([{"role": "user", "content": question}], extra_system=memo)
-        print(">>> 最终答:", retry)
-        bad = [w for w in ["这我可说不准", "书上没记", "藏书窖"] if w in (retry or "")]
-        print(">>> 验收: " + ("含兜底话术[异常]:" + str(bad) if bad else "真实信息已吸收,无拖延话术 [PASS]"))
-    else:
-        print(">>> 搜索无果,走存疑分支")
-        memo = ("内部备忘：这一句问的是你没有把握的实事。你不知道确切答案。"
-                "下一句必须以「这我可说不准」开头，然后用自己的口吻说一句你确实不知道，别编。")
-        retry = await call_llm([{"role": "user", "content": question}], extra_system=memo)
-        print(">>> 最终答:", retry)
-
-async def main():
-    await e2e("齐豫是谁")
-    await e2e("邓丽君是谁")
-    await e2e("好")
-asyncio.run(main())
-PYEOF
-echo "===== 测试结束 ====="
+echo "==1 查17:34-17:37那两条详细介绍的日志=="
+sed -n '/11-13 17:3[4-7]/,$p' /root/bot.log | grep -E "17:3[4-7]" | grep -vE "will be handled|running complete" | head -25
+echo "==2 同步代码=="
+cd /root/bot && git pull --ff-only 2>&1 | tail -1 && git log --oneline -1
+md5sum /root/bot/bot/plugins/ai_chat.py
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo 编译通过
+echo "==3 重启大脑加载新代码=="
+pkill -f "venv/bin/python main.py"; sleep 12
+cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
+sleep 15
+pgrep -af "main.py" | head -1
+tail -3 /root/bot.log
 --- 输出 ---
-
-===== 用户问: 齐豫是谁 =====
-11-13 17:25:59 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
-11-13 17:26:08 [WARNING] plugins | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-第一答: 齐豫，这位在城中是出了名的歌者。她的歌声如同山涧的泉水，清冽而悠远，能洗净人的心灵。书上记载，她的《橄榄树》流传甚广，听
->>> 判定: 事实题,触发搜索
->>> 搜索: 抓到 116 字
-线索首条: - 齐豫 中国台湾女歌手、音乐人、慈善家
-- 资料:齐豫个人档案 - 影音娱乐 - 新浪网：“齐豫
-- 齐豫 - 明星档案 - 写真 - 图片 - 资料 - 照
-11-13 17:26:18 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
->>> 最终答: 齐豫是中国台湾的女歌手，以音乐见长。
->>> 验收: 真实信息已吸收,无拖延话术 [PASS]
-
-===== 用户问: 邓丽君是谁 =====
-11-13 17:26:33 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
-第一答: 这个名字我没听过，书上没记。
->>> 判定: 事实题,触发搜索
->>> 搜索: 抓到 137 字
-线索首条: - 邓丽君简介 - 邓丽君简介(中国)官方网站IOS/Android通用版 - 语文谜
-- 邓丽君 中国台湾女歌手、音乐家
-- 邓丽君(中国台湾歌唱家) - 3
-11-13 17:26:42 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
->>> 最终答: 邓丽君，中国台湾女歌手，1953年出生。
->>> 验收: 真实信息已吸收,无拖延话术 [PASS]
-
-===== 用户问: 好 =====
-11-13 17:26:46 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-第一答: 您有什么需要？
->>> 判定: 非事实题,不搜索(照旧)
-===== 测试结束 =====
+==1 查17:34-17:37那两条详细介绍的日志==
+11-13 17:34:07 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794562447, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+11-13 17:34:08 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794562448, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-13 17:34:08 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794562448, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-13 17:34:08 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 501779947 from 1561950850 '齐豫是谁'
+11-13 17:34:15 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794562452, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+11-13 17:34:20 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794562460, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-13 17:34:21 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-13 17:34:28 [INFO] ai_chat | [联网] 走搜狗抓到 3 条
+11-13 17:34:28 [INFO] ai_chat | [联网] 「齐豫是谁」检索到线索，重答一次
+11-13 17:34:29 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-13 17:34:33 [INFO] ai_chat | [核对·调试] ask='齐豫是谁' lead=False contra=False agree=False dodge=False ans='齐豫，中国台湾女歌手，音乐人，慈善家。'
+11-13 17:34:45 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794562485, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+11-13 17:34:48 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794562488, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-13 17:34:48 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794562488, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-13 17:34:49 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 520203136 from 1561950850 '详细一点介绍齐豫'
+11-13 17:34:52 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794562492, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+11-13 17:34:55 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-13 17:34:59 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794562499, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-13 17:35:05 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+11-13 17:35:14 [WARNING] ai_chat | [模型降级] glm-4-flash 调用失败(APITimeoutError)，尝试下一个
+11-13 17:35:30 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794562530, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+11-13 17:35:33 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794562532, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-13 17:35:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794562534, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-13 17:35:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1551234559 from 1561950850 '详细一点介绍齐豫'
+11-13 17:35:39 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794562538, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+==2 同步代码==
+ 1 file changed, 15 insertions(+), 5 deletions(-)
+461205e 坑104:重复拦截改判据制(答成30秒/答砸10秒放行重试)+API错误文本退出聊天进日志
+20f56daf616b3c8e9cbf0e85fe211d1b  /root/bot/bot/plugins/ai_chat.py
+编译通过
+==3 重启大脑加载新代码==
+8096 /root/bot/venv/bin/python main.py
+11-13 17:43:25 [INFO] uvicorn | 127.0.0.1:42396 - "WebSocket /onebot/v11/ws" [accepted]
+11-13 17:43:25 [INFO] websockets | connection open
+11-13 17:43:25 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
