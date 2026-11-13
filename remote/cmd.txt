@@ -1,20 +1,40 @@
-285444
-echo "=== 当前出口IP ==="
-IPNOW=$(timeout 10 curl -s --max-time 8 https://api.ipify.org || timeout 10 curl -s --max-time 8 http://members.3322.org/dyndns/getip || timeout 10 curl -s --max-time 8 https://ifconfig.me)
-echo "$IPNOW"
-echo "=== 部署IP记录仪(每小时一行) ==="
-cat > /root/ipwatch.sh << 'IPW'
+285445
+echo "=== ①NapCat/协议版本留痕 ==="
+grep -o '"version": *"[^"]*"' /root/Napcat/napcat/package.json 2>/dev/null | head -2
+cat /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null | python3 -c "import sys,json;d=json.load(sys.stdin);print('QQ框架版本:',d.get('version','?'))" 2>/dev/null
+echo "=== ②部署登录态巡检(每5分钟记录,踢号时刻+在线周期从此有账) ==="
+cat > /root/login_watch.sh << 'LW'
 #!/bin/bash
-# 出口IP记录仪:每小时记一行,掉线排查时可回溯IP变动
+# 登录态台账:每5分钟记一行logincheck结果,踢号时刻/在线时长/周期从此可回溯
+LAST=""
 while true; do
-  IP=$(timeout 10 curl -s --max-time 8 https://api.ipify.org 2>/dev/null || timeout 10 curl -s --max-time 8 http://members.3322.org/dyndns/getip 2>/dev/null || echo "查询失败")
-  echo "$(date '+%F %T') $IP" >> /root/ip.log
-  sleep 3600
+  S=$(bash /root/logincheck.sh 2>/dev/null | grep -oE "\[在线\]|\[掉线\]|\[未登录\]" | head -1)
+  T=$(date '+%F %T')
+  if [ "$S" != "$LAST" ]; then
+    echo "$T 状态变化: ${LAST:-初始} -> ${S:-未知}" >> /root/login_state.log
+    LAST="$S"
+  else
+    echo "$T $S" >> /root/login_state.log
+  fi
+  sleep 300
 done
-IPW
-chmod +x /root/ipwatch.sh
-setsid nohup /root/ipwatch.sh > /dev/null 2>&1 < /dev/null &
+LW
+chmod +x /root/login_watch.sh
+setsid nohup /root/login_watch.sh > /dev/null 2>&1 < /dev/null &
 sleep 3
-echo "=== 验证 ==="
-pgrep -f ipwatch.sh >/dev/null && echo "IP记录仪在跑" || echo "没起来"
-cat /root/ip.log 2>/dev/null
+pgrep -f login_watch.sh >/dev/null && echo "登录态巡检在跑" || echo "没起来"
+tail -2 /root/login_state.log 2>/dev/null
+echo "=== ③WS断连/闪断历史统计(bot.log) ==="
+grep -ac "closed by peer" /root/bot.log
+grep -a "closed by peer" /root/bot.log | tail -5
+echo "=== ④消息量基线(今日发送条数) ==="
+grep -ac "send_msg\|发送" /root/bot.log 2>/dev/null || true
+grep -ac "message.group.normal\|message.private.friend" /root/bot.log
+echo "=== ⑤NapCat自动登录配置(quick login能否自愈) ==="
+ls /root/Napcat/napcat/config/ 2>/dev/null | head -8
+grep -l "autoLogin\|quickLogin" /root/Napcat/napcat/config/*.json 2>/dev/null | head -3
+grep -o '"autoLogin[^,]*' /root/Napcat/napcat/config/onebot11_3427943187.json /root/Napcat/napcat/config/webui.json 2>/dev/null | head -5
+echo "=== ⑥记录仪全家福清点 ==="
+for f in tick.log ip.log login_state.log remote_ctl.log bot.log napcat-restart.log; do
+  [ -f /root/$f ] && echo "/root/$f 已有 $(wc -l < /root/$f) 行" || echo "/root/$f 待积累"
+done
