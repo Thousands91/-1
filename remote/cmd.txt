@@ -1,7 +1,5 @@
-285467
-cd /root/bot && git log --oneline -1
-md5sum /root/bot/bot/plugins/ai_chat.py
-grep -c "坑104" /root/bot/bot/plugins/ai_chat.py
-grep -n "_DUP: Dict" /root/bot/bot/plugins/ai_chat.py
-pgrep -af "main.py" | head -1
-tail -1 /root/bot.log | cut -c1-120
+285468
+echo "==17:42之后的联网与降级日志=="
+grep -n "联网\|灯灭\|存疑\|模型降级\|冷却" /root/bot.log | tail -25
+echo "==17:43后消息轨迹=="
+grep "17:4[3-9]\|17:5[0-3]" /root/bot.log | grep -E "message.private|message.group" | cut -c1-140 | tail -10
