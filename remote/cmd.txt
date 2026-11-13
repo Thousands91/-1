@@ -1,8 +1,9 @@
-285447
-echo "=== 登录态权威判定 ==="
-bash /root/logincheck.sh 2>/dev/null | head -4
-echo "=== 最近消息 ==="
-grep -a "message.private.friend\|message.group" /root/bot.log | tail -2 | awk '{print $1,$2,$NF}'
-echo "=== WS连接 ==="
-grep -a "WebSocket\|连接" /root/bot.log | tail -1
-date "+现在: %T"
+285448
+echo "=== 最近10条普通聊天的处理耗时(入站→matcher完成) ==="
+grep -aE "message.(private.friend|group.normal)|Event will be handled.*ai_chat|ai_chat.*complete" /root/bot.log | tail -30 | awk '{print $1,$2,$NF}' | head -30
+echo "=== ai_chat的模型与参数 ==="
+grep -n "AI_MODEL\|max_tokens\|thinking\|temperature" /root/bot/bot/plugins/ai_chat.py | head -10
+echo "=== ai_chat里AI调用处 ==="
+grep -n "chat/completions\|_ai_post\|aiohttp\|timeout" /root/bot/bot/plugins/ai_chat.py | head -10
+echo "=== 现在时间 ==="
+date "+%T"
