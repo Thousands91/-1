@@ -1,5 +1,2 @@
-285475
-echo "==18:23以来的联网/降级/存疑日志=="
-grep -n "联网\|存疑\|模型降级\|灯灭" /root/bot.log | tail -25
-echo "==18:35后私聊消息=="
-grep "18:3[5-9]" /root/bot.log | grep "message.private" | cut -c1-130 | tail -8
+285476
+sed -n '1709,1760p' /root/bot.log | cut -c1-200
