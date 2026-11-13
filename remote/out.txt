@@ -1,45 +1,62 @@
-<<<task_285478.txt>>>
-===== 任务285478 11-13 18:52:10 =====
+<<<task_285479.txt>>>
+===== 任务285479 11-14 06:42:50 =====
 --- 命令 ---
-cd /root/bot/bot && timeout 150 /root/bot/venv/bin/python - <<'PYEOF' 2>&1 | grep -vE "INFO|SUCCESS"
-import asyncio, sys, re, nonebot
-nonebot.init()
-sys.path.insert(0, '/root/bot/bot')
-from dotenv import load_dotenv
-load_dotenv('/root/bot/bot/.env')
-from plugins.ai_chat import call_llm, _DODGE_RE
-
-SNIP = ("- 齐豫 中国台湾女歌手、音乐人、慈善家\n"
-        "- 资料:齐豫个人档案:本名齐豫,出生地台中,职业歌手\n"
-        "- 齐豫:国籍中国,地区台湾,职业歌手")
-
-async def t():
-    # 复刻18:39:to_model带"书上没记"历史惯性
-    to_model = [
-        {"role": "system", "content": "你是阿萨尔,城南旧书店的老板,说话文气带书卷气,称呼对方为您。"},
-        {"role": "user", "content": "齐豫是谁"},
-        {"role": "assistant", "content": "书上没记,不敢妄言。"},
-        {"role": "user", "content": "齐豫是谁"},
-    ]
-    _sys_only = [m for m in to_model if m.get("role") == "system"]
-    _retry_msgs = _sys_only + [{"role": "user", "content": "齐豫是谁"}]
-    r1 = await call_llm(_retry_msgs, extra_system=(
-        "内部备忘（绝不复述本段，也别提'搜索'、'查资料'这类字眼）：\n"
-        "以下是网上查到的线索，按相关度排好序。请直接采用第一条里的事实来回答，"
-        "别用你记忆里的旧版本；线索里没有的细节一个字都不要补，"
-        "宁可口吻含糊也别编。用阿萨尔的口吻说一句就够，别罗列线索：\n" + SNIP))
-    print("干净重答:", r1)
-    print("污染检查:", "被污染,触发重试" if _DODGE_RE.search(r1 or "") else "干净,PASS")
-    if r1 and _DODGE_RE.search(r1):
-        r2 = await call_llm(_retry_msgs, extra_system=(
-            "内部备忘（绝不复述）：你刚才那句在装不知道，但其实网上查到了确凿线索，必须采用：\n"
-            + SNIP + "\n用阿萨尔的口吻，把线索里的事实说进回答里，一句就够。"))
-        print("重试后:", r2, "|", "PASS" if not _DODGE_RE.search(r2 or "") else "仍污染")
-asyncio.run(t())
-PYEOF
-echo ======结束
+echo "==1 登录态(最新)=="
+bash /root/logincheck.sh 2>/dev/null | tail -5
+echo "==2 login_state.log 尾部=="
+tail -8 /root/login_state.log 2>/dev/null
+echo "==3 tick.log 有无断档(冻结温度计)=="
+tail -3 /root/tick.log 2>/dev/null
+awk 'NR>1{split($2,t,":"); s=t[1]*3600+t[2]*60+t[3]; if(prev && s-prev>90) print "断档:", prevline, "->", $0} {prev=s; prevline=$0}' /root/tick.log 2>/dev/null | tail -5
+echo "==4 进程=="
+pgrep -af "main.py|opt/QQ" | head -4
+echo "==5 昨晚以来日志=="
+grep -n "18:5[5-9]\|19:\|2[0-3]:\|^[0-9]*:11-14" /root/bot.log | grep -E "联网|灯灭|模型降级|掉线|offline|断开|connected" | tail -12
+echo "==6 bot.log最后修改时间与最新5行=="
+ls -la /root/bot.log | awk '{print $6,$7,$8}'
+tail -5 /root/bot.log | cut -c1-130
 --- 输出 ---
-11-13 18:52:25 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-干净重答: 歌手，中国台湾的。
-污染检查: 干净,PASS
-======结束
+==1 登录态(最新)==
+=== 登录状态（权威判定）===
+[未登录] 当前没有有效会话
+阶段: reconnecting
+最近错误: [SelfOffline] 账号状态变更为离线（未收到 KickedOffLine 通知）
+==2 login_state.log 尾部==
+2026-11-14 01:23:57 [在线]
+2026-11-14 01:28:58 [在线]
+2026-11-14 01:33:59 [在线]
+2026-11-14 01:39:00 [在线]
+2026-11-14 01:44:00 [在线]
+2026-11-14 01:49:01 [在线]
+2026-11-14 01:54:02 [在线]
+2026-11-14 06:42:47 状态变化: [在线] -> [未登录]
+==3 tick.log 有无断档(冻结温度计)==
+2026-11-14 01:56:45
+2026-11-14 01:57:45
+2026-11-14 06:42:47
+断档: 2026-11-14 01:57:45 -> 2026-11-14 06:42:47
+==4 进程==
+16164 /root/bot/venv/bin/python main.py
+24978 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+24991 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+24993 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+==5 昨晚以来日志==
+2409:11-13 22:25:54 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+2410:11-13 22:26:03 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+2495:11-13 22:29:40 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+2511:11-13 22:30:24 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
+2513:11-13 22:30:37 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+2528:11-13 22:31:09 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+2530:11-13 22:31:22 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+2545:11-13 22:32:00 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+2546:11-13 22:32:08 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+2563:11-13 22:33:32 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+2564:11-13 22:33:40 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+2580:11-13 22:34:59 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+==6 bot.log最后修改时间与最新5行==
+Nov 14 06:42
+11-14 06:42:49 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-14 06:42:49 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-14 06:42:49 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-14 06:42:49 [INFO] ai_chat | [积压跳过] 消息已延迟745秒，不回：'现在呢？'
+11-14 06:42:49 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
