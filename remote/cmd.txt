@@ -1,15 +1,7 @@
-285479
-echo "==1 登录态(最新)=="
-bash /root/logincheck.sh 2>/dev/null | tail -5
-echo "==2 login_state.log 尾部=="
-tail -8 /root/login_state.log 2>/dev/null
-echo "==3 tick.log 有无断档(冻结温度计)=="
-tail -3 /root/tick.log 2>/dev/null
-awk 'NR>1{split($2,t,":"); s=t[1]*3600+t[2]*60+t[3]; if(prev && s-prev>90) print "断档:", prevline, "->", $0} {prev=s; prevline=$0}' /root/tick.log 2>/dev/null | tail -5
-echo "==4 进程=="
-pgrep -af "main.py|opt/QQ" | head -4
-echo "==5 昨晚以来日志=="
-grep -n "18:5[5-9]\|19:\|2[0-3]:\|^[0-9]*:11-14" /root/bot.log | grep -E "联网|灯灭|模型降级|掉线|offline|断开|connected" | tail -12
-echo "==6 bot.log最后修改时间与最新5行=="
-ls -la /root/bot.log | awk '{print $6,$7,$8}'
-tail -5 /root/bot.log | cut -c1-130
+285480
+sleep 60
+echo "==登录态复查=="
+bash /root/logincheck.sh 2>/dev/null | tail -6
+echo "==NapCat最近日志=="
+tail -15 /root/napcat.log 2>/dev/null | cut -c1-140
+grep -E "11-14 06:4[2-9]" /root/bot.log | grep -E "connect|offline|WebSocket|login" | tail -6
