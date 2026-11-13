@@ -1,38 +1,15 @@
-285478
-cd /root/bot/bot && timeout 150 /root/bot/venv/bin/python - <<'PYEOF' 2>&1 | grep -vE "INFO|SUCCESS"
-import asyncio, sys, re, nonebot
-nonebot.init()
-sys.path.insert(0, '/root/bot/bot')
-from dotenv import load_dotenv
-load_dotenv('/root/bot/bot/.env')
-from plugins.ai_chat import call_llm, _DODGE_RE
-
-SNIP = ("- 齐豫 中国台湾女歌手、音乐人、慈善家\n"
-        "- 资料:齐豫个人档案:本名齐豫,出生地台中,职业歌手\n"
-        "- 齐豫:国籍中国,地区台湾,职业歌手")
-
-async def t():
-    # 复刻18:39:to_model带"书上没记"历史惯性
-    to_model = [
-        {"role": "system", "content": "你是阿萨尔,城南旧书店的老板,说话文气带书卷气,称呼对方为您。"},
-        {"role": "user", "content": "齐豫是谁"},
-        {"role": "assistant", "content": "书上没记,不敢妄言。"},
-        {"role": "user", "content": "齐豫是谁"},
-    ]
-    _sys_only = [m for m in to_model if m.get("role") == "system"]
-    _retry_msgs = _sys_only + [{"role": "user", "content": "齐豫是谁"}]
-    r1 = await call_llm(_retry_msgs, extra_system=(
-        "内部备忘（绝不复述本段，也别提'搜索'、'查资料'这类字眼）：\n"
-        "以下是网上查到的线索，按相关度排好序。请直接采用第一条里的事实来回答，"
-        "别用你记忆里的旧版本；线索里没有的细节一个字都不要补，"
-        "宁可口吻含糊也别编。用阿萨尔的口吻说一句就够，别罗列线索：\n" + SNIP))
-    print("干净重答:", r1)
-    print("污染检查:", "被污染,触发重试" if _DODGE_RE.search(r1 or "") else "干净,PASS")
-    if r1 and _DODGE_RE.search(r1):
-        r2 = await call_llm(_retry_msgs, extra_system=(
-            "内部备忘（绝不复述）：你刚才那句在装不知道，但其实网上查到了确凿线索，必须采用：\n"
-            + SNIP + "\n用阿萨尔的口吻，把线索里的事实说进回答里，一句就够。"))
-        print("重试后:", r2, "|", "PASS" if not _DODGE_RE.search(r2 or "") else "仍污染")
-asyncio.run(t())
-PYEOF
-echo ======结束
+285479
+echo "==1 登录态(最新)=="
+bash /root/logincheck.sh 2>/dev/null | tail -5
+echo "==2 login_state.log 尾部=="
+tail -8 /root/login_state.log 2>/dev/null
+echo "==3 tick.log 有无断档(冻结温度计)=="
+tail -3 /root/tick.log 2>/dev/null
+awk 'NR>1{split($2,t,":"); s=t[1]*3600+t[2]*60+t[3]; if(prev && s-prev>90) print "断档:", prevline, "->", $0} {prev=s; prevline=$0}' /root/tick.log 2>/dev/null | tail -5
+echo "==4 进程=="
+pgrep -af "main.py|opt/QQ" | head -4
+echo "==5 昨晚以来日志=="
+grep -n "18:5[5-9]\|19:\|2[0-3]:\|^[0-9]*:11-14" /root/bot.log | grep -E "联网|灯灭|模型降级|掉线|offline|断开|connected" | tail -12
+echo "==6 bot.log最后修改时间与最新5行=="
+ls -la /root/bot.log | awk '{print $6,$7,$8}'
+tail -5 /root/bot.log | cut -c1-130
