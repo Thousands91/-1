@@ -1,18 +1,54 @@
-<<<task_285440.txt>>>
-===== 任务285440 11-13 03:14:10 =====
+<<<task_285441.txt>>>
+===== 任务285441 11-13 11:22:11 =====
 --- 命令 ---
-cd /root/bot && git pull 2>&1 | tail -2
-git log --oneline -1
-pkill -f "venv/bin/python main.py"; sleep 2
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 < /dev/null &
-sleep 12
-grep -ac "Succeeded to load plugin" /root/bot.log
-grep "_R18_EXCLUDE = " /root/bot/bot/plugins/image_search_multisource.py
-pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑已拉起 || echo 大脑没起来
+date "+现在: %F %T"
+echo "=== ①登录态权威判定 ==="
+bash /root/logincheck.sh 2>/dev/null | head -5
+echo "=== ②bot.log最后写入时间与末笔消息 ==="
+stat -c "%y" /root/bot.log
+grep -a "message.private.friend\|message.group" /root/bot.log | tail -3 | awk '{print $1,$2,$NF}'
+echo "=== ③tick秒表断档(1分钟精度,断档=冻结窗口) ==="
+tail -1 /root/tick.log
+python3 -c "
+import re
+lines=[l.strip() for l in open('/root/tick.log') if l.strip()]
+print('秒表总行数:',len(lines),'首行:',lines[0])
+from datetime import datetime
+gaps=[]
+prev=None
+for l in lines:
+    t=datetime.strptime(l,'%Y-%m-%d %H:%M:%S')
+    if prev and (t-prev).total_seconds()>180:
+        gaps.append((prev,t,(t-prev).total_seconds()/60))
+    prev=t
+print('>3分钟断档:')
+for a,b,m in gaps[-8:]: print(' ',a,'->',b,f'{m:.0f}分钟')
+"
+echo "=== ④心跳尾部 ==="
+grep -a "v5-git" /root/remote_ctl.log | tail -3
+echo "=== ⑤进程 ==="
+pgrep -f "main.py" >/dev/null && echo 大脑在 || echo 大脑不在
+pgrep -f "opt/QQ/qq" >/dev/null && echo NapCat在 || echo NapCat不在
 --- 输出 ---
- bot/plugins/image_search_multisource.py | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
-2fd4698 色图:排除表只留guro
-10
-_R18_EXCLUDE = ["-guro"]
-大脑已拉起
+现在: 2026-11-13 11:22:11
+=== ①登录态权威判定 ===
+=== 登录状态（权威判定）===
+[未登录] 当前没有有效会话
+阶段: waiting_qrcode
+最近错误: 无
+=== ②bot.log最后写入时间与末笔消息 ===
+2026-11-13 08:07:33.590000000 +0800
+11-13 07:50:43 '早啊早啊早啊早啊早啊早啊早啊'
+11-13 07:53:11 '[image:summary=,file=359EB92E392FE3EDC6B3D1D4E3AEA843.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQoevhK...,file_size=1273441]'
+11-13 07:53:20 '依旧神秘小面包'
+=== ③tick秒表断档(1分钟精度,断档=冻结窗口) ===
+2026-11-13 11:21:22
+秒表总行数: 545 首行: 2026-11-13 02:16:52
+>3分钟断档:
+=== ④心跳尾部 ===
+[11-13 10:45] 心跳:循环正常(v5-git,LAST=285440)
+[11-13 10:58] 心跳:循环正常(v5-git,LAST=285440)
+[11-13 11:11] 心跳:循环正常(v5-git,LAST=285440)
+=== ⑤进程 ===
+大脑在
+NapCat在
