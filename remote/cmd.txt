@@ -1,9 +1,7 @@
-285466
-echo "==详细一点的日志=="
-grep -n "详细一点" /root/bot.log | tail -6
-echo "==17:35-17:38的处理轨迹(去超长行)=="
-grep "17:3[5-8]" /root/bot.log | grep -vE "will be handled|running complete|input_status" | cut -c1-150 | head -20
-echo "==进程与启动时刻=="
+285467
+cd /root/bot && git log --oneline -1
+md5sum /root/bot/bot/plugins/ai_chat.py
+grep -c "坑104" /root/bot/bot/plugins/ai_chat.py
+grep -n "_DUP: Dict" /root/bot/bot/plugins/ai_chat.py
 pgrep -af "main.py" | head -1
-ps -o pid,lstart,cmd -p $(pgrep -f "venv/bin/python main.py" | head -1) 2>/dev/null | tail -1
-tail -2 /root/bot.log | cut -c1-150
+tail -1 /root/bot.log | cut -c1-120
