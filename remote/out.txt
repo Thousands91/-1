@@ -1,40 +1,17 @@
-<<<task_285461.txt>>>
-===== 任务285461 11-13 16:48:56 =====
+<<<task_285462.txt>>>
+===== 任务285462 11-13 16:50:52 =====
 --- 命令 ---
-echo "==1 代码同步=="
-cd /root/bot && git pull --ff-only 2>&1 | tail -1 && git log --oneline -1
-md5sum /root/bot/bot/plugins/ai_chat.py
-echo "==2 语法校验=="
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo 编译通过
-echo "==3 真链路实测:直接调搜索函数=="
-cd /root/bot && timeout 60 /root/bot/venv/bin/python - <<'PYEOF' 2>&1 | tail -8
-import sys, nonebot
-nonebot.init()
-sys.path.insert(0, '/root/bot/bot')
-from plugins.ai_chat import _web_snippets, _needs_fact
-print("needs_fact('齐豫是谁') =", _needs_fact('齐豫是谁'))
-print("needs_fact('好') =", _needs_fact('好'))
-s = _web_snippets('齐豫是谁')
-print("搜索结果长度:", len(s))
-print(s[:200])
-PYEOF
-echo "==4 大脑无需重启确认=="
-pgrep -af "main.py" | head -1
+echo "==重启大脑加载新代码=="
+pkill -f "venv/bin/python main.py"; sleep 12
+cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 &
+sleep 15
+pgrep -af "main.py" | head -2
+tail -5 /root/bot.log
 --- 输出 ---
-==1 代码同步==
- 1 file changed, 4 insertions(+), 1 deletion(-)
-8e2a9ff 坑103:事实题长度门槛拦死4字短问(齐豫是谁从未触发搜索),带强事实特征的短句放行
-70189740a233746185f971c774903128  /root/bot/bot/plugins/ai_chat.py
-==2 语法校验==
-编译通过
-==3 真链路实测:直接调搜索函数==
-11-13 16:49:05 [INFO] nonebot | Current Env: prod
-needs_fact('齐豫是谁') = True
-needs_fact('好') = False
-11-13 16:49:13 [INFO] plugins | [联网] 走搜狗抓到 3 条
-搜索结果长度: 138
-- 资料:齐豫个人档案 - 影音娱乐 - 新浪网：本名:齐豫 英文名:CHYI 出生地:台中 银屑病
-- 齐豫 中国台湾女歌手、音乐人、慈善家
-- 齐豫 - 明星档案 - 写真 - 图片 - 资料 - 照片 - 中国娱乐网：齐豫 国籍:中国 地区:台湾 籍贯:台中 职业:歌手
-==4 大脑无需重启确认==
-14801 /root/bot/venv/bin/python main.py
+==重启大脑加载新代码==
+32685 /root/bot/venv/bin/python main.py
+11-13 16:51:15 [INFO] uvicorn | Application startup complete.
+11-13 16:51:15 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+11-13 16:51:18 [INFO] uvicorn | 127.0.0.1:60426 - "WebSocket /onebot/v11/ws" [accepted]
+11-13 16:51:18 [INFO] websockets | connection open
+11-13 16:51:18 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
