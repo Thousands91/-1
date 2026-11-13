@@ -1,9 +1,38 @@
-285477
-cd /root/bot && git pull --ff-only 2>&1 | tail -1 && git log --oneline -1
-md5sum /root/bot/bot/plugins/ai_chat.py
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo 编译通过
-pkill -f "venv/bin/python main.py"; sleep 12
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 15
-pgrep -af "main.py" | head -1
-tail -2 /root/bot.log | cut -c1-110
+285478
+cd /root/bot/bot && timeout 150 /root/bot/venv/bin/python - <<'PYEOF' 2>&1 | grep -vE "INFO|SUCCESS"
+import asyncio, sys, re, nonebot
+nonebot.init()
+sys.path.insert(0, '/root/bot/bot')
+from dotenv import load_dotenv
+load_dotenv('/root/bot/bot/.env')
+from plugins.ai_chat import call_llm, _DODGE_RE
+
+SNIP = ("- 齐豫 中国台湾女歌手、音乐人、慈善家\n"
+        "- 资料:齐豫个人档案:本名齐豫,出生地台中,职业歌手\n"
+        "- 齐豫:国籍中国,地区台湾,职业歌手")
+
+async def t():
+    # 复刻18:39:to_model带"书上没记"历史惯性
+    to_model = [
+        {"role": "system", "content": "你是阿萨尔,城南旧书店的老板,说话文气带书卷气,称呼对方为您。"},
+        {"role": "user", "content": "齐豫是谁"},
+        {"role": "assistant", "content": "书上没记,不敢妄言。"},
+        {"role": "user", "content": "齐豫是谁"},
+    ]
+    _sys_only = [m for m in to_model if m.get("role") == "system"]
+    _retry_msgs = _sys_only + [{"role": "user", "content": "齐豫是谁"}]
+    r1 = await call_llm(_retry_msgs, extra_system=(
+        "内部备忘（绝不复述本段，也别提'搜索'、'查资料'这类字眼）：\n"
+        "以下是网上查到的线索，按相关度排好序。请直接采用第一条里的事实来回答，"
+        "别用你记忆里的旧版本；线索里没有的细节一个字都不要补，"
+        "宁可口吻含糊也别编。用阿萨尔的口吻说一句就够，别罗列线索：\n" + SNIP))
+    print("干净重答:", r1)
+    print("污染检查:", "被污染,触发重试" if _DODGE_RE.search(r1 or "") else "干净,PASS")
+    if r1 and _DODGE_RE.search(r1):
+        r2 = await call_llm(_retry_msgs, extra_system=(
+            "内部备忘（绝不复述）：你刚才那句在装不知道，但其实网上查到了确凿线索，必须采用：\n"
+            + SNIP + "\n用阿萨尔的口吻，把线索里的事实说进回答里，一句就够。"))
+        print("重试后:", r2, "|", "PASS" if not _DODGE_RE.search(r2 or "") else "仍污染")
+asyncio.run(t())
+PYEOF
+echo ======结束
