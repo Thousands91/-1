@@ -1,10 +1,14 @@
-<<<task_285463.txt>>>
-===== 任务285463 11-13 17:18:08 =====
+<<<task_285464.txt>>>
+===== 任务285464 11-13 17:25:31 =====
 --- 命令 ---
 cd /root/bot/bot && timeout 220 /root/bot/venv/bin/python - <<'PYEOF' 2>&1 | grep -v "INFO\|SUCCESS"
 import asyncio, sys, nonebot
 nonebot.init()
 sys.path.insert(0, '/root/bot/bot')
+from dotenv import load_dotenv
+load_dotenv('/root/bot/bot/.env')  # 与正式进程同源
+import os
+assert os.getenv("OPENAI_API_KEY"), "密钥没加载"
 from plugins.ai_chat import _needs_fact, _web_snippets, call_llm
 
 async def e2e(question):
@@ -45,19 +49,32 @@ echo "===== 测试结束 ====="
 --- 输出 ---
 
 ===== 用户问: 齐豫是谁 =====
-Traceback (most recent call last):
-  File "<stdin>", line 38, in <module>
-  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
-    return loop.run_until_complete(main)
-  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "<stdin>", line 35, in main
-  File "<stdin>", line 9, in e2e
-  File "/root/bot/bot/plugins/ai_chat.py", line 2154, in call_llm
-    client = AsyncOpenAI(api_key=API_KEY, base_url=BASE_URL,
-  File "/root/bot/venv/lib/python3.10/site-packages/openai/_client.py", line 850, in __init__
-    return async__init__(
-  File "/root/bot/venv/lib/python3.10/site-packages/openai/lib/_client_auth.py", line 665, in async__init__
-    raise _sdk_client.OpenAIError(
-openai.OpenAIError: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable.
+11-13 17:25:59 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
+11-13 17:26:08 [WARNING] plugins | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+第一答: 齐豫，这位在城中是出了名的歌者。她的歌声如同山涧的泉水，清冽而悠远，能洗净人的心灵。书上记载，她的《橄榄树》流传甚广，听
+>>> 判定: 事实题,触发搜索
+>>> 搜索: 抓到 116 字
+线索首条: - 齐豫 中国台湾女歌手、音乐人、慈善家
+- 资料:齐豫个人档案 - 影音娱乐 - 新浪网：“齐豫
+- 齐豫 - 明星档案 - 写真 - 图片 - 资料 - 照
+11-13 17:26:18 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+>>> 最终答: 齐豫是中国台湾的女歌手，以音乐见长。
+>>> 验收: 真实信息已吸收,无拖延话术 [PASS]
+
+===== 用户问: 邓丽君是谁 =====
+11-13 17:26:33 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
+第一答: 这个名字我没听过，书上没记。
+>>> 判定: 事实题,触发搜索
+>>> 搜索: 抓到 137 字
+线索首条: - 邓丽君简介 - 邓丽君简介(中国)官方网站IOS/Android通用版 - 语文谜
+- 邓丽君 中国台湾女歌手、音乐家
+- 邓丽君(中国台湾歌唱家) - 3
+11-13 17:26:42 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+>>> 最终答: 邓丽君，中国台湾女歌手，1953年出生。
+>>> 验收: 真实信息已吸收,无拖延话术 [PASS]
+
+===== 用户问: 好 =====
+11-13 17:26:46 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+第一答: 您有什么需要？
+>>> 判定: 非事实题,不搜索(照旧)
 ===== 测试结束 =====
