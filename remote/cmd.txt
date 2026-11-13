@@ -1,21 +1,5 @@
-285458
-echo "==1 代码更新到最新=="
-cd /root/bot && git pull --ff-only 2>&1 | tail -2 && git log --oneline -1
-grep -c "坑102补录" /root/bot/bot/requirements.txt
-echo "==2 补装httpx=="
-export PYTHONPATH=/data/data/com.termux/files/usr/lib/python3/dist-packages
-/root/bot/venv/bin/python -m pip install -q httpx -i https://pypi.tuna.tsinghua.edu.cn/simple 2>&1 | tail -2
-/root/bot/venv/bin/python -c "import httpx; print('httpx OK', httpx.__version__)"
-echo "==3 表情识别链路实测（不启bot,直接函数级）=="
-/root/bot/venv/bin/python - <<'PYEOF'
-import asyncio, sys
-sys.path.insert(0, '/root/bot/bot')
-async def t():
-    import httpx
-    async with httpx.AsyncClient(timeout=10, follow_redirects=True) as cli:
-        r = await cli.get("https://www.baidu.com/img/flexible/logo/pc/result.png")
-    print("下载测试:", r.status_code, len(r.content), "bytes")
-asyncio.run(t())
-PYEOF
-echo "==4 进程无需重启确认=="
-pgrep -af "main.py" | head -2
+285459
+echo "==16:40前后bot日志=="
+grep -n "联网\|搜索\|sogou\|baidu\|齐豫\|检索" /root/bot.log | tail -30
+echo "==最近40行=="
+tail -40 /root/bot.log
