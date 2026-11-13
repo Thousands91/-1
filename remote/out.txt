@@ -1,62 +1,29 @@
-<<<task_285445.txt>>>
-===== 任务285445 11-13 11:41:29 =====
+<<<task_285446.txt>>>
+===== 任务285446 11-13 11:57:18 =====
 --- 命令 ---
-echo "=== ①NapCat/协议版本留痕 ==="
-grep -o '"version": *"[^"]*"' /root/Napcat/napcat/package.json 2>/dev/null | head -2
-cat /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null | python3 -c "import sys,json;d=json.load(sys.stdin);print('QQ框架版本:',d.get('version','?'))" 2>/dev/null
-echo "=== ②部署登录态巡检(每5分钟记录,踢号时刻+在线周期从此有账) ==="
-cat > /root/login_watch.sh << 'LW'
-#!/bin/bash
-# 登录态台账:每5分钟记一行logincheck结果,踢号时刻/在线时长/周期从此可回溯
-LAST=""
-while true; do
-  S=$(bash /root/logincheck.sh 2>/dev/null | grep -oE "\[在线\]|\[掉线\]|\[未登录\]" | head -1)
-  T=$(date '+%F %T')
-  if [ "$S" != "$LAST" ]; then
-    echo "$T 状态变化: ${LAST:-初始} -> ${S:-未知}" >> /root/login_state.log
-    LAST="$S"
-  else
-    echo "$T $S" >> /root/login_state.log
-  fi
-  sleep 300
-done
-LW
-chmod +x /root/login_watch.sh
-setsid nohup /root/login_watch.sh > /dev/null 2>&1 < /dev/null &
-sleep 3
-pgrep -f login_watch.sh >/dev/null && echo "登录态巡检在跑" || echo "没起来"
-tail -2 /root/login_state.log 2>/dev/null
-echo "=== ③WS断连/闪断历史统计(bot.log) ==="
-grep -ac "closed by peer" /root/bot.log
-grep -a "closed by peer" /root/bot.log | tail -5
-echo "=== ④消息量基线(今日发送条数) ==="
-grep -ac "send_msg\|发送" /root/bot.log 2>/dev/null || true
-grep -ac "message.group.normal\|message.private.friend" /root/bot.log
-echo "=== ⑤NapCat自动登录配置(quick login能否自愈) ==="
-ls /root/Napcat/napcat/config/ 2>/dev/null | head -8
-grep -l "autoLogin\|quickLogin" /root/Napcat/napcat/config/*.json 2>/dev/null | head -3
-grep -o '"autoLogin[^,]*' /root/Napcat/napcat/config/onebot11_3427943187.json /root/Napcat/napcat/config/webui.json 2>/dev/null | head -5
-echo "=== ⑥记录仪全家福清点 ==="
-for f in tick.log ip.log login_state.log remote_ctl.log bot.log napcat-restart.log; do
-  [ -f /root/$f ] && echo "/root/$f 已有 $(wc -l < /root/$f) 行" || echo "/root/$f 待积累"
-done
+echo "=== 四进程现状 ==="
+pgrep -f "main.py" >/dev/null && echo 大脑在 || echo 大脑不在
+pgrep -f "opt/QQ/qq" >/dev/null && echo NapCat在 || echo NapCat不在
+pgrep -f remote_ctl >/dev/null && echo 遥控循环在 || echo 遥控循环不在
+pgrep -f tick.sh >/dev/null && echo 秒表在 || echo 秒表不在
+pgrep -f ipwatch.sh >/dev/null && echo IP记录仪在 || echo IP记录仪不在
+pgrep -f login_watch.sh >/dev/null && echo 登录巡检在 || echo 登录巡检不在
+echo "=== NapCat是不是在等扫码 ==="
+bash /root/logincheck.sh 2>/dev/null | head -4
+echo "=== NapCat进程详情 ==="
+ps -o pid,etime,cmd -p $(pgrep -f "opt/QQ/qq" | head -1) 2>/dev/null | tail -1 | cut -c1-80
 --- 输出 ---
-=== ①NapCat/协议版本留痕 ===
-QQ框架版本: 3.2.34-53644
-=== ②部署登录态巡检(每5分钟记录,踢号时刻+在线周期从此有账) ===
-登录态巡检在跑
-2026-11-13 11:41:30 状态变化: 初始 -> [未登录]
-=== ③WS断连/闪断历史统计(bot.log) ===
-1
-11-13 08:07:33 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
-=== ④消息量基线(今日发送条数) ===
-0
-28
-=== ⑤NapCat自动登录配置(quick login能否自愈) ===
-=== ⑥记录仪全家福清点 ===
-/root/tick.log 已有 565 行
-/root/ip.log 已有 1 行
-/root/login_state.log 已有 1 行
-/root/remote_ctl.log 已有 6986 行
-/root/bot.log 已有 371 行
-/root/napcat-restart.log 已有 18581 行
+=== 四进程现状 ===
+大脑在
+NapCat在
+遥控循环在
+秒表在
+IP记录仪在
+登录巡检在
+=== NapCat是不是在等扫码 ===
+=== 登录状态（权威判定）===
+[未登录] 当前没有有效会话
+阶段: waiting_qrcode
+最近错误: 无
+=== NapCat进程详情 ===
+ 7991       00:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandb
