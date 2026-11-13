@@ -1,20 +1,25 @@
-<<<task_285469.txt>>>
-===== 任务285469 11-13 18:02:20 =====
+<<<task_285470.txt>>>
+===== 任务285470 11-13 18:03:56 =====
 --- 命令 ---
-cd /root/bot && git pull --ff-only 2>&1 | tail -1 && git log --oneline -1
-md5sum /root/bot/bot/plugins/ai_chat.py
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo 编译通过
-pkill -f "venv/bin/python main.py"; sleep 12
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 15
-pgrep -af "main.py" | head -1
-tail -3 /root/bot.log | cut -c1-120
+cd /root/bot/bot && timeout 100 /root/bot/venv/bin/python - <<'PYEOF' 2>&1 | grep -vE "INFO|SUCCESS"
+import time, sys, nonebot
+nonebot.init()
+sys.path.insert(0, '/root/bot/bot')
+from dotenv import load_dotenv
+load_dotenv('/root/bot/bot/.env')
+from plugins.ai_chat import _fact_query, _web_snippets
+# 追问接力验证
+print("首问:", _fact_query("齐豫是谁", 999, time.time()))
+print("追问:", _fact_query("详细一点介绍齐豫", 999, time.time() + 5))
+# 真搜(单源收紧后总时长应<16s)
+t0 = time.time()
+s = _web_snippets("齐豫 是谁")
+print("搜索耗时 %.1fs, 抓到 %d 字" % (time.time() - t0, len(s)))
+print(s[:100])
+PYEOF
+echo ======结束
 --- 输出 ---
- 1 file changed, 29 insertions(+), 8 deletions(-)
-8d47fc3 坑105:追问式事实题接力(15分钟内沿用上次查询)+单源超时收紧(搜狗8s/百度6s)+外层14->16s;回滚报错文案(用户拍板保留技术细节)
-44b13849e8875e12994a0d6ef79ca4bc  /root/bot/bot/plugins/ai_chat.py
-编译通过
-10589 /root/bot/venv/bin/python main.py
-11-13 18:02:50 [INFO] uvicorn | 127.0.0.1:51080 - "WebSocket /onebot/v11/ws" [accepted]
-11-13 18:02:50 [INFO] websockets | connection open
-11-13 18:02:50 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+Traceback (most recent call last):
+  File "<stdin>", line 8, in <module>
+TypeError: _fact_query() takes 2 positional arguments but 3 were given
+======结束
