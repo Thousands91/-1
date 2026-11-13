@@ -1,22 +1,61 @@
-<<<task_285447.txt>>>
-===== 任务285447 11-13 12:13:50 =====
+<<<task_285448.txt>>>
+===== 任务285448 11-13 14:32:21 =====
 --- 命令 ---
-echo "=== 登录态权威判定 ==="
-bash /root/logincheck.sh 2>/dev/null | head -4
-echo "=== 最近消息 ==="
-grep -a "message.private.friend\|message.group" /root/bot.log | tail -2 | awk '{print $1,$2,$NF}'
-echo "=== WS连接 ==="
-grep -a "WebSocket\|连接" /root/bot.log | tail -1
-date "+现在: %T"
+echo "=== 最近10条普通聊天的处理耗时(入站→matcher完成) ==="
+grep -aE "message.(private.friend|group.normal)|Event will be handled.*ai_chat|ai_chat.*complete" /root/bot.log | tail -30 | awk '{print $1,$2,$NF}' | head -30
+echo "=== ai_chat的模型与参数 ==="
+grep -n "AI_MODEL\|max_tokens\|thinking\|temperature" /root/bot/bot/plugins/ai_chat.py | head -10
+echo "=== ai_chat里AI调用处 ==="
+grep -n "chat/completions\|_ai_post\|aiohttp\|timeout" /root/bot/bot/plugins/ai_chat.py | head -10
+echo "=== 现在时间 ==="
+date "+%T"
 --- 输出 ---
-=== 登录态权威判定 ===
-=== 登录状态（权威判定）===
-[在线] 已登录，一切正常
-阶段: ready
-最近错误: 无
-=== 最近消息 ===
-11-13 12:13:27 '可以和我说说'
-11-13 12:13:31 '说完不烧心'
-=== WS连接 ===
-11-13 12:10:46 [INFO] uvicorn | 127.0.0.1:55062 - "WebSocket /onebot/v11/ws" [accepted]
-现在: 12:13:51
+=== 最近10条普通聊天的处理耗时(入站→matcher完成) ===
+11-13 14:14:56 '老给我推干啥啊'
+11-13 14:14:56 lineno=1311)
+11-13 14:14:56 complete
+11-13 14:15:01 '我又去不了！！'
+11-13 14:15:01 lineno=1311)
+11-13 14:15:01 complete
+11-13 14:15:03 '[image:summary=[动画表情],file=2F6D443954443137E7F9F4C8DBDB36E8.png,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSOA6pq...,file_size=7648]'
+11-13 14:15:04 lineno=1311)
+11-13 14:15:04 complete
+11-13 14:16:28 '看看就好'
+11-13 14:16:28 lineno=1311)
+11-13 14:16:28 complete
+11-13 14:16:34 '[image:summary=[动画表情],file=9A550C4832B4FC19119540E5AFDF6570.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhR0gBCR...,file_size=379176]'
+11-13 14:16:34 lineno=1311)
+11-13 14:16:34 complete
+11-13 14:20:12 看了眼馋'
+11-13 14:20:13 lineno=1311)
+11-13 14:20:13 complete
+11-13 14:21:07 '[record:file=5e322ede96bcf1df6e51234dd7b92513.amr,path=/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/Ptt...,url=https://multimedia.nt.qq.com.cn/download?appid=1403&fileid=EhQKvNsb...,file_size=11638]'
+11-13 14:21:07 lineno=1311)
+11-13 14:21:07 complete
+11-13 14:29:11 '我们来聊点书以外的话题吧'
+11-13 14:29:11 lineno=1311)
+11-13 14:29:38 '
+11-13 14:29:38 lineno=1311)
+11-13 14:29:39 complete
+11-13 14:29:53 complete
+11-13 14:30:14 '你来想话题'
+11-13 14:30:20 lineno=1311)
+11-13 14:31:05 complete
+=== ai_chat的模型与参数 ===
+57:MODEL = os.getenv("OPENAI_MODEL", "Qwen/Qwen2.5-7B-Instruct")
+2172:                max_tokens=MAX_TOKENS,
+2173:                temperature=TEMPERATURE,
+2174:                extra_body={"thinking": {"type": "disabled"}},
+=== ai_chat里AI调用处 ===
+174:    """拉取 JSON。优先 aiohttp，缺失则 urllib 线程兜底；失败返回 None。"""
+176:        import aiohttp as _aio
+181:            with _ur.urlopen(url, timeout=20) as r:
+191:                async with sess.get(url, timeout=_aio.ClientTimeout(total=20)) as resp:
+280:_VLM_URL = "https://open.bigmodel.cn/api/paas/v4/chat/completions"
+326:            async with httpx.AsyncClient(timeout=20) as cli:
+359:        async with httpx.AsyncClient(timeout=15, follow_redirects=True) as cli:
+398:        async with httpx.AsyncClient(timeout=6, follow_redirects=True) as cli:
+498:            capture_output=True, timeout=30,
+531:    """下载音频字节。优先 aiohttp，缺库/失败走 urllib 线程兜底；失败返回 None。"""
+=== 现在时间 ===
+14:32:21
