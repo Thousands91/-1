@@ -1,9 +1,29 @@
-285440
-cd /root/bot && git pull 2>&1 | tail -2
-git log --oneline -1
-pkill -f "venv/bin/python main.py"; sleep 2
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 < /dev/null &
-sleep 12
-grep -ac "Succeeded to load plugin" /root/bot.log
-grep "_R18_EXCLUDE = " /root/bot/bot/plugins/image_search_multisource.py
-pgrep -f "venv/bin/python main.py" >/dev/null && echo 大脑已拉起 || echo 大脑没起来
+285441
+date "+现在: %F %T"
+echo "=== ①登录态权威判定 ==="
+bash /root/logincheck.sh 2>/dev/null | head -5
+echo "=== ②bot.log最后写入时间与末笔消息 ==="
+stat -c "%y" /root/bot.log
+grep -a "message.private.friend\|message.group" /root/bot.log | tail -3 | awk '{print $1,$2,$NF}'
+echo "=== ③tick秒表断档(1分钟精度,断档=冻结窗口) ==="
+tail -1 /root/tick.log
+python3 -c "
+import re
+lines=[l.strip() for l in open('/root/tick.log') if l.strip()]
+print('秒表总行数:',len(lines),'首行:',lines[0])
+from datetime import datetime
+gaps=[]
+prev=None
+for l in lines:
+    t=datetime.strptime(l,'%Y-%m-%d %H:%M:%S')
+    if prev and (t-prev).total_seconds()>180:
+        gaps.append((prev,t,(t-prev).total_seconds()/60))
+    prev=t
+print('>3分钟断档:')
+for a,b,m in gaps[-8:]: print(' ',a,'->',b,f'{m:.0f}分钟')
+"
+echo "=== ④心跳尾部 ==="
+grep -a "v5-git" /root/remote_ctl.log | tail -3
+echo "=== ⑤进程 ==="
+pgrep -f "main.py" >/dev/null && echo 大脑在 || echo 大脑不在
+pgrep -f "opt/QQ/qq" >/dev/null && echo NapCat在 || echo NapCat不在
