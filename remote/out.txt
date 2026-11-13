@@ -1,62 +1,31 @@
-<<<task_285479.txt>>>
-===== 任务285479 11-14 06:42:50 =====
+<<<task_285480.txt>>>
+===== 任务285480 11-14 06:44:30 =====
 --- 命令 ---
-echo "==1 登录态(最新)=="
-bash /root/logincheck.sh 2>/dev/null | tail -5
-echo "==2 login_state.log 尾部=="
-tail -8 /root/login_state.log 2>/dev/null
-echo "==3 tick.log 有无断档(冻结温度计)=="
-tail -3 /root/tick.log 2>/dev/null
-awk 'NR>1{split($2,t,":"); s=t[1]*3600+t[2]*60+t[3]; if(prev && s-prev>90) print "断档:", prevline, "->", $0} {prev=s; prevline=$0}' /root/tick.log 2>/dev/null | tail -5
-echo "==4 进程=="
-pgrep -af "main.py|opt/QQ" | head -4
-echo "==5 昨晚以来日志=="
-grep -n "18:5[5-9]\|19:\|2[0-3]:\|^[0-9]*:11-14" /root/bot.log | grep -E "联网|灯灭|模型降级|掉线|offline|断开|connected" | tail -12
-echo "==6 bot.log最后修改时间与最新5行=="
-ls -la /root/bot.log | awk '{print $6,$7,$8}'
-tail -5 /root/bot.log | cut -c1-130
+sleep 60
+echo "==登录态复查=="
+bash /root/logincheck.sh 2>/dev/null | tail -6
+echo "==NapCat最近日志=="
+tail -15 /root/napcat.log 2>/dev/null | cut -c1-140
+grep -E "11-14 06:4[2-9]" /root/bot.log | grep -E "connect|offline|WebSocket|login" | tail -6
 --- 输出 ---
-==1 登录态(最新)==
+==登录态复查==
 === 登录状态（权威判定）===
-[未登录] 当前没有有效会话
-阶段: reconnecting
-最近错误: [SelfOffline] 账号状态变更为离线（未收到 KickedOffLine 通知）
-==2 login_state.log 尾部==
-2026-11-14 01:23:57 [在线]
-2026-11-14 01:28:58 [在线]
-2026-11-14 01:33:59 [在线]
-2026-11-14 01:39:00 [在线]
-2026-11-14 01:44:00 [在线]
-2026-11-14 01:49:01 [在线]
-2026-11-14 01:54:02 [在线]
-2026-11-14 06:42:47 状态变化: [在线] -> [未登录]
-==3 tick.log 有无断档(冻结温度计)==
-2026-11-14 01:56:45
-2026-11-14 01:57:45
-2026-11-14 06:42:47
-断档: 2026-11-14 01:57:45 -> 2026-11-14 06:42:47
-==4 进程==
-16164 /root/bot/venv/bin/python main.py
-24978 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
-24991 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
-24993 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-==5 昨晚以来日志==
-2409:11-13 22:25:54 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-2410:11-13 22:26:03 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-2495:11-13 22:29:40 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-2511:11-13 22:30:24 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
-2513:11-13 22:30:37 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-2528:11-13 22:31:09 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-2530:11-13 22:31:22 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-2545:11-13 22:32:00 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-2546:11-13 22:32:08 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-2563:11-13 22:33:32 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-2564:11-13 22:33:40 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-2580:11-13 22:34:59 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-==6 bot.log最后修改时间与最新5行==
-Nov 14 06:42
-11-14 06:42:49 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-14 06:42:49 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-14 06:42:49 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-14 06:42:49 [INFO] ai_chat | [积压跳过] 消息已延迟745秒，不回：'现在呢？'
-11-14 06:42:49 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+[在线] 已登录，一切正常
+阶段: ready
+最近错误: 无
+==NapCat最近日志==
+11-14 00:45:04 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [相亲相爱一家人(590454333)] [阿萨尔(3427943187)] 早安。今早的�
+65fe82552c3ed285b21f3aef5a305aca2a0d5c07798c71246e509ac9b2f5eb4c
+11-14 00:45:39 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 早上晚！
+11-14 00:52:05 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [愿愿嘻望(462681975)] 晚上早!
+11-14 00:55:16 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+[I] <MMKV_IO.cpp:516::writeActualSize> [nt_mmkv_united_config_no_login_v3] increase sequence to 20, crc 2578389854, actualSize 15945
+[I] <MMKV.cpp:1178::sync> MMKV::sync, SyncFlag = 1
+11-14 01:10:43 [[32minfo[39m] 阿萨尔 | [ServerTime] 时间同步完成，偏差 78ms
+93617c6ec769a68f7f52a4fcb042210918c1f127fcf14c9661438e9fd79d2ad2
+cf6b25e964769d6849a7e2f620c11f5d5984a9d725406223be2a901702d02922
+11-14 06:42:47 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+141c3549ebb37b3f97aa8f3d9dba9cbf7c0beab5048b8ce5bed252e12e64a0a5
+11-14 06:42:49 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)]
+11-14 06:42:49 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爱上齐豫是我的福报(1561950850)] @�
+11-14 06:42:49 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 现在呢？
