@@ -1,7 +1,20 @@
-285460
-echo "==16:30以后的日志=="
-sed -n '/11-13 16:2[5-9]/,$p' /root/bot.log | grep -v "核对·调试" | head -60
-echo "==所有联网行(今天)=="
-grep "联网" /root/bot.log | tail -15
-echo "==requests在不在venv(再验一次)=="
-/root/bot/venv/bin/python -c "import requests,bs4; print('requests',requests.__version__,'bs4 ok')"
+285461
+echo "==1 代码同步=="
+cd /root/bot && git pull --ff-only 2>&1 | tail -1 && git log --oneline -1
+md5sum /root/bot/bot/plugins/ai_chat.py
+echo "==2 语法校验=="
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo 编译通过
+echo "==3 真链路实测:直接调搜索函数=="
+cd /root/bot && timeout 60 /root/bot/venv/bin/python - <<'PYEOF' 2>&1 | tail -8
+import sys, nonebot
+nonebot.init()
+sys.path.insert(0, '/root/bot/bot')
+from plugins.ai_chat import _web_snippets, _needs_fact
+print("needs_fact('齐豫是谁') =", _needs_fact('齐豫是谁'))
+print("needs_fact('好') =", _needs_fact('好'))
+s = _web_snippets('齐豫是谁')
+print("搜索结果长度:", len(s))
+print(s[:200])
+PYEOF
+echo "==4 大脑无需重启确认=="
+pgrep -af "main.py" | head -1
