@@ -1,23 +1,7 @@
-285520
-python3 - <<'PYEOF'
-p = "/root/music_sign.py"
-t = open(p, encoding="utf-8").read()
-old = """        "prompt": "[分享]" + (title or "音乐"),
-    }"""
-new = """        "prompt": "[分享]" + (title or "音乐"),
-        # QQ 客户端靠 view 路由渲染模板、按 app+ver 识别版本——缺了就
-        # 显示"发送者版本过低，无法展示内容"（17:46 实测占位符实锤）
-        "ver": "0.0.0.1",
-        "view": "music",
-        "desc": "音乐",
-    }"""
-assert old in t, "锚点没找到"
-open(p, "w", encoding="utf-8").write(t.replace(old, new, 1))
-print("view/ver/desc 已补")
-PYEOF
-python3 -m py_compile /root/music_sign.py && echo 语法通过
-pkill -f "python /root/music_sign.py"; sleep 1
-setsid nohup /root/bot/venv/bin/python /root/music_sign.py > /root/music_sign.log 2>&1 < /dev/null &
-sleep 2
-echo "==出卡全文(人工核对结构)=="
-timeout 10 curl -s "http://127.0.0.1:10800/" -H "Content-Type: application/json" -d '{"type":"163","id":"185868"}' | python3 -m json.tool
+285521
+echo "==服务日志17:58后=="
+tail -6 /root/music_sign.log
+echo "==bot.log 17:58-18:01 点歌流程=="
+awk '/11-14 17:5[89]/,/11-14 18:01/' /root/bot.log | grep -vE "Matcher\(|running complete|Event will be handled" | head -12 | cut -c1-180
+echo "==napcat 17:58-18:01=="
+awk '/11-14 17:5[89]/,/11-14 18:01/' /root/napcat.log | grep -iE "music|卡|sign|error|json|ark" | head -10 | cut -c1-150
