@@ -1,10 +1,4 @@
-285517
+285518
 M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
-echo "==1 服务日志:17:46那单=="
-tail -6 /root/music_sign.log
-echo "==2 napcat 17:45:40-17:47 音乐相关=="
-awk '/11-14 17:4[5-7]/,0' /root/napcat.log | grep -iE "music|音乐|sign|签名|json|error" | head -10 | cut -c1-150
-echo "==3 音乐handler续段(77520-77560)=="
-sed -n '77520,77560p' $M
-echo "==4 json converter定义=="
-grep -n "ob11ToRawConverters" $M | head -3
+echo "==json converter定义(77262起)=="
+sed -n '77262,77340p' $M
