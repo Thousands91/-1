@@ -1,8 +1,19 @@
-<<<task_285503.txt>>>
-===== 任务285503 11-14 14:49:33 =====
+<<<task_285504.txt>>>
+===== 任务285504 11-14 15:52:21 =====
 --- 命令 ---
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册
-base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+bash /root/logincheck.sh 2>/dev/null | tail -4
+echo "==本地签名服务=="
+pgrep -af music_sign.py | head -1
+echo "==napcat最近日志=="
+grep -iE "快速登录|扫码|qrcode|online|登录" /root/napcat.log | tail -3 | cut -c1-120
 --- 输出 ---
-码已放进相册
-iVBORw0KGgoAAAANSUhEUgAAAJMAAACTAQAAAACinha4AAAACXBIWXMAAAsTAAALEwEAmpwYAAACA0lEQVRIid2WPY7EIAyFHVHQTS4QiWvQcaXJBfJzgeRKdFwjEhcgHQWK95H52WIb3G40g5SvsPCz/Rzivw/9a5aIJsunH8jy7qmTsJPLyPGi46njHvAqYX6YWW0ubprGQKOQPW2ZXDyD2eVszGazpc/USxmXyQIfHSPkN7cmBv3GMLx/v5o2MTzJqj3Tww39by2b2GVxd+iHPGLSapewRHGxSKLMnjdnZMzSw8a7AupCVAnjjHiKfWRWaz0ljIk0kVWbVUm/tG9mIXLgBf3CQ4eyS9gZhs4fXTgmZxZSp4RdFDkTURk96vDSoJUlR6OPa1Yriu9eGrSy08c916hJH3S3TDtjXyZtkjVoN6h4Stil42Yj9GNvVkgoYaeH3ubSNOlhDswiFtBoOM2m4/XRoJFxKBPF2/+OydIsYmw2MptD9seTPrPayKoNQP6aPaL2IuYhfHno40HmzMMoYacvZAtpjJdakJCMwYR4DTgLvHOWMPzhIpfGUEKJ70w3seTUomFCAIb9y7ObmYbjGmAIv7i3Z7eyakVwgmqfY3jPZTM7+lynhMjA+0WM71LDgeYQV/7o18bufY6WMbu/KyBhdZ9nTCSug3arjiJg/l6MdUrQL4aljO+xhpnV7SpjM8YLFcN6tN+7tDHkESA/tjECD6OEQb85E75BkivkDEtY6zfc/2A/CwVYCy8Hze0AAAAASUVORK5CYII=
+=== 登录状态（权威判定）===
+[未登录] 当前没有有效会话
+阶段: waiting_qrcode
+最近错误: 无
+==本地签名服务==
+10244 /root/bot/venv/bin/python /root/music_sign.py
+==napcat最近日志==
+11-14 14:47:22 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以
+11-14 14:47:22 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode
