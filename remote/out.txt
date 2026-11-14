@@ -1,22 +1,55 @@
-<<<task_285529.txt>>>
-===== 任务285529 11-14 18:24:49 =====
+<<<task_285530.txt>>>
+===== 任务285530 11-14 18:27:50 =====
 --- 命令 ---
+echo "==实测复活后的思思签名接口=="
+timeout 15 curl -s -w "\nHTTP:%{http_code} %{time_total}s\n" -X POST "https://ss.xingzhige.com/music_card/card" -H "Content-Type: application/json" -d '{"type":"163","id":"185868"}' -o /tmp/xz.json
+python3 - <<'PYEOF'
+import json
+try:
+    d = json.load(open('/tmp/xz.json'))
+    print("响应键:", list(d.keys())[:8])
+    card = d.get("data") if isinstance(d.get("data"), (dict, str)) else d
+    if isinstance(card, str):
+        card = json.loads(card)
+    if isinstance(card, dict):
+        print("app:", card.get("app"), "| view:", card.get("view"))
+        cfg = card.get("config") or {}
+        print("config.token 存在:", bool(cfg.get("token")), "| token长度:", len(str(cfg.get("token") or "")))
+        mu = (card.get("meta") or {}).get("music") or {}
+        print("字段:", list(mu.keys()))
+except Exception as e:
+    print("解析失败:", e, open('/tmp/xz.json').read()[:300])
+PYEOF
+echo "==getArkJson上下文=="
 M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
-echo "==NapCat内部的Ark生成API=="
-grep -o "get[A-Za-z]*ArkJson" $M | sort -u
-grep -o "Ark[A-Za-z]*Json" $M | sort -u | head -8
-echo "==测思思主域名和常见接口=="
-for u in "https://xingzhige.com" "https://api.xingzhige.com" "https://ss.xingzhige.com" "https://music.xingzhige.com"; do
-  printf "%-32s " "$u"; timeout 8 curl -s -o /dev/null -w "%{http_code} %{time_total}s\n" "$u" 2>&1 || echo 不通
-done
+N=$(grep -n "async getArkJson\|getArkJson(" $M | head -2)
+echo "$N"
+L=$(echo "$N" | head -1 | cut -d: -f1)
+sed -n "$((L-3)),$((L+15))p" $M
 --- 输出 ---
-==NapCat内部的Ark生成API==
-getArkJson
-getBuddyRecommendContactArkJson
-getGroupRecommendContactArkJson
-ArkJson
-==测思思主域名和常见接口==
-https://xingzhige.com            200 0.884513s
-https://api.xingzhige.com        200 0.605217s
-https://ss.xingzhige.com         200 0.572267s
-https://music.xingzhige.com      200 0.720720s
+==实测复活后的思思签名接口==
+
+HTTP:500 0.816074s
+解析失败: Expecting value: line 1 column 1 (char 0) 无法准确获取歌曲信息
+==getArkJson上下文==
+10508:  async getArkJsonGroupShare(e) {
+12447:  async getArkJsonCollection() {
+    );
+    return r?.groupSpaceResult;
+  }
+  async getArkJsonGroupShare(e) {
+    return (await this.core.eventWrapper.callNoListenerEvent(
+      "NodeIKernelGroupService/getGroupRecommendContactArkJson",
+      e
+    )).arkJson;
+  }
+  async uploadGroupBulletinPic(e, r) {
+    const n = await this.getQunPskey();
+    return this.context.session.getGroupService().uploadGroupBulletinPic(e, n, r);
+  }
+  async handleGroupRequest(e, r, n, i) {
+    return this.context.session.getGroupService().operateSysNotify(
+      e,
+      {
+        operateType: n,
+        targetMsg: {
