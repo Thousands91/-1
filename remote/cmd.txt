@@ -1,26 +1,11 @@
-285530
-echo "==实测复活后的思思签名接口=="
-timeout 15 curl -s -w "\nHTTP:%{http_code} %{time_total}s\n" -X POST "https://ss.xingzhige.com/music_card/card" -H "Content-Type: application/json" -d '{"type":"163","id":"185868"}' -o /tmp/xz.json
-python3 - <<'PYEOF'
-import json
-try:
-    d = json.load(open('/tmp/xz.json'))
-    print("响应键:", list(d.keys())[:8])
-    card = d.get("data") if isinstance(d.get("data"), (dict, str)) else d
-    if isinstance(card, str):
-        card = json.loads(card)
-    if isinstance(card, dict):
-        print("app:", card.get("app"), "| view:", card.get("view"))
-        cfg = card.get("config") or {}
-        print("config.token 存在:", bool(cfg.get("token")), "| token长度:", len(str(cfg.get("token") or "")))
-        mu = (card.get("meta") or {}).get("music") or {}
-        print("字段:", list(mu.keys()))
-except Exception as e:
-    print("解析失败:", e, open('/tmp/xz.json').read()[:300])
-PYEOF
-echo "==getArkJson上下文=="
-M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
-N=$(grep -n "async getArkJson\|getArkJson(" $M | head -2)
-echo "$N"
-L=$(echo "$N" | head -1 | cut -d: -f1)
-sed -n "$((L-3)),$((L+15))p" $M
+285531
+echo "==地毯式复测签名服务(带真实163载荷)=="
+for u in "https://ss.xingzhige.com/music_card/card" "http://106.55.0.102:10087/" "https://llob.linyuchen.net/sign/music" "http://napcat-sign.wumiao.wang:2052/music_sign" "https://qqbotark.569879.xyz/"; do
+  printf "%-44s " "$u"
+  R=$(timeout 12 curl -s -w "|%{http_code}" -X POST "$u" -H "Content-Type: application/json" -d '{"type":"163","id":"3381542797"}' 2>&1)
+  CODE="${R##*|}"; BODY="${R%|*}"
+  echo "HTTP$CODE $(echo "$BODY" | head -c 100)"
+done
+echo "==思思换载荷再试:qq类型/GET形式=="
+timeout 12 curl -s -w "|%{http_code}\n" -X POST "https://ss.xingzhige.com/music_card/card" -H "Content-Type: application/json" -d '{"type":"qq","id":"003joRpF3wA7e8"}' | head -c 150
+timeout 12 curl -s -w "|%{http_code}\n" "https://ss.xingzhige.com/music_card/card?type=163&id=185868" | head -c 150
