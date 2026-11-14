@@ -1,87 +1,55 @@
-<<<task_285518.txt>>>
-===== 任务285518 11-14 17:51:05 =====
+<<<task_285519.txt>>>
+===== 任务285519 11-14 17:54:13 =====
 --- 命令 ---
 M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
-echo "==json converter定义(77262起)=="
-sed -n '77262,77340p' $M
+N=$(grep -n "\[Ke\.json\]:" $M | head -1 | cut -d: -f1)
+echo "json converter 位置: $N"
+sed -n "${N},$((N+45))p" $M
 --- 输出 ---
-==json converter定义(77262起)==
-  ob11ToRawConverters = {
-    [Ke.text]: async ({ data: { text: e } }) => ({
-      elementType: Ee.TEXT,
+json converter 位置: 77405
+    [Ke.json]: async ({ data: { data: e } }) => ({
+      elementType: Ee.ARK,
       elementId: "",
-      textElement: {
-        content: e,
-        atType: Xn.ATTYPEUNKNOWN,
-        atUid: "",
-        atTinyId: "",
-        atNtUid: ""
+      arkElement: {
+        bytesData: typeof e == "string" ? e : JSON.stringify(e),
+        linkInfo: null,
+        subElementType: null
       }
     }),
-    [Ke.at]: async ({ data: { qq: e } }, r) => {
-      function n(a, c, u, d) {
-        return {
-          elementType: Ee.TEXT,
-          elementId: "",
-          textElement: {
-            content: `@${d}`,
-            atType: u,
-            atUid: a,
-            atTinyId: "",
-            atNtUid: c
-          }
-        };
+    [Ke.dice]: async () => ({
+      elementType: Ee.FACE,
+      elementId: "",
+      faceElement: {
+        faceIndex: qd.DICE,
+        faceType: va.AniSticke,
+        faceText: "[骰子]",
+        packId: "1",
+        stickerId: "33",
+        sourceType: 1,
+        stickerType: 2,
+        surpriseId: ""
+        // "randomType": 1,
       }
-      if (!r.peer || !e || r.peer.chatType === Te.KCHATTYPEC2C) return;
-      if (e === "all") return n(e, e, Xn.ATTYPEALL, "全体成员");
-      const i = await this.core.apis.GroupApi.getGroupMember(r.peer.peerUid, e);
-      if (i)
-        return n(e, i.uid, Xn.ATTYPEONE, i.nick || i.cardName);
-      const o = await this.core.apis.UserApi.getUidByUinV2(`${e}`);
-      if (!o) throw new Error("Get Uid Error");
-      const s = await this.core.apis.UserApi.getUserDetailInfo(o);
-      return n(e, o, Xn.ATTYPEONE, s.nick || "");
-    },
-    [Ke.reply]: async ({ data: { id: e, seq: r } }, n) => {
-      let i, o;
-      if (r)
-        i = (await this.core.apis.MsgApi.getMsgsBySeqAndCount(
-          n.peer,
-          r.toString(),
-          1,
-          !0,
-          !0
-        )).msgList[0], o = n.peer;
-      else if (e) {
-        const s = ot.getMsgIdAndPeerByShortId(parseInt(e));
-        if (!s) {
-          this.core.context.logger.logWarn("回复消息不存在", e);
-          return;
-        }
-        i = (await this.core.apis.MsgApi.getMsgsByMsgId(
-          s.Peer,
-          [s.MsgId]
-        )).msgList[0], o = s.Peer;
-      } else {
-        this.core.context.logger.logWarn("回复消息缺少id或seq参数");
-        return;
+    }),
+    [Ke.rps]: async () => ({
+      elementType: Ee.FACE,
+      elementId: "",
+      faceElement: {
+        faceIndex: qd.RPS,
+        faceText: "[包剪锤]",
+        faceType: va.AniSticke,
+        packId: "1",
+        stickerId: "34",
+        sourceType: 1,
+        stickerType: 2,
+        surpriseId: ""
+        // "randomType": 1,
       }
-      return i && o ? {
-        elementType: Ee.REPLY,
-        elementId: "",
-        replyElement: {
-          replayMsgSeq: i.msgSeq,
-          // raw.msgSeq
-          replayMsgId: i.msgId,
-          // raw.msgId
-          senderUin: i.senderUin,
-          senderUinStr: i.senderUin,
-          replyMsgClientSeq: i.clientSeq,
-          _replyMsgPeer: o
-        }
-      } : void 0;
-    },
-    [Ke.face]: async ({ data: { id: e, resultId: r, chainCount: n } }) => {
-      const i = +e, s = twe.sysface.find((c) => c.QSid === i.toString());
-      if (!s) {
-        this.core.context.logger.logError("不支持的ID", e);
+    }),
+    // Need signing
+    [Ke.markdown]: async ({ data: { content: e } }) => ({
+      elementType: Ee.MARKDOWN,
+      elementId: "",
+      markdownElement: { content: e }
+    }),
+    [Ke.music]: async ({ data: e }, r) => {
