@@ -1,24 +1,57 @@
-<<<task_285491.txt>>>
-===== 任务285491 11-14 14:13:31 =====
+<<<task_285492.txt>>>
+===== 任务285492 11-14 14:20:17 =====
 --- 命令 ---
-echo "==bot.log 13:50后点歌=="
-grep -E "13:5[0-9]|14:0|14:1" /root/bot.log | grep "点歌" | tail -3
-echo "==napcat 13:52后全部error/音乐=="
-awk '/11-14 13:52:45/,0' /root/napcat.log | grep -iE "error|音乐|music|语音" | head -14
-echo "==napcat最新10行=="
-tail -10 /root/napcat.log | cut -c1-130
+awk '/11-14 13:55:5/,/11-14 13:57:0/' /root/napcat.log | cut -c1-150
 --- 输出 ---
-==bot.log 13:50后点歌==
-11-14 13:55:54 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 65314971 from 1561950850@[群:1109952783] '[at:qq=3427943187] 点歌 稻香 周杰伦'
-==napcat 13:52后全部error/音乐==
-==napcat最新10行==
-11-14 13:56:39 [[32minfo[39m] 阿萨尔 | 语音文件已就绪: /root/.config/QQ/NapCat/temp/5601def8-f9f1-460a-9f37-3ad80ff338
-11-14 13:56:39 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] [�
+11-14 13:55:54 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [我爱这橙色的海洋🍀💛乐育群里�
+11-14 13:55:54 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] 翻柜子找「稻香 
+b8815a0ffa7e6338443028927e2981c33f4c24a82f6926416fb9f66e2f48cf59
+11-14 13:56:09 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
+11-14 13:56:11 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
+  ├─ 音乐类型: 163
+  ├─ 音乐ID: 3381542797
+  ├─ 错误信息: Unexpected end of JSON input
+  └─ 提示: 请检查网络连接，或尝试在配置中更换其他音乐签名服务地址(musicSignUrl)
+11-14 13:56:11 [[31merror[39m] 阿萨尔 | 发生错误 Error: 消息体无法解析, 请检查是否发送了不支持的消息类型
+    at Wwe.sendMsgWithOb11UniqueId (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:77727:13)
+    at Xwe.base_handle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:78111:60)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Xwe.websocketHandle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:36621:17)
+    at async pO.handleMessage (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:67875:15)
+11-14 13:56:13 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
+11-14 13:56:14 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
+  ├─ 音乐类型: qq
+  ├─ 音乐ID: 003joRpF3wA7e8
+  ├─ 错误信息: Unexpected token '关', "关闭id解析功能" is not valid JSON
+  └─ 提示: 请检查网络连接，或尝试在配置中更换其他音乐签名服务地址(musicSignUrl)
+11-14 13:56:14 [[31merror[39m] 阿萨尔 | 发生错误 Error: 消息体无法解析, 请检查是否发送了不支持的消息类型
+    at Wwe.sendMsgWithOb11UniqueId (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:77727:13)
+    at Xwe.base_handle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:78111:60)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Xwe.websocketHandle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:36621:17)
+    at async pO.handleMessage (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:67875:15)
+11-14 13:56:30 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
+11-14 13:56:32 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
+  ├─ 音乐类型: custom
+  ├─ 音乐ID: 自定义
+  ├─ 错误信息: Unexpected end of JSON input
+  └─ 提示: 请检查网络连接，或尝试在配置中更换其他音乐签名服务地址(musicSignUrl)
+11-14 13:56:32 [[31merror[39m] 阿萨尔 | 发生错误 Error: 消息体无法解析, 请检查是否发送了不支持的消息类型
+    at Wwe.sendMsgWithOb11UniqueId (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:77727:13)
+    at Xwe.base_handle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:78111:60)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Xwe.websocketHandle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:36621:17)
+    at async pO.handleMessage (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:67875:15)
+11-14 13:56:34 [[32minfo[39m] 阿萨尔 | 语音文件/root/.config/QQ/NapCat/temp/116e57a3-31da-4f31-84eb-6859509a18f7需要转换成silk
+[mp3float @ 0x2c03882d80] Could not update timestamps for skipped samples.
+[mp3float @ 0x2c03882d80] Could not update timestamps for discarded samples.
+11-14 13:56:39 [[32minfo[39m] 阿萨尔 | 语音文件已就绪: /root/.config/QQ/NapCat/temp/5601def8-f9f1-460a-9f37-3ad80ff3389e 时长: 120.04
+11-14 13:56:39 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] [语音 120s]
 132ab0b259d667bb2ca3e636e7d1608bcd4cc131eeb035446fe473ececd71194
-11-14 13:56:43 [[31merror[39m] 阿萨尔 | 获取语音url失败 Error: [PacketClient] sendPacket 超时 cmd=OidbSvcTrpcTcp.0x12
+11-14 13:56:43 [[31merror[39m] 阿萨尔 | 获取语音url失败 Error: [PacketClient] sendPacket 超时 cmd=OidbSvcTrpcTcp.0x126E_200 timeout=1500m
     at Timeout.<anonymous> (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:25202:11)
     at listOnTimeout (node:internal/timers:605:17)
     at process.processTimers (node:internal/timers:541:7)
-11-14 13:58:09 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [克莱恩·莫雷蒂(2045344206)]
-11-14 13:58:11 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [幽幽子(3889001246)] [未实现
+11-14 13:58:09 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [克莱恩·莫雷蒂(2045344206)] @幽幽子 (3889001
+11-14 13:58:11 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [幽幽子(3889001246)] [未实现 (ElementType = 17)]
 54fa079d2986e4325a6b87e09317d13dfc6cb8406b2ee2461850d71f558f9bd2
