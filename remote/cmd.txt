@@ -1,9 +1,30 @@
-285513
-echo "==登录态=="
-bash /root/logincheck.sh 2>/dev/null | tail -3
-echo "==签名服务日志(有没有被调用)=="
-cat /root/music_sign.log
-echo "==bot.log 最近点歌=="
-grep "点歌" /root/bot.log | tail -3
-echo "==napcat 17:25后 音乐/签名/错误=="
-awk '/11-14 17:2[0-9]/,0' /root/napcat.log | grep -iE "music|音乐|卡|sign|签名|error|语音" | head -16 | cut -c1-160
+285514
+M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
+echo "==NapCat构造签名请求的源码(77460-77520)=="
+sed -n '77460,77520p' $M
+echo "==给服务加原始请求体日志=="
+python3 - <<'PYEOF'
+p = "/root/music_sign.py"
+t = open(p, encoding="utf-8").read()
+old = """        n = int(self.headers.get("Content-Length") or 0)
+        try:
+            d = json.loads(self.rfile.read(n) or b"{}")
+        except Exception:
+            d = {}"""
+new = """        n = int(self.headers.get("Content-Length") or 0)
+        raw = self.rfile.read(n) if n else b""
+        try:
+            d = json.loads(raw or b"{}")
+        except Exception:
+            d = {}
+            _log("原始请求体解析失败: %r" % raw[:400])"""
+assert old in t
+open(p, "w", encoding="utf-8").write(t.replace(old, new, 1))
+print("已加原始请求体日志")
+PYEOF
+pkill -f "python /root/music_sign.py"; sleep 1
+setsid nohup /root/bot/venv/bin/python /root/music_sign.py > /root/music_sign.log 2>&1 < /dev/null &
+sleep 2
+timeout 8 curl -s -o /dev/null -w "服务自检: %{http_code}\n" "http://127.0.0.1:10800/" -H "Content-Type: application/json" -d '{"type":"163","id":"185868"}'
+echo "==onebot11有没有HTTP API可用=="
+python3 -c "import json;d=json.load(open('/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json'));print('http端口:',d.get('http',{}).get('enable'),d.get('http',{}).get('port'));print('ws端口:',d.get('websocket',{}).get('enable'),d.get('websocket',{}).get('port'))"
