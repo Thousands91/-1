@@ -1,14 +1,22 @@
-<<<task_285528.txt>>>
-===== 任务285528 11-14 18:21:13 =====
+<<<task_285529.txt>>>
+===== 任务285529 11-14 18:24:49 =====
 --- 命令 ---
-grep "翻卡取证" /root/bot.log | tail -4
-echo "==取证文件内容=="
-wc -l /tmp/real_card.json 2>/dev/null
-head -c 6000 /tmp/real_card.json 2>/dev/null
+M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
+echo "==NapCat内部的Ark生成API=="
+grep -o "get[A-Za-z]*ArkJson" $M | sort -u
+grep -o "Ark[A-Za-z]*Json" $M | sort -u | head -8
+echo "==测思思主域名和常见接口=="
+for u in "https://xingzhige.com" "https://api.xingzhige.com" "https://ss.xingzhige.com" "https://music.xingzhige.com"; do
+  printf "%-32s " "$u"; timeout 8 curl -s -o /dev/null -w "%{http_code} %{time_total}s\n" "$u" 2>&1 || echo 不通
+done
 --- 输出 ---
-11-14 18:20:15 [INFO] card_forensics | [翻卡取证] 群1109952783 拉到399条
-11-14 18:20:17 [INFO] card_forensics | [翻卡取证] 群590454333 拉到400条
-11-14 18:20:17 [INFO] card_forensics | [翻卡取证] 完成, 1 条卡片消息存于 /tmp/real_card.json
-==取证文件内容==
-1 /tmp/real_card.json
-{"self_id": 3427943187, "user_id": 3427943187, "time": 1794649582, "message_id": 1150751721, "message_seq": 1150751721, "real_id": 1150751721, "real_seq": "731623", "message_type": "group", "sender": {"user_id": 3427943187, "nickname": "阿萨尔", "card": "", "role": "member"}, "raw_message": "[CQ:json,data={\"app\":\"com.tencent.structmsg\"&#44;\"config\":{\"ctime\":12&#44;\"forward\":true&#44;\"type\":\"normal\"&#44;\"autosize\":true}&#44;\"extra\":{\"app_type\":1&#44;\"appid\":100495022&#44;\"msg_seq\":983083785&#44;\"uin\":3427943187}&#44;\"meta\":{\"music\":{\"desc\":\"虾胡闹\"&#44;\"jump\":{\"url\":\"https://music.163.com/song?id=3456659431\"&#44;\"action\":\"\"}&#44;\"music\":{\"type\":\"song\"&#44;\"category_id\":100&#44;\"mid\":\"\"&#44;\"passport\":2&#44;\"paste\":1}&#44;\"preview\":\"https://p2.music.126.net/d9PFoO6QmofVwblLqV0WPw==/109951174215189503.jpg\"&#44;\"tag\":\"网易云音乐\"&#44;\"title\":\"橘子酸(cover那艺娜)\"}}&#44;\"prompt\":\"&#91;分享&#93;橘子酸(cover那艺娜)\"}]", "font": 14, "sub_type": "normal", "message": [{"type": "json", "data": {"data": "{\"app\":\"com.tencent.structmsg\",\"config\":{\"ctime\":12,\"forward\":true,\"type\":\"normal\",\"autosize\":true},\"extra\":{\"app_type\":1,\"appid\":100495022,\"msg_seq\":983083785,\"uin\":3427943187},\"meta\":{\"music\":{\"desc\":\"虾胡闹\",\"jump\":{\"url\":\"https://music.163.com/song?id=3456659431\",\"action\":\"\"},\"music\":{\"type\":\"song\",\"category_id\":100,\"mid\":\"\",\"passport\":2,\"paste\":1},\"preview\":\"https://p2.music.126.net/d9PFoO6QmofVwblLqV0WPw==/109951174215189503.jpg\",\"tag\":\"网易云音乐\",\"title\":\"橘子酸(cover那艺娜)\"}},\"prompt\":\"[分享]橘子酸(cover那艺娜)\"}"}}], "message_format": "array", "post_type": "message_sent", "message_sent_type": "self", "group_id": 590454333, "group_name": "相亲相爱一家人"}
+==NapCat内部的Ark生成API==
+getArkJson
+getBuddyRecommendContactArkJson
+getGroupRecommendContactArkJson
+ArkJson
+==测思思主域名和常见接口==
+https://xingzhige.com            200 0.884513s
+https://api.xingzhige.com        200 0.605217s
+https://ss.xingzhige.com         200 0.572267s
+https://music.xingzhige.com      200 0.720720s
