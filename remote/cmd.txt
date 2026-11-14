@@ -1,4 +1,5 @@
-285518
+285519
 M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
-echo "==json converter定义(77262起)=="
-sed -n '77262,77340p' $M
+N=$(grep -n "\[Ke\.json\]:" $M | head -1 | cut -d: -f1)
+echo "json converter 位置: $N"
+sed -n "${N},$((N+45))p" $M
