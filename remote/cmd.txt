@@ -1,7 +1,2 @@
-285491
-echo "==bot.log 13:50后点歌=="
-grep -E "13:5[0-9]|14:0|14:1" /root/bot.log | grep "点歌" | tail -3
-echo "==napcat 13:52后全部error/音乐=="
-awk '/11-14 13:52:45/,0' /root/napcat.log | grep -iE "error|音乐|music|语音" | head -14
-echo "==napcat最新10行=="
-tail -10 /root/napcat.log | cut -c1-130
+285492
+awk '/11-14 13:55:5/,/11-14 13:57:0/' /root/napcat.log | cut -c1-150
