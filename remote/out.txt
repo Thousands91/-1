@@ -1,21 +1,45 @@
-<<<task_285550.txt>>>
-===== 任务285550 11-14 22:08:44 =====
+<<<task_285560.txt>>>
+===== 任务285560 11-14 22:14:40 =====
 --- 命令 ---
-echo "--- X10侧直测网易云搜索接口 ---"
-curl -s -o /tmp/163test.json -w "HTTP %{http_code} 耗时%{time_total}s\n" --max-time 15 "https://music.163.com/api/search/get?s=%E9%BD%90%E8%B1%AB&type=1&limit=3&offset=0" -H "User-Agent: Mozilla/5.0" -H "Referer: https://music.163.com/"
-head -c 200 /tmp/163test.json; echo
-echo "--- 大脑进程与最近点歌日志 ---"
-pgrep -f "python.*main.py" >/dev/null && echo 大脑活着 || echo 大脑已死
-grep -a "点歌\|翻不着\|齐豫" /root/bot/bot/bot.log 2>/dev/null | tail -6
-echo "--- v3签名服务 ---"
-pgrep -fa music_sign.py || echo "v3未跑"
-echo "--- 任务285550结束 ---"
+echo "--- 坑110修复：点歌搜索加异常留痕 ---"
+P=/root/bot/bot/plugins/song_request.py
+cp $P $P.bak.trace
+grep -n "return out" $P | head -2
+cat > /tmp/fix_trace.py <<'PYEOF'
+p = '/root/bot/bot/plugins/song_request.py'
+s = open(p).read()
+a = "        return out\n    except Exception:\n        return []"
+b = "        return out\n    except Exception as e:\n        logger.warning(f\"[点歌] 搜索「{keyword}」异常: {e!r}\")\n        return []"
+assert a in s, '锚点缺失'
+s = s.replace(a, b, 1)
+if 'from nonebot.log import logger' not in s:
+    s = s.replace('import aiohttp', 'import aiohttp\nfrom nonebot.log import logger', 1)
+open(p, 'w').write(s)
+print('OK 已加搜索异常留痕')
+PYEOF
+/root/bot/venv/bin/python /tmp/fix_trace.py
+md5sum $P
+/root/bot/venv/bin/python -m py_compile $P && echo "语法OK"
+echo "--- 按SOP重启大脑（kill PID，禁pkill -f） ---"
+BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}')
+echo "旧PID: $BP"
+[ -n "$BP" ] && kill $BP
+sleep 3
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 &
+sleep 6
+pgrep -af "main.py" | head -3 || echo "!!大脑没起来"
+tail -3 /root/bot/bot/bot.log
+echo "--- 任务285560结束 ---"
 --- 输出 ---
---- X10侧直测网易云搜索接口 ---
-HTTP 200 耗时1.530290s
-{"result":{"songs":[{"album":{"publishTime":881596800000,"size":12,"artist":{"img1v1Url":"https://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg","musicSize":0,"albumSize":0,"img1v1":0
---- 大脑进程与最近点歌日志 ---
-大脑活着
---- v3签名服务 ---
-5171 python3 /root/music_sign.py
---- 任务285550结束 ---
+--- 坑110修复：点歌搜索加异常留痕 ---
+333:        return out
+OK 已加搜索异常留痕
+f26074eb06c0f28729e5ca13ec94e3d9  /root/bot/bot/plugins/song_request.py
+语法OK
+--- 按SOP重启大脑（kill PID，禁pkill -f） ---
+旧PID: 27465
+29111 /root/bot/venv/bin/python main.py
+11-14 22:14:49 [INFO] __main__ | ==================================================
+11-14 22:14:49 [INFO] uvicorn | Application startup complete.
+11-14 22:14:49 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+--- 任务285560结束 ---
