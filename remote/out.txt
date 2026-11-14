@@ -1,11 +1,26 @@
-<<<task_285505.txt>>>
-===== 任务285505 11-14 15:53:22 =====
+<<<task_285506.txt>>>
+===== 任务285506 11-14 16:44:18 =====
 --- 命令 ---
-pkill -f "opt/QQ/[q]q"; sleep 3
-cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 -q 3427943187 > /root/napcat.log 2>&1 < /dev/null &
-sleep 28
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册
-base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+echo "==1 大脑与登录态=="
+bash /root/logincheck.sh 2>/dev/null | tail -3
+echo "==2 bot.log 16:40后 点歌相关=="
+grep -E "16:3[5-9]|16:4" /root/bot.log | grep -E "点歌|song|card|音乐" | tail -5
+echo "==3 napcat 16:35后 音乐/签名=="
+awk '/11-14 16:3[5-9]/,0' /root/napcat.log | grep -iE "music|音乐|卡|sign|签名|error" | head -12
+echo "==4 本地签名服务日志=="
+tail -8 /root/music_sign.log 2>/dev/null
+echo "==5 服务存活=="
+pgrep -af music_sign.py | head -1
 --- 输出 ---
-码已放进相册
-iVBORw0KGgoAAAANSUhEUgAAAJMAAACTAQAAAACinha4AAAACXBIWXMAAAsTAAALEwEAmpwYAAACAUlEQVRIid2WsY2FMAyGjVLQPRaIlDXSZSVYAB4LwErpsgZSFki6FBG+P8eT7qRr4vaiFPAVlu3/t4H476F/zRLRTNeLOAe1exokLHNdrZ5HPZXIAa8S5vXmOVmaQruLmJnD1qGYXc6WojfWk9eDlHFdgl4t78Xkn9q6GPoH9rk/Pe1i7ZS64CKpX1r2sJto8ubt+LaqpSNhGW3zkVkxm7fVi4Qli+bFRBHBkjWnhCFMGonomjy/ndol7B7hNXO4CtccjjYRs3FHLtZkT+snl16WxjpbPktd24NhCbvH1nL2KjfN+ZSw5PTqIiZyCSrZa5MwzOIx1i2geSb7R7duVjQ5moqeCVZVLGGwWC5tPlo8/vivk7G/thCPMZ4BxrkWCYNP7yY4rU4d7hokjLnOsBqhDkj3qa2T3U1wpF8HLAbmXcK40FAqoQekuEQZY4OQ7GlidZASsTTql60vQvub01nCsm8DjQmbAsR/4vUyZr2FCsXIYZd8fNrJksPGjdhAmOnbPTu7l+VwzWTOot7W3NgoIlb4gFUDn76+xphlDMPRZgsb9E16kzCcRI9T1PcVsPY9RwUjjIOM1ClhuXkcQ3ltHsPxeLybYX8EREUuJpFehGxu0il8zLEVspAtXmELzvZbQBFDHTaehfegB5Yx9G9D6UUl/D3ZR7de1vsP9z/YF1+7XyXQmLQPAAAAAElFTkSuQmCC
+==1 大脑与登录态==
+[在线] 已登录，一切正常
+阶段: ready
+最近错误: 无
+==2 bot.log 16:40后 点歌相关==
+11-14 16:42:49 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 775515345 from 1561950850@[群:1109952783] '[at:qq=3427943187] 点歌 稻香 周杰伦'
+11-14 16:42:50 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=39)
+11-14 16:43:25 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=39) running complete
+==3 napcat 16:35后 音乐/签名==
+==4 本地签名服务日志==
+==5 服务存活==
+10244 /root/bot/venv/bin/python /root/music_sign.py
