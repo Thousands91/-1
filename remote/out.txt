@@ -1,43 +1,158 @@
-<<<task_285532.txt>>>
-===== 任务285532 11-14 18:33:40 =====
+<<<task_285533.txt>>>
+===== 任务285533 11-14 18:36:38 =====
 --- 命令 ---
-COVER="https://p2.music.126.net/d9PFoO6QmofVwblLqV0WPw==/109951174215189503.jpg"
-echo "==yibai服务: custom全量载荷=="
-timeout 20 curl -s -w "\nHTTP:%{http_code} %{time_total}s\n" -X POST "http://106.55.0.102:10087/" \
-  -H "Content-Type: application/json" \
-  -d "{\"type\":\"custom\",\"singer\":\"虾胡闹\",\"title\":\"橘子酸(cover那艺娜)\",\"url\":\"https://music.163.com/song?id=3381542797\",\"audio\":\"https://api.injahow.cn/meting/?type=url&server=netease&id=3381542797\",\"image\":\"$COVER\"}" -o /tmp/yb.json
-head -c 700 /tmp/yb.json; echo
-python3 - <<'PYEOF'
+cat > /root/music_sign.py <<'PYEOF'
+#!/usr/bin/env python3
+"""自托管音乐签名代理 v3（坑107终局，2026-11-14）。
+
+真相（18:35 定案）：正版音乐卡必须带腾讯签发的 config.token，
+token 只能由挂着的真 QQ 客户端从腾讯侧取得——本地凭空拼的 JSON
+（v1/v2）客户端一律显示"发送者版本过低"。公益签名服务全靠各自
+的真客户端活着，目前全网已知服务半死/僵尸。
+
+v3 策略：代理 + 验真 + 冷却。
+- 收到请求 → 从网易云补齐歌讯 → 以 custom 契约轮询上游真签名服务
+- 谁吐出带 config.token 的卡就转发谁（验真，绝不让占位符卡出门）
+- 全灭 → 400（NapCat 发卡失败，插件走文字卡兜底，体验不断）
+- 某上游挂掉记冷却 5 分钟，期间跳过，不拖累延迟
+"""
 import json
-try:
-    d=json.load(open('/tmp/yb.json'))
-    cfg=d.get('config') or {}
-    print('app:',d.get('app'),'view:',d.get('view'),'token:',bool(cfg.get('token')),len(str(cfg.get('token') or '')))
-except Exception as e:
-    print('非ark JSON:', e)
+import random
+import threading
+import time
+import urllib.request
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+PORT = 10800
+UIN = 3427943187
+UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+      "Content-Type": "application/json"}
+UPSTREAMS = ["http://106.55.0.102:10087/", "https://ss.xingzhige.com/music_card/card"]
+_cooldown = {}  # base -> 恢复时间戳
+_lock = threading.Lock()
+_cache = {}
+
+
+def _log(msg):
+    with _lock:
+        print(time.strftime("%m-%d %H:%M:%S ") + msg, flush=True)
+
+
+def netease_meta(sid):
+    if sid in _cache:
+        return _cache[sid]
+    url = "https://music.163.com/api/song/detail/?id=%s&ids=%%5B%s%%5D" % (sid, sid)
+    d = json.load(urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=4))
+    s = (d.get("songs") or [{}])[0]
+    r = (s.get("name", ""),
+         "/".join(a.get("name", "") for a in s.get("artists") or []),
+         (s.get("album") or {}).get("picUrl", ""))
+    _cache[sid] = r
+    return r
+
+
+def get_signed_card(payload):
+    now = time.time()
+    for base in UPSTREAMS:
+        if _cooldown.get(base, 0) > now:
+            continue
+        try:
+            body = urllib.request.urlopen(
+                urllib.request.Request(base, data=json.dumps(payload).encode(), headers=UA),
+                timeout=8).read()
+            card = json.loads(body)
+            if isinstance(card, dict) and (card.get("config") or {}).get("token"):
+                _log("上游出真卡: %s (%d bytes)" % (base, len(body)))
+                return card
+            _log("上游无token(拒收): %s -> %s" % (base, body[:80]))
+        except Exception as e:
+            _log("上游失败: %s -> %s" % (base, e))
+        with _lock:
+            _cooldown[base] = time.time() + 300  # 冷却5分钟
+    return None
+
+
+class H(BaseHTTPRequestHandler):
+    protocol_version = "HTTP/1.1"
+
+    def _read_body(self):
+        te = (self.headers.get("Transfer-Encoding") or "").lower()
+        if "chunked" in te:
+            body = b""
+            while True:
+                line = self.rfile.readline(65536).strip()
+                if b";" in line:
+                    line = line.split(b";")[0]
+                try:
+                    size = int(line, 16)
+                except ValueError:
+                    break
+                if size == 0:
+                    self.rfile.readline(65536)
+                    break
+                body += self.rfile.read(size)
+                self.rfile.read(2)
+            return body
+        n = int(self.headers.get("Content-Length") or 0)
+        return self.rfile.read(n) if n else b""
+
+    def do_POST(self):
+        raw = self._read_body()
+        try:
+            d = json.loads(raw or b"{}")
+        except Exception:
+            d = {}
+            _log("请求体解析失败: %r" % raw[:200])
+        t = d.get("type", "?")
+        out = None
+        try:
+            if t == "custom" and d.get("title"):
+                payload = {"type": "custom", "singer": d.get("singer") or d.get("content") or "",
+                           "title": d.get("title", ""), "url": d.get("url", ""),
+                           "audio": d.get("audio", ""), "image": d.get("image", "")}
+            elif t in ("163", "custom"):
+                title, desc, pic = netease_meta(str(d.get("id", "")))
+                payload = {"type": "custom", "singer": desc, "title": title,
+                           "url": "https://music.163.com/song?id=%s" % d.get("id"),
+                           "audio": "https://api.injahow.cn/meting/?type=url&server=netease&id=%s" % d.get("id"),
+                           "image": pic}
+            else:
+                payload = None
+            if payload:
+                out = get_signed_card(payload)
+        except Exception as e:
+            _log("build异常: %s" % e)
+        if out is None:
+            body = json.dumps({"error": "no live signer", "ok": False}).encode()
+            self.send_response(400)
+        else:
+            body = json.dumps(out, ensure_ascii=False).encode()
+            self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+        _log("处理完毕 type=%s -> %d bytes %s" % (t, len(body), "真卡" if out else "(全灭,走兜底)"))
+
+    def log_message(self, *a):
+        pass
+
+
+_log("music_sign v3 启动 127.0.0.1:%d (代理模式,验token)" % PORT)
+ThreadingHTTPServer(("127.0.0.1", PORT), H).serve_forever()
 PYEOF
-echo "==思思: custom全量载荷=="
-timeout 20 curl -s -w "\nHTTP:%{http_code}\n" -X POST "https://ss.xingzhige.com/music_card/card" \
-  -H "Content-Type: application/json" \
-  -d "{\"type\":\"custom\",\"singer\":\"虾胡闹\",\"title\":\"橘子酸(cover那艺娜)\",\"url\":\"https://music.163.com/song?id=3381542797\",\"audio\":\"https://api.injahow.cn/meting/?type=url&server=netease&id=3381542797\",\"image\":\"$COVER\"}" -o /tmp/xz2.json
-head -c 500 /tmp/xz2.json; echo
-python3 - <<'PYEOF'
-import json
-try:
-    d=json.load(open('/tmp/xz2.json'))
-    cfg=d.get('config') or {}
-    print('app:',d.get('app'),'view:',d.get('view'),'token:',bool(cfg.get('token')),len(str(cfg.get('token') or '')))
-except Exception as e:
-    print('非ark JSON:', e)
-PYEOF
+python3 -m py_compile /root/music_sign.py && echo 语法通过
+pkill -f "python /root/music_sign.py"; sleep 1
+setsid nohup /root/bot/venv/bin/python /root/music_sign.py > /root/music_sign.log 2>&1 < /dev/null &
+sleep 2
+timeout 15 curl -s -o /dev/null -w "自测(预期400全灭): %{http_code} %{time_total}s\n" "http://127.0.0.1:10800/" -H "Content-Type: application/json" -d '{"type":"163","id":"185868"}'
+tail -5 /root/music_sign.log
+rm -f /root/bot/bot/plugins/card_forensics.py && echo 取证插件已移除
 --- 输出 ---
-==yibai服务: custom全量载荷==
-
-HTTP:504 15.735742s
-{"error":"等待 Push 超时","ok":false}
-app: None view: None token: False 0
-==思思: custom全量载荷==
-
-HTTP:200
-
-非ark JSON: Expecting value: line 1 column 1 (char 0)
+语法通过
+自测(预期400全灭): 400 11.135227s
+11-14 18:36:40 music_sign v3 启动 127.0.0.1:10800 (代理模式,验token)
+11-14 18:36:51 上游失败: http://106.55.0.102:10087/ -> timed out
+11-14 18:36:53 上游失败: https://ss.xingzhige.com/music_card/card -> Expecting value: line 1 column 1 (char 0)
+11-14 18:36:53 处理完毕 type=163 -> 40 bytes (全灭,走兜底)
+取证插件已移除
