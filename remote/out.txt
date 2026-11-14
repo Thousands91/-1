@@ -1,19 +1,5 @@
-<<<task_285489.txt>>>
-===== 任务285489 11-14 13:52:21 =====
+<<<task_285490.txt>>>
+===== 任务285490 11-14 14:11:48 =====
 --- 命令 ---
-cd /root/bot && git pull --ff-only 2>&1 | tail -1 && git log --oneline -1
-md5sum /root/bot/bot/plugins/song_request.py
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/song_request.py && echo 编译通过
-pkill -f "venv/bin/python main.py"; sleep 10
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 12
-pgrep -af "venv/bin/python main.py" | head -1
-tail -2 /root/bot.log | cut -c1-100
+grep -E "14:(0[0-9]|1[0-1])" /root/napcat.log 2>/dev/null | grep -iE "点歌|music|卡|sign|签名|error|语音" | head -16
 --- 输出 ---
- 1 file changed, 23 insertions(+), 1 deletion(-)
-6c2f45a 坑107续:自定义卡补必填封面(meting pic兜底,NapCat缺image整卡被拒实锤13:48)
-5a25815d81fb3d55363cee96369d53dc  /root/bot/bot/plugins/song_request.py
-编译通过
-32387 /root/bot/venv/bin/python main.py
-11-14 13:52:45 [INFO] websockets | connection open
-11-14 13:52:45 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
