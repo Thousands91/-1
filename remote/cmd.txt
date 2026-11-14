@@ -1,11 +1,15 @@
-285485
-echo "==NapCat版本=="
-cat /root/Napcat/package.json 2>/dev/null | grep version | head -1
-ls /root/Napcat/ | head
-echo "==DNS解析=="
-for h in qqbotark.569879.xyz ss.xingzhige.com llob.linyuchen.net napcat-sign.wumiao.wang; do
-  printf "%-28s " "$h"
-  getent hosts $h 2>/dev/null | head -1 || nslookup $h 2>/dev/null | tail -2 | head -1 || echo "解析失败"
-done
-echo "==逐个端口级连通测试=="
-timeout 8 bash -c 'echo > /dev/tcp/111.170.174.56/443' 2>&1 && echo "111.170.174.56:443 TCP可达" || echo "111.170.174.56:443 TCP不通"
+285486
+echo "==1 同步代码=="
+cd /root/bot && git pull --ff-only 2>&1 | tail -1 && git log --oneline -1
+md5sum /root/bot/bot/plugins/song_request.py
+echo "==2 语法=="
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/song_request.py && echo 编译通过
+echo "==3 NapCat配置里musicSignUrl=="
+grep -h "musicSignUrl" /root/.config/QQ/NapCat/config/onebot11_3427943187.json 2>/dev/null || echo "配置无musicSignUrl(用内置默认)"
+ls /root/.config/QQ/NapCat/config/ 2>/dev/null | head -8
+echo "==4 重启大脑=="
+pkill -f "venv/bin/python main.py"; sleep 10
+cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 12
+pgrep -af "venv/bin/python main.py" | head -1
+tail -3 /root/bot.log | cut -c1-120
