@@ -1,21 +1,129 @@
-<<<task_285493.txt>>>
-===== 任务285493 11-14 14:25:57 =====
+<<<task_285494.txt>>>
+===== 任务285494 11-14 14:26:59 =====
 --- 命令 ---
 M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
-echo "==NapCat版本=="
-grep -o '"version":"[^"]*"' /root/Napcat/opt/QQ/resources/app/app_launcher/package.json 2>/dev/null | head -1
-cat /root/Napcat/opt/QQ/resources/app/app_launcher/package.json 2>/dev/null | head -5
-echo "==自定义音乐卡片代码上下文=="
-grep -n "自定义音乐卡片" $M | head -3
-echo "==musicSignUrl引用=="
-grep -c "musicSignUrl" $M
-echo "==custom music处理段=="
-grep -o 'case"custom":[^}]\{0,400\}' $M | head -2
+echo "==77400-77520段=="
+sed -n '77400,77520p' $M
 --- 输出 ---
-==NapCat版本==
-==自定义音乐卡片代码上下文==
-77463:          this.core.context.logger.logError("[音乐卡片] 自定义音乐卡片缺少必需参数: url");
-77467:          this.core.context.logger.logError("[音乐卡片] 自定义音乐卡片缺少必需参数: image");
-==musicSignUrl引用==
-4
-==custom music处理段==
+==77400-77520段==
+    },
+    [Ke.voice]: async (e, r) => this.obContext.apis.FileApi.createValidSendPttElement(
+      r,
+      (await this.handleOb11FileLikeMessage(e, r)).path
+    ),
+    [Ke.json]: async ({ data: { data: e } }) => ({
+      elementType: Ee.ARK,
+      elementId: "",
+      arkElement: {
+        bytesData: typeof e == "string" ? e : JSON.stringify(e),
+        linkInfo: null,
+        subElementType: null
+      }
+    }),
+    [Ke.dice]: async () => ({
+      elementType: Ee.FACE,
+      elementId: "",
+      faceElement: {
+        faceIndex: qd.DICE,
+        faceType: va.AniSticke,
+        faceText: "[骰子]",
+        packId: "1",
+        stickerId: "33",
+        sourceType: 1,
+        stickerType: 2,
+        surpriseId: ""
+        // "randomType": 1,
+      }
+    }),
+    [Ke.rps]: async () => ({
+      elementType: Ee.FACE,
+      elementId: "",
+      faceElement: {
+        faceIndex: qd.RPS,
+        faceText: "[包剪锤]",
+        faceType: va.AniSticke,
+        packId: "1",
+        stickerId: "34",
+        sourceType: 1,
+        stickerType: 2,
+        surpriseId: ""
+        // "randomType": 1,
+      }
+    }),
+    // Need signing
+    [Ke.markdown]: async ({ data: { content: e } }) => ({
+      elementType: Ee.MARKDOWN,
+      elementId: "",
+      markdownElement: { content: e }
+    }),
+    [Ke.music]: async ({ data: e }, r) => {
+      const n = ["qq", "163", "kugou", "kuwo", "migu"], i = [...n, "custom"];
+      if (e.id !== void 0) {
+        if (!n.includes(e.type)) {
+          this.core.context.logger.logError(`[音乐卡片] type参数错误: "${e.type}"，仅支持: ${n.join("、")}`);
+          return;
+        }
+      } else {
+        if (!i.includes(e.type)) {
+          this.core.context.logger.logError(`[音乐卡片] type参数错误: "${e.type}"，仅支持: ${i.join("、")}`);
+          return;
+        }
+        if (!e.url) {
+          this.core.context.logger.logError("[音乐卡片] 自定义音乐卡片缺少必需参数: url");
+          return;
+        }
+        if (!e.image) {
+          this.core.context.logger.logError("[音乐卡片] 自定义音乐卡片缺少必需参数: image");
+          return;
+        }
+      }
+      let o;
+      if (e.id === void 0 && e.content) {
+        const { content: a, ...c } = e;
+        o = { singer: a, ...c };
+      } else
+        o = e;
+      let s = this.obContext.configLoader.configData.musicSignUrl;
+      s || (s = "http://106.55.0.102:10087/");
+      try {
+        let a;
+        try {
+          a = await Lt.HttpGetJson(s, "POST", o);
+        } catch {
+          this.core.context.logger.logError("[音乐卡片签名] 首选地址失败，尝试备选地址..."), a = await Lt.HttpGetJson(
+            "https://ss.xingzhige.com/music_card/card",
+            // 思思的音卡签名
+            "POST",
+            o
+          );
+        }
+        return this.ob11ToRawConverters.json({
+          data: { data: a },
+          type: Ke.json
+        }, r);
+      } catch (a) {
+        const c = a instanceof Error ? a.message : String(a);
+        this.core.context.logger.logError(
+          `[音乐卡片签名失败] 签名服务请求出错!
+  ├─ 音乐类型: ${e.type}
+  ├─ 音乐ID: ${e.id ?? "自定义"}
+  ├─ 错误信息: ${c}
+  └─ 提示: 请检查网络连接，或尝试在配置中更换其他音乐签名服务地址(musicSignUrl)`
+        );
+        return;
+      }
+    },
+    [Ke.node]: async () => {
+    },
+    [Ke.forward]: async ({ data: e }, r) => {
+      const n = FA.fromResId(e.id);
+      return this.ob11ToRawConverters.json({
+        data: { data: JSON.stringify(n) },
+        type: Ke.json
+      }, r);
+    },
+    [Ke.xml]: async () => {
+    },
+    [Ke.poke]: async () => {
+    },
+    [Ke.location]: async () => ({
