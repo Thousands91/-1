@@ -1,33 +1,20 @@
-<<<task_285482.txt>>>
-===== 任务285482 11-14 13:09:06 =====
+<<<task_285483.txt>>>
+===== 任务285483 11-14 13:10:48 =====
 --- 命令 ---
-grep -n "音乐卡片签名" /root/napcat.log | tail -5
-echo "==完整错误上下文=="
-grep -A 3 "音乐卡片签名" /root/napcat.log | tail -20
+echo "==测签名服务连通性=="
+timeout 12 curl -s -o /dev/null -w "%{http_code} %{time_total}s\n" https://111.170.174.56:443 2>&1 || echo "首选地址不通"
+timeout 12 curl -s -o /dev/null -w "%{http_code}\n" https://music.qsign.jixs.cc 2>&1 | head -1
+echo "==NapCat配置里签名服务设置=="
+grep -r "sign\|音乐\|music" /root/Napcat/config/ 2>/dev/null | grep -v "token\|key\|password" | head -8
+ls /root/Napcat/config/ 2>/dev/null
+echo "==对照组:其它外网通不通=="
+timeout 8 curl -s -o /dev/null -w "baidu:%{http_code}\n" https://www.baidu.com
+timeout 8 curl -s -o /dev/null -w "music.163.com:%{http_code}\n" https://music.163.com
 --- 输出 ---
-2432:11-14 13:04:47 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
-2448:11-14 13:05:14 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
-2449:11-14 13:05:46 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
-2452:11-14 13:06:26 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
-2467:11-14 13:06:52 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
-==完整错误上下文==
-  ├─ 错误信息: connect ETIMEDOUT 111.170.174.56:443
---
-11-14 13:04:47 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
-  ├─ 音乐类型: qq
-  ├─ 音乐ID: 001SgpUZ0eCe6L
-  ├─ 错误信息: connect ETIMEDOUT 111.170.174.56:443
---
-11-14 13:05:14 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
-11-14 13:05:46 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
-11-14 13:06:21 [[32minfo[39m] 阿萨尔 | 语音文件/root/.config/QQ/NapCat/temp/c70c6e35-a521-471a-9ef5-b88d38c3da83需要转换成silk
-[mp3float @ 0x2c03883100] Could not update timestamps for skipped samples.
-11-14 13:06:26 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
-  ├─ 音乐类型: 163
-  ├─ 音乐ID: 2663794686
-  ├─ 错误信息: connect ETIMEDOUT 111.170.174.56:443
---
-11-14 13:06:52 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
-  ├─ 音乐类型: qq
-  ├─ 音乐ID: 000COwzI2VMlNK
-  ├─ 错误信息: connect ETIMEDOUT 111.170.174.56:443
+==测签名服务连通性==
+首选地址不通
+000
+==NapCat配置里签名服务设置==
+==对照组:其它外网通不通==
+baidu:200
+music.163.com:200
