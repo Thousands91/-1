@@ -1,101 +1,57 @@
-<<<task_285514.txt>>>
-===== 任务285514 11-14 17:34:36 =====
+<<<task_285515.txt>>>
+===== 任务285515 11-14 17:36:33 =====
 --- 命令 ---
 M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
-echo "==NapCat构造签名请求的源码(77460-77520)=="
-sed -n '77460,77520p' $M
-echo "==给服务加原始请求体日志=="
-python3 - <<'PYEOF'
-p = "/root/music_sign.py"
-t = open(p, encoding="utf-8").read()
-old = """        n = int(self.headers.get("Content-Length") or 0)
-        try:
-            d = json.loads(self.rfile.read(n) or b"{}")
-        except Exception:
-            d = {}"""
-new = """        n = int(self.headers.get("Content-Length") or 0)
-        raw = self.rfile.read(n) if n else b""
-        try:
-            d = json.loads(raw or b"{}")
-        except Exception:
-            d = {}
-            _log("原始请求体解析失败: %r" % raw[:400])"""
-assert old in t
-open(p, "w", encoding="utf-8").write(t.replace(old, new, 1))
-print("已加原始请求体日志")
-PYEOF
-pkill -f "python /root/music_sign.py"; sleep 1
-setsid nohup /root/bot/venv/bin/python /root/music_sign.py > /root/music_sign.log 2>&1 < /dev/null &
-sleep 2
-timeout 8 curl -s -o /dev/null -w "服务自检: %{http_code}\n" "http://127.0.0.1:10800/" -H "Content-Type: application/json" -d '{"type":"163","id":"185868"}'
-echo "==onebot11有没有HTTP API可用=="
-python3 -c "import json;d=json.load(open('/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json'));print('http端口:',d.get('http',{}).get('enable'),d.get('http',{}).get('port'));print('ws端口:',d.get('websocket',{}).get('enable'),d.get('websocket',{}).get('port'))"
+echo "==补看285514尾部结果=="
+pgrep -af music_sign.py | head -1
+tail -2 /root/music_sign.log
+echo "==HttpGetJson函数定义=="
+grep -n "HttpGetJson" $M | head -5
+N=$(grep -n "static.*HttpGetJson\|HttpGetJson(" $M | head -1 | cut -d: -f1)
+echo "定义位置: $N"
+sed -n "$((N-2)),$((N+25))p" $M
+echo "==onebot11 HTTP端口=="
+python3 -c "import json;d=json.load(open('/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json'));print('http:',d.get('http'));print('ws:',d.get('websocket'))"
 --- 输出 ---
-==NapCat构造签名请求的源码(77460-77520)==
+==补看285514尾部结果==
+18761 /root/bot/venv/bin/python /root/music_sign.py
+11-14 17:34:38 music_sign v2 启动 127.0.0.1:10800
+11-14 17:34:40 已出卡 type=163 id=185868 -> 579 bytes
+==HttpGetJson函数定义==
+8287:  static async HttpGetJson(e, r = "GET", n, i = {}, o = !0, s = !0, a = 5) {
+8303:          this.HttpGetJson(x, r, n, i, o, s, a - 1).then(p).catch(f);
+8331:    return this.HttpGetJson(e, r, n, i, !1, !1);
+8379:        let n = await Lt.HttpGetJson(r, "GET");
+8732:        Lt.HttpGetJson(p, "GET", void 0, {
+定义位置: 8287
+  // 请求和回复都是JSON data传原始内容 自动编码json
+  // 支持 301/302 重定向（最多 5 次）
+  static async HttpGetJson(e, r = "GET", n, i = {}, o = !0, s = !0, a = 5) {
+    const c = new URL(e), u = e.startsWith("https://") ? E4 : jp, d = {
+      hostname: c.hostname,
+      port: c.port,
+      path: c.pathname + c.search,
+      method: r,
+      headers: i
+    };
+    return new Promise((p, f) => {
+      const h = u.request(d, (m) => {
+        if ((m.statusCode === 301 || m.statusCode === 302 || m.statusCode === 307 || m.statusCode === 308) && m.headers.location) {
+          if (a <= 0) {
+            f(new Error("Too many redirects"));
+            return;
+          }
+          const x = new URL(m.headers.location, e).href;
+          this.HttpGetJson(x, r, n, i, o, s, a - 1).then(p).catch(f);
           return;
         }
-        if (!e.url) {
-          this.core.context.logger.logError("[音乐卡片] 自定义音乐卡片缺少必需参数: url");
-          return;
-        }
-        if (!e.image) {
-          this.core.context.logger.logError("[音乐卡片] 自定义音乐卡片缺少必需参数: image");
-          return;
-        }
-      }
-      let o;
-      if (e.id === void 0 && e.content) {
-        const { content: a, ...c } = e;
-        o = { singer: a, ...c };
-      } else
-        o = e;
-      let s = this.obContext.configLoader.configData.musicSignUrl;
-      s || (s = "http://106.55.0.102:10087/");
-      try {
-        let a;
-        try {
-          a = await Lt.HttpGetJson(s, "POST", o);
-        } catch {
-          this.core.context.logger.logError("[音乐卡片签名] 首选地址失败，尝试备选地址..."), a = await Lt.HttpGetJson(
-            "https://ss.xingzhige.com/music_card/card",
-            // 思思的音卡签名
-            "POST",
-            o
-          );
-        }
-        return this.ob11ToRawConverters.json({
-          data: { data: a },
-          type: Ke.json
-        }, r);
-      } catch (a) {
-        const c = a instanceof Error ? a.message : String(a);
-        this.core.context.logger.logError(
-          `[音乐卡片签名失败] 签名服务请求出错!
-  ├─ 音乐类型: ${e.type}
-  ├─ 音乐ID: ${e.id ?? "自定义"}
-  ├─ 错误信息: ${c}
-  └─ 提示: 请检查网络连接，或尝试在配置中更换其他音乐签名服务地址(musicSignUrl)`
-        );
-        return;
-      }
-    },
-    [Ke.node]: async () => {
-    },
-    [Ke.forward]: async ({ data: e }, r) => {
-      const n = FA.fromResId(e.id);
-      return this.ob11ToRawConverters.json({
-        data: { data: JSON.stringify(n) },
-        type: Ke.json
-      }, r);
-    },
-    [Ke.xml]: async () => {
-    },
-    [Ke.poke]: async () => {
-    },
-    [Ke.location]: async () => ({
-==给服务加原始请求体日志==
-已加原始请求体日志
-服务自检: 200
-==onebot11有没有HTTP API可用==
-http端口: None None
-ws端口: None None
+        let y = "";
+        m.on("data", (x) => {
+          y += x.toString();
+        }), m.on("end", () => {
+          try {
+            if (m.statusCode && m.statusCode >= 200 && m.statusCode < 300)
+              if (o) {
+==onebot11 HTTP端口==
+http: None
+ws: None
