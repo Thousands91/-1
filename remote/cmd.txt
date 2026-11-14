@@ -1,8 +1,24 @@
-285507
-echo "==bot.log 16:42:50-16:43:26 全量=="
-awk '/11-14 16:42:50/,/11-14 16:43:26/' /root/bot.log | grep -vE "Matcher\(|running complete|Event will be handled" | cut -c1-200
-echo "==napcat 16:42:45-16:43:30 全量=="
-awk '/11-14 16:42:4[5-9]/,/11-14 16:43:30/' /root/napcat.log | cut -c1-160
-echo "==X10代码版本=="
-cd /root/bot && git log --oneline -1
-md5sum /root/bot/bot/plugins/song_request.py
+285508
+echo "==1 找出所有onebot11配置并看musicSignUrl=="
+for f in $(find /root -name "onebot11_*.json" 2>/dev/null); do
+  printf "%s => " "$f"
+  python3 -c "import json;print(repr(json.load(open('$f')).get('musicSignUrl','<无此键>')))" 2>/dev/null || echo 解析失败
+done
+echo "==2 本地服务真实响应=="
+timeout 10 curl -s "http://127.0.0.1:10800/" -H "Content-Type: application/json" -d '{"type":"custom","singer":"周杰伦","title":"晴天","url":"https://music.163.com/song?id=185868","audio":"https://api.injahow.cn/meting/?type=url&server=netease&id=185868","image":"https://p1.music.126.net/6j7FCfCQcFfrJuXP4F6yaw==/109951165939217481.jpg"}' | head -c 120; echo
+echo "==3 全部配置文件统一指向本地服务=="
+for f in $(find /root -name "onebot11_*.json" 2>/dev/null); do
+  python3 -c "
+import json
+p='$f'
+d=json.load(open(p))
+d['musicSignUrl']='http://127.0.0.1:10800/'
+json.dump(d,open(p,'w'),ensure_ascii=False,indent=2)
+print(p,'已设置')"
+done
+echo "==4 重启QQ加载配置=="
+pkill -f "opt/QQ/[q]q"; sleep 3
+cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 -q 3427943187 > /root/napcat.log 2>&1 < /dev/null &
+sleep 28
+cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册
+base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
