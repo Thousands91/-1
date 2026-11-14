@@ -1,59 +1,30 @@
-285522
-cat /root/bot/bot/.env | sed 's/\(SECRET\|TOKEN\|KEY\)=.*/\1=<隐藏>/' 
-echo "==napcat网络配置=="
-python3 -c "
-import json
-d=json.load(open('/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json'))
-import sys
-net=d.get('network') or {}
-print(json.dumps(net, ensure_ascii=False)[:600])"
-echo "==翻历史消息找正版卡片=="
+285523
 /root/bot/venv/bin/python - <<'PYEOF'
-import asyncio, json, re, sys
-sys.path.insert(0, '/root/bot')
-from nonebot import get_driver, get_bot
-import nonebot
+import asyncio, json, aiohttp
 
 async def main():
-    driver = get_driver()
-    nonebot.init()
-    # 直接用运行中的连接不行,这里起独立nonebot再连接也不行——改走反向:直接读NapCat配置里的反向ws地址,当客户端连大脑的ws
-    # 更简单:从.env拿端口和token,直连大脑ws server
-    conf = {}
-    for line in open('/root/bot/bot/.env'):
-        line=line.strip()
-        if '=' in line and not line.startswith('#'):
-            k,v=line.split('=',1); conf[k.strip()]=v.strip().strip('"')
-    port = conf.get('PORT') or conf.get('ONEBOT_PORT') or '8080'
-    tok  = conf.get('ONEBOT_ACCESS_TOKEN') or conf.get('ACCESS_TOKEN') or ''
-    url = f"ws://127.0.0.1:{port}/onebot/v11/ws"
-    import aiohttp
-    hdr = {"Authorization": f"Bearer {tok}"} if tok else {}
+    url = "ws://127.0.0.1:8080/onebot/v11/ws"
     async with aiohttp.ClientSession() as s:
-        try:
-            ws = await s.ws_connect(url, headers=hdr, timeout=aiohttp.ClientWSTimeout(ws_close=10))
-        except Exception as e:
-            print("连接失败:", url, e); return
+        ws = await s.ws_connect(url, timeout=aiohttp.ClientWSTimeout(ws_close=15))
         for gid in (1109952783, 590454333):
-            await ws.send_str(json.dumps({"action":"get_group_msg_history","params":{"group_id":gid,"count":300},"echo":f"h{gid}"}))
-        found = 0
-        end = 0
-        while end < 2 and found < 3:
-            try:
-                m = await ws.receive(20)
-            except Exception:
-                break
-            if m.type.name != 'TEXT': continue
+            await ws.send_str(json.dumps({"action":"get_group_msg_history","params":{"group_id":gid,"count":400},"echo":f"h{gid}"}))
+        found, end = 0, 0
+        out = open("/tmp/real_card.json", "w")
+        while end < 2 and found < 4:
+            m = await ws.receive(25)
+            if m.type.name != 'TEXT': break
             d = json.loads(m.data)
-            if str(d.get("echo","")).startswith("h") and d.get("data"):
+            if str(d.get("echo","")).startswith("h") and isinstance(d.get("data"), dict):
                 end += 1
                 for msg in (d["data"].get("messages") or []):
                     raw = json.dumps(msg, ensure_ascii=False)
-                    if "structmsg" in raw or '"ark"' in raw or '音乐卡片' in raw or 'music' in raw.lower() and 'app' in raw:
+                    if "structmsg" in raw or '"ark"' in raw:
                         found += 1
-                        print(f"===群{gid} 发现卡片消息 seq={msg.get('message_seq')} time={msg.get('time')}===")
-                        print(raw[:2500])
-                        if found >= 3: break
-        print(f"共找到 {found} 条卡片消息")
+                        print(f"===群{str(d['echo'])[1:]} seq={msg.get('message_seq')} 时间={msg.get('time')}===")
+                        print(raw[:2600])
+                        out.write(raw + "\n")
+                        if found >= 4: break
+        print(f"共找到 {found} 条含卡片的记录")
+        out.close()
 asyncio.run(main())
 PYEOF
