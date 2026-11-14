@@ -1,5 +1,24 @@
-<<<task_285490.txt>>>
-===== 任务285490 11-14 14:11:48 =====
+<<<task_285491.txt>>>
+===== 任务285491 11-14 14:13:31 =====
 --- 命令 ---
-grep -E "14:(0[0-9]|1[0-1])" /root/napcat.log 2>/dev/null | grep -iE "点歌|music|卡|sign|签名|error|语音" | head -16
+echo "==bot.log 13:50后点歌=="
+grep -E "13:5[0-9]|14:0|14:1" /root/bot.log | grep "点歌" | tail -3
+echo "==napcat 13:52后全部error/音乐=="
+awk '/11-14 13:52:45/,0' /root/napcat.log | grep -iE "error|音乐|music|语音" | head -14
+echo "==napcat最新10行=="
+tail -10 /root/napcat.log | cut -c1-130
 --- 输出 ---
+==bot.log 13:50后点歌==
+11-14 13:55:54 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 65314971 from 1561950850@[群:1109952783] '[at:qq=3427943187] 点歌 稻香 周杰伦'
+==napcat 13:52后全部error/音乐==
+==napcat最新10行==
+11-14 13:56:39 [[32minfo[39m] 阿萨尔 | 语音文件已就绪: /root/.config/QQ/NapCat/temp/5601def8-f9f1-460a-9f37-3ad80ff338
+11-14 13:56:39 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] [�
+132ab0b259d667bb2ca3e636e7d1608bcd4cc131eeb035446fe473ececd71194
+11-14 13:56:43 [[31merror[39m] 阿萨尔 | 获取语音url失败 Error: [PacketClient] sendPacket 超时 cmd=OidbSvcTrpcTcp.0x12
+    at Timeout.<anonymous> (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:25202:11)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+11-14 13:58:09 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [克莱恩·莫雷蒂(2045344206)]
+11-14 13:58:11 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [幽幽子(3889001246)] [未实现
+54fa079d2986e4325a6b87e09317d13dfc6cb8406b2ee2461850d71f558f9bd2
