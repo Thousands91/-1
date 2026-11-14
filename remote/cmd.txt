@@ -1,8 +1,9 @@
-285498
-M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
-echo "==xingzhige引用=="
-grep -n "xingzhige" $M | head -3
-echo "==首选地址失败上下文=="
-grep -n "首选地址失败" $M | head -2
-echo "==77477-77500=="
-awk 'NR>=77477 && NR<=77500' $M
+285499
+echo "==完整载荷测签名(custom风格)=="
+timeout 15 curl -s -X POST "http://106.55.0.102:10087/" \
+  -H "Content-Type: application/json" \
+  -d '{"type":"custom","url":"https://music.163.com/song?id=185868","audio":"https://api.injahow.cn/meting/?type=url&server=netease&id=185868","title":"晴天 - 周杰伦","content":"叶惠美","image":"https://p1.music.126.net/cover.jpg"}' | head -c 500; echo
+echo "==163风格带id=="
+timeout 15 curl -s -X POST "http://106.55.0.102:10087/" \
+  -H "Content-Type: application/json" \
+  -d '{"type":"163","id":"185868"}' | head -c 300; echo
