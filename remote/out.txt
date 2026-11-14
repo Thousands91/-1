@@ -1,64 +1,36 @@
-<<<task_285507.txt>>>
-===== 任务285507 11-14 16:46:15 =====
+<<<task_285508.txt>>>
+===== 任务285508 11-14 16:54:30 =====
 --- 命令 ---
-echo "==bot.log 16:42:50-16:43:26 全量=="
-awk '/11-14 16:42:50/,/11-14 16:43:26/' /root/bot.log | grep -vE "Matcher\(|running complete|Event will be handled" | cut -c1-200
-echo "==napcat 16:42:45-16:43:30 全量=="
-awk '/11-14 16:42:4[5-9]/,/11-14 16:43:30/' /root/napcat.log | cut -c1-160
-echo "==X10代码版本=="
-cd /root/bot && git log --oneline -1
-md5sum /root/bot/bot/plugins/song_request.py
+echo "==1 找出所有onebot11配置并看musicSignUrl=="
+for f in $(find /root -name "onebot11_*.json" 2>/dev/null); do
+  printf "%s => " "$f"
+  python3 -c "import json;print(repr(json.load(open('$f')).get('musicSignUrl','<无此键>')))" 2>/dev/null || echo 解析失败
+done
+echo "==2 本地服务真实响应=="
+timeout 10 curl -s "http://127.0.0.1:10800/" -H "Content-Type: application/json" -d '{"type":"custom","singer":"周杰伦","title":"晴天","url":"https://music.163.com/song?id=185868","audio":"https://api.injahow.cn/meting/?type=url&server=netease&id=185868","image":"https://p1.music.126.net/6j7FCfCQcFfrJuXP4F6yaw==/109951165939217481.jpg"}' | head -c 120; echo
+echo "==3 全部配置文件统一指向本地服务=="
+for f in $(find /root -name "onebot11_*.json" 2>/dev/null); do
+  python3 -c "
+import json
+p='$f'
+d=json.load(open(p))
+d['musicSignUrl']='http://127.0.0.1:10800/'
+json.dump(d,open(p,'w'),ensure_ascii=False,indent=2)
+print(p,'已设置')"
+done
+echo "==4 重启QQ加载配置=="
+pkill -f "opt/QQ/[q]q"; sleep 3
+cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 -q 3427943187 > /root/napcat.log 2>&1 < /dev/null &
+sleep 28
+cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册
+base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
 --- 输出 ---
-==bot.log 16:42:50-16:43:26 全量==
-==napcat 16:42:45-16:43:30 全量==
-11-14 16:42:48 [[31merror[39m] 阿萨尔 | [Rkey] 异常服务 https://secret-service.bietiaop.com/rkeys 异常 /  Error: write EPROTO 154619681792:error:1000
-
-    at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
-11-14 16:42:49 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [我爱这橙色的海洋🍀💛乐育群里的(1561950
-11-14 16:42:50 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] 翻柜子找「稻香 周杰伦�
-843e67c3cd46a9189909ff76c89833fe600c92af3087153addecb7d37e44af62
-11-14 16:43:04 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
-11-14 16:43:12 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
-  ├─ 音乐类型: 163
-  ├─ 音乐ID: 3381542797
-  ├─ 错误信息: Unexpected end of JSON input
-  └─ 提示: 请检查网络连接，或尝试在配置中更换其他音乐签名服务地址(musicSignUrl)
-11-14 16:43:12 [[31merror[39m] 阿萨尔 | 发生错误 Error: 消息体无法解析, 请检查是否发送了不支持的消息类型
-    at Wwe.sendMsgWithOb11UniqueId (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:77727:13)
-    at Xwe.base_handle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:78111:60)
-    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    at async Xwe.websocketHandle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:36621:17)
-    at async pO.handleMessage (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:67875:15)
-11-14 16:43:14 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
-11-14 16:43:14 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
-  ├─ 音乐类型: qq
-  ├─ 音乐ID: 003joRpF3wA7e8
-  ├─ 错误信息: Unexpected token '关', "关闭id解析功能" is not valid JSON
-  └─ 提示: 请检查网络连接，或尝试在配置中更换其他音乐签名服务地址(musicSignUrl)
-11-14 16:43:14 [[31merror[39m] 阿萨尔 | 发生错误 Error: 消息体无法解析, 请检查是否发送了不支持的消息类型
-    at Wwe.sendMsgWithOb11UniqueId (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:77727:13)
-    at Xwe.base_handle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:78111:60)
-    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    at async Xwe.websocketHandle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:36621:17)
-    at async pO.handleMessage (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:67875:15)
-11-14 16:43:15 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
-11-14 16:43:17 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
-  ├─ 音乐类型: custom
-  ├─ 音乐ID: 自定义
-  ├─ 错误信息: Unexpected end of JSON input
-  └─ 提示: 请检查网络连接，或尝试在配置中更换其他音乐签名服务地址(musicSignUrl)
-11-14 16:43:17 [[31merror[39m] 阿萨尔 | 发生错误 Error: 消息体无法解析, 请检查是否发送了不支持的消息类型
-    at Wwe.sendMsgWithOb11UniqueId (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:77727:13)
-    at Xwe.base_handle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:78111:60)
-    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    at async Xwe.websocketHandle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:36621:17)
-    at async pO.handleMessage (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:67875:15)
-11-14 16:43:20 [[32minfo[39m] 阿萨尔 | 语音文件/root/.config/QQ/NapCat/temp/226fffed-d75d-4186-83db-1f979ad9af38需要转换成silk
-[mp3float @ 0x2403304380] Could not update timestamps for skipped samples.
-[mp3float @ 0x2403304380] Could not update timestamps for discarded samples.
-11-14 16:43:24 [[32minfo[39m] 阿萨尔 | 语音文件已就绪: /root/.config/QQ/NapCat/temp/27820886-12dd-46ca-afb2-177108b0f639 时长: 120.04
-11-14 16:43:24 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] [语音 120s]
-c521949dacab170ebc425691ce188f3f22589773d9020806f344a034d3ed47a6
-==X10代码版本==
-6c2f45a 坑107续:自定义卡补必填封面(meting pic兜底,NapCat缺image整卡被拒实锤13:48)
-5a25815d81fb3d55363cee96369d53dc  /root/bot/bot/plugins/song_request.py
+==1 找出所有onebot11配置并看musicSignUrl==
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json => 'http://127.0.0.1:10800/'
+==2 本地服务真实响应==
+{"app": "com.tencent.structmsg", "config": {"ctime": 12, "forward": true, "type": "normal", "autosize": true}, "extra": 
+==3 全部配置文件统一指向本地服务==
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json 已设置
+==4 重启QQ加载配置==
+码已放进相册
+iVBORw0KGgoAAAANSUhEUgAAAJMAAACTAQAAAACinha4AAAACXBIWXMAAAsTAAALEwEAmpwYAAACCUlEQVRIid2Wsa3lIBBFxyIg82sAiTbIaMluwDYN2C05ow0kGjAZgeXZi/57+7+0CSNtsFrkwD4BMnfu3IH4z0X/NbuI1mhGUpdLr5MGCSt8r1U9RKTVEfEpYaeZqy1nAyHSLGRrtQzA+Ckxm3w+OC3OvKSM7wkC+Lxr/nG2Lgb95mjez7emXaytaCbCUdTPWvawx5tJ0+QV2O7MKmEXqY3u0TGf9iEVJOzRaT7N4tJCaSIWsXLm44TLMsq+aRRBwBjaO8uVFp8hvJDlEnOI+fIqVHpJGNw9RDj8Hthe+qvmvezCuWGTCqOlmW2QsNYf2MmrcnKo373Vwy7XJMQ5QjULvf3XyUq9idJIvBM6O80S9jhV4g2Djz5NLrOEFW7iEdnN34u/BwlrSVAzIxWi+mjfyx5PE5KP7dbOkWXMwad2w05Vbc4eIoamdHlD3Vht3swShnaE/KNGi+BFxlCrF3ZyeJAoH+/2Ma728RavhROROiTscUi+vJMNSO7KIlYqrHpPGgXPga2IMZuh/QWiKKOGs4hFhRhbkQoV2amKhF3Yo+Yd1YbXPnnaybDKmQZWME7gdy07GebMAvFwmto6bJAwzLfFY8g0twZWRcQwV5EHOl8aLfI7w3rZWltvQfihpkHKGJcICwkvz0HEMCs0hvmNPOBTxpp+uEG0xMWg+/J4L/vbd71/m/0CD7ZVmxkBEksAAAAASUVORK5CYII=
