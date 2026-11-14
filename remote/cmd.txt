@@ -1,15 +1,3 @@
-285486
-echo "==1 同步代码=="
-cd /root/bot && git pull --ff-only 2>&1 | tail -1 && git log --oneline -1
-md5sum /root/bot/bot/plugins/song_request.py
-echo "==2 语法=="
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/song_request.py && echo 编译通过
-echo "==3 NapCat配置里musicSignUrl=="
-grep -h "musicSignUrl" /root/.config/QQ/NapCat/config/onebot11_3427943187.json 2>/dev/null || echo "配置无musicSignUrl(用内置默认)"
-ls /root/.config/QQ/NapCat/config/ 2>/dev/null | head -8
-echo "==4 重启大脑=="
-pkill -f "venv/bin/python main.py"; sleep 10
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 12
-pgrep -af "venv/bin/python main.py" | head -1
-tail -3 /root/bot.log | cut -c1-120
+285487
+grep -E "13:3[0-9]|13:4[0-9]" /root/napcat.log 2>/dev/null | grep -iE "music|卡|sign|签名" | head -6
+grep -E "点歌" /root/bot.log | tail -3
