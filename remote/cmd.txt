@@ -1,58 +1,10 @@
-285516
-python3 - <<'PYEOF'
-p = "/root/music_sign.py"
-t = open(p, encoding="utf-8").read()
-old = """        n = int(self.headers.get("Content-Length") or 0)
-        raw = self.rfile.read(n) if n else b""
-        try:
-            d = json.loads(raw or b"{}")
-        except Exception:
-            d = {}
-            _log("原始请求体解析失败: %r" % raw[:400])"""
-new = """        raw = self._read_body()
-        try:
-            d = json.loads(raw or b"{}")
-        except Exception:
-            d = {}
-            _log("原始请求体解析失败: %r" % raw[:400])"""
-assert old in t, "锚点没找到"
-helper = '''
-    def _read_body(self):
-        """NapCat 的 HttpGetJson 发 POST 不带 Content-Length，body 走 chunked；
-        Python 标准库只会按 Content-Length 读，结果读到 0 字节——这就是
-        v2 时代 NapCat 三连敲门全收到 type=? 的原因。两种读法都支持。"""
-        te = (self.headers.get("Transfer-Encoding") or "").lower()
-        if "chunked" in te:
-            body = b""
-            while True:
-                line = self.rfile.readline(65536).strip()
-                if b";" in line:
-                    line = line.split(b";")[0]
-                try:
-                    size = int(line, 16)
-                except ValueError:
-                    break
-                if size == 0:
-                    self.rfile.readline(65536)
-                    break
-                body += self.rfile.read(size)
-                self.rfile.read(2)
-            return body
-        n = int(self.headers.get("Content-Length") or 0)
-        return self.rfile.read(n) if n else b""
-
-    def do_POST(self):'''
-t = t.replace("    def do_POST(self):", helper, 1)
-t = t.replace(old, new, 1)
-open(p, "w", encoding="utf-8").write(t)
-print("chunked 支持已写入")
-PYEOF
-python3 -m py_compile /root/music_sign.py && echo 语法通过
-pkill -f "python /root/music_sign.py"; sleep 1
-setsid nohup /root/bot/venv/bin/python /root/music_sign.py > /root/music_sign.log 2>&1 < /dev/null &
-sleep 2
-echo "==自测1: 模拟NapCat的chunked发法=="
-timeout 10 curl -s -o /dev/null -w "chunked: %{http_code} 出卡%{size_download}字节\n" "http://127.0.0.1:10800/" -H "Transfer-Encoding: chunked" -H "Content-Type: application/json" -d '{"type":"163","id":"3381542797"}'
-echo "==自测2: 常规Content-Length发法(兼容)=="
-timeout 10 curl -s -o /dev/null -w "常规: %{http_code} 出卡%{size_download}字节\n" "http://127.0.0.1:10800/" -H "Content-Type: application/json" -d '{"type":"custom","singer":"周杰伦","title":"稻香 - 周杰伦","url":"https://music.163.com/song?id=3381542797","audio":"https://api.injahow.cn/meting/?type=url&server=netease&id=3381542797","image":"https://p1.music.126.net/x.jpg"}'
-tail -4 /root/music_sign.log
+285517
+M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
+echo "==1 服务日志:17:46那单=="
+tail -6 /root/music_sign.log
+echo "==2 napcat 17:45:40-17:47 音乐相关=="
+awk '/11-14 17:4[5-7]/,0' /root/napcat.log | grep -iE "music|音乐|sign|签名|json|error" | head -10 | cut -c1-150
+echo "==3 音乐handler续段(77520-77560)=="
+sed -n '77520,77560p' $M
+echo "==4 json converter定义=="
+grep -n "ob11ToRawConverters" $M | head -3
