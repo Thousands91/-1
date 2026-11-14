@@ -1,31 +1,43 @@
-285524
+285525
+echo "==.env的key名清单(只看键名)=="
+grep -oE '^[A-Za-z_]+' /root/bot/bot/.env
+echo "==带全套标准头重连=="
 /root/bot/venv/bin/python - <<'PYEOF'
 import asyncio, json, aiohttp
-
+conf={}
+for line in open('/root/bot/bot/.env'):
+    line=line.strip()
+    if '=' in line and not line.startswith('#'):
+        k,v=line.split('=',1); conf[k.strip()]=v.strip().strip('"')
+tok = conf.get('ONEBOT_ACCESS_TOKEN') or conf.get('ACCESS_TOKEN') or ''
 async def main():
-    url = "ws://127.0.0.1:8080/onebot/v11/ws"
-    hdr = {"X-Self-ID": "9000000001", "User-Agent": " napcat"}
-    async with aiohttp.ClientSession() as s:
-        ws = await s.ws_connect(url, headers=hdr, timeout=aiohttp.ClientWSTimeout(ws_close=15))
-        for gid in (1109952783, 590454333):
-            await ws.send_str(json.dumps({"action":"get_group_msg_history","params":{"group_id":gid,"count":400},"echo":f"h{gid}"}))
-        found, end = 0, 0
-        out = open("/tmp/real_card.json", "w")
-        while end < 2 and found < 4:
-            m = await ws.receive(25)
-            if m.type.name != 'TEXT': break
-            d = json.loads(m.data)
-            if str(d.get("echo","")).startswith("h") and isinstance(d.get("data"), dict):
-                end += 1
-                for msg in (d["data"].get("messages") or []):
-                    raw = json.dumps(msg, ensure_ascii=False)
-                    if "structmsg" in raw or '"ark"' in raw:
-                        found += 1
-                        print(f"===群{str(d['echo'])[1:]} seq={msg.get('message_seq')} 时间={msg.get('time')}===")
-                        print(raw[:2600])
-                        out.write(raw + "\n")
-                        if found >= 4: break
-        print(f"共找到 {found} 条含卡片的记录")
-        out.close()
+    hdr = {"X-Self-ID": "9000000001", "X-Client-Role": "Universal",
+           "User-Agent": "NapCat/4.8"}
+    if tok: hdr["Authorization"] = "Bearer " + tok
+    try:
+        async with aiohttp.ClientSession() as s:
+            ws = await s.ws_connect("ws://127.0.0.1:8080/onebot/v11/ws", headers=hdr, timeout=aiohttp.ClientWSTimeout(ws_close=15))
+            print("WS连接成功")
+            for gid in (1109952783, 590454333):
+                await ws.send_str(json.dumps({"action":"get_group_msg_history","params":{"group_id":gid,"count":400},"echo":f"h{gid}"}))
+            found, end = 0, 0
+            out = open("/tmp/real_card.json", "w")
+            while end < 2 and found < 4:
+                m = await ws.receive(30)
+                if m.type.name != 'TEXT': break
+                d = json.loads(m.data)
+                if str(d.get("echo","")).startswith("h") and isinstance(d.get("data"), dict):
+                    end += 1
+                    for msg in (d["data"].get("messages") or []):
+                        raw = json.dumps(msg, ensure_ascii=False)
+                        if "structmsg" in raw or '"ark"' in raw or '"json"' in raw and 'music' in raw:
+                            found += 1
+                            print(f"===群{str(d['echo'])[1:]} seq={msg.get('message_seq')}===")
+                            print(raw[:2600]); out.write(raw+"\n")
+                            if found>=4: break
+            print(f"共找到 {found} 条")
+            out.close()
+    except Exception as e:
+        print("失败:", type(e).__name__, e)
 asyncio.run(main())
 PYEOF
