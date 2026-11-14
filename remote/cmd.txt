@@ -1,2 +1,11 @@
-285492
-awk '/11-14 13:55:5/,/11-14 13:57:0/' /root/napcat.log | cut -c1-150
+285493
+M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
+echo "==NapCat版本=="
+grep -o '"version":"[^"]*"' /root/Napcat/opt/QQ/resources/app/app_launcher/package.json 2>/dev/null | head -1
+cat /root/Napcat/opt/QQ/resources/app/app_launcher/package.json 2>/dev/null | head -5
+echo "==自定义音乐卡片代码上下文=="
+grep -n "自定义音乐卡片" $M | head -3
+echo "==musicSignUrl引用=="
+grep -c "musicSignUrl" $M
+echo "==custom music处理段=="
+grep -o 'case"custom":[^}]\{0,400\}' $M | head -2
