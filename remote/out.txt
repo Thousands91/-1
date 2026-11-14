@@ -1,65 +1,87 @@
-<<<task_285517.txt>>>
-===== 任务285517 11-14 17:49:52 =====
+<<<task_285518.txt>>>
+===== 任务285518 11-14 17:51:05 =====
 --- 命令 ---
 M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
-echo "==1 服务日志:17:46那单=="
-tail -6 /root/music_sign.log
-echo "==2 napcat 17:45:40-17:47 音乐相关=="
-awk '/11-14 17:4[5-7]/,0' /root/napcat.log | grep -iE "music|音乐|sign|签名|json|error" | head -10 | cut -c1-150
-echo "==3 音乐handler续段(77520-77560)=="
-sed -n '77520,77560p' $M
-echo "==4 json converter定义=="
-grep -n "ob11ToRawConverters" $M | head -3
+echo "==json converter定义(77262起)=="
+sed -n '77262,77340p' $M
 --- 输出 ---
-==1 服务日志:17:46那单==
-11-14 17:38:58 music_sign v2 启动 127.0.0.1:10800
-11-14 17:39:00 已出卡 type=163 id=3381542797 -> 609 bytes
-11-14 17:39:00 已出卡 type=custom id= -> 532 bytes
-11-14 17:46:20 已出卡 type=163 id=3456659431 -> 597 bytes
-==2 napcat 17:45:40-17:47 音乐相关==
-==3 音乐handler续段(77520-77560)==
-    [Ke.location]: async () => ({
-      elementType: Ee.SHARELOCATION,
+==json converter定义(77262起)==
+  ob11ToRawConverters = {
+    [Ke.text]: async ({ data: { text: e } }) => ({
+      elementType: Ee.TEXT,
       elementId: "",
-      shareLocationElement: {
-        text: "测试",
-        ext: ""
+      textElement: {
+        content: e,
+        atType: Xn.ATTYPEUNKNOWN,
+        atUid: "",
+        atTinyId: "",
+        atNtUid: ""
       }
     }),
-    [Ke.miniapp]: async () => {
-    },
-    [Ke.contact]: async ({ data: { type: e = "qq", id: r } }, n) => {
-      if (e === "qq") {
-        const i = await this.core.apis.UserApi.getBuddyRecommendContactArkJson(r.toString(), "");
-        return this.ob11ToRawConverters.json({
-          data: { data: i.arkMsg },
-          type: Ke.json
-        }, n);
-      } else if (e === "group") {
-        const i = await this.core.apis.GroupApi.getGroupRecommendContactArkJson(r.toString());
-        return this.ob11ToRawConverters.json({
-          data: { data: i.arkJson },
-          type: Ke.json
-        }, n);
+    [Ke.at]: async ({ data: { qq: e } }, r) => {
+      function n(a, c, u, d) {
+        return {
+          elementType: Ee.TEXT,
+          elementId: "",
+          textElement: {
+            content: `@${d}`,
+            atType: u,
+            atUid: a,
+            atTinyId: "",
+            atNtUid: c
+          }
+        };
       }
+      if (!r.peer || !e || r.peer.chatType === Te.KCHATTYPEC2C) return;
+      if (e === "all") return n(e, e, Xn.ATTYPEALL, "全体成员");
+      const i = await this.core.apis.GroupApi.getGroupMember(r.peer.peerUid, e);
+      if (i)
+        return n(e, i.uid, Xn.ATTYPEONE, i.nick || i.cardName);
+      const o = await this.core.apis.UserApi.getUidByUinV2(`${e}`);
+      if (!o) throw new Error("Get Uid Error");
+      const s = await this.core.apis.UserApi.getUserDetailInfo(o);
+      return n(e, o, Xn.ATTYPEONE, s.nick || "");
     },
-    // 不需要支持发送
-    [Ke.onlinefile]: async () => {
+    [Ke.reply]: async ({ data: { id: e, seq: r } }, n) => {
+      let i, o;
+      if (r)
+        i = (await this.core.apis.MsgApi.getMsgsBySeqAndCount(
+          n.peer,
+          r.toString(),
+          1,
+          !0,
+          !0
+        )).msgList[0], o = n.peer;
+      else if (e) {
+        const s = ot.getMsgIdAndPeerByShortId(parseInt(e));
+        if (!s) {
+          this.core.context.logger.logWarn("回复消息不存在", e);
+          return;
+        }
+        i = (await this.core.apis.MsgApi.getMsgsByMsgId(
+          s.Peer,
+          [s.MsgId]
+        )).msgList[0], o = s.Peer;
+      } else {
+        this.core.context.logger.logWarn("回复消息缺少id或seq参数");
+        return;
+      }
+      return i && o ? {
+        elementType: Ee.REPLY,
+        elementId: "",
+        replyElement: {
+          replayMsgSeq: i.msgSeq,
+          // raw.msgSeq
+          replayMsgId: i.msgId,
+          // raw.msgId
+          senderUin: i.senderUin,
+          senderUinStr: i.senderUin,
+          replyMsgClientSeq: i.clientSeq,
+          _replyMsgPeer: o
+        }
+      } : void 0;
     },
-    [Ke.flashtransfer]: async () => {
-    }
-  };
-  constructor(e, r) {
-    this.obContext = e, this.core = r;
-  }
-  /**
-     * 解析带有JSON标记的文本
-     * @param text 要解析的文本
-     * @returns 解析后的结果数组，每个元素包含类型(text或json)和内容
-     */
-  parseTextWithJson(e) {
-    const r = /<(\{.*?\})>/g, n = [];
-==4 json converter定义==
-77262:  ob11ToRawConverters = {
-77491:        return this.ob11ToRawConverters.json({
-77511:      return this.ob11ToRawConverters.json({
+    [Ke.face]: async ({ data: { id: e, resultId: r, chainCount: n } }) => {
+      const i = +e, s = twe.sysface.find((c) => c.QSid === i.toString());
+      if (!s) {
+        this.core.context.logger.logError("不支持的ID", e);
