@@ -1,57 +1,33 @@
-<<<task_285481.txt>>>
-===== 任务285481 11-14 13:07:52 =====
+<<<task_285482.txt>>>
+===== 任务285482 11-14 13:09:06 =====
 --- 命令 ---
-echo "==13:00后bot.log点歌相关=="
-sed -n '/11-14 13:0/,$p' /root/bot.log | grep -vE "Matcher|running complete" | head -25
-echo "==napcat.log 13:00后 music/卡片/错误=="
-awk '/11-14 13:0/,0' /root/napcat.log 2>/dev/null | grep -iE "music|card|error|fail|share" | head -15
-echo "==napcat.log最后20行=="
-tail -20 /root/napcat.log 2>/dev/null | cut -c1-150
+grep -n "音乐卡片签名" /root/napcat.log | tail -5
+echo "==完整错误上下文=="
+grep -A 3 "音乐卡片签名" /root/napcat.log | tail -20
 --- 输出 ---
-==13:00后bot.log点歌相关==
-11-14 13:02:13 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1291717522 from 1561950850@[群:590454333] '[image:summary=,file=3E4C43491477C97A2B1833C83BA57F71.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSjkLOG...,file_size=189344]'
-11-14 13:02:24 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1219803568 from 1561950850@[群:1109952783] '[at:qq=3889001246] /今日猪猪 '
-11-14 13:02:26 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1694137942 from 3889001246@[群:1109952783] '[markdown:content=[](%7B%22version%22%3A2%7D)\n[@Arp273](mqqapi://markdown/mention?at_...]@Arp273 🎉 抓到一只新猪猪啦！\n【觉醒猪】\n限制解除\n> 你体内封印的力量终于觉醒了，全身泛着霓虹光芒，脚下的地面都在震。至于这股力量能拿来干什么，你也不知道——但先摆个姿势总没错。\n> 🐝免艾特游玩 | 🔗☯️加幽幽子新功能早知道~'
-11-14 13:02:37 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 998357486 from 1561950850@[群:1109952783] '[image:summary=,file=3E4C43491477C97A2B1833C83BA57F71.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSjkLOG...,file_size=189344]'
-11-14 13:02:56 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2063963522 from 1561950850@[群:1109952783] '[at:qq=3427943187] 点歌 橘子酸'
-11-14 13:03:49 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 518922744 from 3358627236@[群:590454333] '[image:summary=,file=39B6BC330CAE4CB4A52BD91D9C374C33.jpg,sub_type=0,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhREl6KZ...,file_size=195092]'
-11-14 13:04:52 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2128483993 from 1561950850@[群:1109952783] '？'
-11-14 13:04:54 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1263051742 from 1561950850@[群:1109952783] '什么玩意'
-11-14 13:05:04 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1347945547 from 1561950850@[群:1109952783] '[at:qq=3427943187] 点歌 橘子酸 那艺娜'
-==napcat.log 13:00后 music/卡片/错误==
-11-14 13:03:09 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
-11-14 13:03:40 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
-[mp3float @ 0x2c03883100] Could not update timestamps for discarded samples.
-11-14 13:04:15 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
-  └─ 提示: 请检查网络连接，或尝试在配置中更换其他音乐签名服务地址(musicSignUrl)
-11-14 13:04:15 [[31merror[39m] 阿萨尔 | 发生错误 Error: 消息体无法解析, 请检查是否发送了不支持的消息类型
-11-14 13:04:18 [[31merror[39m] 阿萨尔 | 获取语音url失败 Error: [PacketClient] sendPacket 超时 cmd=OidbSvcTrpcTcp.0x126E_200 timeout=1500ms
+2432:11-14 13:04:47 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
+2448:11-14 13:05:14 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
+2449:11-14 13:05:46 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
+2452:11-14 13:06:26 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
+2467:11-14 13:06:52 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
+==完整错误上下文==
+  ├─ 错误信息: connect ETIMEDOUT 111.170.174.56:443
+--
 11-14 13:04:47 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
-  └─ 提示: 请检查网络连接，或尝试在配置中更换其他音乐签名服务地址(musicSignUrl)
-11-14 13:04:47 [[31merror[39m] 阿萨尔 | 发生错误 Error: 消息体无法解析, 请检查是否发送了不支持的消息类型
+  ├─ 音乐类型: qq
+  ├─ 音乐ID: 001SgpUZ0eCe6L
+  ├─ 错误信息: connect ETIMEDOUT 111.170.174.56:443
+--
 11-14 13:05:14 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
 11-14 13:05:46 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
+11-14 13:06:21 [[32minfo[39m] 阿萨尔 | 语音文件/root/.config/QQ/NapCat/temp/c70c6e35-a521-471a-9ef5-b88d38c3da83需要转换成silk
+[mp3float @ 0x2c03883100] Could not update timestamps for skipped samples.
 11-14 13:06:26 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
-  └─ 提示: 请检查网络连接，或尝试在配置中更换其他音乐签名服务地址(musicSignUrl)
-11-14 13:06:26 [[31merror[39m] 阿萨尔 | 发生错误 Error: 消息体无法解析, 请检查是否发送了不支持的消息类型
-==napcat.log最后20行==
-    at Wwe.sendMsgWithOb11UniqueId (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:77727:13)
-    at Xwe.base_handle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:78111:60)
-    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    at async Xwe.websocketHandle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:36621:17)
-    at async pO.handleMessage (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:67875:15)
-[mp3float @ 0x2c03883100] Could not update timestamps for discarded samples.
-11-14 13:06:27 [[32minfo[39m] 阿萨尔 | 语音文件已就绪: /root/.config/QQ/NapCat/temp/552758b9-a057-462a-b585-bac76de2a966 时长: 184.5
-11-14 13:06:27 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] [语音 184s]
-353418be5c4a4eb6e7c2a9912aa0b13166491b3f004f27f192e4da7655f8e005
+  ├─ 音乐类型: 163
+  ├─ 音乐ID: 2663794686
+  ├─ 错误信息: connect ETIMEDOUT 111.170.174.56:443
+--
 11-14 13:06:52 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
   ├─ 音乐类型: qq
   ├─ 音乐ID: 000COwzI2VMlNK
   ├─ 错误信息: connect ETIMEDOUT 111.170.174.56:443
-  └─ 提示: 请检查网络连接，或尝试在配置中更换其他音乐签名服务地址(musicSignUrl)
-11-14 13:06:52 [[31merror[39m] 阿萨尔 | 发生错误 Error: 消息体无法解析, 请检查是否发送了不支持的消息类型
-    at Wwe.sendMsgWithOb11UniqueId (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:77727:13)
-    at Xwe.base_handle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:78111:60)
-    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-    at async Xwe.websocketHandle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:36621:17)
-    at async pO.handleMessage (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:67875:15)
