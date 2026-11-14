@@ -1,10 +1,11 @@
-<<<task_285511.txt>>>
-===== 任务285511 11-14 17:09:52 =====
+<<<task_285512.txt>>>
+===== 任务285512 11-14 17:11:38 =====
 --- 命令 ---
-ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+pkill -f "opt/QQ/[q]q"; sleep 3
+cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 -q 3427943187 > /root/napcat.log 2>&1 < /dev/null &
+sleep 26
 cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册
 base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
 --- 输出 ---
--rw-r--r-- 1 root root 599 Nov 14 16:54 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
 码已放进相册
-iVBORw0KGgoAAAANSUhEUgAAAJMAAACTAQAAAACinha4AAAACXBIWXMAAAsTAAALEwEAmpwYAAACCUlEQVRIid2Wsa3lIBBFxyIg82sAiTbIaMluwDYN2C05ow0kGjAZgeXZi/57+7+0CSNtsFrkwD4BMnfu3IH4z0X/NbuI1mhGUpdLr5MGCSt8r1U9RKTVEfEpYaeZqy1nAyHSLGRrtQzA+Ckxm3w+OC3OvKSM7wkC+Lxr/nG2Lgb95mjez7emXaytaCbCUdTPWvawx5tJ0+QV2O7MKmEXqY3u0TGf9iEVJOzRaT7N4tJCaSIWsXLm44TLMsq+aRRBwBjaO8uVFp8hvJDlEnOI+fIqVHpJGNw9RDj8Hthe+qvmvezCuWGTCqOlmW2QsNYf2MmrcnKo373Vwy7XJMQ5QjULvf3XyUq9idJIvBM6O80S9jhV4g2Djz5NLrOEFW7iEdnN34u/BwlrSVAzIxWi+mjfyx5PE5KP7dbOkWXMwad2w05Vbc4eIoamdHlD3Vht3swShnaE/KNGi+BFxlCrF3ZyeJAoH+/2Ma728RavhROROiTscUi+vJMNSO7KIlYqrHpPGgXPga2IMZuh/QWiKKOGs4hFhRhbkQoV2amKhF3Yo+Yd1YbXPnnaybDKmQZWME7gdy07GebMAvFwmto6bJAwzLfFY8g0twZWRcQwV5EHOl8aLfI7w3rZWltvQfihpkHKGJcICwkvz0HEMCs0hvmNPOBTxpp+uEG0xMWg+/J4L/vbd71/m/0CD7ZVmxkBEksAAAAASUVORK5CYII=
+iVBORw0KGgoAAAANSUhEUgAAAJMAAACTAQAAAACinha4AAAACXBIWXMAAAsTAAALEwEAmpwYAAACCElEQVRIid2WsY30IBCFxyIgsxtAog0yWlo3YOwG7JbIaAOJBuzMAfL8j9vbu+BPmPSQ5dV+SIgZHu+Z+P9Bf5qdRItjTmbRdYo0SNjFdWa1Y0arLeGvhEUTbvV4tWoaEs1C9nLm5RUne8gZfk9f55smKeO6fIGB1fVbWxdD/+Zkvp/fnnYxjNOpjfPiTfg9yy72OOxdPa6Gu5xaHRJ2ej7uSr6GyLu3MkYUYjnJXjeEYyYJYy6rUw8VTjRExTIGmZjhptHZk96972at9LL6cvo2M0sY9EKUh5QDq5XUJWGo4CG1ujpHnEOdJOz0NNx2d639L182CbtiOW6LVVEN5icJ45gXzbvjDS3E6UnYo+3uy+7KFe2KFkrYFVG3XQmL1Sm9Nd7LOKkrYkfAZddFyOqiy5bM6OjlKIgY251QitruPNyfu9rHrtTuB98QGmPVScIeb7HSqHNr/Jef9TP0b3TQqQkQrP5ot5MldUQIDW+G7wYJw1WGAzHDts3oP73vY/CtK8HAaNSK4/tedjMHy7Srri/K5L89u5c1/7NN4HD9VGcRc3lxFTGF3jfvlzCMiy2ncsQ8swkS1vLcmwnBGKGXH8/uYi3PmzwhloqI20QM+oJlIpnhoPTei5AxQgZmlgchC83/kDNo5M9e+hjqiDm0JWuLZQlr+cYImXI267UsYb3fcH+D/QOxJjlgDiWhrwAAAABJRU5ErkJggg==
