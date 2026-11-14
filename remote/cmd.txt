@@ -1,4 +1,6 @@
-285494
+285495
 M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
-echo "==77400-77520段=="
-sed -n '77400,77520p' $M
+sed -n '77520,77570p' $M
+echo "==找配置文件=="
+find /root -name "onebot11_*.json" 2>/dev/null | head -3
+find /root -path "*NapCat*config*" -name "*.json" 2>/dev/null | head -5
