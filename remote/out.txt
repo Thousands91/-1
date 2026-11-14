@@ -1,11 +1,68 @@
-<<<task_285512.txt>>>
-===== 任务285512 11-14 17:11:38 =====
+<<<task_285513.txt>>>
+===== 任务285513 11-14 17:32:19 =====
 --- 命令 ---
-pkill -f "opt/QQ/[q]q"; sleep 3
-cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 -q 3427943187 > /root/napcat.log 2>&1 < /dev/null &
-sleep 26
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册
-base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+echo "==登录态=="
+bash /root/logincheck.sh 2>/dev/null | tail -3
+echo "==签名服务日志(有没有被调用)=="
+cat /root/music_sign.log
+echo "==bot.log 最近点歌=="
+grep "点歌" /root/bot.log | tail -3
+echo "==napcat 17:25后 音乐/签名/错误=="
+awk '/11-14 17:2[0-9]/,0' /root/napcat.log | grep -iE "music|音乐|卡|sign|签名|error|语音" | head -16 | cut -c1-160
 --- 输出 ---
-码已放进相册
-iVBORw0KGgoAAAANSUhEUgAAAJMAAACTAQAAAACinha4AAAACXBIWXMAAAsTAAALEwEAmpwYAAACCElEQVRIid2WsY30IBCFxyIgsxtAog0yWlo3YOwG7JbIaAOJBuzMAfL8j9vbu+BPmPSQ5dV+SIgZHu+Z+P9Bf5qdRItjTmbRdYo0SNjFdWa1Y0arLeGvhEUTbvV4tWoaEs1C9nLm5RUne8gZfk9f55smKeO6fIGB1fVbWxdD/+Zkvp/fnnYxjNOpjfPiTfg9yy72OOxdPa6Gu5xaHRJ2ej7uSr6GyLu3MkYUYjnJXjeEYyYJYy6rUw8VTjRExTIGmZjhptHZk96972at9LL6cvo2M0sY9EKUh5QDq5XUJWGo4CG1ujpHnEOdJOz0NNx2d639L182CbtiOW6LVVEN5icJ45gXzbvjDS3E6UnYo+3uy+7KFe2KFkrYFVG3XQmL1Sm9Nd7LOKkrYkfAZddFyOqiy5bM6OjlKIgY251QitruPNyfu9rHrtTuB98QGmPVScIeb7HSqHNr/Jef9TP0b3TQqQkQrP5ot5MldUQIDW+G7wYJw1WGAzHDts3oP73vY/CtK8HAaNSK4/tedjMHy7Srri/K5L89u5c1/7NN4HD9VGcRc3lxFTGF3jfvlzCMiy2ncsQ8swkS1vLcmwnBGKGXH8/uYi3PmzwhloqI20QM+oJlIpnhoPTei5AxQgZmlgchC83/kDNo5M9e+hjqiDm0JWuLZQlr+cYImXI267UsYb3fcH+D/QOxJjlgDiWhrwAAAABJRU5ErkJggg==
+==登录态==
+[在线] 已登录，一切正常
+阶段: ready
+最近错误: 无
+==签名服务日志(有没有被调用)==
+11-14 17:02:36 music_sign v2 启动 127.0.0.1:10800
+11-14 17:02:40 已出卡 type=163 id=3381542797 -> 609 bytes
+11-14 17:02:40 已出卡 type=custom id= -> 508 bytes
+11-14 17:02:40 已出卡 type=qq id=003joRpF3wA7e8 -> 38 bytes
+11-14 17:02:41 已出卡 type=163 id=185868 -> 579 bytes
+11-14 17:02:41 已出卡 type=163 id=185868 -> 579 bytes
+11-14 17:02:41 已出卡 type=163 id=185868 -> 579 bytes
+11-14 17:02:46 已出卡 type=163 id=185868 -> 579 bytes
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 37320)
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/socketserver.py", line 683, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python3.10/socketserver.py", line 360, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/usr/lib/python3.10/socketserver.py", line 747, in __init__
+    self.handle()
+  File "/usr/lib/python3.10/http/server.py", line 433, in handle
+    self.handle_one_request()
+  File "/usr/lib/python3.10/http/server.py", line 421, in handle_one_request
+    method()
+  File "/root/music_sign.py", line 91, in do_POST
+    self.wfile.write(body)
+  File "/usr/lib/python3.10/socketserver.py", line 826, in write
+    self._sock.sendall(b)
+BrokenPipeError: [Errno 32] Broken pipe
+----------------------------------------
+11-14 17:29:07 已出卡 type=? id= -> 38 bytes
+11-14 17:29:12 已出卡 type=? id= -> 38 bytes
+11-14 17:29:12 已出卡 type=? id= -> 38 bytes
+==bot.log 最近点歌==
+11-14 13:55:54 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 65314971 from 1561950850@[群:1109952783] '[at:qq=3427943187] 点歌 稻香 周杰伦'
+11-14 16:42:49 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 775515345 from 1561950850@[群:1109952783] '[at:qq=3427943187] 点歌 稻香 周杰伦'
+11-14 17:28:58 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 7007321 from 1561950850@[群:590454333] '[at:qq=3427943187] 点歌 橘子酸'
+==napcat 17:25后 音乐/签名/错误==
+11-14 17:27:51 [[31merror[39m] 快速登录错误： 登录态已失效，请重新登录。
+[BuglyService.cpp][registBugly][589]set signal stack
+[BuglyService.cpp][registSignalHandler][520]regist native handler
+11-14 17:28:35 [[31merror[39m] 测试Packet状态异常 Error: [PacketClient] sendPacket 超时 cmd=OidbSvcTrpcTcp.0x9067_202 timeout=3000ms
+[NativeCrashHandler.cpp][getCrashDetailBeanFromRecord][52]!!!! in NativeCrashHandler getCrashDetailBeanFromRecord, open file error!!!,dumpFilePath:/root/.config
+11-14 17:29:07 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
+11-14 17:29:10 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
+  ├─ 音乐类型: 163
+  ├─ 音乐ID: 3456659431
+  └─ 提示: 请检查网络连接，或尝试在配置中更换其他音乐签名服务地址(musicSignUrl)
+11-14 17:29:10 [[31merror[39m] 阿萨尔 | 发生错误 Error: 消息体无法解析, 请检查是否发送了不支持的消息类型
+11-14 17:29:12 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
+11-14 17:29:12 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
+  ├─ 音乐类型: qq
+  ├─ 音乐ID: 002e5kr13lgvrd
+  └─ 提示: 请检查网络连接，或尝试在配置中更换其他音乐签名服务地址(musicSignUrl)
