@@ -1,29 +1,89 @@
-<<<task_285521.txt>>>
-===== 任务285521 11-14 18:01:59 =====
+<<<task_285522.txt>>>
+===== 任务285522 11-14 18:03:00 =====
 --- 命令 ---
-echo "==服务日志17:58后=="
-tail -6 /root/music_sign.log
-echo "==bot.log 17:58-18:01 点歌流程=="
-awk '/11-14 17:5[89]/,/11-14 18:01/' /root/bot.log | grep -vE "Matcher\(|running complete|Event will be handled" | head -12 | cut -c1-180
-echo "==napcat 17:58-18:01=="
-awk '/11-14 17:5[89]/,/11-14 18:01/' /root/napcat.log | grep -iE "music|卡|sign|error|json|ark" | head -10 | cut -c1-150
+cat /root/bot/bot/.env | sed 's/\(SECRET\|TOKEN\|KEY\)=.*/\1=<隐藏>/' 
+echo "==napcat网络配置=="
+python3 -c "
+import json
+d=json.load(open('/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json'))
+import sys
+net=d.get('network') or {}
+print(json.dumps(net, ensure_ascii=False)[:600])"
+echo "==翻历史消息找正版卡片=="
+/root/bot/venv/bin/python - <<'PYEOF'
+import asyncio, json, re, sys
+sys.path.insert(0, '/root/bot')
+from nonebot import get_driver, get_bot
+import nonebot
+
+async def main():
+    driver = get_driver()
+    nonebot.init()
+    # 直接用运行中的连接不行,这里起独立nonebot再连接也不行——改走反向:直接读NapCat配置里的反向ws地址,当客户端连大脑的ws
+    # 更简单:从.env拿端口和token,直连大脑ws server
+    conf = {}
+    for line in open('/root/bot/bot/.env'):
+        line=line.strip()
+        if '=' in line and not line.startswith('#'):
+            k,v=line.split('=',1); conf[k.strip()]=v.strip().strip('"')
+    port = conf.get('PORT') or conf.get('ONEBOT_PORT') or '8080'
+    tok  = conf.get('ONEBOT_ACCESS_TOKEN') or conf.get('ACCESS_TOKEN') or ''
+    url = f"ws://127.0.0.1:{port}/onebot/v11/ws"
+    import aiohttp
+    hdr = {"Authorization": f"Bearer {tok}"} if tok else {}
+    async with aiohttp.ClientSession() as s:
+        try:
+            ws = await s.ws_connect(url, headers=hdr, timeout=aiohttp.ClientWSTimeout(ws_close=10))
+        except Exception as e:
+            print("连接失败:", url, e); return
+        for gid in (1109952783, 590454333):
+            await ws.send_str(json.dumps({"action":"get_group_msg_history","params":{"group_id":gid,"count":300},"echo":f"h{gid}"}))
+        found = 0
+        end = 0
+        while end < 2 and found < 3:
+            try:
+                m = await ws.receive(20)
+            except Exception:
+                break
+            if m.type.name != 'TEXT': continue
+            d = json.loads(m.data)
+            if str(d.get("echo","")).startswith("h") and d.get("data"):
+                end += 1
+                for msg in (d["data"].get("messages") or []):
+                    raw = json.dumps(msg, ensure_ascii=False)
+                    if "structmsg" in raw or '"ark"' in raw or '音乐卡片' in raw or 'music' in raw.lower() and 'app' in raw:
+                        found += 1
+                        print(f"===群{gid} 发现卡片消息 seq={msg.get('message_seq')} time={msg.get('time')}===")
+                        print(raw[:2500])
+                        if found >= 3: break
+        print(f"共找到 {found} 条卡片消息")
+asyncio.run(main())
+PYEOF
 --- 输出 ---
-==服务日志17:58后==
-11-14 17:55:16 music_sign v2 启动 127.0.0.1:10800
-11-14 17:55:19 已出卡 type=163 id=185868 -> 632 bytes
-11-14 18:00:26 已出卡 type=163 id=2663794686 -> 630 bytes
-==bot.log 17:58-18:01 点歌流程==
-11-14 17:58:01 [INFO] ai_chat | [核对·调试] ask='你觉得夏玛怎么样' lead=False contra=False agree=False dodge=False ans='夏玛，她如同夜空中最亮的星，既�
-11-14 17:58:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1743277673 from 1561950850@[群:590454333] '你要换工作了吗'
-11-14 17:58:21 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794650300, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify',
-11-14 17:58:25 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794650305, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify',
-11-14 17:58:36 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794650315, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify',
-11-14 17:58:37 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794650316, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify',
-11-14 17:58:37 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 775586264 from 1561950850 '我没玩夏玛今天，你觉得今天她的身体怎么样
-11-14 17:58:37 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794650317, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify',
-11-14 17:58:41 [INFO] ai_chat | [核对·调试] ask='我没玩夏玛今天，你觉得今天她的身体怎么样？' lead=False contra=False agree=False dodge=True ans='这话书
-11-14 17:58:55 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794650335, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify',
-11-14 17:59:00 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794650339, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify',
-11-14 17:59:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794650350, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify',
-==napcat 17:58-18:01==
-11-14 18:00:26 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [卡片消息]
+
+# 命令前缀：空串让命令裸词也能触发（菜单里写的「天气」「看景」没带斜杠）
+COMMAND_START=["", "/", "!", "！"]
+
+# ============== AI 大模型 ==============
+OPENAI_API_KEY=<隐藏>
+OPENAI_BASE_URL=https://open.bigmodel.cn/api/paas/v4
+OPENAI_MODEL=glm-4.7-flash
+ENABLE_AI_CHAT=true
+
+HOST=0.0.0.0
+PORT=8080
+SILICONFLOW_API_KEY=<隐藏>
+ZHIPU_API_KEY=<隐藏>
+==napcat网络配置==
+{"httpServers": [], "httpSseServers": [], "httpClients": [], "websocketServers": [], "websocketClients": [{"enable": true, "url": "ws://127.0.0.1:8080/onebot/v11/ws", "messagePostFormat": "array", "reportSelfMessage": false, "token": "", "debug": false, "heartInterval": 30000, "reconnectInterval": 5000}], "plugins": []}
+==翻历史消息找正版卡片==
+Traceback (most recent call last):
+  File "<stdin>", line 47, in <module>
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "<stdin>", line 7, in main
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py", line 89, in get_driver
+    raise ValueError("NoneBot has not been initialized.")
+ValueError: NoneBot has not been initialized.
