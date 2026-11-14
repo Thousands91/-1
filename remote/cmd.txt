@@ -1,3 +1,4 @@
-285487
-grep -E "13:3[0-9]|13:4[0-9]" /root/napcat.log 2>/dev/null | grep -iE "music|卡|sign|签名" | head -6
-grep -E "点歌" /root/bot.log | tail -3
+285488
+grep -E "13:4[7-9]" /root/napcat.log 2>/dev/null | head -12
+echo "==bot.log对应=="
+grep -E "13:4[7-9]" /root/bot.log | grep -vE "Matcher|running" | tail -6
