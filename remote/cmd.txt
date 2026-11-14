@@ -1,5 +1,9 @@
-285528
-grep "翻卡取证" /root/bot.log | tail -4
-echo "==取证文件内容=="
-wc -l /tmp/real_card.json 2>/dev/null
-head -c 6000 /tmp/real_card.json 2>/dev/null
+285529
+M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
+echo "==NapCat内部的Ark生成API=="
+grep -o "get[A-Za-z]*ArkJson" $M | sort -u
+grep -o "Ark[A-Za-z]*Json" $M | sort -u | head -8
+echo "==测思思主域名和常见接口=="
+for u in "https://xingzhige.com" "https://api.xingzhige.com" "https://ss.xingzhige.com" "https://music.xingzhige.com"; do
+  printf "%-32s " "$u"; timeout 8 curl -s -o /dev/null -w "%{http_code} %{time_total}s\n" "$u" 2>&1 || echo 不通
+done
