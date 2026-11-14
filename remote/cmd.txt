@@ -1,10 +1,30 @@
-285550
-echo "--- X10侧直测网易云搜索接口 ---"
-curl -s -o /tmp/163test.json -w "HTTP %{http_code} 耗时%{time_total}s\n" --max-time 15 "https://music.163.com/api/search/get?s=%E9%BD%90%E8%B1%AB&type=1&limit=3&offset=0" -H "User-Agent: Mozilla/5.0" -H "Referer: https://music.163.com/"
-head -c 200 /tmp/163test.json; echo
-echo "--- 大脑进程与最近点歌日志 ---"
-pgrep -f "python.*main.py" >/dev/null && echo 大脑活着 || echo 大脑已死
-grep -a "点歌\|翻不着\|齐豫" /root/bot/bot/bot.log 2>/dev/null | tail -6
-echo "--- v3签名服务 ---"
-pgrep -fa music_sign.py || echo "v3未跑"
-echo "--- 任务285550结束 ---"
+285560
+echo "--- 坑110修复：点歌搜索加异常留痕 ---"
+P=/root/bot/bot/plugins/song_request.py
+cp $P $P.bak.trace
+grep -n "return out" $P | head -2
+cat > /tmp/fix_trace.py <<'PYEOF'
+p = '/root/bot/bot/plugins/song_request.py'
+s = open(p).read()
+a = "        return out\n    except Exception:\n        return []"
+b = "        return out\n    except Exception as e:\n        logger.warning(f\"[点歌] 搜索「{keyword}」异常: {e!r}\")\n        return []"
+assert a in s, '锚点缺失'
+s = s.replace(a, b, 1)
+if 'from nonebot.log import logger' not in s:
+    s = s.replace('import aiohttp', 'import aiohttp\nfrom nonebot.log import logger', 1)
+open(p, 'w').write(s)
+print('OK 已加搜索异常留痕')
+PYEOF
+/root/bot/venv/bin/python /tmp/fix_trace.py
+md5sum $P
+/root/bot/venv/bin/python -m py_compile $P && echo "语法OK"
+echo "--- 按SOP重启大脑（kill PID，禁pkill -f） ---"
+BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}')
+echo "旧PID: $BP"
+[ -n "$BP" ] && kill $BP
+sleep 3
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 &
+sleep 6
+pgrep -af "main.py" | head -3 || echo "!!大脑没起来"
+tail -3 /root/bot/bot/bot.log
+echo "--- 任务285560结束 ---"
