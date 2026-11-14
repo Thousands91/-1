@@ -1,22 +1,24 @@
-<<<task_285484.txt>>>
-===== 任务285484 11-14 13:13:29 =====
+<<<task_285485.txt>>>
+===== 任务285485 11-14 13:19:32 =====
 --- 命令 ---
-echo "==候选签名服务连通性(从X10测)=="
-for u in "https://llob.linyuchen.net/sign/music" "http://napcat-sign.wumiao.wang:2052/music_sign" "https://qqbotark.569879.xyz/" "https://ss.xingzhige.com/music_card/card"; do
-  printf "%-45s " "$u"
-  timeout 10 curl -s -o /dev/null -w "%{http_code} %{time_total}s\n" "$u" 2>&1 || echo "不通"
+echo "==NapCat版本=="
+cat /root/Napcat/package.json 2>/dev/null | grep version | head -1
+ls /root/Napcat/ | head
+echo "==DNS解析=="
+for h in qqbotark.569879.xyz ss.xingzhige.com llob.linyuchen.net napcat-sign.wumiao.wang; do
+  printf "%-28s " "$h"
+  getent hosts $h 2>/dev/null | head -1 || nslookup $h 2>/dev/null | tail -2 | head -1 || echo "解析失败"
 done
-echo "==onebot11配置文件=="
-ls /root/Napcat/config/ 2>/dev/null || ls /root/.config/QQ/NapCat/config/ 2>/dev/null
-grep -l "musicSignUrl" /root/Napcat/config/*.json /root/.config/QQ/NapCat/config/*.json 2>/dev/null
-grep -h "musicSignUrl" /root/Napcat/config/onebot11_3427943187.json /root/.config/QQ/NapCat/config/onebot11_3427943187.json 2>/dev/null
+echo "==逐个端口级连通测试=="
+timeout 8 bash -c 'echo > /dev/tcp/111.170.174.56/443' 2>&1 && echo "111.170.174.56:443 TCP可达" || echo "111.170.174.56:443 TCP不通"
 --- 输出 ---
-==候选签名服务连通性(从X10测)==
-https://llob.linyuchen.net/sign/music         000 0.422726s
-不通
-http://napcat-sign.wumiao.wang:2052/music_sign 000 0.164513s
-不通
-https://qqbotark.569879.xyz/                  000 0.186593s
-不通
-https://ss.xingzhige.com/music_card/card      不通
-==onebot11配置文件==
+==NapCat版本==
+guild1.db
+guild1.db-shm
+guild1.db-wal
+opt
+==DNS解析==
+qqbotark.569879.xyz          ss.xingzhige.com             111.170.174.56  ss.xingzhige.com
+llob.linyuchen.net           47.100.126.233  llob.linyuchen.net
+napcat-sign.wumiao.wang      ==逐个端口级连通测试==
+111.170.174.56:443 TCP不通
