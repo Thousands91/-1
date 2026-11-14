@@ -1,26 +1,10 @@
-285540
-echo "--- 音卡上游扩列（任务285540，原13号因任务号倒退被跳过，作废重发） ---"
-echo "改前:"
-grep -n "UPSTREAMS" /root/music_sign.py
-pgrep -fa "music_sign.py" || echo "!!进程未在跑"
-cp /root/music_sign.py /root/music_sign.py.bak.ups
-cat > /tmp/fix_ups.py <<'PYEOF'
-import re
-p = '/root/music_sign.py'
-s = open(p).read()
-new = 'UPSTREAMS = [\n    "http://106.55.0.102:10087/",\n    "https://ss.xingzhige.com/music_card/card",\n    "https://qqbotark.569879.xyz/",\n    "https://llob.linyuchen.net/sign/music",\n]'
-s2, n = re.subn(r'UPSTREAMS\s*=\s*\[[^\]]*\]', new, s, count=1)
-assert n == 1, 'UPSTREAMS 未匹配'
-open(p, 'w').write(s2)
-print('OK UPSTREAMS 已扩到4个')
-PYEOF
-python3 /tmp/fix_ups.py
-echo "改后:"
-grep -n -A6 "^UPSTREAMS" /root/music_sign.py
-pkill -f "music_sign.py"; sleep 1
-cd /root && nohup python3 /root/music_sign.py >> /root/music_sign.log 2>&1 &
-sleep 2
-echo "重启后:"
-pgrep -fa "music_sign.py" || echo "!!重启失败"
-curl -s --max-time 5 -o /dev/null -w "代理端口10800: %{http_code}\n" "http://127.0.0.1:10800/"
-echo "--- 任务285540结束 ---"
+285550
+echo "--- X10侧直测网易云搜索接口 ---"
+curl -s -o /tmp/163test.json -w "HTTP %{http_code} 耗时%{time_total}s\n" --max-time 15 "https://music.163.com/api/search/get?s=%E9%BD%90%E8%B1%AB&type=1&limit=3&offset=0" -H "User-Agent: Mozilla/5.0" -H "Referer: https://music.163.com/"
+head -c 200 /tmp/163test.json; echo
+echo "--- 大脑进程与最近点歌日志 ---"
+pgrep -f "python.*main.py" >/dev/null && echo 大脑活着 || echo 大脑已死
+grep -a "点歌\|翻不着\|齐豫" /root/bot/bot/bot.log 2>/dev/null | tail -6
+echo "--- v3签名服务 ---"
+pgrep -fa music_sign.py || echo "v3未跑"
+echo "--- 任务285550结束 ---"
