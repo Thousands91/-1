@@ -1,11 +1,8 @@
-285506
-echo "==1 大脑与登录态=="
-bash /root/logincheck.sh 2>/dev/null | tail -3
-echo "==2 bot.log 16:40后 点歌相关=="
-grep -E "16:3[5-9]|16:4" /root/bot.log | grep -E "点歌|song|card|音乐" | tail -5
-echo "==3 napcat 16:35后 音乐/签名=="
-awk '/11-14 16:3[5-9]/,0' /root/napcat.log | grep -iE "music|音乐|卡|sign|签名|error" | head -12
-echo "==4 本地签名服务日志=="
-tail -8 /root/music_sign.log 2>/dev/null
-echo "==5 服务存活=="
-pgrep -af music_sign.py | head -1
+285507
+echo "==bot.log 16:42:50-16:43:26 全量=="
+awk '/11-14 16:42:50/,/11-14 16:43:26/' /root/bot.log | grep -vE "Matcher\(|running complete|Event will be handled" | cut -c1-200
+echo "==napcat 16:42:45-16:43:30 全量=="
+awk '/11-14 16:42:4[5-9]/,/11-14 16:43:30/' /root/napcat.log | cut -c1-160
+echo "==X10代码版本=="
+cd /root/bot && git log --oneline -1
+md5sum /root/bot/bot/plugins/song_request.py
