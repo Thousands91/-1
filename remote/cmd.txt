@@ -1,11 +1,12 @@
-285523
+285524
 /root/bot/venv/bin/python - <<'PYEOF'
 import asyncio, json, aiohttp
 
 async def main():
     url = "ws://127.0.0.1:8080/onebot/v11/ws"
+    hdr = {"X-Self-ID": "9000000001", "User-Agent": " napcat"}
     async with aiohttp.ClientSession() as s:
-        ws = await s.ws_connect(url, timeout=aiohttp.ClientWSTimeout(ws_close=15))
+        ws = await s.ws_connect(url, headers=hdr, timeout=aiohttp.ClientWSTimeout(ws_close=15))
         for gid in (1109952783, 590454333):
             await ws.send_str(json.dumps({"action":"get_group_msg_history","params":{"group_id":gid,"count":400},"echo":f"h{gid}"}))
         found, end = 0, 0
