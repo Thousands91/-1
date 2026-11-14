@@ -1,8 +1,49 @@
-<<<task_285526.txt>>>
-===== 任务285526 11-14 18:18:26 =====
+<<<task_285527.txt>>>
+===== 任务285527 11-14 18:19:41 =====
 --- 命令 ---
-pkill -f "ws_connect" 2>/dev/null; pkill -f "real_card" 2>/dev/null
-ps aux | grep -E "python -|python3 -" | grep -v grep | head -3
-echo done
+cat > /root/bot/bot/plugins/card_forensics.py <<'PYEOF'
+"""坑107取证插件:启动后翻群历史,抓正版音乐卡片的原始JSON做对照。
+任务完成即自删(由运维远程清理)。"""
+import asyncio, json
+from nonebot import get_bot, get_driver
+from nonebot.log import logger
+
+async def dump():
+    await asyncio.sleep(8)
+    try:
+        bot = get_bot()
+    except Exception as e:
+        logger.warning(f"[翻卡取证] get_bot失败: {e}")
+        return
+    found = 0
+    out = open("/tmp/real_card.json", "w")
+    for gid in (1109952783, 590454333):
+        try:
+            data = await bot.call_api("get_group_msg_history", group_id=gid, count=400)
+            msgs = (data or {}).get("messages") or []
+            logger.info(f"[翻卡取证] 群{gid} 拉到{len(msgs)}条")
+            for m in msgs:
+                raw = json.dumps(m, ensure_ascii=False)
+                if "structmsg" in raw or '"ark"' in raw:
+                    found += 1
+                    out.write(raw + "\n")
+        except Exception as e:
+            logger.warning(f"[翻卡取证] 群{gid}失败: {type(e).__name__}: {e}")
+    out.close()
+    logger.info(f"[翻卡取证] 完成, {found} 条卡片消息存于 /tmp/real_card.json")
+
+@get_driver().on_bot_connect
+async def _(bot):
+    asyncio.create_task(dump())
+PYEOF
+echo "==重启大脑(免费,不用扫码)=="
+pkill -f "venv/bin/python main.py"; sleep 10
+cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 25
+grep "翻卡取证" /root/bot.log | tail -5
+echo "==取证文件=="
+head -c 3000 /tmp/real_card.json 2>/dev/null || echo "文件还没生成"
 --- 输出 ---
-done
+==重启大脑(免费,不用扫码)==
+11-14 18:20:15 [INFO] card_forensics | [翻卡取证] 群1109952783 拉到399条
+==取证文件==
