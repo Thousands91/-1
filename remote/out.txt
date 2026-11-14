@@ -1,55 +1,67 @@
-<<<task_285519.txt>>>
-===== 任务285519 11-14 17:54:13 =====
+<<<task_285520.txt>>>
+===== 任务285520 11-14 17:55:14 =====
 --- 命令 ---
-M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
-N=$(grep -n "\[Ke\.json\]:" $M | head -1 | cut -d: -f1)
-echo "json converter 位置: $N"
-sed -n "${N},$((N+45))p" $M
+python3 - <<'PYEOF'
+p = "/root/music_sign.py"
+t = open(p, encoding="utf-8").read()
+old = """        "prompt": "[分享]" + (title or "音乐"),
+    }"""
+new = """        "prompt": "[分享]" + (title or "音乐"),
+        # QQ 客户端靠 view 路由渲染模板、按 app+ver 识别版本——缺了就
+        # 显示"发送者版本过低，无法展示内容"（17:46 实测占位符实锤）
+        "ver": "0.0.0.1",
+        "view": "music",
+        "desc": "音乐",
+    }"""
+assert old in t, "锚点没找到"
+open(p, "w", encoding="utf-8").write(t.replace(old, new, 1))
+print("view/ver/desc 已补")
+PYEOF
+python3 -m py_compile /root/music_sign.py && echo 语法通过
+pkill -f "python /root/music_sign.py"; sleep 1
+setsid nohup /root/bot/venv/bin/python /root/music_sign.py > /root/music_sign.log 2>&1 < /dev/null &
+sleep 2
+echo "==出卡全文(人工核对结构)=="
+timeout 10 curl -s "http://127.0.0.1:10800/" -H "Content-Type: application/json" -d '{"type":"163","id":"185868"}' | python3 -m json.tool
 --- 输出 ---
-json converter 位置: 77405
-    [Ke.json]: async ({ data: { data: e } }) => ({
-      elementType: Ee.ARK,
-      elementId: "",
-      arkElement: {
-        bytesData: typeof e == "string" ? e : JSON.stringify(e),
-        linkInfo: null,
-        subElementType: null
-      }
-    }),
-    [Ke.dice]: async () => ({
-      elementType: Ee.FACE,
-      elementId: "",
-      faceElement: {
-        faceIndex: qd.DICE,
-        faceType: va.AniSticke,
-        faceText: "[骰子]",
-        packId: "1",
-        stickerId: "33",
-        sourceType: 1,
-        stickerType: 2,
-        surpriseId: ""
-        // "randomType": 1,
-      }
-    }),
-    [Ke.rps]: async () => ({
-      elementType: Ee.FACE,
-      elementId: "",
-      faceElement: {
-        faceIndex: qd.RPS,
-        faceText: "[包剪锤]",
-        faceType: va.AniSticke,
-        packId: "1",
-        stickerId: "34",
-        sourceType: 1,
-        stickerType: 2,
-        surpriseId: ""
-        // "randomType": 1,
-      }
-    }),
-    // Need signing
-    [Ke.markdown]: async ({ data: { content: e } }) => ({
-      elementType: Ee.MARKDOWN,
-      elementId: "",
-      markdownElement: { content: e }
-    }),
-    [Ke.music]: async ({ data: e }, r) => {
+view/ver/desc 已补
+语法通过
+==出卡全文(人工核对结构)==
+{
+    "app": "com.tencent.structmsg",
+    "config": {
+        "ctime": 12,
+        "forward": true,
+        "type": "normal",
+        "autosize": true
+    },
+    "extra": {
+        "app_type": 1,
+        "appid": 100495022,
+        "msg_seq": 819281914,
+        "uin": 3427943187
+    },
+    "meta": {
+        "music": {
+            "desc": "\u5468\u6770\u4f26",
+            "jump": {
+                "url": "https://music.163.com/song?id=185868",
+                "action": ""
+            },
+            "music": {
+                "type": "song",
+                "category_id": 100,
+                "mid": "",
+                "passport": 2,
+                "paste": 1
+            },
+            "preview": "https://p1.music.126.net/i9iGIx3y8FlghFJqn5pAqQ==/109951171867698249.jpg",
+            "tag": "\u7f51\u6613\u4e91\u97f3\u4e50",
+            "title": "\u4e0d\u80fd\u8bf4\u7684\u79d8\u5bc6"
+        }
+    },
+    "prompt": "[\u5206\u4eab]\u4e0d\u80fd\u8bf4\u7684\u79d8\u5bc6",
+    "ver": "0.0.0.1",
+    "view": "music",
+    "desc": "\u97f3\u4e50"
+}
