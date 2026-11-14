@@ -1,3 +1,6 @@
-285503
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册
-base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+285504
+bash /root/logincheck.sh 2>/dev/null | tail -4
+echo "==本地签名服务=="
+pgrep -af music_sign.py | head -1
+echo "==napcat最近日志=="
+grep -iE "快速登录|扫码|qrcode|online|登录" /root/napcat.log | tail -3 | cut -c1-120
