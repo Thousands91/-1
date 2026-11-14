@@ -1,9 +1,4 @@
-285496
-M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
-echo "==配置文件=="
-cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json | python3 -c "import sys,json; d=json.load(sys.stdin); print('musicSignUrl:', repr(d.get('musicSignUrl')))"
-echo "==musicSignUrl 4处引用=="
-grep -n "musicSignUrl" $M
-echo "==签名请求代码段=="
-sed -n '77518,77520p' $M | head -2
-awk 'NR>=77505 && NR<=77520' $M
+285497
+echo "==测NapCat默认签名地址=="
+timeout 10 curl -s -o /dev/null -w "%{http_code} %{time_total}s\n" -X POST "http://106.55.0.102:10087/" -d '{}' 2>&1 || echo 不通
+timeout 10 curl -s -X POST "http://106.55.0.102:10087/" -d '{"type":"163","id":"2663794686"}' 2>&1 | head -c 200; echo
