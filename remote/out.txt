@@ -1,25 +1,19 @@
-<<<task_285488.txt>>>
-===== 任务285488 11-14 13:49:49 =====
+<<<task_285489.txt>>>
+===== 任务285489 11-14 13:52:21 =====
 --- 命令 ---
-grep -E "13:4[7-9]" /root/napcat.log 2>/dev/null | head -12
-echo "==bot.log对应=="
-grep -E "13:4[7-9]" /root/bot.log | grep -vE "Matcher|running" | tail -6
+cd /root/bot && git pull --ff-only 2>&1 | tail -1 && git log --oneline -1
+md5sum /root/bot/bot/plugins/song_request.py
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/song_request.py && echo 编译通过
+pkill -f "venv/bin/python main.py"; sleep 10
+cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
+sleep 12
+pgrep -af "venv/bin/python main.py" | head -1
+tail -2 /root/bot.log | cut -c1-100
 --- 输出 ---
-11-14 13:47:30 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [我爱这橙色的海洋🍀💛乐育群里的(1561950850)] @阿萨尔 (3427943187)  点歌 稻香 周杰伦
-11-14 13:47:30 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] 翻柜子找「稻香 周杰伦」，稍等一下……
-11-14 13:47:35 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
-11-14 13:48:07 [[31merror[39m] 阿萨尔 | [音乐卡片签名] 首选地址失败，尝试备选地址...
-11-14 13:48:37 [[31merror[39m] 阿萨尔 | [音乐卡片] 自定义音乐卡片缺少必需参数: image
-11-14 13:48:37 [[31merror[39m] 阿萨尔 | 发生错误 Error: 消息体无法解析, 请检查是否发送了不支持的消息类型
-11-14 13:48:38 [[32minfo[39m] 阿萨尔 | 语音文件/root/.config/QQ/NapCat/temp/509a650c-bd7e-482c-9b02-cd656bba5eac需要转换成silk
-11-14 13:48:41 [[31merror[39m] 阿萨尔 | [音乐卡片签名失败] 签名服务请求出错!
-11-14 13:48:41 [[31merror[39m] 阿萨尔 | 发生错误 Error: 消息体无法解析, 请检查是否发送了不支持的消息类型
-11-14 13:48:43 [[32minfo[39m] 阿萨尔 | 语音文件已就绪: /root/.config/QQ/NapCat/temp/4f716c69-26a8-43f9-9187-55f1f7fb341b 时长: 120.04
-11-14 13:48:43 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] [语音 120s]
-11-14 13:48:57 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [我爱这橙色的海洋🍀💛乐育群里的(1561950850)] @玉玉症犯惹 (1538719747)  
-==bot.log对应==
-11-14 13:47:30 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1374158450 from 1561950850@[群:1109952783] '[at:qq=3427943187] 点歌 稻香 周杰伦'
-11-14 13:48:57 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1033621439 from 1561950850@[群:1109952783] '[at:qq=1538719747] '
-11-14 13:49:23 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 68909515 from 1538719747@[群:1109952783] '这是什么稻香'
-11-14 13:49:31 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1308360595 from 1538719747@[群:1109952783] '樱香'
-11-14 13:49:33 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1001560542 from 1538719747@[群:1109952783] '[image:summary=[动画表情],file=CA848DE4B54DDD381DACCDA230EE6FB1.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSILOSP...,file_size=19670]'
+ 1 file changed, 23 insertions(+), 1 deletion(-)
+6c2f45a 坑107续:自定义卡补必填封面(meting pic兜底,NapCat缺image整卡被拒实锤13:48)
+5a25815d81fb3d55363cee96369d53dc  /root/bot/bot/plugins/song_request.py
+编译通过
+32387 /root/bot/venv/bin/python main.py
+11-14 13:52:45 [INFO] websockets | connection open
+11-14 13:52:45 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
