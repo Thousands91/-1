@@ -1,4 +1,8 @@
-285497
-echo "==测NapCat默认签名地址=="
-timeout 10 curl -s -o /dev/null -w "%{http_code} %{time_total}s\n" -X POST "http://106.55.0.102:10087/" -d '{}' 2>&1 || echo 不通
-timeout 10 curl -s -X POST "http://106.55.0.102:10087/" -d '{"type":"163","id":"2663794686"}' 2>&1 | head -c 200; echo
+285498
+M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
+echo "==xingzhige引用=="
+grep -n "xingzhige" $M | head -3
+echo "==首选地址失败上下文=="
+grep -n "首选地址失败" $M | head -2
+echo "==77477-77500=="
+awk 'NR>=77477 && NR<=77500' $M
