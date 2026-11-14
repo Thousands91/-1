@@ -1,9 +1,2 @@
-285489
-cd /root/bot && git pull --ff-only 2>&1 | tail -1 && git log --oneline -1
-md5sum /root/bot/bot/plugins/song_request.py
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/song_request.py && echo 编译通过
-pkill -f "venv/bin/python main.py"; sleep 10
-cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 12
-pgrep -af "venv/bin/python main.py" | head -1
-tail -2 /root/bot.log | cut -c1-100
+285490
+grep -E "14:(0[0-9]|1[0-1])" /root/napcat.log 2>/dev/null | grep -iE "点歌|music|卡|sign|签名|error|语音" | head -16
