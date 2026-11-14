@@ -1,36 +1,109 @@
-<<<task_285508.txt>>>
-===== 任务285508 11-14 16:54:30 =====
+<<<task_285509.txt>>>
+===== 任务285509 11-14 16:57:15 =====
 --- 命令 ---
-echo "==1 找出所有onebot11配置并看musicSignUrl=="
-for f in $(find /root -name "onebot11_*.json" 2>/dev/null); do
-  printf "%s => " "$f"
-  python3 -c "import json;print(repr(json.load(open('$f')).get('musicSignUrl','<无此键>')))" 2>/dev/null || echo 解析失败
-done
-echo "==2 本地服务真实响应=="
-timeout 10 curl -s "http://127.0.0.1:10800/" -H "Content-Type: application/json" -d '{"type":"custom","singer":"周杰伦","title":"晴天","url":"https://music.163.com/song?id=185868","audio":"https://api.injahow.cn/meting/?type=url&server=netease&id=185868","image":"https://p1.music.126.net/6j7FCfCQcFfrJuXP4F6yaw==/109951165939217481.jpg"}' | head -c 120; echo
-echo "==3 全部配置文件统一指向本地服务=="
-for f in $(find /root -name "onebot11_*.json" 2>/dev/null); do
-  python3 -c "
-import json
-p='$f'
-d=json.load(open(p))
-d['musicSignUrl']='http://127.0.0.1:10800/'
-json.dump(d,open(p,'w'),ensure_ascii=False,indent=2)
-print(p,'已设置')"
-done
-echo "==4 重启QQ加载配置=="
-pkill -f "opt/QQ/[q]q"; sleep 3
-cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 -q 3427943187 > /root/napcat.log 2>&1 < /dev/null &
-sleep 28
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册
-base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+echo "==music_sign.py 全文=="
+cat /root/music_sign.py
+echo "==真实载荷复测: 163/ID=3381542797(稻香真身)=="
+timeout 15 curl -s -w "\nHTTP:%{http_code}\n" "http://127.0.0.1:10800/" -H "Content-Type: application/json" -d '{"type":"163","id":"3381542797"}' | head -c 400; echo
+echo "==qq类型复测=="
+timeout 15 curl -s -w "\nHTTP:%{http_code}\n" "http://127.0.0.1:10800/" -H "Content-Type: application/json" -d '{"type":"qq","id":"003joRpF3wA7e8"}' | head -c 300; echo
+echo "==custom带content复测(bot真实结构)=="
+timeout 15 curl -s -w "\nHTTP:%{http_code}\n" "http://127.0.0.1:10800/" -H "Content-Type: application/json" -d '{"type":"custom","singer":"周杰伦","title":"稻香 - 周杰伦","content":"魔杰座","url":"https://music.163.com/song?id=3381542797","audio":"https://api.injahow.cn/meting/?type=url&server=netease&id=3381542797","image":"https://p1.music.126.net/test.jpg"}' | head -c 300; echo
+echo "==服务日志=="
+ls -la /root/music_sign.log; tail -5 /root/music_sign.log 2>/dev/null
 --- 输出 ---
-==1 找出所有onebot11配置并看musicSignUrl==
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json => 'http://127.0.0.1:10800/'
-==2 本地服务真实响应==
-{"app": "com.tencent.structmsg", "config": {"ctime": 12, "forward": true, "type": "normal", "autosize": true}, "extra": 
-==3 全部配置文件统一指向本地服务==
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json 已设置
-==4 重启QQ加载配置==
-码已放进相册
-iVBORw0KGgoAAAANSUhEUgAAAJMAAACTAQAAAACinha4AAAACXBIWXMAAAsTAAALEwEAmpwYAAACCUlEQVRIid2Wsa3lIBBFxyIg82sAiTbIaMluwDYN2C05ow0kGjAZgeXZi/57+7+0CSNtsFrkwD4BMnfu3IH4z0X/NbuI1mhGUpdLr5MGCSt8r1U9RKTVEfEpYaeZqy1nAyHSLGRrtQzA+Ckxm3w+OC3OvKSM7wkC+Lxr/nG2Lgb95mjez7emXaytaCbCUdTPWvawx5tJ0+QV2O7MKmEXqY3u0TGf9iEVJOzRaT7N4tJCaSIWsXLm44TLMsq+aRRBwBjaO8uVFp8hvJDlEnOI+fIqVHpJGNw9RDj8Hthe+qvmvezCuWGTCqOlmW2QsNYf2MmrcnKo373Vwy7XJMQ5QjULvf3XyUq9idJIvBM6O80S9jhV4g2Djz5NLrOEFW7iEdnN34u/BwlrSVAzIxWi+mjfyx5PE5KP7dbOkWXMwad2w05Vbc4eIoamdHlD3Vht3swShnaE/KNGi+BFxlCrF3ZyeJAoH+/2Ma728RavhROROiTscUi+vJMNSO7KIlYqrHpPGgXPga2IMZuh/QWiKKOGs4hFhRhbkQoV2amKhF3Yo+Yd1YbXPnnaybDKmQZWME7gdy07GebMAvFwmto6bJAwzLfFY8g0twZWRcQwV5EHOl8aLfI7w3rZWltvQfihpkHKGJcICwkvz0HEMCs0hvmNPOBTxpp+uEG0xMWg+/J4L/vbd71/m/0CD7ZVmxkBEksAAAAASUVORK5CYII=
+==music_sign.py 全文==
+#!/usr/bin/env python3
+"""自托管音乐卡片签名服务（坑107终，2026-11-14）。
+
+所谓"签名"只是把数据拼成 NTQQ 认的 ark JSON——不涉及任何腾讯密钥。
+公益签名服务死的死残的残（ss.xingzhige 失联、qqbotark 域名死、
+106.55.0.102 后端 Push 超时），本地拼最稳，永不依赖第三方活体。
+
+NapCat 把 POST 进来的 music 数据交给本服务，本服务返回 ark JSON，
+它当 ARK 元素发出。只监听 127.0.0.1，外部摸不到。
+"""
+import json
+import random
+import urllib.request
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
+PORT = 10800
+UIN = 3427943187
+UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+
+
+def build_ark(title, desc, jump, preview, tag, appid):
+    return {
+        "app": "com.tencent.structmsg",
+        "config": {"ctime": 12, "forward": True, "type": "normal", "autosize": True},
+        "extra": {"app_type": 1, "appid": appid,
+                  "msg_seq": random.randint(100000000, 999999999), "uin": UIN},
+        "meta": {"music": {
+            "desc": desc or "分享",
+            "jump": {"url": jump, "action": ""},
+            "music": {"type": "song", "category_id": 100, "mid": "",
+                      "passport": 2, "paste": 1},
+            "preview": preview or "",
+            "tag": tag,
+            "title": title or "分享",
+        }},
+        "prompt": "[分享]" + (title or "音乐"),
+    }
+
+
+def netease_meta(sid):
+    url = "https://music.163.com/api/song/detail/?id=%s&ids=%%5B%s%%5D" % (sid, sid)
+    req = urllib.request.Request(url, headers=UA)
+    d = json.load(urllib.request.urlopen(req, timeout=6))
+    s = (d.get("songs") or [{}])[0]
+    return (s.get("name", ""),
+            "/".join(a.get("name", "") for a in s.get("artists") or []),
+            (s.get("album") or {}).get("picUrl", ""),
+            "https://music.163.com/song?id=%s" % sid)
+
+
+class H(BaseHTTPRequestHandler):
+    def do_POST(self):
+        n = int(self.headers.get("Content-Length") or 0)
+        try:
+            d = json.loads(self.rfile.read(n) or b"{}")
+        except Exception:
+            d = {}
+        t = d.get("type")
+        out = None
+        try:
+            if t == "custom":
+                out = build_ark(d.get("title", ""), d.get("singer") or d.get("content"),
+                                d.get("url", ""), d.get("image", ""), "音乐", 100497308)
+            elif t == "163":
+                title, desc, pic, jump = netease_meta(d.get("id"))
+                out = build_ark(title, desc, jump, pic, "网易云音乐", 100495022)
+        except Exception:
+            out = None
+        if out is None:
+            body = json.dumps({"error": "build failed", "ok": False}).encode()
+            self.send_response(400)
+        else:
+            body = json.dumps(out, ensure_ascii=False).encode()
+            self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def log_message(self, *a):
+        pass
+
+
+HTTPServer(("127.0.0.1", PORT), H).serve_forever()
+==真实载荷复测: 163/ID=3381542797(稻香真身)==
+{"app": "com.tencent.structmsg", "config": {"ctime": 12, "forward": true, "type": "normal", "autosize": true}, "extra": {"app_type": 1, "appid": 100495022, "msg_seq": 907114353, "uin": 3427943187}, "meta": {"music": {"desc": "周杰伦./街道办GDC/欧阳耀莹.", "jump": {"url": "https://music.163.com/song?id=3381542797", "action": ""}, "music": {"type": "song", "category_id": 100, "mid": "", "p
+==qq类型复测==
+{"error": "build failed", "ok": false}
+HTTP:400
+
+==custom带content复测(bot真实结构)==
+{"app": "com.tencent.structmsg", "config": {"ctime": 12, "forward": true, "type": "normal", "autosize": true}, "extra": {"app_type": 1, "appid": 100497308, "msg_seq": 591155799, "uin": 3427943187}, "meta": {"music": {"desc": "周杰伦", "jump": {"url": "https://music.163.com/song?id=3381542797", "a
+==服务日志==
+-rw-r--r-- 1 root root 0 Nov 14 14:44 /root/music_sign.log
