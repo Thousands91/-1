@@ -1,6 +1,9 @@
-285495
+285496
 M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
-sed -n '77520,77570p' $M
-echo "==找配置文件=="
-find /root -name "onebot11_*.json" 2>/dev/null | head -3
-find /root -path "*NapCat*config*" -name "*.json" 2>/dev/null | head -5
+echo "==配置文件=="
+cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json | python3 -c "import sys,json; d=json.load(sys.stdin); print('musicSignUrl:', repr(d.get('musicSignUrl')))"
+echo "==musicSignUrl 4处引用=="
+grep -n "musicSignUrl" $M
+echo "==签名请求代码段=="
+sed -n '77518,77520p' $M | head -2
+awk 'NR>=77505 && NR<=77520' $M
