@@ -1,9 +1,26 @@
-285529
+285530
+echo "==实测复活后的思思签名接口=="
+timeout 15 curl -s -w "\nHTTP:%{http_code} %{time_total}s\n" -X POST "https://ss.xingzhige.com/music_card/card" -H "Content-Type: application/json" -d '{"type":"163","id":"185868"}' -o /tmp/xz.json
+python3 - <<'PYEOF'
+import json
+try:
+    d = json.load(open('/tmp/xz.json'))
+    print("响应键:", list(d.keys())[:8])
+    card = d.get("data") if isinstance(d.get("data"), (dict, str)) else d
+    if isinstance(card, str):
+        card = json.loads(card)
+    if isinstance(card, dict):
+        print("app:", card.get("app"), "| view:", card.get("view"))
+        cfg = card.get("config") or {}
+        print("config.token 存在:", bool(cfg.get("token")), "| token长度:", len(str(cfg.get("token") or "")))
+        mu = (card.get("meta") or {}).get("music") or {}
+        print("字段:", list(mu.keys()))
+except Exception as e:
+    print("解析失败:", e, open('/tmp/xz.json').read()[:300])
+PYEOF
+echo "==getArkJson上下文=="
 M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
-echo "==NapCat内部的Ark生成API=="
-grep -o "get[A-Za-z]*ArkJson" $M | sort -u
-grep -o "Ark[A-Za-z]*Json" $M | sort -u | head -8
-echo "==测思思主域名和常见接口=="
-for u in "https://xingzhige.com" "https://api.xingzhige.com" "https://ss.xingzhige.com" "https://music.xingzhige.com"; do
-  printf "%-32s " "$u"; timeout 8 curl -s -o /dev/null -w "%{http_code} %{time_total}s\n" "$u" 2>&1 || echo 不通
-done
+N=$(grep -n "async getArkJson\|getArkJson(" $M | head -2)
+echo "$N"
+L=$(echo "$N" | head -1 | cut -d: -f1)
+sed -n "$((L-3)),$((L+15))p" $M
