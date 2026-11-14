@@ -1,10 +1,41 @@
-<<<task_285497.txt>>>
-===== 任务285497 11-14 14:33:19 =====
+<<<task_285498.txt>>>
+===== 任务285498 11-14 14:35:23 =====
 --- 命令 ---
-echo "==测NapCat默认签名地址=="
-timeout 10 curl -s -o /dev/null -w "%{http_code} %{time_total}s\n" -X POST "http://106.55.0.102:10087/" -d '{}' 2>&1 || echo 不通
-timeout 10 curl -s -X POST "http://106.55.0.102:10087/" -d '{"type":"163","id":"2663794686"}' 2>&1 | head -c 200; echo
+M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
+echo "==xingzhige引用=="
+grep -n "xingzhige" $M | head -3
+echo "==首选地址失败上下文=="
+grep -n "首选地址失败" $M | head -2
+echo "==77477-77500=="
+awk 'NR>=77477 && NR<=77500' $M
 --- 输出 ---
-==测NapCat默认签名地址==
-400 0.045162s
-{"error":"缺少 title","ok":false}
+==xingzhige引用==
+9277:        "http://ss.xingzhige.com/music_card/rkey",
+77485:            "https://ss.xingzhige.com/music_card/card",
+==首选地址失败上下文==
+77484:          this.core.context.logger.logError("[音乐卡片签名] 首选地址失败，尝试备选地址..."), a = await Lt.HttpGetJson(
+==77477-77500==
+      let s = this.obContext.configLoader.configData.musicSignUrl;
+      s || (s = "http://106.55.0.102:10087/");
+      try {
+        let a;
+        try {
+          a = await Lt.HttpGetJson(s, "POST", o);
+        } catch {
+          this.core.context.logger.logError("[音乐卡片签名] 首选地址失败，尝试备选地址..."), a = await Lt.HttpGetJson(
+            "https://ss.xingzhige.com/music_card/card",
+            // 思思的音卡签名
+            "POST",
+            o
+          );
+        }
+        return this.ob11ToRawConverters.json({
+          data: { data: a },
+          type: Ke.json
+        }, r);
+      } catch (a) {
+        const c = a instanceof Error ? a.message : String(a);
+        this.core.context.logger.logError(
+          `[音乐卡片签名失败] 签名服务请求出错!
+  ├─ 音乐类型: ${e.type}
+  ├─ 音乐ID: ${e.id ?? "自定义"}
