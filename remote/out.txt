@@ -1,57 +1,70 @@
-<<<task_285515.txt>>>
-===== 任务285515 11-14 17:36:33 =====
+<<<task_285516.txt>>>
+===== 任务285516 11-14 17:38:56 =====
 --- 命令 ---
-M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
-echo "==补看285514尾部结果=="
-pgrep -af music_sign.py | head -1
-tail -2 /root/music_sign.log
-echo "==HttpGetJson函数定义=="
-grep -n "HttpGetJson" $M | head -5
-N=$(grep -n "static.*HttpGetJson\|HttpGetJson(" $M | head -1 | cut -d: -f1)
-echo "定义位置: $N"
-sed -n "$((N-2)),$((N+25))p" $M
-echo "==onebot11 HTTP端口=="
-python3 -c "import json;d=json.load(open('/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json'));print('http:',d.get('http'));print('ws:',d.get('websocket'))"
+python3 - <<'PYEOF'
+p = "/root/music_sign.py"
+t = open(p, encoding="utf-8").read()
+old = """        n = int(self.headers.get("Content-Length") or 0)
+        raw = self.rfile.read(n) if n else b""
+        try:
+            d = json.loads(raw or b"{}")
+        except Exception:
+            d = {}
+            _log("原始请求体解析失败: %r" % raw[:400])"""
+new = """        raw = self._read_body()
+        try:
+            d = json.loads(raw or b"{}")
+        except Exception:
+            d = {}
+            _log("原始请求体解析失败: %r" % raw[:400])"""
+assert old in t, "锚点没找到"
+helper = '''
+    def _read_body(self):
+        """NapCat 的 HttpGetJson 发 POST 不带 Content-Length，body 走 chunked；
+        Python 标准库只会按 Content-Length 读，结果读到 0 字节——这就是
+        v2 时代 NapCat 三连敲门全收到 type=? 的原因。两种读法都支持。"""
+        te = (self.headers.get("Transfer-Encoding") or "").lower()
+        if "chunked" in te:
+            body = b""
+            while True:
+                line = self.rfile.readline(65536).strip()
+                if b";" in line:
+                    line = line.split(b";")[0]
+                try:
+                    size = int(line, 16)
+                except ValueError:
+                    break
+                if size == 0:
+                    self.rfile.readline(65536)
+                    break
+                body += self.rfile.read(size)
+                self.rfile.read(2)
+            return body
+        n = int(self.headers.get("Content-Length") or 0)
+        return self.rfile.read(n) if n else b""
+
+    def do_POST(self):'''
+t = t.replace("    def do_POST(self):", helper, 1)
+t = t.replace(old, new, 1)
+open(p, "w", encoding="utf-8").write(t)
+print("chunked 支持已写入")
+PYEOF
+python3 -m py_compile /root/music_sign.py && echo 语法通过
+pkill -f "python /root/music_sign.py"; sleep 1
+setsid nohup /root/bot/venv/bin/python /root/music_sign.py > /root/music_sign.log 2>&1 < /dev/null &
+sleep 2
+echo "==自测1: 模拟NapCat的chunked发法=="
+timeout 10 curl -s -o /dev/null -w "chunked: %{http_code} 出卡%{size_download}字节\n" "http://127.0.0.1:10800/" -H "Transfer-Encoding: chunked" -H "Content-Type: application/json" -d '{"type":"163","id":"3381542797"}'
+echo "==自测2: 常规Content-Length发法(兼容)=="
+timeout 10 curl -s -o /dev/null -w "常规: %{http_code} 出卡%{size_download}字节\n" "http://127.0.0.1:10800/" -H "Content-Type: application/json" -d '{"type":"custom","singer":"周杰伦","title":"稻香 - 周杰伦","url":"https://music.163.com/song?id=3381542797","audio":"https://api.injahow.cn/meting/?type=url&server=netease&id=3381542797","image":"https://p1.music.126.net/x.jpg"}'
+tail -4 /root/music_sign.log
 --- 输出 ---
-==补看285514尾部结果==
-18761 /root/bot/venv/bin/python /root/music_sign.py
-11-14 17:34:38 music_sign v2 启动 127.0.0.1:10800
-11-14 17:34:40 已出卡 type=163 id=185868 -> 579 bytes
-==HttpGetJson函数定义==
-8287:  static async HttpGetJson(e, r = "GET", n, i = {}, o = !0, s = !0, a = 5) {
-8303:          this.HttpGetJson(x, r, n, i, o, s, a - 1).then(p).catch(f);
-8331:    return this.HttpGetJson(e, r, n, i, !1, !1);
-8379:        let n = await Lt.HttpGetJson(r, "GET");
-8732:        Lt.HttpGetJson(p, "GET", void 0, {
-定义位置: 8287
-  // 请求和回复都是JSON data传原始内容 自动编码json
-  // 支持 301/302 重定向（最多 5 次）
-  static async HttpGetJson(e, r = "GET", n, i = {}, o = !0, s = !0, a = 5) {
-    const c = new URL(e), u = e.startsWith("https://") ? E4 : jp, d = {
-      hostname: c.hostname,
-      port: c.port,
-      path: c.pathname + c.search,
-      method: r,
-      headers: i
-    };
-    return new Promise((p, f) => {
-      const h = u.request(d, (m) => {
-        if ((m.statusCode === 301 || m.statusCode === 302 || m.statusCode === 307 || m.statusCode === 308) && m.headers.location) {
-          if (a <= 0) {
-            f(new Error("Too many redirects"));
-            return;
-          }
-          const x = new URL(m.headers.location, e).href;
-          this.HttpGetJson(x, r, n, i, o, s, a - 1).then(p).catch(f);
-          return;
-        }
-        let y = "";
-        m.on("data", (x) => {
-          y += x.toString();
-        }), m.on("end", () => {
-          try {
-            if (m.statusCode && m.statusCode >= 200 && m.statusCode < 300)
-              if (o) {
-==onebot11 HTTP端口==
-http: None
-ws: None
+chunked 支持已写入
+语法通过
+==自测1: 模拟NapCat的chunked发法==
+chunked: 200 出卡609字节
+==自测2: 常规Content-Length发法(兼容)==
+常规: 200 出卡532字节
+11-14 17:38:58 music_sign v2 启动 127.0.0.1:10800
+11-14 17:39:00 已出卡 type=163 id=3381542797 -> 609 bytes
+11-14 17:39:00 已出卡 type=custom id= -> 532 bytes
