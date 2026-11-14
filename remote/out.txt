@@ -1,16 +1,20 @@
-<<<task_285499.txt>>>
-===== 任务285499 11-14 14:37:38 =====
+<<<task_285500.txt>>>
+===== 任务285500 11-14 14:39:44 =====
 --- 命令 ---
-echo "==完整载荷测签名(custom风格)=="
-timeout 15 curl -s -X POST "http://106.55.0.102:10087/" \
+echo "==NapCat实际custom结构(singer合并)=="
+timeout 20 curl -s -w "\nHTTP:%{http_code} %{time_total}s\n" -X POST "http://106.55.0.102:10087/" \
   -H "Content-Type: application/json" \
-  -d '{"type":"custom","url":"https://music.163.com/song?id=185868","audio":"https://api.injahow.cn/meting/?type=url&server=netease&id=185868","title":"晴天 - 周杰伦","content":"叶惠美","image":"https://p1.music.126.net/cover.jpg"}' | head -c 500; echo
-echo "==163风格带id=="
-timeout 15 curl -s -X POST "http://106.55.0.102:10087/" \
+  -d '{"singer":"叶惠美","type":"custom","url":"https://music.163.com/song?id=185868","audio":"https://api.injahow.cn/meting/?type=url&server=netease&id=185868","title":"晴天 - 周杰伦","image":"https://p1.music.126.net/cover.jpg"}' | head -c 600; echo
+echo "==163带title=="
+timeout 20 curl -s -w "\nHTTP:%{http_code}\n" -X POST "http://106.55.0.102:10087/" \
   -H "Content-Type: application/json" \
-  -d '{"type":"163","id":"185868"}' | head -c 300; echo
+  -d '{"type":"163","id":"185868","title":"晴天","singer":"周杰伦"}' | head -c 400; echo
 --- 输出 ---
-==完整载荷测签名(custom风格)==
+==NapCat实际custom结构(singer合并)==
+{"error":"等待 Push 超时","ok":false}
+HTTP:504 15.498482s
 
-==163风格带id==
-{"error":"缺少 title","ok":false}
+==163带title==
+{"error":"等待 Push 超时","ok":false}
+HTTP:504
+
