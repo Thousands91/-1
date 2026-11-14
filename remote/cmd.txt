@@ -1,11 +1,4 @@
-285493
+285494
 M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
-echo "==NapCat版本=="
-grep -o '"version":"[^"]*"' /root/Napcat/opt/QQ/resources/app/app_launcher/package.json 2>/dev/null | head -1
-cat /root/Napcat/opt/QQ/resources/app/app_launcher/package.json 2>/dev/null | head -5
-echo "==自定义音乐卡片代码上下文=="
-grep -n "自定义音乐卡片" $M | head -3
-echo "==musicSignUrl引用=="
-grep -c "musicSignUrl" $M
-echo "==custom music处理段=="
-grep -o 'case"custom":[^}]\{0,400\}' $M | head -2
+echo "==77400-77520段=="
+sed -n '77400,77520p' $M
