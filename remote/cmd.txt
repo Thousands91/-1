@@ -1,24 +1,3 @@
-285502
-C=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json
-echo "==1 配置指向本地签名服务=="
-python3 - <<'PYEOF'
-import json
-p = "/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json"
-d = json.load(open(p))
-d["musicSignUrl"] = "http://127.0.0.1:10800/"
-json.dump(d, open(p, "w"), ensure_ascii=False, indent=2)
-print("musicSignUrl =", d["musicSignUrl"])
-PYEOF
-echo "==2 写进start_all.sh(开机自启)=="
-grep -q music_sign /root/start_all.sh 2>/dev/null || echo 'setsid nohup /root/bot/venv/bin/python /root/music_sign.py > /root/music_sign.log 2>&1 < /dev/null &' >> /root/start_all.sh
-tail -2 /root/start_all.sh
-echo "==3 重启NapCat(加载配置)=="
-pkill -f "opt/QQ/[q]q"; sleep 3
-pgrep -f music_sign.py >/dev/null || { setsid nohup /root/bot/venv/bin/python /root/music_sign.py > /root/music_sign.log 2>&1 < /dev/null & sleep 1; }
-cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 -q 3427943187 > /root/napcat.log 2>&1 < /dev/null &
-sleep 30
-echo "==4 登录状态=="
-bash /root/logincheck.sh 2>/dev/null | tail -4
-grep -iE "快速登录|quick|扫码|qrcode|登录成功|online" /root/napcat.log | tail -4
-echo "==5 大脑连接=="
-tail -3 /root/bot.log | cut -c1-110
+285503
+cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册
+base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
