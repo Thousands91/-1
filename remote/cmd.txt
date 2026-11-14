@@ -1,100 +1,24 @@
-285501
-echo "==1 写入自托管签名服务=="
-cat > /root/music_sign.py <<'PYEOF'
-#!/usr/bin/env python3
-"""自托管音乐卡片签名服务（坑107终，2026-11-14）。
-
-所谓"签名"只是把数据拼成 NTQQ 认的 ark JSON——不涉及任何腾讯密钥。
-公益签名服务死的死残的残（ss.xingzhige 失联、qqbotark 域名死、
-106.55.0.102 后端 Push 超时），本地拼最稳，永不依赖第三方活体。
-
-NapCat 把 POST 进来的 music 数据交给本服务，本服务返回 ark JSON，
-它当 ARK 元素发出。只监听 127.0.0.1，外部摸不到。
-"""
+285502
+C=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json
+echo "==1 配置指向本地签名服务=="
+python3 - <<'PYEOF'
 import json
-import random
-import urllib.request
-from http.server import BaseHTTPRequestHandler, HTTPServer
-
-PORT = 10800
-UIN = 3427943187
-UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
-
-
-def build_ark(title, desc, jump, preview, tag, appid):
-    return {
-        "app": "com.tencent.structmsg",
-        "config": {"ctime": 12, "forward": True, "type": "normal", "autosize": True},
-        "extra": {"app_type": 1, "appid": appid,
-                  "msg_seq": random.randint(100000000, 999999999), "uin": UIN},
-        "meta": {"music": {
-            "desc": desc or "分享",
-            "jump": {"url": jump, "action": ""},
-            "music": {"type": "song", "category_id": 100, "mid": "",
-                      "passport": 2, "paste": 1},
-            "preview": preview or "",
-            "tag": tag,
-            "title": title or "分享",
-        }},
-        "prompt": "[分享]" + (title or "音乐"),
-    }
-
-
-def netease_meta(sid):
-    url = "https://music.163.com/api/song/detail/?id=%s&ids=%%5B%s%%5D" % (sid, sid)
-    req = urllib.request.Request(url, headers=UA)
-    d = json.load(urllib.request.urlopen(req, timeout=6))
-    s = (d.get("songs") or [{}])[0]
-    return (s.get("name", ""),
-            "/".join(a.get("name", "") for a in s.get("artists") or []),
-            (s.get("album") or {}).get("picUrl", ""),
-            "https://music.163.com/song?id=%s" % sid)
-
-
-class H(BaseHTTPRequestHandler):
-    def do_POST(self):
-        n = int(self.headers.get("Content-Length") or 0)
-        try:
-            d = json.loads(self.rfile.read(n) or b"{}")
-        except Exception:
-            d = {}
-        t = d.get("type")
-        out = None
-        try:
-            if t == "custom":
-                out = build_ark(d.get("title", ""), d.get("singer") or d.get("content"),
-                                d.get("url", ""), d.get("image", ""), "音乐", 100497308)
-            elif t == "163":
-                title, desc, pic, jump = netease_meta(d.get("id"))
-                out = build_ark(title, desc, jump, pic, "网易云音乐", 100495022)
-        except Exception:
-            out = None
-        if out is None:
-            body = json.dumps({"error": "build failed", "ok": False}).encode()
-            self.send_response(400)
-        else:
-            body = json.dumps(out, ensure_ascii=False).encode()
-            self.send_response(200)
-        self.send_header("Content-Type", "application/json")
-        self.send_header("Content-Length", str(len(body)))
-        self.end_headers()
-        self.wfile.write(body)
-
-    def log_message(self, *a):
-        pass
-
-
-HTTPServer(("127.0.0.1", PORT), H).serve_forever()
+p = "/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json"
+d = json.load(open(p))
+d["musicSignUrl"] = "http://127.0.0.1:10800/"
+json.dump(d, open(p, "w"), ensure_ascii=False, indent=2)
+print("musicSignUrl =", d["musicSignUrl"])
 PYEOF
-echo "==2 起服务=="
-pgrep -f music_sign.py >/dev/null && kill $(pgrep -f music_sign.py) 2>/dev/null; sleep 1
-setsid nohup /root/bot/venv/bin/python /root/music_sign.py > /root/music_sign.log 2>&1 < /dev/null &
-sleep 2
-pgrep -af music_sign.py | head -1
-echo "==3 本地自测=="
-curl -s -X POST "http://127.0.0.1:10800/" -H "Content-Type: application/json" \
-  -d '{"type":"custom","url":"https://music.163.com/song?id=185868","audio":"x","title":"晴天 - 周杰伦","image":"https://p1.music.126.net/x.jpg","singer":"周杰伦"}' | head -c 400; echo
-curl -s -X POST "http://127.0.0.1:10800/" -H "Content-Type: application/json" \
-  -d '{"type":"163","id":"185868"}' | head -c 400; echo
-EOF
-bash /workspace/rc.sh send 285501 /tmp/task285501.txt && sleep 50 && bash /workspace/rc.sh wait 285501 200
+echo "==2 写进start_all.sh(开机自启)=="
+grep -q music_sign /root/start_all.sh 2>/dev/null || echo 'setsid nohup /root/bot/venv/bin/python /root/music_sign.py > /root/music_sign.log 2>&1 < /dev/null &' >> /root/start_all.sh
+tail -2 /root/start_all.sh
+echo "==3 重启NapCat(加载配置)=="
+pkill -f "opt/QQ/[q]q"; sleep 3
+pgrep -f music_sign.py >/dev/null || { setsid nohup /root/bot/venv/bin/python /root/music_sign.py > /root/music_sign.log 2>&1 < /dev/null & sleep 1; }
+cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 -q 3427943187 > /root/napcat.log 2>&1 < /dev/null &
+sleep 30
+echo "==4 登录状态=="
+bash /root/logincheck.sh 2>/dev/null | tail -4
+grep -iE "快速登录|quick|扫码|qrcode|登录成功|online" /root/napcat.log | tail -4
+echo "==5 大脑连接=="
+tail -3 /root/bot.log | cut -c1-110
