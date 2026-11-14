@@ -1,24 +1,11 @@
-285508
-echo "==1 找出所有onebot11配置并看musicSignUrl=="
-for f in $(find /root -name "onebot11_*.json" 2>/dev/null); do
-  printf "%s => " "$f"
-  python3 -c "import json;print(repr(json.load(open('$f')).get('musicSignUrl','<无此键>')))" 2>/dev/null || echo 解析失败
-done
-echo "==2 本地服务真实响应=="
-timeout 10 curl -s "http://127.0.0.1:10800/" -H "Content-Type: application/json" -d '{"type":"custom","singer":"周杰伦","title":"晴天","url":"https://music.163.com/song?id=185868","audio":"https://api.injahow.cn/meting/?type=url&server=netease&id=185868","image":"https://p1.music.126.net/6j7FCfCQcFfrJuXP4F6yaw==/109951165939217481.jpg"}' | head -c 120; echo
-echo "==3 全部配置文件统一指向本地服务=="
-for f in $(find /root -name "onebot11_*.json" 2>/dev/null); do
-  python3 -c "
-import json
-p='$f'
-d=json.load(open(p))
-d['musicSignUrl']='http://127.0.0.1:10800/'
-json.dump(d,open(p,'w'),ensure_ascii=False,indent=2)
-print(p,'已设置')"
-done
-echo "==4 重启QQ加载配置=="
-pkill -f "opt/QQ/[q]q"; sleep 3
-cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 -q 3427943187 > /root/napcat.log 2>&1 < /dev/null &
-sleep 28
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册
-base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+285509
+echo "==music_sign.py 全文=="
+cat /root/music_sign.py
+echo "==真实载荷复测: 163/ID=3381542797(稻香真身)=="
+timeout 15 curl -s -w "\nHTTP:%{http_code}\n" "http://127.0.0.1:10800/" -H "Content-Type: application/json" -d '{"type":"163","id":"3381542797"}' | head -c 400; echo
+echo "==qq类型复测=="
+timeout 15 curl -s -w "\nHTTP:%{http_code}\n" "http://127.0.0.1:10800/" -H "Content-Type: application/json" -d '{"type":"qq","id":"003joRpF3wA7e8"}' | head -c 300; echo
+echo "==custom带content复测(bot真实结构)=="
+timeout 15 curl -s -w "\nHTTP:%{http_code}\n" "http://127.0.0.1:10800/" -H "Content-Type: application/json" -d '{"type":"custom","singer":"周杰伦","title":"稻香 - 周杰伦","content":"魔杰座","url":"https://music.163.com/song?id=3381542797","audio":"https://api.injahow.cn/meting/?type=url&server=netease&id=3381542797","image":"https://p1.music.126.net/test.jpg"}' | head -c 300; echo
+echo "==服务日志=="
+ls -la /root/music_sign.log; tail -5 /root/music_sign.log 2>/dev/null
