@@ -1,62 +1,38 @@
-<<<task_285495.txt>>>
-===== 任务285495 11-14 14:29:02 =====
+<<<task_285496.txt>>>
+===== 任务285496 11-14 14:31:05 =====
 --- 命令 ---
 M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
-sed -n '77520,77570p' $M
-echo "==找配置文件=="
-find /root -name "onebot11_*.json" 2>/dev/null | head -3
-find /root -path "*NapCat*config*" -name "*.json" 2>/dev/null | head -5
+echo "==配置文件=="
+cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json | python3 -c "import sys,json; d=json.load(sys.stdin); print('musicSignUrl:', repr(d.get('musicSignUrl')))"
+echo "==musicSignUrl 4处引用=="
+grep -n "musicSignUrl" $M
+echo "==签名请求代码段=="
+sed -n '77518,77520p' $M | head -2
+awk 'NR>=77505 && NR<=77520' $M
 --- 输出 ---
+==配置文件==
+musicSignUrl: ''
+==musicSignUrl 4处引用==
+37523:  musicSignUrl: l.String({ default: "" }),
+44754:  musicSignUrl: l.String({ default: "" }),
+77477:      let s = this.obContext.configLoader.configData.musicSignUrl;
+77502:  └─ 提示: 请检查网络连接，或尝试在配置中更换其他音乐签名服务地址(musicSignUrl)`
+==签名请求代码段==
+    [Ke.poke]: async () => {
+    },
+      }
+    },
+    [Ke.node]: async () => {
+    },
+    [Ke.forward]: async ({ data: e }, r) => {
+      const n = FA.fromResId(e.id);
+      return this.ob11ToRawConverters.json({
+        data: { data: JSON.stringify(n) },
+        type: Ke.json
+      }, r);
+    },
+    [Ke.xml]: async () => {
+    },
+    [Ke.poke]: async () => {
+    },
     [Ke.location]: async () => ({
-      elementType: Ee.SHARELOCATION,
-      elementId: "",
-      shareLocationElement: {
-        text: "测试",
-        ext: ""
-      }
-    }),
-    [Ke.miniapp]: async () => {
-    },
-    [Ke.contact]: async ({ data: { type: e = "qq", id: r } }, n) => {
-      if (e === "qq") {
-        const i = await this.core.apis.UserApi.getBuddyRecommendContactArkJson(r.toString(), "");
-        return this.ob11ToRawConverters.json({
-          data: { data: i.arkMsg },
-          type: Ke.json
-        }, n);
-      } else if (e === "group") {
-        const i = await this.core.apis.GroupApi.getGroupRecommendContactArkJson(r.toString());
-        return this.ob11ToRawConverters.json({
-          data: { data: i.arkJson },
-          type: Ke.json
-        }, n);
-      }
-    },
-    // 不需要支持发送
-    [Ke.onlinefile]: async () => {
-    },
-    [Ke.flashtransfer]: async () => {
-    }
-  };
-  constructor(e, r) {
-    this.obContext = e, this.core = r;
-  }
-  /**
-     * 解析带有JSON标记的文本
-     * @param text 要解析的文本
-     * @returns 解析后的结果数组，每个元素包含类型(text或json)和内容
-     */
-  parseTextWithJson(e) {
-    const r = /<(\{.*?\})>/g, n = [];
-    let i = 0, o;
-    for (; (o = r.exec(e)) !== null; ) {
-      o.index > i && n.push({
-        type: "text",
-        content: e.substring(i, o.index)
-      });
-      try {
-        const s = JSON.parse(o[1] ?? "");
-        n.push({
-          type: "json",
-==找配置文件==
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json
