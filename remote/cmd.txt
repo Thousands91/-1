@@ -1,5 +1,5 @@
-13
-echo "--- 音卡上游扩列（任务13） ---"
+285540
+echo "--- 音卡上游扩列（任务285540，原13号因任务号倒退被跳过，作废重发） ---"
 echo "改前:"
 grep -n "UPSTREAMS" /root/music_sign.py
 pgrep -fa "music_sign.py" || echo "!!进程未在跑"
@@ -23,4 +23,4 @@ sleep 2
 echo "重启后:"
 pgrep -fa "music_sign.py" || echo "!!重启失败"
 curl -s --max-time 5 -o /dev/null -w "代理端口10800: %{http_code}\n" "http://127.0.0.1:10800/"
-echo "--- 任务13结束 ---"
+echo "--- 任务285540结束 ---"
