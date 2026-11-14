@@ -1,6 +1,6 @@
-285504
-bash /root/logincheck.sh 2>/dev/null | tail -4
-echo "==本地签名服务=="
-pgrep -af music_sign.py | head -1
-echo "==napcat最近日志=="
-grep -iE "快速登录|扫码|qrcode|online|登录" /root/napcat.log | tail -3 | cut -c1-120
+285505
+pkill -f "opt/QQ/[q]q"; sleep 3
+cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 -q 3427943187 > /root/napcat.log 2>&1 < /dev/null &
+sleep 28
+cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册
+base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
