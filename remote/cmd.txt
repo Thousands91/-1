@@ -1,6 +1,9 @@
-285512
-pkill -f "opt/QQ/[q]q"; sleep 3
-cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 -q 3427943187 > /root/napcat.log 2>&1 < /dev/null &
-sleep 26
-cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册
-base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+285513
+echo "==登录态=="
+bash /root/logincheck.sh 2>/dev/null | tail -3
+echo "==签名服务日志(有没有被调用)=="
+cat /root/music_sign.log
+echo "==bot.log 最近点歌=="
+grep "点歌" /root/bot.log | tail -3
+echo "==napcat 17:25后 音乐/签名/错误=="
+awk '/11-14 17:2[0-9]/,0' /root/napcat.log | grep -iE "music|音乐|卡|sign|签名|error|语音" | head -16 | cut -c1-160
