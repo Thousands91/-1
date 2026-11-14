@@ -1,67 +1,29 @@
-<<<task_285520.txt>>>
-===== 任务285520 11-14 17:55:14 =====
+<<<task_285521.txt>>>
+===== 任务285521 11-14 18:01:59 =====
 --- 命令 ---
-python3 - <<'PYEOF'
-p = "/root/music_sign.py"
-t = open(p, encoding="utf-8").read()
-old = """        "prompt": "[分享]" + (title or "音乐"),
-    }"""
-new = """        "prompt": "[分享]" + (title or "音乐"),
-        # QQ 客户端靠 view 路由渲染模板、按 app+ver 识别版本——缺了就
-        # 显示"发送者版本过低，无法展示内容"（17:46 实测占位符实锤）
-        "ver": "0.0.0.1",
-        "view": "music",
-        "desc": "音乐",
-    }"""
-assert old in t, "锚点没找到"
-open(p, "w", encoding="utf-8").write(t.replace(old, new, 1))
-print("view/ver/desc 已补")
-PYEOF
-python3 -m py_compile /root/music_sign.py && echo 语法通过
-pkill -f "python /root/music_sign.py"; sleep 1
-setsid nohup /root/bot/venv/bin/python /root/music_sign.py > /root/music_sign.log 2>&1 < /dev/null &
-sleep 2
-echo "==出卡全文(人工核对结构)=="
-timeout 10 curl -s "http://127.0.0.1:10800/" -H "Content-Type: application/json" -d '{"type":"163","id":"185868"}' | python3 -m json.tool
+echo "==服务日志17:58后=="
+tail -6 /root/music_sign.log
+echo "==bot.log 17:58-18:01 点歌流程=="
+awk '/11-14 17:5[89]/,/11-14 18:01/' /root/bot.log | grep -vE "Matcher\(|running complete|Event will be handled" | head -12 | cut -c1-180
+echo "==napcat 17:58-18:01=="
+awk '/11-14 17:5[89]/,/11-14 18:01/' /root/napcat.log | grep -iE "music|卡|sign|error|json|ark" | head -10 | cut -c1-150
 --- 输出 ---
-view/ver/desc 已补
-语法通过
-==出卡全文(人工核对结构)==
-{
-    "app": "com.tencent.structmsg",
-    "config": {
-        "ctime": 12,
-        "forward": true,
-        "type": "normal",
-        "autosize": true
-    },
-    "extra": {
-        "app_type": 1,
-        "appid": 100495022,
-        "msg_seq": 819281914,
-        "uin": 3427943187
-    },
-    "meta": {
-        "music": {
-            "desc": "\u5468\u6770\u4f26",
-            "jump": {
-                "url": "https://music.163.com/song?id=185868",
-                "action": ""
-            },
-            "music": {
-                "type": "song",
-                "category_id": 100,
-                "mid": "",
-                "passport": 2,
-                "paste": 1
-            },
-            "preview": "https://p1.music.126.net/i9iGIx3y8FlghFJqn5pAqQ==/109951171867698249.jpg",
-            "tag": "\u7f51\u6613\u4e91\u97f3\u4e50",
-            "title": "\u4e0d\u80fd\u8bf4\u7684\u79d8\u5bc6"
-        }
-    },
-    "prompt": "[\u5206\u4eab]\u4e0d\u80fd\u8bf4\u7684\u79d8\u5bc6",
-    "ver": "0.0.0.1",
-    "view": "music",
-    "desc": "\u97f3\u4e50"
-}
+==服务日志17:58后==
+11-14 17:55:16 music_sign v2 启动 127.0.0.1:10800
+11-14 17:55:19 已出卡 type=163 id=185868 -> 632 bytes
+11-14 18:00:26 已出卡 type=163 id=2663794686 -> 630 bytes
+==bot.log 17:58-18:01 点歌流程==
+11-14 17:58:01 [INFO] ai_chat | [核对·调试] ask='你觉得夏玛怎么样' lead=False contra=False agree=False dodge=False ans='夏玛，她如同夜空中最亮的星，既�
+11-14 17:58:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1743277673 from 1561950850@[群:590454333] '你要换工作了吗'
+11-14 17:58:21 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794650300, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify',
+11-14 17:58:25 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794650305, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify',
+11-14 17:58:36 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794650315, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify',
+11-14 17:58:37 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794650316, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify',
+11-14 17:58:37 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 775586264 from 1561950850 '我没玩夏玛今天，你觉得今天她的身体怎么样
+11-14 17:58:37 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794650317, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify',
+11-14 17:58:41 [INFO] ai_chat | [核对·调试] ask='我没玩夏玛今天，你觉得今天她的身体怎么样？' lead=False contra=False agree=False dodge=True ans='这话书
+11-14 17:58:55 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794650335, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify',
+11-14 17:59:00 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794650339, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify',
+11-14 17:59:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794650350, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify',
+==napcat 17:58-18:01==
+11-14 18:00:26 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [卡片消息]
