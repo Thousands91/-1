@@ -1,11 +1,30 @@
-285531
-echo "==地毯式复测签名服务(带真实163载荷)=="
-for u in "https://ss.xingzhige.com/music_card/card" "http://106.55.0.102:10087/" "https://llob.linyuchen.net/sign/music" "http://napcat-sign.wumiao.wang:2052/music_sign" "https://qqbotark.569879.xyz/"; do
-  printf "%-44s " "$u"
-  R=$(timeout 12 curl -s -w "|%{http_code}" -X POST "$u" -H "Content-Type: application/json" -d '{"type":"163","id":"3381542797"}' 2>&1)
-  CODE="${R##*|}"; BODY="${R%|*}"
-  echo "HTTP$CODE $(echo "$BODY" | head -c 100)"
-done
-echo "==思思换载荷再试:qq类型/GET形式=="
-timeout 12 curl -s -w "|%{http_code}\n" -X POST "https://ss.xingzhige.com/music_card/card" -H "Content-Type: application/json" -d '{"type":"qq","id":"003joRpF3wA7e8"}' | head -c 150
-timeout 12 curl -s -w "|%{http_code}\n" "https://ss.xingzhige.com/music_card/card?type=163&id=185868" | head -c 150
+285532
+COVER="https://p2.music.126.net/d9PFoO6QmofVwblLqV0WPw==/109951174215189503.jpg"
+echo "==yibai服务: custom全量载荷=="
+timeout 20 curl -s -w "\nHTTP:%{http_code} %{time_total}s\n" -X POST "http://106.55.0.102:10087/" \
+  -H "Content-Type: application/json" \
+  -d "{\"type\":\"custom\",\"singer\":\"虾胡闹\",\"title\":\"橘子酸(cover那艺娜)\",\"url\":\"https://music.163.com/song?id=3381542797\",\"audio\":\"https://api.injahow.cn/meting/?type=url&server=netease&id=3381542797\",\"image\":\"$COVER\"}" -o /tmp/yb.json
+head -c 700 /tmp/yb.json; echo
+python3 - <<'PYEOF'
+import json
+try:
+    d=json.load(open('/tmp/yb.json'))
+    cfg=d.get('config') or {}
+    print('app:',d.get('app'),'view:',d.get('view'),'token:',bool(cfg.get('token')),len(str(cfg.get('token') or '')))
+except Exception as e:
+    print('非ark JSON:', e)
+PYEOF
+echo "==思思: custom全量载荷=="
+timeout 20 curl -s -w "\nHTTP:%{http_code}\n" -X POST "https://ss.xingzhige.com/music_card/card" \
+  -H "Content-Type: application/json" \
+  -d "{\"type\":\"custom\",\"singer\":\"虾胡闹\",\"title\":\"橘子酸(cover那艺娜)\",\"url\":\"https://music.163.com/song?id=3381542797\",\"audio\":\"https://api.injahow.cn/meting/?type=url&server=netease&id=3381542797\",\"image\":\"$COVER\"}" -o /tmp/xz2.json
+head -c 500 /tmp/xz2.json; echo
+python3 - <<'PYEOF'
+import json
+try:
+    d=json.load(open('/tmp/xz2.json'))
+    cfg=d.get('config') or {}
+    print('app:',d.get('app'),'view:',d.get('view'),'token:',bool(cfg.get('token')),len(str(cfg.get('token') or '')))
+except Exception as e:
+    print('非ark JSON:', e)
+PYEOF
