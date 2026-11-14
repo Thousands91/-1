@@ -1,41 +1,16 @@
-<<<task_285498.txt>>>
-===== 任务285498 11-14 14:35:23 =====
+<<<task_285499.txt>>>
+===== 任务285499 11-14 14:37:38 =====
 --- 命令 ---
-M=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
-echo "==xingzhige引用=="
-grep -n "xingzhige" $M | head -3
-echo "==首选地址失败上下文=="
-grep -n "首选地址失败" $M | head -2
-echo "==77477-77500=="
-awk 'NR>=77477 && NR<=77500' $M
+echo "==完整载荷测签名(custom风格)=="
+timeout 15 curl -s -X POST "http://106.55.0.102:10087/" \
+  -H "Content-Type: application/json" \
+  -d '{"type":"custom","url":"https://music.163.com/song?id=185868","audio":"https://api.injahow.cn/meting/?type=url&server=netease&id=185868","title":"晴天 - 周杰伦","content":"叶惠美","image":"https://p1.music.126.net/cover.jpg"}' | head -c 500; echo
+echo "==163风格带id=="
+timeout 15 curl -s -X POST "http://106.55.0.102:10087/" \
+  -H "Content-Type: application/json" \
+  -d '{"type":"163","id":"185868"}' | head -c 300; echo
 --- 输出 ---
-==xingzhige引用==
-9277:        "http://ss.xingzhige.com/music_card/rkey",
-77485:            "https://ss.xingzhige.com/music_card/card",
-==首选地址失败上下文==
-77484:          this.core.context.logger.logError("[音乐卡片签名] 首选地址失败，尝试备选地址..."), a = await Lt.HttpGetJson(
-==77477-77500==
-      let s = this.obContext.configLoader.configData.musicSignUrl;
-      s || (s = "http://106.55.0.102:10087/");
-      try {
-        let a;
-        try {
-          a = await Lt.HttpGetJson(s, "POST", o);
-        } catch {
-          this.core.context.logger.logError("[音乐卡片签名] 首选地址失败，尝试备选地址..."), a = await Lt.HttpGetJson(
-            "https://ss.xingzhige.com/music_card/card",
-            // 思思的音卡签名
-            "POST",
-            o
-          );
-        }
-        return this.ob11ToRawConverters.json({
-          data: { data: a },
-          type: Ke.json
-        }, r);
-      } catch (a) {
-        const c = a instanceof Error ? a.message : String(a);
-        this.core.context.logger.logError(
-          `[音乐卡片签名失败] 签名服务请求出错!
-  ├─ 音乐类型: ${e.type}
-  ├─ 音乐ID: ${e.id ?? "自定义"}
+==完整载荷测签名(custom风格)==
+
+==163风格带id==
+{"error":"缺少 title","ok":false}
