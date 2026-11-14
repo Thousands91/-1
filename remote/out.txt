@@ -1,46 +1,8 @@
-<<<task_285502.txt>>>
-===== 任务285502 11-14 14:47:07 =====
+<<<task_285503.txt>>>
+===== 任务285503 11-14 14:49:33 =====
 --- 命令 ---
-C=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json
-echo "==1 配置指向本地签名服务=="
-python3 - <<'PYEOF'
-import json
-p = "/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json"
-d = json.load(open(p))
-d["musicSignUrl"] = "http://127.0.0.1:10800/"
-json.dump(d, open(p, "w"), ensure_ascii=False, indent=2)
-print("musicSignUrl =", d["musicSignUrl"])
-PYEOF
-echo "==2 写进start_all.sh(开机自启)=="
-grep -q music_sign /root/start_all.sh 2>/dev/null || echo 'setsid nohup /root/bot/venv/bin/python /root/music_sign.py > /root/music_sign.log 2>&1 < /dev/null &' >> /root/start_all.sh
-tail -2 /root/start_all.sh
-echo "==3 重启NapCat(加载配置)=="
-pkill -f "opt/QQ/[q]q"; sleep 3
-pgrep -f music_sign.py >/dev/null || { setsid nohup /root/bot/venv/bin/python /root/music_sign.py > /root/music_sign.log 2>&1 < /dev/null & sleep 1; }
-cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 -q 3427943187 > /root/napcat.log 2>&1 < /dev/null &
-sleep 30
-echo "==4 登录状态=="
-bash /root/logincheck.sh 2>/dev/null | tail -4
-grep -iE "快速登录|quick|扫码|qrcode|登录成功|online" /root/napcat.log | tail -4
-echo "==5 大脑连接=="
-tail -3 /root/bot.log | cut -c1-110
+cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册
+base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
 --- 输出 ---
-==1 配置指向本地签名服务==
-musicSignUrl = http://127.0.0.1:10800/
-==2 写进start_all.sh(开机自启)==
-echo 以后手机重启后: 打开Termux输入 bash start_all.sh 即可
-setsid nohup /root/bot/venv/bin/python /root/music_sign.py > /root/music_sign.log 2>&1 < /dev/null &
-==3 重启NapCat(加载配置)==
-==4 登录状态==
-=== 登录状态（权威判定）===
-[未登录] 当前没有有效会话
-阶段: waiting_qrcode
-最近错误: 无
-11-14 14:47:22 [[32minfo[39m] QQ 3427943187 未配置回退密码环境变量，建议优先使用 ACCOUNT + NAPCAT_QUICK_PASSWORD（NAPCAT_QUICK_PASSWORD_MD5 作为备用），将使用二维码登录方式
-11-14 14:47:22 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
-11-14 14:47:22 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-==5 大脑连接==
-11-14 13:58:11 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, linen
-11-14 13:58:11 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-14 14:47:08 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+码已放进相册
+iVBORw0KGgoAAAANSUhEUgAAAJMAAACTAQAAAACinha4AAAACXBIWXMAAAsTAAALEwEAmpwYAAACA0lEQVRIid2WPY7EIAyFHVHQTS4QiWvQcaXJBfJzgeRKdFwjEhcgHQWK95H52WIb3G40g5SvsPCz/Rzivw/9a5aIJsunH8jy7qmTsJPLyPGi46njHvAqYX6YWW0ubprGQKOQPW2ZXDyD2eVszGazpc/USxmXyQIfHSPkN7cmBv3GMLx/v5o2MTzJqj3Tww39by2b2GVxd+iHPGLSapewRHGxSKLMnjdnZMzSw8a7AupCVAnjjHiKfWRWaz0ljIk0kVWbVUm/tG9mIXLgBf3CQ4eyS9gZhs4fXTgmZxZSp4RdFDkTURk96vDSoJUlR6OPa1Yriu9eGrSy08c916hJH3S3TDtjXyZtkjVoN6h4Stil42Yj9GNvVkgoYaeH3ubSNOlhDswiFtBoOM2m4/XRoJFxKBPF2/+OydIsYmw2MptD9seTPrPayKoNQP6aPaL2IuYhfHno40HmzMMoYacvZAtpjJdakJCMwYR4DTgLvHOWMPzhIpfGUEKJ70w3seTUomFCAIb9y7ObmYbjGmAIv7i3Z7eyakVwgmqfY3jPZTM7+lynhMjA+0WM71LDgeYQV/7o18bufY6WMbu/KyBhdZ9nTCSug3arjiJg/l6MdUrQL4aljO+xhpnV7SpjM8YLFcN6tN+7tDHkESA/tjECD6OEQb85E75BkivkDEtY6zfc/2A/CwVYCy8Hze0AAAAASUVORK5CYII=
