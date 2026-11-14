@@ -1,4 +1,10 @@
-285482
-grep -n "音乐卡片签名" /root/napcat.log | tail -5
-echo "==完整错误上下文=="
-grep -A 3 "音乐卡片签名" /root/napcat.log | tail -20
+285483
+echo "==测签名服务连通性=="
+timeout 12 curl -s -o /dev/null -w "%{http_code} %{time_total}s\n" https://111.170.174.56:443 2>&1 || echo "首选地址不通"
+timeout 12 curl -s -o /dev/null -w "%{http_code}\n" https://music.qsign.jixs.cc 2>&1 | head -1
+echo "==NapCat配置里签名服务设置=="
+grep -r "sign\|音乐\|music" /root/Napcat/config/ 2>/dev/null | grep -v "token\|key\|password" | head -8
+ls /root/Napcat/config/ 2>/dev/null
+echo "==对照组:其它外网通不通=="
+timeout 8 curl -s -o /dev/null -w "baidu:%{http_code}\n" https://www.baidu.com
+timeout 8 curl -s -o /dev/null -w "music.163.com:%{http_code}\n" https://music.163.com
