@@ -1,30 +1,5 @@
-285560
-echo "--- 坑110修复：点歌搜索加异常留痕 ---"
-P=/root/bot/bot/plugins/song_request.py
-cp $P $P.bak.trace
-grep -n "return out" $P | head -2
-cat > /tmp/fix_trace.py <<'PYEOF'
-p = '/root/bot/bot/plugins/song_request.py'
-s = open(p).read()
-a = "        return out\n    except Exception:\n        return []"
-b = "        return out\n    except Exception as e:\n        logger.warning(f\"[点歌] 搜索「{keyword}」异常: {e!r}\")\n        return []"
-assert a in s, '锚点缺失'
-s = s.replace(a, b, 1)
-if 'from nonebot.log import logger' not in s:
-    s = s.replace('import aiohttp', 'import aiohttp\nfrom nonebot.log import logger', 1)
-open(p, 'w').write(s)
-print('OK 已加搜索异常留痕')
-PYEOF
-/root/bot/venv/bin/python /tmp/fix_trace.py
-md5sum $P
-/root/bot/venv/bin/python -m py_compile $P && echo "语法OK"
-echo "--- 按SOP重启大脑（kill PID，禁pkill -f） ---"
-BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}')
-echo "旧PID: $BP"
-[ -n "$BP" ] && kill $BP
-sleep 3
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 &
-sleep 6
-pgrep -af "main.py" | head -3 || echo "!!大脑没起来"
-tail -3 /root/bot/bot/bot.log
-echo "--- 任务285560结束 ---"
+285570
+echo "--- 抓 music_sign.py 轮询代码（为OIAPI适配做准备，不改文件） ---"
+grep -n "UPSTREAMS" /root/music_sign.py
+sed -n "/def get_signed_card/,/^def /p" /root/music_sign.py | head -60
+echo "--- 任务285570结束 ---"
