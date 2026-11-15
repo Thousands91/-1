@@ -287,13 +287,13 @@ PICK_N = 6
 
 
 async def _pick_rule(event: GroupMessageEvent | PrivateMessageEvent) -> bool:
-    """只有"该用户 60 秒内点过歌"时，纯数字消息才被这里接住——
-    其余任何数字消息一律放行，不影响群里的正常聊天。"""
+    """只有"该用户点过歌"时，纯数字/取消消息才被这里接住——其余一律放行。
+    坑115：过期列表也接住——用户超时后发序号，与其让 AI 复读一个光秃秃
+    的"4"（像坏了），不如明确告诉他列表作废了。接住即清，只拦一次。"""
     txt = event.get_plaintext().strip()
     if not re.fullmatch(r"[0-9]{1,2}|取消", txt):
         return False
-    item = _PENDING.get(event.get_session_id())
-    return bool(item and item[0] >= time.time())
+    return event.get_session_id() in _PENDING
 
 
 pick_cmd = on_message(rule=_pick_rule, priority=1, block=True)
@@ -307,6 +307,10 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent):
     sid = event.get_session_id()
     expiry, picks, force_file, kw = _PENDING.pop(sid)
     txt = event.get_plaintext().strip()
+    # 坑115：选择期过了就明说作废，不让消息漏给 AI 复读
+    if expiry < time.time():
+        await pick_cmd.finish(
+            "刚才那份列表过了60秒，作废了——想听重新点一次，序号马上给你重排。")
     if txt == "取消":
         await pick_cmd.finish("好，柜子关上了。想听再点。")
     try:

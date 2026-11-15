@@ -1669,6 +1669,18 @@ async def call_llm(messages: List[dict], extra_system: str = "") -> str:
     if not text:
         # 思考模式万一没关干净会导致空正文——抛错交给上层重试机制
         raise RuntimeError("模型返回空正文(疑似思考模式未关闭)")
+    # 坑115（2026-11-15）：复读抑制。用户发"？"模型回"？"、发"4"回"4"
+    # ——极短消息被模型原样复读，出现过多次。回复与用户最后一条消息
+    # 完全相同且 ≤3 字符时，换成一句人话反问，不装深沉。
+    _last_user = ""
+    for _m in reversed(messages):
+        if _m.get("role") == "user":
+            _c = _m.get("content")
+            if isinstance(_c, str):
+                _last_user = _c.strip()
+            break
+    if _last_user and text == _last_user and len(text) <= 3:
+        text = "嗯？想问什么直说，我这儿听着呢。"
     return text
 
 
