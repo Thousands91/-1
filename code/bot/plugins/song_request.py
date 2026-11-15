@@ -24,11 +24,13 @@
    probe 会记下真实上限在哪
 """
 import re
+import time
 from datetime import datetime
 from pathlib import Path
 
 import aiohttp
-from nonebot import on_command
+from nonebot.log import logger
+from nonebot import on_command, on_message
 from nonebot.rule import to_me
 from nonebot.exception import FinishedException
 from nonebot.adapters.onebot.v11 import (
@@ -119,6 +121,30 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, arg: Messa
     # 用户写了歌手名，就把这位歌手的版本排到前头
     songs = rank_by_artist(songs, kw)
 
+    # 坑111：多选点歌——不再默认点第一首，改成发候选列表让用户回序号挑。
+    # 待选表按"群+用户"隔离，互不干扰；60 秒超时作废。
+    picks = songs[:PICK_N]
+    lines = [
+        f"{i + 1}. {s['name']} - {s['artists'] or '佚名'}"
+        + (f" 《{s['album']}》" if s.get("album") else "")
+        for i, s in enumerate(picks)
+    ]
+    _PENDING[event.get_session_id()] = (time.time() + PICK_TIMEOUT, picks, force_file, kw)
+    await song_cmd.finish(
+        f"「{kw}」翻出这几首，回复序号选哪首（{PICK_TIMEOUT}秒内有效）：\n"
+        + "\n".join(lines)
+        + "\n直接发序号就行；发「取消」或超时作废。"
+    )
+
+
+async def deliver(matcher, bot: Bot, event: GroupMessageEvent | PrivateMessageEvent,
+                  kw: str, songs: list, force_file: bool) -> None:
+    """从 songs[0] 起按顺序试，取第一个真能拿到音频的发出去。
+
+    「点歌」直发（旧入口）与「序号选择」（坑111）两个入口共用；
+    matcher 参数化：send/finish 走调用方自己的 matcher，长音频的
+    _timeout 余量、finish 结束语义都保持原样。
+    """
     # 同名歌很多，按顺序试，取第一个真能拿到音频的
     card = songs[0]
     for s in songs[:TRY_N]:
@@ -132,8 +158,8 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, arg: Messa
             note = (f"这首 {sec} 秒，直接给你传文件——下载后用什么播放器都行，"
                     f"切出聊天界面照样放，还能拖进度条。")
             if await send_file(bot, event, s, audio):
-                await song_cmd.finish(Message(f"{build_card(s)}\n\n{note}"))
-            await song_cmd.finish(
+                await matcher.finish(Message(f"{build_card(s)}\n\n{note}"))
+            await matcher.finish(
                 Message(f"{build_card(s)}\n\n这首 {sec} 秒，文件没传上去。点上面的链接听吧。")
             )
 
@@ -144,9 +170,7 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, arg: Messa
         ne_card_done = False
         if s.get("fee") != 1:
             try:
-                await song_cmd.send(MessageSegment.music("163", str(s["id"])))
-                card_note = ("点这张卡片去网易云音乐听完整版——切界面、锁屏都不会停，"
-                             "跟语音条是同一个音源。")
+                await matcher.send(MessageSegment.music("163", str(s["id"])))
                 ne_card_done = True
             except Exception:
                 card_note = ""
@@ -154,7 +178,7 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, arg: Messa
             mid, vip = await qq_card_mid(kw)
             if mid:
                 try:
-                    await song_cmd.send(MessageSegment.music("qq", mid))
+                    await matcher.send(MessageSegment.music("qq", mid))
                     if vip:
                         card_note = ("上面这张卡片是 QQ 音乐的同一首歌，点它也能后台听；"
                                      "不过这首在 QQ 音乐要 VIP，点进去可能只能试听几十秒，"
@@ -166,15 +190,21 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, arg: Messa
                         card_note = ("点这张卡片去 QQ 音乐听——切界面、锁屏都不会停。")
                 except Exception:
                     card_note = ""
+        # 坑107终局：发卡走本地签名代理（验config.token），上游公益签名服务
+        # 全灭时代理返回400、发卡失败——这里接文字卡兜底，点歌体验不断；
+        # 上游复活时真卡自动回来，无需人工干预
+        if not ne_card_done and not card_note:
+            if not await send_custom_card(s):
+                await matcher.send(Message(build_card(s)))
 
         try:
             # 长音频发过去要等 NapCat 转 silk 再上传，默认 30 秒的 api_timeout
             # 根本不够，按体积给个宽裕的余量。
             _t = 60 + len(audio) // (200 * 1024)
-            await song_cmd.send(MessageSegment.record(audio), _timeout=_t)
+            await matcher.send(MessageSegment.record(audio), _timeout=_t)
             probe(sec, len(audio), "ok", "")
             if card_note:
-                await song_cmd.send(card_note)
+                await matcher.send(card_note)
             return
         except FinishedException:
             # finish() 是靠抛这个异常结束的，别当成"发送失败"记进日志
@@ -188,15 +218,53 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, arg: Messa
             if card_note:
                 note += "；卡片照发，去 QQ 音乐点着听也行"
             if await send_file(bot, event, s, audio):
-                await song_cmd.finish(Message(f"{build_card(s)}\n\n{note}，改成传文件了——下载后切界面也能听。"))
-            await song_cmd.finish(
+                await matcher.finish(Message(f"{build_card(s)}\n\n{note}，改成传文件了——下载后切界面也能听。"))
+            await matcher.finish(
                 Message(f"{build_card(s)}\n\n{note}，文件也没传上去。点上面的链接听吧。")
             )
 
     # 全都拿不到音频，退回卡片
-    await song_cmd.finish(
+    await matcher.finish(
         Message(f"{build_card(card)}\n\n曲子我调不出来，只能给您递个名目。")
     )
+
+
+# ---- 坑111：序号选择 ----
+# 待选表：session_id → (过期时间戳, 候选列表)
+_PENDING: dict = {}
+PICK_TIMEOUT = 60
+PICK_N = 6
+
+
+async def _pick_rule(event: GroupMessageEvent | PrivateMessageEvent) -> bool:
+    """只有"该用户 60 秒内点过歌"时，纯数字消息才被这里接住——
+    其余任何数字消息一律放行，不影响群里的正常聊天。"""
+    txt = event.get_plaintext().strip()
+    if not re.fullmatch(r"[0-9]{1,2}|取消", txt):
+        return False
+    item = _PENDING.get(event.get_session_id())
+    return bool(item and item[0] >= time.time())
+
+
+pick_cmd = on_message(rule=_pick_rule, priority=15, block=True)
+
+
+@pick_cmd.handle()
+async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent):
+    sid = event.get_session_id()
+    _, picks, force_file, kw = _PENDING.pop(sid)
+    txt = event.get_plaintext().strip()
+    if txt == "取消":
+        await pick_cmd.finish("好，柜子关上了。想听再点。")
+    try:
+        n = int(txt)
+    except ValueError:
+        n = 0
+    if not 1 <= n <= len(picks):
+        await pick_cmd.finish(f"序号 1~{len(picks)} 才算数；要重新翻柜子就再说一次「点歌」。")
+    # 选中的排头：拿不到音频时自动顺延下一个候选，不用再选一遍
+    songs = picks[n - 1:] + picks[:n - 1]
+    await deliver(pick_cmd, bot, event, kw, songs, force_file)
 
 
 LOG = Path(__file__).resolve().parent.parent / "data" / "voice_probe.log"
@@ -215,6 +283,48 @@ def probe(sec: int, size: int, result: str, err: str) -> None:
                     f"{size // 1024}KB\t{result}\t{err}\n")
     except Exception:
         pass
+
+
+async def _song_pic(song_id: int) -> str:
+    """搜索接口的封面字段（album.picUrl）经常是空的，meting 的 song
+    接口稳定带 pic。NapCat 自定义卡片 image 是必填，缺了整卡被拒
+    （实测报"自定义音乐卡片缺少必需参数: image"）。
+    """
+    try:
+        async with aiohttp.ClientSession(headers={"User-Agent": UA}) as sess:
+            async with sess.get(
+                f"{STREAM}?type=song&server=netease&id={song_id}",
+                timeout=aiohttp.ClientTimeout(total=10),
+            ) as r:
+                d = await r.json(content_type=None)
+        if isinstance(d, list):
+            d = d[0] if d else {}
+        return (d or {}).get("pic") or ""
+    except Exception:
+        return ""
+
+
+async def send_custom_card(s: dict) -> bool:
+    """坑107兜底：官方模板卡（163/qq）要过外部签名服务，公益签名服务一挂
+    卡片就全军覆没（实测 2026-11-14 四个已知签名地址全不通）。自定义卡片
+    用自己拼的 ark 结构，NapCat 直接发、不走签名服务，材料全是现成的：
+    网易云页面链接 + meting 音频外链 + 封面 + 歌名。
+    用户已拍板不发附带说明句（坑98文案定版），所以成功即静默。
+    """
+    pic = s.get("pic") or await _song_pic(s["id"])
+    if not pic:
+        return False  # NapCat 硬性要求 image，拿不到封面就别硬发
+    try:
+        await song_cmd.send(MessageSegment.music_custom(
+            url=f"https://music.163.com/song?id={s['id']}",
+            audio=f"{STREAM}?type=url&server=netease&id={s['id']}",
+            title=f"{s['name']} - {s['artists'] or '佚名'}",
+            content=s.get("album") or None,
+            img_url=pic,
+        ))
+        return True
+    except Exception:
+        return False
 
 
 async def qq_card_mid(keyword: str):
@@ -280,11 +390,13 @@ async def search(keyword: str) -> list:
                 "name": s.get("name", ""),
                 "artists": "/".join(a.get("name", "") for a in (s.get("artists") or [])),
                 "album": (s.get("album") or {}).get("name", ""),
+                "pic": (s.get("album") or {}).get("picUrl", ""),
                 "sec": int((s.get("duration") or 0) // 1000),
                 "fee": s.get("fee", 0),
             })
         return out
-    except Exception:
+    except Exception as e:
+        logger.warning(f"[点歌] 搜索「{keyword}」异常: {e!r}")
         return []
 
 
@@ -326,7 +438,9 @@ def usable(s: dict, keyword: str) -> bool:
 
 async def fetch_audio(song_id: int):
     """返回 (音频 bytes 或 None, 时长秒, 错误说明)"""
-    url = f"{STREAM}?type=url&id={song_id}"
+    # 2026-11-12：上游 meting 接口行为变更——不带 server 参数返回 200 空体，
+    # 必须显式 server=netease（歌源全是网易云搜索，恒定 netease）。缺它=语音全灭。
+    url = f"{STREAM}?type=url&server=netease&id={song_id}"
     try:
         async with aiohttp.ClientSession(headers={"User-Agent": UA}) as sess:
             async with sess.get(url, timeout=aiohttp.ClientTimeout(total=30)) as r:
