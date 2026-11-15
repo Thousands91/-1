@@ -1,5 +1,10 @@
-285570
-echo "--- 抓 music_sign.py 轮询代码（为OIAPI适配做准备，不改文件） ---"
-grep -n "UPSTREAMS" /root/music_sign.py
-sed -n "/def get_signed_card/,/^def /p" /root/music_sign.py | head -60
-echo "--- 任务285570结束 ---"
+285580
+echo "--- 抓基线：song_request.py + music_sign轮询代码 ---"
+echo "==song_request_base64=="
+base64 -w0 /root/bot/bot/plugins/song_request.py
+echo
+echo "==md5=="
+md5sum /root/bot/bot/plugins/song_request.py
+echo "==music_sign轮询代码=="
+sed -n "/def get_signed_card/,/^def build/p" /root/music_sign.py | head -70
+echo "--- 任务285580结束 ---"
