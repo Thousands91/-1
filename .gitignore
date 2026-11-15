@@ -1,2 +1,6 @@
 __pycache__/
 *.pyc
+guild1.db*
+*.db-shm
+*.db-wal
+remote/qrcode.png
