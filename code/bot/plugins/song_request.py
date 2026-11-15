@@ -145,7 +145,8 @@ async def deliver(matcher, bot: Bot, event: GroupMessageEvent | PrivateMessageEv
     matcher 参数化：send/finish 走调用方自己的 matcher，长音频的
     _timeout 余量、finish 结束语义都保持原样。
     """
-    # 同名歌很多，按顺序试，取第一个真能拿到音频的
+    # 同名歌很多，按顺序试，取第一个真能拿到音频的（仅直发点歌入口用；
+    # 多选入口已在处理器里单选单曲、放不了如实报告——坑113改版）
     card = songs[0]
     for s in songs[:TRY_N]:
         audio, sec, err = await fetch_audio(s["id"])
@@ -246,13 +247,16 @@ async def _pick_rule(event: GroupMessageEvent | PrivateMessageEvent) -> bool:
     return bool(item and item[0] >= time.time())
 
 
-pick_cmd = on_message(rule=_pick_rule, priority=15, block=True)
+pick_cmd = on_message(rule=_pick_rule, priority=1, block=True)
+# priority=1（坑113）：必须排在一切对话类处理器之前。原来 priority=15 排在
+# ai_chat 后面，用户发"1"会先被 AI 当聊天接走抢答一句，选择器再执行——
+# 双重回复。选择规则本身极窄（60秒内点过歌的纯数字），提到最前不会误伤。
 
 
 @pick_cmd.handle()
 async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent):
     sid = event.get_session_id()
-    _, picks, force_file, kw = _PENDING.pop(sid)
+    expiry, picks, force_file, kw = _PENDING.pop(sid)
     txt = event.get_plaintext().strip()
     if txt == "取消":
         await pick_cmd.finish("好，柜子关上了。想听再点。")
@@ -262,9 +266,18 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent):
         n = 0
     if not 1 <= n <= len(picks):
         await pick_cmd.finish(f"序号 1~{len(picks)} 才算数；要重新翻柜子就再说一次「点歌」。")
-    # 选中的排头：拿不到音频时自动顺延下一个候选，不用再选一遍
-    songs = picks[n - 1:] + picks[:n - 1]
-    await deliver(pick_cmd, bot, event, kw, songs, force_file)
+    s = picks[n - 1]
+    # 坑113改版（2026-11-15 用户拍板）：选哪首就是哪首——拿不到音频就如实
+    # 说，绝不顺延换歌（顺延到的那首不是点歌人想要的，等于答非所问）。
+    # 待选表在剩余时间内保留，回其它序号还能改选。
+    audio, sec, err = await fetch_audio(s["id"])
+    if not audio:
+        if expiry >= time.time():
+            _PENDING[sid] = (expiry, picks, force_file, kw)
+        await pick_cmd.finish(
+            f"你选的「{s['name']}」这首拿不到音频（多半是版权原因），"
+            f"这首真放不了。想听别首就再回个序号，或重新点歌。")
+    await deliver(pick_cmd, bot, event, kw, [s], force_file)
 
 
 LOG = Path(__file__).resolve().parent.parent / "data" / "voice_probe.log"
