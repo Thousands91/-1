@@ -274,9 +274,20 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent):
     if not audio:
         if expiry >= time.time():
             _PENDING[sid] = (expiry, picks, force_file, kw)
+        # 坑113续（用户要求）：什么原因就说什么原因，不许含糊。
+        # fetch_audio 的 err 是具体错误；VIP 在搜索阶段就有标记（fee==1），
+        # 沿用全插件统一的 VIP 话术，不另造含糊说法。
+        if s.get("fee") == 1:
+            why = "这首在网易云要 VIP，免费拿不到音频"
+        elif err == "不是音频":
+            why = "网易云歌源没返回这首的音频（这类一般是版权受限的曲子）"
+        elif "HTTP" in err or "Error" in err or "Timeout" in err:
+            why = f"我取音频时出了网络问题（{err}），不是歌的问题，可以再回一次这个序号重试"
+        else:
+            why = f"音频异常（{err}）"
         await pick_cmd.finish(
-            f"你选的「{s['name']}」这首拿不到音频（多半是版权原因），"
-            f"这首真放不了。想听别首就再回个序号，或重新点歌。")
+            f"你选的「{s['name']}」放不了：{why}。"
+            f"想听别首就再回个序号，或重新点歌。")
     await deliver(pick_cmd, bot, event, kw, [s], force_file)
 
 
