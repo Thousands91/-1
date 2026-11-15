@@ -1,5 +1,5 @@
 #!/bin/bash
-# remote_ctl_v6 (2026-11-15)：坑116——回传主路改走 git push
+# remote_ctl_v6.2 (2026-11-15)：坑116 git push回传 + mkdir原子实例锁 + run_task防双执行
 # 病根：手机侧 api.github.com 小包 GET 通([api:200])，但回传的 PUT 带 100KB+ 大包
 # 被掐死（report:API回传失败 后错误体为空=请求被吞），285710 结果卡待发箱。
 # git 通道([git:通])实测健康，拉命令本来就走它——回传搬上同一条路。
@@ -14,13 +14,19 @@ OUT_URL="$BASE/out.txt"
 PBOX=/root/.remote_pending
 mkdir -p "$PBOX"
 
-# ---- 启动：接管旧循环 ----
-OLDPID=$(cat /root/.remote_pid 2>/dev/null)
-sleep 12
-if [ -n "$OLDPID" ] && kill -0 "$OLDPID" 2>/dev/null; then
-  kill "$OLDPID" 2>/dev/null
-  echo "[$(date '+%m-%d %H:%M')] v6接管:杀掉旧循环pid=$OLDPID" >> "$LOG"
+# ---- 启动：原子实例锁 v6.2(mkdir原子性,同秒双开也只有一个能活;含死锁自清) ----
+LD=/root/.remote_ctl.lock
+if mkdir "$LD" 2>/dev/null; then
+  echo $$ > "$LD/pid"
+else
+  LP=$(cat "$LD/pid" 2>/dev/null)
+  if [ -n "$LP" ] && kill -0 "$LP" 2>/dev/null && tr -d '\0' < "/proc/$LP/cmdline" 2>/dev/null | grep -q remote_ctl; then
+    echo "[$(date '+%m-%d %H:%M:%S')] 实例锁:已有实例在岗(pid=$LP),本次启动退出——谁拉起的我记下了" >> "$LOG"
+    exit 0
+  fi
+  rm -rf "$LD" && mkdir "$LD" && echo $$ > "$LD/pid"
 fi
+trap 'rm -rf "$LD" 2>/dev/null' EXIT
 echo $$ > /root/.remote_pid
 
 get_tok() {
@@ -46,6 +52,8 @@ get_cmd() {
 }
 
 run_task() {
+  # 双执行保险:落笔前复查LAST,别的实例已执行过就直接放弃
+  [ -f /root/.remote_last ] && [ "$1" -le "$(cat /root/.remote_last 2>/dev/null || echo 0)" ] && return 0
   echo "$1" > /root/.remote_last
   LAST=$1
   O="$PBOX/task_$1.txt"
@@ -145,7 +153,7 @@ while true; do
   fi
   pgrep -f "opt/QQ/qq" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：NapCat不在" >> "$LOG"; restart_napcat; }
   pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & cd "$REPO"; }
-  [ $((C % 60)) -eq 0 ] && echo "[$(date '+%m-%d %H:%M')] 心跳:循环正常(v6-git,LAST=$LAST)" >> "$LOG"
+  [ $((C % 60)) -eq 0 ] && echo "[$(date '+%m-%d %H:%M')] 心跳:循环正常(v6.2-git,LAST=$LAST)" >> "$LOG"
   fi
   sleep 10
 done
