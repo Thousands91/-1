@@ -1,45 +1,72 @@
-<<<task_285560.txt>>>
-===== 任务285560 11-14 22:14:40 =====
+<<<task_285570.txt>>>
+===== 任务285570 11-15 12:00:42 =====
 --- 命令 ---
-echo "--- 坑110修复：点歌搜索加异常留痕 ---"
-P=/root/bot/bot/plugins/song_request.py
-cp $P $P.bak.trace
-grep -n "return out" $P | head -2
-cat > /tmp/fix_trace.py <<'PYEOF'
-p = '/root/bot/bot/plugins/song_request.py'
-s = open(p).read()
-a = "        return out\n    except Exception:\n        return []"
-b = "        return out\n    except Exception as e:\n        logger.warning(f\"[点歌] 搜索「{keyword}」异常: {e!r}\")\n        return []"
-assert a in s, '锚点缺失'
-s = s.replace(a, b, 1)
-if 'from nonebot.log import logger' not in s:
-    s = s.replace('import aiohttp', 'import aiohttp\nfrom nonebot.log import logger', 1)
-open(p, 'w').write(s)
-print('OK 已加搜索异常留痕')
-PYEOF
-/root/bot/venv/bin/python /tmp/fix_trace.py
-md5sum $P
-/root/bot/venv/bin/python -m py_compile $P && echo "语法OK"
-echo "--- 按SOP重启大脑（kill PID，禁pkill -f） ---"
-BP=$(ps -eo pid,args | grep "[m]ain.py" | awk '{print $1}')
-echo "旧PID: $BP"
-[ -n "$BP" ] && kill $BP
-sleep 3
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 &
-sleep 6
-pgrep -af "main.py" | head -3 || echo "!!大脑没起来"
-tail -3 /root/bot/bot/bot.log
-echo "--- 任务285560结束 ---"
+echo "--- 抓 music_sign.py 轮询代码（为OIAPI适配做准备，不改文件） ---"
+grep -n "UPSTREAMS" /root/music_sign.py
+sed -n "/def get_signed_card/,/^def /p" /root/music_sign.py | head -60
+echo "--- 任务285570结束 ---"
 --- 输出 ---
---- 坑110修复：点歌搜索加异常留痕 ---
-333:        return out
-OK 已加搜索异常留痕
-f26074eb06c0f28729e5ca13ec94e3d9  /root/bot/bot/plugins/song_request.py
-语法OK
---- 按SOP重启大脑（kill PID，禁pkill -f） ---
-旧PID: 27465
-29111 /root/bot/venv/bin/python main.py
-11-14 22:14:49 [INFO] __main__ | ==================================================
-11-14 22:14:49 [INFO] uvicorn | Application startup complete.
-11-14 22:14:49 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
---- 任务285560结束 ---
+--- 抓 music_sign.py 轮询代码（为OIAPI适配做准备，不改文件） ---
+26:UPSTREAMS = [
+57:    for base in UPSTREAMS:
+def get_signed_card(payload):
+    now = time.time()
+    for base in UPSTREAMS:
+        if _cooldown.get(base, 0) > now:
+            continue
+        try:
+            body = urllib.request.urlopen(
+                urllib.request.Request(base, data=json.dumps(payload).encode(), headers=UA),
+                timeout=8).read()
+            card = json.loads(body)
+            if isinstance(card, dict) and (card.get("config") or {}).get("token"):
+                _log("上游出真卡: %s (%d bytes)" % (base, len(body)))
+                return card
+            _log("上游无token(拒收): %s -> %s" % (base, body[:80]))
+        except Exception as e:
+            _log("上游失败: %s -> %s" % (base, e))
+        with _lock:
+            _cooldown[base] = time.time() + 300  # 冷却5分钟
+    return None
+
+
+class H(BaseHTTPRequestHandler):
+    protocol_version = "HTTP/1.1"
+
+    def _read_body(self):
+        te = (self.headers.get("Transfer-Encoding") or "").lower()
+        if "chunked" in te:
+            body = b""
+            while True:
+                line = self.rfile.readline(65536).strip()
+                if b";" in line:
+                    line = line.split(b";")[0]
+                try:
+                    size = int(line, 16)
+                except ValueError:
+                    break
+                if size == 0:
+                    self.rfile.readline(65536)
+                    break
+                body += self.rfile.read(size)
+                self.rfile.read(2)
+            return body
+        n = int(self.headers.get("Content-Length") or 0)
+        return self.rfile.read(n) if n else b""
+
+    def do_POST(self):
+        raw = self._read_body()
+        try:
+            d = json.loads(raw or b"{}")
+        except Exception:
+            d = {}
+            _log("请求体解析失败: %r" % raw[:200])
+        t = d.get("type", "?")
+        out = None
+        try:
+            if t == "custom" and d.get("title"):
+                payload = {"type": "custom", "singer": d.get("singer") or d.get("content") or "",
+                           "title": d.get("title", ""), "url": d.get("url", ""),
+                           "audio": d.get("audio", ""), "image": d.get("image", "")}
+            elif t in ("163", "custom"):
+--- 任务285570结束 ---
