@@ -114,7 +114,10 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, arg: Messa
                         f"柜上拿不来整首的音频，翻唱的又不肯糊弄您——点上面的链接去听吧。")
             )
 
-    songs = [s for s in songs if usable(s, kw)]
+    # 坑113续（2026-11-15 用户拍板）：候选**不过滤** VIP/现场/伴奏版——
+    # 已经是人选歌了，该让人看到全部真实结果；选中放不了会如实相告。
+    # 关键词相关性仍保留（防网易云"宽容搜索"塞不相干的歌）。
+    songs = [s for s in songs if usable(s, kw, keep_all=True)]
     if not songs:
         await song_cmd.finish(f"「{kw}」这几个字，我在曲子和歌手里都翻不着。换个说法试试？")
 
@@ -126,6 +129,7 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, arg: Messa
     picks = songs[:PICK_N]
     lines = [
         f"{i + 1}. {s['name']} - {s['artists'] or '佚名'}"
+        + ("（VIP）" if s.get("fee") == 1 else "")
         + (f" 《{s['album']}》" if s.get("album") else "")
         for i, s in enumerate(picks)
     ]
@@ -274,19 +278,36 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent):
     if not audio:
         if expiry >= time.time():
             _PENDING[sid] = (expiry, picks, force_file, kw)
-        # 坑113续（用户要求）：什么原因就说什么原因，不许含糊。
-        # fetch_audio 的 err 是具体错误；VIP 在搜索阶段就有标记（fee==1），
-        # 沿用全插件统一的 VIP 话术，不另造含糊说法。
-        if s.get("fee") == 1:
-            why = "这首在网易云要 VIP，免费拿不到音频"
-        elif err == "不是音频":
-            why = "网易云歌源没返回这首的音频（这类一般是版权受限的曲子）"
-        elif "HTTP" in err or "Error" in err or "Timeout" in err:
-            why = f"我取音频时出了网络问题（{err}），不是歌的问题，可以再回一次这个序号重试"
-        else:
-            why = f"音频异常（{err}）"
+        # 坑113续（用户拍板）：选了放不了的，**同一首歌**去 QQ 音乐找补——
+        # 找到就递卡片（恢复旧 VIP 行为），找不到就如实说原因，绝不换歌。
+        # 话术走柜子人设；什么原因就说什么原因，不含糊。
+        if s.get("fee") == 1 or err == "不是音频":
+            mid, qvip = await qq_card_mid(s["name"])
+            if mid:
+                try:
+                    await pick_cmd.send(MessageSegment.music("qq", mid))
+                    if qvip:
+                        await pick_cmd.finish(
+                            "这首网易云要 VIP，柜上取不出免费音频；QQ 音乐那边同样要 VIP，"
+                            "点上面卡片大概只能试听几十秒——您回别的序号，或重新点歌。")
+                    await pick_cmd.finish(
+                        "这首在网易云要 VIP，柜上取不出免费的音频——不过 QQ 音乐有免费的，"
+                        "点上面这张卡片去听完整版，切界面、锁屏都不会停。")
+                except FinishedException:
+                    raise
+                except Exception:
+                    pass  # 卡片没递出去就走下面的诚实告知
+            if s.get("fee") == 1:
+                await pick_cmd.finish(
+                    Message(f"{build_card(s)}\n\n这首是「{s['artists']}」的原曲，两边平台都要 VIP，"
+                            f"柜上拿不来整首的音频——点上面的链接去听吧。"))
+        if "HTTP" in err or "Error" in err or "Timeout" in err:
+            await pick_cmd.finish(
+                f"取「{s['name']}」的音频时网络出了岔子（{err}），不是曲子的问题——"
+                f"您再回一次这个序号试试。")
         await pick_cmd.finish(
-            f"你选的「{s['name']}」放不了：{why}。"
+            f"您选的「{s['name']}」这首，网易云歌源没递出音频来"
+            f"（这类一般是版权受限的曲子），柜上真放不了。"
             f"想听别首就再回个序号，或重新点歌。")
     await deliver(pick_cmd, bot, event, kw, [s], force_file)
 
@@ -429,20 +450,24 @@ def _norm(t: str) -> str:
     return re.sub(r"[^0-9a-z\u4e00-\u9fff]", "", (t or "").lower())
 
 
-def usable(s: dict, keyword: str) -> bool:
+def usable(s: dict, keyword: str, keep_all: bool = False) -> bool:
     """过滤掉注定发不出声的条目。
 
     网易云的搜索很"宽容"，输一串乱码也能返 10 条不相干的歌，所以：
     1. 关键词得跟 歌名/歌手/专辑 其中之一真的沾边（去符号后比对）
        —— 坑80：旧版只比歌名，导致"只搜歌手名"全军覆没
     2. 剔除伴奏 / 纯音乐 / DJ 版（这些是给翻唱伴奏用的，不是给人听的）
+
+    keep_all=True（坑113续，用户拍板）：多选候选不过滤 VIP/现场/伴奏——
+    人选歌不预筛，只留关键词相关性这一条。
     """
-    if FILTER_VIP and s.get("fee") == 1:
-        return False
-    # 坏词过滤必须放在所有提前 return 之前：旧版"整串包含"的提前
-    # return 会绕过它，"晴天DJ版"这种就漏出去了（单测抓到的潜伏 bug）
-    if any(w in s["name"].lower() for w in BAD_WORDS):
-        return False
+    if not keep_all:
+        if FILTER_VIP and s.get("fee") == 1:
+            return False
+        # 坏词过滤必须放在所有提前 return 之前：旧版"整串包含"的提前
+        # return 会绕过它，"晴天DJ版"这种就漏出去了（单测抓到的潜伏 bug）
+        if any(w in s["name"].lower() for w in BAD_WORDS):
+            return False
     name = _norm(s["name"])
     artist = _norm(s["artists"])
     album = _norm(s.get("album", ""))
