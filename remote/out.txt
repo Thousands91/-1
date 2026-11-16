@@ -1,59 +1,48 @@
-<<<task_285980.txt>>>
-===== 任务285980 11-17 03:26:35 =====
+<<<task_286010.txt>>>
+===== 任务286010 11-17 03:46:18 =====
 --- 命令 ---
-echo "--- 凌晨勘验:第3次断档精确定位(只读) ---"
-python3 - <<'PY'
-import re, datetime
-for path, label in [('/root/tick.log','tick'), ('/root/health.log','health')]:
-    try: txt = open(path,'rb').read().decode('utf-8','ignore')
-    except Exception as e: print(label, "读不到"); continue
-    evs = []
-    for line in txt.splitlines():
-        m = re.search(r'(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})', line)
-        if m:
-            y,mm,dd,h,mi,s = m.groups(); evs.append(datetime.datetime(int(y),int(mm),int(dd),int(h),int(mi),int(s)))
-        else:
-            m = re.search(r'^(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})', line)
-            if m:
-                mm,dd,h,mi,s = m.groups(); evs.append(datetime.datetime(2026,int(mm),int(dd),int(h),int(mi),int(s)))
-    evs.sort()
-    print(f"== {label}: {len(evs)}条, {evs[0]:%m-%d %H:%M}~{evs[-1]:%m-%d %H:%M}" if evs else f"== {label}: 无")
-    prev=None
-    for t in evs:
-        if prev and (t-prev)>datetime.timedelta(minutes=30):
-            print(f"  断档: {prev:%m-%d %H:%M} -> {t:%m-%d %H:%M} 持续{(t-prev).total_seconds()/3600:.1f}h")
-        prev=t
-    if prev: print(f"  (末段 {prev:%m-%d %H:%M})")
-PY
-echo "[ipwatch今夜]"; grep -a "11-16 2[0-3]\|11-17 " /root/ip.log 2>/dev/null | tail -8
-echo "[login_state今夜]"; grep -a "11-16 2[0-3]\|11-17 " /root/login_state.log 2>/dev/null | tail -6
-echo "[v6循环] 实例数:$(pgrep -c -f 'remote_ctl_v[6].sh')"
-bash /root/logincheck.sh 2>/dev/null | tail -2
-echo "--- 任务285980结束 ---"
+echo "== 仪器在岗检查 $(date '+%F %T') =="
+for n in tick.sh login_watch.sh ipwatch.sh health_probe.sh; do
+  if pgrep -f "$n" >/dev/null; then echo "$n: 在岗(pid $(pgrep -f "$n" | head -1))"; else echo "$n: 不在岗!"; fi
+done
+echo "-- tick最新3条 --"; tail -n 3 /root/logs/tick.log 2>/dev/null || tail -n 3 /root/tick.log 2>/dev/null || echo "tick.log路径待查"
+echo "-- health最新3条 --"; tail -n 3 /root/logs/health.log 2>/dev/null || tail -n 3 /root/health.log 2>/dev/null || echo "health.log路径待查"
+echo "-- login最新3条 --"; tail -n 3 /root/logs/login_state.log 2>/dev/null || tail -n 3 /root/login_state.log 2>/dev/null || echo "login_state.log路径待查"
+echo "-- ip最新3条 --"; tail -n 3 /root/logs/ip.log 2>/dev/null || tail -n 3 /root/ip.log 2>/dev/null || echo "ip.log路径待查"
+echo "-- 进程 --"; pgrep -f "opt/QQ/qq" >/dev/null && echo "NapCat:在" || echo "NapCat:不在"; pgrep -f "main.py" >/dev/null && echo "大脑:在" || echo "大脑:不在"
+echo "-- 登录态 --"; bash /root/logincheck.sh 2>/dev/null | head -3
+echo "-- 遥控循环 --"; cat /root/.remote_last 2>/dev/null; echo "remote_pid=$(cat /root/.remote_pid 2>/dev/null)"
+echo "== 巡检完 =="
 --- 输出 ---
---- 凌晨勘验:第3次断档精确定位(只读) ---
-== tick: 4909条, 11-13 02:16~11-17 03:26
-  断档: 11-14 01:57 -> 11-14 06:42 持续4.8h
-  断档: 11-15 23:52 -> 11-16 07:00 持续7.1h
-  断档: 11-16 23:53 -> 11-17 03:20 持续3.5h
-  (末段 11-17 03:26)
-== health: 1589条, 11-15 14:20~11-17 03:26
-  断档: 11-15 23:53 -> 11-16 07:00 持续7.1h
-  断档: 11-16 23:53 -> 11-17 03:20 持续3.4h
-  (末段 11-17 03:26)
-[ipwatch今夜]
-2026-11-16 20:22:04 14.19.177.57
-2026-11-16 21:22:06 14.19.177.57
+== 仪器在岗检查 2026-11-17 03:46:18 ==
+tick.sh: 在岗(pid 8749)
+login_watch.sh: 在岗(pid 15846)
+ipwatch.sh: 在岗(pid 14108)
+health_probe.sh: 在岗(pid 27341)
+-- tick最新3条 --
+2026-11-17 03:44:11
+2026-11-17 03:45:11
+2026-11-17 03:46:12
+-- health最新3条 --
+11-17 03:44:15 elapsed=60s ip=192.168.31.142 if=无
+11-17 03:45:15 elapsed=60s ip=192.168.31.142 if=无
+11-17 03:46:15 elapsed=60s ip=192.168.31.142 if=无
+-- login最新3条 --
+2026-11-17 03:36:12 [在线]
+2026-11-17 03:41:13 [在线]
+2026-11-17 03:46:14 [在线]
+-- ip最新3条 --
 2026-11-16 22:22:09 14.19.177.57
 2026-11-16 23:22:11 14.19.177.57
-[login_state今夜]
-2026-11-16 23:37:54 [在线]
-2026-11-16 23:42:55 [在线]
-2026-11-16 23:47:55 [在线]
-2026-11-16 23:52:56 [在线]
-2026-11-17 03:21:10 [在线]
-2026-11-17 03:26:11 [在线]
-[v6循环] 实例数:1
+2026-11-17 03:45:27 14.19.177.57
+-- 进程 --
+NapCat:在
+大脑:在
+-- 登录态 --
+=== 登录状态（权威判定）===
+[在线] 已登录，一切正常
 阶段: ready
-最近错误: 无
---- 任务285980结束 ---
+-- 遥控循环 --
+286010
+remote_pid=22571
+== 巡检完 ==
