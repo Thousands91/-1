@@ -1,13 +1,16 @@
-286010
-echo "== 仪器在岗检查 $(date '+%F %T') =="
-for n in tick.sh login_watch.sh ipwatch.sh health_probe.sh; do
-  if pgrep -f "$n" >/dev/null; then echo "$n: 在岗(pid $(pgrep -f "$n" | head -1))"; else echo "$n: 不在岗!"; fi
+286020
+echo "== 表情+点歌勘验 $(date '+%F %T') =="
+echo "-- bot.log 03:30以后 尾60行 --"
+grep -a "03:3[0-9]" /root/bot.log 2>/dev/null | tail -60 || tail -60 /root/bot.log
+echo "-- 表情相关日志 --"
+grep -a "表情\|mface\|图片" /root/bot.log 2>/dev/null | tail -20
+echo "-- 点歌/music相关日志 --"
+grep -a -i "music\|点歌\|song" /root/bot.log 2>/dev/null | tail -20
+echo "-- 识别缓存文件 --"
+ls -la /root/bot/bot/plugins/data/ 2>/dev/null | head -20
+for f in /root/bot/bot/plugins/data/mface_names.json /root/bot/bot/plugins/data/qface_index.json; do
+  [ -f "$f" ] && echo "$f 存在 $(wc -c < "$f")字节" || echo "$f 不存在"
 done
-echo "-- tick最新3条 --"; tail -n 3 /root/logs/tick.log 2>/dev/null || tail -n 3 /root/tick.log 2>/dev/null || echo "tick.log路径待查"
-echo "-- health最新3条 --"; tail -n 3 /root/logs/health.log 2>/dev/null || tail -n 3 /root/health.log 2>/dev/null || echo "health.log路径待查"
-echo "-- login最新3条 --"; tail -n 3 /root/logs/login_state.log 2>/dev/null || tail -n 3 /root/login_state.log 2>/dev/null || echo "login_state.log路径待查"
-echo "-- ip最新3条 --"; tail -n 3 /root/logs/ip.log 2>/dev/null || tail -n 3 /root/ip.log 2>/dev/null || echo "ip.log路径待查"
-echo "-- 进程 --"; pgrep -f "opt/QQ/qq" >/dev/null && echo "NapCat:在" || echo "NapCat:不在"; pgrep -f "main.py" >/dev/null && echo "大脑:在" || echo "大脑:不在"
-echo "-- 登录态 --"; bash /root/logincheck.sh 2>/dev/null | head -3
-echo "-- 遥控循环 --"; cat /root/.remote_last 2>/dev/null; echo "remote_pid=$(cat /root/.remote_pid 2>/dev/null)"
-echo "== 巡检完 =="
+echo "-- NapCat版本 --"
+cat /root/Napcat/package.json 2>/dev/null | head -5; ls /root/Napcat | head -15
+echo "-- 勘验完 --"
