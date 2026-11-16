@@ -1,15 +1,17 @@
-286060
-cd /root/bot || { echo "致命:仓库不在"; exit 1; }
-echo "-- pull前HEAD --"; git log --oneline -1
-echo "-- 脏文件 --"; git status --short | head -8
-git stash 2>&1 | head -1
-git pull --ff-only origin main 2>&1 | tail -3
-echo "-- pull后 --"; git log --oneline -1
+286070
+cd /root/bot || exit 1
+echo "== 恢复运行数据 =="
+git stash list | head -2
+git checkout stash@{0} -- bot/data/ 2>&1
+git reset HEAD -- bot/plugins/ 2>/dev/null
+echo "-- data恢复后状态 --"
+git status --short | head -8
+ls -la --time-style=+%m-%d_%H:%M bot/data/memory/1561950850.json bot/data/fortune_log.json
+echo "== 部署终验(只读) =="
+echo "-- 插件md5(应为新版11ff2e0c/08cf69d3) --"
 md5sum bot/plugins/ai_chat.py bot/plugins/song_request.py
-echo "-- 表情识别层在场检查 --"; grep -c "_image_sticker_name" bot/plugins/ai_chat.py
-echo "-- 重启大脑(不动QQ) --"
-( sleep 2; pkill -f "[v]env/bin/python main.py"; sleep 3; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 ) &
-sleep 15
-pgrep -f "python main.py" >/dev/null && echo "大脑已拉起" || echo "大脑没起来!"
-tail -6 /root/bot/bot/bot.log 2>/dev/null | grep -a "Succeeded\|Started\|error" | head -5
-echo "-- 部署完 --"
+echo "-- 大脑与登录态 --"
+pgrep -f "python main.py" >/dev/null && echo "大脑:在" || echo "大脑:不在"
+pgrep -f "opt/QQ/qq" >/dev/null && echo "NapCat:在" || echo "NapCat:不在"
+tail -3 /root/bot/bot/bot.log | grep -a "ready\|Started\|成功" | head -3
+echo "== 完 =="
