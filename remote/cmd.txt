@@ -1,2 +1,30 @@
-0
-cd /root/asar-sync && echo idle
+285980
+echo "--- 凌晨勘验:第3次断档精确定位(只读) ---"
+python3 - <<'PY'
+import re, datetime
+for path, label in [('/root/tick.log','tick'), ('/root/health.log','health')]:
+    try: txt = open(path,'rb').read().decode('utf-8','ignore')
+    except Exception as e: print(label, "读不到"); continue
+    evs = []
+    for line in txt.splitlines():
+        m = re.search(r'(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})', line)
+        if m:
+            y,mm,dd,h,mi,s = m.groups(); evs.append(datetime.datetime(int(y),int(mm),int(dd),int(h),int(mi),int(s)))
+        else:
+            m = re.search(r'^(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})', line)
+            if m:
+                mm,dd,h,mi,s = m.groups(); evs.append(datetime.datetime(2026,int(mm),int(dd),int(h),int(mi),int(s)))
+    evs.sort()
+    print(f"== {label}: {len(evs)}条, {evs[0]:%m-%d %H:%M}~{evs[-1]:%m-%d %H:%M}" if evs else f"== {label}: 无")
+    prev=None
+    for t in evs:
+        if prev and (t-prev)>datetime.timedelta(minutes=30):
+            print(f"  断档: {prev:%m-%d %H:%M} -> {t:%m-%d %H:%M} 持续{(t-prev).total_seconds()/3600:.1f}h")
+        prev=t
+    if prev: print(f"  (末段 {prev:%m-%d %H:%M})")
+PY
+echo "[ipwatch今夜]"; grep -a "11-16 2[0-3]\|11-17 " /root/ip.log 2>/dev/null | tail -8
+echo "[login_state今夜]"; grep -a "11-16 2[0-3]\|11-17 " /root/login_state.log 2>/dev/null | tail -6
+echo "[v6循环] 实例数:$(pgrep -c -f 'remote_ctl_v[6].sh')"
+bash /root/logincheck.sh 2>/dev/null | tail -2
+echo "--- 任务285980结束 ---"
