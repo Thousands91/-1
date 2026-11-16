@@ -1,24 +1,2 @@
-285970
-echo "--- 停摆普查补全:tick.log带年份格式重析(只读) ---"
-python3 - <<'PY'
-import re, datetime
-txt = open('/root/tick.log','rb').read().decode('utf-8','ignore')
-evs = []
-for line in txt.splitlines():
-    m = re.search(r'(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})', line)
-    if not m:
-        m = re.search(r'^(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})', line)
-        if m: mm,dd,h,mi,s = m.groups(); evs.append(datetime.datetime(2026,int(mm),int(dd),int(h),int(mi),int(s))); continue
-    else:
-        y,mm,dd,h,mi,s = m.groups(); evs.append(datetime.datetime(int(y),int(mm),int(dd),int(h),int(mi),int(s)))
-evs.sort()
-print(f"tick: 共{len(evs)}条 | 记录期 {evs[0]:%m-%d %H:%M} ~ {evs[-1]:%m-%d %H:%M}" if evs else "tick: 无记录")
-prev=None
-for t in evs:
-    if prev and (t-prev)>datetime.timedelta(minutes=30):
-        print(f"  断档: {prev:%m-%d %H:%M} -> {t:%m-%d %H:%M}  持续{(t-prev).total_seconds()/3600:.1f}小时")
-    prev=t
-if prev: print(f"  (末段 {prev:%m-%d %H:%M} 至今无断档)")
-PY
-echo "[tick.log头3行原样]"; head -3 /root/tick.log
-echo "--- 任务285970结束 ---"
+0
+cd /root/asar-sync && echo idle
