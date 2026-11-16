@@ -1,8 +1,4 @@
-286170
-echo "== 发卡日志 04:49 前后 =="
-grep -a "\[发卡\]" /root/bot/bot/bot.log | tail -8
-echo "== napcat.log 04:49 时段 music/sign/error =="
-grep -a "04:4[89]" /root/napcat.log 2>/dev/null | grep -a -i "music\|sign\|error\|fail" | head -12
-echo "== music_sign.log 尾部 =="
-tail -6 /root/music_sign.log 2>/dev/null
-echo "== 验收完 =="
+286180
+echo "<<<SIGN_START>>>"
+cat /root/music_sign.py
+echo "<<<SIGN_END>>>"
