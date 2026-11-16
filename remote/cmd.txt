@@ -1,2 +1,9 @@
-0
-cd /root/asar-sync && echo idle
+285860
+echo "--- 历史案例重审:11-15掉线后如何复活(只读) ---"
+echo "=== 11-15 02:12掉线(第2177行)之后60行 ==="
+sed -n '2177,2237p' /root/napcat.log | grep -avE "^[0-9a-f]{20,}$" | grep -av "^\[I\]" | head -40
+echo "=== 02:12后首个'接收'出现的时间和上下文 ==="
+awk 'NR>2177 && /接收|登录|二维码|qrcode|ErrCode|在线|Token|quick/' /root/napcat.log | head -8
+echo "=== 11-14至11-15间的登录类关键词 ==="
+grep -an "登录\|Login Success\|Token登录\|快速登录\|refresh" /root/napcat.log | head -15
+echo "--- 任务285860结束 ---"
