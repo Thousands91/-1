@@ -1,2 +1,30 @@
-0
-cd /root/asar-sync && echo idle
+285960
+echo "--- 停摆历史普查:tick+health台账全量断档清点(只读) ---"
+python3 - <<'PY'
+import re, datetime
+def census(path, label):
+    try:
+        txt = open(path, 'rb').read().decode('utf-8', 'ignore')
+    except Exception as e:
+        print(label, "读不到:", e); return
+    evs = []
+    for line in txt.splitlines():
+        m = re.match(r'(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})', line)
+        if m:
+            mm, dd, h, mi, s = m.groups()
+            evs.append(datetime.datetime(2026, int(mm), int(dd), int(h), int(mi), int(s)))
+    evs.sort()
+    if not evs:
+        print(f"== {label}: 无可解析记录"); return
+    print(f"== {label}: 共{len(evs)}条 | 记录期 {evs[0]:%m-%d %H:%M} ~ {evs[-1]:%m-%d %H:%M}")
+    prev = None
+    for t in evs:
+        if prev and (t - prev) > datetime.timedelta(minutes=30):
+            hrs = (t - prev).total_seconds() / 3600
+            print(f"  断档: {prev:%m-%d %H:%M} -> {t:%m-%d %H:%M}  持续{hrs:.1f}小时")
+        prev = t
+    print(f"  (末段 {prev:%m-%d %H:%M} 至今无断档)")
+census('/root/tick.log', 'tick(每分钟)')
+census('/root/health.log', 'health(每60秒)')
+PY
+echo "--- 任务285960结束 ---"
