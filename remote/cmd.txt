@@ -1,17 +1,18 @@
-286030
-echo "== 日志黑洞追踪 $(date '+%F %T') =="
-echo "-- main.py 进程 stdout 实际指向 --"
-MPID=$(pgrep -f "main.py" | head -1)
-echo "main.py pid=$MPID"
-ls -l /proc/$MPID/fd/1 /proc/$MPID/fd/2 2>/dev/null
-echo "-- /root 下最近3天改动的日志文件 --"
-find /root /root/bot -maxdepth 3 -name "*.log" -o -maxdepth 3 -name "nohup.out" 2>/dev/null | xargs ls -la --time-style=+%m-%d_%H:%M 2>/dev/null | sort -k6r | head -12
-echo "-- /root/bot.log 文件信息 --"
-ls -la --time-style=+%F_%H:%M /root/bot.log
-echo "-- plugins目录结构(找data目录真实位置) --"
-ls /root/bot/bot/plugins/ 2>/dev/null | head -30
-find /root/bot -maxdepth 4 -type d -name data 2>/dev/null
-echo "-- NapCat日志里03:36前后 --"
-ls /root/Napcat/logs 2>/dev/null | tail -5
-grep -a "03:3[5-8]" /root/Napcat/logs/$(ls /root/Napcat/logs 2>/dev/null | tail -1) 2>/dev/null | head -10
-echo "== 追踪完 =="
+286040
+echo "== 真日志勘验 $(date '+%F %T') =="
+echo "-- 03:30-03:47 全部日志 --"
+grep -a "03:3[0-9]\|03:4[0-7]" /root/bot/bot/bot.log | tail -50
+echo "-- 最近表情相关 --"
+grep -a "表情\|mface" /root/bot/bot/bot.log | tail -10
+echo "-- 最近点歌/music --"
+grep -a -i "music\|点歌\|song_request\|ActionFailed" /root/bot/bot/bot.log | tail -15
+echo "-- data目录内容 --"
+ls -la /root/bot/bot/data/ 2>/dev/null | head -15
+for f in mface_names.json qface_index.json; do
+  [ -f "/root/bot/bot/data/$f" ] && echo "$f 存在 $(wc -c < /root/bot/bot/data/$f)字节" || echo "$f 不存在"
+done
+echo "-- music_sign.log 尾部 --"
+tail -15 /root/music_sign.log 2>/dev/null
+echo "-- 签名服务进程/端口 --"
+pgrep -af "sign" | head -5
+echo "== 勘验完 =="
