@@ -1,18 +1,15 @@
-285800
-echo "--- 勘验:阿萨尔掉线根因取证(只读) ---"
-echo "=== napcat.log规模与起点 ==="
-wc -l /root/napcat.log 2>/dev/null; echo "[日志第一行]"; head -1 /root/napcat.log 2>/dev/null
-echo "=== 全部掉线记录 ==="
-grep -n "账号状态变更为离线\|账号状态变更为在线\|ErrCode\|kick\|风控\|下线" /root/napcat.log 2>/dev/null | tail -20
-echo "=== 最近一次掉线前后现场(各10行) ==="
-LN=$(grep -n "账号状态变更为离线" /root/napcat.log 2>/dev/null | tail -1 | cut -d: -f1)
-if [ -n "$LN" ]; then START=$((LN-10)); [ $START -lt 1 ] && START=1; sed -n "${START},$((LN+10))p" /root/napcat.log; fi
-echo "=== 最近一次登录成功记录 ==="
-grep -E "登录成功|扫码登录|LoginSuccess|二维码登录成功" /root/napcat.log 2>/dev/null | tail -5
-echo "=== 看护对NapCat的全部动作(48h) ==="
-grep -E "自动拉起|重启NapCat|NapCat不在|保险丝|未登录" /root/remote_ctl.log 2>/dev/null | tail -15
-echo "=== napcat-restart.log尾 ==="
-tail -n 8 /root/napcat-restart.log 2>/dev/null
-echo "=== 当前logincheck完整输出 ==="
-bash /root/logincheck.sh 2>/dev/null
-echo "--- 任务285800结束 ---"
+285810
+echo "--- 勘验2:回复后是否即掉线+快速登录盲区(只读) ---"
+echo "=== 07:00:13之后的发送记录(前20条) ==="
+grep -n "07:00\|发送\|Send\|send_msg" /root/napcat.log 2>/dev/null | awk -F: '$1>3152' | head -20
+echo "=== 23:52至07:00之间的日志行数(验证冻结空窗) ==="
+sed -n '3152,3153p' /root/napcat.log
+AWK=$(awk '/11-15 23:52/{a=NR} /11-16 07:00/{b=NR; print b-a-1; exit}' /root/napcat.log); echo "两时刻之间日志行数: ${AWK:-算不出}"
+echo "=== napcat-restart.log非哈希可读行(尾30) ==="
+grep -vE "^[0-9a-f]{20,}$" /root/napcat-restart.log 2>/dev/null | grep -v "^$" | tail -30
+echo "=== napcat-restart.log登录相关关键词 ==="
+grep -iE "登录|login|quick|扫码|qrcode|offline|online" /root/napcat-restart.log 2>/dev/null | grep -vE "^[0-9a-f]{20,}$" | tail -20
+echo "=== 遥控日志文件体检(查16:07记录失踪之谜) ==="
+ls -la /root/remote_ctl.log*; wc -l /root/remote_ctl.log
+grep -n "16:07\|16:0[0-9]" /root/remote_ctl.log | tail -5
+echo "--- 任务285810结束 ---"
