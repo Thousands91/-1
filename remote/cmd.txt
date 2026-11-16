@@ -1,12 +1,11 @@
-285930
-echo "--- health_probe v3部署:充电状态字段 ---"
-echo "[现版存档]"; md5sum /root/health_probe.sh
-echo "IyEvYmluL2Jhc2gKIyBoZWFsdGhfcHJvYmUgdjMgKDIwMjYtMTEtMTYp77yaK+WFheeUteeKtuaAgeWtl+autShEb3pl6KOB5YazOuWumOaWueinhOWImT3lhYXnlLXkuK3kuI3ov5tEb3plLOmqjOivgeaPkueUteWNs+S4jeWGuykKIyDnm67nmoTvvJrlhrvnu5Por7QgdnMgSVDlj5jliqjor7TvvIzkuI3lho3njJzvvIzkuIvmrKHmjonnur/nlKjmlbDmja7oo4HlhrMKIyDovpPlh7rvvJrml7bpl7QgZWxhcHNlZCB1cHRpbWUgaXA9WCBpZj13bGFuMCBiYXR0PU4l77yIaXDlj5bpu5jorqTot6/nlLHmupDlnLDlnYDvvIzmnKzmnLrosIPnlKjkuI3oirHpkrHvvIkKTEFTVD0kKGRhdGUgKyVzKQp3aGlsZSB0cnVlOyBkbwogIHNsZWVwIDYwCiAgTk9XPSQoZGF0ZSArJXMpCiAgVFM9JChkYXRlICcrJW0tJWQgJUg6JU06JVMnKQogIEVMPSQoKE5PVy1MQVNUKSk7IExBU1Q9JE5PVwogIFVQPSQoY3V0IC1kLiAtZjEgL3Byb2MvdXB0aW1lIDI+L2Rldi9udWxsKQogIFJUPSQoaXAgLTQgcm91dGUgZ2V0IDEuMS4xLjEgMj4vZGV2L251bGwgfCBoZWFkIC0xKQogIElQPSQoZWNobyAiJFJUIiB8IGdyZXAgLW8gJ3NyYyBbMC05Ll0qJyB8IGF3ayAne3ByaW50ICQyfScpCiAgSUY9JChlY2hvICIkUlQiIHwgZ3JlcCAtbyAnZGV2IFthLXpBLVowLTldKicgfCBhd2sgJ3twcmludCAkMn0nKQogIFsgLXogIiRJUCIgXSAmJiBJUD0kKGhvc3RuYW1lIC1JIDI+L2Rldi9udWxsIHwgYXdrICd7cHJpbnQgJDF9JykKICBCQVRUPSQoY2F0IC9zeXMvY2xhc3MvcG93ZXJfc3VwcGx5L2JhdHRlcnkvY2FwYWNpdHkgMj4vZGV2L251bGwgfHwgZWNobyAiPyIpCiAgQ0hHPSQoY2F0IC9zeXMvY2xhc3MvcG93ZXJfc3VwcGx5L2JhdHRlcnkvc3RhdHVzIDI+L2Rldi9udWxsIHx8IGVjaG8gIj8iKQogIGVjaG8gIiRUUyBlbGFwc2VkPSR7RUx9cyB1cHRpbWU9JHtVUH1zIGlwPSR7SVA6LeaXoH0gaWY9JHtJRjot5pegfSBiYXR0PSR7QkFUVH0lIGNoZz0ke0NIR30iID4+IC9yb290L2hlYWx0aC5sb2cKZG9uZQo=" | base64 -d > /root/health_probe_v3.sh
-bash -n /root/health_probe_v3.sh && echo 新版语法OK
-pkill -f health_probe
-sleep 1
-mv /root/health_probe.sh /root/health_probe_v2.bak; mv /root/health_probe_v3.sh /root/health_probe.sh
-setsid nohup bash /root/health_probe.sh >/dev/null 2>&1 &
-sleep 65
-tail -n 2 /root/health.log
-echo "--- 任务285930结束 ---"
+285940
+echo "--- 探测:充电状态可读路径(只读) ---"
+echo "[/sys/class/power_supply 目录]"; ls /sys/class/power_supply/ 2>&1 | head -5
+echo "[逐个试读]"
+for D in /sys/class/power_supply/*; do
+  echo "$D: status=$(cat $D/status 2>/dev/null || echo 读不到) cap=$(cat $D/capacity 2>/dev/null || echo 读不到)"
+done
+echo "[termux-api路径]"; ls /data/data/com.termux/files/usr/bin/termux-battery-status 2>&1 | head -1
+echo "[termux-api试跑]"; timeout 10 /data/data/com.termux/files/usr/bin/termux-battery-status 2>&1 | head -3
+echo "[/proc/uptime]"; cat /proc/uptime 2>/dev/null
+echo "--- 任务285940结束 ---"
