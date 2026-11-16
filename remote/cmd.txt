@@ -1,6 +1,2 @@
-285900
-echo "--- 验收:v6.5在岗+QQ在线(只读) ---"
-echo "实例数: $(pgrep -c -f 'remote_ctl_v[6].sh')"
-grep -ac "重启取证" /root/remote_ctl_v6.sh
-bash /root/logincheck.sh 2>/dev/null | tail -3
-echo "--- 任务285900结束 ---"
+0
+cd /root/asar-sync && echo idle
