@@ -1,17 +1,15 @@
-286070
+286080
 cd /root/bot || exit 1
-echo "== 恢复运行数据 =="
-git stash list | head -2
-git checkout stash@{0} -- bot/data/ 2>&1
-git reset HEAD -- bot/plugins/ 2>/dev/null
-echo "-- data恢复后状态 --"
-git status --short | head -8
-ls -la --time-style=+%m-%d_%H:%M bot/data/memory/1561950850.json bot/data/fortune_log.json
-echo "== 部署终验(只读) =="
-echo "-- 插件md5(应为新版11ff2e0c/08cf69d3) --"
-md5sum bot/plugins/ai_chat.py bot/plugins/song_request.py
-echo "-- 大脑与登录态 --"
-pgrep -f "python main.py" >/dev/null && echo "大脑:在" || echo "大脑:不在"
-pgrep -f "opt/QQ/qq" >/dev/null && echo "NapCat:在" || echo "NapCat:不在"
-tail -3 /root/bot/bot/bot.log | grep -a "ready\|Started\|成功" | head -3
-echo "== 完 =="
+echo "== 旧版(stash)点歌逻辑勘验 =="
+echo "-- 旧版选号handler/发卡相关行 --"
+git show 'stash@{0}:bot/plugins/song_request.py' 2>/dev/null | grep -n "music\|卡片\|列表\|选\|reply\|send" | head -30
+echo "-- 旧版总行数 --"
+git show 'stash@{0}:bot/plugins/song_request.py' 2>/dev/null | wc -l
+echo "== 本次(新版)卡片实发类型 =="
+echo "-- bot.log 03:54-04:00 点歌段 --"
+grep -a "03:5[4-9]" /root/bot/bot/bot.log | grep -a -i "song\|music\|点歌" | head -10
+echo "-- music_sign.log 03:54后有无新记录 --"
+tail -3 /root/music_sign.log
+echo "-- voice_probe.log 尾3条 --"
+tail -3 /root/bot/bot/data/voice_probe.log
+echo "== 勘验完 =="
