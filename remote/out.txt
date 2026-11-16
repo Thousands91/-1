@@ -1,26 +1,22 @@
-<<<task_285940.txt>>>
-===== 任务285940 11-16 18:27:25 =====
+<<<task_285950.txt>>>
+===== 任务285950 11-16 18:30:03 =====
 --- 命令 ---
-echo "--- 探测:充电状态可读路径(只读) ---"
-echo "[/sys/class/power_supply 目录]"; ls /sys/class/power_supply/ 2>&1 | head -5
-echo "[逐个试读]"
-for D in /sys/class/power_supply/*; do
-  echo "$D: status=$(cat $D/status 2>/dev/null || echo 读不到) cap=$(cat $D/capacity 2>/dev/null || echo 读不到)"
-done
-echo "[termux-api路径]"; ls /data/data/com.termux/files/usr/bin/termux-battery-status 2>&1 | head -1
-echo "[termux-api试跑]"; timeout 10 /data/data/com.termux/files/usr/bin/termux-battery-status 2>&1 | head -3
-echo "[/proc/uptime]"; cat /proc/uptime 2>/dev/null
-echo "--- 任务285940结束 ---"
+echo "--- health_probe v3.1部署(删死字段) ---"
+echo "IyEvYmluL2Jhc2gKIyBoZWFsdGhfcHJvYmUgdjMuMSAoMjAyNi0xMS0xNinvvJpjaGFyZ2UvYmF0dC91cHRpbWXlrZfmrrXlt7LliKDigJTigJTmnKzmnLpwcm9vdOWunua1i+ivu+S4jeWIsAojIChTRUxpbnV45ouSL3N5cy9jbGFzcy9wb3dlcl9zdXBwbHk7dGVybXV4LWJhdHRlcnktc3RhdHVz5pyq6KOF5LiUL2RhdGEvZGF0YeS4jeWPr+ingTsvcHJvYy91cHRpbWXpnZnmgIHlgYflgLwpCiMgRG96ZeijgeWGs+aUuemdoDplbGFwc2Vk5pat5qGjKOWGu+e7kykraXAubG9nKOaXtueykklQKSvnlKjmiLflhYXnlLXooYzkuLrjgILlrpjmlrnkvp3mja465YWF55S15LitRG96ZeS4jeinpuWPkShzb3VyY2UuYW5kcm9pZC5jb20pCiMg55uu55qE77ya5Ya757uT6K+0IHZzIElQ5Y+Y5Yqo6K+077yM5LiN5YaN54yc77yM5LiL5qyh5o6J57q/55So5pWw5o2u6KOB5YazCiMg6L6T5Ye677ya5pe26Ze0IGVsYXBzZWQgdXB0aW1lIGlwPVggaWY9d2xhbjAgYmF0dD1OJe+8iGlw5Y+W6buY6K6k6Lev55Sx5rqQ5Zyw5Z2A77yM5pys5py66LCD55So5LiN6Iqx6ZKx77yJCkxBU1Q9JChkYXRlICslcykKd2hpbGUgdHJ1ZTsgZG8KICBzbGVlcCA2MAogIE5PVz0kKGRhdGUgKyVzKQogIFRTPSQoZGF0ZSAnKyVtLSVkICVIOiVNOiVTJykKICBFTD0kKChOT1ctTEFTVCkpOyBMQVNUPSROT1cKICBSVD0kKGlwIC00IHJvdXRlIGdldCAxLjEuMS4xIDI+L2Rldi9udWxsIHwgaGVhZCAtMSkKICBJUD0kKGVjaG8gIiRSVCIgfCBncmVwIC1vICdzcmMgWzAtOS5dKicgfCBhd2sgJ3twcmludCAkMn0nKQogIElGPSQoZWNobyAiJFJUIiB8IGdyZXAgLW8gJ2RldiBbYS16QS1aMC05XSonIHwgYXdrICd7cHJpbnQgJDJ9JykKICBbIC16ICIkSVAiIF0gJiYgSVA9JChob3N0bmFtZSAtSSAyPi9kZXYvbnVsbCB8IGF3ayAne3ByaW50ICQxfScpCiAgZWNobyAiJFRTIGVsYXBzZWQ9JHtFTH1zIGlwPSR7SVA6LeaXoH0gaWY9JHtJRjot5pegfSIgPj4gL3Jvb3QvaGVhbHRoLmxvZwpkb25lCg==" | base64 -d > /root/health_probe_v31.sh
+bash -n /root/health_probe_v31.sh && echo 语法OK
+echo "期望md5: 72fcc7bf345556f4d27cfa1e2589a575"; md5sum /root/health_probe_v31.sh
+pkill -f health_probe
+sleep 1
+mv /root/health_probe.sh /root/health_probe_v3.bak; mv /root/health_probe_v31.sh /root/health_probe.sh
+setsid nohup bash /root/health_probe.sh >/dev/null 2>&1 &
+sleep 65
+tail -n 2 /root/health.log
+echo "--- 任务285950结束 ---"
 --- 输出 ---
---- 探测:充电状态可读路径(只读) ---
-[/sys/class/power_supply 目录]
-ls: cannot open directory '/sys/class/power_supply/': Permission denied
-[逐个试读]
-/sys/class/power_supply/*: status=读不到 cap=读不到
-[termux-api路径]
-ls: cannot access '/data/data/com.termux/files/usr/bin/termux-battery-status': No such file or directory
-[termux-api试跑]
-timeout: failed to run command '/data/data/com.termux/files/usr/bin/termux-battery-status': No such file or directory
-[/proc/uptime]
-124.08 932.76
---- 任务285940结束 ---
+--- health_probe v3.1部署(删死字段) ---
+语法OK
+期望md5: 72fcc7bf345556f4d27cfa1e2589a575
+72fcc7bf345556f4d27cfa1e2589a575  /root/health_probe_v31.sh
+11-16 18:29:39 elapsed=60s uptime=124s ip=192.168.31.142 if=无 batt=?% chg=?
+11-16 18:31:05 elapsed=60s ip=192.168.31.142 if=无
+--- 任务285950结束 ---
