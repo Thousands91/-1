@@ -1,18 +1,6 @@
-285840
-echo "--- 到家勘验:夜间冻结判定(health.log铁证)+出新码 ---"
-echo "=== 昨夜每小时体检条数(满勤≈60条/小时,0=冻住) ==="
-for H in "11-15 23" "11-16 00" "11-16 01" "11-16 02" "11-16 03" "11-16 04" "11-16 05" "11-16 06" "11-16 07"; do
-  echo "$H点: $(grep -ac "^$H:" /root/health.log)"
-done
-echo "=== 昨夜体检记录头10条 ==="
-grep -a "11-15 23:\|11-16 0" /root/health.log | head -10
-echo "=== health.log总行数与最新3条 ==="
-wc -l /root/health.log; tail -3 /root/health.log
-echo "=== 当前登录状态与最新登录错误 ==="
-bash /root/logincheck.sh 2>/dev/null | tail -3
-grep -a "Login Error" /root/napcat-restart.log 2>/dev/null | tail -1
-echo "=== 出新码放相册 ==="
-Q=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-echo "[码时间] $(stat -c %y "$Q" 2>/dev/null)"
-cp "$Q" "/sdcard/DCIM/Camera/asar_qr.png" && echo "新码已放相册:asar_qr.png"
-echo "--- 任务285840结束 ---"
+285850
+echo "--- 登录站稳验收(只读) ---"
+bash /root/logincheck.sh 2>/dev/null
+echo "[最新登录错误] $(grep -a 'Login Error' /root/napcat-restart.log 2>/dev/null | tail -1 || echo 无)"
+echo "[大脑最近活动]"; tail -n 3 /root/bot.log 2>/dev/null | grep -a "SUCCESS\|INFO" | tail -2
+echo "--- 任务285850结束 ---"
