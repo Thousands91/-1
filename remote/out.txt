@@ -1,26 +1,74 @@
-<<<task_285790.txt>>>
-===== 任务285790 11-16 16:50:56 =====
+<<<task_285800.txt>>>
+===== 任务285800 11-16 16:59:38 =====
 --- 命令 ---
-echo "--- 取新码:覆盖相册旧码 ---"
-Q=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-echo "[当前码时间] $(stat -c %y "$Q" 2>/dev/null)"
-AGE=$(( $(date +%s) - $(stat -c %Y "$Q" 2>/dev/null || echo 0) ))
-echo "[码龄] ${AGE}秒"
-if [ "$AGE" -gt 120 ]; then
-  echo "[码过期,NapCat自动换码需要重启触发,重启NapCat]"
-  pkill -f "opt/QQ/[q]q"; sleep 2
-  cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null &
-  sleep 25; cd /root/asar-sync
-  echo "[重启后码时间] $(stat -c %y "$Q" 2>/dev/null)"
-fi
-cp "$Q" "/sdcard/DCIM/Camera/asar_qr.png" && echo "新码已覆盖相册:asar_qr.png"
-bash /root/logincheck.sh 2>/dev/null | tail -2
-echo "--- 任务285790结束 ---"
+echo "--- 勘验:阿萨尔掉线根因取证(只读) ---"
+echo "=== napcat.log规模与起点 ==="
+wc -l /root/napcat.log 2>/dev/null; echo "[日志第一行]"; head -1 /root/napcat.log 2>/dev/null
+echo "=== 全部掉线记录 ==="
+grep -n "账号状态变更为离线\|账号状态变更为在线\|ErrCode\|kick\|风控\|下线" /root/napcat.log 2>/dev/null | tail -20
+echo "=== 最近一次掉线前后现场(各10行) ==="
+LN=$(grep -n "账号状态变更为离线" /root/napcat.log 2>/dev/null | tail -1 | cut -d: -f1)
+if [ -n "$LN" ]; then START=$((LN-10)); [ $START -lt 1 ] && START=1; sed -n "${START},$((LN+10))p" /root/napcat.log; fi
+echo "=== 最近一次登录成功记录 ==="
+grep -E "登录成功|扫码登录|LoginSuccess|二维码登录成功" /root/napcat.log 2>/dev/null | tail -5
+echo "=== 看护对NapCat的全部动作(48h) ==="
+grep -E "自动拉起|重启NapCat|NapCat不在|保险丝|未登录" /root/remote_ctl.log 2>/dev/null | tail -15
+echo "=== napcat-restart.log尾 ==="
+tail -n 8 /root/napcat-restart.log 2>/dev/null
+echo "=== 当前logincheck完整输出 ==="
+bash /root/logincheck.sh 2>/dev/null
+echo "--- 任务285800结束 ---"
 --- 输出 ---
---- 取新码:覆盖相册旧码 ---
-[当前码时间] 2026-11-16 16:50:36.660000000 +0800
-[码龄] 20秒
-新码已覆盖相册:asar_qr.png
+--- 勘验:阿萨尔掉线根因取证(只读) ---
+=== napcat.log规模与起点 ===
+3276 /root/napcat.log
+[日志第一行]
+not mini app. 
+=== 全部掉线记录 ===
+2177:11-15 02:12:12 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+3152:11-16 07:00:13 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+=== 最近一次掉线前后现场(各10行) ===
+11-15 23:10:23 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [长太息以笑希希，乐希希之多艰(553414459)] 好腻害
+11-15 23:10:25 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [长太息以笑希希，乐希希之多艰(553414459)] 🥰
+4efb189764e2b85ae236de886d347ff8603e5b4af92d6ddb6153512f8db204b7
+11-15 23:28:32 [[32minfo[39m] 阿萨尔 | [ServerTime] 时间同步完成，偏差 329ms
+11-15 23:37:57 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [云逸(4G📶淡人机(1664743600)]  
+[I] <MMKV_IO.cpp:516::writeActualSize> [nt_mmkv_united_config_no_login_v3] increase sequence to 43, crc 1701737315, actualSize 15972
+[I] <MMKV.cpp:1178::sync> MMKV::sync, SyncFlag = 1
+1f73570d61b9019efff2d17b8f3c058aeb527f0b67a31c2ccc4d702a1d033f9b
+11-15 23:52:10 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] @幽幽子 (3889001246)  /今日猪猪 
+11-15 23:52:12 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [幽幽子(3889001246)] [未实现 (ElementType = 17)] [Markdown 消息] @七嘻ttl   💫 这是你第2次抓到这只猪猪啦~ ...
+11-16 07:00:13 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+3906771bf41feb51a2d901f22999862ff5ffd178e56f0e4421d42cffa9f2f71e
+11-16 07:00:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 明天再说
+11-16 07:00:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [冉要当烟酒生(1062461846)] 起床上厕所还能看到一出好戏（憋笑）
+11-16 07:00:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [冉要当烟酒生(1062461846)] [回复消息 未找到消息记录 (MsgId = 0)] @小冉 (3819642626)  还没那么有钱，先约个简单的试试水
+11-16 07:00:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [冉要当烟酒生(1062461846)] 而且我第一次约稿
+11-16 07:00:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [冉要当烟酒生(1062461846)] [回复消息 未找到消息记录 (MsgId = 0)] 。
+11-16 07:00:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [冉要当烟酒生(1062461846)] [图片]
+11-16 07:00:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [冉要当烟酒生(1062461846)] [回复消息 未找到消息记录 (MsgId = 0)] @小冉 (3819642626)  这个还是默认吧
+11-16 07:00:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [冉要当烟酒生(1062461846)] [回复消息 未找到消息记录 (MsgId = 0)] @小冉 (3819642626)  手动忽略（bushi）
+11-16 07:00:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [冉要当烟酒生(1062461846)] 呃啊接着睡
+=== 最近一次登录成功记录 ===
+=== 看护对NapCat的全部动作(48h) ===
+[11-12 00:08] 看护：NapCat不在
+[11-12 00:08] 看护:自动拉起NapCat(24h内第1次)
+[11-12 00:50] 看护：未登录且码1664s未刷新，尝试重启NapCat
+[11-12 00:50] 看护:自动拉起NapCat(24h内第2次)
+[11-12 06:06] 看护：未登录且码10200s未刷新，尝试重启NapCat
+[11-12 06:06] 看护:自动拉起NapCat(24h内第3次)
+=== napcat-restart.log尾 ===
+bc60480e38cc1888f2d8040f44bdabe19e5adcd147241689440167d1bc8eaa95
+4d4802e993bf56fe3fa1993503d71f8fe33ee1a24f6b5c1bc35418ed76d6e59b
+4305470ff28fcf7728c509ba99e86207ffca51c0f8ee6c4dc292923b9705f7c0
+e02c9b1fbb6228eca588c36cc6e19a485c6dc0b1ddce58575fe2406e34345859
+549c1758b10dcdcff12ccd5af95dd6d5cfcea402d7077c4eff45c1720252427a
+c6a133120de6d289261f2b4480b7fd0250f71f300ccd7f5c0784f351f9f5e20d
+d155ce8ee3c2ae52ea537abdede18b0108d0f9251f35c9fa84ef897878c8f9da
+b84b2b2f29e5b3209908734067d55bda9e5554fb735905baa25c9a961b4c4e82
+=== 当前logincheck完整输出 ===
+=== 登录状态（权威判定）===
+[未登录] 当前没有有效会话
 阶段: waiting_qrcode
 最近错误: 无
---- 任务285790结束 ---
+--- 任务285800结束 ---
