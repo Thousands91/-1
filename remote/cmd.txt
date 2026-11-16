@@ -1,14 +1,2 @@
-285920
-echo "--- 四账合审:ipwatch/login_watch/tick三件套现状+昨夜数据(只读) ---"
-echo "[三件套进程] tick:$(pgrep -c -f tick.sh 2>/dev/null) ipwatch:$(pgrep -c -f ipwatch.sh 2>/dev/null) login_watch:$(pgrep -c -f login_watch.sh 2>/dev/null)"
-for F in /root/ip.log /root/login_state.log /root/tick.log; do
-  echo "=== $F 存在:$(ls -la $F 2>/dev/null | awk '{print $5"B "$6" "$7" "$8}') ==="
-done
-echo "=== ip.log 昨夜至今(11-15 22点后) ==="
-grep -a "11-15 2[2-3]\|11-16 " /root/ip.log 2>/dev/null | tail -40 || tail -20 /root/ip.log 2>/dev/null
-echo "=== login_state.log 昨夜至今 ==="
-grep -a "11-15 2[2-3]\|11-16 " /root/login_state.log 2>/dev/null | tail -30 || tail -15 /root/login_state.log 2>/dev/null
-echo "=== tick.log 昨夜空窗与今晨恢复 ==="
-grep -ac "11-16 0[0-6]" /root/tick.log 2>/dev/null
-grep -a "11-16 07" /root/tick.log 2>/dev/null | head -3
-echo "--- 任务285920结束 ---"
+0
+cd /root/asar-sync && echo idle
