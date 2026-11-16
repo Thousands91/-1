@@ -1,2 +1,13 @@
-0
-cd /root/asar-sync && echo idle
+285730
+echo "== 仪器在岗检查 $(date '+%F %T') =="
+for n in tick.sh login_watch.sh ipwatch.sh health_probe.sh; do
+  if pgrep -f "$n" >/dev/null; then echo "$n: 在岗(pid $(pgrep -f "$n" | head -1))"; else echo "$n: 不在岗!"; fi
+done
+echo "-- tick最新3条 --"; tail -n 3 /root/logs/tick.log 2>/dev/null || tail -n 3 /root/tick.log 2>/dev/null || echo "tick.log路径待查"
+echo "-- health最新3条 --"; tail -n 3 /root/logs/health.log 2>/dev/null || tail -n 3 /root/health.log 2>/dev/null || echo "health.log路径待查"
+echo "-- login最新3条 --"; tail -n 3 /root/logs/login_state.log 2>/dev/null || tail -n 3 /root/login_state.log 2>/dev/null || echo "login_state.log路径待查"
+echo "-- ip最新3条 --"; tail -n 3 /root/logs/ip.log 2>/dev/null || tail -n 3 /root/ip.log 2>/dev/null || echo "ip.log路径待查"
+echo "-- 进程 --"; pgrep -f "opt/QQ/qq" >/dev/null && echo "NapCat:在" || echo "NapCat:不在"; pgrep -f "main.py" >/dev/null && echo "大脑:在" || echo "大脑:不在"
+echo "-- 登录态 --"; bash /root/logincheck.sh 2>/dev/null | head -3
+echo "-- 遥控循环 --"; cat /root/.remote_last 2>/dev/null; echo "remote_pid=$(cat /root/.remote_pid 2>/dev/null)"
+echo "== 巡检完 =="
