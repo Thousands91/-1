@@ -1,36 +1,67 @@
-<<<task_286070.txt>>>
-===== 任务286070 11-17 03:55:02 =====
+<<<task_286080.txt>>>
+===== 任务286080 11-17 04:01:25 =====
 --- 命令 ---
 cd /root/bot || exit 1
-echo "== 恢复运行数据 =="
-git stash list | head -2
-git checkout stash@{0} -- bot/data/ 2>&1
-git reset HEAD -- bot/plugins/ 2>/dev/null
-echo "-- data恢复后状态 --"
-git status --short | head -8
-ls -la --time-style=+%m-%d_%H:%M bot/data/memory/1561950850.json bot/data/fortune_log.json
-echo "== 部署终验(只读) =="
-echo "-- 插件md5(应为新版11ff2e0c/08cf69d3) --"
-md5sum bot/plugins/ai_chat.py bot/plugins/song_request.py
-echo "-- 大脑与登录态 --"
-pgrep -f "python main.py" >/dev/null && echo "大脑:在" || echo "大脑:不在"
-pgrep -f "opt/QQ/qq" >/dev/null && echo "NapCat:在" || echo "NapCat:不在"
-tail -3 /root/bot/bot/bot.log | grep -a "ready\|Started\|成功" | head -3
-echo "== 完 =="
+echo "== 旧版(stash)点歌逻辑勘验 =="
+echo "-- 旧版选号handler/发卡相关行 --"
+git show 'stash@{0}:bot/plugins/song_request.py' 2>/dev/null | grep -n "music\|卡片\|列表\|选\|reply\|send" | head -30
+echo "-- 旧版总行数 --"
+git show 'stash@{0}:bot/plugins/song_request.py' 2>/dev/null | wc -l
+echo "== 本次(新版)卡片实发类型 =="
+echo "-- bot.log 03:54-04:00 点歌段 --"
+grep -a "03:5[4-9]" /root/bot/bot/bot.log | grep -a -i "song\|music\|点歌" | head -10
+echo "-- music_sign.log 03:54后有无新记录 --"
+tail -3 /root/music_sign.log
+echo "-- voice_probe.log 尾3条 --"
+tail -3 /root/bot/bot/data/voice_probe.log
+echo "== 勘验完 =="
 --- 输出 ---
-== 恢复运行数据 ==
-stash@{0}: WIP on main: 6c2f45a 坑107续:自定义卡补必填封面(meting pic兜底,NapCat缺image整卡被拒实锤13:48)
--- data恢复后状态 --
-M  bot/data/fortune_log.json
-M  bot/data/memory/1561950850.json
-?? bot/plugins/song_request.py.bak.trace
--rw-r--r-- 1 root root   753 11-17_03:55 bot/data/fortune_log.json
--rw-r--r-- 1 root root 19463 11-17_03:55 bot/data/memory/1561950850.json
-== 部署终验(只读) ==
--- 插件md5(应为新版11ff2e0c/08cf69d3) --
-11ff2e0c59c1ffa1f3c7b09207cac15a  bot/plugins/ai_chat.py
-08cf69d3714e3cdd1645bef4db2bb9dc  bot/plugins/song_request.py
--- 大脑与登录态 --
-大脑:在
-NapCat:在
-== 完 ==
+== 旧版(stash)点歌逻辑勘验 ==
+-- 旧版选号handler/发卡相关行 --
+4:群里发 /点歌 晴天  → 机器人找到歌，发语音 / 文件 / 分享卡片
+14:1. 默认"语音 + 音乐卡片"双发，卡片双源择优：
+16:   - 卡片：网易云这首免费 → 发网易云卡片（点开去网易云 App 听完整
+17:     版，后台不断）；网易云 VIP 但 QQ 音乐免费 → 发 QQ 音乐卡片；
+19:2. 卡片发 QQ 音乐版时，优先挑 QQ 音乐里免费的那条结果
+44:SEARCH = "https://music.163.com/api/search/get"
+47:# QQ 音乐搜索（公开接口，无需 key）：拿 songmid 发官方分享卡片用。
+58:# 搜索回来的候选，最多往下试几个
+68:CACHE_DIR = Path(__file__).resolve().parent.parent / "data" / "music_cache"
+103:    await song_cmd.send(f"翻柜子找「{kw}」，稍等一下……")
+111:    # （仅网易云入口；qq/酷我入口选歌后走各自平台的找补链）
+130:                    await song_cmd.send(MessageSegment.music("qq", mid))
+133:                                f"——点上面这张卡片去 QQ 音乐听完整版，切界面、锁屏都不会停。")
+138:                    pass  # 卡片没发出去就走下面的诚实告知
+144:    # 坑113续（2026-11-15 用户拍板）：候选**不过滤** VIP/现场/伴奏版——
+145:    # 已经是人选歌了，该让人看到全部真实结果；选中放不了会如实相告。
+154:    # 坑111：多选点歌——不再默认点第一首，改成发候选列表让用户回序号挑。
+155:    # 待选表按"群+用户"隔离，互不干扰；60 秒超时作废。
+167:        f"「{kw}」翻出这几首，回复序号选哪首（{PICK_TIMEOUT}秒内有效）：\n"
+178:    「点歌」直发（旧入口）与「序号选择」（坑111）两个入口共用；
+179:    matcher 参数化：send/finish 走调用方自己的 matcher，长音频的
+185:    # 多选入口已在处理器里单选单曲、放不了如实报告——坑113改版）
+199:            if await send_file(bot, event, s, audio):
+205:        # ---- 语音模式：先发卡片，再发语音条 ----
+213:                await matcher.send(MessageSegment.music("qq", s["id"]))
+215:                card_note = ("点这张卡片去 QQ 音乐听——切界面、锁屏都不会停。")
+220:                await matcher.send(MessageSegment.music("163", str(s["id"])))
+229:                    await matcher.send(MessageSegment.music("qq", mid))
+232:                        card_note = ("上面这张卡片是 QQ 音乐的同一首歌，点它也能后台听；"
+236:                        card_note = ("这首在网易云要 VIP，但 QQ 音乐有免费的——点这张卡片"
+-- 旧版总行数 --
+863
+== 本次(新版)卡片实发类型 ==
+-- bot.log 03:54-04:00 点歌段 --
+11-17 03:54:03 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-17 03:57:36 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 599850876 from 1561950850 '点歌 齐豫'
+11-17 03:57:36 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=39)
+11-17 03:58:27 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=39) running complete
+-- music_sign.log 03:54后有无新记录 --
+11-17 03:57:59 上游无token(拒收): http://106.55.0.102:10087/ -> b'"{\\"app\\":\\"com.tencent.music.lua\\",\\"bizsrc\\":\\"qqconnect.sdkshare_music\\",\\"co'
+11-17 03:58:01 上游出真卡: https://ss.xingzhige.com/music_card/card (1089 bytes)
+11-17 03:58:01 处理完毕 type=163 -> 831 bytes 真卡
+-- voice_probe.log 尾3条 --
+2026-11-15 15:19:13	333s	13019KB	ok	
+2026-11-17 03:40:28	466s	7296KB	ok	
+2026-11-17 03:58:27	266s	10424KB	ok	
+== 勘验完 ==
