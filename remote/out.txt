@@ -1,20 +1,49 @@
-<<<task_285750.txt>>>
-===== 任务285750 11-15 18:07:30 =====
+<<<task_285760.txt>>>
+===== 任务285760 11-16 16:33:46 =====
 --- 命令 ---
-echo "--- 验收:v6.2单实例确认(只读) ---"
-echo "实例数: $(pgrep -c -f 'remote_ctl_v[6].sh')"
-pgrep -af "remote_ctl_v[6].sh"
-md5sum /root/remote_ctl_v6.sh
-tail -n 5 /root/remote_ctl.log
-echo "--- 任务285750结束 ---"
+echo "--- 11-16诊断:阿萨尔失联排查(只读) ---"
+echo "[时间] $(date '+%m-%d %H:%M:%S')  [开机时长] $(uptime)"
+echo "[v6.2循环] 实例数:$(pgrep -c -f 'remote_ctl_v[6].sh') $(pgrep -af 'remote_ctl_v[6].sh')"
+echo "[NapCat] $(pgrep -f 'opt/QQ/qq' >/dev/null && echo 在 || echo 不在)"
+echo "[大脑] $(pgrep -f 'main.py' >/dev/null && echo 在 || echo 不在)"
+echo "[登录检查]"; bash /root/logincheck.sh 2>/dev/null | tail -3
+echo "[大脑日志尾]"; tail -n 10 /root/bot.log 2>/dev/null
+echo "[遥控日志尾]"; tail -n 6 /root/remote_ctl.log
+echo "[体检尾]"; tail -n 5 /root/health.log 2>/dev/null
+echo "--- 任务285760结束 ---"
 --- 输出 ---
---- 验收:v6.2单实例确认(只读) ---
-实例数: 1
-15429 bash /root/remote_ctl_v6.sh
-94f70f52ca56408caaf7f3fced6ca373  /root/remote_ctl_v6.sh
-[11-15 17:45] report:API回传失败:
-[11-15 17:45] report:git push失败,回退API
-[11-15 17:45] report:API回传失败:
-[11-15 17:59] report:git回传成功
-[11-15 18:05] report:git回传成功
---- 任务285750结束 ---
+--- 11-16诊断:阿萨尔失联排查(只读) ---
+[时间] 11-16 16:33:46  [开机时长]  16:33:46 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
+[v6.2循环] 实例数:2 15429 bash /root/remote_ctl_v6.sh
+24371 bash /root/remote_ctl_v6.sh
+[NapCat] 在
+[大脑] 在
+[登录检查]
+[未登录] 当前没有有效会话
+阶段: waiting_qrcode
+最近错误: 无
+[大脑日志尾]
+11-14 22:13:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 937277237 from 2586464457@[群:1109952783] '[reply:id=999005169]庞贝古城将要被熔岩吞噬时，有人喊了一句：小孩先走'
+11-14 22:13:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-14 22:13:35 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-14 22:13:35 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-14 22:13:35 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-14 22:14:41 [INFO] uvicorn | Shutting down
+11-14 22:14:41 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+11-14 22:14:41 [INFO] uvicorn | Waiting for application shutdown.
+11-14 22:14:41 [INFO] uvicorn | Application shutdown complete.
+11-14 22:14:41 [INFO] uvicorn | Finished server process [27465]
+[遥控日志尾]
+[11-16 15:44] 心跳:循环正常(v6.2-git,LAST=285750)
+[11-16 15:57] 心跳:循环正常(v6.2-git,LAST=285750)
+[11-16 16:07] 看护：未登录且码637s未刷新，尝试重启NapCat
+[11-16 16:07] 看护:自动拉起NapCat(24h内第3次)
+[11-16 16:11] 心跳:循环正常(v6.2-git,LAST=285750)
+[11-16 16:25] 心跳:循环正常(v6.2-git,LAST=285750)
+[体检尾]
+11-16 16:29:43 elapsed=60s uptime=124s batt=? ?%
+11-16 16:30:43 elapsed=60s uptime=124s batt=? ?%
+11-16 16:31:44 elapsed=61s uptime=124s batt=? ?%
+11-16 16:32:44 elapsed=60s uptime=124s batt=? ?%
+11-16 16:33:44 elapsed=60s uptime=124s batt=? ?%
+--- 任务285760结束 ---
