@@ -1,4 +1,4 @@
-285730
+286010
 echo "== 仪器在岗检查 $(date '+%F %T') =="
 for n in tick.sh login_watch.sh ipwatch.sh health_probe.sh; do
   if pgrep -f "$n" >/dev/null; then echo "$n: 在岗(pid $(pgrep -f "$n" | head -1))"; else echo "$n: 不在岗!"; fi
