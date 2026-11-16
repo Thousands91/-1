@@ -1,18 +1,57 @@
-<<<task_285830.txt>>>
-===== 任务285830 11-16 17:13:30 =====
+<<<task_285840.txt>>>
+===== 任务285840 11-16 17:31:49 =====
 --- 命令 ---
-echo "--- 验收:v6.3在岗确认(只读) ---"
-echo "实例数: $(pgrep -c -f 'remote_ctl_v[6].sh')"
-pgrep -af "remote_ctl_v[6].sh"
-grep -a "v6.3" /root/remote_ctl_v6.sh | head -1
-tail -n 3 /root/remote_ctl.log
-echo "--- 任务285830结束 ---"
+echo "--- 到家勘验:夜间冻结判定(health.log铁证)+出新码 ---"
+echo "=== 昨夜每小时体检条数(满勤≈60条/小时,0=冻住) ==="
+for H in "11-15 23" "11-16 00" "11-16 01" "11-16 02" "11-16 03" "11-16 04" "11-16 05" "11-16 06" "11-16 07"; do
+  echo "$H点: $(grep -ac "^$H:" /root/health.log)"
+done
+echo "=== 昨夜体检记录头10条 ==="
+grep -a "11-15 23:\|11-16 0" /root/health.log | head -10
+echo "=== health.log总行数与最新3条 ==="
+wc -l /root/health.log; tail -3 /root/health.log
+echo "=== 当前登录状态与最新登录错误 ==="
+bash /root/logincheck.sh 2>/dev/null | tail -3
+grep -a "Login Error" /root/napcat-restart.log 2>/dev/null | tail -1
+echo "=== 出新码放相册 ==="
+Q=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+echo "[码时间] $(stat -c %y "$Q" 2>/dev/null)"
+cp "$Q" "/sdcard/DCIM/Camera/asar_qr.png" && echo "新码已放相册:asar_qr.png"
+echo "--- 任务285840结束 ---"
 --- 输出 ---
---- 验收:v6.3在岗确认(只读) ---
-实例数: 1
-7444 bash /root/remote_ctl_v6.sh
-# remote_ctl_v6.3 (2026-11-16)：坑116 git回传+原子锁 + 坑117重启验尸(登录结局留案底)
---- 任务285810结束 ---
-[11-16 17:09] report:git回传成功
-[11-16 17:12] report:git回传成功
---- 任务285830结束 ---
+--- 到家勘验:夜间冻结判定(health.log铁证)+出新码 ---
+=== 昨夜每小时体检条数(满勤≈60条/小时,0=冻住) ===
+11-15 23点: 54
+11-16 00点: 0
+11-16 01点: 0
+11-16 02点: 0
+11-16 03点: 0
+11-16 04点: 0
+11-16 05点: 0
+11-16 06点: 0
+11-16 07点: 60
+=== 昨夜体检记录头10条 ===
+11-15 23:00:03 elapsed=61s uptime=124s batt=? ?%
+11-15 23:01:03 elapsed=60s uptime=124s batt=? ?%
+11-15 23:02:03 elapsed=60s uptime=124s batt=? ?%
+11-15 23:03:03 elapsed=60s uptime=124s batt=? ?%
+11-15 23:04:03 elapsed=60s uptime=124s batt=? ?%
+11-15 23:05:03 elapsed=60s uptime=124s batt=? ?%
+11-15 23:06:03 elapsed=60s uptime=124s batt=? ?%
+11-15 23:07:04 elapsed=60s uptime=124s batt=? ?%
+11-15 23:08:04 elapsed=61s uptime=124s batt=? ?%
+11-15 23:09:04 elapsed=60s uptime=124s batt=? ?%
+=== health.log总行数与最新3条 ===
+1202 /root/health.log
+11-16 17:28:54 elapsed=60s uptime=124s batt=? ?%
+11-16 17:29:54 elapsed=61s uptime=124s batt=? ?%
+11-16 17:30:54 elapsed=60s uptime=124s batt=? ?%
+=== 当前登录状态与最新登录错误 ===
+[未登录] 当前没有有效会话
+阶段: waiting_qrcode
+最近错误: 无
+11-16 17:31:18 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+=== 出新码放相册 ===
+[码时间] 2026-11-16 17:31:18.570000000 +0800
+新码已放相册:asar_qr.png
+--- 任务285840结束 ---
