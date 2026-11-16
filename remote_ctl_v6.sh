@@ -1,5 +1,5 @@
 #!/bin/bash
-# remote_ctl_v6.2 (2026-11-15)：坑116 git push回传 + mkdir原子实例锁 + run_task防双执行
+# remote_ctl_v6.3 (2026-11-16)：坑116 git回传+原子锁 + 坑117重启验尸(登录结局留案底)
 # 病根：手机侧 api.github.com 小包 GET 通([api:200])，但回传的 PUT 带 100KB+ 大包
 # 被掐死（report:API回传失败 后错误体为空=请求被吞），285710 结果卡待发箱。
 # git 通道([git:通])实测健康，拉命令本来就走它——回传搬上同一条路。
@@ -121,6 +121,9 @@ restart_napcat() {
   pkill -f "opt/QQ/qq" 2>/dev/null; sleep 3
   cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 &
   cd "$REPO"
+  # 坑117:重启验尸——60s/300s后各记一次登录判定+最新登录错误(证据在napcat-restart.log,grep必须带-a防二进制静默)
+  ( sleep 60; E1=$(grep -a "Login Error" /root/napcat-restart.log 2>/dev/null | tail -1); S1=$(bash /root/logincheck.sh 2>/dev/null | grep -aE "\[在线\]|\[未登录\]" | head -1); echo "[$(date '+%m-%d %H:%M')] 验尸+60s:[$S1] 最新登录错误:${E1:-无}" >> "$LOG"; sleep 240; S2=$(bash /root/logincheck.sh 2>/dev/null | grep -aE "\[在线\]|\[未登录\]" | head -1); echo "[$(date '+%m-%d %H:%M')] 验尸+300s:[$S2]" >> "$LOG" ) &
+  return 0
 }
 
 C=0
@@ -153,7 +156,7 @@ while true; do
   fi
   pgrep -f "opt/QQ/qq" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：NapCat不在" >> "$LOG"; restart_napcat; }
   pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & cd "$REPO"; }
-  [ $((C % 60)) -eq 0 ] && echo "[$(date '+%m-%d %H:%M')] 心跳:循环正常(v6.2-git,LAST=$LAST)" >> "$LOG"
+  [ $((C % 60)) -eq 0 ] && echo "[$(date '+%m-%d %H:%M')] 心跳:循环正常(v6.3-git,LAST=$LAST)" >> "$LOG"
   fi
   sleep 10
 done
