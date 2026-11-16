@@ -1,5 +1,5 @@
 #!/bin/bash
-# remote_ctl_v6.4 (2026-11-16)：+重启带-q快速登录(NapCat日志实锤:无-q从不尝试快速登录,直接落扫码态)
+# remote_ctl_v6.5 (2026-11-16)：+重启取证快照上云+日志裁剪保全(根治证据丢失)
 # 病根：手机侧 api.github.com 小包 GET 通([api:200])，但回传的 PUT 带 100KB+ 大包
 # 被掐死（report:API回传失败 后错误体为空=请求被吞），285710 结果卡待发箱。
 # git 通道([git:通])实测健康，拉命令本来就走它——回传搬上同一条路。
@@ -105,6 +105,11 @@ git_report() {
 
 NAP_FUSE=/root/.napcat_pulls
 restart_napcat() {
+  # 坑117终:重启取证快照——拍下临终日志送GitHub云端,本地日志清了也有案底
+  { echo "===== 重启取证 $(date '+%m-%d %H:%M:%S') ====="
+    echo "--- napcat.log尾150行 ---"; tail -n 150 /root/napcat.log 2>/dev/null
+    echo "--- napcat-restart.log尾80行 ---"; tail -n 80 /root/napcat-restart.log 2>/dev/null
+  } > "$PBOX/forensic_restart_$(date +%m%d_%H%M).txt" 2>/dev/null
   NOW=$(date +%s)
   touch "$NAP_FUSE"
   : > /tmp/napf
@@ -156,7 +161,15 @@ while true; do
   fi
   pgrep -f "opt/QQ/qq" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：NapCat不在" >> "$LOG"; restart_napcat; }
   pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & cd "$REPO"; }
-  [ $((C % 60)) -eq 0 ] && echo "[$(date '+%m-%d %H:%M')] 心跳:循环正常(v6.4-git,LAST=$LAST)" >> "$LOG"
+  if [ $((C % 60)) -eq 0 ]; then
+    echo "[$(date '+%m-%d %H:%M')] 心跳:循环正常(v6.5-git,LAST=$LAST)" >> "$LOG"
+    for LF in /root/napcat.log /root/napcat-restart.log "$LOG"; do
+      if [ -f "$LF" ] && [ "$(wc -l < "$LF")" -gt 20000 ]; then
+        tail -n 20000 "$LF" > "$LF.t" && cat "$LF.t" > "$LF" && rm -f "$LF.t"
+        echo "[$(date '+%m-%d %H:%M')] 日志保全:$LF超2万行,已裁剪保留尾部" >> "$LOG"
+      fi
+    done
+  fi
   fi
   sleep 10
 done
