@@ -1,41 +1,43 @@
-<<<task_286050.txt>>>
-===== 任务286050 11-17 03:52:03 =====
+<<<task_286060.txt>>>
+===== 任务286060 11-17 03:53:46 =====
 --- 命令 ---
-echo "== 版本+签名配置核对 $(date '+%F %T') =="
-md5sum /root/bot/bot/plugins/ai_chat.py /root/bot/bot/plugins/song_request.py 2>/dev/null
-echo "-- 设备ai_chat有没有表情识别层 --"
-grep -c "_image_sticker_name" /root/bot/bot/plugins/ai_chat.py 2>/dev/null
-grep -n "我在。您有什么要说" /root/bot/bot/plugins/ai_chat.py 2>/dev/null
-echo "-- 设备song_request行42/299附近与本地对照 --"
-sed -n '39,43p' /root/bot/bot/plugins/song_request.py 2>/dev/null
-echo "-- NapCat musicSignUrl 配置 --"
-grep -rn "musicSignUrl\|music_sign" /root/Napcat/config* /root/Napcat/*.json /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/ 2>/dev/null | grep -v node_modules | head -10
-echo "-- napcat.log 03:39-03:41 点歌时段 --"
-grep -a "03:3[9]\|03:4[01]" /root/napcat.log 2>/dev/null | grep -a -i "music\|sign\|error\|fail\|卡" | head -15
-echo "-- 03:40 前后全部(备选) --"
-grep -a "03:40" /root/napcat.log 2>/dev/null | tail -20
-echo "== 核对完 =="
+cd /root/bot || { echo "致命:仓库不在"; exit 1; }
+echo "-- pull前HEAD --"; git log --oneline -1
+echo "-- 脏文件 --"; git status --short | head -8
+git stash 2>&1 | head -1
+git pull --ff-only origin main 2>&1 | tail -3
+echo "-- pull后 --"; git log --oneline -1
+md5sum bot/plugins/ai_chat.py bot/plugins/song_request.py
+echo "-- 表情识别层在场检查 --"; grep -c "_image_sticker_name" bot/plugins/ai_chat.py
+echo "-- 重启大脑(不动QQ) --"
+( sleep 2; pkill -f "[v]env/bin/python main.py"; sleep 3; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 ) &
+sleep 15
+pgrep -f "python main.py" >/dev/null && echo "大脑已拉起" || echo "大脑没起来!"
+tail -6 /root/bot/bot/bot.log 2>/dev/null | grep -a "Succeeded\|Started\|error" | head -5
+echo "-- 部署完 --"
 --- 输出 ---
-== 版本+签名配置核对 2026-11-17 03:52:03 ==
-54e839cb5f8afbd0f79d89c63e7e325a  /root/bot/bot/plugins/ai_chat.py
-52c9b525aeac3b62617dde577e820fd4  /root/bot/bot/plugins/song_request.py
--- 设备ai_chat有没有表情识别层 --
-0
-1005:        await ai_chat.finish(_with_quote(event, Message("我在。您有什么要说给我听？📖")))
--- 设备song_request行42/299附近与本地对照 --
-)
-from nonebot.params import CommandArg
-
-song_cmd = on_command("点歌", aliases={"听歌", "来首歌"}, rule=to_me(), priority=20, block=True)
-
--- NapCat musicSignUrl 配置 --
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json:21:  "musicSignUrl": "http://127.0.0.1:10800/",
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json.bak:21:  "musicSignUrl": "",
--- napcat.log 03:39-03:41 点歌时段 --
--- 03:40 前后全部(备选) --
-11-17 03:40:03 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 您选的这首在网易云这首歌放不了（文件过大）——同一首歌我从酷我的柜子里找到了，给您递过来：
-11-17 03:40:04 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 🎵 观世音菩萨发愿偈(大悲咒) ...
-11-17 03:40:07 [[32minfo[39m] 阿萨尔 | 语音文件/root/.config/QQ/NapCat/temp/3c21fcc0-1cc4-46c6-a75f-1f399a02db6f需要转换成silk
-11-17 03:40:25 [[32minfo[39m] 阿萨尔 | 语音文件已就绪: /root/.config/QQ/NapCat/temp/925a30a1-3299-4d04-aded-deb6b4368936 时长: 466.88
-11-17 03:40:25 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [语音 466s]
-== 核对完 ==
+-- pull前HEAD --
+6c2f45a 坑107续:自定义卡补必填封面(meting pic兜底,NapCat缺image整卡被拒实锤13:48)
+-- 脏文件 --
+ M bot/data/fortune_log.json
+ M bot/data/memory/1561950850.json
+ M bot/plugins/ai_chat.py
+ M bot/plugins/song_request.py
+?? bot/plugins/song_request.py.bak.trace
+Saved working directory and index state WIP on main: 6c2f45a 坑107续:自定义卡补必填封面(meting pic兜底,NapCat缺image整卡被拒实锤13:48)
+Fast-forward
+ bot/plugins/song_request.py | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+-- pull后 --
+84515af 坑107终局:卡片走验token签名代理,上游全灭接文字卡兜底,上游复活真卡自动回归
+11ff2e0c59c1ffa1f3c7b09207cac15a  bot/plugins/ai_chat.py
+08cf69d3714e3cdd1645bef4db2bb9dc  bot/plugins/song_request.py
+-- 表情识别层在场检查 --
+3
+-- 重启大脑(不动QQ) --
+大脑已拉起
+11-17 03:54:03 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+11-17 03:54:03 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+11-17 03:54:03 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+11-17 03:54:04 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+-- 部署完 --
