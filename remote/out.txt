@@ -1,18 +1,13 @@
-<<<task_286120.txt>>>
-===== 任务286120 11-17 04:19:11 =====
+<<<task_286130.txt>>>
+===== 任务286130 11-17 04:24:17 =====
 --- 命令 ---
-cd /root/bot || exit 1
-git pull --ff-only origin main 2>&1 | tail -2
-git log --oneline -1
-( sleep 2; pkill -f "[v]env/bin/python main.py"; sleep 3; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 ) &
-sleep 15
-pgrep -f "python main.py" >/dev/null && echo "大脑已拉起" || echo "大脑没起来!"
-grep -a "song_request" /root/bot/bot/bot.log | tail -1
-echo "== 部署完 =="
+echo "== 发卡仪表验收 $(date '+%F %T') =="
+grep -a "\[发卡\]" /root/bot/bot/bot.log | tail -12
+echo "== 验收完 =="
 --- 输出 ---
- bot/plugins/song_request.py | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
-8af94e6 坑118仪表化:发卡全链路落日志(官方卡/custom卡/封面放弃/异常),实测无卡时日志必给实锤
-大脑已拉起
-11-17 04:19:27 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-== 部署完 ==
+== 发卡仪表验收 2026-11-17 04:24:17 ==
+11-17 04:20:50 [INFO] song_request | [发卡] custom卡发送成功 src=kuwo id=128405
+11-17 04:20:50 [INFO] song_request | [发卡] custom卡 OK src=kuwo id=128405
+11-17 04:22:55 [INFO] song_request | [发卡] custom卡发送成功 src=netease id=284793
+11-17 04:22:55 [INFO] song_request | [发卡] custom卡 OK src=netease id=284793
+== 验收完 ==
