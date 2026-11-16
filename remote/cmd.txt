@@ -1,15 +1,15 @@
-286050
-echo "== 版本+签名配置核对 $(date '+%F %T') =="
-md5sum /root/bot/bot/plugins/ai_chat.py /root/bot/bot/plugins/song_request.py 2>/dev/null
-echo "-- 设备ai_chat有没有表情识别层 --"
-grep -c "_image_sticker_name" /root/bot/bot/plugins/ai_chat.py 2>/dev/null
-grep -n "我在。您有什么要说" /root/bot/bot/plugins/ai_chat.py 2>/dev/null
-echo "-- 设备song_request行42/299附近与本地对照 --"
-sed -n '39,43p' /root/bot/bot/plugins/song_request.py 2>/dev/null
-echo "-- NapCat musicSignUrl 配置 --"
-grep -rn "musicSignUrl\|music_sign" /root/Napcat/config* /root/Napcat/*.json /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/ 2>/dev/null | grep -v node_modules | head -10
-echo "-- napcat.log 03:39-03:41 点歌时段 --"
-grep -a "03:3[9]\|03:4[01]" /root/napcat.log 2>/dev/null | grep -a -i "music\|sign\|error\|fail\|卡" | head -15
-echo "-- 03:40 前后全部(备选) --"
-grep -a "03:40" /root/napcat.log 2>/dev/null | tail -20
-echo "== 核对完 =="
+286060
+cd /root/bot || { echo "致命:仓库不在"; exit 1; }
+echo "-- pull前HEAD --"; git log --oneline -1
+echo "-- 脏文件 --"; git status --short | head -8
+git stash 2>&1 | head -1
+git pull --ff-only origin main 2>&1 | tail -3
+echo "-- pull后 --"; git log --oneline -1
+md5sum bot/plugins/ai_chat.py bot/plugins/song_request.py
+echo "-- 表情识别层在场检查 --"; grep -c "_image_sticker_name" bot/plugins/ai_chat.py
+echo "-- 重启大脑(不动QQ) --"
+( sleep 2; pkill -f "[v]env/bin/python main.py"; sleep 3; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 ) &
+sleep 15
+pgrep -f "python main.py" >/dev/null && echo "大脑已拉起" || echo "大脑没起来!"
+tail -6 /root/bot/bot/bot.log 2>/dev/null | grep -a "Succeeded\|Started\|error" | head -5
+echo "-- 部署完 --"
