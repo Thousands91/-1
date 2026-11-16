@@ -1,16 +1,37 @@
-<<<task_285900.txt>>>
-===== 任务285900 11-16 17:59:27 =====
+<<<task_285910.txt>>>
+===== 任务285910 11-16 18:09:28 =====
 --- 命令 ---
-echo "--- 验收:v6.5在岗+QQ在线(只读) ---"
-echo "实例数: $(pgrep -c -f 'remote_ctl_v[6].sh')"
-grep -ac "重启取证" /root/remote_ctl_v6.sh
-bash /root/logincheck.sh 2>/dev/null | tail -3
-echo "--- 任务285900结束 ---"
+echo "--- health_probe v2部署:IP记录仪 ---"
+echo "[现版存档]"; cat /root/health_probe.sh
+echo "IyEvYmluL2Jhc2gKIyBoZWFsdGhfcHJvYmUgdjIgKDIwMjYtMTEtMTYp77yaK0lQL+e9keWNoeiusOW9leKAlOKAlOaOiee6v+W9kuWboOS7quWZqAojIOebrueahO+8muWGu+e7k+ivtCB2cyBJUOWPmOWKqOivtO+8jOS4jeWGjeeMnO+8jOS4i+asoeaOiee6v+eUqOaVsOaNruijgeWGswojIOi+k+WHuu+8muaXtumXtCBlbGFwc2VkIHVwdGltZSBpcD1YIGlmPXdsYW4wIGJhdHQ9TiXvvIhpcOWPlum7mOiupOi3r+eUsea6kOWcsOWdgO+8jOacrOacuuiwg+eUqOS4jeiKsemSse+8iQpMQVNUPSQoZGF0ZSArJXMpCndoaWxlIHRydWU7IGRvCiAgc2xlZXAgNjAKICBOT1c9JChkYXRlICslcykKICBUUz0kKGRhdGUgJyslbS0lZCAlSDolTTolUycpCiAgRUw9JCgoTk9XLUxBU1QpKTsgTEFTVD0kTk9XCiAgVVA9JChjdXQgLWQuIC1mMSAvcHJvYy91cHRpbWUgMj4vZGV2L251bGwpCiAgUlQ9JChpcCAtNCByb3V0ZSBnZXQgMS4xLjEuMSAyPi9kZXYvbnVsbCB8IGhlYWQgLTEpCiAgSVA9JChlY2hvICIkUlQiIHwgZ3JlcCAtbyAnc3JjIFswLTkuXSonIHwgYXdrICd7cHJpbnQgJDJ9JykKICBJRj0kKGVjaG8gIiRSVCIgfCBncmVwIC1vICdkZXYgW2EtekEtWjAtOV0qJyB8IGF3ayAne3ByaW50ICQyfScpCiAgWyAteiAiJElQIiBdICYmIElQPSQoaG9zdG5hbWUgLUkgMj4vZGV2L251bGwgfCBhd2sgJ3twcmludCAkMX0nKQogIEJBVFQ9JChjYXQgL3N5cy9jbGFzcy9wb3dlcl9zdXBwbHkvYmF0dGVyeS9jYXBhY2l0eSAyPi9kZXYvbnVsbCB8fCBlY2hvICI/IikKICBlY2hvICIkVFMgZWxhcHNlZD0ke0VMfXMgdXB0aW1lPSR7VVB9cyBpcD0ke0lQOi3ml6B9IGlmPSR7SUY6LeaXoH0gYmF0dD0ke0JBVFR9JSIgPj4gL3Jvb3QvaGVhbHRoLmxvZwpkb25lCg==" | base64 -d > /root/health_probe_v2.sh
+bash -n /root/health_probe_v2.sh && echo 新版语法OK
+pkill -f health_probe
+sleep 1
+mv /root/health_probe.sh /root/health_probe_v1.bak; mv /root/health_probe_v2.sh /root/health_probe.sh
+setsid nohup bash /root/health_probe.sh >/dev/null 2>&1 &
+sleep 65
+tail -n 3 /root/health.log
+echo "--- 任务285910结束 ---"
 --- 输出 ---
---- 验收:v6.5在岗+QQ在线(只读) ---
-实例数: 1
-3
-[在线] 已登录，一切正常
-阶段: ready
-最近错误: 无
---- 任务285900结束 ---
+--- health_probe v2部署:IP记录仪 ---
+[现版存档]
+#!/bin/bash
+# health_probe v1 (2026-11-15): 冻结自证记录仪——独立进程,不碰遥控器
+LOG=/root/health.log
+echo "$(date '+%m-%d %H:%M:%S') probe_started" >> $LOG
+LAST=$(date +%s)
+while true; do
+  sleep 60
+  NOW=$(date +%s)
+  UP=$(cut -d' ' -f1 /proc/uptime 2>/dev/null | cut -d. -f1)
+  ST=$(cat /sys/class/power_supply/battery/status 2>/dev/null || echo "?")
+  CP=$(cat /sys/class/power_supply/battery/capacity 2>/dev/null || echo "?")
+  ELAPSED=$((NOW-LAST))
+  LAST=$NOW
+  echo "$(date '+%m-%d %H:%M:%S') elapsed=${ELAPSED}s uptime=${UP}s batt=${ST} ${CP}%" >> $LOG
+done
+新版语法OK
+11-16 18:07:58 elapsed=60s uptime=124s batt=? ?%
+11-16 18:08:58 elapsed=60s uptime=124s batt=? ?%
+11-16 18:10:29 elapsed=60s uptime=124s ip=192.168.31.142 if=无 batt=?%
+--- 任务285910结束 ---
