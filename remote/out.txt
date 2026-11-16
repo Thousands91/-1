@@ -1,39 +1,37 @@
-<<<task_285960.txt>>>
-===== 任务285960 11-16 18:35:58 =====
+<<<task_285970.txt>>>
+===== 任务285970 11-16 18:37:49 =====
 --- 命令 ---
-echo "--- 停摆历史普查:tick+health台账全量断档清点(只读) ---"
+echo "--- 停摆普查补全:tick.log带年份格式重析(只读) ---"
 python3 - <<'PY'
 import re, datetime
-def census(path, label):
-    try:
-        txt = open(path, 'rb').read().decode('utf-8', 'ignore')
-    except Exception as e:
-        print(label, "读不到:", e); return
-    evs = []
-    for line in txt.splitlines():
-        m = re.match(r'(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})', line)
-        if m:
-            mm, dd, h, mi, s = m.groups()
-            evs.append(datetime.datetime(2026, int(mm), int(dd), int(h), int(mi), int(s)))
-    evs.sort()
-    if not evs:
-        print(f"== {label}: 无可解析记录"); return
-    print(f"== {label}: 共{len(evs)}条 | 记录期 {evs[0]:%m-%d %H:%M} ~ {evs[-1]:%m-%d %H:%M}")
-    prev = None
-    for t in evs:
-        if prev and (t - prev) > datetime.timedelta(minutes=30):
-            hrs = (t - prev).total_seconds() / 3600
-            print(f"  断档: {prev:%m-%d %H:%M} -> {t:%m-%d %H:%M}  持续{hrs:.1f}小时")
-        prev = t
-    print(f"  (末段 {prev:%m-%d %H:%M} 至今无断档)")
-census('/root/tick.log', 'tick(每分钟)')
-census('/root/health.log', 'health(每60秒)')
+txt = open('/root/tick.log','rb').read().decode('utf-8','ignore')
+evs = []
+for line in txt.splitlines():
+    m = re.search(r'(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})', line)
+    if not m:
+        m = re.search(r'^(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})', line)
+        if m: mm,dd,h,mi,s = m.groups(); evs.append(datetime.datetime(2026,int(mm),int(dd),int(h),int(mi),int(s))); continue
+    else:
+        y,mm,dd,h,mi,s = m.groups(); evs.append(datetime.datetime(int(y),int(mm),int(dd),int(h),int(mi),int(s)))
+evs.sort()
+print(f"tick: 共{len(evs)}条 | 记录期 {evs[0]:%m-%d %H:%M} ~ {evs[-1]:%m-%d %H:%M}" if evs else "tick: 无记录")
+prev=None
+for t in evs:
+    if prev and (t-prev)>datetime.timedelta(minutes=30):
+        print(f"  断档: {prev:%m-%d %H:%M} -> {t:%m-%d %H:%M}  持续{(t-prev).total_seconds()/3600:.1f}小时")
+    prev=t
+if prev: print(f"  (末段 {prev:%m-%d %H:%M} 至今无断档)")
 PY
-echo "--- 任务285960结束 ---"
+echo "[tick.log头3行原样]"; head -3 /root/tick.log
+echo "--- 任务285970结束 ---"
 --- 输出 ---
---- 停摆历史普查:tick+health台账全量断档清点(只读) ---
-== tick(每分钟): 无可解析记录
-== health(每60秒): 共1265条 | 记录期 11-15 14:20 ~ 11-16 18:35
-  断档: 11-15 23:53 -> 11-16 07:00  持续7.1小时
-  (末段 11-16 18:35 至今无断档)
---- 任务285960结束 ---
+--- 停摆普查补全:tick.log带年份格式重析(只读) ---
+tick: 共4587条 | 记录期 11-13 02:16 ~ 11-16 18:37
+  断档: 11-14 01:57 -> 11-14 06:42  持续4.8小时
+  断档: 11-15 23:52 -> 11-16 07:00  持续7.1小时
+  (末段 11-16 18:37 至今无断档)
+[tick.log头3行原样]
+2026-11-13 02:16:52
+2026-11-13 02:17:52
+2026-11-13 02:18:52
+--- 任务285970结束 ---
