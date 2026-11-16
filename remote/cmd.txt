@@ -1,6 +1,10 @@
-286090
+286100
 cd /root/bot || exit 1
-echo "<<<OLDFILE_START>>>"
-git show 'stash@{0}:bot/plugins/song_request.py' 2>/dev/null
-echo "<<<OLDFILE_END>>>"
-echo "行数:$(git show 'stash@{0}:bot/plugins/song_request.py' | wc -l) md5:$(git show 'stash@{0}:bot/plugins/song_request.py' | md5sum | cut -c1-8)"
+git pull --ff-only origin main 2>&1 | tail -2
+echo "-- pull后HEAD --"; git log --oneline -1
+md5sum bot/plugins/song_request.py
+( sleep 2; pkill -f "[v]env/bin/python main.py"; sleep 3; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 ) &
+sleep 15
+pgrep -f "python main.py" >/dev/null && echo "大脑已拉起" || echo "大脑没起来!"
+grep -a "song_request" /root/bot/bot/bot.log | tail -1
+echo "== 部署完 =="
