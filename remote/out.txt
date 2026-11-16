@@ -1,21 +1,18 @@
-<<<task_286100.txt>>>
-===== 任务286100 11-17 04:04:50 =====
+<<<task_286110.txt>>>
+===== 任务286110 11-17 04:11:25 =====
 --- 命令 ---
 cd /root/bot || exit 1
 git pull --ff-only origin main 2>&1 | tail -2
-echo "-- pull后HEAD --"; git log --oneline -1
-md5sum bot/plugins/song_request.py
+git log --oneline -1
 ( sleep 2; pkill -f "[v]env/bin/python main.py"; sleep 3; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 ) &
 sleep 15
 pgrep -f "python main.py" >/dev/null && echo "大脑已拉起" || echo "大脑没起来!"
 grep -a "song_request" /root/bot/bot/bot.log | tail -1
 echo "== 部署完 =="
 --- 输出 ---
- bot/plugins/song_request.py | 466 ++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 424 insertions(+), 42 deletions(-)
--- pull后HEAD --
-54c1327 坑118收编:点歌列表版(坑111多选/114平台分支/107custom兜底)正式进仓库,根治设备就地改版丢代码
-8cebdf8ce0ffca182279102bb65acf57  bot/plugins/song_request.py
+ bot/plugins/song_request.py | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+fca6697 坑118续:酷我找补条目继承原曲封面(meting兜底),修列表选歌custom卡无图被拒→永无卡片的bug
 大脑已拉起
-11-17 04:05:07 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-17 04:11:42 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
 == 部署完 ==
