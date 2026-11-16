@@ -1,7 +1,11 @@
-285750
-echo "--- 验收:v6.2单实例确认(只读) ---"
-echo "实例数: $(pgrep -c -f 'remote_ctl_v[6].sh')"
-pgrep -af "remote_ctl_v[6].sh"
-md5sum /root/remote_ctl_v6.sh
-tail -n 5 /root/remote_ctl.log
-echo "--- 任务285750结束 ---"
+285760
+echo "--- 11-16诊断:阿萨尔失联排查(只读) ---"
+echo "[时间] $(date '+%m-%d %H:%M:%S')  [开机时长] $(uptime)"
+echo "[v6.2循环] 实例数:$(pgrep -c -f 'remote_ctl_v[6].sh') $(pgrep -af 'remote_ctl_v[6].sh')"
+echo "[NapCat] $(pgrep -f 'opt/QQ/qq' >/dev/null && echo 在 || echo 不在)"
+echo "[大脑] $(pgrep -f 'main.py' >/dev/null && echo 在 || echo 不在)"
+echo "[登录检查]"; bash /root/logincheck.sh 2>/dev/null | tail -3
+echo "[大脑日志尾]"; tail -n 10 /root/bot.log 2>/dev/null
+echo "[遥控日志尾]"; tail -n 6 /root/remote_ctl.log
+echo "[体检尾]"; tail -n 5 /root/health.log 2>/dev/null
+echo "--- 任务285760结束 ---"
