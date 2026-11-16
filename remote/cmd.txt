@@ -1,2 +1,12 @@
-0
-cd /root/asar-sync && echo idle
+285910
+echo "--- health_probe v2部署:IP记录仪 ---"
+echo "[现版存档]"; cat /root/health_probe.sh
+echo "IyEvYmluL2Jhc2gKIyBoZWFsdGhfcHJvYmUgdjIgKDIwMjYtMTEtMTYp77yaK0lQL+e9keWNoeiusOW9leKAlOKAlOaOiee6v+W9kuWboOS7quWZqAojIOebrueahO+8muWGu+e7k+ivtCB2cyBJUOWPmOWKqOivtO+8jOS4jeWGjeeMnO+8jOS4i+asoeaOiee6v+eUqOaVsOaNruijgeWGswojIOi+k+WHuu+8muaXtumXtCBlbGFwc2VkIHVwdGltZSBpcD1YIGlmPXdsYW4wIGJhdHQ9TiXvvIhpcOWPlum7mOiupOi3r+eUsea6kOWcsOWdgO+8jOacrOacuuiwg+eUqOS4jeiKsemSse+8iQpMQVNUPSQoZGF0ZSArJXMpCndoaWxlIHRydWU7IGRvCiAgc2xlZXAgNjAKICBOT1c9JChkYXRlICslcykKICBUUz0kKGRhdGUgJyslbS0lZCAlSDolTTolUycpCiAgRUw9JCgoTk9XLUxBU1QpKTsgTEFTVD0kTk9XCiAgVVA9JChjdXQgLWQuIC1mMSAvcHJvYy91cHRpbWUgMj4vZGV2L251bGwpCiAgUlQ9JChpcCAtNCByb3V0ZSBnZXQgMS4xLjEuMSAyPi9kZXYvbnVsbCB8IGhlYWQgLTEpCiAgSVA9JChlY2hvICIkUlQiIHwgZ3JlcCAtbyAnc3JjIFswLTkuXSonIHwgYXdrICd7cHJpbnQgJDJ9JykKICBJRj0kKGVjaG8gIiRSVCIgfCBncmVwIC1vICdkZXYgW2EtekEtWjAtOV0qJyB8IGF3ayAne3ByaW50ICQyfScpCiAgWyAteiAiJElQIiBdICYmIElQPSQoaG9zdG5hbWUgLUkgMj4vZGV2L251bGwgfCBhd2sgJ3twcmludCAkMX0nKQogIEJBVFQ9JChjYXQgL3N5cy9jbGFzcy9wb3dlcl9zdXBwbHkvYmF0dGVyeS9jYXBhY2l0eSAyPi9kZXYvbnVsbCB8fCBlY2hvICI/IikKICBlY2hvICIkVFMgZWxhcHNlZD0ke0VMfXMgdXB0aW1lPSR7VVB9cyBpcD0ke0lQOi3ml6B9IGlmPSR7SUY6LeaXoH0gYmF0dD0ke0JBVFR9JSIgPj4gL3Jvb3QvaGVhbHRoLmxvZwpkb25lCg==" | base64 -d > /root/health_probe_v2.sh
+bash -n /root/health_probe_v2.sh && echo 新版语法OK
+pkill -f health_probe
+sleep 1
+mv /root/health_probe.sh /root/health_probe_v1.bak; mv /root/health_probe_v2.sh /root/health_probe.sh
+setsid nohup bash /root/health_probe.sh >/dev/null 2>&1 &
+sleep 65
+tail -n 3 /root/health.log
+echo "--- 任务285910结束 ---"
