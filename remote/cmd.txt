@@ -1,16 +1,17 @@
-286020
-echo "== 表情+点歌勘验 $(date '+%F %T') =="
-echo "-- bot.log 03:30以后 尾60行 --"
-grep -a "03:3[0-9]" /root/bot.log 2>/dev/null | tail -60 || tail -60 /root/bot.log
-echo "-- 表情相关日志 --"
-grep -a "表情\|mface\|图片" /root/bot.log 2>/dev/null | tail -20
-echo "-- 点歌/music相关日志 --"
-grep -a -i "music\|点歌\|song" /root/bot.log 2>/dev/null | tail -20
-echo "-- 识别缓存文件 --"
-ls -la /root/bot/bot/plugins/data/ 2>/dev/null | head -20
-for f in /root/bot/bot/plugins/data/mface_names.json /root/bot/bot/plugins/data/qface_index.json; do
-  [ -f "$f" ] && echo "$f 存在 $(wc -c < "$f")字节" || echo "$f 不存在"
-done
-echo "-- NapCat版本 --"
-cat /root/Napcat/package.json 2>/dev/null | head -5; ls /root/Napcat | head -15
-echo "-- 勘验完 --"
+286030
+echo "== 日志黑洞追踪 $(date '+%F %T') =="
+echo "-- main.py 进程 stdout 实际指向 --"
+MPID=$(pgrep -f "main.py" | head -1)
+echo "main.py pid=$MPID"
+ls -l /proc/$MPID/fd/1 /proc/$MPID/fd/2 2>/dev/null
+echo "-- /root 下最近3天改动的日志文件 --"
+find /root /root/bot -maxdepth 3 -name "*.log" -o -maxdepth 3 -name "nohup.out" 2>/dev/null | xargs ls -la --time-style=+%m-%d_%H:%M 2>/dev/null | sort -k6r | head -12
+echo "-- /root/bot.log 文件信息 --"
+ls -la --time-style=+%F_%H:%M /root/bot.log
+echo "-- plugins目录结构(找data目录真实位置) --"
+ls /root/bot/bot/plugins/ 2>/dev/null | head -30
+find /root/bot -maxdepth 4 -type d -name data 2>/dev/null
+echo "-- NapCat日志里03:36前后 --"
+ls /root/Napcat/logs 2>/dev/null | tail -5
+grep -a "03:3[5-8]" /root/Napcat/logs/$(ls /root/Napcat/logs 2>/dev/null | tail -1) 2>/dev/null | head -10
+echo "== 追踪完 =="
