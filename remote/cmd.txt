@@ -1,7 +1,2 @@
-285830
-echo "--- 验收:v6.3在岗确认(只读) ---"
-echo "实例数: $(pgrep -c -f 'remote_ctl_v[6].sh')"
-pgrep -af "remote_ctl_v[6].sh"
-grep -a "v6.3" /root/remote_ctl_v6.sh | head -1
-tail -n 3 /root/remote_ctl.log
-echo "--- 任务285830结束 ---"
+0
+cd /root/asar-sync && echo idle
