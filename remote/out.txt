@@ -1,72 +1,56 @@
-<<<task_286020.txt>>>
-===== 任务286020 11-17 03:48:59 =====
+<<<task_286030.txt>>>
+===== 任务286030 11-17 03:50:11 =====
 --- 命令 ---
-echo "== 表情+点歌勘验 $(date '+%F %T') =="
-echo "-- bot.log 03:30以后 尾60行 --"
-grep -a "03:3[0-9]" /root/bot.log 2>/dev/null | tail -60 || tail -60 /root/bot.log
-echo "-- 表情相关日志 --"
-grep -a "表情\|mface\|图片" /root/bot.log 2>/dev/null | tail -20
-echo "-- 点歌/music相关日志 --"
-grep -a -i "music\|点歌\|song" /root/bot.log 2>/dev/null | tail -20
-echo "-- 识别缓存文件 --"
-ls -la /root/bot/bot/plugins/data/ 2>/dev/null | head -20
-for f in /root/bot/bot/plugins/data/mface_names.json /root/bot/bot/plugins/data/qface_index.json; do
-  [ -f "$f" ] && echo "$f 存在 $(wc -c < "$f")字节" || echo "$f 不存在"
-done
-echo "-- NapCat版本 --"
-cat /root/Napcat/package.json 2>/dev/null | head -5; ls /root/Napcat | head -15
-echo "-- 勘验完 --"
+echo "== 日志黑洞追踪 $(date '+%F %T') =="
+echo "-- main.py 进程 stdout 实际指向 --"
+MPID=$(pgrep -f "main.py" | head -1)
+echo "main.py pid=$MPID"
+ls -l /proc/$MPID/fd/1 /proc/$MPID/fd/2 2>/dev/null
+echo "-- /root 下最近3天改动的日志文件 --"
+find /root /root/bot -maxdepth 3 -name "*.log" -o -maxdepth 3 -name "nohup.out" 2>/dev/null | xargs ls -la --time-style=+%m-%d_%H:%M 2>/dev/null | sort -k6r | head -12
+echo "-- /root/bot.log 文件信息 --"
+ls -la --time-style=+%F_%H:%M /root/bot.log
+echo "-- plugins目录结构(找data目录真实位置) --"
+ls /root/bot/bot/plugins/ 2>/dev/null | head -30
+find /root/bot -maxdepth 4 -type d -name data 2>/dev/null
+echo "-- NapCat日志里03:36前后 --"
+ls /root/Napcat/logs 2>/dev/null | tail -5
+grep -a "03:3[5-8]" /root/Napcat/logs/$(ls /root/Napcat/logs 2>/dev/null | tail -1) 2>/dev/null | head -10
+echo "== 追踪完 =="
 --- 输出 ---
-== 表情+点歌勘验 2026-11-17 03:49:00 ==
--- bot.log 03:30以后 尾60行 --
--- 表情相关日志 --
-11-13 19:55:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 745329822 from 2045344206@[群:590454333] '[image:summary=[动画表情],file=6B9A734802BF72B45CC9C41EFFA84EB2.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhT61fvv...,file_size=8306]'
-11-13 20:50:45 [INFO] ai_chat | [图片表情识别] cb198a9f → 点赞表情配整挺好文字
-11-13 20:50:54 [INFO] ai_chat | [表情·重答] 解说腔/称呼混用/雷同: 行了行了，您这样子，像是在说书里的故事太长，想听听书外的。
-11-13 20:50:57 [INFO] ai_chat | [核对·调试] ask='[表情包:表情包]' lead=False contra=False agree=False dodge=False ans='行了行了，您这样子，我这书里没收着，倒是把我的脸读出花了。'
-11-13 21:58:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 814954546 from 2338094559@[群:590454333] '[image:summary=[动画表情],file=6C4CF2AB01F1956D76B188F2EE6580AE.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTFDnNS...,file_size=95768]'
-11-13 22:13:58 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1494873256 from 2338094559@[群:590454333] '[image:summary=[动画表情],file=6C4CF2AB01F1956D76B188F2EE6580AE.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTFDnNS...,file_size=95768]'
-11-13 22:43:09 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1480519442 from 3819642626@[群:590454333] '[image:summary=[动画表情],file=7F3559BFE9FCD382664066B228D14D21.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQI11C9...,file_size=48371]'
-11-13 22:52:58 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1563348100 from 3819642626@[群:590454333] '[image:summary=[动画表情],file=5460BF6CB3EA8F9BF56E000FF7933FD9.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSNbC0V...,file_size=160751]'
-11-14 11:00:35 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1178445148 from 2534970154@[群:1109952783] '[image:summary=[动画表情],file=CA848DE4B54DDD381DACCDA230EE6FB1.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSILOSP...,file_size=19670]'
-11-14 11:35:42 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2095355666 from 3889001246@[群:590454333] '[markdown:content=[](%7B%22version%22%3A2%7D)\n[@克莱恩·莫雷蒂](mqqapi://markdown/mention?at...]@克莱恩·莫雷蒂 🎉 抓到一只新猪猪啦！\n【猪卖萌】\n试图萌混过关\n> 你睁着无辜的大眼睛，还时不时扑棱两下，试图用这套表情包掩盖刚刚把猪圈拱翻的事实。遗憾的是，大家只觉得你看起来很好吃，并没有觉得你无辜。\n> 🐝免艾特游玩 | 🔗☯️加幽幽子新功能早知道~'
-11-14 12:33:16 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1900980144 from 2045344206@[群:590454333] '[image:summary=[动画表情],file=9016A03E20B7B18B1523558E3F8B85E4.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSEqy7t...,file_size=102283]'
-11-14 12:41:15 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2079637868 from 2045344206@[群:590454333] '[image:summary=[动画表情],file=9421EDE68959EBAC0605BC3DC175359A.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhR3I3Mo...,file_size=14927]'
-11-14 13:10:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1426624179 from 2045344206@[群:590454333] '[image:summary=[动画表情],file=9016A03E20B7B18B1523558E3F8B85E4.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSEqy7t...,file_size=102283]'
-11-14 13:49:33 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1001560542 from 1538719747@[群:1109952783] '[image:summary=[动画表情],file=CA848DE4B54DDD381DACCDA230EE6FB1.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSILOSP...,file_size=19670]'
-11-14 19:45:54 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 637101003 from 2045344206@[群:590454333] '[image:summary=[动画表情],file=9016A03E20B7B18B1523558E3F8B85E4.jpg,sub_type=1,url=https://gchat.qpic.cn/download?appid=1407&fileid=EhSEqy7tH7CI7y1GUX...,file_size=102283]'
-11-14 19:46:15 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1887862816 from 2045344206@[群:590454333] '[image:summary=[动画表情],file=2C3C5FED6613A40C3E5ED186C142E2F6.jpg,sub_type=1,url=https://gchat.qpic.cn/download?appid=1407&fileid=EhRBHun9tC8EYqCvng...,file_size=21450]'
-11-14 19:56:31 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 374029321 from 568187738@[群:590454333] '[image:summary=[动画表情],file=08B8625D8088032708B9E14E2E320E3C.jpg,sub_type=1,url=https://gchat.qpic.cn/download?appid=1407&fileid=EhTzZxfIZXzo2zmeB0...,file_size=108640]'
-11-14 21:22:19 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 716374517 from 2045344206@[群:590454333] '[image:summary=[动画表情],file=9016A03E20B7B18B1523558E3F8B85E4.jpg,sub_type=1,url=https://gchat.qpic.cn/download?appid=1407&fileid=EhSEqy7tH7CI7y1GUX...,file_size=102283]'
-11-14 21:23:04 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1543287831 from 2045344206@[群:590454333] '[image:summary=[动画表情],file=6B9A734802BF72B45CC9C41EFFA84EB2.jpg,sub_type=1,url=https://gchat.qpic.cn/download?appid=1407&fileid=EhT61fvvAjupMtOINR...,file_size=8306]'
-11-14 21:55:48 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1128095072 from 3552275152@[群:590454333] '[image:summary=[动画表情],file=2CDBDF7B751849FC6171645B30D85737.jpg,sub_type=1,url=https://gchat.qpic.cn/download?appid=1407&fileid=EhRXVsIfmQkEKvGgMt...,file_size=27699]'
--- 点歌/music相关日志 --
-11-14 17:28:58 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 7007321 from 1561950850@[群:590454333] '[at:qq=3427943187] 点歌 橘子酸'
-11-14 17:28:58 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=39)
-11-14 17:29:21 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=39) running complete
-11-14 17:46:15 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1467994952 from 1561950850@[群:590454333] '[at:qq=3427943187]  点歌 橘子酸'
-11-14 17:46:15 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=39)
-11-14 17:46:40 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=39) running complete
-11-14 17:59:38 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2001379571 from 1561950850 '点歌 叹息瓶 齐豫'
-11-14 17:59:38 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=39)
-11-14 17:59:44 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=39) running complete
-11-14 18:00:09 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 773772999 from 1561950850 '点歌 谁能给我爱'
-11-14 18:00:09 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=39)
-11-14 18:00:45 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=39) running complete
-11-14 18:19:59 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-14 18:40:59 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-14 21:54:57 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1561980706 from 1561950850 '点歌 齐豫'
-11-14 21:54:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=39)
-11-14 21:55:13 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=39) running complete
-11-14 22:04:04 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 246951367 from 1561950850 '点歌 菊叹'
-11-14 22:04:04 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=39)
-11-14 22:05:15 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=39) running complete
--- 识别缓存文件 --
-/root/bot/bot/plugins/data/mface_names.json 不存在
-/root/bot/bot/plugins/data/qface_index.json 不存在
--- NapCat版本 --
-guild1.db
-guild1.db-shm
-guild1.db-wal
-opt
--- 勘验完 --
+== 日志黑洞追踪 2026-11-17 03:50:11 ==
+-- main.py 进程 stdout 实际指向 --
+main.py pid=18856
+l-wx------ 1 root root 64 Nov 17 03:50 /proc/18856/fd/1 -> /root/bot/bot/bot.log
+l-wx------ 1 root root 64 Nov 17 03:50 /proc/18856/fd/2 -> /root/bot/bot/bot.log
+-- /root 下最近3天改动的日志文件 --
+-rw-r--r-- 1 root root  174790 11-17_03:50 /root/napcat.log
+-rw-r--r-- 1 root root   98640 11-17_03:49 /root/tick.log
+-rw-r--r-- 1 root root 1181172 11-17_03:49 /root/remote_ctl.log
+-rw-r--r-- 1 root root   80520 11-17_03:49 /root/health.log
+-rw-r--r-- 1 root root   26127 11-17_03:46 /root/login_state.log
+-rw-r--r-- 1 root root    2474 11-17_03:45 /root/ip.log
+-rw-r--r-- 1 root root 1627487 11-17_03:41 /root/bot/bot/bot.log
+-rw-r--r-- 1 root root 1627487 11-17_03:41 /root/bot/bot/bot.log
+-rw-r--r-- 1 root root     745 11-17_03:40 /root/bot/bot/data/voice_probe.log
+-rw-r--r-- 1 root root 1429553 11-16_18:13 /root/napcat-restart.log
+-rw-r--r-- 1 root root    3684 11-15_15:18 /root/music_sign.log
+-rw-r--r-- 1 root root  711705 11-14_22:14 /root/bot.log
+-- /root/bot.log 文件信息 --
+-rw-r--r-- 1 root root 711705 2026-11-14_22:14 /root/bot.log
+-- plugins目录结构(找data目录真实位置) --
+__pycache__
+ai_chat.py
+book_find.py
+chess_game.py
+fortune.py
+games.py
+image_search_multisource.py
+keyword_reply.py
+news.py
+song_request.py
+song_request.py.bak.trace
+weather.py
+/root/bot/bot/data
+-- NapCat日志里03:36前后 --
+== 追踪完 ==
