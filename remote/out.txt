@@ -1,5 +1,5 @@
-<<<task_286140.txt>>>
-===== 任务286140 11-17 04:35:42 =====
+<<<task_286150.txt>>>
+===== 任务286150 11-17 04:42:33 =====
 --- 命令 ---
 cd /root/bot || exit 1
 git pull --ff-only origin main 2>&1 | tail -2
@@ -10,9 +10,9 @@ pgrep -f "python main.py" >/dev/null && echo "大脑已拉起" || echo "大脑�
 grep -a "song_request" /root/bot/bot/bot.log | tail -1
 echo "== 部署完 =="
 --- 输出 ---
- bot/plugins/song_request.py | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ * branch            main       -> FETCH_HEAD
+Already up to date.
 1500b05 坑118终版:custom卡封面改网易云官方picUrl直链(meting 302跳转+90x90缩略图=QQ抓不到封面的真凶)
 大脑已拉起
-11-17 04:35:59 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-17 04:42:49 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
 == 部署完 ==
