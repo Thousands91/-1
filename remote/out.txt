@@ -1,43 +1,36 @@
-<<<task_286060.txt>>>
-===== 任务286060 11-17 03:53:46 =====
+<<<task_286070.txt>>>
+===== 任务286070 11-17 03:55:02 =====
 --- 命令 ---
-cd /root/bot || { echo "致命:仓库不在"; exit 1; }
-echo "-- pull前HEAD --"; git log --oneline -1
-echo "-- 脏文件 --"; git status --short | head -8
-git stash 2>&1 | head -1
-git pull --ff-only origin main 2>&1 | tail -3
-echo "-- pull后 --"; git log --oneline -1
+cd /root/bot || exit 1
+echo "== 恢复运行数据 =="
+git stash list | head -2
+git checkout stash@{0} -- bot/data/ 2>&1
+git reset HEAD -- bot/plugins/ 2>/dev/null
+echo "-- data恢复后状态 --"
+git status --short | head -8
+ls -la --time-style=+%m-%d_%H:%M bot/data/memory/1561950850.json bot/data/fortune_log.json
+echo "== 部署终验(只读) =="
+echo "-- 插件md5(应为新版11ff2e0c/08cf69d3) --"
 md5sum bot/plugins/ai_chat.py bot/plugins/song_request.py
-echo "-- 表情识别层在场检查 --"; grep -c "_image_sticker_name" bot/plugins/ai_chat.py
-echo "-- 重启大脑(不动QQ) --"
-( sleep 2; pkill -f "[v]env/bin/python main.py"; sleep 3; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 ) &
-sleep 15
-pgrep -f "python main.py" >/dev/null && echo "大脑已拉起" || echo "大脑没起来!"
-tail -6 /root/bot/bot/bot.log 2>/dev/null | grep -a "Succeeded\|Started\|error" | head -5
-echo "-- 部署完 --"
+echo "-- 大脑与登录态 --"
+pgrep -f "python main.py" >/dev/null && echo "大脑:在" || echo "大脑:不在"
+pgrep -f "opt/QQ/qq" >/dev/null && echo "NapCat:在" || echo "NapCat:不在"
+tail -3 /root/bot/bot/bot.log | grep -a "ready\|Started\|成功" | head -3
+echo "== 完 =="
 --- 输出 ---
--- pull前HEAD --
-6c2f45a 坑107续:自定义卡补必填封面(meting pic兜底,NapCat缺image整卡被拒实锤13:48)
--- 脏文件 --
- M bot/data/fortune_log.json
- M bot/data/memory/1561950850.json
- M bot/plugins/ai_chat.py
- M bot/plugins/song_request.py
+== 恢复运行数据 ==
+stash@{0}: WIP on main: 6c2f45a 坑107续:自定义卡补必填封面(meting pic兜底,NapCat缺image整卡被拒实锤13:48)
+-- data恢复后状态 --
+M  bot/data/fortune_log.json
+M  bot/data/memory/1561950850.json
 ?? bot/plugins/song_request.py.bak.trace
-Saved working directory and index state WIP on main: 6c2f45a 坑107续:自定义卡补必填封面(meting pic兜底,NapCat缺image整卡被拒实锤13:48)
-Fast-forward
- bot/plugins/song_request.py | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
--- pull后 --
-84515af 坑107终局:卡片走验token签名代理,上游全灭接文字卡兜底,上游复活真卡自动回归
+-rw-r--r-- 1 root root   753 11-17_03:55 bot/data/fortune_log.json
+-rw-r--r-- 1 root root 19463 11-17_03:55 bot/data/memory/1561950850.json
+== 部署终验(只读) ==
+-- 插件md5(应为新版11ff2e0c/08cf69d3) --
 11ff2e0c59c1ffa1f3c7b09207cac15a  bot/plugins/ai_chat.py
 08cf69d3714e3cdd1645bef4db2bb9dc  bot/plugins/song_request.py
--- 表情识别层在场检查 --
-3
--- 重启大脑(不动QQ) --
-大脑已拉起
-11-17 03:54:03 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
-11-17 03:54:03 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-11-17 03:54:03 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
-11-17 03:54:04 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
--- 部署完 --
+-- 大脑与登录态 --
+大脑:在
+NapCat:在
+== 完 ==
