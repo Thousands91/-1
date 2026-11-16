@@ -1,17 +1,8 @@
-285770
-echo "--- 出码:阿萨尔重新登录 ---"
-Q=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-echo "[掉线线索]"; grep -E "掉线|下线|ErrCode|kick|风控|离线|LogOut" /root/napcat.log 2>/dev/null | tail -5
-echo "[旧码时间] $(stat -c %y "$Q" 2>/dev/null)"
-AGE=$(( $(date +%s) - $(stat -c %Y "$Q" 2>/dev/null || echo 0) ))
-if [ "$AGE" -gt 120 ]; then
-  echo "[码已旧(${AGE}秒),按SOP重启NapCat取新码]"
-  pkill -f "opt/QQ/[q]q"; sleep 2
-  cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null &
-  sleep 25; cd /root/asar-sync
-else
-  echo "[码还新鲜(${AGE}秒),直接用]"
-fi
-echo "[新码时间] $(stat -c %y "$Q" 2>/dev/null)"
-cp "$Q" "/sdcard/DCIM/Camera/asar_qr.png" && echo "码已放进相册:asar_qr.png,去QQ扫"
-echo "--- 任务285770结束 ---"
+285780
+echo "--- ping:手机生死判定 ---"
+echo "[现在时间] $(date '+%m-%d %H:%M:%S')"
+echo "[在线时长] $(uptime)"
+echo "[电量探测] $(cat /sys/class/power_supply/battery/capacity 2>/dev/null || cat /sys/class/power_supply/*/capacity 2>/dev/null | head -1 || echo 读不到)"
+echo "[循环] $(pgrep -c -f 'remote_ctl_v[6].sh')个 $(pgrep -af 'remote_ctl_v[6].sh' | head -1)"
+echo "[心跳尾]"; tail -n 2 /root/remote_ctl.log
+echo "--- 任务285780结束 ---"
