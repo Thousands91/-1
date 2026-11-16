@@ -1,16 +1,18 @@
-285790
-echo "--- 取新码:覆盖相册旧码 ---"
-Q=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-echo "[当前码时间] $(stat -c %y "$Q" 2>/dev/null)"
-AGE=$(( $(date +%s) - $(stat -c %Y "$Q" 2>/dev/null || echo 0) ))
-echo "[码龄] ${AGE}秒"
-if [ "$AGE" -gt 120 ]; then
-  echo "[码过期,NapCat自动换码需要重启触发,重启NapCat]"
-  pkill -f "opt/QQ/[q]q"; sleep 2
-  cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null &
-  sleep 25; cd /root/asar-sync
-  echo "[重启后码时间] $(stat -c %y "$Q" 2>/dev/null)"
-fi
-cp "$Q" "/sdcard/DCIM/Camera/asar_qr.png" && echo "新码已覆盖相册:asar_qr.png"
-bash /root/logincheck.sh 2>/dev/null | tail -2
-echo "--- 任务285790结束 ---"
+285800
+echo "--- 勘验:阿萨尔掉线根因取证(只读) ---"
+echo "=== napcat.log规模与起点 ==="
+wc -l /root/napcat.log 2>/dev/null; echo "[日志第一行]"; head -1 /root/napcat.log 2>/dev/null
+echo "=== 全部掉线记录 ==="
+grep -n "账号状态变更为离线\|账号状态变更为在线\|ErrCode\|kick\|风控\|下线" /root/napcat.log 2>/dev/null | tail -20
+echo "=== 最近一次掉线前后现场(各10行) ==="
+LN=$(grep -n "账号状态变更为离线" /root/napcat.log 2>/dev/null | tail -1 | cut -d: -f1)
+if [ -n "$LN" ]; then START=$((LN-10)); [ $START -lt 1 ] && START=1; sed -n "${START},$((LN+10))p" /root/napcat.log; fi
+echo "=== 最近一次登录成功记录 ==="
+grep -E "登录成功|扫码登录|LoginSuccess|二维码登录成功" /root/napcat.log 2>/dev/null | tail -5
+echo "=== 看护对NapCat的全部动作(48h) ==="
+grep -E "自动拉起|重启NapCat|NapCat不在|保险丝|未登录" /root/remote_ctl.log 2>/dev/null | tail -15
+echo "=== napcat-restart.log尾 ==="
+tail -n 8 /root/napcat-restart.log 2>/dev/null
+echo "=== 当前logincheck完整输出 ==="
+bash /root/logincheck.sh 2>/dev/null
+echo "--- 任务285800结束 ---"
