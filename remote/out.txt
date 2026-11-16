@@ -1,18 +1,26 @@
-<<<task_286160.txt>>>
-===== 任务286160 11-17 04:45:41 =====
+<<<task_286170.txt>>>
+===== 任务286170 11-17 04:51:20 =====
 --- 命令 ---
-cd /root/bot || exit 1
-git pull --ff-only origin main 2>&1 | tail -2
-git log --oneline -1
-( sleep 2; pkill -f "[v]env/bin/python main.py"; sleep 3; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 ) &
-sleep 15
-pgrep -f "python main.py" >/dev/null && echo "大脑已拉起" || echo "大脑没起来!"
-grep -a "song_request" /root/bot/bot/bot.log | tail -1
-echo "== 部署完 =="
+echo "== 发卡日志 04:49 前后 =="
+grep -a "\[发卡\]" /root/bot/bot/bot.log | tail -8
+echo "== napcat.log 04:49 时段 music/sign/error =="
+grep -a "04:4[89]" /root/napcat.log 2>/dev/null | grep -a -i "music\|sign\|error\|fail" | head -12
+echo "== music_sign.log 尾部 =="
+tail -6 /root/music_sign.log 2>/dev/null
+echo "== 验收完 =="
 --- 输出 ---
- bot/plugins/song_request.py | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
-83da3db 坑118外篇:找补路径优先发原曲163官方卡(用户拍板:能走官方卡就直接走),官方卡失败才落custom卡
-大脑已拉起
-11-17 04:45:58 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-== 部署完 ==
+== 发卡日志 04:49 前后 ==
+11-17 04:20:50 [INFO] song_request | [发卡] custom卡发送成功 src=kuwo id=128405
+11-17 04:20:50 [INFO] song_request | [发卡] custom卡 OK src=kuwo id=128405
+11-17 04:22:55 [INFO] song_request | [发卡] custom卡发送成功 src=netease id=284793
+11-17 04:22:55 [INFO] song_request | [发卡] custom卡 OK src=netease id=284793
+11-17 04:49:44 [INFO] song_request | [发卡] 163官方卡(找补原曲) OK id=5262296
+== napcat.log 04:49 时段 music/sign/error ==
+== music_sign.log 尾部 ==
+11-17 04:22:49 处理完毕 type=qq -> 40 bytes (全灭,走兜底)
+11-17 04:22:52 上游出真卡: https://ss.xingzhige.com/music_card/card (1169 bytes)
+11-17 04:22:52 处理完毕 type=custom -> 911 bytes 真卡
+11-17 04:49:42 上游无token(拒收): http://106.55.0.102:10087/ -> b'"{\\"app\\":\\"com.tencent.music.lua\\",\\"bizsrc\\":\\"qqconnect.sdkshare_music\\",\\"co'
+11-17 04:49:42 上游出真卡: https://ss.xingzhige.com/music_card/card (1033 bytes)
+11-17 04:49:42 处理完毕 type=163 -> 775 bytes 真卡
+== 验收完 ==
