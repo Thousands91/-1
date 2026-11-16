@@ -1,134 +1,41 @@
-<<<task_286040.txt>>>
-===== 任务286040 11-17 03:50:43 =====
+<<<task_286050.txt>>>
+===== 任务286050 11-17 03:52:03 =====
 --- 命令 ---
-echo "== 真日志勘验 $(date '+%F %T') =="
-echo "-- 03:30-03:47 全部日志 --"
-grep -a "03:3[0-9]\|03:4[0-7]" /root/bot/bot/bot.log | tail -50
-echo "-- 最近表情相关 --"
-grep -a "表情\|mface" /root/bot/bot/bot.log | tail -10
-echo "-- 最近点歌/music --"
-grep -a -i "music\|点歌\|song_request\|ActionFailed" /root/bot/bot/bot.log | tail -15
-echo "-- data目录内容 --"
-ls -la /root/bot/bot/data/ 2>/dev/null | head -15
-for f in mface_names.json qface_index.json; do
-  [ -f "/root/bot/bot/data/$f" ] && echo "$f 存在 $(wc -c < /root/bot/bot/data/$f)字节" || echo "$f 不存在"
-done
-echo "-- music_sign.log 尾部 --"
-tail -15 /root/music_sign.log 2>/dev/null
-echo "-- 签名服务进程/端口 --"
-pgrep -af "sign" | head -5
-echo "== 勘验完 =="
+echo "== 版本+签名配置核对 $(date '+%F %T') =="
+md5sum /root/bot/bot/plugins/ai_chat.py /root/bot/bot/plugins/song_request.py 2>/dev/null
+echo "-- 设备ai_chat有没有表情识别层 --"
+grep -c "_image_sticker_name" /root/bot/bot/plugins/ai_chat.py 2>/dev/null
+grep -n "我在。您有什么要说" /root/bot/bot/plugins/ai_chat.py 2>/dev/null
+echo "-- 设备song_request行42/299附近与本地对照 --"
+sed -n '39,43p' /root/bot/bot/plugins/song_request.py 2>/dev/null
+echo "-- NapCat musicSignUrl 配置 --"
+grep -rn "musicSignUrl\|music_sign" /root/Napcat/config* /root/Napcat/*.json /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/ 2>/dev/null | grep -v node_modules | head -10
+echo "-- napcat.log 03:39-03:41 点歌时段 --"
+grep -a "03:3[9]\|03:4[01]" /root/napcat.log 2>/dev/null | grep -a -i "music\|sign\|error\|fail\|卡" | head -15
+echo "-- 03:40 前后全部(备选) --"
+grep -a "03:40" /root/napcat.log 2>/dev/null | tail -20
+echo "== 核对完 =="
 --- 输出 ---
-== 真日志勘验 2026-11-17 03:50:43 ==
--- 03:30-03:47 全部日志 --
-11-17 03:34:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-17 03:34:41 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-17 03:34:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=886)
-11-17 03:35:04 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-17 03:35:25 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-11-17 03:35:31 [INFO] ai_chat | [核对·调试] ask='？所以是为什么' lead=False contra=False agree=False dodge=False ans='或许是因为，这苦涩中藏着知识的甘甜，像是提醒我，无论多晚，头脑都该保持清'
-11-17 03:35:31 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=886) running complete
-11-17 03:36:36 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794857796, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
-11-17 03:36:40 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794857800, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-17 03:36:40 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794857800, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-17 03:36:40 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 675540243 from 1561950850 '你不用睡觉的？'
-11-17 03:36:40 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=92)
-11-17 03:36:40 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=188)
-11-17 03:36:40 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=92) running complete
-11-17 03:36:40 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=188) running complete
-11-17 03:36:40 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-17 03:36:40 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-17 03:36:40 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=886)
-11-17 03:36:41 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794857801, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
-11-17 03:36:50 [INFO] ai_chat | [核对·调试] ask='你不用睡觉的？' lead=False contra=False agree=False dodge=False ans='人总有睡觉的时候，只是我的梦里也全是字句，倒不如睁着眼来得踏实。'
-11-17 03:36:50 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=886) running complete
-11-17 03:37:13 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794857833, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
-11-17 03:37:14 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794857834, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-17 03:37:14 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794857834, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-17 03:37:14 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 862552360 from 1561950850 '[image:summary=[额],file=FDC5CE98D581FA21BEE37192471F7C66.jpg,sub_type=7,url=https://multimedia.nt.qq.com.cn/download?appid=1406&fileid=EhS9gY00...,file_size=21552]'
-11-17 03:37:14 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=92)
-11-17 03:37:14 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=188)
-11-17 03:37:14 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=92) running complete
-11-17 03:37:14 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=188) running complete
-11-17 03:37:14 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-17 03:37:14 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-17 03:37:14 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=886)
-11-17 03:37:14 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=886) running complete
-11-17 03:37:18 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794857838, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
-11-17 03:37:20 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794857840, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-17 03:39:39 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794857979, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
-11-17 03:39:42 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794857982, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-17 03:39:42 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794857982, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-17 03:39:42 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 547373699 from 1561950850 '点歌 齐豫'
-11-17 03:39:42 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=42)
-11-17 03:39:43 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794857983, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
-11-17 03:39:44 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=42) running complete
-11-17 03:39:52 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794857992, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
-11-17 03:39:54 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794857994, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-17 03:39:54 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794857994, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-17 03:39:54 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2115748317 from 1561950850 '4'
-11-17 03:39:54 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=299)
-11-17 03:39:57 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794857997, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
-11-17 03:40:28 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=299) running complete
-11-17 03:41:22 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794858082, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
--- 最近表情相关 --
-11-16 22:24:08 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1266817411 from 3117126263@[群:590454333] '[image:summary=[动画表情],file=A02BFE5F0A3680D2D201F9231C55D151.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQ0jFR0...,file_size=28695]'
-11-16 22:27:57 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1007127661 from 2842217679@[群:590454333] '[image:summary=[动画表情],file=9F2FFEEFDA81A1841F40ADB3F225958E.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTHRTGH...,file_size=62182]'
-11-16 22:30:33 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 714000909 from 3361875175@[群:590454333] '[image:summary=[动画表情],file=BFACE71A330610CA44BA85E5F638EEA7.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSov7dN...,file_size=129464]'
-11-16 22:31:08 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1468792193 from 3552275152@[群:590454333] '[image:summary=[动画表情],file=2FD3738C432B05CADB279781B011DD18.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhRPtajg...,file_size=37074]'
-11-16 22:31:16 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 680634097 from 3552275152@[群:590454333] '[image:summary=[动画表情],file=D44D88BEBA9F1E02F65C2451C44C94BB.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQPd5N1...,file_size=1243143]'
-11-16 22:31:54 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2045984812 from 3361875175@[群:590454333] '[image:summary=[动画表情],file=CA848DE4B54DDD381DACCDA230EE6FB1.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSILOSP...,file_size=19670]'
-11-16 22:32:00 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1077617470 from 3361875175@[群:590454333] '[image:summary=[动画表情],file=BFACE71A330610CA44BA85E5F638EEA7.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSov7dN...,file_size=129464]'
-11-16 22:34:24 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 126759982 from 568187738@[群:590454333] '[image:summary=[动画表情],file=08B8625D8088032708B9E14E2E320E3C.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTzZxfI...,file_size=108640]'
-11-16 22:36:19 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1625589196 from 568187738@[群:590454333] '[image:summary=[动画表情],file=08B8625D8088032708B9E14E2E320E3C.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTzZxfI...,file_size=108640]'
-11-17 03:20:16 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1930156536 from 568187738@[群:590454333] '[image:summary=[动画表情],file=E6FC095676076D03C4C38FB178AFD569.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhQtbBFb...,file_size=27278]'
--- 最近点歌/music --
-11-15 14:25:38 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=41) running complete
-11-15 14:25:50 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=250)
-11-15 14:25:53 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=250) running complete
-11-15 14:52:44 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-15 15:17:50 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2124530914 from 1561950850 '点歌 潘越云'
-11-15 15:17:50 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=42)
-11-15 15:17:53 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=42) running complete
-11-15 15:18:12 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=299)
-11-15 15:19:13 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=299) running complete
-11-15 16:38:57 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-17 03:39:42 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 547373699 from 1561950850 '点歌 齐豫'
-11-17 03:39:42 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=42)
-11-17 03:39:44 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=42) running complete
-11-17 03:39:54 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=299)
-11-17 03:40:28 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=299) running complete
--- data目录内容 --
-total 0
-drwxr-xr-x 4 root root  3488 Nov 14 13:30 .
-drwxr-xr-x 7 root root  3488 Nov 14 22:14 ..
--rw-r--r-- 1 root root   753 Nov 16 17:50 fortune_log.json
--rw-r--r-- 1 root root 25369 Nov 11 22:41 gutenberg_zh.json
--rw-r--r-- 1 root root    70 Nov 13 20:50 image_captions.json
-drwxr-xr-x 2 root root  3488 Nov 12 23:56 memory
--rw-r--r-- 1 root root    83 Nov 12 15:01 mface_names.json
-drwxr-xr-x 2 root root  3488 Nov 14 13:30 music_cache
--rw-r--r-- 1 root root  6807 Nov 12 00:07 qface_index.json
--rw-r--r-- 1 root root  1617 Nov 13 03:13 search_tag_cache.json
--rw-r--r-- 1 root root   745 Nov 17 03:40 voice_probe.log
-mface_names.json 存在 83字节
-qface_index.json 存在 6807字节
--- music_sign.log 尾部 --
-11-15 11:34:36 处理完毕 type=custom -> 40 bytes (全灭,走兜底)
-11-15 13:17:52 上游无token(拒收): http://106.55.0.102:10087/ -> b'"{\\"app\\":\\"com.tencent.music.lua\\",\\"bizsrc\\":\\"qqconnect.sdkshare_music\\",\\"co'
-11-15 13:17:55 上游失败: https://ss.xingzhige.com/music_card/card -> Expecting value: line 1 column 1 (char 0)
-11-15 13:17:55 上游失败: https://qqbotark.569879.xyz/ -> <urlopen error [Errno -2] Name or service not known>
-11-15 13:17:55 上游失败: https://llob.linyuchen.net/sign/music -> <urlopen error [Errno 104] Connection reset by peer>
-11-15 13:17:55 处理完毕 type=163 -> 40 bytes (全灭,走兜底)
-11-15 13:18:04 处理完毕 type=qq -> 40 bytes (全灭,走兜底)
-11-15 13:18:11 处理完毕 type=custom -> 40 bytes (全灭,走兜底)
-11-15 15:18:29 上游无token(拒收): http://106.55.0.102:10087/ -> b'"{\\"app\\":\\"com.tencent.music.lua\\",\\"bizsrc\\":\\"qqconnect.sdkshare_music\\",\\"co'
-11-15 15:18:31 上游失败: https://ss.xingzhige.com/music_card/card -> Expecting value: line 1 column 1 (char 0)
-11-15 15:18:31 上游失败: https://qqbotark.569879.xyz/ -> <urlopen error [Errno -2] Name or service not known>
-11-15 15:18:31 上游失败: https://llob.linyuchen.net/sign/music -> <urlopen error [Errno 104] Connection reset by peer>
-11-15 15:18:31 处理完毕 type=163 -> 40 bytes (全灭,走兜底)
-11-15 15:18:36 处理完毕 type=qq -> 40 bytes (全灭,走兜底)
-11-15 15:18:42 处理完毕 type=custom -> 40 bytes (全灭,走兜底)
--- 签名服务进程/端口 --
-5171 python3 /root/music_sign.py
-== 勘验完 ==
+== 版本+签名配置核对 2026-11-17 03:52:03 ==
+54e839cb5f8afbd0f79d89c63e7e325a  /root/bot/bot/plugins/ai_chat.py
+52c9b525aeac3b62617dde577e820fd4  /root/bot/bot/plugins/song_request.py
+-- 设备ai_chat有没有表情识别层 --
+0
+1005:        await ai_chat.finish(_with_quote(event, Message("我在。您有什么要说给我听？📖")))
+-- 设备song_request行42/299附近与本地对照 --
+)
+from nonebot.params import CommandArg
+
+song_cmd = on_command("点歌", aliases={"听歌", "来首歌"}, rule=to_me(), priority=20, block=True)
+
+-- NapCat musicSignUrl 配置 --
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json:21:  "musicSignUrl": "http://127.0.0.1:10800/",
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json.bak:21:  "musicSignUrl": "",
+-- napcat.log 03:39-03:41 点歌时段 --
+-- 03:40 前后全部(备选) --
+11-17 03:40:03 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 您选的这首在网易云这首歌放不了（文件过大）——同一首歌我从酷我的柜子里找到了，给您递过来：
+11-17 03:40:04 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 🎵 观世音菩萨发愿偈(大悲咒) ...
+11-17 03:40:07 [[32minfo[39m] 阿萨尔 | 语音文件/root/.config/QQ/NapCat/temp/3c21fcc0-1cc4-46c6-a75f-1f399a02db6f需要转换成silk
+11-17 03:40:25 [[32minfo[39m] 阿萨尔 | 语音文件已就绪: /root/.config/QQ/NapCat/temp/925a30a1-3299-4d04-aded-deb6b4368936 时长: 466.88
+11-17 03:40:25 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [语音 466s]
+== 核对完 ==
