@@ -1,16 +1,13 @@
-286370
-UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-echo "===== 网易云标API最后探查 $(date '+%F %T') ====="
-echo "-- 1. vkeys 音乐卡接口 --"
-for u in \
-  'https://api.vkeys.cn/v2/music/?src=netease&id=5262296' \
-  'https://api.vkeys.cn/v3/music/?src=netease&id=5262296' \
-  'https://api.vkeys.cn/v2/music/card?server=netease&id=5262296'; do
-  echo "[$u] -> $(curl -s --max-time 10 -A "$UA" "$u" 2>/dev/null | head -c 200)"
-  echo ""
-done
-echo "-- 2. 抓一张xingzhige完整卡json存文件(供分析) --"
-curl -s --max-time 12 -A "$UA" -X POST 'https://ss.xingzhige.com/music_card/card' -H 'Content-Type: application/json' -d '{"server":"netease","id":5262296,"type":"163"}' > /root/xz_card_sample.json 2>/dev/null
-echo "字节:$(wc -c </root/xz_card_sample.json 2>/dev/null)"
-grep -o '"app":"[^"]*"\|"appid":[0-9]*\|"token":"[^"]*"\|"jumpUrl":"[^"]*"' /root/xz_card_sample.json 2>/dev/null | head -8
+286380
+echo "===== 点歌分支与发卡日志核查 $(date '+%F %T') ====="
+echo "-- 1. 设备插件版本(md5) --"
+md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null
+echo "-- 2. 是否含 try_official_card(新版本标志) --"
+grep -c "try_official_card" /root/bot/bot/plugins/song_request.py 2>/dev/null
+echo "-- 3. bot.log 最近[发卡]日志 --"
+grep -a "\[发卡\]" /root/bot/bot/bot.log 2>/dev/null | tail -25
+echo "-- 4. bot.log 叹息瓶相关 --"
+grep -a "叹息瓶" /root/bot/bot/bot.log 2>/dev/null | tail -15
+echo "-- 5. bot.log 最近点歌异常 --"
+grep -aE "点歌|song_request|music" /root/bot/bot/bot.log 2>/dev/null | tail -20
 echo "===== 完 ====="
