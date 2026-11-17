@@ -1,13 +1,13 @@
-286550
-echo "===== 用各平台真实ID重测官方卡 $(date '+%F %T') ====="
-M="https://api.injahow.cn/meting/"
-echo "--- [1] meting搜各平台拿真实id(关键词:晴天) ---"
-for S in kugou kuwo migu tencent netease; do
-  echo "--server=$S--"
-  curl -s --max-time 12 "$M?server=$S&type=search&keyword=%E6%99%B4%E5%A4%A9" 2>/dev/null | head -c 250
-  echo ""
-done
-echo "--- [2] 用专门的酷狗搜索API拿真实hash/id ---"
-curl -s --max-time 12 "https://api.injahow.cn/bparse/?type=kugou&format=json" 2>/dev/null | head -c 100
-echo ""
+286560
+echo "===== 查NapCat签名服务指向 $(date '+%F %T') ====="
+echo "--- [1] 所有NapCat配置文件位置 ---"
+find /root /opt -type f \( -name "*.json" -o -name "*.yml" -o -name "*.yaml" \) 2>/dev/null | grep -iE "napcat|onebot|config" | grep -v node_modules | head -30
+echo "--- [2] 全盘搜musicSignUrl关键词(限定目录) ---"
+grep -rn "musicSignUrl" /root/NapCat /root/napcat /opt /root/bot 2>/dev/null | grep -v node_modules | head -10
+echo "--- [3] 签名代理进程和端口 ---"
+ps aux | grep -iE "music_sign|10800|sign.py" | grep -v grep | head -10
+echo "--- [4] NapCat进程 ---"
+ps aux | grep -iE "napcat|qq-wrapper|launcher" | grep -v grep | head -10
+echo "--- [5] 本地代理文件 ---"
+ls -la /root/music_sign.py 2>/dev/null
 echo "===== 完 ====="
