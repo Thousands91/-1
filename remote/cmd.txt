@@ -1,18 +1,25 @@
-286520
-echo "===== 酷我封面接口实测(用插件文档里的正确接口) $(date '+%F %T') ====="
+286530
+echo "===== 验证酷我封面URL拼接 $(date '+%F %T') ====="
 UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-RID=128405
-echo "--- [1] 搜索接口 web_albumpic_short ---"
-curl -s --max-time 12 -A "$UA" "http://search.kuwo.cn/r.s?all=%E5%A4%A7%E6%82%B2%E5%92%92&ft=music&itemset=web_2013&client=mp3&rformat=json&encoding=utf8&pn=0&rn=1" 2>/dev/null | grep -oE 'web_albumpic_short[^&]*|PICPATH[^&]*|album[^&]*' | head -5
-echo "--- [2] 歌曲详情接口 albumPic (多个候选) ---"
+PIC='120/s4s56/10/1915725811.jpg'
+echo "--- 常见酷我封面域名拼接测试 ---"
 for U in \
-  "http://www.kuwo.cn/api/v1/www/music/playInfo?mid=$RID" \
-  "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=$RID" \
-  "https://changenotice.kuwo.cn/mobi.s?rid=$RID&br=192"; do
-  echo "接口:$U"
-  curl -s --max-time 10 -A "$UA" "$U" 2>/dev/null | grep -oE '"albumPic":"[^"]*"|"pic":"[^"]*"|"picUrl":"[^"]*"|"albumpic":"[^"]*"|"songpic":"[^"]*"' | head -3
+  "http://imgserver.kuwo.cn/$PIC" \
+  "https://imgserver.kuwo.cn/$PIC" \
+  "http://qukufile2.qianqian.com/data2/pic/$PIC" \
+  "https://qukufile2.qianqian.com/data2/pic/$PIC" \
+  "http://img2.kuwo.cn/$PIC" \
+  "https://img2.kuwo.cn/$PIC"; do
+  r=$(curl -s -o /tmp/kwtest.jpg -w "%{http_code}:%{size_download}:%{content_type}" --max-time 10 -A "$UA" "$U" 2>/dev/null)
+  echo "  [$r] $U"
 done
-echo "--- [3] 直接看详情接口原文前400 ---"
-curl -s --max-time 10 -A "$UA" "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=$RID" 2>/dev/null | head -c 400
+echo "--- hts_MVPIC 直链测试 ---"
+curl -s -o /tmp/kwmv.jpg -w "MV封面: %{http_code}:%{size_download}:%{content_type}" --max-time 10 -A "$UA" "https://img2.kuwo.cn/wmvpic/324/64/50/469116481.jpg" 2>/dev/null
 echo ""
+echo "--- 用拿到的封面直接发一张酷我custom卡测试(经本地代理) ---"
+curl -s --max-time 15 -H "Content-Type: application/json" -X POST \
+  -d '{"type":"custom","singer":"印良","title":"大悲咒","url":"https://www.kuwo.cn/play_detail/128405","audio":"http://antiserver.kuwo.cn/anti.s?type=convert_url&format=mp3&rid=MUSIC_128405&response=url","image":"http://imgserver.kuwo.cn/120/s4s56/10/1915725811.jpg"}' \
+  "https://ss.xingzhige.com/music_card/card" 2>/dev/null > /tmp/kwcard.json
+echo "卡字节:$(stat -c%s /tmp/kwcard.json)"
+grep -oE '"tag"[^,]*|"appid"[^,]*|"preview"[^,]*' /tmp/kwcard.json | head -6
 echo "===== 完 ====="
