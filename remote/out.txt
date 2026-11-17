@@ -1,73 +1,30 @@
-<<<task_286350.txt>>>
-===== 任务286350 11-18 02:11:42 =====
+<<<task_286360.txt>>>
+===== 任务286360 11-18 02:12:54 =====
 --- 命令 ---
-echo "===== 网易云标可行性探查 $(date '+%F %T') ====="
-echo "-- 1. 签名服务源码URL/上游清单 --"
-grep -n "http\|url\|xingzhige\|106.55\|qqbotark\|llob\|appid\|app\b" /root/music_sign.py 2>/dev/null | head -30
-echo "-- 2. xingzhige出卡原始json(大悲咒 5262296) --"
 UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-curl -s --max-time 15 -A "$UA" -X POST "https://ss.xingzhige.com/music_card/card" -H "Content-Type: application/json" -d '{"server":"netease","id":5262296,"type":"163"}' 2>/dev/null | head -c 1200
-echo ""
-echo "-- 3. 试xingzhige带app/netease参数能否出网易云标 --"
-for extra in '"app":"com.netease.cloudmusic"' '"appid":100951776' '"type":"netease"'; do
-  echo "[试 $extra]"
-  curl -s --max-time 12 -A "$UA" -X POST "https://ss.xingzhige.com/music_card/card" -H "Content-Type: application/json" -d "{\"server\":\"netease\",\"id\":5262296,\"type\":\"163\",$extra}" 2>/dev/null | grep -o '"app":"[^"]*"\|"appid":[0-9]*' | head -3
+echo "===== 网易云标签名源实测 $(date '+%F %T') ====="
+echo "-- 1. xingzhige 带 appid 覆盖参数 --"
+for payload in \
+  '{"server":"netease","id":5262296,"type":"163","appid":100951776}' \
+  '{"server":"netease","id":5262296,"type":"163","app":"com.netease.cloudmusic"}' \
+  '{"server":"netease","id":5262296,"type":"netease"}'; do
+  R=$(curl -s --max-time 12 -A "$UA" -X POST "https://ss.xingzhige.com/music_card/card" -H "Content-Type: application/json" -d "$payload" 2>/dev/null)
+  echo "[$payload] -> $(echo "$R" | grep -o '"app":"[^"]*"\|"appid":[0-9]*' | head -4 | tr '\n' ' ')"
 done
+echo "-- 2. 其他上游出卡标 --"
+echo "[qqbotark] $(curl -s --max-time 12 -A "$UA" -X POST 'https://qqbotark.569879.xyz/' -H 'Content-Type: application/json' -d '{"server":"netease","id":5262296,"type":"163"}' 2>/dev/null | grep -o '"app":"[^"]*"\|"appid":[0-9]*' | head -4 | tr '\n' ' ')"
+echo "[llob] $(curl -s --max-time 12 -A "$UA" -X POST 'https://llob.linyuchen.net/sign/music' -H 'Content-Type: application/json' -d '{"server":"netease","id":5262296,"type":"163"}' 2>/dev/null | grep -o '"app":"[^"]*"\|"appid":[0-9]*' | head -4 | tr '\n' ' ')"
+echo "-- 3. xingzhige 卡token(确认能否复用) --"
+curl -s --max-time 12 -A "$UA" -X POST "https://ss.xingzhige.com/music_card/card" -H "Content-Type: application/json" -d '{"server":"netease","id":5262296,"type":"163"}' 2>/dev/null | grep -o '"token":"[^"]*"'
 echo "===== 完 ====="
 --- 输出 ---
-===== 网易云标可行性探查 2026-11-18 02:11:42 =====
--- 1. 签名服务源码URL/上游清单 --
-19:import urllib.request
-20:from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-27:    "http://106.55.0.102:10087/",
-28:    "https://ss.xingzhige.com/music_card/card",
-29:    "https://qqbotark.569879.xyz/",
-30:    "https://llob.linyuchen.net/sign/music",
-45:    url = "https://music.163.com/api/song/detail/?id=%s&ids=%%5B%s%%5D" % (sid, sid)
-46:    d = json.load(urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=4))
-61:            body = urllib.request.urlopen(
-62:                urllib.request.Request(base, data=json.dumps(payload).encode(), headers=UA),
-112:                           "title": d.get("title", ""), "url": d.get("url", ""),
-117:                           "url": "https://music.163.com/song?id=%s" % d.get("id"),
-118:                           "audio": "https://api.injahow.cn/meting/?type=url&server=netease&id=%s" % d.get("id"),
--- 2. xingzhige出卡原始json(大悲咒 5262296) --
-{
-    "app": "com.tencent.music.lua",
-    "bizsrc": "qqconnect.sdkshare_music",
-    "config": {
-        "ctime": 1794939104,
-        "forward": 1,
-        "token": "da828aff8752efdcd13a2907e13c0003",
-        "type": "normal"
-    },
-    "extra": {
-        "app_type": 1,
-        "appid": 100495085,
-        "uin": 3264925726
-    },
-    "meta": {
-        "music": {
-            "app_type": 1,
-            "appid": 100495085,
-            "ctime": 1794939104,
-            "desc": "齐豫",
-            "jumpUrl": "https://music.163.com/#/song?id=5262296",
-            "musicUrl": "http://m801.music.126.net/20261118023644/c26721848e3894fc826ea132e818e496/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/35924495185/7264/305e/1bba/a53806bd599dafccd3734d2ebade7eac.mp3",
-            "preview": "https://p1.music.126.net/9i6o10_BSz382LRNSjqj1g==/56075093033648.jpg",
-            "tag": "网易云音乐",
-            "tagIcon": "https://i.gtimg.cn/open/app_icon/00/49/50/85/100495085_100_m.png",
-            "title": "大悲咒",
-            "uin": 3264925726
-        }
-    },
-    "prompt": "[分享]大悲咒",
-    "ver": "0.0.0.1",
-    "view": "music"
-}
--- 3. 试xingzhige带app/netease参数能否出网易云标 --
-[试 "app":"com.netease.cloudmusic"]
-"appid":
-"appid":
-[试 "appid":100951776]
-[试 "type":"netease"]
+===== 网易云标签名源实测 2026-11-18 02:12:54 =====
+-- 1. xingzhige 带 appid 覆盖参数 --
+[{"server":"netease","id":5262296,"type":"163","appid":100951776}] -> 
+[{"server":"netease","id":5262296,"type":"163","app":"com.netease.cloudmusic"}] -> "appid": "appid": 
+[{"server":"netease","id":5262296,"type":"netease"}] -> 
+-- 2. 其他上游出卡标 --
+[qqbotark] 
+[llob] 
+-- 3. xingzhige 卡token(确认能否复用) --
 ===== 完 =====
