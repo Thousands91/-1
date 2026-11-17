@@ -1,12 +1,18 @@
-286450
-echo "===== 部署一致性与分支核验 $(date '+%F %T') ====="
-cd /root/bot/bot
-echo "-- 1. 设备md5(应=03bcc7db202ecd6e3a7b056b7f24e774) --"
-md5sum plugins/song_request.py
-echo "-- 2. song_cmd处理器的所有finish行号(应只有4处告知+1发列表) --"
-grep -n "song_cmd.finish\|song_cmd.send" plugins/song_request.py | head -12
-echo "-- 3. 是否残留VIP特判 --"
-grep -c "vip_original" plugins/song_request.py
-echo "-- 4. on_command入口数量(点歌只应1个) --"
-grep -c "on_command(\"点歌\"" plugins/song_request.py
+286460
+UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+echo "===== 酷我封面URL实测 $(date '+%F %T') ====="
+for rid in 256484839 51685512; do
+  echo "-- rid=$rid --"
+  for u in \
+    "http://imgserver.kuwo.cn/artist/pic/$rid" \
+    "http://qukufile2.qianqian.com/data2/pic/$rid.jpg" \
+    "https://qukufile2.qianqian.com/data2/pic/$rid.jpg" \
+    "http://imgserver.kuwo.cn/artist/pic/$rid.jpg"; do
+    out=$(curl -s -o /tmp/kwpic -w "%{http_code}:%{size_download}:%{content_type}" --max-time 8 -A "$UA" "$u" 2>/dev/null)
+    echo "  [$out] $u"
+  done
+done
+echo "-- 酷我song信息接口(可能带pic) --"
+curl -s --max-time 8 -A "$UA" "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=256484839" 2>/dev/null | head -c 500
+echo ""
 echo "===== 完 ====="
