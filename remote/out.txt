@@ -1,56 +1,28 @@
-<<<task_286500.txt>>>
-===== 任务286500 11-18 03:02:12 =====
+<<<task_286510.txt>>>
+===== 任务286510 11-18 03:03:06 =====
 --- 命令 ---
-echo "===== 定案:NapCat签名服务配置 + 官方卡能否出平台标 $(date '+%F %T') ====="
-echo "--- [1] NapCat实际musicSignUrl配置(全盘搜,限定小范围避免卡死) ---"
-for d in /root/NapCat /root/napcat /opt/NapCat /opt/napcat /root/.config/napcat; do
-  [ -d "$d" ] && grep -rn "musicSignUrl" "$d" 2>/dev/null | head -5
-done
-echo "--- [2] 官方卡契约163(原样传上游,不转custom) ---"
-echo "思思:"
-curl -s --max-time 15 -H "Content-Type: application/json" -X POST \
-  -d '{"type":"163","id":"284799"}' \
-  "https://ss.xingzhige.com/music_card/card" 2>/dev/null > /tmp/off163.json
-echo "字节:$(stat -c%s /tmp/off163.json)"
-grep -oE '"appid"[^,]*|"tag"[^,]*|"jumpUrl"[^,]*|"tagIcon"[^,]*' /tmp/off163.json 2>/dev/null | head -8
-head -c 120 /tmp/off163.json; echo ""
-echo "--- [3] 官方卡契约kuwo(原样传思思) ---"
-curl -s --max-time 15 -H "Content-Type: application/json" -X POST \
-  -d '{"type":"kuwo","id":"128405"}' \
-  "https://ss.xingzhige.com/music_card/card" 2>/dev/null | head -c 200
-echo ""
-echo "--- [4] 官方卡契约kugou/migu(对照) ---"
-for T in kugou migu qq; do
-  echo "--$T--"
-  curl -s --max-time 15 -H "Content-Type: application/json" -X POST \
-    -d "{\"type\":\"$T\",\"id\":\"128405\"}" \
-    "https://ss.xingzhige.com/music_card/card" 2>/dev/null | head -c 150
+echo "===== 逐个上游测kuwo官方卡契约 $(date '+%F %T') ====="
+for U in "http://106.55.0.102:10087/" "https://llob.linyuchen.net/sign/music" "https://qqbotark.569879.xyz/"; do
+  echo "上游:$U"
+  echo -n "  kuwo: "
+  curl -s --max-time 12 -H "Content-Type: application/json" -X POST \
+    -d '{"type":"kuwo","id":"128405"}' "$U" 2>/dev/null | head -c 250
+  echo ""
+  echo -n "  163对照: "
+  curl -s --max-time 12 -H "Content-Type: application/json" -X POST \
+    -d '{"type":"163","id":"284799"}' "$U" 2>/dev/null | head -c 250
   echo ""
 done
 echo "===== 完 ====="
 --- 输出 ---
-===== 定案:NapCat签名服务配置 + 官方卡能否出平台标 2026-11-18 03:02:13 =====
---- [1] NapCat实际musicSignUrl配置(全盘搜,限定小范围避免卡死) ---
---- [2] 官方卡契约163(原样传上游,不转custom) ---
-思思:
-字节:1096
-"appid": 100495085
-"appid": 100495085
-"jumpUrl": "https://music.163.com/#/song?id=284799"
-"tag": "网易云音乐"
-"tagIcon": "https://i.gtimg.cn/open/app_icon/00/49/50/85/100495085_100_m.png"
-{
-    "app": "com.tencent.music.lua",
-    "bizsrc": "qqconnect.sdkshare_music",
-    "config": {
-        "ctime": 1794942
---- [3] 官方卡契约kuwo(原样传思思) ---
-异常拦截
---- [4] 官方卡契约kugou/migu(对照) ---
---kugou--
-异常拦截
---migu--
-异常拦截
---qq--
-关闭id解析功能
+===== 逐个上游测kuwo官方卡契约 2026-11-18 03:03:06 =====
+上游:http://106.55.0.102:10087/
+  kuwo: {"error":"缺少 title","ok":false}
+  163对照: {"error":"缺少 title","ok":false}
+上游:https://llob.linyuchen.net/sign/music
+  kuwo: 
+  163对照: 
+上游:https://qqbotark.569879.xyz/
+  kuwo: 
+  163对照: 
 ===== 完 =====
