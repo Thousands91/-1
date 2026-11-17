@@ -1,45 +1,45 @@
-<<<task_286530.txt>>>
-===== 任务286530 11-18 03:05:38 =====
+<<<task_286540.txt>>>
+===== 任务286540 11-18 03:07:10 =====
 --- 命令 ---
-echo "===== 验证酷我封面URL拼接 $(date '+%F %T') ====="
-UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-PIC='120/s4s56/10/1915725811.jpg'
-echo "--- 常见酷我封面域名拼接测试 ---"
-for U in \
-  "http://imgserver.kuwo.cn/$PIC" \
-  "https://imgserver.kuwo.cn/$PIC" \
-  "http://qukufile2.qianqian.com/data2/pic/$PIC" \
-  "https://qukufile2.qianqian.com/data2/pic/$PIC" \
-  "http://img2.kuwo.cn/$PIC" \
-  "https://img2.kuwo.cn/$PIC"; do
-  r=$(curl -s -o /tmp/kwtest.jpg -w "%{http_code}:%{size_download}:%{content_type}" --max-time 10 -A "$UA" "$U" 2>/dev/null)
-  echo "  [$r] $U"
-done
-echo "--- hts_MVPIC 直链测试 ---"
-curl -s -o /tmp/kwmv.jpg -w "MV封面: %{http_code}:%{size_download}:%{content_type}" --max-time 10 -A "$UA" "https://img2.kuwo.cn/wmvpic/324/64/50/469116481.jpg" 2>/dev/null
-echo ""
-echo "--- 用拿到的封面直接发一张酷我custom卡测试(经本地代理) ---"
-curl -s --max-time 15 -H "Content-Type: application/json" -X POST \
-  -d '{"type":"custom","singer":"印良","title":"大悲咒","url":"https://www.kuwo.cn/play_detail/128405","audio":"http://antiserver.kuwo.cn/anti.s?type=convert_url&format=mp3&rid=MUSIC_128405&response=url","image":"http://imgserver.kuwo.cn/120/s4s56/10/1915725811.jpg"}' \
-  "https://ss.xingzhige.com/music_card/card" 2>/dev/null > /tmp/kwcard.json
-echo "卡字节:$(stat -c%s /tmp/kwcard.json)"
-grep -oE '"tag"[^,]*|"appid"[^,]*|"preview"[^,]*' /tmp/kwcard.json | head -6
+echo "===== 最终三问核验 $(date '+%F %T') ====="
+echo "--- [1] 点歌入口数(应=1个on_command点歌) ---"
+grep -rn "on_command(\"点歌\"\|on_command('点歌'" /root/bot/bot/plugins/ 2>/dev/null | wc -l
+grep -rn "on_command(\"点歌\"\|on_command('点歌'" /root/bot/bot/plugins/ 2>/dev/null
+echo "--- [2] VIP特判残留(应=0) ---"
+grep -c "vip_original\|free_original" /root/bot/bot/plugins/song_request.py 2>/dev/null
+echo "--- [3] song_cmd里所有finish(看有没有跳过列表直接发卡的) ---"
+grep -n "song_cmd.finish\|await song_cmd.send" /root/bot/bot/plugins/song_request.py 2>/dev/null | head -20
+echo "--- [4] 发列表的行(确认存在) ---"
+grep -n "候选\|_PENDING\[\|回.*序号\|PICK_N" /root/bot/bot/plugins/song_request.py 2>/dev/null | head -10
+echo "--- [5] 设备插件md5 ---"
+md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null
 echo "===== 完 ====="
 --- 输出 ---
-===== 验证酷我封面URL拼接 2026-11-18 03:05:38 =====
---- 常见酷我封面域名拼接测试 ---
-  [000:0:] http://imgserver.kuwo.cn/120/s4s56/10/1915725811.jpg
-  [000:0:] https://imgserver.kuwo.cn/120/s4s56/10/1915725811.jpg
-  [000:0:] http://qukufile2.qianqian.com/data2/pic/120/s4s56/10/1915725811.jpg
-  [000:0:] https://qukufile2.qianqian.com/data2/pic/120/s4s56/10/1915725811.jpg
-  [404:162:text/html] http://img2.kuwo.cn/120/s4s56/10/1915725811.jpg
-  [404:162:text/html] https://img2.kuwo.cn/120/s4s56/10/1915725811.jpg
---- hts_MVPIC 直链测试 ---
-MV封面: 200:7129:image/jpeg
---- 用拿到的封面直接发一张酷我custom卡测试(经本地代理) ---
-卡字节:1069
-"appid": 100497308
-"appid": 100497308
-"preview": "https://p.qpic.cn/qqconnect/0/app_100497308_1626060999/100?max-age=2592000&t=0"
-"tag": "QQ音乐"
+===== 最终三问核验 2026-11-18 03:07:10 =====
+--- [1] 点歌入口数(应=1个on_command点歌) ---
+2
+/root/bot/bot/plugins/song_request.py:42:song_cmd = on_command("点歌", aliases={"听歌", "来首歌"}, rule=to_me(), priority=20, block=True)
+/root/bot/bot/plugins/song_request.py.bak.trace:39:song_cmd = on_command("点歌", aliases={"听歌", "来首歌"}, rule=to_me(), priority=20, block=True)
+--- [2] VIP特判残留(应=0) ---
+0
+--- [3] song_cmd里所有finish(看有没有跳过列表直接发卡的) ---
+96:            await song_cmd.finish(
+101:        await song_cmd.finish("想听什么？说个歌名、歌手名都行；后面加个'文件'就发文件版（能后台听）。")
+103:    await song_cmd.send(f"翻柜子找「{kw}」，稍等一下……")
+122:        await song_cmd.finish(f"「{kw}」这几个字，我在曲子和歌手里都翻不着。换个说法试试？")
+139:    await song_cmd.finish(
+511:        await song_cmd.send(MessageSegment.music_custom(
+--- [4] 发列表的行(确认存在) ---
+58:# 搜索回来的候选，最多往下试几个
+111:    # 有没有带歌手名，一律先出候选列表。VIP 歌放行到列表里（下面 keep_all），
+117:    # 坑113续（2026-11-15 用户拍板）：候选**不过滤** VIP/现场/伴奏版——
+127:    # 坑111：多选点歌——不再默认点第一首，改成发候选列表让用户回序号挑。
+129:    picks = songs[:PICK_N]
+138:    _PENDING[event.get_session_id()] = (time.time() + PICK_TIMEOUT, picks, force_file, kw)
+140:        f"「{kw}」翻出这几首，回复序号选哪首（{PICK_TIMEOUT}秒内有效）：\n"
+311:# 待选表：session_id → (过期时间戳, 候选列表)
+314:PICK_N = 6
+358:            _PENDING[sid] = (expiry, picks, force_file, kw)
+--- [5] 设备插件md5 ---
+03bcc7db202ecd6e3a7b056b7f24e774  /root/bot/bot/plugins/song_request.py
 ===== 完 =====
