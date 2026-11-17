@@ -1,47 +1,45 @@
-<<<task_286430.txt>>>
-===== 任务286430 11-18 02:36:21 =====
+<<<task_286440.txt>>>
+===== 任务286440 11-18 02:42:44 =====
 --- 命令 ---
-echo "===== 重启大脑加载新点歌代码 $(date '+%F %T') ====="
-echo "-- 1. 旧父进程 --"
-tr '\0' ' ' </proc/24645/cmdline 2>/dev/null; echo
-echo "-- 2. 停旧大脑 --"
-pkill -f "venv/bin/python main.py"; sleep 3
-pgrep -af "venv/bin/python main.py" || echo "旧进程已清空"
-echo "-- 3. setsid拉起新大脑 --"
-cd /root/bot/bot
-setsid /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null &
-sleep 12
-echo "-- 4. 新进程(应只有1个) --"
-pgrep -af "venv/bin/python main.py"
-echo "-- 5. 启动日志尾部 --"
-tail -18 /root/bot/bot/bot.log
+echo "===== 点歌全平台发卡日志普查 $(date '+%F %T') ====="
+LOG=/root/bot/bot/bot.log
+echo "-- 1. 全部[发卡]记录统计(按类型) --"
+grep -a "\[发卡\]" $LOG 2>/dev/null | sed -E 's/^.*\[发卡\]/[发卡]/' | sort | uniq -c | sort -rn | head -40
+echo "-- 2. 最近40条[发卡]原始 --"
+grep -a "\[发卡\]" $LOG 2>/dev/null | tail -40
+echo "-- 3. 点歌命令触发记录(最近30) --"
+grep -aE "'点歌 |'来首歌 |'听歌 " $LOG 2>/dev/null | tail -30
+echo "-- 4. 发卡异常/放弃记录 --"
+grep -aE "custom卡放弃|custom卡失败|官方卡失败|无封面|整卡被拒" $LOG 2>/dev/null | tail -25
 echo "===== 完 ====="
 --- 输出 ---
-===== 重启大脑加载新点歌代码 2026-11-18 02:36:22 =====
--- 1. 旧父进程 --
-bash 
--- 2. 停旧大脑 --
-旧进程已清空
--- 3. setsid拉起新大脑 --
--- 4. 新进程(应只有1个) --
-30989 /root/bot/venv/bin/python main.py
--- 5. 启动日志尾部 --
-11-18 02:36:36 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-18 02:36:36 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
-11-18 02:36:36 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
-11-18 02:36:36 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-11-18 02:36:36 [SUCCESS] nonebot | Running NoneBot...
-11-18 02:36:36 [SUCCESS] nonebot | Loaded adapters: OneBot V11
-11-18 02:36:37 [INFO] uvicorn | Started server process [30989]
-11-18 02:36:37 [INFO] uvicorn | Waiting for application startup.
-11-18 02:36:37 [INFO] __main__ | ==================================================
-11-18 02:36:37 [INFO] __main__ | QQ 群机器人启动成功 ✅
-11-18 02:36:37 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
-11-18 02:36:37 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
-11-18 02:36:37 [INFO] __main__ | ==================================================
-11-18 02:36:37 [INFO] uvicorn | Application startup complete.
-11-18 02:36:37 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-11-18 02:36:37 [INFO] uvicorn | 127.0.0.1:54738 - "WebSocket /onebot/v11/ws" [accepted]
-11-18 02:36:37 [INFO] websockets | connection open
-11-18 02:36:37 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+===== 点歌全平台发卡日志普查 2026-11-18 02:42:45 =====
+-- 1. 全部[发卡]记录统计(按类型) --
+      1 [发卡] custom卡发送成功 src=netease id=284793
+      1 [发卡] custom卡发送成功 src=kuwo id=128405
+      1 [发卡] custom卡 OK src=netease id=284793
+      1 [发卡] custom卡 OK src=kuwo id=128405
+      1 [发卡] 163官方卡(找补原曲) OK id=5262296
+      1 [发卡] 163官方卡 OK id=284799
+-- 2. 最近40条[发卡]原始 --
+11-17 04:20:50 [INFO] song_request | [发卡] custom卡发送成功 src=kuwo id=128405
+11-17 04:20:50 [INFO] song_request | [发卡] custom卡 OK src=kuwo id=128405
+11-17 04:22:55 [INFO] song_request | [发卡] custom卡发送成功 src=netease id=284793
+11-17 04:22:55 [INFO] song_request | [发卡] custom卡 OK src=netease id=284793
+11-17 04:49:44 [INFO] song_request | [发卡] 163官方卡(找补原曲) OK id=5262296
+11-18 02:19:40 [INFO] song_request | [发卡] 163官方卡 OK id=284799
+-- 3. 点歌命令触发记录(最近30) --
+11-14 22:18:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1302089628 from 1561950850 '点歌 齐豫'
+11-15 11:33:57 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 146487265 from 1561950850 '点歌 齐豫'
+11-15 14:25:36 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1850163371 from 1561950850 '点歌 齐豫'
+11-15 15:17:50 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2124530914 from 1561950850 '点歌 潘越云'
+11-17 03:39:42 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 547373699 from 1561950850 '点歌 齐豫'
+11-17 03:57:36 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 599850876 from 1561950850 '点歌 齐豫'
+11-17 04:06:40 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1844442990 from 1561950850 '点歌 齐豫'
+11-17 04:20:25 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 370183728 from 1561950850 '点歌 齐豫'
+11-17 04:22:20 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1575266838 from 1561950850 '点歌 齐豫'
+11-17 04:49:13 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 692521035 from 1561950850 '点歌 齐豫'
+11-17 15:33:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 70293303 from 1561950850 '点歌 黄绮珊'
+11-18 02:19:29 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 227451039 from 1561950850 '点歌 叹息瓶 齐豫'
+-- 4. 发卡异常/放弃记录 --
 ===== 完 =====
