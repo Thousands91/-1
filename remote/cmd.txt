@@ -1,13 +1,7 @@
-286260
-echo '===== WS关闭+离线细节取证 ====='
-echo '-- 1. 所有日志文件就近列出 --'
-find /root/Napcat -maxdepth 5 -name "*.log" 2>/dev/null | head -20
-echo '-- 2. napcat-restart.log 15:33前后完整(含WS/离线/error) --'
-grep -a "15:33\|15:38\|SelfOffline\|offline\|closed\|close frame\|ErrCode\|code=1000\|code=1006" /root/napcat-restart.log 2>/dev/null | tail -30
-echo '-- 3. bot.log WS关闭那条的上下文 --'
+286270
 LN=$(grep -an "closed by peer" /root/bot/bot/bot.log | tail -1 | cut -d: -f1)
 echo "WS关闭行号=$LN"
-[ -n "$LN" ] && sed -n "$((LN-3)),$((LN+8))p" /root/bot/bot/bot.log
-echo '-- 4. SelfOffline后NapCat行为 --'
-grep -a "SelfOffline\|WebSocket\|ws.*close\|connection.*close\|OneBot" /root/napcat-restart.log 2>/dev/null | tail -15
-echo '===== 完 ====='
+[ -n "$LN" ] && sed -n "$((LN-4)),$((LN+3))p" /root/bot/bot/bot.log
+echo '-- NapCat侧15:33-15:34关键行 --'
+grep -a "15:33:4\|15:33:5\|SelfOffline\|WS.*close\|websocket.*close" /root/napcat.log 2>/dev/null | tail -12
+echo '==完=='
