@@ -1,40 +1,20 @@
-<<<task_286390.txt>>>
-===== 任务286390 11-18 02:30:08 =====
+<<<task_286400.txt>>>
+===== 任务286400 11-18 02:31:43 =====
 --- 命令 ---
-echo "===== 部署点歌新版本 f039dda $(date '+%F %T') ====="
+echo "===== 语法复检+重启大脑 $(date '+%F %T') ====="
 cd /root/bot/bot
-echo "-- 1. 确认是git仓库 --"
-git rev-parse --is-inside-work-tree 2>&1
-echo "-- 2. 当前HEAD --"
-git log -1 --format='%h %s' 2>&1
-echo "-- 3. 拉取远程 --"
-git -c http.lowSpeedLimit=0 -c http.lowSpeedTime=999 fetch origin 2>&1 | tail -3
-git reset --hard origin/main 2>&1 | tail -3
-echo "-- 4. 拉取后HEAD --"
-git log -1 --format='%h %s' 2>&1
-echo "-- 5. 校验新逻辑进场(应为0处vip_original特判) --"
-grep -c "vip_original" plugins/song_request.py 2>&1
-echo "-- 6. 语法检查 --"
-python3.11 -m py_compile plugins/song_request.py 2>&1 && echo "语法OK"
-echo "-- 7. 新标记注释在不在 --"
-grep -c "坑118外篇五" plugins/song_request.py 2>&1
+echo "-- 1. 语法检查(python3) --"
+python3 -m py_compile plugins/song_request.py 2>&1 && echo "语法OK"
+echo "-- 2. 大脑进程 --"
+pgrep -af "nb run|nonebot|bot.py|python.*bot" | head -8
+echo "-- 3. setsid拉起方式探查(启动脚本) --"
+ls -la /root/bot/*.sh /root/bot/bot/*.sh 2>/dev/null | head -10
 echo "===== 完 ====="
 --- 输出 ---
-===== 部署点歌新版本 f039dda 2026-11-18 02:30:08 =====
--- 1. 确认是git仓库 --
-true
--- 2. 当前HEAD --
-b6237dd 坑118外篇四:VIP歌/拿不到音频也发真卡片(官方卡只是链接不需音频),四处兜底改官方卡优先→custom卡→文字卡
--- 3. 拉取远程 --
-From https://github.com/Thousands91/qq-bot
-   b6237dd..f039dda  main       -> origin/main
-HEAD is now at f039dda 坑118外篇五:一律先出列表再选歌(取消VIP原曲特判直发),列表选VIP歌改网易云官方卡优先(网易云标,QQ找补降兜底)
--- 4. 拉取后HEAD --
-f039dda 坑118外篇五:一律先出列表再选歌(取消VIP原曲特判直发),列表选VIP歌改网易云官方卡优先(网易云标,QQ找补降兜底)
--- 5. 校验新逻辑进场(应为0处vip_original特判) --
-0
--- 6. 语法检查 --
-bash: line 15: python3.11: command not found
--- 7. 新标记注释在不在 --
-2
+===== 语法复检+重启大脑 2026-11-18 02:31:43 =====
+-- 1. 语法检查(python3) --
+语法OK
+-- 2. 大脑进程 --
+-- 3. setsid拉起方式探查(启动脚本) --
+-rw-r--r-- 1 root root 318 Nov 11 22:41 /root/bot/entrypoint.sh
 ===== 完 =====
