@@ -1,30 +1,53 @@
-<<<task_286360.txt>>>
-===== 任务286360 11-18 02:12:54 =====
+<<<task_286370.txt>>>
+===== 任务286370 11-18 02:14:08 =====
 --- 命令 ---
 UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-echo "===== 网易云标签名源实测 $(date '+%F %T') ====="
-echo "-- 1. xingzhige 带 appid 覆盖参数 --"
-for payload in \
-  '{"server":"netease","id":5262296,"type":"163","appid":100951776}' \
-  '{"server":"netease","id":5262296,"type":"163","app":"com.netease.cloudmusic"}' \
-  '{"server":"netease","id":5262296,"type":"netease"}'; do
-  R=$(curl -s --max-time 12 -A "$UA" -X POST "https://ss.xingzhige.com/music_card/card" -H "Content-Type: application/json" -d "$payload" 2>/dev/null)
-  echo "[$payload] -> $(echo "$R" | grep -o '"app":"[^"]*"\|"appid":[0-9]*' | head -4 | tr '\n' ' ')"
+echo "===== 网易云标API最后探查 $(date '+%F %T') ====="
+echo "-- 1. vkeys 音乐卡接口 --"
+for u in \
+  'https://api.vkeys.cn/v2/music/?src=netease&id=5262296' \
+  'https://api.vkeys.cn/v3/music/?src=netease&id=5262296' \
+  'https://api.vkeys.cn/v2/music/card?server=netease&id=5262296'; do
+  echo "[$u] -> $(curl -s --max-time 10 -A "$UA" "$u" 2>/dev/null | head -c 200)"
+  echo ""
 done
-echo "-- 2. 其他上游出卡标 --"
-echo "[qqbotark] $(curl -s --max-time 12 -A "$UA" -X POST 'https://qqbotark.569879.xyz/' -H 'Content-Type: application/json' -d '{"server":"netease","id":5262296,"type":"163"}' 2>/dev/null | grep -o '"app":"[^"]*"\|"appid":[0-9]*' | head -4 | tr '\n' ' ')"
-echo "[llob] $(curl -s --max-time 12 -A "$UA" -X POST 'https://llob.linyuchen.net/sign/music' -H 'Content-Type: application/json' -d '{"server":"netease","id":5262296,"type":"163"}' 2>/dev/null | grep -o '"app":"[^"]*"\|"appid":[0-9]*' | head -4 | tr '\n' ' ')"
-echo "-- 3. xingzhige 卡token(确认能否复用) --"
-curl -s --max-time 12 -A "$UA" -X POST "https://ss.xingzhige.com/music_card/card" -H "Content-Type: application/json" -d '{"server":"netease","id":5262296,"type":"163"}' 2>/dev/null | grep -o '"token":"[^"]*"'
+echo "-- 2. 抓一张xingzhige完整卡json存文件(供分析) --"
+curl -s --max-time 12 -A "$UA" -X POST 'https://ss.xingzhige.com/music_card/card' -H 'Content-Type: application/json' -d '{"server":"netease","id":5262296,"type":"163"}' > /root/xz_card_sample.json 2>/dev/null
+echo "字节:$(wc -c </root/xz_card_sample.json 2>/dev/null)"
+grep -o '"app":"[^"]*"\|"appid":[0-9]*\|"token":"[^"]*"\|"jumpUrl":"[^"]*"' /root/xz_card_sample.json 2>/dev/null | head -8
 echo "===== 完 ====="
 --- 输出 ---
-===== 网易云标签名源实测 2026-11-18 02:12:54 =====
--- 1. xingzhige 带 appid 覆盖参数 --
-[{"server":"netease","id":5262296,"type":"163","appid":100951776}] -> 
-[{"server":"netease","id":5262296,"type":"163","app":"com.netease.cloudmusic"}] -> "appid": "appid": 
-[{"server":"netease","id":5262296,"type":"netease"}] -> 
--- 2. 其他上游出卡标 --
-[qqbotark] 
-[llob] 
--- 3. xingzhige 卡token(确认能否复用) --
+===== 网易云标API最后探查 2026-11-18 02:14:08 =====
+-- 1. vkeys 音乐卡接口 --
+[https://api.vkeys.cn/v2/music/?src=netease&id=5262296] -> {
+    "code": 404,
+    "message": "404 not found",
+    "data": [],
+    "time": "2026-11-18 02:14:10",
+    "pid": 313,
+    "tips": "欢迎使用API-Server"
+}
+
+[https://api.vkeys.cn/v3/music/?src=netease&id=5262296] -> {
+    "code": 1,
+    "message": "HTTP异常：404 Not Found",
+    "data": null,
+    "time": "2026-11-18 02:14:11",
+    "pid": 100,
+    "tips": "欢迎使用落月API-V3"
+}
+
+[https://api.vkeys.cn/v2/music/card?server=netease&id=5262296] -> {
+    "code": 404,
+    "message": "404 not found",
+    "data": [],
+    "time": "2026-11-18 02:14:12",
+    "pid": 135,
+    "tips": "欢迎使用API-Server"
+}
+
+-- 2. 抓一张xingzhige完整卡json存文件(供分析) --
+字节:1134
+"appid":
+"appid":
 ===== 完 =====
