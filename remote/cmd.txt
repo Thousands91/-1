@@ -1,9 +1,13 @@
-286410
-echo "===== 大脑进程与启动脚本 $(date '+%F %T') ====="
-echo "-- 1. entrypoint.sh内容 --"
-cat /root/bot/entrypoint.sh 2>/dev/null
-echo "-- 2. 所有python进程 --"
-ps aux | grep -iE "python|nonebot|nb run" | grep -v grep | head -15
-echo "-- 3. bot目录结构 --"
-ls -la /root/bot/bot/ | head -20
+286420
+echo "===== 大脑进程上下文 $(date '+%F %T') ====="
+echo "-- 1. cwd --"
+readlink /proc/24647/cwd 2>&1
+echo "-- 2. cmdline --"
+tr '\0' ' ' </proc/24647/cmdline 2>/dev/null; echo
+echo "-- 3. 父进程 --"
+ps -o pid,ppid,cmd -p 24647 2>&1
+echo "-- 4. main.py内容 --"
+cat /root/bot/bot/main.py 2>/dev/null
+echo "-- 5. python路径 --"
+ls -l /root/bot/venv/bin/python 2>&1
 echo "===== 完 ====="
