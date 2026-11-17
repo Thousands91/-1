@@ -1,62 +1,47 @@
-<<<task_286480.txt>>>
-===== 任务286480 11-18 02:59:21 =====
+<<<task_286490.txt>>>
+===== 任务286490 11-18 03:01:34 =====
 --- 命令 ---
-echo "===== 抓上游真实卡JSON定案卡标机制 $(date '+%F %T') ====="
-UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-UP1='https://ss.xingzhige.com/music_card/card'
-UP2='https://qqbotark.569879.xyz/'
-echo "--- [A] 网易云custom契约(已知能出网易云标卡),抓完整JSON关键字段 ---"
-for U in "$UP1" "$UP2"; do
-  echo "上游:$U"
-  curl -s --max-time 15 -H "Content-Type: application/json" -X POST \
-    -d '{"type":"custom","singer":"齐豫","title":"叹息瓶","url":"https://music.163.com/song?id=284799","audio":"https://api.injahow.cn/meting/?type=url&server=netease&id=284799","image":"https://p2.music.126.net/xxxxx/284799.jpg"}' \
-    "$U" 2>/dev/null > /tmp/card163.json
-  sz=$(stat -c%s /tmp/card163.json 2>/dev/null)
-  echo "  返回字节:$sz"
-  if [ "$sz" -gt 100 ]; then
-    echo "  app/appid/prompt字段:"
-    grep -oE '"app"[^,]*|"appid"[^,]*|"prompt"[^,]*|com\.tencent\.[a-z.]+|com\.netease\.[a-z.]+|100495085|100951776' /tmp/card163.json | head -20
-    echo "  前300字符:"; head -c 300 /tmp/card163.json; echo ""
-  else
-    echo "  内容:"; head -c 200 /tmp/card163.json; echo ""
-  fi
-done
-echo "--- [B] 酷我内容custom契约,看上游出什么标 ---"
-KWIMG=$(curl -s --max-time 8 -A "$UA" "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=128405" 2>/dev/null | grep -oE '"pic":"[^"]*"' | head -1 | cut -d'"' -f4)
-echo "酷我封面:$KWIMG"
-for U in "$UP1" "$UP2"; do
-  echo "上游:$U"
-  curl -s --max-time 15 -H "Content-Type: application/json" -X POST \
-    -d "{\"type\":\"custom\",\"singer\":\"印良\",\"title\":\"大悲咒\",\"url\":\"https://www.kuwo.cn/play_detail/128405\",\"audio\":\"http://antiserver.kuwo.cn/anti.s?type=convert_url&format=mp3&rid=MUSIC_128405&response=url\",\"image\":\"$KWIMG\"}" \
-    "$U" 2>/dev/null > /tmp/cardkw.json
-  sz=$(stat -c%s /tmp/cardkw.json 2>/dev/null)
-  echo "  返回字节:$sz"
-  if [ "$sz" -gt 100 ]; then
-    echo "  app/appid/prompt字段:"
-    grep -oE '"app"[^,]*|"appid"[^,]*|"prompt"[^,]*|com\.tencent\.[a-z.]+|com\.netease\.[a-z.]+|com\.kuwo\.[a-z.]+|100495085|100951776' /tmp/cardkw.json | head -20
-  else
-    echo "  内容:"; head -c 200 /tmp/cardkw.json; echo ""
-  fi
-done
-echo "--- [C] kuwo官方卡契约原样转发(不转custom) ---"
-for U in "$UP1" "$UP2"; do
-  echo "上游:$U"
-  curl -s --max-time 15 -H "Content-Type: application/json" -X POST \
-    -d '{"type":"kuwo","id":"128405"}' "$U" 2>/dev/null | head -c 300
-  echo ""
-done
+echo "===== 拉完整卡JSON看url/jumpUrl决定标 $(date '+%F %T') ====="
+echo "--- 网易云内容的卡 完整JSON ---"
+curl -s --max-time 15 -H "Content-Type: application/json" -X POST \
+  -d '{"type":"custom","singer":"齐豫","title":"叹息瓶","url":"https://music.163.com/song?id=284799","audio":"https://api.injahow.cn/meting/?type=url&server=netease&id=284799","image":"https://p2.music.126.net/abc/284799.jpg"}' \
+  "https://ss.xingzhige.com/music_card/card" 2>/dev/null > /tmp/card_full.json
+echo "字节:$(stat -c%s /tmp/card_full.json)"
+python3 -c "
+import json
+d=json.load(open('/tmp/card_full.json'))
+def walk(o,p=''):
+  if isinstance(o,dict):
+    for k,v in o.items():
+      if isinstance(v,(dict,list)): walk(v,p+'.'+k)
+      else:
+        s=str(v)
+        if any(x in k.lower() or x in s.lower() for x in ['url','jump','app','prompt','title','desc','name']):
+          print(f'{p}.{k} = {s[:120]}')
+  elif isinstance(o,list):
+    for i,v in enumerate(o[:3]): walk(v,p+f'[{i}]')
+walk(d)
+" 2>/dev/null || head -c 1500 /tmp/card_full.json
+echo "--- 完整原文(前1800) ---"
+head -c 1800 /tmp/card_full.json
+echo ""
 echo "===== 完 ====="
 --- 输出 ---
-===== 抓上游真实卡JSON定案卡标机制 2026-11-18 02:59:21 =====
---- [A] 网易云custom契约(已知能出网易云标卡),抓完整JSON关键字段 ---
-上游:https://ss.xingzhige.com/music_card/card
-  返回字节:1004
-  app/appid/prompt字段:
-"app": "com.tencent.music.lua"
-"appid": 100497308
-"appid": 100497308
-"prompt": "[分享]叹息瓶"
-  前300字符:
+===== 拉完整卡JSON看url/jumpUrl决定标 2026-11-18 03:01:34 =====
+--- 网易云内容的卡 完整JSON ---
+字节:1004
+.app = com.tencent.music.lua
+.extra.app_type = 1
+.extra.appid = 100497308
+.meta.music.app_type = 1
+.meta.music.appid = 100497308
+.meta.music.desc = 齐豫
+.meta.music.jumpUrl = https://music.163.com/song?id=284799
+.meta.music.musicUrl = https://api.injahow.cn/meting/?type=url&server=netease&id=284799
+.meta.music.tagIcon = https://p.qpic.cn/qqconnect/0/app_100497308_1626060999/100?max-age=2592000&t=0
+.meta.music.title = 叹息瓶
+.prompt = [分享]叹息瓶
+--- 完整原文(前1800) ---
 {
     "app": "com.tencent.music.lua",
     "bizsrc": "qqconnect.sdkshare_music",
@@ -69,27 +54,25 @@ echo "===== 完 ====="
     "extra": {
         "app_type": 1,
         "appid": 100497308,
-  
-上游:https://qqbotark.569879.xyz/
-  返回字节:0
-  内容:
-
---- [B] 酷我内容custom契约,看上游出什么标 ---
-酷我封面:
-上游:https://ss.xingzhige.com/music_card/card
-  返回字节:1069
-  app/appid/prompt字段:
-"app": "com.tencent.music.lua"
-"appid": 100497308
-"appid": 100497308
-"prompt": "[分享]大悲咒"
-上游:https://qqbotark.569879.xyz/
-  返回字节:0
-  内容:
-
---- [C] kuwo官方卡契约原样转发(不转custom) ---
-上游:https://ss.xingzhige.com/music_card/card
-异常拦截
-上游:https://qqbotark.569879.xyz/
-
+        "uin": 3264925726
+    },
+    "meta": {
+        "music": {
+            "app_type": 1,
+            "appid": 100497308,
+            "ctime": 1794941963,
+            "desc": "齐豫",
+            "jumpUrl": "https://music.163.com/song?id=284799",
+            "musicUrl": "https://api.injahow.cn/meting/?type=url&server=netease&id=284799",
+            "preview": "https://p2.music.126.net/xxxxx/284799.jpg",
+            "tag": "QQ音乐",
+            "tagIcon": "https://p.qpic.cn/qqconnect/0/app_100497308_1626060999/100?max-age=2592000&t=0",
+            "title": "叹息瓶",
+            "uin": 3264925726
+        }
+    },
+    "prompt": "[分享]叹息瓶",
+    "ver": "0.0.0.1",
+    "view": "music"
+}
 ===== 完 =====
