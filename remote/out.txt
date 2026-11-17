@@ -1,28 +1,35 @@
-<<<task_286510.txt>>>
-===== 任务286510 11-18 03:03:06 =====
+<<<task_286520.txt>>>
+===== 任务286520 11-18 03:03:56 =====
 --- 命令 ---
-echo "===== 逐个上游测kuwo官方卡契约 $(date '+%F %T') ====="
-for U in "http://106.55.0.102:10087/" "https://llob.linyuchen.net/sign/music" "https://qqbotark.569879.xyz/"; do
-  echo "上游:$U"
-  echo -n "  kuwo: "
-  curl -s --max-time 12 -H "Content-Type: application/json" -X POST \
-    -d '{"type":"kuwo","id":"128405"}' "$U" 2>/dev/null | head -c 250
-  echo ""
-  echo -n "  163对照: "
-  curl -s --max-time 12 -H "Content-Type: application/json" -X POST \
-    -d '{"type":"163","id":"284799"}' "$U" 2>/dev/null | head -c 250
-  echo ""
+echo "===== 酷我封面接口实测(用插件文档里的正确接口) $(date '+%F %T') ====="
+UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+RID=128405
+echo "--- [1] 搜索接口 web_albumpic_short ---"
+curl -s --max-time 12 -A "$UA" "http://search.kuwo.cn/r.s?all=%E5%A4%A7%E6%82%B2%E5%92%92&ft=music&itemset=web_2013&client=mp3&rformat=json&encoding=utf8&pn=0&rn=1" 2>/dev/null | grep -oE 'web_albumpic_short[^&]*|PICPATH[^&]*|album[^&]*' | head -5
+echo "--- [2] 歌曲详情接口 albumPic (多个候选) ---"
+for U in \
+  "http://www.kuwo.cn/api/v1/www/music/playInfo?mid=$RID" \
+  "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=$RID" \
+  "https://changenotice.kuwo.cn/mobi.s?rid=$RID&br=192"; do
+  echo "接口:$U"
+  curl -s --max-time 10 -A "$UA" "$U" 2>/dev/null | grep -oE '"albumPic":"[^"]*"|"pic":"[^"]*"|"picUrl":"[^"]*"|"albumpic":"[^"]*"|"songpic":"[^"]*"' | head -3
 done
+echo "--- [3] 直接看详情接口原文前400 ---"
+curl -s --max-time 10 -A "$UA" "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=$RID" 2>/dev/null | head -c 400
+echo ""
 echo "===== 完 ====="
 --- 输出 ---
-===== 逐个上游测kuwo官方卡契约 2026-11-18 03:03:06 =====
-上游:http://106.55.0.102:10087/
-  kuwo: {"error":"缺少 title","ok":false}
-  163对照: {"error":"缺少 title","ok":false}
-上游:https://llob.linyuchen.net/sign/music
-  kuwo: 
-  163对照: 
-上游:https://qqbotark.569879.xyz/
-  kuwo: 
-  163对照: 
+===== 酷我封面接口实测(用插件文档里的正确接口) 2026-11-18 03:03:56 =====
+--- [1] 搜索接口 web_albumpic_short ---
+PICPATH':'','PLAYCNT':'15249','SCORE100':'70','SIG1':'427724585','SIG2':'445940835','SONGNAME':'大悲咒','SUBLIST':[],'SUBTITLE':'','TAG':'http://218.30.20.121:5699/denglj/dljCD/863995794.wma','TMEMINFO':'','ad_subtype':'','ad_type':'','allartistid':'11080','audiobookpayinfo':{'download':'0','play':'0'},'barrage':'0','bitSwitch':65536,'cache_status':'1','content_type':'0','fpay':'1','hts_MVPIC':'https://img2.kuwo.cn/wmvpic/324/64/50/469116481.jpg','info':'xxxx','iot_info':'A_5,B_5,C_5,D_5,E_5,F_5,G_5,H_5','isRedSong':1,'isdownload':'0','isshowtype':'0','isstar':'0','mp4sig1':'337334386','mp4sig2':'577567857','mvpayinfo':{'down':'0','download':'0','play':'0','vid':'258587'},'originalsongtype':'0','payInfo':{'cannotDownload':'0','cannotOnlinePlay':'0','down':'0000','download':'0000','extendAttr':2,'feeType':{'album':'0','bookvip':'0','song':'0','vip':'0'},'limitfree':'1','listen_fragment':'0','local_encrypt':'1','ndown':'111111111111','nplay':'001111111111','overseas_ndown':'11111','overseas_nplay':'11111','paytagindex':{'AR501':8,'DB':7,'F':3,'H':1,'HR':4,'L':0,'S':2,'ZP':6,'ZPGA201':9,'ZPGA501':10,'ZPLY':11},'paytype':2,'play':'0000','refrain_end':'210564','refrain_start':'167252','tips_intercept':'0'},'signal':'','spPrivilege':'0','subsStrategy':'0','subsText':'','svip_preview':'0','terminal':'1,2,3,4,5,6,7,8,9,10,11,12,14,15,16,17,18,19,20,21','terminalOnline':'','tme_musician_adtype':'0','tpay':'0','web_albumpic_short':'120/s4s56/10/1915725811.jpg','web_artistpic_short':'120/40/95/1704870447.jpg','web_timingonline':''}],'searchgroup':'englishcorrect'}
+--- [2] 歌曲详情接口 albumPic (多个候选) ---
+接口:http://www.kuwo.cn/api/v1/www/music/playInfo?mid=128405
+接口:http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=128405
+接口:https://changenotice.kuwo.cn/mobi.s?rid=128405&br=192
+--- [3] 直接看详情接口原文前400 ---
+
+
+
+{"data":null,"msg":"音乐查询失败","msgs":null,"profileid":"site","reqid":"5f9aa612X502bX4c56X8867X7d2f38005aeb","status":301}
+
 ===== 完 =====
