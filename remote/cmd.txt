@@ -1,14 +1,13 @@
-286540
-echo "===== 最终三问核验 $(date '+%F %T') ====="
-echo "--- [1] 点歌入口数(应=1个on_command点歌) ---"
-grep -rn "on_command(\"点歌\"\|on_command('点歌'" /root/bot/bot/plugins/ 2>/dev/null | wc -l
-grep -rn "on_command(\"点歌\"\|on_command('点歌'" /root/bot/bot/plugins/ 2>/dev/null
-echo "--- [2] VIP特判残留(应=0) ---"
-grep -c "vip_original\|free_original" /root/bot/bot/plugins/song_request.py 2>/dev/null
-echo "--- [3] song_cmd里所有finish(看有没有跳过列表直接发卡的) ---"
-grep -n "song_cmd.finish\|await song_cmd.send" /root/bot/bot/plugins/song_request.py 2>/dev/null | head -20
-echo "--- [4] 发列表的行(确认存在) ---"
-grep -n "候选\|_PENDING\[\|回.*序号\|PICK_N" /root/bot/bot/plugins/song_request.py 2>/dev/null | head -10
-echo "--- [5] 设备插件md5 ---"
-md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null
+286550
+echo "===== 用各平台真实ID重测官方卡 $(date '+%F %T') ====="
+M="https://api.injahow.cn/meting/"
+echo "--- [1] meting搜各平台拿真实id(关键词:晴天) ---"
+for S in kugou kuwo migu tencent netease; do
+  echo "--server=$S--"
+  curl -s --max-time 12 "$M?server=$S&type=search&keyword=%E6%99%B4%E5%A4%A9" 2>/dev/null | head -c 250
+  echo ""
+done
+echo "--- [2] 用专门的酷狗搜索API拿真实hash/id ---"
+curl -s --max-time 12 "https://api.injahow.cn/bparse/?type=kugou&format=json" 2>/dev/null | head -c 100
+echo ""
 echo "===== 完 ====="
