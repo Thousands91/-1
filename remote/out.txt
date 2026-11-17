@@ -1,39 +1,51 @@
-<<<task_286460.txt>>>
-===== 任务286460 11-18 02:47:59 =====
+<<<task_286470.txt>>>
+===== 任务286470 11-18 02:56:03 =====
 --- 命令 ---
-UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-echo "===== 酷我封面URL实测 $(date '+%F %T') ====="
-for rid in 256484839 51685512; do
-  echo "-- rid=$rid --"
-  for u in \
-    "http://imgserver.kuwo.cn/artist/pic/$rid" \
-    "http://qukufile2.qianqian.com/data2/pic/$rid.jpg" \
-    "https://qukufile2.qianqian.com/data2/pic/$rid.jpg" \
-    "http://imgserver.kuwo.cn/artist/pic/$rid.jpg"; do
-    out=$(curl -s -o /tmp/kwpic -w "%{http_code}:%{size_download}:%{content_type}" --max-time 8 -A "$UA" "$u" 2>/dev/null)
-    echo "  [$out] $u"
-  done
+echo "===== 酷我官方卡可行性全面实测 $(date '+%F %T') ====="
+echo "--- [1] NapCat 的 musicSignUrl 配置 ---"
+grep -rn "musicSignUrl\|music_sign\|10800\|xingzhige" /root/NapCat/config /opt/napcat/config /root/napcat/config 2>/dev/null | head -20
+find / -name "onebot*.json" -o -name "napcat*.json" 2>/dev/null | grep -iE "config|onebot" | head -10
+echo "--- [2] 签名服务进程与源码 ---"
+ps aux | grep -iE "music_sign|sign" | grep -v grep | head -10
+echo "---代理源码路径---"
+find /root /opt -iname "*music*sign*.py" 2>/dev/null | head -10
+echo "---代理是否处理kuwo---"
+for f in $(find /root /opt -iname "*music*sign*.py" 2>/dev/null); do echo "文件:$f"; grep -n "kuwo\|kugou\|migu\|supported\|type.*163\|type.*custom\|type ==" "$f" | head -20; done
+echo "--- [3] 直连默认签名服务测kuwo官方卡(对比163) ---"
+for T in kuwo 163; do
+  echo "--type=$T--"
+  curl -s --max-time 12 -H "Content-Type: application/json" -X POST \
+    -d "{\"type\":\"$T\",\"id\":\"128405\"}" \
+    "https://ss.xingzhige.com/music_card/card" 2>/dev/null | head -c 300
+  echo ""
 done
-echo "-- 酷我song信息接口(可能带pic) --"
-curl -s --max-time 8 -A "$UA" "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=256484839" 2>/dev/null | head -c 500
-echo ""
+echo "--- [4] 本地代理端口测试 ---"
+for T in kuwo 163; do
+  echo "--本地10800 type=$T--"
+  curl -s --max-time 12 -H "Content-Type: application/json" -X POST \
+    -d "{\"type\":\"$T\",\"id\":\"128405\"}" \
+    "http://127.0.0.1:10800/" 2>/dev/null | head -c 300
+  echo ""
+done
 echo "===== 完 ====="
 --- 输出 ---
-===== 酷我封面URL实测 2026-11-18 02:47:59 =====
--- rid=256484839 --
-  [000:0:] http://imgserver.kuwo.cn/artist/pic/256484839
-  [000:0:] http://qukufile2.qianqian.com/data2/pic/256484839.jpg
-  [000:0:] https://qukufile2.qianqian.com/data2/pic/256484839.jpg
-  [000:0:] http://imgserver.kuwo.cn/artist/pic/256484839.jpg
--- rid=51685512 --
-  [000:0:] http://imgserver.kuwo.cn/artist/pic/51685512
-  [000:0:] http://qukufile2.qianqian.com/data2/pic/51685512.jpg
-  [000:0:] https://qukufile2.qianqian.com/data2/pic/51685512.jpg
-  [000:0:] http://imgserver.kuwo.cn/artist/pic/51685512.jpg
--- 酷我song信息接口(可能带pic) --
+===== 酷我官方卡可行性全面实测 2026-11-18 02:56:03 =====
+--- [1] NapCat 的 musicSignUrl 配置 ---
+--- [2] 签名服务进程与源码 ---
+---代理源码路径---
+/root/music_sign.py
+---代理是否处理kuwo---
+文件:/root/music_sign.py
+111:                payload = {"type": "custom", "singer": d.get("singer") or d.get("content") or "",
+116:                payload = {"type": "custom", "singer": desc, "title": title,
+--- [3] 直连默认签名服务测kuwo官方卡(对比163) ---
+--type=kuwo--
+异常拦截
+--type=163--
+无法准确获取歌曲信息
+--- [4] 本地代理端口测试 ---
+--本地10800 type=kuwo--
 
-
-
-{"data":null,"msg":"音乐查询失败","msgs":null,"profileid":"site","reqid":"72df7ddcX9d0aX4d83X8bd8Xdb1282311300","status":301}
+--本地10800 type=163--
 
 ===== 完 =====
