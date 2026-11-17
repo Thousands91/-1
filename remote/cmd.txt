@@ -1,16 +1,22 @@
-286210
-echo "===== 掉线根因二轮 $(date '+%F %T') ====="
-echo "--- 1. QQ进程启动时刻 ---"
-ps -o pid,lstart,etime,cmd -p 24845,24860 2>/dev/null
-echo "--- 2. 登录态翻转点(最后在线+最早未登录) ---"
-grep -n "\[在线\]" /root/login_state.log | tail -3
-grep -n "\[未登录\]" /root/login_state.log | head -5
-echo "--- 3. 15:30-15:40 napcat.log 全量 ---"
-grep -a "15:3[0-9]" /root/napcat.log 2>/dev/null | tail -40
-echo "--- 4. 取证快照列表 ---"
-ls -la --time-style=+%m-%d_%H:%M /root/*forensic* /root/forensic* 2>/dev/null | tail -8
-echo "--- 5. v6遥控日志15:30后 ---"
-for f in /root/remote.log /root/remote_ctl.log /root/.remote_log; do [ -f "$f" ] && { echo "[$f]"; grep -a "15:3[0-9]\|16:\|17:\|18:" "$f" | tail -20; }; done
-echo "--- 6. 当前QQ相关进程全部 ---"
-pgrep -af "xvfb|qq|napcat" | head -10
+286220
+echo "===== 下线原因取证+保全 $(date '+%F %T') ====="
+echo "--- 1. 账号离线事件上下文(前后各6行) ---"
+LN=$(grep -an "账号状态变更为离线" /root/napcat.log | tail -1 | cut -d: -f1)
+echo "行号=$LN"
+[ -n "$LN" ] && sed -n "$((LN-6)),$((LN+12))p" /root/napcat.log
+echo "--- 2. 下线原因关键词全日志搜 ---"
+grep -a -i "kick\|被踢\|下线\|ErrCode\|token.*expire\|登录失效\|强制.*线\|其它设备\|异地\|冻结\|风控\|cannot send\|session" /root/napcat.log | tail -25
+echo "--- 3. 15:33:30~15:34:30 完整日志 ---"
+grep -a "15:33:[3-9]\|15:34:[0-3]" /root/napcat.log | tail -40
+echo "--- 4. 取证保全(出码前归档) ---"
+{
+  echo "=== 归档时刻 $(date '+%F %T') ==="
+  echo "--- napcat.log 15:25~15:40 ---"; grep -a "15:2[5-9]\|15:3[0-9]\|15:40" /root/napcat.log
+  echo "--- bot.log 15:25~15:40 ---"; grep -a "15:2[5-9]\|15:3[0-9]\|15:40" /root/bot/bot/bot.log
+  echo "--- login_state 15:20~16:00 ---"; grep -a "15:2[0-9]\|15:3[0-9]\|15:4[0-9]\|15:5[0-9]\|16:00" /root/login_state.log
+  echo "--- 四账尾部 ---"; tail -8 /root/tick.log; tail -8 /root/health.log; tail -4 /root/ip.log
+} > /root/forensic_offline_1117_1533.txt 2>&1
+wc -l /root/forensic_offline_1117_1533.txt
+echo "--- 5. 归档上云候选md5 ---"
+md5sum /root/forensic_offline_1117_1533.txt
 echo "===== 完 ====="
