@@ -1,22 +1,15 @@
-286220
-echo "===== 下线原因取证+保全 $(date '+%F %T') ====="
-echo "--- 1. 账号离线事件上下文(前后各6行) ---"
-LN=$(grep -an "账号状态变更为离线" /root/napcat.log | tail -1 | cut -d: -f1)
-echo "行号=$LN"
-[ -n "$LN" ] && sed -n "$((LN-6)),$((LN+12))p" /root/napcat.log
-echo "--- 2. 下线原因关键词全日志搜 ---"
-grep -a -i "kick\|被踢\|下线\|ErrCode\|token.*expire\|登录失效\|强制.*线\|其它设备\|异地\|冻结\|风控\|cannot send\|session" /root/napcat.log | tail -25
-echo "--- 3. 15:33:30~15:34:30 完整日志 ---"
-grep -a "15:33:[3-9]\|15:34:[0-3]" /root/napcat.log | tail -40
-echo "--- 4. 取证保全(出码前归档) ---"
-{
-  echo "=== 归档时刻 $(date '+%F %T') ==="
-  echo "--- napcat.log 15:25~15:40 ---"; grep -a "15:2[5-9]\|15:3[0-9]\|15:40" /root/napcat.log
-  echo "--- bot.log 15:25~15:40 ---"; grep -a "15:2[5-9]\|15:3[0-9]\|15:40" /root/bot/bot/bot.log
-  echo "--- login_state 15:20~16:00 ---"; grep -a "15:2[0-9]\|15:3[0-9]\|15:4[0-9]\|15:5[0-9]\|16:00" /root/login_state.log
-  echo "--- 四账尾部 ---"; tail -8 /root/tick.log; tail -8 /root/health.log; tail -4 /root/ip.log
-} > /root/forensic_offline_1117_1533.txt 2>&1
-wc -l /root/forensic_offline_1117_1533.txt
-echo "--- 5. 归档上云候选md5 ---"
-md5sum /root/forensic_offline_1117_1533.txt
+286230
+echo "===== 黑匣子调阅 $(date '+%F %T') ====="
+echo "--- 1. offline_forensics.log 15:30后事件 ---"
+grep -a "11-17 15:\|11-17 16:\|11-17 17:\|11-17 18:" /root/offline_forensics.log 2>/dev/null | tail -60 || echo "文件不存在或无可匹配"
+echo "--- 2. offline_forensics 最后30行(全量) ---"
+tail -30 /root/offline_forensics.log 2>/dev/null || echo "文件不存在"
+echo "--- 3. netmon.log 15:28~15:40(掉线前网络) ---"
+grep -a "15:2[89]\|15:3[0-9]\|15:40" /root/netmon.log 2>/dev/null | tail -20 || echo "文件不存在"
+echo "--- 4. 黑匣子进程在岗 ---"
+for n in offline_watch.sh netmon.sh; do pgrep -f "$n" >/dev/null && echo "$n:在(pid $(pgrep -f "$n"|head -1))" || echo "$n:不在!"; done
+echo "--- 5. NapCat debug日志目录 15:33 ---"
+ls -la --time-style=+%m-%d_%H:%M /root/Napcat/logs/ 2>/dev/null | tail -8
+DLOG=$(ls -t /root/Napcat/logs/*.log 2>/dev/null | head -1); echo "最新debug日志=$DLOG"
+[ -n "$DLOG" ] && grep -a "15:33\|15:38\|offline\|kick\|session\|ErrCode" "$DLOG" 2>/dev/null | tail -25
 echo "===== 完 ====="
