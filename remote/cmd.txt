@@ -1,12 +1,12 @@
-286440
-echo "===== 点歌全平台发卡日志普查 $(date '+%F %T') ====="
-LOG=/root/bot/bot/bot.log
-echo "-- 1. 全部[发卡]记录统计(按类型) --"
-grep -a "\[发卡\]" $LOG 2>/dev/null | sed -E 's/^.*\[发卡\]/[发卡]/' | sort | uniq -c | sort -rn | head -40
-echo "-- 2. 最近40条[发卡]原始 --"
-grep -a "\[发卡\]" $LOG 2>/dev/null | tail -40
-echo "-- 3. 点歌命令触发记录(最近30) --"
-grep -aE "'点歌 |'来首歌 |'听歌 " $LOG 2>/dev/null | tail -30
-echo "-- 4. 发卡异常/放弃记录 --"
-grep -aE "custom卡放弃|custom卡失败|官方卡失败|无封面|整卡被拒" $LOG 2>/dev/null | tail -25
+286450
+echo "===== 部署一致性与分支核验 $(date '+%F %T') ====="
+cd /root/bot/bot
+echo "-- 1. 设备md5(应=03bcc7db202ecd6e3a7b056b7f24e774) --"
+md5sum plugins/song_request.py
+echo "-- 2. song_cmd处理器的所有finish行号(应只有4处告知+1发列表) --"
+grep -n "song_cmd.finish\|song_cmd.send" plugins/song_request.py | head -12
+echo "-- 3. 是否残留VIP特判 --"
+grep -c "vip_original" plugins/song_request.py
+echo "-- 4. on_command入口数量(点歌只应1个) --"
+grep -c "on_command(\"点歌\"" plugins/song_request.py
 echo "===== 完 ====="
