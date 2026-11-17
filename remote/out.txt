@@ -1,54 +1,29 @@
-<<<task_286220.txt>>>
-===== 任务286220 11-17 18:13:14 =====
+<<<task_286230.txt>>>
+===== 任务286230 11-17 18:17:52 =====
 --- 命令 ---
-echo "===== 下线原因取证+保全 $(date '+%F %T') ====="
-echo "--- 1. 账号离线事件上下文(前后各6行) ---"
-LN=$(grep -an "账号状态变更为离线" /root/napcat.log | tail -1 | cut -d: -f1)
-echo "行号=$LN"
-[ -n "$LN" ] && sed -n "$((LN-6)),$((LN+12))p" /root/napcat.log
-echo "--- 2. 下线原因关键词全日志搜 ---"
-grep -a -i "kick\|被踢\|下线\|ErrCode\|token.*expire\|登录失效\|强制.*线\|其它设备\|异地\|冻结\|风控\|cannot send\|session" /root/napcat.log | tail -25
-echo "--- 3. 15:33:30~15:34:30 完整日志 ---"
-grep -a "15:33:[3-9]\|15:34:[0-3]" /root/napcat.log | tail -40
-echo "--- 4. 取证保全(出码前归档) ---"
-{
-  echo "=== 归档时刻 $(date '+%F %T') ==="
-  echo "--- napcat.log 15:25~15:40 ---"; grep -a "15:2[5-9]\|15:3[0-9]\|15:40" /root/napcat.log
-  echo "--- bot.log 15:25~15:40 ---"; grep -a "15:2[5-9]\|15:3[0-9]\|15:40" /root/bot/bot/bot.log
-  echo "--- login_state 15:20~16:00 ---"; grep -a "15:2[0-9]\|15:3[0-9]\|15:4[0-9]\|15:5[0-9]\|16:00" /root/login_state.log
-  echo "--- 四账尾部 ---"; tail -8 /root/tick.log; tail -8 /root/health.log; tail -4 /root/ip.log
-} > /root/forensic_offline_1117_1533.txt 2>&1
-wc -l /root/forensic_offline_1117_1533.txt
-echo "--- 5. 归档上云候选md5 ---"
-md5sum /root/forensic_offline_1117_1533.txt
+echo "===== 黑匣子调阅 $(date '+%F %T') ====="
+echo "--- 1. offline_forensics.log 15:30后事件 ---"
+grep -a "11-17 15:\|11-17 16:\|11-17 17:\|11-17 18:" /root/offline_forensics.log 2>/dev/null | tail -60 || echo "文件不存在或无可匹配"
+echo "--- 2. offline_forensics 最后30行(全量) ---"
+tail -30 /root/offline_forensics.log 2>/dev/null || echo "文件不存在"
+echo "--- 3. netmon.log 15:28~15:40(掉线前网络) ---"
+grep -a "15:2[89]\|15:3[0-9]\|15:40" /root/netmon.log 2>/dev/null | tail -20 || echo "文件不存在"
+echo "--- 4. 黑匣子进程在岗 ---"
+for n in offline_watch.sh netmon.sh; do pgrep -f "$n" >/dev/null && echo "$n:在(pid $(pgrep -f "$n"|head -1))" || echo "$n:不在!"; done
+echo "--- 5. NapCat debug日志目录 15:33 ---"
+ls -la --time-style=+%m-%d_%H:%M /root/Napcat/logs/ 2>/dev/null | tail -8
+DLOG=$(ls -t /root/Napcat/logs/*.log 2>/dev/null | head -1); echo "最新debug日志=$DLOG"
+[ -n "$DLOG" ] && grep -a "15:33\|15:38\|offline\|kick\|session\|ErrCode" "$DLOG" 2>/dev/null | tail -25
 echo "===== 完 ====="
 --- 输出 ---
-===== 下线原因取证+保全 2026-11-17 18:13:14 =====
---- 1. 账号离线事件上下文(前后各6行) ---
-行号=2169
-11-17 15:22:33 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [北长尾山鹅(2534970154)] 我讨厌你们…
-11-17 15:22:44 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [oOvOa(3361875175)] [图片]
-11-17 15:22:54 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [oOvOa(3361875175)] 摸摸凑企鹅
-11-17 15:24:39 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爻心懒寄云中月(1445169274)] 怎么还不下班
-11-17 15:27:27 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [Xylitol(2586464457)] [图片]
-11-17 15:27:31 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [Xylitol(2586464457)] [图片]
-11-17 15:33:10 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-0b8e24ad7eed5f0cddb7c9a91dea383a9e368eb0d0674b8ee9a90f4c38bdf1b2
-11-17 15:33:10 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 点歌 黄绮珊
-[I] <MMKV_IO.cpp:516::writeActualSize> [mmkv.default] increase sequence to 22, crc 1285129681, actualSize 4
-[I] <MMKV_IO.cpp:516::writeActualSize> [mmkv.default] increase sequence to 23, crc 1285129681, actualSize 4
-11-17 15:33:11 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 翻柜子找「黄绮珊」，稍等一下……
-b34dd568b12d397091f1ac77bddd8a0c01e5f9ab13bf2d592c0f645b58ad9d78
-11-17 15:33:16 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-17 15:33:19 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 「黄绮珊」翻出这几首，回复序号选哪首（60秒内有效）： ...
-c24069badca5698a091fefd5719ac1b0c0402f157c8d5cd7d7948ce5fcc0e000
-[18396:1117/153348.315145:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
-[18396:1117/153348.412102:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[18396:1117/153348.427570:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
---- 2. 下线原因关键词全日志搜 ---
---- 3. 15:33:30~15:34:30 完整日志 ---
---- 4. 取证保全(出码前归档) ---
-136 /root/forensic_offline_1117_1533.txt
---- 5. 归档上云候选md5 ---
-2fb63a906465fa6f0af13b60539f00ee  /root/forensic_offline_1117_1533.txt
+===== 黑匣子调阅 2026-11-17 18:17:52 =====
+--- 1. offline_forensics.log 15:30后事件 ---
+--- 2. offline_forensics 最后30行(全量) ---
+文件不存在
+--- 3. netmon.log 15:28~15:40(掉线前网络) ---
+--- 4. 黑匣子进程在岗 ---
+offline_watch.sh:不在!
+netmon.sh:不在!
+--- 5. NapCat debug日志目录 15:33 ---
+最新debug日志=
 ===== 完 =====
