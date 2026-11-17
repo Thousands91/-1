@@ -1,70 +1,47 @@
-<<<task_286420.txt>>>
-===== 任务286420 11-18 02:34:40 =====
+<<<task_286430.txt>>>
+===== 任务286430 11-18 02:36:21 =====
 --- 命令 ---
-echo "===== 大脑进程上下文 $(date '+%F %T') ====="
-echo "-- 1. cwd --"
-readlink /proc/24647/cwd 2>&1
-echo "-- 2. cmdline --"
-tr '\0' ' ' </proc/24647/cmdline 2>/dev/null; echo
-echo "-- 3. 父进程 --"
-ps -o pid,ppid,cmd -p 24647 2>&1
-echo "-- 4. main.py内容 --"
-cat /root/bot/bot/main.py 2>/dev/null
-echo "-- 5. python路径 --"
-ls -l /root/bot/venv/bin/python 2>&1
+echo "===== 重启大脑加载新点歌代码 $(date '+%F %T') ====="
+echo "-- 1. 旧父进程 --"
+tr '\0' ' ' </proc/24645/cmdline 2>/dev/null; echo
+echo "-- 2. 停旧大脑 --"
+pkill -f "venv/bin/python main.py"; sleep 3
+pgrep -af "venv/bin/python main.py" || echo "旧进程已清空"
+echo "-- 3. setsid拉起新大脑 --"
+cd /root/bot/bot
+setsid /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null &
+sleep 12
+echo "-- 4. 新进程(应只有1个) --"
+pgrep -af "venv/bin/python main.py"
+echo "-- 5. 启动日志尾部 --"
+tail -18 /root/bot/bot/bot.log
 echo "===== 完 ====="
 --- 输出 ---
-===== 大脑进程上下文 2026-11-18 02:34:40 =====
--- 1. cwd --
-/root/bot/bot
--- 2. cmdline --
-/root/bot/venv/bin/python main.py 
--- 3. 父进程 --
-  PID  PPID CMD
-24647 24645 /root/bot/venv/bin/python main.py
--- 4. main.py内容 --
-"""
-NoneBot 启动入口
-"""
-
-import sys
-from pathlib import Path
-
-from nonebot import get_driver, init, load_plugins
-
-from config import config  # noqa: F401  导入即完成配置注册
-
-# 让 persona 能被插件 import
-sys.path.insert(0, str(Path(__file__).parent))
-
-# 初始化（NoneBot 2.x 的 init() 不接受参数）
-init()
-
-# 必须显式注册适配器，否则机器人收不到任何 QQ 消息
-from nonebot.adapters.onebot.v11 import Adapter  # noqa: E402
-
-get_driver().register_adapter(Adapter)
-
-# 加载所有插件
-plugins_path = Path(__file__).parent / "plugins"
-load_plugins(str(plugins_path))
-
-
-@get_driver().on_startup
-async def _startup():
-    from loguru import logger
-
-    logger.info("=" * 50)
-    logger.info("QQ 群机器人启动成功 ✅")
-    logger.info("OneBot v11 反向 WS：/onebot/v11/ws")
-    logger.info("请确认 NapCat / go-cqhttp 已登录")
-    logger.info("=" * 50)
-
-
-if __name__ == "__main__":
-    from nonebot import run
-
-    run()
--- 5. python路径 --
-lrwxrwxrwx 1 root root 18 Nov 11 23:30 /root/bot/venv/bin/python -> python3
+===== 重启大脑加载新点歌代码 2026-11-18 02:36:22 =====
+-- 1. 旧父进程 --
+bash 
+-- 2. 停旧大脑 --
+旧进程已清空
+-- 3. setsid拉起新大脑 --
+-- 4. 新进程(应只有1个) --
+30989 /root/bot/venv/bin/python main.py
+-- 5. 启动日志尾部 --
+11-18 02:36:36 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-18 02:36:36 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+11-18 02:36:36 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+11-18 02:36:36 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+11-18 02:36:36 [SUCCESS] nonebot | Running NoneBot...
+11-18 02:36:36 [SUCCESS] nonebot | Loaded adapters: OneBot V11
+11-18 02:36:37 [INFO] uvicorn | Started server process [30989]
+11-18 02:36:37 [INFO] uvicorn | Waiting for application startup.
+11-18 02:36:37 [INFO] __main__ | ==================================================
+11-18 02:36:37 [INFO] __main__ | QQ 群机器人启动成功 ✅
+11-18 02:36:37 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
+11-18 02:36:37 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
+11-18 02:36:37 [INFO] __main__ | ==================================================
+11-18 02:36:37 [INFO] uvicorn | Application startup complete.
+11-18 02:36:37 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+11-18 02:36:37 [INFO] uvicorn | 127.0.0.1:54738 - "WebSocket /onebot/v11/ws" [accepted]
+11-18 02:36:37 [INFO] websockets | connection open
+11-18 02:36:37 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
 ===== 完 =====
