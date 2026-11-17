@@ -1,33 +1,9 @@
-286240
-echo "===== 黑匣子重部署 $(date '+%F %T') ====="
-echo "IyEvYmluL2Jhc2gKIyDnvZHnu5zlv4Pot7Ppu5HljKPlrZDvvJrmr482MHPkuIDmnaHorrDlvZXjgILmjonnur/lkI7lm57nnIvov5nmlofku7bvvIzog73ljLrliIYi572R57uc5YWI5patIui/mOaYryLmnI3liqHnq6/ouKLkuroiCkxPRz0vcm9vdC9uZXRtb24ubG9nCndoaWxlIHRydWU7IGRvCiAgVFM9JChkYXRlICcrJW0tJWQgJUg6JU06JVMnKQogIFA9JChwaW5nIC1jMSAtVzIgMjIzLjUuNS41IDI+L2Rldi9udWxsIHwgYXdrIC1GJ3RpbWU9JyAnL3RpbWU9L3twcmludCAkMn0nIHwgY3V0IC1kJyAnIC1mMSkKICBbIC16ICIkUCIgXSAmJiBQPUZBSUwKICBUPSQoY2F0IC9zeXMvY2xhc3MvcG93ZXJfc3VwcGx5L2JhdHRlcnkvdGVtcCAyPi9kZXYvbnVsbCkKICBlY2hvICIkVFMgcGluZz0ke1B9bXMgYmF0dD0ke1R9IiA+PiAiJExPRyIKICBpZiBbICIkKHN0YXQgLWMgJXMgIiRMT0ciIDI+L2Rldi9udWxsKSIgLWd0IDIwOTcxNTIgXTsgdGhlbgogICAgdGFpbCAtYyAxMDQ4NTc2ICIkTE9HIiA+ICIkTE9HLnQiICYmIG12ICIkTE9HLnQiICIkTE9HIgogIGZpCiAgc2xlZXAgNjAKZG9uZQo=" | base64 -d > /root/netmon.sh
-echo "IyEvYmluL2Jhc2gKIyDmjonnur/lj5bor4HlmajvvJrmo4DmtYvliLAi6LSm5Y+354q25oCB5Y+Y5pu05Li656a757q/Iueri+WNs+aKk+eOsOWcuuW/q+eFp+WIsCBvZmZsaW5lX2ZvcmVuc2ljcy5sb2cKQ09ORj0vcm9vdC9OYXBjYXQvb3B0L1FRL3Jlc291cmNlcy9hcHAvYXBwX2xhdW5jaGVyL25hcGNhdApPVVQ9L3Jvb3Qvb2ZmbGluZV9mb3JlbnNpY3MubG9nCk5FV0VTVD0kKGxzIC10ICIkQ09ORi9uYXBjYXQvbG9ncy8iKi5sb2cgL3Jvb3QvbmFwY2F0LXJlc3RhcnQubG9nIDI+L2Rldi9udWxsIHwgaGVhZCAtMSkKUFJFVj0wClsgLW4gIiRORVdFU1QiIF0gJiYgUFJFVj0kKGdyZXAgLWMgIui0puWPt+eKtuaAgeWPmOabtOS4uuemu+e6vyIgIiRORVdFU1QiIDI+L2Rldi9udWxsIHx8IGVjaG8gMCkKd2hpbGUgdHJ1ZTsgZG8KICBORVdFU1Q9JChscyAtdCAiJENPTkYvbmFwY2F0L2xvZ3MvIioubG9nIC9yb290L25hcGNhdC1yZXN0YXJ0LmxvZyAyPi9kZXYvbnVsbCB8IGhlYWQgLTEpCiAgaWYgWyAtbiAiJE5FV0VTVCIgXTsgdGhlbgogICAgTj0kKGdyZXAgLWMgIui0puWPt+eKtuaAgeWPmOabtOS4uuemu+e6vyIgIiRORVdFU1QiIDI+L2Rldi9udWxsIHx8IGVjaG8gMCkKICAgIGlmIFsgIiR7TjotMH0iIC1ndCAiJFBSRVYiIF07IHRoZW4KICAgICAgewogICAgICAgIGVjaG8gIj09PT09IOaOiee6v+S6i+S7tiAkKGRhdGUgJyslbS0lZCAlSDolTTolUycpID09PT09IgogICAgICAgIGVjaG8gIuadpea6kDogJE5FV0VTVCIKICAgICAgICBlY2hvICItLSDkuovlj5HliY3nvZHnu5zlv4Pot7Mo5pyA6L+ROOadoSkgLS0iCiAgICAgICAgdGFpbCAtOCAvcm9vdC9uZXRtb24ubG9nIDI+L2Rldi9udWxsCiAgICAgICAgZWNobyAiLS0g5Y2z5pe2572R57ucIC0tIgogICAgICAgIHBpbmcgLWMyIC1XMiAyMjMuNS41LjUgMj4mMSB8IHRhaWwgLTIKICAgICAgICBlY2hvICItLSDns7vnu5/nirbmgIEgLS0iCiAgICAgICAgdXB0aW1lCiAgICAgICAgZnJlZSAtbSB8IGhlYWQgLTIKICAgICAgICBkZiAtaCAvIHwgdGFpbCAtMQogICAgICAgIGVjaG8gIueUtemHjzogJChjYXQgL3N5cy9jbGFzcy9wb3dlcl9zdXBwbHkvYmF0dGVyeS9jYXBhY2l0eSAyPi9kZXYvbnVsbCkiCiAgICAgICAgZWNobyAiUVHov5vnqIvmlbA6ICQocGdyZXAgLWZjICdvcHQvUVEvcXEnIDI+L2Rldi9udWxsKSIKICAgICAgICBlY2hvICItLSDml6Xlv5flsL7pg6ggLS0iCiAgICAgICAgdGFpbCAtMTUgIiRORVdFU1QiIDI+L2Rldi9udWxsCiAgICAgIH0gPj4gIiRPVVQiIDI+JjEKICAgICAgUFJFVj0kTgogICAgZmkKICBmaQogIHNsZWVwIDEwCmRvbmUK" | base64 -d > /root/offline_watch.sh
-chmod +x /root/netmon.sh /root/offline_watch.sh
-echo "写入校验: netmon=$(wc -c </root/netmon.sh)离线=$(wc -c </root/offline_watch.sh)字节"
-# 立即拉起(带防双开)
-pgrep -f "[n]etmon.sh" >/dev/null || (nohup bash /root/netmon.sh >/dev/null 2>&1 &)
-pgrep -f "[o]ffline_watch.sh" >/dev/null || (nohup bash /root/offline_watch.sh >/dev/null 2>&1 &)
-sleep 3
-echo "-- 在岗检查 --"
-for n in netmon.sh offline_watch.sh; do pgrep -f "" >/dev/null && echo ":在(pid $(pgrep -f ""|head -1))" || echo ":不在!"; done
-echo "-- netmon首批记录 --"; tail -3 /root/netmon.log 2>/dev/null
-echo "-- 补进v6看护自启 --"
-V6=$(ls -t /root/remote_ctl*.sh 2>/dev/null | head -1); echo "v6脚本=$V6"
-if ! grep -q "netmon.sh" "$V6" 2>/dev/null; then
-  cp "$V6" "$V6.bak_$(date +%m%d%H%M)"
-  python3 - <<'PY'
-import glob,os
-v6=sorted(glob.glob('/root/remote_ctl*.sh'),key=os.path.getmtime)[-1]
-s=open(v6,encoding='utf-8').read()
-line='pgrep -f "[n]etmon.sh" >/dev/null || (nohup bash /root/netmon.sh >/dev/null 2>&1 &)\npgrep -f "[o]ffline_watch.sh" >/dev/null || (nohup bash /root/offline_watch.sh >/dev/null 2>&1 &)\n'
-# 插在看护循环的大脑拉起行之后
-anchor='pgrep -f "main.py" >/dev/null ||'
-i=s.find(anchor)
-if i<0: i=s.find('done\n',s.find('while'))
-s=s[:i]+line+s[i:] if i>=0 else s+line
-open(v6,'w',encoding='utf-8').write(s)
-print('已插入自启守卫')
-PY
-  bash -n "$V6" && echo "v6语法OK" || echo "v6语法错误!回滚"
-else echo "已有守卫,跳过"; fi
-echo "===== 完 ====="
+286250
+echo '===== 黑匣子在岗验收 ====='
+for n in netmon.sh offline_watch.sh; do
+  p=$(pgrep -f "bash /root/$n" | head -1)
+  [ -n "$p" ] && echo "$n:在(pid $p)" || echo "$n:不在!"
+done
+echo '-- netmon.log 尾3 --'; tail -3 /root/netmon.log 2>/dev/null || echo 'netmon.log还没生成'
+echo '-- v6自启守卫确认 --'; grep -n "netmon.sh\|offline_watch.sh" /root/remote_ctl_v6.sh | tail -4
+echo '===== 完 ====='
