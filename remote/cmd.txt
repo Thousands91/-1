@@ -1,4 +1,19 @@
-286180
-echo "<<<SIGN_START>>>"
-cat /root/music_sign.py
-echo "<<<SIGN_END>>>"
+286200
+echo "===== 断联勘验 $(date '+%F %T') ====="
+echo "--- 1. 四账最后5条 ---"
+for f in tick health login_state ip; do
+  p=$(ls /root/logs/${f}.log /root/${f}.log 2>/dev/null | head -1)
+  echo "[$f] path=$p"; [ -n "$p" ] && tail -5 "$p"
+done
+echo "--- 2. 登录态 ---"
+bash /root/logincheck.sh 2>/dev/null | head -5
+echo "--- 3. 进程 ---"
+pgrep -af "opt/QQ/[q]q" | head -2; echo "大脑:"; pgrep -af "python main.py" | head -2
+echo "遥控pid=$(cat /root/.remote_pid 2>/dev/null) last=$(cat /root/.remote_last 2>/dev/null)"
+echo "--- 4. 仪器在岗 ---"
+for n in tick.sh login_watch.sh ipwatch.sh health_probe.sh; do pgrep -f "$n" >/dev/null && echo "$n:在" || echo "$n:不在!"; done
+echo "--- 5. bot.log 尾8行 ---"
+tail -8 /root/bot/bot/bot.log 2>/dev/null
+echo "--- 6. napcat-restart.log 尾5行 ---"
+tail -5 /root/napcat-restart.log 2>/dev/null
+echo "===== 勘验完 ====="
