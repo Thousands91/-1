@@ -1,22 +1,35 @@
-<<<task_286250.txt>>>
-===== 任务286250 11-17 18:56:58 =====
+<<<task_286320.txt>>>
+===== 任务286320 11-18 01:54:28 =====
 --- 命令 ---
-echo '===== 黑匣子在岗验收 ====='
-for n in netmon.sh offline_watch.sh; do
-  p=$(pgrep -f "bash /root/$n" | head -1)
-  [ -n "$p" ] && echo "$n:在(pid $p)" || echo "$n:不在!"
-done
-echo '-- netmon.log 尾3 --'; tail -3 /root/netmon.log 2>/dev/null || echo 'netmon.log还没生成'
-echo '-- v6自启守卫确认 --'; grep -n "netmon.sh\|offline_watch.sh" /root/remote_ctl_v6.sh | tail -4
-echo '===== 完 ====='
+echo "===== 回传恢复验收 $(date '+%F %T') ====="
+echo "-- 脚本版本 --"; grep -o "v6.6-git" /root/remote_ctl_v6.sh | head -1
+echo "-- 低速参数 --"; grep -o "lowSpeedLimit=0" /root/remote_ctl_v6.sh | head -1
+echo "-- 循环 --"; echo "pid=$(cat /root/.remote_pid 2>/dev/null)"; pgrep -af "remote_ctl_v6.sh" | head -2
+echo "-- 四账仪器 --"; for n in tick.sh login_watch.sh ipwatch.sh health_probe.sh offline_watch.sh netmon.sh; do pgrep -f "$n" >/dev/null && echo "$n:在" || echo "$n:不在!"; done
+echo "-- 大脑/NapCat --"; pgrep -f "main.py" >/dev/null && echo "大脑:在" || echo "大脑:不在"; pgrep -f "opt/QQ/qq" >/dev/null && echo "NapCat:在" || echo "NapCat:不在"
+echo "-- 登录态 --"; bash /root/logincheck.sh 2>/dev/null | head -3
+echo "-- 电量 --"; termux-battery-status 2>/dev/null | grep -o '"percentage":[0-9]*' || echo "proot内读不到(正常)"
+echo "===== 验收完 ====="
 --- 输出 ---
-===== 黑匣子在岗验收 =====
-netmon.sh:在(pid 16695)
-offline_watch.sh:在(pid 16703)
--- netmon.log 尾3 --
-11-17 18:55:52 ping=FAILms batt=
-11-17 18:56:54 ping=FAILms batt=
--- v6自启守卫确认 --
-163:  pgrep -f "[n]etmon.sh" >/dev/null || (nohup bash /root/netmon.sh >/dev/null 2>&1 &)
-164:pgrep -f "[o]ffline_watch.sh" >/dev/null || (nohup bash /root/offline_watch.sh >/dev/null 2>&1 &)
-===== 完 =====
+===== 回传恢复验收 2026-11-18 01:54:28 =====
+-- 脚本版本 --
+v6.6-git
+-- 低速参数 --
+lowSpeedLimit=0
+-- 循环 --
+pid=17992
+17992 bash /root/remote_ctl_v6.sh
+-- 四账仪器 --
+tick.sh:不在!
+login_watch.sh:不在!
+ipwatch.sh:不在!
+health_probe.sh:不在!
+offline_watch.sh:不在!
+netmon.sh:不在!
+-- 大脑/NapCat --
+大脑:不在
+NapCat:不在
+-- 登录态 --
+-- 电量 --
+proot内读不到(正常)
+===== 验收完 =====
