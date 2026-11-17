@@ -1,5 +1,5 @@
 #!/bin/bash
-# remote_ctl_v6.5 (2026-11-16)：+重启取证快照上云+日志裁剪保全(根治证据丢失)
+# remote_ctl_v6.6 (2026-11-17)：+git push低速保护+PBOX防堆积(根治回传卡死)
 # 病根：手机侧 api.github.com 小包 GET 通([api:200])，但回传的 PUT 带 100KB+ 大包
 # 被掐死（report:API回传失败 后错误体为空=请求被吞），285710 结果卡待发箱。
 # git 通道([git:通])实测健康，拉命令本来就走它——回传搬上同一条路。
@@ -62,7 +62,12 @@ run_task() {
 }
 
 make_bundle() {
-  F=$(ls -A "$PBOX" 2>/dev/null); [ -n "$F" ] || return 1
+  # 防堆积:待发文件>3个时只取最新3个,旧的丢弃(回传卡死时不让bundle越滚越大)
+  ALL=$(ls -1t "$PBOX" 2>/dev/null)
+  [ -n "$ALL" ] || return 1
+  DROPPED=$(echo "$ALL" | tail -n +4)
+  [ -n "$DROPPED" ] && echo "$DROPPED" | while read -r d; do rm -f "$PBOX/$d" 2>/dev/null; done
+  F=$(echo "$ALL" | head -3)
   : > /tmp/remote_bundle.txt
   for f in $F; do echo "<<<$f>>>" >> /tmp/remote_bundle.txt; cat "$PBOX/$f" >> /tmp/remote_bundle.txt; done
   return 0
@@ -89,7 +94,7 @@ git_report() {
   cp /tmp/remote_bundle.txt "$REPO/remote/out.txt"
   if git add remote/out.txt 2>/dev/null && \
      git -c user.name=asar-x10 -c user.email=asar-x10@localhost commit -m "遥控输出(git) $(date '+%m-%d %H:%M')" >/dev/null 2>&1; then
-    if timeout 90 git pull --rebase origin main >/dev/null 2>&1 && timeout 90 git push origin main >/dev/null 2>&1; then
+    if timeout 120 git -c http.lowSpeedLimit=0 -c http.lowSpeedTime=999 pull --rebase origin main >/dev/null 2>&1 && timeout 120 git -c http.lowSpeedLimit=0 -c http.lowSpeedTime=999 push origin main >/dev/null 2>&1; then
       rm -f "$PBOX"/*
       echo "[$(date '+%m-%d %H:%M')] report:git回传成功" >> "$LOG"
       return 0
@@ -162,7 +167,7 @@ while true; do
   pgrep -f "opt/QQ/qq" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：NapCat不在" >> "$LOG"; restart_napcat; }
   pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & cd "$REPO"; }
   if [ $((C % 60)) -eq 0 ]; then
-    echo "[$(date '+%m-%d %H:%M')] 心跳:循环正常(v6.5-git,LAST=$LAST)" >> "$LOG"
+    echo "[$(date '+%m-%d %H:%M')] 心跳:循环正常(v6.6-git,LAST=$LAST)" >> "$LOG"
     for LF in /root/napcat.log /root/napcat-restart.log "$LOG"; do
       if [ -f "$LF" ] && [ "$(wc -l < "$LF")" -gt 20000 ]; then
         tail -n 20000 "$LF" > "$LF.t" && cat "$LF.t" > "$LF" && rm -f "$LF.t"
