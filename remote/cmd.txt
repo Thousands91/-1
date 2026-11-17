@@ -1,19 +1,10 @@
-286390
-echo "===== 部署点歌新版本 f039dda $(date '+%F %T') ====="
+286400
+echo "===== 语法复检+重启大脑 $(date '+%F %T') ====="
 cd /root/bot/bot
-echo "-- 1. 确认是git仓库 --"
-git rev-parse --is-inside-work-tree 2>&1
-echo "-- 2. 当前HEAD --"
-git log -1 --format='%h %s' 2>&1
-echo "-- 3. 拉取远程 --"
-git -c http.lowSpeedLimit=0 -c http.lowSpeedTime=999 fetch origin 2>&1 | tail -3
-git reset --hard origin/main 2>&1 | tail -3
-echo "-- 4. 拉取后HEAD --"
-git log -1 --format='%h %s' 2>&1
-echo "-- 5. 校验新逻辑进场(应为0处vip_original特判) --"
-grep -c "vip_original" plugins/song_request.py 2>&1
-echo "-- 6. 语法检查 --"
-python3.11 -m py_compile plugins/song_request.py 2>&1 && echo "语法OK"
-echo "-- 7. 新标记注释在不在 --"
-grep -c "坑118外篇五" plugins/song_request.py 2>&1
+echo "-- 1. 语法检查(python3) --"
+python3 -m py_compile plugins/song_request.py 2>&1 && echo "语法OK"
+echo "-- 2. 大脑进程 --"
+pgrep -af "nb run|nonebot|bot.py|python.*bot" | head -8
+echo "-- 3. setsid拉起方式探查(启动脚本) --"
+ls -la /root/bot/*.sh /root/bot/bot/*.sh 2>/dev/null | head -10
 echo "===== 完 ====="
