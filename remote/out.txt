@@ -1,11 +1,6 @@
-<<<forensic_restart_1117_1533.txt>>>
-===== 重启取证 11-17 15:33:47 =====
+<<<forensic_restart_1117_1714.txt>>>
+===== 重启取证 11-17 17:14:37 =====
 --- napcat.log尾150行 ---
-fadbf4cccabfd00be6349509da5d143a24c085ec7af17993fcb5acfec4966d2a
-11-17 14:51:45 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [二旬老人想玩4i发现对方是比我还猛的猛1(2959186535)] 可怕
-11-17 14:51:51 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [二旬老人想玩4i发现对方是比我还猛的猛1(2959186535)] 居然要吃吗
-11-17 14:51:53 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [二旬老人想玩4i发现对方是比我还猛的猛1(2959186535)] 😭
-11-17 14:56:30 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [我爱这橙色的海洋🍀💛乐育群里的(1561950850)] ？
 11-17 14:58:57 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [克莱恩·莫雷蒂(2045344206)] 来精神病院了
 11-17 14:59:14 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [克莱恩·莫雷蒂(2045344206)] 老师找了个精神病人给我们演讲
 11-17 14:59:31 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爻心懒寄云中月(1445169274)] 为啥不找我
@@ -151,84 +146,89 @@ b34dd568b12d397091f1ac77bddd8a0c01e5f9ab13bf2d592c0f645b58ad9d78
 11-17 15:33:16 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
 11-17 15:33:19 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 「黄绮珊」翻出这几首，回复序号选哪首（60秒内有效）： ...
 c24069badca5698a091fefd5719ac1b0c0402f157c8d5cd7d7948ce5fcc0e000
+[18396:1117/153348.315145:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
+[18396:1117/153348.412102:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[18396:1117/153348.427570:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[18396:1117/153348.488223:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[18396:1117/153348.488696:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
 --- napcat-restart.log尾80行 ---
-d685a3a7b0129c6d6898fe6661030c70dffbf22ee7cfa01de95112dd63d31cad
-11-16 17:35:21 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
-1611-16 17:35:21 [[33mwarn[39m] 
+29b9456b8f396d935defd289380a624f6690cda43f27ada99086bfdabb2f7a44
+f2e68bd95a6f1179c474fba1569a873dc0aaca759cf1f99773844a94351445b5
+649361e4247738f308dddaf279d89e520bb01ab391dc624fc92968321a9898b8
+f4efc49283aef31b22c8f1577bc47dc1fe06221fcd0fc325166029d1ec6820ef
+8358f69cd8896ec25b0b7107e35d01e4852a066941fa1784fff6f0f9b275215c
+9565c0fc9aa66a25d552063023c1fa66e2f374d71c131de473a9c17e9a513598
+ee266f862332f1254df4e64b31f700a3dc0bd2559184fddbcf2c9f741e6c010d
+d915e8380e647ed419e7295947fd9ba2e37c52a8616e321be1130b3f54326157
+94e89c84edb42bf3bda7539e21bf5a343696ce1bd4706c4e12888b374bc5d36a
+78ef3f4a8e796682ae95e3ff80b33fe72c943ee4678be2d29448f7c6b5eb834c
+8e1a2c84435721e9c935da562b3aacb360500f5818fe257f87a4b262ab0cec8b
+02a0f711307c6b2b4f3496d73460c61710de4d493c3ef37e847bd89506184502
+78d820a1dde12dcf9ea5de30544fcbbd564b38c7c122c8aef0d45ee9ea5d094d
+261f9b504ca3095343e924f7b915f2d51591bfaa08eca74fa7d64c69d0fd7bc6
+e706136a6a61c087def731bfd3e5cf41ed7241969fccabdf355c3189ff3833b7
+036bf10c2629e2694ad31c418b543254cfa39267dce008dc4d6a99aacbdabe91
+15660c0fcaa2e58c085240c6a0012ea486c8908adf380cc1804211fb47062676
+4c5f87520d19f0a7bdfe3a9aa67fec3cc08cc35ab686bbe0de921573d13300f5
+2611194939a1413d7b612b3f48df26dcd4db571a2e68b800ceb824e3fe0477e2
+d542946299f288152c4b9b6a807c8bde3745d704a014d373f7912992a8241138
+a0f65a09698e2af1aeb2fe3d1005231d5c67a8a2647ffc24134229eea98fc13f
+7d4f90c9cb467eb10649e0e167e6976fad6925ce2629c46a3ff0d849240756f7
+37ea40fae7388cdaf4f5003e0ebd6b195368ae8b717c2f01e4319d579ea9b8aa
+2817f7d4143979a8097cf544ce8c8d1122ead17160a979a35a1021d10b2dfe55
+5158dae9a6c75e111c6aefce5d400daeccd7847be14d642d07409da99a82c345
+0d8ca499b244ba5fdf14724164f7feecf35b10d5b013562d26e0f8c5e5112762
+43bad3c1de770337370f47ba713e17e03c2a8dc8e5052318881138cab96a6964
+0d39d1a5e8b93b7723092eaab2e1c7a7bae9171c7fa161bb167ed51c4f985bb1
+50075e35a9003c7a2a2c099c60fae44dd04a49f714d7f5f8aeb787f39b1a515b
+5062593cc54df3eec9cb961bba75cecdb64405497ea8446108c66ef2caefe175
+8d52e24b5eb948bf8671471b604d9b6973277b09d0aec59d8a2f243a20f229ec
+7724e15618f340d1b1286c58dcc6c0e7bf5eca124b95a96627b05d85328b7583
+548d40b3aadbf5ffeed98d5709617b3a284ee7f1175e6a38b02aba9205db14a4
+3f75f9c4dcd149e75dea0299ca8ac6a2ea8a1dd4907be5c95a0790ce107d823a
+8631c9e1f966675192a73e15b475ff5ba97d4eaa38a68165d30733c00bba522c
+07aac0dd2bde51575f1c90e57e379ecdbc2d829d53c44ef86eb4923951b8ba89
+eef1d8a267e9ca5b1ead731684cf9e3472d6267f48e2bc4d9ef191869e258a74
+1a496d40de5a6a21618cdeb180201fc95c0a54f2aec47ed20df35776550e817e
+6f5a21c8023bc9fa58e2e7116251666f32bb712d79bf0675844eaf7ac67b984d
+b4e6c0357b9f4a3900198430f26e409d89c358eb76bb04fa954526b402fb37ec
+4b7c0b71c61def15b6300ec56429ac98d92f549839302feb931f6df247280676
+0e5cadce816a2728cc027a4306232fa2f449a12eb30d5ac618316c033048791e
+d3f9b3eb17625e030be90e329f2826d14408bd12a8822ad8f6f81739a6c5611b
+dfeb029fcd3de6554471869cd1f2b094d45cb864f675a5ec739e94add5c86924
+ce6f4db68a463f3479a87c4e2a7e1e9ac68b42ac985ce3cf6795dae07e20e84e
+53e8b8a6bb6b4e1c25dc53e413a9cc61b44aef4083c04b75a51a96399778f0db
+668c184f5a7eed2463afff1b903e71fe0778195295414dd5c4df8bce8f9dd9b6
+3ccef4d11121aed6e20594797ddfe7289f803993c40a644055e00d68ad4ce710
+33003af993dbd6549288364a4728e5135a589e0b6bf34f04d809b955c638abfc
+a37197a3a69a24fead8a600d4181fbd4f6e3339a85fff8b36dc4387b227dbbec
+11-17 17:03:27 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+a5e9ef7899d9dea65a0b7364078c886891e527e7653bcc7cb740393ebfa20e7c
+11-17 17:03:27 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+527a85e3dcd79af49d2b83bb7aa44f3accc50f2d20b666cb70feabf211-17 17:03:27 [[33mwarn[39m] 
 
 ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
-█ ▄▄▄▄▄ █▀ █▀▀▀ ▀▀▄▄▄▄ █▄▀█ ▄▄▄▄▄ █
-█ █   █ █▀ ▄ █▀█ ▀██▄█▄▄▄ █ █   █ █
-█ █▄▄▄█ █▀█ █▄█▄▀▀▀ █  ▄▄▀█ █▄▄▄█ █
-█▄▄▄▄▄▄▄█▄█▄█ █▄▀ █▄▀ ▀▄▀ █▄▄▄▄▄▄▄█
-█▄▄  ▄█▄▄  ▄█▄▄▀█▄▄▄ ▀██  ▄▀▄█▄▀ ▀█
-█▄ █▀▄█▄▀█ ▀ ▄██▄▀█ ▀█▀█▀▀▀▀▄ ▄▀▄██
-█▄  ▄▀█▄█▄▄▀▄▀▄▀▄▀ ▀▀▄  ▄▄▄▀ ▄▄█▀▀█
-█▀ ▄██▄▄███▀█▀██▄▀█▀██▀▀█▀  ▀██▀▄██
-█▀▀▄▀▄█▄ ▀ ▀█▄▄▀▄█▄▄█ █▀▀█▄▀█▄▀█ ▀█
-█▄▄▀▀█ ▄██ ▄ ▄██▄ ▄ █  ███ ▄▀█▄▀▄██
-█▀█▄▀██▄▀ █▀▄▀▄▀  ██▀▄▀▄ ▀█▀█▄▀█ ▀█
-█ █   ▀▄▄▄▀▀█▀█▀▄█▄▀▀█▀▀▀▀  ▄  ▀▄██
-█▄██▄▄▄▄█▀ ██▄▄▀▀▀▄██▀▀▄▄ ▄▄▄  ▀█ █
-█ ▄▄▄▄▄ █▄ ▄ ▄▄▄  █ ▀ ▀█  █▄█ ▀ ▄██
-█ █   █ █ █ ▄ ▄▀▄ ███▀  ▀▄ ▄  ▄█▄██
-█ █▄▄▄█ █  ▄███▀▄▄▄▀█  █ █▄▄ ▀▀ ▄██
-█▄▄▄▄▄▄▄█▄████▄█▄▄▄▄██▄▄█▄██▄▄▄█▄██
+█ ▄▄▄▄▄ ██▄▄ ▀ ▀█ █▀▄█ ▄▄██ ▄▄▄▄▄ █
+█ █   █ █▀▄  █▀▀▄█▀ ▄ ▄██▀█ █   █ █
+█ █▄▄▄█ █▄▀ █▄█▄█▀▀██  ▄▄▀█ █▄▄▄█ █
+█▄▄▄▄▄▄▄█▄▀▄█ █▄█ █▄▀ █ ▀ █▄▄▄▄▄▄▄█
+█  ███ ▄ ▀▄ █▄▄█▀ ▀▀█▄▀█ ▄██▀ ▄▀▀██
+██  ▄ █▄ █▄▀ ▄██ ▀▄▀▀█▄█▀ ▀▀  ▄▀▄██
+█▀▄▄▄ █▄▀▄  █▀█   ██▀▀ ▀▄▄█ ▄███  █
+█ ▄▀▀▀▄▄▀ ▀██▀█▀ ██▄█ █▀█▀ ▄█▀█▀▄▀█
+██▄ ▀█▀▄  ▄▄█▄▄▀ █ ▄▄ █▀ ▄▄▀▀▄▀█ ▀█
+██▀▀ █ ▄▄▄██▀▄▄▄▄ ▄ ▄▀▄▄▄█▀██▄█▀█▄█
+█▀ ▄▄▀█▄█▄▄▀▄▀▄█  ▄█▀▄   ▀██▀ ▀█ ██
+█ █▀▄█▀▄▀ ▀██▀█▀ ▄█▀▀▄▄ ▀▀     ▀▄██
+█▄▄▄▄▄▄▄▄  ▀▄▄█  ██▀ █▀▀█ ▄▄▄ ▀▀▄▀█
+█ ▄▄▄▄▄ █  ▄ ▄▄ ▄█▄▀██▄█  █▄█ ▀ ▄▀█
+█ █   █ ██▄▄▄ ▄▀ ▄█▀▀▀▄ ▀▄ ▄▄ ▄█▄██
+█ █▄▄▄█ █▀▄▄▄█▄  ▀█▀ ▀▄▀▀███▄   █▄█
+█▄▄▄▄▄▄▄█▄█▄██▄█▄▄▄██▄█▄█▄██▄▄▄█▄██
 
-二维码解码URL: https://txz.qq.com/p?k=qK*ba0*S8cbPEGB5P2oBmC0l2VpV3uJW&f=1600001615
+二维码解码URL: https://txz.qq.com/p?k=iBjeBS8Z0MyUwd3uYzWFX7Nq8tfFw434&f=1600001615
 如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
-7e435001913e3844cf73152c30b5a147ef8489fb36f6418cb6ad8aecb82886
-11-16 17:35:21 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-88614a41e39607186341d7eb6b2040ab53a07c1f51a233029bfa2b515e2ae886
-81d6ff1817aae53b2d89b3160e437a04c43f3eb75d2d33eedc8efdcf6c156597
-8a8b3f804a1bd5829d6d01b2dc12c3a9fd57c4c08eedd29c24b88cf4fd1214c1
-b9ce3453aa8113806f19787c26bdca82aa282f3e58dc7284e77c030ba4372de2
-eadd8b9f8bf544a0b411c87a0a55c12fce5e4b306c5009a95fac22b357fac523
-48c7e954e8e7a82be30663397db46543f9a60087e1dd0874dda08888bc40d84b
-201bd28cd7d97767eb3e98840f889a26d941976fbf23845c0f1c3b904ed2d868
-06f6b485a7e60fd2060cf80b8bfcf54b8e0db3bee0f450063b575e81f41ed6f7
-d1c5b28dc51e5ee5260de697184983b01c430858481eeefae491d12a1c1d119e
-16cac1aa66dd90ce5ee7b17e974e8dd7cbc9ecedbaaa9b0f913e4155e44544e9
-5da2b866dccabadc10e0ca7642c19396cbeb648825c10d2dffba5e9af1ae941f
-8bd1665f7e32fd938e3be72aa965ff599165e2020e61ba658b3831fd98edbdab
-d9f6b3eeae6abee3a76d828dd48132d2a23be4cb25e1557aa1af92fba951bd5a
-17986cc11e7e1078a227c30c946f4417b8e575790169125f77135dfa990ecde7
-359313a07ba99aa6eabce87a1e36dead2b509442a7c79faf642ef344c2540a37
-138ebe92efc1ec829d3efdcaba84f36fc63aab00cb56859b3d4fba5491b9bc30
-346fe288aa0121c290a300da553786ef61029a598cb10d1fcfdda5dc373009fb
-68ac27c0b70541ccb373a13420d5ba7a45b176e5326a77a18919d50c1e2bb2e0
-b5cb9d3020ea91504fbe297d368c18c8c04657596172263ff09020eddb33454a
-1ae865634ea837599abed1f5899f7512cd3ef877459764c55720093070ec3898
-46701422f427b46c1a3aa94380d04c393e98cef06c44c9e53c962b3f6407d04a
-16090cd2ea14dec69abe7400693c3bec69ad284cdfb63e4527aa4c9e2d9bb3dc
-9192b6dd4e59c1d45c21d1a335ab569e19ef0d4da2f8cb283de3e9a0c13f3d7a
-1c20fe74b02b4ef6cb4fe7b1cf3122d6994ff0080e246e8e523a1f44cb472ed2
-196b29f2fa6b17d6b9ae4095672e4f5a8d51afb4427e071d56e13a827e267ba3
-861a3416e12dc5e42909b36acab8b8387716fa771ce1b14b1648402f20fe5bf9
-b25868a0718f799c01f889db28a6142914aa7f9d6b6f8e8f81425c75a16310d4
-b762e1ac75e76f1c129014c92d969aa60b05226e6215858fb17bfc85eb6f31c1
-ffd77b96bf1921d91b8e2bc9df0c8084ecacd50cf15e1d56fcaaac7419cabbc9
-0c1bd79ad372b773605f73e77d65773a371b4a038a712e6bd853f21df26b5f39
-f9255419de6bac902b00ed58cc7cefdf1b62fa22dfefe50d1d82938e7620563c
-ffcf77fba0c0513178da1472d3957faabe1eaa18536ee72800a6631d1dfc6450
-e247a2c836bb9df35b5ab0e1efcc35bee96cd95c562e41fd690e1acd487f4084
-8c45a9ca70db22e9407058eeb882b6e8f0eca560ef44d58f35fbc28d1475d212
-0ffa4eb52d30eaeb42bebf7dae8f0821271f009568c558a638aab241b542a120
-be8e44975c3517d203ce76ce076e82a0d60a25f67beb7d0009cf0b5556d6b8c6
-29a6199d1bb6820a6a98666e61f90797fd1658f0d458147e84f3e3ab5dd7390a
-813b39d6454d94285d12be7f6d38f58eb14c527964966655a001b615ec33e8ea
-dd6719b9564afb87eec6524bec5686b9f6cbaab161fce2e9f6e39acbe836dcd6
-89a87b1e556cbdcc28d99fa12d29fa5aec74764fd1103fc40e798f342b397d75
-7eb1cf459d3a0bee8bc20e1ecbd8461292e368ca8966f402b90e78743eb12831
-cea8f45f92813949c80e632fae3f2da1b1f41d6794720be597c4826303e5a0bf
-9a86009726655ca49437af803bbfd050d2e0c0500777725abfdcb2fffabc3dae
-f51a42d55d4300058f93bfef1d44d95b6b3394cfa25fdab479531e4d599bc130
-daeb6de78c8367c58de4db0de8005c5854f0092327d23d66f282c1f476844141
-[24388:1116/173652.006090:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
-[24388:1116/173652.019513:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[24388:1116/173652.023075:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[24388:1116/173652.026709:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[24388:1116/173652.033231:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[24388:1116/173652.036098:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[24388:1116/173652.038814:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[24388:1116/173652.040593:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+c11afd3f
+11-17 17:03:27 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+3d2541e0183c3c92e58cc510739b34b149ad1be1befbf7356dd1ca038d87a559
+11-17 17:03:31 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
