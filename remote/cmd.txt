@@ -1,7 +1,7 @@
-286270
-LN=$(grep -an "closed by peer" /root/bot/bot/bot.log | tail -1 | cut -d: -f1)
-echo "WS关闭行号=$LN"
-[ -n "$LN" ] && sed -n "$((LN-4)),$((LN+3))p" /root/bot/bot/bot.log
-echo '-- NapCat侧15:33-15:34关键行 --'
-grep -a "15:33:4\|15:33:5\|SelfOffline\|WS.*close\|websocket.*close" /root/napcat.log 2>/dev/null | tail -12
-echo '==完=='
+286280
+echo "PING $(date '+%F %T')"
+echo "remote_pid=$(cat /root/.remote_pid 2>/dev/null) last=$(cat /root/.remote_last 2>/dev/null)"
+pgrep -af "remote_ctl_v6" | head -3
+echo "--- remote_ctl.log 尾6 ---"; tail -6 /root/remote_ctl.log 2>/dev/null
+echo "--- PBOX待发箱 ---"; ls -la /root/.remote_pending/ 2>/dev/null | tail -8
+echo "==完=="
