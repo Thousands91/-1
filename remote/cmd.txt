@@ -1,16 +1,12 @@
-286430
-echo "===== 重启大脑加载新点歌代码 $(date '+%F %T') ====="
-echo "-- 1. 旧父进程 --"
-tr '\0' ' ' </proc/24645/cmdline 2>/dev/null; echo
-echo "-- 2. 停旧大脑 --"
-pkill -f "venv/bin/python main.py"; sleep 3
-pgrep -af "venv/bin/python main.py" || echo "旧进程已清空"
-echo "-- 3. setsid拉起新大脑 --"
-cd /root/bot/bot
-setsid /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null &
-sleep 12
-echo "-- 4. 新进程(应只有1个) --"
-pgrep -af "venv/bin/python main.py"
-echo "-- 5. 启动日志尾部 --"
-tail -18 /root/bot/bot/bot.log
+286440
+echo "===== 点歌全平台发卡日志普查 $(date '+%F %T') ====="
+LOG=/root/bot/bot/bot.log
+echo "-- 1. 全部[发卡]记录统计(按类型) --"
+grep -a "\[发卡\]" $LOG 2>/dev/null | sed -E 's/^.*\[发卡\]/[发卡]/' | sort | uniq -c | sort -rn | head -40
+echo "-- 2. 最近40条[发卡]原始 --"
+grep -a "\[发卡\]" $LOG 2>/dev/null | tail -40
+echo "-- 3. 点歌命令触发记录(最近30) --"
+grep -aE "'点歌 |'来首歌 |'听歌 " $LOG 2>/dev/null | tail -30
+echo "-- 4. 发卡异常/放弃记录 --"
+grep -aE "custom卡放弃|custom卡失败|官方卡失败|无封面|整卡被拒" $LOG 2>/dev/null | tail -25
 echo "===== 完 ====="
