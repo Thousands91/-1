@@ -1,20 +1,42 @@
-<<<task_286400.txt>>>
-===== 任务286400 11-18 02:31:43 =====
+<<<task_286410.txt>>>
+===== 任务286410 11-18 02:32:32 =====
 --- 命令 ---
-echo "===== 语法复检+重启大脑 $(date '+%F %T') ====="
-cd /root/bot/bot
-echo "-- 1. 语法检查(python3) --"
-python3 -m py_compile plugins/song_request.py 2>&1 && echo "语法OK"
-echo "-- 2. 大脑进程 --"
-pgrep -af "nb run|nonebot|bot.py|python.*bot" | head -8
-echo "-- 3. setsid拉起方式探查(启动脚本) --"
-ls -la /root/bot/*.sh /root/bot/bot/*.sh 2>/dev/null | head -10
+echo "===== 大脑进程与启动脚本 $(date '+%F %T') ====="
+echo "-- 1. entrypoint.sh内容 --"
+cat /root/bot/entrypoint.sh 2>/dev/null
+echo "-- 2. 所有python进程 --"
+ps aux | grep -iE "python|nonebot|nb run" | grep -v grep | head -15
+echo "-- 3. bot目录结构 --"
+ls -la /root/bot/bot/ | head -20
 echo "===== 完 ====="
 --- 输出 ---
-===== 语法复检+重启大脑 2026-11-18 02:31:43 =====
--- 1. 语法检查(python3) --
-语法OK
--- 2. 大脑进程 --
--- 3. setsid拉起方式探查(启动脚本) --
--rw-r--r-- 1 root root 318 Nov 11 22:41 /root/bot/entrypoint.sh
+===== 大脑进程与启动脚本 2026-11-18 02:32:32 =====
+-- 1. entrypoint.sh内容 --
+#!/bin/sh
+# 首次启动时把镜像内置的记忆数据播种到挂载卷，之后卷里的数据为准（重启不丢）
+if [ ! -e /app/data/memory ] && [ -d /app/data_seed/memory ]; then
+  echo "[entrypoint] 播种记忆数据到 data/"
+  cp -rn /app/data_seed/* /app/data/ 2>/dev/null
+fi
+exec python /app/main.py
+-- 2. 所有python进程 --
+aid_u0_+ 24647  0.0  1.1 606248 67396 ?        S<sl  2023   0:16 /root/bot/venv/bin/python main.py
+-- 3. bot目录结构 --
+total 0
+drwxr-xr-x  7 root root    3488 Nov 14 22:14 .
+drwxr-xr-x 11 root root    3488 Nov 11 23:30 ..
+-rw-r--r--  1 root root     518 Nov 12 15:26 .env
+-rw-r--r--  1 root root    1218 Nov 11 22:41 .env.example
+drwxr-xr-x  2 root root    3488 Nov 12 00:06 __pycache__
+drwxr-xr-x  2 root root    3488 Nov 11 22:41 assets
+-rw-r--r--  1 root root 2132246 Nov 18 02:20 bot.log
+-rw-r--r--  1 root root     705 Nov 11 22:41 config.py
+drwxr-xr-x  4 root root    3488 Nov 18 02:30 data
+-rw-r--r--  1 root root     979 Nov 11 22:41 main.py
+drwxr-xr-x  3 root root    3488 Nov 12 00:07 persona
+drwxr-xr-x  3 root root    3488 Nov 18 02:30 plugins
+-rw-r--r--  1 root root     461 Nov 11 22:41 pyproject.toml
+-rw-r--r--  1 root root    1077 Nov 13 15:37 requirements.txt
+-rw-r--r--  1 root root    7540 Nov 11 22:41 tests_test_games_full.py
+-rw-r--r--  1 root root    4909 Nov 11 22:41 tests_test_mute_v2.py
 ===== 完 =====
