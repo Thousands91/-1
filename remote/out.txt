@@ -1,42 +1,70 @@
-<<<task_286410.txt>>>
-===== 任务286410 11-18 02:32:32 =====
+<<<task_286420.txt>>>
+===== 任务286420 11-18 02:34:40 =====
 --- 命令 ---
-echo "===== 大脑进程与启动脚本 $(date '+%F %T') ====="
-echo "-- 1. entrypoint.sh内容 --"
-cat /root/bot/entrypoint.sh 2>/dev/null
-echo "-- 2. 所有python进程 --"
-ps aux | grep -iE "python|nonebot|nb run" | grep -v grep | head -15
-echo "-- 3. bot目录结构 --"
-ls -la /root/bot/bot/ | head -20
+echo "===== 大脑进程上下文 $(date '+%F %T') ====="
+echo "-- 1. cwd --"
+readlink /proc/24647/cwd 2>&1
+echo "-- 2. cmdline --"
+tr '\0' ' ' </proc/24647/cmdline 2>/dev/null; echo
+echo "-- 3. 父进程 --"
+ps -o pid,ppid,cmd -p 24647 2>&1
+echo "-- 4. main.py内容 --"
+cat /root/bot/bot/main.py 2>/dev/null
+echo "-- 5. python路径 --"
+ls -l /root/bot/venv/bin/python 2>&1
 echo "===== 完 ====="
 --- 输出 ---
-===== 大脑进程与启动脚本 2026-11-18 02:32:32 =====
--- 1. entrypoint.sh内容 --
-#!/bin/sh
-# 首次启动时把镜像内置的记忆数据播种到挂载卷，之后卷里的数据为准（重启不丢）
-if [ ! -e /app/data/memory ] && [ -d /app/data_seed/memory ]; then
-  echo "[entrypoint] 播种记忆数据到 data/"
-  cp -rn /app/data_seed/* /app/data/ 2>/dev/null
-fi
-exec python /app/main.py
--- 2. 所有python进程 --
-aid_u0_+ 24647  0.0  1.1 606248 67396 ?        S<sl  2023   0:16 /root/bot/venv/bin/python main.py
--- 3. bot目录结构 --
-total 0
-drwxr-xr-x  7 root root    3488 Nov 14 22:14 .
-drwxr-xr-x 11 root root    3488 Nov 11 23:30 ..
--rw-r--r--  1 root root     518 Nov 12 15:26 .env
--rw-r--r--  1 root root    1218 Nov 11 22:41 .env.example
-drwxr-xr-x  2 root root    3488 Nov 12 00:06 __pycache__
-drwxr-xr-x  2 root root    3488 Nov 11 22:41 assets
--rw-r--r--  1 root root 2132246 Nov 18 02:20 bot.log
--rw-r--r--  1 root root     705 Nov 11 22:41 config.py
-drwxr-xr-x  4 root root    3488 Nov 18 02:30 data
--rw-r--r--  1 root root     979 Nov 11 22:41 main.py
-drwxr-xr-x  3 root root    3488 Nov 12 00:07 persona
-drwxr-xr-x  3 root root    3488 Nov 18 02:30 plugins
--rw-r--r--  1 root root     461 Nov 11 22:41 pyproject.toml
--rw-r--r--  1 root root    1077 Nov 13 15:37 requirements.txt
--rw-r--r--  1 root root    7540 Nov 11 22:41 tests_test_games_full.py
--rw-r--r--  1 root root    4909 Nov 11 22:41 tests_test_mute_v2.py
+===== 大脑进程上下文 2026-11-18 02:34:40 =====
+-- 1. cwd --
+/root/bot/bot
+-- 2. cmdline --
+/root/bot/venv/bin/python main.py 
+-- 3. 父进程 --
+  PID  PPID CMD
+24647 24645 /root/bot/venv/bin/python main.py
+-- 4. main.py内容 --
+"""
+NoneBot 启动入口
+"""
+
+import sys
+from pathlib import Path
+
+from nonebot import get_driver, init, load_plugins
+
+from config import config  # noqa: F401  导入即完成配置注册
+
+# 让 persona 能被插件 import
+sys.path.insert(0, str(Path(__file__).parent))
+
+# 初始化（NoneBot 2.x 的 init() 不接受参数）
+init()
+
+# 必须显式注册适配器，否则机器人收不到任何 QQ 消息
+from nonebot.adapters.onebot.v11 import Adapter  # noqa: E402
+
+get_driver().register_adapter(Adapter)
+
+# 加载所有插件
+plugins_path = Path(__file__).parent / "plugins"
+load_plugins(str(plugins_path))
+
+
+@get_driver().on_startup
+async def _startup():
+    from loguru import logger
+
+    logger.info("=" * 50)
+    logger.info("QQ 群机器人启动成功 ✅")
+    logger.info("OneBot v11 反向 WS：/onebot/v11/ws")
+    logger.info("请确认 NapCat / go-cqhttp 已登录")
+    logger.info("=" * 50)
+
+
+if __name__ == "__main__":
+    from nonebot import run
+
+    run()
+-- 5. python路径 --
+lrwxrwxrwx 1 root root 18 Nov 11 23:30 /root/bot/venv/bin/python -> python3
 ===== 完 =====
