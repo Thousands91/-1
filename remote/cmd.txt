@@ -1,11 +1,14 @@
-286340
-cd /root/bot || exit 1
-git pull --ff-only origin main 2>&1 | tail -2
-echo "-- HEAD --"; git log --oneline -1
-echo "-- 修复在场 --"; grep -c "try_official_card" bot/plugins/song_request.py
-( sleep 2; pkill -f "[v]env/bin/python main.py"; sleep 3; cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null & )
-sleep 15
-pgrep -f "main.py" >/dev/null && echo "大脑已拉起" || echo "大脑没起来!"
-grep -a "song_request" /root/bot/bot/bot.log | tail -1
-echo "-- 登录态 --"; bash /root/logincheck.sh 2>/dev/null | head -2
-echo "== 部署完 =="
+286350
+echo "===== 网易云标可行性探查 $(date '+%F %T') ====="
+echo "-- 1. 签名服务源码URL/上游清单 --"
+grep -n "http\|url\|xingzhige\|106.55\|qqbotark\|llob\|appid\|app\b" /root/music_sign.py 2>/dev/null | head -30
+echo "-- 2. xingzhige出卡原始json(大悲咒 5262296) --"
+UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+curl -s --max-time 15 -A "$UA" -X POST "https://ss.xingzhige.com/music_card/card" -H "Content-Type: application/json" -d '{"server":"netease","id":5262296,"type":"163"}' 2>/dev/null | head -c 1200
+echo ""
+echo "-- 3. 试xingzhige带app/netease参数能否出网易云标 --"
+for extra in '"app":"com.netease.cloudmusic"' '"appid":100951776' '"type":"netease"'; do
+  echo "[试 $extra]"
+  curl -s --max-time 12 -A "$UA" -X POST "https://ss.xingzhige.com/music_card/card" -H "Content-Type: application/json" -d "{\"server\":\"netease\",\"id\":5262296,\"type\":\"163\",$extra}" 2>/dev/null | grep -o '"app":"[^"]*"\|"appid":[0-9]*' | head -3
+done
+echo "===== 完 ====="
