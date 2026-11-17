@@ -1,53 +1,52 @@
-<<<task_286370.txt>>>
-===== 任务286370 11-18 02:14:08 =====
+<<<task_286380.txt>>>
+===== 任务286380 11-18 02:25:48 =====
 --- 命令 ---
-UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-echo "===== 网易云标API最后探查 $(date '+%F %T') ====="
-echo "-- 1. vkeys 音乐卡接口 --"
-for u in \
-  'https://api.vkeys.cn/v2/music/?src=netease&id=5262296' \
-  'https://api.vkeys.cn/v3/music/?src=netease&id=5262296' \
-  'https://api.vkeys.cn/v2/music/card?server=netease&id=5262296'; do
-  echo "[$u] -> $(curl -s --max-time 10 -A "$UA" "$u" 2>/dev/null | head -c 200)"
-  echo ""
-done
-echo "-- 2. 抓一张xingzhige完整卡json存文件(供分析) --"
-curl -s --max-time 12 -A "$UA" -X POST 'https://ss.xingzhige.com/music_card/card' -H 'Content-Type: application/json' -d '{"server":"netease","id":5262296,"type":"163"}' > /root/xz_card_sample.json 2>/dev/null
-echo "字节:$(wc -c </root/xz_card_sample.json 2>/dev/null)"
-grep -o '"app":"[^"]*"\|"appid":[0-9]*\|"token":"[^"]*"\|"jumpUrl":"[^"]*"' /root/xz_card_sample.json 2>/dev/null | head -8
+echo "===== 点歌分支与发卡日志核查 $(date '+%F %T') ====="
+echo "-- 1. 设备插件版本(md5) --"
+md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null
+echo "-- 2. 是否含 try_official_card(新版本标志) --"
+grep -c "try_official_card" /root/bot/bot/plugins/song_request.py 2>/dev/null
+echo "-- 3. bot.log 最近[发卡]日志 --"
+grep -a "\[发卡\]" /root/bot/bot/bot.log 2>/dev/null | tail -25
+echo "-- 4. bot.log 叹息瓶相关 --"
+grep -a "叹息瓶" /root/bot/bot/bot.log 2>/dev/null | tail -15
+echo "-- 5. bot.log 最近点歌异常 --"
+grep -aE "点歌|song_request|music" /root/bot/bot/bot.log 2>/dev/null | tail -20
 echo "===== 完 ====="
 --- 输出 ---
-===== 网易云标API最后探查 2026-11-18 02:14:08 =====
--- 1. vkeys 音乐卡接口 --
-[https://api.vkeys.cn/v2/music/?src=netease&id=5262296] -> {
-    "code": 404,
-    "message": "404 not found",
-    "data": [],
-    "time": "2026-11-18 02:14:10",
-    "pid": 313,
-    "tips": "欢迎使用API-Server"
-}
-
-[https://api.vkeys.cn/v3/music/?src=netease&id=5262296] -> {
-    "code": 1,
-    "message": "HTTP异常：404 Not Found",
-    "data": null,
-    "time": "2026-11-18 02:14:11",
-    "pid": 100,
-    "tips": "欢迎使用落月API-V3"
-}
-
-[https://api.vkeys.cn/v2/music/card?server=netease&id=5262296] -> {
-    "code": 404,
-    "message": "404 not found",
-    "data": [],
-    "time": "2026-11-18 02:14:12",
-    "pid": 135,
-    "tips": "欢迎使用API-Server"
-}
-
--- 2. 抓一张xingzhige完整卡json存文件(供分析) --
-字节:1134
-"appid":
-"appid":
+===== 点歌分支与发卡日志核查 2026-11-18 02:25:49 =====
+-- 1. 设备插件版本(md5) --
+4a071bf1bda7226a5c21f3a97fd84fb8  /root/bot/bot/plugins/song_request.py
+-- 2. 是否含 try_official_card(新版本标志) --
+4
+-- 3. bot.log 最近[发卡]日志 --
+11-17 04:20:50 [INFO] song_request | [发卡] custom卡发送成功 src=kuwo id=128405
+11-17 04:20:50 [INFO] song_request | [发卡] custom卡 OK src=kuwo id=128405
+11-17 04:22:55 [INFO] song_request | [发卡] custom卡发送成功 src=netease id=284793
+11-17 04:22:55 [INFO] song_request | [发卡] custom卡 OK src=netease id=284793
+11-17 04:49:44 [INFO] song_request | [发卡] 163官方卡(找补原曲) OK id=5262296
+11-18 02:19:40 [INFO] song_request | [发卡] 163官方卡 OK id=284799
+-- 4. bot.log 叹息瓶相关 --
+11-18 02:19:29 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 227451039 from 1561950850 '点歌 叹息瓶 齐豫'
+-- 5. bot.log 最近点歌异常 --
+11-17 04:22:55 [INFO] song_request | [发卡] custom卡 OK src=netease id=284793
+11-17 04:23:03 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=309) running complete
+11-17 04:35:59 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-17 04:42:49 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-17 04:45:58 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-17 04:49:13 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 692521035 from 1561950850 '点歌 齐豫'
+11-17 04:49:13 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=42)
+11-17 04:49:16 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=42) running complete
+11-17 04:49:25 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=326)
+11-17 04:49:44 [INFO] song_request | [发卡] 163官方卡(找补原曲) OK id=5262296
+11-17 04:50:07 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=326) running complete
+11-17 15:33:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 70293303 from 1561950850 '点歌 黄绮珊'
+11-17 15:33:11 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=42)
+11-17 15:33:19 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=42) running complete
+11-18 01:55:27 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-18 02:09:15 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-18 02:19:29 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 227451039 from 1561950850 '点歌 叹息瓶 齐豫'
+11-18 02:19:30 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=42)
+11-18 02:19:40 [INFO] song_request | [发卡] 163官方卡 OK id=284799
+11-18 02:19:40 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=42) running complete
 ===== 完 =====
