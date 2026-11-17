@@ -1,13 +1,16 @@
-286420
-echo "===== 大脑进程上下文 $(date '+%F %T') ====="
-echo "-- 1. cwd --"
-readlink /proc/24647/cwd 2>&1
-echo "-- 2. cmdline --"
-tr '\0' ' ' </proc/24647/cmdline 2>/dev/null; echo
-echo "-- 3. 父进程 --"
-ps -o pid,ppid,cmd -p 24647 2>&1
-echo "-- 4. main.py内容 --"
-cat /root/bot/bot/main.py 2>/dev/null
-echo "-- 5. python路径 --"
-ls -l /root/bot/venv/bin/python 2>&1
+286430
+echo "===== 重启大脑加载新点歌代码 $(date '+%F %T') ====="
+echo "-- 1. 旧父进程 --"
+tr '\0' ' ' </proc/24645/cmdline 2>/dev/null; echo
+echo "-- 2. 停旧大脑 --"
+pkill -f "venv/bin/python main.py"; sleep 3
+pgrep -af "venv/bin/python main.py" || echo "旧进程已清空"
+echo "-- 3. setsid拉起新大脑 --"
+cd /root/bot/bot
+setsid /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null &
+sleep 12
+echo "-- 4. 新进程(应只有1个) --"
+pgrep -af "venv/bin/python main.py"
+echo "-- 5. 启动日志尾部 --"
+tail -18 /root/bot/bot/bot.log
 echo "===== 完 ====="
