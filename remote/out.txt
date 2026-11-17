@@ -1,78 +1,56 @@
-<<<task_286490.txt>>>
-===== 任务286490 11-18 03:01:34 =====
+<<<task_286500.txt>>>
+===== 任务286500 11-18 03:02:12 =====
 --- 命令 ---
-echo "===== 拉完整卡JSON看url/jumpUrl决定标 $(date '+%F %T') ====="
-echo "--- 网易云内容的卡 完整JSON ---"
+echo "===== 定案:NapCat签名服务配置 + 官方卡能否出平台标 $(date '+%F %T') ====="
+echo "--- [1] NapCat实际musicSignUrl配置(全盘搜,限定小范围避免卡死) ---"
+for d in /root/NapCat /root/napcat /opt/NapCat /opt/napcat /root/.config/napcat; do
+  [ -d "$d" ] && grep -rn "musicSignUrl" "$d" 2>/dev/null | head -5
+done
+echo "--- [2] 官方卡契约163(原样传上游,不转custom) ---"
+echo "思思:"
 curl -s --max-time 15 -H "Content-Type: application/json" -X POST \
-  -d '{"type":"custom","singer":"齐豫","title":"叹息瓶","url":"https://music.163.com/song?id=284799","audio":"https://api.injahow.cn/meting/?type=url&server=netease&id=284799","image":"https://p2.music.126.net/abc/284799.jpg"}' \
-  "https://ss.xingzhige.com/music_card/card" 2>/dev/null > /tmp/card_full.json
-echo "字节:$(stat -c%s /tmp/card_full.json)"
-python3 -c "
-import json
-d=json.load(open('/tmp/card_full.json'))
-def walk(o,p=''):
-  if isinstance(o,dict):
-    for k,v in o.items():
-      if isinstance(v,(dict,list)): walk(v,p+'.'+k)
-      else:
-        s=str(v)
-        if any(x in k.lower() or x in s.lower() for x in ['url','jump','app','prompt','title','desc','name']):
-          print(f'{p}.{k} = {s[:120]}')
-  elif isinstance(o,list):
-    for i,v in enumerate(o[:3]): walk(v,p+f'[{i}]')
-walk(d)
-" 2>/dev/null || head -c 1500 /tmp/card_full.json
-echo "--- 完整原文(前1800) ---"
-head -c 1800 /tmp/card_full.json
+  -d '{"type":"163","id":"284799"}' \
+  "https://ss.xingzhige.com/music_card/card" 2>/dev/null > /tmp/off163.json
+echo "字节:$(stat -c%s /tmp/off163.json)"
+grep -oE '"appid"[^,]*|"tag"[^,]*|"jumpUrl"[^,]*|"tagIcon"[^,]*' /tmp/off163.json 2>/dev/null | head -8
+head -c 120 /tmp/off163.json; echo ""
+echo "--- [3] 官方卡契约kuwo(原样传思思) ---"
+curl -s --max-time 15 -H "Content-Type: application/json" -X POST \
+  -d '{"type":"kuwo","id":"128405"}' \
+  "https://ss.xingzhige.com/music_card/card" 2>/dev/null | head -c 200
 echo ""
+echo "--- [4] 官方卡契约kugou/migu(对照) ---"
+for T in kugou migu qq; do
+  echo "--$T--"
+  curl -s --max-time 15 -H "Content-Type: application/json" -X POST \
+    -d "{\"type\":\"$T\",\"id\":\"128405\"}" \
+    "https://ss.xingzhige.com/music_card/card" 2>/dev/null | head -c 150
+  echo ""
+done
 echo "===== 完 ====="
 --- 输出 ---
-===== 拉完整卡JSON看url/jumpUrl决定标 2026-11-18 03:01:34 =====
---- 网易云内容的卡 完整JSON ---
-字节:1004
-.app = com.tencent.music.lua
-.extra.app_type = 1
-.extra.appid = 100497308
-.meta.music.app_type = 1
-.meta.music.appid = 100497308
-.meta.music.desc = 齐豫
-.meta.music.jumpUrl = https://music.163.com/song?id=284799
-.meta.music.musicUrl = https://api.injahow.cn/meting/?type=url&server=netease&id=284799
-.meta.music.tagIcon = https://p.qpic.cn/qqconnect/0/app_100497308_1626060999/100?max-age=2592000&t=0
-.meta.music.title = 叹息瓶
-.prompt = [分享]叹息瓶
---- 完整原文(前1800) ---
+===== 定案:NapCat签名服务配置 + 官方卡能否出平台标 2026-11-18 03:02:13 =====
+--- [1] NapCat实际musicSignUrl配置(全盘搜,限定小范围避免卡死) ---
+--- [2] 官方卡契约163(原样传上游,不转custom) ---
+思思:
+字节:1096
+"appid": 100495085
+"appid": 100495085
+"jumpUrl": "https://music.163.com/#/song?id=284799"
+"tag": "网易云音乐"
+"tagIcon": "https://i.gtimg.cn/open/app_icon/00/49/50/85/100495085_100_m.png"
 {
     "app": "com.tencent.music.lua",
     "bizsrc": "qqconnect.sdkshare_music",
     "config": {
-        "ctime": 1794941963,
-        "forward": 1,
-        "token": "8cc86af29e8bd25876ecd936c4256b5a",
-        "type": "normal"
-    },
-    "extra": {
-        "app_type": 1,
-        "appid": 100497308,
-        "uin": 3264925726
-    },
-    "meta": {
-        "music": {
-            "app_type": 1,
-            "appid": 100497308,
-            "ctime": 1794941963,
-            "desc": "齐豫",
-            "jumpUrl": "https://music.163.com/song?id=284799",
-            "musicUrl": "https://api.injahow.cn/meting/?type=url&server=netease&id=284799",
-            "preview": "https://p2.music.126.net/xxxxx/284799.jpg",
-            "tag": "QQ音乐",
-            "tagIcon": "https://p.qpic.cn/qqconnect/0/app_100497308_1626060999/100?max-age=2592000&t=0",
-            "title": "叹息瓶",
-            "uin": 3264925726
-        }
-    },
-    "prompt": "[分享]叹息瓶",
-    "ver": "0.0.0.1",
-    "view": "music"
-}
+        "ctime": 1794942
+--- [3] 官方卡契约kuwo(原样传思思) ---
+异常拦截
+--- [4] 官方卡契约kugou/migu(对照) ---
+--kugou--
+异常拦截
+--migu--
+异常拦截
+--qq--
+关闭id解析功能
 ===== 完 =====
