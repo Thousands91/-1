@@ -1,45 +1,30 @@
-<<<task_286440.txt>>>
-===== 任务286440 11-18 02:42:44 =====
+<<<task_286450.txt>>>
+===== 任务286450 11-18 02:45:02 =====
 --- 命令 ---
-echo "===== 点歌全平台发卡日志普查 $(date '+%F %T') ====="
-LOG=/root/bot/bot/bot.log
-echo "-- 1. 全部[发卡]记录统计(按类型) --"
-grep -a "\[发卡\]" $LOG 2>/dev/null | sed -E 's/^.*\[发卡\]/[发卡]/' | sort | uniq -c | sort -rn | head -40
-echo "-- 2. 最近40条[发卡]原始 --"
-grep -a "\[发卡\]" $LOG 2>/dev/null | tail -40
-echo "-- 3. 点歌命令触发记录(最近30) --"
-grep -aE "'点歌 |'来首歌 |'听歌 " $LOG 2>/dev/null | tail -30
-echo "-- 4. 发卡异常/放弃记录 --"
-grep -aE "custom卡放弃|custom卡失败|官方卡失败|无封面|整卡被拒" $LOG 2>/dev/null | tail -25
+echo "===== 部署一致性与分支核验 $(date '+%F %T') ====="
+cd /root/bot/bot
+echo "-- 1. 设备md5(应=03bcc7db202ecd6e3a7b056b7f24e774) --"
+md5sum plugins/song_request.py
+echo "-- 2. song_cmd处理器的所有finish行号(应只有4处告知+1发列表) --"
+grep -n "song_cmd.finish\|song_cmd.send" plugins/song_request.py | head -12
+echo "-- 3. 是否残留VIP特判 --"
+grep -c "vip_original" plugins/song_request.py
+echo "-- 4. on_command入口数量(点歌只应1个) --"
+grep -c "on_command(\"点歌\"" plugins/song_request.py
 echo "===== 完 ====="
 --- 输出 ---
-===== 点歌全平台发卡日志普查 2026-11-18 02:42:45 =====
--- 1. 全部[发卡]记录统计(按类型) --
-      1 [发卡] custom卡发送成功 src=netease id=284793
-      1 [发卡] custom卡发送成功 src=kuwo id=128405
-      1 [发卡] custom卡 OK src=netease id=284793
-      1 [发卡] custom卡 OK src=kuwo id=128405
-      1 [发卡] 163官方卡(找补原曲) OK id=5262296
-      1 [发卡] 163官方卡 OK id=284799
--- 2. 最近40条[发卡]原始 --
-11-17 04:20:50 [INFO] song_request | [发卡] custom卡发送成功 src=kuwo id=128405
-11-17 04:20:50 [INFO] song_request | [发卡] custom卡 OK src=kuwo id=128405
-11-17 04:22:55 [INFO] song_request | [发卡] custom卡发送成功 src=netease id=284793
-11-17 04:22:55 [INFO] song_request | [发卡] custom卡 OK src=netease id=284793
-11-17 04:49:44 [INFO] song_request | [发卡] 163官方卡(找补原曲) OK id=5262296
-11-18 02:19:40 [INFO] song_request | [发卡] 163官方卡 OK id=284799
--- 3. 点歌命令触发记录(最近30) --
-11-14 22:18:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1302089628 from 1561950850 '点歌 齐豫'
-11-15 11:33:57 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 146487265 from 1561950850 '点歌 齐豫'
-11-15 14:25:36 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1850163371 from 1561950850 '点歌 齐豫'
-11-15 15:17:50 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2124530914 from 1561950850 '点歌 潘越云'
-11-17 03:39:42 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 547373699 from 1561950850 '点歌 齐豫'
-11-17 03:57:36 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 599850876 from 1561950850 '点歌 齐豫'
-11-17 04:06:40 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1844442990 from 1561950850 '点歌 齐豫'
-11-17 04:20:25 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 370183728 from 1561950850 '点歌 齐豫'
-11-17 04:22:20 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1575266838 from 1561950850 '点歌 齐豫'
-11-17 04:49:13 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 692521035 from 1561950850 '点歌 齐豫'
-11-17 15:33:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 70293303 from 1561950850 '点歌 黄绮珊'
-11-18 02:19:29 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 227451039 from 1561950850 '点歌 叹息瓶 齐豫'
--- 4. 发卡异常/放弃记录 --
+===== 部署一致性与分支核验 2026-11-18 02:45:02 =====
+-- 1. 设备md5(应=03bcc7db202ecd6e3a7b056b7f24e774) --
+03bcc7db202ecd6e3a7b056b7f24e774  plugins/song_request.py
+-- 2. song_cmd处理器的所有finish行号(应只有4处告知+1发列表) --
+96:            await song_cmd.finish(
+101:        await song_cmd.finish("想听什么？说个歌名、歌手名都行；后面加个'文件'就发文件版（能后台听）。")
+103:    await song_cmd.send(f"翻柜子找「{kw}」，稍等一下……")
+122:        await song_cmd.finish(f"「{kw}」这几个字，我在曲子和歌手里都翻不着。换个说法试试？")
+139:    await song_cmd.finish(
+511:        await song_cmd.send(MessageSegment.music_custom(
+-- 3. 是否残留VIP特判 --
+0
+-- 4. on_command入口数量(点歌只应1个) --
+1
 ===== 完 =====
