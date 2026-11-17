@@ -1,80 +1,75 @@
-<<<task_286200.txt>>>
-===== 任务286200 11-17 18:11:31 =====
+<<<task_286210.txt>>>
+===== 任务286210 11-17 18:12:17 =====
 --- 命令 ---
-echo "===== 断联勘验 $(date '+%F %T') ====="
-echo "--- 1. 四账最后5条 ---"
-for f in tick health login_state ip; do
-  p=$(ls /root/logs/${f}.log /root/${f}.log 2>/dev/null | head -1)
-  echo "[$f] path=$p"; [ -n "$p" ] && tail -5 "$p"
-done
-echo "--- 2. 登录态 ---"
-bash /root/logincheck.sh 2>/dev/null | head -5
-echo "--- 3. 进程 ---"
-pgrep -af "opt/QQ/[q]q" | head -2; echo "大脑:"; pgrep -af "python main.py" | head -2
-echo "遥控pid=$(cat /root/.remote_pid 2>/dev/null) last=$(cat /root/.remote_last 2>/dev/null)"
-echo "--- 4. 仪器在岗 ---"
-for n in tick.sh login_watch.sh ipwatch.sh health_probe.sh; do pgrep -f "$n" >/dev/null && echo "$n:在" || echo "$n:不在!"; done
-echo "--- 5. bot.log 尾8行 ---"
-tail -8 /root/bot/bot/bot.log 2>/dev/null
-echo "--- 6. napcat-restart.log 尾5行 ---"
-tail -5 /root/napcat-restart.log 2>/dev/null
-echo "===== 勘验完 ====="
+echo "===== 掉线根因二轮 $(date '+%F %T') ====="
+echo "--- 1. QQ进程启动时刻 ---"
+ps -o pid,lstart,etime,cmd -p 24845,24860 2>/dev/null
+echo "--- 2. 登录态翻转点(最后在线+最早未登录) ---"
+grep -n "\[在线\]" /root/login_state.log | tail -3
+grep -n "\[未登录\]" /root/login_state.log | head -5
+echo "--- 3. 15:30-15:40 napcat.log 全量 ---"
+grep -a "15:3[0-9]" /root/napcat.log 2>/dev/null | tail -40
+echo "--- 4. 取证快照列表 ---"
+ls -la --time-style=+%m-%d_%H:%M /root/*forensic* /root/forensic* 2>/dev/null | tail -8
+echo "--- 5. v6遥控日志15:30后 ---"
+for f in /root/remote.log /root/remote_ctl.log /root/.remote_log; do [ -f "$f" ] && { echo "[$f]"; grep -a "15:3[0-9]\|16:\|17:\|18:" "$f" | tail -20; }; done
+echo "--- 6. 当前QQ相关进程全部 ---"
+pgrep -af "xvfb|qq|napcat" | head -10
+echo "===== 完 ====="
 --- 输出 ---
-===== 断联勘验 2026-11-17 18:11:31 =====
---- 1. 四账最后5条 ---
-[tick] path=/root/tick.log
-2026-11-17 18:06:52
-2026-11-17 18:07:52
-2026-11-17 18:08:53
+===== 掉线根因二轮 2026-11-17 18:12:17 =====
+--- 1. QQ进程启动时刻 ---
+  PID                  STARTED     ELAPSED CMD
+24845 Tue Apr  4 02:53:39 2023       00:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox
+24860 Tue Apr  4 02:53:40 2023       00:00 /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox
+--- 2. 登录态翻转点(最后在线+最早未登录) ---
+1013:2026-11-17 15:27:59 [在线]
+1014:2026-11-17 15:33:00 [在线]
+1015:2026-11-17 15:38:01 状态变化: [在线] -> [未登录]
+1:2026-11-13 11:41:30 状态变化: 初始 -> [未登录]
+2:2026-11-13 11:46:31 [未登录]
+3:2026-11-13 11:51:31 [未登录]
+4:2026-11-13 11:56:32 [未登录]
+5:2026-11-13 12:01:33 [未登录]
+--- 3. 15:30-15:40 napcat.log 全量 ---
+11-17 10:15:31 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [长太息以笑希希，乐希希之多艰(553414459)] 我不行了
+11-17 15:33:10 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+11-17 15:33:10 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 点歌 黄绮珊
+11-17 15:33:11 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 翻柜子找「黄绮珊」，稍等一下……
+11-17 15:33:16 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-17 15:33:19 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 「黄绮珊」翻出这几首，回复序号选哪首（60秒内有效）： ...
+--- 4. 取证快照列表 ---
+--- 5. v6遥控日志15:30后 ---
+[/root/remote_ctl.log]
 2026-11-17 18:09:53
 2026-11-17 18:10:53
-[health] path=/root/health.log
 11-17 18:06:45 elapsed=60s ip=192.168.31.142 if=无
 11-17 18:07:45 elapsed=60s ip=192.168.31.142 if=无
 11-17 18:08:45 elapsed=60s ip=192.168.31.142 if=无
 11-17 18:09:46 elapsed=61s ip=192.168.31.142 if=无
 11-17 18:10:46 elapsed=60s ip=192.168.31.142 if=无
-[login_state] path=/root/login_state.log
 2026-11-17 17:48:21 [未登录]
 2026-11-17 17:53:21 [未登录]
 2026-11-17 17:58:22 [未登录]
 2026-11-17 18:03:23 [未登录]
 2026-11-17 18:08:24 [未登录]
-[ip] path=/root/ip.log
-2026-11-17 13:46:01 14.19.177.57
-2026-11-17 14:46:03 14.19.177.57
-2026-11-17 15:46:05 14.19.177.57
 2026-11-17 16:46:07 14.19.177.57
 2026-11-17 17:46:18 14.19.177.57
---- 2. 登录态 ---
-=== 登录状态（权威判定）===
-[未登录] 当前没有有效会话
-阶段: waiting_qrcode
-最近错误: 无
---- 3. 进程 ---
-24845 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox
-24860 /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox
-大脑:
-29676 /root/bot/venv/bin/python main.py
-遥控pid=22571 last=286200
---- 4. 仪器在岗 ---
-tick.sh:在
-login_watch.sh:在
-ipwatch.sh:在
-health_probe.sh:在
---- 5. bot.log 尾8行 ---
-11-17 15:27:31 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-17 15:27:31 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-17 15:27:31 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
 11-17 15:33:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 70293303 from 1561950850 '点歌 黄绮珊'
 11-17 15:33:11 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=42)
 11-17 15:33:16 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794900796, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
 11-17 15:33:19 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=42) running complete
 11-17 15:33:48 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
---- 6. napcat-restart.log 尾5行 ---
-dbd5d4a92ba846143b2233aa4c9c576f21761f4ffd1070c33601d0cec0aba236
-dda1e12fa3522c05a4c0d099199d48902cde969679d8dbc44c7c12d54c36587a
-71b68f680b1b07050751de5f8785e4a617cc01f8515e2cf45818df414e8bf50b
-48f83959b0779f4e930b72ef96e3e9e8efb37e75dbcc3611e25636efa43c0925
-da66231c94df18280da0a0be25a9c517881cfafe396b5534ffc3873c3251b66e
-===== 勘验完 =====
+[11-17 18:11] report:git回传成功
+--- 6. 当前QQ相关进程全部 ---
+2079 Xvfb :129 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.PLPbXn/Xauthority
+5922 Xvfb :112 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.QMuQLP/Xauthority
+6454 Xvfb :120 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.M6Qop4/Xauthority
+7959 Xvfb :125 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.xRzI5z/Xauthority
+8003 Xvfb :113 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.vmrtUj/Xauthority
+8195 Xvfb :109 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.S7eoRK/Xauthority
+9558 Xvfb :121 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.SzIMMP/Xauthority
+10536 Xvfb :115 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.8jIqCV/Xauthority
+11659 Xvfb :122 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.C2LtCy/Xauthority
+11701 Xvfb :106 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.7QP2vJ/Xauthority
+===== 完 =====
