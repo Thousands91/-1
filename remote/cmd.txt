@@ -1,14 +1,17 @@
-286350
-echo "===== 网易云标可行性探查 $(date '+%F %T') ====="
-echo "-- 1. 签名服务源码URL/上游清单 --"
-grep -n "http\|url\|xingzhige\|106.55\|qqbotark\|llob\|appid\|app\b" /root/music_sign.py 2>/dev/null | head -30
-echo "-- 2. xingzhige出卡原始json(大悲咒 5262296) --"
+286360
 UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-curl -s --max-time 15 -A "$UA" -X POST "https://ss.xingzhige.com/music_card/card" -H "Content-Type: application/json" -d '{"server":"netease","id":5262296,"type":"163"}' 2>/dev/null | head -c 1200
-echo ""
-echo "-- 3. 试xingzhige带app/netease参数能否出网易云标 --"
-for extra in '"app":"com.netease.cloudmusic"' '"appid":100951776' '"type":"netease"'; do
-  echo "[试 $extra]"
-  curl -s --max-time 12 -A "$UA" -X POST "https://ss.xingzhige.com/music_card/card" -H "Content-Type: application/json" -d "{\"server\":\"netease\",\"id\":5262296,\"type\":\"163\",$extra}" 2>/dev/null | grep -o '"app":"[^"]*"\|"appid":[0-9]*' | head -3
+echo "===== 网易云标签名源实测 $(date '+%F %T') ====="
+echo "-- 1. xingzhige 带 appid 覆盖参数 --"
+for payload in \
+  '{"server":"netease","id":5262296,"type":"163","appid":100951776}' \
+  '{"server":"netease","id":5262296,"type":"163","app":"com.netease.cloudmusic"}' \
+  '{"server":"netease","id":5262296,"type":"netease"}'; do
+  R=$(curl -s --max-time 12 -A "$UA" -X POST "https://ss.xingzhige.com/music_card/card" -H "Content-Type: application/json" -d "$payload" 2>/dev/null)
+  echo "[$payload] -> $(echo "$R" | grep -o '"app":"[^"]*"\|"appid":[0-9]*' | head -4 | tr '\n' ' ')"
 done
+echo "-- 2. 其他上游出卡标 --"
+echo "[qqbotark] $(curl -s --max-time 12 -A "$UA" -X POST 'https://qqbotark.569879.xyz/' -H 'Content-Type: application/json' -d '{"server":"netease","id":5262296,"type":"163"}' 2>/dev/null | grep -o '"app":"[^"]*"\|"appid":[0-9]*' | head -4 | tr '\n' ' ')"
+echo "[llob] $(curl -s --max-time 12 -A "$UA" -X POST 'https://llob.linyuchen.net/sign/music' -H 'Content-Type: application/json' -d '{"server":"netease","id":5262296,"type":"163"}' 2>/dev/null | grep -o '"app":"[^"]*"\|"appid":[0-9]*' | head -4 | tr '\n' ' ')"
+echo "-- 3. xingzhige 卡token(确认能否复用) --"
+curl -s --max-time 12 -A "$UA" -X POST "https://ss.xingzhige.com/music_card/card" -H "Content-Type: application/json" -d '{"server":"netease","id":5262296,"type":"163"}' 2>/dev/null | grep -o '"token":"[^"]*"'
 echo "===== 完 ====="
