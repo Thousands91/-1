@@ -1,10 +1,9 @@
-286400
-echo "===== 语法复检+重启大脑 $(date '+%F %T') ====="
-cd /root/bot/bot
-echo "-- 1. 语法检查(python3) --"
-python3 -m py_compile plugins/song_request.py 2>&1 && echo "语法OK"
-echo "-- 2. 大脑进程 --"
-pgrep -af "nb run|nonebot|bot.py|python.*bot" | head -8
-echo "-- 3. setsid拉起方式探查(启动脚本) --"
-ls -la /root/bot/*.sh /root/bot/bot/*.sh 2>/dev/null | head -10
+286410
+echo "===== 大脑进程与启动脚本 $(date '+%F %T') ====="
+echo "-- 1. entrypoint.sh内容 --"
+cat /root/bot/entrypoint.sh 2>/dev/null
+echo "-- 2. 所有python进程 --"
+ps aux | grep -iE "python|nonebot|nb run" | grep -v grep | head -15
+echo "-- 3. bot目录结构 --"
+ls -la /root/bot/bot/ | head -20
 echo "===== 完 ====="
