@@ -1,18 +1,11 @@
-286330
-echo "===== 全服务拉起 $(date '+%F %T') ====="
-# 四账仪器
-for n in tick.sh login_watch.sh ipwatch.sh health_probe.sh offline_watch.sh netmon.sh; do
-  if [ -f "/root/$n" ]; then setsid nohup bash "/root/$n" >/dev/null 2>&1 < /dev/null & else echo "$n:文件不存在!"; fi
-done
-sleep 3
-echo "-- 仪器在岗 --"; for n in tick.sh login_watch.sh ipwatch.sh health_probe.sh offline_watch.sh netmon.sh; do pgrep -f "$n" >/dev/null && echo "$n:在" || echo "$n:不在!"; done
-# 大脑
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null &
-sleep 8
-pgrep -f "main.py" >/dev/null && echo "大脑:已拉起" || echo "大脑:没起来!"
-# NapCat(带-q快速登录,试走捷径)
-cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox >> /root/napcat-restart.log 2>&1 < /dev/null &
-sleep 20
-pgrep -f "opt/QQ/qq" >/dev/null && echo "NapCat:已拉起" || echo "NapCat:没起来!"
-echo "-- 登录态 --"; bash /root/logincheck.sh 2>/dev/null | head -3
-echo "===== 拉起完 ====="
+286340
+cd /root/bot || exit 1
+git pull --ff-only origin main 2>&1 | tail -2
+echo "-- HEAD --"; git log --oneline -1
+echo "-- 修复在场 --"; grep -c "try_official_card" bot/plugins/song_request.py
+( sleep 2; pkill -f "[v]env/bin/python main.py"; sleep 3; cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null & )
+sleep 15
+pgrep -f "main.py" >/dev/null && echo "大脑已拉起" || echo "大脑没起来!"
+grep -a "song_request" /root/bot/bot/bot.log | tail -1
+echo "-- 登录态 --"; bash /root/logincheck.sh 2>/dev/null | head -2
+echo "== 部署完 =="
