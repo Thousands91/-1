@@ -1,19 +1,16 @@
-286200
-echo "===== 断联勘验 $(date '+%F %T') ====="
-echo "--- 1. 四账最后5条 ---"
-for f in tick health login_state ip; do
-  p=$(ls /root/logs/${f}.log /root/${f}.log 2>/dev/null | head -1)
-  echo "[$f] path=$p"; [ -n "$p" ] && tail -5 "$p"
-done
-echo "--- 2. 登录态 ---"
-bash /root/logincheck.sh 2>/dev/null | head -5
-echo "--- 3. 进程 ---"
-pgrep -af "opt/QQ/[q]q" | head -2; echo "大脑:"; pgrep -af "python main.py" | head -2
-echo "遥控pid=$(cat /root/.remote_pid 2>/dev/null) last=$(cat /root/.remote_last 2>/dev/null)"
-echo "--- 4. 仪器在岗 ---"
-for n in tick.sh login_watch.sh ipwatch.sh health_probe.sh; do pgrep -f "$n" >/dev/null && echo "$n:在" || echo "$n:不在!"; done
-echo "--- 5. bot.log 尾8行 ---"
-tail -8 /root/bot/bot/bot.log 2>/dev/null
-echo "--- 6. napcat-restart.log 尾5行 ---"
-tail -5 /root/napcat-restart.log 2>/dev/null
-echo "===== 勘验完 ====="
+286210
+echo "===== 掉线根因二轮 $(date '+%F %T') ====="
+echo "--- 1. QQ进程启动时刻 ---"
+ps -o pid,lstart,etime,cmd -p 24845,24860 2>/dev/null
+echo "--- 2. 登录态翻转点(最后在线+最早未登录) ---"
+grep -n "\[在线\]" /root/login_state.log | tail -3
+grep -n "\[未登录\]" /root/login_state.log | head -5
+echo "--- 3. 15:30-15:40 napcat.log 全量 ---"
+grep -a "15:3[0-9]" /root/napcat.log 2>/dev/null | tail -40
+echo "--- 4. 取证快照列表 ---"
+ls -la --time-style=+%m-%d_%H:%M /root/*forensic* /root/forensic* 2>/dev/null | tail -8
+echo "--- 5. v6遥控日志15:30后 ---"
+for f in /root/remote.log /root/remote_ctl.log /root/.remote_log; do [ -f "$f" ] && { echo "[$f]"; grep -a "15:3[0-9]\|16:\|17:\|18:" "$f" | tail -20; }; done
+echo "--- 6. 当前QQ相关进程全部 ---"
+pgrep -af "xvfb|qq|napcat" | head -10
+echo "===== 完 ====="
