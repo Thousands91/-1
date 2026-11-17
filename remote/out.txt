@@ -1,75 +1,54 @@
-<<<task_286210.txt>>>
-===== 任务286210 11-17 18:12:17 =====
+<<<task_286220.txt>>>
+===== 任务286220 11-17 18:13:14 =====
 --- 命令 ---
-echo "===== 掉线根因二轮 $(date '+%F %T') ====="
-echo "--- 1. QQ进程启动时刻 ---"
-ps -o pid,lstart,etime,cmd -p 24845,24860 2>/dev/null
-echo "--- 2. 登录态翻转点(最后在线+最早未登录) ---"
-grep -n "\[在线\]" /root/login_state.log | tail -3
-grep -n "\[未登录\]" /root/login_state.log | head -5
-echo "--- 3. 15:30-15:40 napcat.log 全量 ---"
-grep -a "15:3[0-9]" /root/napcat.log 2>/dev/null | tail -40
-echo "--- 4. 取证快照列表 ---"
-ls -la --time-style=+%m-%d_%H:%M /root/*forensic* /root/forensic* 2>/dev/null | tail -8
-echo "--- 5. v6遥控日志15:30后 ---"
-for f in /root/remote.log /root/remote_ctl.log /root/.remote_log; do [ -f "$f" ] && { echo "[$f]"; grep -a "15:3[0-9]\|16:\|17:\|18:" "$f" | tail -20; }; done
-echo "--- 6. 当前QQ相关进程全部 ---"
-pgrep -af "xvfb|qq|napcat" | head -10
+echo "===== 下线原因取证+保全 $(date '+%F %T') ====="
+echo "--- 1. 账号离线事件上下文(前后各6行) ---"
+LN=$(grep -an "账号状态变更为离线" /root/napcat.log | tail -1 | cut -d: -f1)
+echo "行号=$LN"
+[ -n "$LN" ] && sed -n "$((LN-6)),$((LN+12))p" /root/napcat.log
+echo "--- 2. 下线原因关键词全日志搜 ---"
+grep -a -i "kick\|被踢\|下线\|ErrCode\|token.*expire\|登录失效\|强制.*线\|其它设备\|异地\|冻结\|风控\|cannot send\|session" /root/napcat.log | tail -25
+echo "--- 3. 15:33:30~15:34:30 完整日志 ---"
+grep -a "15:33:[3-9]\|15:34:[0-3]" /root/napcat.log | tail -40
+echo "--- 4. 取证保全(出码前归档) ---"
+{
+  echo "=== 归档时刻 $(date '+%F %T') ==="
+  echo "--- napcat.log 15:25~15:40 ---"; grep -a "15:2[5-9]\|15:3[0-9]\|15:40" /root/napcat.log
+  echo "--- bot.log 15:25~15:40 ---"; grep -a "15:2[5-9]\|15:3[0-9]\|15:40" /root/bot/bot/bot.log
+  echo "--- login_state 15:20~16:00 ---"; grep -a "15:2[0-9]\|15:3[0-9]\|15:4[0-9]\|15:5[0-9]\|16:00" /root/login_state.log
+  echo "--- 四账尾部 ---"; tail -8 /root/tick.log; tail -8 /root/health.log; tail -4 /root/ip.log
+} > /root/forensic_offline_1117_1533.txt 2>&1
+wc -l /root/forensic_offline_1117_1533.txt
+echo "--- 5. 归档上云候选md5 ---"
+md5sum /root/forensic_offline_1117_1533.txt
 echo "===== 完 ====="
 --- 输出 ---
-===== 掉线根因二轮 2026-11-17 18:12:17 =====
---- 1. QQ进程启动时刻 ---
-  PID                  STARTED     ELAPSED CMD
-24845 Tue Apr  4 02:53:39 2023       00:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox
-24860 Tue Apr  4 02:53:40 2023       00:00 /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox
---- 2. 登录态翻转点(最后在线+最早未登录) ---
-1013:2026-11-17 15:27:59 [在线]
-1014:2026-11-17 15:33:00 [在线]
-1015:2026-11-17 15:38:01 状态变化: [在线] -> [未登录]
-1:2026-11-13 11:41:30 状态变化: 初始 -> [未登录]
-2:2026-11-13 11:46:31 [未登录]
-3:2026-11-13 11:51:31 [未登录]
-4:2026-11-13 11:56:32 [未登录]
-5:2026-11-13 12:01:33 [未登录]
---- 3. 15:30-15:40 napcat.log 全量 ---
-11-17 10:15:31 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [长太息以笑希希，乐希希之多艰(553414459)] 我不行了
+===== 下线原因取证+保全 2026-11-17 18:13:14 =====
+--- 1. 账号离线事件上下文(前后各6行) ---
+行号=2169
+11-17 15:22:33 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [北长尾山鹅(2534970154)] 我讨厌你们…
+11-17 15:22:44 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [oOvOa(3361875175)] [图片]
+11-17 15:22:54 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [oOvOa(3361875175)] 摸摸凑企鹅
+11-17 15:24:39 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爻心懒寄云中月(1445169274)] 怎么还不下班
+11-17 15:27:27 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [Xylitol(2586464457)] [图片]
+11-17 15:27:31 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [Xylitol(2586464457)] [图片]
 11-17 15:33:10 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+0b8e24ad7eed5f0cddb7c9a91dea383a9e368eb0d0674b8ee9a90f4c38bdf1b2
 11-17 15:33:10 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 点歌 黄绮珊
+[I] <MMKV_IO.cpp:516::writeActualSize> [mmkv.default] increase sequence to 22, crc 1285129681, actualSize 4
+[I] <MMKV_IO.cpp:516::writeActualSize> [mmkv.default] increase sequence to 23, crc 1285129681, actualSize 4
 11-17 15:33:11 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 翻柜子找「黄绮珊」，稍等一下……
+b34dd568b12d397091f1ac77bddd8a0c01e5f9ab13bf2d592c0f645b58ad9d78
 11-17 15:33:16 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
 11-17 15:33:19 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 「黄绮珊」翻出这几首，回复序号选哪首（60秒内有效）： ...
---- 4. 取证快照列表 ---
---- 5. v6遥控日志15:30后 ---
-[/root/remote_ctl.log]
-2026-11-17 18:09:53
-2026-11-17 18:10:53
-11-17 18:06:45 elapsed=60s ip=192.168.31.142 if=无
-11-17 18:07:45 elapsed=60s ip=192.168.31.142 if=无
-11-17 18:08:45 elapsed=60s ip=192.168.31.142 if=无
-11-17 18:09:46 elapsed=61s ip=192.168.31.142 if=无
-11-17 18:10:46 elapsed=60s ip=192.168.31.142 if=无
-2026-11-17 17:48:21 [未登录]
-2026-11-17 17:53:21 [未登录]
-2026-11-17 17:58:22 [未登录]
-2026-11-17 18:03:23 [未登录]
-2026-11-17 18:08:24 [未登录]
-2026-11-17 16:46:07 14.19.177.57
-2026-11-17 17:46:18 14.19.177.57
-11-17 15:33:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 70293303 from 1561950850 '点歌 黄绮珊'
-11-17 15:33:11 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=42)
-11-17 15:33:16 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794900796, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-17 15:33:19 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=42) running complete
-11-17 15:33:48 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
-[11-17 18:11] report:git回传成功
---- 6. 当前QQ相关进程全部 ---
-2079 Xvfb :129 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.PLPbXn/Xauthority
-5922 Xvfb :112 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.QMuQLP/Xauthority
-6454 Xvfb :120 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.M6Qop4/Xauthority
-7959 Xvfb :125 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.xRzI5z/Xauthority
-8003 Xvfb :113 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.vmrtUj/Xauthority
-8195 Xvfb :109 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.S7eoRK/Xauthority
-9558 Xvfb :121 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.SzIMMP/Xauthority
-10536 Xvfb :115 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.8jIqCV/Xauthority
-11659 Xvfb :122 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.C2LtCy/Xauthority
-11701 Xvfb :106 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.7QP2vJ/Xauthority
+c24069badca5698a091fefd5719ac1b0c0402f157c8d5cd7d7948ce5fcc0e000
+[18396:1117/153348.315145:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
+[18396:1117/153348.412102:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[18396:1117/153348.427570:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+--- 2. 下线原因关键词全日志搜 ---
+--- 3. 15:33:30~15:34:30 完整日志 ---
+--- 4. 取证保全(出码前归档) ---
+136 /root/forensic_offline_1117_1533.txt
+--- 5. 归档上云候选md5 ---
+2fb63a906465fa6f0af13b60539f00ee  /root/forensic_offline_1117_1533.txt
 ===== 完 =====
