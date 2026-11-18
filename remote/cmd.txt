@@ -1,15 +1,10 @@
-只读核查任务286960（不改动设备、不执行任何 adb shell 命令，逐条回传原文）：
+只读验收任务286970（重启worker后验证，逐条回传原文，不要做任何修改）：
 
-1. 确认昨晚硬啃铺进 X10 的 adb 工具链还在：
-   ls -l /root/adblibs/adb
-   LD_LIBRARY_PATH=/root/adblibs:/data/data/com.termux/files/usr/lib /root/adblibs/adb version
-
-2. 确认 adb 客户端密钥已生成：
-   ls -l /root/.android/adbkey /root/.android/adbkey.pub
-
-3. 确认当前有没有 adb 设备（没插 OTG 前预期为空，这是预期结果，照传）：
-   LD_LIBRARY_PATH=/root/adblibs:/data/data/com.termux/files/usr/lib /root/adblibs/adb devices
-
-4. 确认现在没冻：tail -3 /root/tick.log
-
-把以上四条的输出原文回传即可，不要做任何修复动作。
+echo "===== worker重启验收 $(date '+%F %T') ====="
+echo "[1] 循环实例数(应为1):"; pgrep -af remote_ctl_v6.sh
+echo "[2] 实例数计数:"; pgrep -fc remote_ctl_v6.sh
+echo "[3] 锁状态:"; ls -ld /root/.remote_ctl.lock 2>/dev/null && cat /root/.remote_ctl.lock 2>/dev/null || echo "无锁"
+echo "[4] 待发箱PBOX:"; ls -la /root/.remote_pending/ 2>/dev/null | tail -8
+echo "[5] remote_ctl.log尾部20行:"; tail -20 /root/remote_ctl.log 2>/dev/null
+echo "[6] tick最后活动:"; tail -3 /root/tick.log 2>/dev/null
+echo "===== 完 ====="
