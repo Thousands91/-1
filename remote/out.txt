@@ -1,57 +1,55 @@
-<<<task_287010.txt>>>
-===== 任务287010 11-19 00:35:12 =====
+<<<task_287020.txt>>>
+===== 任务287020 11-19 00:36:28 =====
 --- 命令 ---
-echo "===== 聚焦诊断 287010 ====="
-echo "[1]登录判定:"; bash /root/logincheck.sh 2>/dev/null | grep -E "登录|在线|离线|掉线|二维码|\[OK\]" | head -8
-echo "[2]bot.log最后25行:"; tail -25 /root/bot.log 2>/dev/null
-echo "[3]发卡日志(全):"; grep -E "发卡|music|官方卡|CIRCUIT|签名|异常|ERROR|Traceback" /root/bot.log 2>/dev/null | tail -25
-echo "[4]大脑bot.log:"; tail -12 /root/bot/bot/bot.log 2>/dev/null
+echo "===== 登录态确认 287020 ====="
+echo "[1]logincheck完整输出:"; bash /root/logincheck.sh 2>/dev/null | head -20
+echo "[2]二维码文件:"; QR=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png; ls -l "$QR" 2>/dev/null; stat -c "二维码修改时间:%y" "$QR" 2>/dev/null
+echo "[3]NapCat日志尾20:"; tail -20 /root/napcat.log 2>/dev/null
+echo "[4]NapCat重启日志尾10:"; tail -10 /root/napcat-restart.log 2>/dev/null
+echo "[5]当前时间:"; date '+%F %T'
 echo "=====完====="
 --- 输出 ---
-===== 聚焦诊断 287010 =====
-[1]登录判定:
+===== 登录态确认 287020 =====
+[1]logincheck完整输出:
 === 登录状态（权威判定）===
 [未登录] 当前没有有效会话
-[2]bot.log最后25行:
-11-18 02:01:23 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=42)
-11-18 02:01:24 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=42) running complete
-11-18 02:01:27 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794938486, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
-11-18 02:01:37 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794938497, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
-11-18 02:01:38 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794938498, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-18 02:01:38 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794938498, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-18 02:01:38 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 4391368 from 1561950850 '6'
-11-18 02:01:38 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=326)
-11-18 02:01:42 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794938502, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
-11-18 02:01:43 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794938503, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-18 02:01:43 [INFO] song_request | [发卡] custom卡发送成功 src=netease id=1901319324
-11-18 02:01:43 [INFO] song_request | [发卡] custom卡 OK src=netease id=1901319324
-11-18 02:01:46 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=326) running complete
-11-18 02:02:15 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794938535, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
-11-18 02:02:20 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794938540, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
-11-18 02:02:31 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794938551, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-18 02:02:31 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794938551, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-18 02:02:31 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2099788745 from 1561950850 '点歌 叹息瓶 齐豫'
-11-18 02:02:31 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=42)
-11-18 02:02:34 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=42) running complete
-11-18 02:09:01 [INFO] uvicorn | Shutting down
-11-18 02:09:01 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
-11-18 02:09:01 [INFO] uvicorn | Waiting for application shutdown.
-11-18 02:09:01 [INFO] uvicorn | Application shutdown complete.
-11-18 02:09:01 [INFO] uvicorn | Finished server process [18624]
-[3]发卡日志(全):
-11-18 02:01:43 [INFO] song_request | [发卡] custom卡发送成功 src=netease id=1901319324
-11-18 02:01:43 [INFO] song_request | [发卡] custom卡 OK src=netease id=1901319324
-[4]大脑bot.log:
-    return await bot.send(event=event, message=_message, **kwargs)
-  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/bot.py", line 237, in send
-    return await self.__class__.send_handler(self, event, message, **kwargs)
-  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/bot.py", line 190, in send
-    return await bot.send_msg(**params)
-  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/internal/adapter/bot.py", line 176, in call_api
-    raise exception
-  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/internal/adapter/bot.py", line 128, in call_api
-    result = await self.adapter._call_api(self, api, **data)
-  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/adapter.py", line 177, in _call_api
-    raise NetworkError(f"WebSocket call api {api} timeout") from None
-nonebot.adapters.onebot.v11.exception.NetworkError: NetWorkError(message='WebSocket call api send_msg timeout')
+阶段: waiting_qrcode
+最近错误: 无
+[2]二维码文件:
+-rw-r--r-- 1 root root 602 Nov 19 00:34 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+二维码修改时间:2026-11-19 00:34:54.240000000 +0800
+[3]NapCat日志尾20:
+29b7c663b37fa6ab2c68871637da5f31f9cf92073ed6ddf23181743c31bd4d77
+14e0655d3ee98a0615f65f483a6607e986efcbd5327b69c441fe2b04617cb13d
+cd3525e093f40088586868e40b24d8388807dee3bd1c0f3daeffe2e014cdb184
+92f86896dce3cf0abf4ad20a41aa8eb47393b97c3767dec0b15f6456d461fa74
+d5a86ba7a9b4738cd9650b46731b09d8b485281bd234bea338c4ac9a0318cb4c
+fbdfcc537c72aab8e27a592d891e48c64f0f3cc5199e3ebec263ef47d15c724d
+b77dfb78b052916abd78dea8f9f633916a21d6117ff8f890ea89f23c12b5b300
+120e9ea66c77cdd12ad3b245cf7a1d00e226dca129dd96424c75d90a15703a6f
+b03a68ae0fa62914744eb6acb7e69047b8356e7b68771bd14fc250e2b4a47ffc
+927917af6e790d9d9dbc8171e790f12ef15d0334ee87d47d7e2907bfd84bdda7
+f93022fea041bacf2aa4ee5ace26ca1229d809e84eacb87aacc14f1ea2dc8b6f
+b31fbd2f2eadc6eeeb7f00862b12f14a8be36d01ac2cd0558ab18674d7f979a5
+0e026aeb118394091c393a7cb48c9112130bbab2f41bdbc609a88686b4061c0f
+a358751c1a274fe526043fd5d308ff72c5060a267fbcb001900571605cf9c87c
+56d715360cd4bafb3b1a5fc34de76b6029f681dcdbe7496cb4d315bec0285666
+64833f1013797ebef5016034042cc262aede7bfd6fad9f7fb4b04efa19337d32
+0f8a4a3a58a4561aa8d07f6877895a6c501a050e777bf8f5b332ca7ae7af0015
+4d8ce27e64fb34b71ba0e1db9b2a4778aa16f8bb7a17f8d043ca4119ff67aa3d
+5648b76668c84f5a7a21351321501855ce4320b8324fc76d5d463cfef4615fee
+c23e71c44618c4e83f1d7a0213fe69446ec548401e0e9b5bb87a644df4cb4de5
+[4]NapCat重启日志尾10:
+[18888:1118/020018.429097:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[18631:1118/020018.431920:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[18888:1118/020018.434733:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[18631:1118/020018.436330:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[18631:1118/020018.438067:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+[18888:1118/020018.441971:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[18888:1118/020018.449001:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[18888:1118/020018.457764:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[18888:1118/020018.466807:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[18888:1118/020018.466958:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+[5]当前时间:
+2026-11-19 00:36:28
 =====完=====
