@@ -1,25 +1,29 @@
-287140
-echo "===== 复现签名请求 287140 ====="
+287150
+echo "===== 验证修复思路 287150 ====="
 python3 -c '
-import json,urllib.request
-def post(payload):
-    req=urllib.request.Request("http://127.0.0.1:10800/",data=json.dumps(payload).encode(),headers={"Content-Type":"application/json"})
-    return urllib.request.urlopen(req,timeout=20).read().decode()
-# 场景A:只传id不传title(模拟NapCat官方卡契约)
-a=post({"type":"163","id":"33737547"})
-print("[A只传id]返回前300:",a[:300])
+import json,urllib.request,time,sys
+sys.path.insert(0,"/root")
+# 1. 测netease_meta按id查歌名
 try:
-    card=json.loads(a)
-    m=card.get("meta",{}).get("music",{})
-    print("  卡内 title=",repr(m.get("title"))," singer=",repr(m.get("desc"))," tag=",m.get("tag"))
-except Exception as e: print("  解析失败",e)
-# 场景B:带title
-b=post({"type":"163","id":"33737547","title":"夜蝶","singer":"李艺彤"})
-print("[B带title]返回前300:",b[:300])
-try:
-    card=json.loads(b); m=card.get("meta",{}).get("music",{})
-    print("  卡内 title=",repr(m.get("title"))," singer=",repr(m.get("desc"))," tag=",m.get("tag"))
-except Exception as e: print("  解析失败",e)
-' 2>&1 | head -40
-echo "[日志尾]:"; tail -6 /root/music_sign_v4.log 2>/dev/null
+    import music_sign as ms
+    print("[netease_meta 33737547]",ms.netease_meta("33737547"))
+except Exception as e: print("[netease_meta失败]",e)
+# 2. 带重试测带title的163卡
+def post(payload,tries=3):
+    for i in range(tries):
+        try:
+            req=urllib.request.Request("http://127.0.0.1:10800/",data=json.dumps(payload).encode(),headers={"Content-Type":"application/json"})
+            return urllib.request.urlopen(req,timeout=20).read().decode()
+        except Exception as e:
+            print("  第%d次失败:%s"%(i+1,str(e)[:60])); time.sleep(4)
+    return None
+r=post({"type":"163","id":"33737547","title":"夜蝶","singer":"李艺彤"})
+if r:
+    try:
+        c=json.loads(r); m=c.get("meta",{}).get("music",{})
+        print("[带title的163卡] title=",repr(m.get("title")),"desc=",repr(m.get("desc")),"tag=",m.get("tag"))
+    except Exception as e: print("[解析失败]",r[:200],e)
+else: print("[带title卡-全失败]")
+' 2>&1 | head -30
+echo "[日志尾]:"; tail -8 /root/music_sign_v4.log 2>/dev/null
 echo "=====完====="
