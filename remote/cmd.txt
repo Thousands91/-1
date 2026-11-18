@@ -1,9 +1,32 @@
-286850
-echo "===== 代理语法与运行路径核查 $(date '+%F %T') ====="
-echo -n "[1] v4 Python语法: "; python3 -m py_compile /root/music_sign_v4.py 2>&1 && echo OK || echo FAIL
-echo -n "[2] 在跑的代理完整命令: "; ps -o pid,args -p $(pgrep -f music_sign | head -1) 2>/dev/null | tail -1
-echo "[3] music_sign.py 和 v4 的md5:"
-md5sum /root/music_sign.py /root/music_sign_v4.py 2>/dev/null
-echo "[4] NapCat签名URL指向: "
-grep -o 'musicSignUrl[^,}]*' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json 2>/dev/null
+286860
+echo "===== 覆盖代理到实际运行路径并重启 $(date '+%F %T') ====="
+# 1. 备份当前在跑的旧v4
+cp /root/music_sign.py /root/music_sign.py.bak_pre_kugou 2>/dev/null && echo "[1] 旧代理已备份"
+# 2. 用新v4覆盖实际运行文件
+cp /root/music_sign_v4.py /root/music_sign.py && echo "[2] 已覆盖 music_sign.py"
+echo -n "[3] Python语法: "; python3 -m py_compile /root/music_sign.py 2>&1 && echo OK || echo FAIL
+echo -n "[4] md5: "; md5sum /root/music_sign.py | cut -d\  -f1
+# 5. 停旧起新
+OLD=$(pgrep -f 'python3 /root/music_sign.py' | head -1)
+echo "[5] 旧代理PID=$OLD"
+[ -n "$OLD" ] && kill $OLD && sleep 1
+setsid python3 /root/music_sign.py >>/root/music_sign_v4.log 2>&1 < /dev/null &
+sleep 2
+NEWPID=$(pgrep -f 'python3 /root/music_sign.py' | head -1)
+echo "[6] 新代理PID=$NEWPID (实例数=$(pgrep -f 'python3 /root/music_sign.py' | wc -l))"
+# 7. 实测酷狗/咪咕出卡
+echo "[7] 酷狗签名实测:"
+curl -s --max-time 15 -X POST -H 'Content-Type: application/json' -d '{"type":"kugou","id":"晴天"}' http://127.0.0.1:10800/ 2>/dev/null | python3 -c "
+import sys,json
+try:
+ c=json.load(sys.stdin); print('  tag='+c['meta']['music']['tag'],'title='+str(c['meta']['music'].get('title')),'token='+str(bool(c['config'].get('token'))))
+except Exception as e: print('  失败:',e)
+"
+echo "[8] 咪咕签名实测:"
+curl -s --max-time 15 -X POST -H 'Content-Type: application/json' -d '{"type":"migu","id":"晴天"}' http://127.0.0.1:10800/ 2>/dev/null | python3 -c "
+import sys,json
+try:
+ c=json.load(sys.stdin); print('  tag='+c['meta']['music']['tag'],'title='+str(c['meta']['music'].get('title')),'token='+str(bool(c['config'].get('token'))))
+except Exception as e: print('  失败:',e)
+"
 echo "===== 完 ====="
