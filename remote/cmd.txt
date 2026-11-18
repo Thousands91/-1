@@ -1,9 +1,25 @@
-287130
-echo "===== 签名代理深查 287130 ====="
-echo "[1]签名进程:"; pgrep -af 'music_sign' | head -5
-echo "[2]监听10800的进程:"; netstat -tlnp 2>/dev/null | grep 10800 || ss -tlnp 2>/dev/null | grep 10800 || echo "netstat/ss无结果"
-echo "[3]端口测试:"; curl -s --max-time 6 -o /tmp/sigresp.txt -w "HTTP:%{http_code}\n" http://127.0.0.1:10800/ 2>/dev/null; head -c 200 /tmp/sigresp.txt 2>/dev/null; echo
-echo "[4]music_sign_v4.log尾20:"; tail -20 /root/music_sign_v4.log 2>/dev/null || echo "无此文件"
-echo "[5]NapCat签名配置:"; grep -ra "10800\|musicSignUrl" /root/Napcat/ 2>/dev/null | head -5
-echo "[6]真日志00:49-00:51全部song_request行:"; grep -a "11-19 00:4\|11-19 00:5" /root/bot/bot/bot.log 2>/dev/null | grep -iE "song|发卡|music|点歌|官方卡" | tail -20
+287140
+echo "===== 复现签名请求 287140 ====="
+python3 -c '
+import json,urllib.request
+def post(payload):
+    req=urllib.request.Request("http://127.0.0.1:10800/",data=json.dumps(payload).encode(),headers={"Content-Type":"application/json"})
+    return urllib.request.urlopen(req,timeout=20).read().decode()
+# 场景A:只传id不传title(模拟NapCat官方卡契约)
+a=post({"type":"163","id":"33737547"})
+print("[A只传id]返回前300:",a[:300])
+try:
+    card=json.loads(a)
+    m=card.get("meta",{}).get("music",{})
+    print("  卡内 title=",repr(m.get("title"))," singer=",repr(m.get("desc"))," tag=",m.get("tag"))
+except Exception as e: print("  解析失败",e)
+# 场景B:带title
+b=post({"type":"163","id":"33737547","title":"夜蝶","singer":"李艺彤"})
+print("[B带title]返回前300:",b[:300])
+try:
+    card=json.loads(b); m=card.get("meta",{}).get("music",{})
+    print("  卡内 title=",repr(m.get("title"))," singer=",repr(m.get("desc"))," tag=",m.get("tag"))
+except Exception as e: print("  解析失败",e)
+' 2>&1 | head -40
+echo "[日志尾]:"; tail -6 /root/music_sign_v4.log 2>/dev/null
 echo "=====完====="
