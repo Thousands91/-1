@@ -1,42 +1,29 @@
-<<<task_286900.txt>>>
-===== 任务286900 11-18 10:06:08 =====
+<<<task_286910.txt>>>
+===== 任务286910 11-18 10:08:01 =====
 --- 命令 ---
-echo "状态 $(date '+%F %T'): 在线 | 代码md5=$(md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null | cut -d\  -f1) | 遥控=$(pgrep -f '[r]emote_ctl_v6' | wc -l)"
---- 输出 ---
-状态 2026-11-18 10:06:08: 在线 | 代码md5=4cd2e1709a592666316a41a74afabcc3 | 遥控=1
-<<<task_286890.txt>>>
-===== 任务286890 11-18 10:00:16 =====
---- 命令 ---
-echo "唤醒探针 $(date '+%F %T') OK 在线"
---- 输出 ---
-唤醒探针 2026-11-18 10:00:16 OK 在线
-<<<task_286880.txt>>>
-===== 任务286880 11-18 09:56:59 =====
---- 命令 ---
-echo "===== raw直拉点歌代码 $(date '+%F %T') ====="
-cd /root/bot
-echo -n "[1] 设备存活: "; echo OK
-echo -n "[2] 拉前md5: "; md5sum bot/plugins/song_request.py 2>/dev/null | cut -d\  -f1
-# 用raw下载新文件到临时文件(带超时),成功且语法对才覆盖
-curl -s --max-time 30 -o /tmp/sr.new "https://raw.githubusercontent.com/Thousands91/qq-bot/main/bot/plugins/song_request.py"
-echo -n "[3] 下载字节: "; stat -c%s /tmp/sr.new 2>/dev/null
-echo -n "[4] 新文件md5: "; md5sum /tmp/sr.new 2>/dev/null | cut -d\  -f1
-echo -n "[5] 语法: "; python3 -m py_compile /tmp/sr.new 2>&1 && echo OK || echo FAIL
-echo -n "[6] 酷狗标记: "; grep -c "kugou官方卡 OK 歌名" /tmp/sr.new 2>/dev/null
-# md5匹配才覆盖(本地目标md5=4cd2e170...)
-if [ "$(md5sum /tmp/sr.new 2>/dev/null | cut -d\  -f1)" = "4cd2e1709a592666316a41a74afabcc3" ]; then
-  cp /tmp/sr.new bot/plugins/song_request.py && echo "[7] 已覆盖 ✅"
-else
-  echo "[7] md5不符,未覆盖 ❌"
-fi
+echo "===== 重启大脑加载酷狗咪咕代码 $(date '+%F %T') ====="
+echo -n "[1] 代码md5: "; md5sum /root/bot/bot/plugins/song_request.py | cut -d\  -f1
+echo -n "[2] 酷狗接入标记: "; grep -c "kugou官方卡 OK 歌名" /root/bot/bot/plugins/song_request.py
+echo -n "[3] py_compile: "; cd /root/bot/bot && python3 -m py_compile plugins/song_request.py 2>&1 && echo OK || echo FAIL
+OLD=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
+echo "[4] 旧大脑PID=$OLD"
+[ -n "$OLD" ] && kill $OLD && sleep 2
+cd /root/bot/bot && setsid /root/bot/venv/bin/python main.py >>/root/bot/bot/bot.log 2>&1 < /dev/null &
+sleep 6
+NEWPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
+echo "[5] 新大脑PID=$NEWPID 实例数=$(pgrep -f '/root/bot/venv/bin/python main.py' | wc -l)"
+echo "[6] 启动日志尾部(插件加载/Bot连接):"
+tail -15 /root/bot/bot/bot.log 2>/dev/null | grep -E "song_request|Bot|connected|connected|加载|Loaded|ERROR|Traceback" | tail -8
 echo "===== 完 ====="
 --- 输出 ---
-===== raw直拉点歌代码 2026-11-18 09:56:59 =====
-[1] 设备存活: OK
-[2] 拉前md5: 4cd2e1709a592666316a41a74afabcc3
-[3] 下载字节: 48810
-[4] 新文件md5: 4cd2e1709a592666316a41a74afabcc3
-[5] 语法: OK
-[6] 酷狗标记: 0
-[7] 已覆盖 ✅
+===== 重启大脑加载酷狗咪咕代码 2026-11-18 10:08:01 =====
+[1] 代码md5: 4cd2e1709a592666316a41a74afabcc3
+[2] 酷狗接入标记: 0
+[3] py_compile: OK
+[4] 旧大脑PID=20977
+[5] 新大脑PID=6446 实例数=1
+[6] 启动日志尾部(插件加载/Bot连接):
+11-18 10:05:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794967500, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+11-18 10:08:02 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+11-18 10:08:07 [SUCCESS] nonebot | NoneBot is initializing...
 ===== 完 =====
