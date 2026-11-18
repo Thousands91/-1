@@ -1,47 +1,42 @@
-<<<task_286860.txt>>>
-===== 任务286860 11-18 09:49:37 =====
+<<<task_286900.txt>>>
+===== 任务286900 11-18 10:06:08 =====
 --- 命令 ---
-echo "===== 覆盖代理到实际运行路径并重启 $(date '+%F %T') ====="
-# 1. 备份当前在跑的旧v4
-cp /root/music_sign.py /root/music_sign.py.bak_pre_kugou 2>/dev/null && echo "[1] 旧代理已备份"
-# 2. 用新v4覆盖实际运行文件
-cp /root/music_sign_v4.py /root/music_sign.py && echo "[2] 已覆盖 music_sign.py"
-echo -n "[3] Python语法: "; python3 -m py_compile /root/music_sign.py 2>&1 && echo OK || echo FAIL
-echo -n "[4] md5: "; md5sum /root/music_sign.py | cut -d\  -f1
-# 5. 停旧起新
-OLD=$(pgrep -f 'python3 /root/music_sign.py' | head -1)
-echo "[5] 旧代理PID=$OLD"
-[ -n "$OLD" ] && kill $OLD && sleep 1
-setsid python3 /root/music_sign.py >>/root/music_sign_v4.log 2>&1 < /dev/null &
-sleep 2
-NEWPID=$(pgrep -f 'python3 /root/music_sign.py' | head -1)
-echo "[6] 新代理PID=$NEWPID (实例数=$(pgrep -f 'python3 /root/music_sign.py' | wc -l))"
-# 7. 实测酷狗/咪咕出卡
-echo "[7] 酷狗签名实测:"
-curl -s --max-time 15 -X POST -H 'Content-Type: application/json' -d '{"type":"kugou","id":"晴天"}' http://127.0.0.1:10800/ 2>/dev/null | python3 -c "
-import sys,json
-try:
- c=json.load(sys.stdin); print('  tag='+c['meta']['music']['tag'],'title='+str(c['meta']['music'].get('title')),'token='+str(bool(c['config'].get('token'))))
-except Exception as e: print('  失败:',e)
-"
-echo "[8] 咪咕签名实测:"
-curl -s --max-time 15 -X POST -H 'Content-Type: application/json' -d '{"type":"migu","id":"晴天"}' http://127.0.0.1:10800/ 2>/dev/null | python3 -c "
-import sys,json
-try:
- c=json.load(sys.stdin); print('  tag='+c['meta']['music']['tag'],'title='+str(c['meta']['music'].get('title')),'token='+str(bool(c['config'].get('token'))))
-except Exception as e: print('  失败:',e)
-"
+echo "状态 $(date '+%F %T'): 在线 | 代码md5=$(md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null | cut -d\  -f1) | 遥控=$(pgrep -f '[r]emote_ctl_v6' | wc -l)"
+--- 输出 ---
+状态 2026-11-18 10:06:08: 在线 | 代码md5=4cd2e1709a592666316a41a74afabcc3 | 遥控=1
+<<<task_286890.txt>>>
+===== 任务286890 11-18 10:00:16 =====
+--- 命令 ---
+echo "唤醒探针 $(date '+%F %T') OK 在线"
+--- 输出 ---
+唤醒探针 2026-11-18 10:00:16 OK 在线
+<<<task_286880.txt>>>
+===== 任务286880 11-18 09:56:59 =====
+--- 命令 ---
+echo "===== raw直拉点歌代码 $(date '+%F %T') ====="
+cd /root/bot
+echo -n "[1] 设备存活: "; echo OK
+echo -n "[2] 拉前md5: "; md5sum bot/plugins/song_request.py 2>/dev/null | cut -d\  -f1
+# 用raw下载新文件到临时文件(带超时),成功且语法对才覆盖
+curl -s --max-time 30 -o /tmp/sr.new "https://raw.githubusercontent.com/Thousands91/qq-bot/main/bot/plugins/song_request.py"
+echo -n "[3] 下载字节: "; stat -c%s /tmp/sr.new 2>/dev/null
+echo -n "[4] 新文件md5: "; md5sum /tmp/sr.new 2>/dev/null | cut -d\  -f1
+echo -n "[5] 语法: "; python3 -m py_compile /tmp/sr.new 2>&1 && echo OK || echo FAIL
+echo -n "[6] 酷狗标记: "; grep -c "kugou官方卡 OK 歌名" /tmp/sr.new 2>/dev/null
+# md5匹配才覆盖(本地目标md5=4cd2e170...)
+if [ "$(md5sum /tmp/sr.new 2>/dev/null | cut -d\  -f1)" = "4cd2e1709a592666316a41a74afabcc3" ]; then
+  cp /tmp/sr.new bot/plugins/song_request.py && echo "[7] 已覆盖 ✅"
+else
+  echo "[7] md5不符,未覆盖 ❌"
+fi
 echo "===== 完 ====="
 --- 输出 ---
-===== 覆盖代理到实际运行路径并重启 2026-11-18 09:49:37 =====
-[1] 旧代理已备份
-[2] 已覆盖 music_sign.py
-[3] Python语法: OK
-[4] md5: e37965c54f76505d4411cdfe842d0d0d
-[5] 旧代理PID=20386
-[6] 新代理PID=31302 (实例数=1)
-[7] 酷狗签名实测:
-  tag=酷狗音乐 title=晴天 token=True
-[8] 咪咕签名实测:
-  tag=咪咕音乐 title=晴天 token=True
+===== raw直拉点歌代码 2026-11-18 09:56:59 =====
+[1] 设备存活: OK
+[2] 拉前md5: 4cd2e1709a592666316a41a74afabcc3
+[3] 下载字节: 48810
+[4] 新文件md5: 4cd2e1709a592666316a41a74afabcc3
+[5] 语法: OK
+[6] 酷狗标记: 0
+[7] 已覆盖 ✅
 ===== 完 =====
