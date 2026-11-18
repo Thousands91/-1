@@ -1,16 +1,9 @@
-287090
-echo "===== 修复remote_ctl_v6第168行 287090 ====="
-python3 -c '
-p="/root/remote_ctl_v6.sh"
-s=open(p).read()
-bad="python main.py >> /root/bot/bot/bot.log 2>python main.py > /root/bot.log 2>&11"
-good="python main.py >> /root/bot/bot/bot.log 2>&1"
-if bad in s:
-    s=s.replace(bad,good); open(p,"w").write(s); print("已修复坏行")
-else:
-    print("未找到预期坏行,当前该行:",[l for l in s.splitlines() if "main.py" in l and "看护" not in l])
-'
-echo "[校验]第168行:"; sed -n '168p' /root/remote_ctl_v6.sh
-echo "[语法]:"; bash -n /root/remote_ctl_v6.sh && echo OK
-echo "[全脚本残留坏串检查]:"; grep -n '2>python\|bot.log 2>&11' /root/remote_ctl_v6.sh || echo "无残留"
+287100
+echo "===== 最终全量校验 287100 ====="
+echo "[1]全脚本旧路径残留(应为空):"; grep -rn '/root/bot.log' /root/*.sh 2>/dev/null | grep -v 'bot/bot/bot.log' | grep -v '\.bak' || echo "✓无残留"
+echo "[2]真日志路径确认(大脑fd):"; readlink /proc/6446/fd/1 2>/dev/null
+echo "[3]大脑进程(应还是6446):"; pgrep -af 'venv/bin/python main.py' | head -3
+echo "[4]登录态:"; bash /root/logincheck.sh 2>/dev/null | head -4
+echo "[5]日志文件清单:"; ls -l /root/bot.log* /root/bot/bot/bot.log 2>/dev/null
+echo "[6]真日志最后活动:"; tail -2 /root/bot/bot/bot.log 2>/dev/null
 echo "=====完====="
