@@ -1,12 +1,4 @@
-286700
-echo "===== 定位NapCat签名配置 $(date '+%F %T') ====="
-echo "--- [1] 全/root搜musicSignUrl(限json/conf,排除node_modules和db) ---"
-grep -rln "musicSignUrl" /root --include="*.json" --include="*.conf" --include="*.yaml" --include="*.yml" 2>/dev/null | grep -v node_modules | head -20
-echo "--- [2] NapCat真实配置目录候选 ---"
-ls -la /root/.config/QQ/ 2>/dev/null | head; ls -la /root/.config/QQ/napcat/ 2>/dev/null | head
-ls -la /root/Napcat/config/ 2>/dev/null | head
-echo "--- [3] 从NapCat进程/cmdline找配置路径线索 ---"
-for p in 21596 21622; do echo "pid=$p"; tr '\0' ' ' < /proc/$p/cmdline 2>/dev/null; echo; done
-echo "--- [4] grep 10800在/root的配置里 ---"
-grep -rln "10800" /root --include="*.json" 2>/dev/null | grep -v node_modules | head -10
+286710
+echo "===== 读签名配置 $(date '+%F %T') ====="
+grep -n "musicSignUrl" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json 2>/dev/null
 echo "===== 完 ====="
