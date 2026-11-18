@@ -1,15 +1,14 @@
-286590
-echo "===== 出站回复核验 $(date '+%F %T') ====="
-echo "--- [1] NapCat最近发送(出站)记录 ---"
-grep -E '发送 ->|发送<<|发送 ' /root/napcat.log 2>/dev/null | tail -12
-echo "--- [2] NapCat日志最后20行原文 ---"
-tail -20 /root/napcat.log 2>/dev/null
-echo "--- [3] 大脑日志最后25行原文 ---"
-tail -25 /root/bot/bot/bot.log 2>/dev/null
-echo "--- [4] 当前时间戳 ---"
-date '+%F %T'
-echo "--- [5] 积压跳过计数(最近100行) ---"
-tail -100 /root/bot/bot/bot.log 2>/dev/null | grep -c "积压跳过"
-echo "--- [6] 反向WS连接状态(大脑日志grep) ---"
-tail -200 /root/bot/bot/bot.log 2>/dev/null | grep -iE 'connected|Bot .* connected|websocket|WS' | tail -8
+286600
+echo "===== 积压消化状态 $(date '+%F %T') ====="
+echo "--- [1] 大脑日志最后8行(看处理到几点) ---"
+tail -8 /root/bot/bot/bot.log 2>/dev/null
+echo "--- [2] 最近30行里正常回复vs积压跳过 ---"
+echo -n "积压跳过: "; tail -30 /root/bot/bot/bot.log 2>/dev/null | grep -c "积压跳过"
+echo -n "正常ai回复(ai_chat发送/回复): "; tail -30 /root/bot/bot/bot.log 2>/dev/null | grep -cE "发送|send|回复"
+echo "--- [3] NapCat最后5行(看是否还在涌入旧消息) ---"
+tail -5 /root/napcat.log 2>/dev/null
+echo "--- [4] 大脑日志最后修改时间 ---"
+stat -c '%y' /root/bot/bot/bot.log 2>/dev/null
+echo "--- [5] NapCat日志最后修改时间 ---"
+stat -c '%y' /root/napcat.log 2>/dev/null
 echo "===== 完 ====="
