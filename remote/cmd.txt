@@ -1,15 +1,10 @@
-286910
-echo "===== 重启大脑加载酷狗咪咕代码 $(date '+%F %T') ====="
-echo -n "[1] 代码md5: "; md5sum /root/bot/bot/plugins/song_request.py | cut -d\  -f1
-echo -n "[2] 酷狗接入标记: "; grep -c "kugou官方卡 OK 歌名" /root/bot/bot/plugins/song_request.py
-echo -n "[3] py_compile: "; cd /root/bot/bot && python3 -m py_compile plugins/song_request.py 2>&1 && echo OK || echo FAIL
-OLD=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
-echo "[4] 旧大脑PID=$OLD"
-[ -n "$OLD" ] && kill $OLD && sleep 2
-cd /root/bot/bot && setsid /root/bot/venv/bin/python main.py >>/root/bot/bot/bot.log 2>&1 < /dev/null &
-sleep 6
-NEWPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
-echo "[5] 新大脑PID=$NEWPID 实例数=$(pgrep -f '/root/bot/venv/bin/python main.py' | wc -l)"
-echo "[6] 启动日志尾部(插件加载/Bot连接):"
-tail -15 /root/bot/bot/bot.log 2>/dev/null | grep -E "song_request|Bot|connected|connected|加载|Loaded|ERROR|Traceback" | tail -8
+286920
+echo "===== 大脑终检 $(date '+%F %T') ====="
+echo -n "[1] 大脑实例数: "; pgrep -f '/root/bot/venv/bin/python main.py' | wc -l
+echo -n "[2] PID: "; pgrep -f '/root/bot/venv/bin/python main.py' | head -1
+echo "[3] 启动完成标志(最近30行):"
+tail -30 /root/bot/bot/bot.log 2>/dev/null | grep -E "Bot 3427943187 connected|正在初始化|初始化完成|Application startup|Running on|ERROR|Traceback" | tail -6
+echo "[4] 酷狗标记(用正确串): "; grep -c "kugou官方卡 OK" /root/bot/bot/plugins/song_request.py
+echo "[5] 咪咕标记: "; grep -c '"migu"' /root/bot/bot/plugins/song_request.py
+echo "[6] 代理实例: "; pgrep -f 'python3 /root/music_sign.py' | wc -l
 echo "===== 完 ====="
