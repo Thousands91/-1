@@ -1,48 +1,234 @@
-<<<task_287230.txt>>>
-===== 任务287230 11-19 02:26:49 =====
---- 命令 ---
-echo "===== 签名代理v10上车(自建播放页彻底去蓝条) 287230 ====="
-echo "IyEvdXNyL2Jpbi9lbnYgcHl0aG9uMwoiIiLoh6rmiZjnrqHpn7PkuZDnrb7lkI3ku6PnkIYgdjnvvIjlnZExMzPvvJoxNjPljaHniYfokL3lnLDpobXmlLnoh6rlu7rlubLlh4Dmkq3mlL7pobUs5b275bqV5Y676JOd5p2h77yJCgp2OO+8iOWdkTEzMe+8mjE2M+WNoeeJh+iQveWcsOmhteeUqC9tL3Nvbmfml6fmqKHmnb/ljrvlupXpg6jok53mnaHvvIkKCnY377yI5Z2RMTMw77yabXVzaWNVcmzloavnvZHpobXoh7Tmkq3mlL7plK7mkq3kuI3kuobmrYzvvIzmlLnloavnnJ9tcDPnm7Tpk77vvIkKCnY277yI5Z2RMTI577yaanVtcFVybOaMh+WQkW9pYXBpLm5ldOaUvuS4jeS6huatjO+8jOWKoGp1bXDlj4LmlbDkv67vvIkKCnY177yIMjAyNi0xMS0xOCDlnZExMjPvvJrmjqXlhaVPSUFQSeWFqOW5s+WPsOetvuWQjea6kO+8ieOAggoK6YeN5aSn5Y2H57qn77yI5Z2RMTIz57+75qGI77yJ77ya5pendjPnmoQ05Liq5LiK5ri477yIMTA2LjU1LjAuMTAyL+aAneaAnS9xcWJvdGFyay9sbG9i77yJCuayoeS4gOS4quaUr+aMgSBrdXdvL2t1Z291L21pZ3UvcXEg5a6Y5pa55Y2h5aWR57qm4oCU4oCU5oCd5oCdIuW8guW4uOaLpuaIqiLjgIExMDblj6rorqRjdXN0b23jgIEK5YW25L2Z5peg5ZON5bqU44CC6L+Z5bCx5piv6YW35oiRL+mFt+eLly/lkqrlkpXljaHlgZrkuI3lh7rnmoTnnJ/mraPljp/lm6DvvIjnrb7lkI3mupDkuI3lr7nvvIzkuI3mmK/mioDmnK/kuI3ooYzvvInjgIIKCnY0IOaWsOWiniBPSUFQSe+8iGh0dHBzOi8vb2lhcGkubmV0L2FwaS9RUU11c2ljSlNPTkFya++8ieS9nOS4uummlumAieS4iua4uO+8mgotIGZvcm1hdCDmlK/mjIEgcXEvMTYzL2t1Z291L2t1d28vbWlndS9taWhveW8vYmlsaWJpbGkuLi4g5YWo5bmz5Y+wCi0g5a6e5rWL5LqU5Liq5bmz5Y+w5YWo6YOo6L+U5Zue5bimIHRva2VuIOecn+WNoe+8jHRhZyDliIbliKvmmK8KICDphbfmiJHpn7PkuZAv572R5piT5LqR6Z+z5LmQL+mFt+eLl+mfs+S5kC/lkqrlkpXpn7PkuZAvUVHpn7PkuZAKLSDov5Tlm57kvZPmmK8geyJjb2RlIjoxLCJtZXNzYWdlIjoiPOWNoUpTT07lrZfnrKbkuLI+In3vvIzpnIDop6Plh7ogbWVzc2FnZQoK5a6Y5pa55Y2h5aWR57qm5aSE55CG77yaTmFwQ2F0IOS8oOadpSB7dHlwZToia3V3byIsaWQ6IjEyODQwNSJ977yM5Luj55CG5ou85Ye65bmz5Y+wVVJM77yMCkdFVCBPSUFQSSBmb3JtYXQ9a3V3byZ1cmw9POaLvOWlveeahHVybD7vvIzlj5blh7ogbWVzc2FnZSjljaFKU09OKSDnm7TmjqXov5Tlm57nu5kgTmFwQ2F044CCCmN1c3RvbSDlpZHnuqbvvIjmnIkgdXJsL2ltYWdlL3RpdGxl77yJ57un57ut6LWwIE9JQVBJIGZvcm1hdD1jdXN0b20g5oiW5pen5LiK5ri45YWc5bqV44CCCiIiIgppbXBvcnQganNvbgppbXBvcnQgcmFuZG9tCmltcG9ydCB0aHJlYWRpbmcKaW1wb3J0IHRpbWUKaW1wb3J0IHVybGxpYi5wYXJzZQppbXBvcnQgdXJsbGliLnJlcXVlc3QKZnJvbSBodHRwLnNlcnZlciBpbXBvcnQgQmFzZUhUVFBSZXF1ZXN0SGFuZGxlciwgVGhyZWFkaW5nSFRUUFNlcnZlcgoKUE9SVCA9IDEwODAwClVJTiA9IDM0Mjc5NDMxODcKVUEgPSB7IlVzZXItQWdlbnQiOiAiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IiwKICAgICAgIkNvbnRlbnQtVHlwZSI6ICJhcHBsaWNhdGlvbi9qc29uIn0KCiMgT0lBUEkg5YWo5bmz5Y+w562+5ZCN5rqQ77yI5Z2RMTIz5paw5o6l5YWl77yM6aaW6YCJ77yJCk9JQVBJID0gImh0dHBzOi8vb2lhcGkubmV0L2FwaS9RUU11c2ljSlNPTkFyayIKCiMg5pen5LiK5ri477yI5L+d55WZ5YWc5bqV77yM5LuFIGN1c3RvbSDnlKjvvIkKVVBTVFJFQU1TID0gWwogICAgImh0dHA6Ly8xMDYuNTUuMC4xMDI6MTAwODcvIiwKICAgICJodHRwczovL3NzLnhpbmd6aGlnZS5jb20vbXVzaWNfY2FyZC9jYXJkIiwKICAgICJodHRwczovL3FxYm90YXJrLjU2OTg3OS54eXovIiwKICAgICJodHRwczovL2xsb2IubGlueXVjaGVuLm5ldC9zaWduL211c2ljIiwKXQoKIyDlrpjmlrnljaHlubPlj7Ag4oaSIChPSUFQSSBmb3JtYXQsIFVSTOaooeadvykKT0ZGSUNJQUwgPSB7CiAgICAiMTYzIjogICAoIjE2MyIsICAgImh0dHBzOi8vbXVzaWMuMTYzLmNvbS9zb25nP2lkPXtpZH0iKSwKICAgICJxcSI6ICAgICgicXEiLCAgICAiaHR0cHM6Ly95LnFxLmNvbS9uL3J5cXEvc29uZ0RldGFpbC97aWR9IiksCiAgICAia3V3byI6ICAoImt1d28iLCAgImh0dHBzOi8vd3d3Lmt1d28uY24vcGxheV9kZXRhaWwve2lkfSIpLAogICAgImt1Z291IjogKCJrdWdvdSIsICJodHRwczovL3d3dy5rdWdvdS5jb20vc29uZy8jaGFzaD17aWR9IiksCiAgICAibWlndSI6ICAoIm1pZ3UiLCAgImh0dHBzOi8vbXVzaWMubWlndS5jbi92My9tdXNpYy9zb25nL3tpZH0iKSwKfQoKIyDlnZExMzM6IOiHquW7uuW5suWHgOaSreaUvumhtSjmiZjnrqHlnKhHaXRIdWIgUGFnZXMs5b275bqV5Y676JOd5p2hL+WOu+e9keaYk+S6keW8leWvvCkKUExBWUVSX1BBR0UgPSAiaHR0cHM6Ly90aG91c2FuZHM5MS5naXRodWIuaW8vLTEvbXVzaWNfcGxheWVyLmh0bWwiCgoKZGVmIHBsYXllcl91cmwoc29uZywgc2luZ2VyLCBjb3Zlciwgc2lkKToKICAgICIiIuaLvOiHquW7uuaSreaUvumhtVVSTDrluKbmrYzlkI0v5q2M5omLL+Wwgemdoi9pZOOAggogICAg5Z2RMTMzOiDkuI3kvKDlrozmlbRtcDPnm7Tpk74o5bimJizkvJrooqtPSUFQSeino+eggeWQjuW9k+WIhumalOespuWIh+aWrSksCiAgICDlj6rkvKDnuq9pZCzmkq3mlL7pobXnlKhpZOeOsOWcuuaLvG1ldGluZ+mfs+mikeOAgiIiIgogICAgcSA9IHVybGxpYi5wYXJzZS51cmxlbmNvZGUoewogICAgICAgICJ0aXRsZSI6IHNvbmcgb3IgIumfs+S5kCIsICJzaW5nZXIiOiBzaW5nZXIgb3IgIiIsCiAgICAgICAgImNvdmVyIjogY292ZXIgb3IgIiIsICJpZCI6IHN0cihzaWQgb3IgIiIpLAogICAgfSkKICAgIHJldHVybiBQTEFZRVJfUEFHRSArICI/IiArIHEKCgpfY29vbGRvd24gPSB7fQpfbG9jayA9IHRocmVhZGluZy5Mb2NrKCkKX2NhY2hlID0ge30KCgpkZWYgX2xvZyhtc2cpOgogICAgd2l0aCBfbG9jazoKICAgICAgICBwcmludCh0aW1lLnN0cmZ0aW1lKCIlbS0lZCAlSDolTTolUyAiKSArIG1zZywgZmx1c2g9VHJ1ZSkKCgpkZWYgX2h0dHBfZ2V0KHVybCwgdGltZW91dD0xMik6CiAgICByZXEgPSB1cmxsaWIucmVxdWVzdC5SZXF1ZXN0KHVybCwgaGVhZGVycz1VQSkKICAgIHJldHVybiB1cmxsaWIucmVxdWVzdC51cmxvcGVuKHJlcSwgdGltZW91dD10aW1lb3V0KS5yZWFkKCkKCgpkZWYgb2lhcGlfY2FyZChmbXQsIHVybCwgc29uZz0iIiwgc2luZ2VyPSIiLCBjb3Zlcj0iIiwganVtcD0iIik6CiAgICAiIiLosIMgT0lBUEkg5Ye65Y2h77yM6L+U5Zue5Y2hIEpTT04g5a2X56ym5Liy77yI5bey6Kej5Ye6IG1lc3NhZ2XvvInvvIzlpLHotKXov5Tlm54gTm9uZeOAgiIiIgogICAgcGFyYW1zID0geyJmb3JtYXQiOiBmbXQsICJ1cmwiOiB1cmx9CiAgICAjIOWdkTEyOTogT0lBUEnpu5jorqTmiooganVtcFVybCDlhpnmrbvmiJAgaHR0cDovL29pYXBpLm5ldC8gKOeCueWNoeeJh+i3s+WIsEFQSeebruW9lemhtSzmlL7kuI3kuobmrYwp44CCCiAgICAjIOWumOaWueaWh+aho+aUr+aMgSBqdW1wIOWPguaVsOaMh+WumueCueWHu+i3s+i9rOmTvuaOpTvov5nph4zmiorlubPlj7DmrYzmm7Lpk77mjqXkvZwganVtcCDkvKDlhaUsdG9rZW7ljp/moLfmnInmlYjjgIIKICAgICMg5Z2RMTI5KzEzMDoganVtcFVybCDnlKjkvKDlhaXnmoQganVtcCjmrYzmm7LpobUpOyBtdXNpY1VybCDnlKggdXJsKOecn21wM+ebtOmTvinjgIIKICAgICMg5LqM6ICF5YiG56a7OiDngrnljaHniYfihpLot7PmrYzmm7LpobU7IOeCueWwgemdouaSreaUvumUruKGkuaSrW1wM+OAggogICAganVtcF90YXJnZXQgPSBqdW1wIG9yIHVybAogICAgaWYganVtcF90YXJnZXQ6CiAgICAgICAgcGFyYW1zWyJqdW1wIl0gPSBqdW1wX3RhcmdldAogICAgaWYgc29uZzoKICAgICAgICBwYXJhbXNbInNvbmciXSA9IHNvbmcKICAgIGlmIHNpbmdlcjoKICAgICAgICBwYXJhbXNbInNpbmdlciJdID0gc2luZ2VyCiAgICBpZiBjb3ZlcjoKICAgICAgICBwYXJhbXNbImNvdmVyIl0gPSBjb3ZlcgogICAgZnVsbCA9IE9JQVBJICsgIj8iICsgdXJsbGliLnBhcnNlLnVybGVuY29kZShwYXJhbXMpCiAgICB0cnk6CiAgICAgICAgYm9keSA9IF9odHRwX2dldChmdWxsKQogICAgICAgIGQgPSBqc29uLmxvYWRzKGJvZHkpCiAgICAgICAgbXNnID0gZC5nZXQoIm1lc3NhZ2UiKQogICAgICAgICMg5oiQ5Yqf77yaY29kZT0xLCBtZXNzYWdlIOaYr+WNoSBKU09OIOWtl+espuS4sgogICAgICAgIGlmIGQuZ2V0KCJjb2RlIikgPT0gMSBhbmQgaXNpbnN0YW5jZShtc2csIHN0cik6CiAgICAgICAgICAgIGNhcmQgPSBqc29uLmxvYWRzKG1zZykKICAgICAgICAgICAgaWYgKGNhcmQuZ2V0KCJjb25maWciKSBvciB7fSkuZ2V0KCJ0b2tlbiIpOgogICAgICAgICAgICAgICAgX2xvZyhmIk9JQVBJ5Ye655yf5Y2hIGZvcm1hdD17Zm10fSB0YWc9e2NhcmQuZ2V0KCdtZXRhJyx7fSkuZ2V0KCdtdXNpYycse30pLmdldCgndGFnJyl9ICh7bGVuKG1zZyl95a2X6IqCKSIpCiAgICAgICAgICAgICAgICByZXR1cm4gbXNnICAjIE5hcENhdCDopoHnmoTmmK/ljaEgSlNPTiDlrZfnrKbkuLIKICAgICAgICBfbG9nKGYiT0lBUEnml6DnnJ/ljaEgZm9ybWF0PXtmbXR9IGNvZGU9e2QuZ2V0KCdjb2RlJyl9IG1zZz17c3RyKG1zZylbOjYwXX0iKQogICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgIF9sb2coZiJPSUFQSeWksei0pSBmb3JtYXQ9e2ZtdH06IHt0eXBlKGUpLl9fbmFtZV9ffSB7ZX0iKQogICAgcmV0dXJuIE5vbmUKCgpkZWYgYXVkaW9fdXJsKHQsIHNpZCk6CiAgICAiIiLlnZExMzA6IOWumOaWueWNoeeahCBtdXNpY1VybCDooqtPSUFQSeWhq+aIkOatjOabsue9kemhtVVSTCzmkq3mlL7plK7ngrnkuIvljrtRUeaLv+e9kemhteW9k+mfs+mikeaSreKGkuaUvuS4jeS6huatjOOAggogICAg5pen54mI6IO95pKt5piv5Zug5Li6562+5ZCN5rqQ5oqKIG11c2ljVXJsIOWhq+aIkOecn21wM+ebtOmTvuOAgui/memHjOaMieW5s+WPsOaLvOWHuumfs+mikeebtOmTviwKICAgIOS9nOS4uiB1cmwg5Y+C5pWw5Lyg57uZT0lBUEkg4oaSIE9JQVBJ562+5Y+R5pe25oqK5a6D5YaZ6L+bIG11c2ljVXJsIOW5tuS4gOW5tuetvnRva2VuKOWunua1i3Rva2Vu6KaG55uWKeOAggogICAg5pWw5o2u5rqQ5rK/55So54K55q2M5o+S5Lu25ZCM5qy+5YWs55uK5rqQOgogICAgICAxNjMgIOKGkiBtZXRpbmcgbmV0ZWFzZSAo5a6e5rWL6L+U5ZueMzAy5Yiw572R5piT5LqRQ0RO55qEbXAzLDQ4MUtCL+mmlizlj6/nlKgpCiAgICAgIHFxICAg4oaSIG1ldGluZyB0ZW5jZW50CiAgICAgIGt1d28g4oaSIGFudGlzZXJ2ZXIg55u06ZO+CiAgICAgIGt1Z291L21pZ3Ug4oaSIOaXoOeos+WumuebtOmTvizov5Tlm54iIiAo6L+Z5Lqb5bmz5Y+w57u05oyB5Y6f5qC3Pei3s+e9kemhtSzkuI3lgJLpgIApCiAgICAiIiIKICAgIGlmIHQgPT0gIjE2MyI6CiAgICAgICAgcmV0dXJuICJodHRwczovL2FwaS5pbmphaG93LmNuL21ldGluZy8/dHlwZT11cmwmc2VydmVyPW5ldGVhc2UmaWQ9IiArIHN0cihzaWQpCiAgICBpZiB0ID09ICJxcSI6CiAgICAgICAgcmV0dXJuICJodHRwczovL2FwaS5pbmphaG93LmNuL21ldGluZy8/dHlwZT11cmwmc2VydmVyPXRlbmNlbnQmaWQ9IiArIHN0cihzaWQpCiAgICBpZiB0ID09ICJrdXdvIjoKICAgICAgICByZXR1cm4gKCJodHRwOi8vYW50aXNlcnZlci5rdXdvLmNuL2FudGkucz90eXBlPWNvbnZlcnRfdXJsIgogICAgICAgICAgICAgICAgIiZmb3JtYXQ9bXAzJnJlc3BvbnNlPXVybCZyaWQ9IiArIHN0cihzaWQpKQogICAgcmV0dXJuICIiCgoKZGVmIG5ldGVhc2VfbWV0YShzaWQpOgogICAgIiIi5pen6Lev5b6E5YWc5bqV55So77ya5LuO572R5piT5LqR6KGl6b2Q5q2M6K6v44CCIiIiCiAgICBpZiBzaWQgaW4gX2NhY2hlOgogICAgICAgIHJldHVybiBfY2FjaGVbc2lkXQogICAgdXJsID0gImh0dHBzOi8vbXVzaWMuMTYzLmNvbS9hcGkvc29uZy9kZXRhaWwvP2lkPSVzJmlkcz0lJTVCJXMlJTVEIiAlIChzaWQsIHNpZCkKICAgIGQgPSBqc29uLmxvYWQodXJsbGliLnJlcXVlc3QudXJsb3Blbih1cmxsaWIucmVxdWVzdC5SZXF1ZXN0KHVybCwgaGVhZGVycz1VQSksIHRpbWVvdXQ9NCkpCiAgICBzID0gKGQuZ2V0KCJzb25ncyIpIG9yIFt7fV0pWzBdCiAgICByID0gKHMuZ2V0KCJuYW1lIiwgIiIpLAogICAgICAgICAiLyIuam9pbihhLmdldCgibmFtZSIsICIiKSBmb3IgYSBpbiBzLmdldCgiYXJ0aXN0cyIpIG9yIFtdKSwKICAgICAgICAgKHMuZ2V0KCJhbGJ1bSIpIG9yIHt9KS5nZXQoInBpY1VybCIsICIiKSkKICAgIF9jYWNoZVtzaWRdID0gcgogICAgcmV0dXJuIHIKCgpkZWYgZ2V0X3NpZ25lZF9jYXJkX2xlZ2FjeShwYXlsb2FkKToKICAgICIiIuaXpzTkuIrmuLjlhZzlupXvvIjku4UgY3VzdG9t77yM6L+U5ZueIGRpY3Qg5Y2h77yJ44CCIiIiCiAgICBub3cgPSB0aW1lLnRpbWUoKQogICAgZm9yIGJhc2UgaW4gVVBTVFJFQU1TOgogICAgICAgIGlmIF9jb29sZG93bi5nZXQoYmFzZSwgMCkgPiBub3c6CiAgICAgICAgICAgIGNvbnRpbnVlCiAgICAgICAgdHJ5OgogICAgICAgICAgICBib2R5ID0gdXJsbGliLnJlcXVlc3QudXJsb3BlbigKICAgICAgICAgICAgICAgIHVybGxpYi5yZXF1ZXN0LlJlcXVlc3QoYmFzZSwgZGF0YT1qc29uLmR1bXBzKHBheWxvYWQpLmVuY29kZSgpLCBoZWFkZXJzPVVBKSwKICAgICAgICAgICAgICAgIHRpbWVvdXQ9OCkucmVhZCgpCiAgICAgICAgICAgIGNhcmQgPSBqc29uLmxvYWRzKGJvZHkpCiAgICAgICAgICAgIGlmIGlzaW5zdGFuY2UoY2FyZCwgZGljdCkgYW5kIChjYXJkLmdldCgiY29uZmlnIikgb3Ige30pLmdldCgidG9rZW4iKToKICAgICAgICAgICAgICAgIF9sb2coIuaXp+S4iua4uOWHuuecn+WNoTogJXMgKCVkIGJ5dGVzKSIgJSAoYmFzZSwgbGVuKGJvZHkpKSkKICAgICAgICAgICAgICAgIHJldHVybiBjYXJkCiAgICAgICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgICAgICBfbG9nKCLml6fkuIrmuLjlpLHotKU6ICVzIC0+ICVzIiAlIChiYXNlLCBlKSkKICAgICAgICB3aXRoIF9sb2NrOgogICAgICAgICAgICBfY29vbGRvd25bYmFzZV0gPSB0aW1lLnRpbWUoKSArIDMwMAogICAgcmV0dXJuIE5vbmUKCgpjbGFzcyBIKEJhc2VIVFRQUmVxdWVzdEhhbmRsZXIpOgogICAgcHJvdG9jb2xfdmVyc2lvbiA9ICJIVFRQLzEuMSIKCiAgICBkZWYgX3JlYWRfYm9keShzZWxmKToKICAgICAgICB0ZSA9IChzZWxmLmhlYWRlcnMuZ2V0KCJUcmFuc2Zlci1FbmNvZGluZyIpIG9yICIiKS5sb3dlcigpCiAgICAgICAgaWYgImNodW5rZWQiIGluIHRlOgogICAgICAgICAgICBib2R5ID0gYiIiCiAgICAgICAgICAgIHdoaWxlIFRydWU6CiAgICAgICAgICAgICAgICBsaW5lID0gc2VsZi5yZmlsZS5yZWFkbGluZSg2NTUzNikuc3RyaXAoKQogICAgICAgICAgICAgICAgaWYgYiI7IiBpbiBsaW5lOgogICAgICAgICAgICAgICAgICAgIGxpbmUgPSBsaW5lLnNwbGl0KGIiOyIpWzBdCiAgICAgICAgICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICAgICAgc2l6ZSA9IGludChsaW5lLCAxNikKICAgICAgICAgICAgICAgIGV4Y2VwdCBWYWx1ZUVycm9yOgogICAgICAgICAgICAgICAgICAgIGJyZWFrCiAgICAgICAgICAgICAgICBpZiBzaXplID09IDA6CiAgICAgICAgICAgICAgICAgICAgc2VsZi5yZmlsZS5yZWFkbGluZSg2NTUzNikKICAgICAgICAgICAgICAgICAgICBicmVhawogICAgICAgICAgICAgICAgYm9keSArPSBzZWxmLnJmaWxlLnJlYWQoc2l6ZSkKICAgICAgICAgICAgICAgIHNlbGYucmZpbGUucmVhZCgyKQogICAgICAgICAgICByZXR1cm4gYm9keQogICAgICAgIG4gPSBpbnQoc2VsZi5oZWFkZXJzLmdldCgiQ29udGVudC1MZW5ndGgiKSBvciAwKQogICAgICAgIHJldHVybiBzZWxmLnJmaWxlLnJlYWQobikgaWYgbiBlbHNlIGIiIgoKICAgIGRlZiBkb19QT1NUKHNlbGYpOgogICAgICAgIHJhdyA9IHNlbGYuX3JlYWRfYm9keSgpCiAgICAgICAgdHJ5OgogICAgICAgICAgICBkID0ganNvbi5sb2FkcyhyYXcgb3IgYiJ7fSIpCiAgICAgICAgZXhjZXB0IEV4Y2VwdGlvbjoKICAgICAgICAgICAgZCA9IHt9CiAgICAgICAgICAgIF9sb2coIuivt+axguS9k+ino+aekOWksei0pTogJXIiICUgcmF3WzoyMDBdKQogICAgICAgIHQgPSBkLmdldCgidHlwZSIsICI/IikKICAgICAgICBjYXJkX3N0ciA9IE5vbmUgICMgTmFwQ2F0IOimgeeahOWNoSBKU09OIOWtl+espuS4sgogICAgICAgIHRyeToKICAgICAgICAgICAgaWYgdCBpbiBPRkZJQ0lBTCBhbmQgZC5nZXQoImlkIikgaXMgbm90IE5vbmU6CiAgICAgICAgICAgICAgICAjIOWumOaWueWNoeWlkee6pu+8mmt1d28va3Vnb3UvbWlndS9xcS8xNjMg4oaSIE9JQVBJCiAgICAgICAgICAgICAgICBmbXQsIHRwbCA9IE9GRklDSUFMW3RdCiAgICAgICAgICAgICAgICBzaWQgPSBzdHIoZFsiaWQiXSkKICAgICAgICAgICAgICAgIHVybCA9IHRwbC5mb3JtYXQoaWQ9c2lkKQogICAgICAgICAgICAgICAgIyDlnZExMjTmlrnmoYjvvJrphbfni5cv5ZKq5ZKV5rKh5pyJ6Ieq5bex55qE5pCc57Si5o6l5Y+j77yM54K55q2M5L6n5oqKIuatjOWQjSLloZ7ov5sgaWTjgIIKICAgICAgICAgICAgICAgICMgTmFwQ2F0IOWumOaWueWNoeWlkee6puWPquS/neivgeS8oCBpZOOAgeS4jeS4gOWumuS8oCB0aXRsZeKAlOKAlOayoeaciSB0aXRsZSDml7YKICAgICAgICAgICAgICAgICMg5bCx5oqKIGlkIOW9k+atjOWQjeWWgiBPSUFQSe+8iOWunua1iyBmb3JtYXQ9a3Vnb3UvbWlndSArIHNvbmc95q2M5ZCNIOiDveWHugogICAgICAgICAgICAgICAgIyDmraPnoa4gdGl0bGUg55qE55yf5Y2h77yJ44CCMTYzL3FxIOacieecn+WuniBpZO+8jOS/neaMgeWOn+agt+S4jeWKqOOAggogICAgICAgICAgICAgICAgc29uZyA9IGQuZ2V0KCJ0aXRsZSIsICIiKQogICAgICAgICAgICAgICAgc2luZ2VyID0gZC5nZXQoInNpbmdlciIsICIiKQogICAgICAgICAgICAgICAgY292ZXIgPSAiIgogICAgICAgICAgICAgICAgIyDlnZExMjg6IE5hcENhdOWumOaWueWNoeW4uOWPquS8oGlk5LiN5LygdGl0bGUgLT4gT0lBUEnml6DmrYzlkI3lh7rljaDkvY3nrKbljaHjgIIKICAgICAgICAgICAgICAgICMgMTYzL3FxIOeUqCBuZXRlYXNlX21ldGEg5oyJaWTlj43mn6XnnJ/mrYzlkI0v5q2M5omLL+Wwgemdojsga3Vnb3UvbWlndSDmsr/nlKhpZOW9k+atjOWQjeOAggogICAgICAgICAgICAgICAgaWYgbm90IHNvbmcgYW5kIHQgaW4gKCIxNjMiLCAicXEiKToKICAgICAgICAgICAgICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICAgICAgICAgIG5zLCBuYSwgbnAgPSBuZXRlYXNlX21ldGEoc2lkKQogICAgICAgICAgICAgICAgICAgICAgICBpZiBuczogc29uZywgc2luZ2VyLCBjb3ZlciA9IG5zLCAoc2luZ2VyIG9yIG5hKSwgKGNvdmVyIG9yIG5wKQogICAgICAgICAgICAgICAgICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICAgICAgICAgICAgICAgICAgX2xvZygibmV0ZWFzZV9tZXRh5Y+N5p+l5aSx6LSlOiAlcyIgJSBlKQogICAgICAgICAgICAgICAgaWYgbm90IHNvbmcgYW5kIHQgaW4gKCJrdWdvdSIsICJtaWd1IiwgImt1d28iKToKICAgICAgICAgICAgICAgICAgICBzb25nID0gc2lkCiAgICAgICAgICAgICAgICAjIOWdkTEzMDogdXJsKOatjOabsumhtSnnu5lqdW1w55So5LqO54K55Y2h54mH6Lez6L2sOyBhdWRpb191cmwo55yfbXAzKee7mU9JQVBJ55qEdXJs5Y+C5pWwCiAgICAgICAgICAgICAgICAjIOKGkiDnrb7lj5Hov5sgbXVzaWNVcmws6K6p5bCB6Z2i5pKt5pS+6ZSu6IO955u05o6l5pKt44CC5ou/5LiN5Yiw55u06ZO+55qE5bmz5Y+w57u05oyB55SocGFnZSjooYzkuLrkuI3lj5gp44CCCiAgICAgICAgICAgICAgICBhdSA9IGF1ZGlvX3VybCh0LCBzaWQpCiAgICAgICAgICAgICAgICAjIOWdkTEzMTogMTYz54K55Y2h54mH6JC95Zyw6aG155SoIC9tL3Nvbmcg5pen5qih5p2/KOaXoCLlkozlpb3lj4vkuIDotbflkKzmrYwi6JOd5p2hKTsKICAgICAgICAgICAgICAgICMg5Y6fIC9zb25nIOS8mjMwMuWIsCB5Lm11c2ljLjE2My5jb20g5paw5qih5p2/LOW6lemDqOazqOWFpeiTneadoeOAguWPquaUuWp1bXAs5pKt5pS+KGF1KeS4jeWPmOOAggogICAgICAgICAgICAgICAganVtcF91cmwgPSB1cmwKICAgICAgICAgICAgICAgIGlmIHQgPT0gIjE2MyIgYW5kIGF1OgogICAgICAgICAgICAgICAgICAgICMg5Z2RMTMzOiAxNjPmnIltcDPnm7Tpk77ml7Ys54K55Y2h54mH6Lez6Ieq5bu65bmy5YeA5pKt5pS+6aG1KOW4puecn+WunuatjOabsuS/oeaBryzml6Dok53mnaEv5peg5byV5a+8KeOAggogICAgICAgICAgICAgICAgICAgICMg5bCB6Z2i57y65aSx5pe26KGl5p+l5LiA5qyhKOiQveWcsOmhteimgeaYvuekuuWwgemdoinjgIIKICAgICAgICAgICAgICAgICAgICBpZiBub3QgY292ZXI6CiAgICAgICAgICAgICAgICAgICAgICAgIHRyeToKICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9uLCBfYSwgY292ZXIgPSBuZXRlYXNlX21ldGEoc2lkKQogICAgICAgICAgICAgICAgICAgICAgICAgICAgaWYgbm90IHNpbmdlcjogc2luZ2VyID0gX2EKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmIG5vdCBzb25nOiBzb25nID0gX24KICAgICAgICAgICAgICAgICAgICAgICAgZXhjZXB0IEV4Y2VwdGlvbjoKICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBhc3MKICAgICAgICAgICAgICAgICAgICBqdW1wX3VybCA9IHBsYXllcl91cmwoc29uZywgc2luZ2VyLCBjb3Zlciwgc2lkKQogICAgICAgICAgICAgICAgZWxpZiB0ID09ICIxNjMiOgogICAgICAgICAgICAgICAgICAgIGp1bXBfdXJsID0gImh0dHBzOi8vbXVzaWMuMTYzLmNvbS9tL3Nvbmc/aWQ9IiArIHNpZAogICAgICAgICAgICAgICAgY2FyZF9zdHIgPSBvaWFwaV9jYXJkKGZtdCwgKGF1IG9yIHVybCksIGp1bXA9anVtcF91cmwsIHNvbmc9c29uZywgc2luZ2VyPXNpbmdlciwgY292ZXI9Y292ZXIpCiAgICAgICAgICAgICAgICAjIOWdkTEyODogT0lBUEnnhpTmlq0oNTAzIFVQU1RSRUFNX0NJUkNVSVRfT1BFTinml7bliIfmgJ3mgJ3mupDlhZzlupUs5a6Y5pa55Y2h5LiN5YaN5YWo54GtCiAgICAgICAgICAgICAgICBpZiBjYXJkX3N0ciBpcyBOb25lOgogICAgICAgICAgICAgICAgICAgIF9sb2coIk9JQVBJ5LiN5Y+v55SoLOWumOaWueWNoeWIh+aXp+S4iua4uOWFnOW6lSB0eXBlPSVzIiAlIHQpCiAgICAgICAgICAgICAgICAgICAgcGF5bG9hZCA9IHsidHlwZSI6IHQsICJpZCI6IHNpZCwgInRpdGxlIjogc29uZywgInNpbmdlciI6IHNpbmdlciwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJ1cmwiOiB1cmwsICJpbWFnZSI6IGNvdmVyLCAiYXVkaW8iOiAiIn0KICAgICAgICAgICAgICAgICAgICBsZWdhY3kgPSBnZXRfc2lnbmVkX2NhcmRfbGVnYWN5KHBheWxvYWQpCiAgICAgICAgICAgICAgICAgICAgaWYgbGVnYWN5OgogICAgICAgICAgICAgICAgICAgICAgICBjYXJkX3N0ciA9IGpzb24uZHVtcHMobGVnYWN5LCBlbnN1cmVfYXNjaWk9RmFsc2UpCiAgICAgICAgICAgIGVsaWYgdCA9PSAiY3VzdG9tIiBhbmQgKGQuZ2V0KCJ1cmwiKSBvciBkLmdldCgidGl0bGUiKSk6CiAgICAgICAgICAgICAgICAjIGN1c3RvbSDljaHvvJrkvJjlhYggT0lBUEkgY3VzdG9t77yM5aSx6LSl6YCA5pen5LiK5ri4CiAgICAgICAgICAgICAgICBjYXJkX3N0ciA9IG9pYXBpX2NhcmQoImN1c3RvbSIsIGQuZ2V0KCJ1cmwiLCAiIiksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc29uZz1kLmdldCgidGl0bGUiLCAiIiksIHNpbmdlcj1kLmdldCgic2luZ2VyIiwgIiIpLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvdmVyPWQuZ2V0KCJpbWFnZSIsICIiKSkKICAgICAgICAgICAgICAgIGlmIG5vdCBjYXJkX3N0cjoKICAgICAgICAgICAgICAgICAgICBwYXlsb2FkID0geyJ0eXBlIjogImN1c3RvbSIsICJzaW5nZXIiOiBkLmdldCgic2luZ2VyIikgb3IgZC5nZXQoImNvbnRlbnQiKSBvciAiIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJ0aXRsZSI6IGQuZ2V0KCJ0aXRsZSIsICIiKSwgInVybCI6IGQuZ2V0KCJ1cmwiLCAiIiksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiYXVkaW8iOiBkLmdldCgiYXVkaW8iLCAiIiksICJpbWFnZSI6IGQuZ2V0KCJpbWFnZSIsICIiKX0KICAgICAgICAgICAgICAgICAgICBjYXJkID0gZ2V0X3NpZ25lZF9jYXJkX2xlZ2FjeShwYXlsb2FkKQogICAgICAgICAgICAgICAgICAgIGNhcmRfc3RyID0ganNvbi5kdW1wcyhjYXJkLCBlbnN1cmVfYXNjaWk9RmFsc2UpIGlmIGNhcmQgZWxzZSBOb25lCiAgICAgICAgICAgIGVsaWYgdCA9PSAiMTYzIjoKICAgICAgICAgICAgICAgICMgMTYzIOaXoCBpZCDnmoTmnoHnq6/mg4XlhrUKICAgICAgICAgICAgICAgIGNhcmRfc3RyID0gb2lhcGlfY2FyZCgiMTYzIiwgImh0dHBzOi8vbXVzaWMuMTYzLmNvbS9zb25nP2lkPSIgKyBzdHIoZC5nZXQoImlkIiwgIiIpKSkKICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgICAgIF9sb2coImJ1aWxk5byC5bi4OiAlcyIgJSBlKQoKICAgICAgICBpZiBjYXJkX3N0ciBpcyBOb25lOgogICAgICAgICAgICBib2R5ID0ganNvbi5kdW1wcyh7ImVycm9yIjogIm5vIGxpdmUgc2lnbmVyIiwgIm9rIjogRmFsc2V9KS5lbmNvZGUoKQogICAgICAgICAgICBzZWxmLnNlbmRfcmVzcG9uc2UoNDAwKQogICAgICAgIGVsc2U6CiAgICAgICAgICAgICMg5YWz6ZSu77yaTmFwQ2F0IOacn+acm+eahOaYr+WNoSBKU09OIOWtl+espuS4suacrOi6q++8iOS4jeaYr+WMheS6huS4gOWxgueahOWvueixoe+8iQogICAgICAgICAgICBib2R5ID0gY2FyZF9zdHIuZW5jb2RlKCkKICAgICAgICAgICAgc2VsZi5zZW5kX3Jlc3BvbnNlKDIwMCkKICAgICAgICBzZWxmLnNlbmRfaGVhZGVyKCJDb250ZW50LVR5cGUiLCAiYXBwbGljYXRpb24vanNvbiIpCiAgICAgICAgc2VsZi5zZW5kX2hlYWRlcigiQ29udGVudC1MZW5ndGgiLCBzdHIobGVuKGJvZHkpKSkKICAgICAgICBzZWxmLmVuZF9oZWFkZXJzKCkKICAgICAgICBzZWxmLndmaWxlLndyaXRlKGJvZHkpCiAgICAgICAgX2xvZygi5aSE55CG5a6M5q+VIHR5cGU9JXMgLT4gJWQgYnl0ZXMgJXMiICUgKHQsIGxlbihib2R5KSwgIuecn+WNoSIgaWYgY2FyZF9zdHIgZWxzZSAiKOWFqOeBrSzotbDlhZzlupUpIikpCgogICAgZGVmIGxvZ19tZXNzYWdlKHNlbGYsICphKToKICAgICAgICBwYXNzCgoKX2xvZygibXVzaWNfc2lnbiB2OSDlkK/liqggMTI3LjAuMC4xOiVkIChPSUFQSeWFqOW5s+WPsCvml6fmupDlhZzlupUpIiAlIFBPUlQpClRocmVhZGluZ0hUVFBTZXJ2ZXIoKCIxMjcuMC4wLjEiLCBQT1JUKSwgSCkuc2VydmVfZm9yZXZlcigpCg==" | base64 -d > /root/music_sign_v10.py
-echo "[1]md5:"; md5sum /root/music_sign_v10.py
-echo "[2]语法:"; python3 -m py_compile /root/music_sign_v10.py && echo OK || echo 错
-echo "[3]备份v8:"; cp -f /root/music_sign.py /root/music_sign_v8.bak && echo 已备份
-echo "[4]覆盖运行路径:"; cp -f /root/music_sign_v10.py /root/music_sign.py && md5sum /root/music_sign.py
-echo "[5]重启代理:"; pkill -f 'python3 /root/music_sign.py'; sleep 2; cd /root && setsid nohup python3 /root/music_sign.py >> /root/music_sign_v4.log 2>&1 < /dev/null & sleep 4; pgrep -af 'music_sign' | head -3
-echo "[6]端口:"; curl -s --max-time 5 -o /dev/null -w "HTTP:%{http_code}\n" http://127.0.0.1:10800/
-echo "[7]真机验收(只传id):"
-python3 -c '
-import json,urllib.request
-req=urllib.request.Request("http://127.0.0.1:10800/",data=json.dumps({"type":"163","id":"33737547"}).encode(),headers={"Content-Type":"application/json"})
-c=json.loads(urllib.request.urlopen(req,timeout=25).read().decode())
-m=c.get("meta",{}).get("music",{})
-print("tag=%s title=%r"%(m.get("tag"),m.get("title")))
-print("musicUrl=%s"%m.get("musicUrl"))
-print("jumpUrl=%s"%m.get("jumpUrl"))
-print("token=%s"%bool((c.get("config") or {}).get("token")))
-'
-echo "[8]启动日志:"; tail -3 /root/music_sign_v4.log
-echo "=====完====="
---- 输出 ---
-===== 签名代理v10上车(自建播放页彻底去蓝条) 287230 =====
-[1]md5:
-54fae249e8d98a90ff0694628063f4b4  /root/music_sign_v10.py
-[2]语法:
-OK
-[3]备份v8:
-已备份
-[4]覆盖运行路径:
-54fae249e8d98a90ff0694628063f4b4  /root/music_sign.py
-[5]重启代理:
-7608 python3 /root/music_sign.py
-[6]端口:
-HTTP:501
-[7]真机验收(只传id):
-tag=网易云音乐 title='夜蝶 (Live)'
-musicUrl=https://api.injahow.cn/meting/?type=url&server=netease&id=33737547
-jumpUrl=https://thousands91.github.io/-1/music_player.html?title=夜蝶 (Live)&singer=李艺彤/黄婷婷&cover=https://p1.music.126.net/KnUSpILlj7Vxh0AMkGKV-Q==/3295236348603739.jpg&id=33737547
-token=True
-[8]启动日志:
-11-19 02:26:52 music_sign v9 启动 127.0.0.1:10800 (OIAPI全平台+旧源兜底)
-11-19 02:26:58 OIAPI出真卡 format=163 tag=网易云音乐 (842字节)
-11-19 02:26:58 处理完毕 type=163 -> 892 bytes 真卡
-=====完=====
+<<<forensic_restart_1119_0302.txt>>>
+===== 重启取证 11-19 03:02:59 =====
+--- napcat.log尾150行 ---
+11-19 01:09:04 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 而且万花世界这个编剧其中一个好像和李艺彤是有关联的
+11-19 01:09:11 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 我想想
+11-19 01:09:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 忘了
+11-19 01:09:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [亖᳐卐冇卌⭐᳐੭ﾞ(1561950850)] [回复消息 [修᳐勾᳐੭ﾞ(3549246127)] 今年年底李艺彤生日会，如果我有钱有时间就去了] @修᳐勾᳐੭ﾞ (3549246127)  去
+11-19 01:09:35 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 但是还有一个就是黄婷婷现在折月亮那个女主
+11-19 01:09:38 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] [回复消息 [修᳐勾᳐੭ﾞ(3549246127)] 而且万花世界这个编剧其中一个好像和李艺彤是有关联的] @修᳐勾᳐੭ﾞ (3549246127)  是的是的
+11-19 01:09:43 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 李艺彤粉丝
+11-19 01:09:43 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 是个kt
+11-19 01:09:59 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 唯爱卡推
+11-19 01:10:02 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 唯爱kt
+11-19 01:10:07 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 唯爱卡婷
+11-19 01:10:11 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 我不管一定是这样的
+11-19 01:10:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 那个折月亮那个女主也是个kt而且经纪人是李艺彤的前经纪人
+11-19 01:10:17 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] [图片]
+11-19 01:10:33 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 我管他的，卡黄本来就是双推应援会
+11-19 01:10:38 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 站中间串三边
+11-19 01:10:52 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 但是我觉得ht太恶心了，说我是ht我一定不会接受的
+11-19 01:11:01 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] ht就是一堆精虫
+11-19 01:11:07 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] [回复消息 [亖᳐卐冇卌⭐᳐੭ﾞ(1561950850)] @修᳐勾᳐੭ﾞ (3549246127)  去] @亖᳐卐冇卌⭐᳐੭ﾞ (1561950850)  没钱没时间啊
+11-19 01:11:11 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] [图片]
+11-19 01:11:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] [图片]
+11-19 01:11:17 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 我连票都买不起
+11-19 01:11:25 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 还有黄婷婷的六七年没有见的朋友
+11-19 01:11:27 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 是谁阿
+11-19 01:11:30 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 谁呢
+11-19 01:11:34 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 妈妈要是知道我花这么多钱给卡黄她肯定生气
+a65dd42f71a505febe04b7bb25af0f445297ea8c886fc7e18e092eee4a8c8d12
+11-19 01:11:48 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] [回复消息 [梨᳐拾亦᳐੭ﾞ(3327068725)] 还有黄婷婷的六七年没有见的朋友] @梨᳐拾亦᳐੭ﾞ (3327068725)  而且黄婷婷当时再见朋友放的那个图
+[I] <MMKV_IO.cpp:516::writeActualSize> [nt_mmkv_united_config_no_login_v3] increase sequence to 64, crc 3232474925, actualSize 15972
+[I] <MMKV.cpp:1178::sync> MMKV::sync, SyncFlag = 1
+11-19 01:11:58 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 和300多个女生一起生活的经历
+11-19 01:12:04 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 直接就是李艺彤的照片在上面
+11-19 01:12:14 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 放的是cp30的图
+11-19 01:12:24 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 李艺彤就在右上角
+11-19 01:12:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 她怎么可能不知道
+11-19 01:12:33 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 怎么可能只有这一张图
+11-19 01:12:43 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 最后其实我觉得芒果也是真贴脸
+11-19 01:12:55 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 但是我只想黄婷婷和李艺彤能赚钱
+11-19 01:13:07 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 卡黄的热度和流量应该给她们真正的主人
+11-19 01:13:30 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] [回复消息 [修᳐勾᳐੭ﾞ(3549246127)] 最后其实我觉得芒果也是真贴脸] 最后一期嘉宾室还有几张图
+11-19 01:13:42 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 里面有李艺彤读信的截频
+11-19 01:13:44 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 黄婷婷参加无限超越班是26年3月，表演中并没有限定好友是多久后久别重逢，但是她自己说有6、7年没有见。她是在2019年离开塞纳河，所以时间对的上，那这段表演的是谁不言而喻，黄婷婷你到底想起了谁
+11-19 01:13:45 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 真的牛逼
+11-19 01:14:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] [回复消息 [梨᳐拾亦᳐੭ﾞ(3327068725)] 黄婷婷参加无限超越班是26年3月，表演中并没有限定好友是多久后久别重逢，但是她自己说有6、7年没有见。她是在2019年离开塞纳河，所以时间对的上，那这段表演的是谁不言而喻，黄婷婷你到底想起了谁] @梨᳐拾亦᳐੭ﾞ (3327068725)  好久不见这首歌我感觉她和男主完全就像被迫卖还买不明白
+11-19 01:14:19 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 黄婷婷一眼拉拉
+11-19 01:14:26 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 然后九年是什么
+11-19 01:14:41 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 不是十年，八年
+11-19 01:14:43 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 是九年
+11-19 01:14:57 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] [图片]
+11-19 01:15:14 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 我要嗑一辈子卡黄
+11-19 01:15:24 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 我妈妈妈咪早在一起了
+11-19 01:17:32 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] [转发消息]
+11-19 01:17:32 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 当时看后会友期和恩恩聊的
+08fd3a7a06525874c8b86dda0a9a82722f2d20c3e4d6b76847715f268c0804b9
+11-19 01:17:49 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 黄婷婷说得对 抖音乐子人多
+11-19 01:18:27 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [枫淞诗（已复活）(568187738)] 哼哼哼～
+11-19 01:18:31 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [枫淞诗（已复活）(568187738)] 哼哼哼哼哼哼～
+11-19 01:18:33 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [枫淞诗（已复活）(568187738)] ～～～
+11-19 01:21:03 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [M250通用机枪-烽火地带-6LJO4T40AMN4BFKBN7S74(3611220879)] 换头像了
+11-19 01:21:15 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [M250通用机枪-烽火地带-6LJO4T40AMN4BFKBN7S74(3611220879)] 哟
+11-19 01:21:17 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [M250通用机枪-烽火地带-6LJO4T40AMN4BFKBN7S74(3611220879)] 和龙龙和好了
+11-19 01:21:39 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-19 01:21:44 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-19 01:21:46 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [枫淞诗（已复活）(568187738)] 哼哼哼～
+11-19 01:21:48 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-19 01:21:48 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-19 01:21:48 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 阿萨尔 点歌 黄小琥
+11-19 01:21:52 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-19 01:21:58 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [枫淞诗（已复活）(568187738)] 哼哼哼哼哼哼～～
+11-19 01:22:01 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 黄小琥的《没那么简单》，我听过。她的歌声像沙漠里的清泉，唱尽了人心里的苦与甜。🎶📚
+2f36a0fb433c584a2a0507046066f04919939716bc7d5757482c73f32eb72a0c
+11-19 01:22:03 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-19 01:22:08 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-19 01:22:09 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-19 01:22:09 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-19 01:22:09 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 点歌 黄小琥 没那么简单
+11-19 01:22:10 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 翻柜子找「黄小琥 没那么简单」，稍等一下……
+f3fd3d2a6fd61f67504b67bc380c790b54852c36ec5338faf638fc43754ded6f
+11-19 01:22:12 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 「黄小琥 没那么简单」翻出这几首，回复序号选哪首（60秒内有效）： ...
+1aa8274d2b449087f4e0e304c9047b75fcf823e68f51db8626beea2cf52f5e1d
+11-19 01:22:21 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-19 01:22:22 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-19 01:22:22 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-19 01:22:22 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 5
+11-19 01:22:23 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [M250通用机枪-烽火地带-6LJO4T40AMN4BFKBN7S74(3611220879)] 猪猪
+11-19 01:22:26 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-19 01:22:31 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-19 01:22:37 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [卡片消息]
+17bdb4ea2736d26fb14417668ef7be8a2d0cf238469e36a0823df916db93d944
+11-19 01:22:41 [[32minfo[39m] 阿萨尔 | 语音文件/root/.config/QQ/NapCat/temp/07587109-1e72-484c-8758-e8b9e414d5f4需要转换成silk
+[mp3float @ 0x1c03f5c380] Could not update timestamps for skipped samples.
+11-19 01:22:48 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爱上齐豫是我的福报(1561950850)] ttl
+[mp3float @ 0x1c03f5c380] Could not update timestamps for discarded samples.
+11-19 01:22:54 [[32minfo[39m] 阿萨尔 | 语音文件已就绪: /root/.config/QQ/NapCat/temp/dbfa604b-6d2e-49e3-b7fd-2b32a44deb41 时长: 308.14
+11-19 01:22:54 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [语音 308s]
+bbe6b0dcae8bed8e2a9cc72bbe7d391f4071a5b7915a9935296fa8b84074c035
+11-19 01:23:18 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [枫淞诗（已复活）(568187738)] ttl
+11-19 01:24:43 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-19 01:29:56 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-19 01:36:35 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-19 01:36:38 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-19 01:41:33 [[32minfo[39m] 阿萨尔 | [ServerTime] 时间同步完成，偏差 1637ms
+e03578a7146a08989ecef16c779c4283babb93f531796b09ea985aec1500155d
+11-19 01:49:03 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-19 01:49:08 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-19 01:49:09 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-19 01:49:09 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-19 01:49:09 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 点歌 没那么简单
+11-19 01:49:09 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 翻柜子找「没那么简单」，稍等一下……
+944ae14a03bdc6c37494fd52060a7e65d51fe4c03a9b84002e5868109648a840
+11-19 01:49:11 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 「没那么简单」翻出这几首，回复序号选哪首（60秒内有效）： ...
+6591cb66fd1d248ac76ef73446e0f03ede97f67e8c7fa51844aa2ff4796dd06f
+11-19 01:49:17 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-19 01:49:18 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-19 01:49:18 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-19 01:49:18 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 2
+11-19 01:49:22 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-19 01:49:31 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [卡片消息]
+a4576dcb17d5ffac287be11b1bdb13d19b2edb30c2f9483d2d2522ba6e27ea28
+11-19 01:49:39 [[32minfo[39m] 阿萨尔 | 语音文件/root/.config/QQ/NapCat/temp/6518f453-5602-4eaf-b39c-665ecae01dc5需要转换成silk
+[mp3float @ 0x1c03f5d500] Could not update timestamps for skipped samples.
+[mp3float @ 0x1c03f5d500] Could not update timestamps for discarded samples.
+11-19 01:49:49 [[32minfo[39m] 阿萨尔 | 语音文件已就绪: /root/.config/QQ/NapCat/temp/19dcd4c0-f52f-4f32-b268-14e1d50c8ae7 时长: 308.14
+11-19 01:49:49 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [语音 308s]
+9a1b8a20728a0db063aa48703f180ea475f730a76f5ab2151e49d34a7db7f1b4
+11-19 01:51:25 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] [回复消息 [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 其实你们如果想来西安玩的话，现在可以来，西安暖气来了] @●᳐‖▜▜▙᳐੭ﾞ (1179127036)  好心动呀但是我们离得太远了
+11-19 01:51:29 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 呜呜
+11-19 01:51:35 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-19 01:52:04 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] [图片]
+11-19 01:52:17 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 前几天还喝朋友煮火锅了
+11-19 01:52:25 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 前几天还和朋友煮火锅了
+11-19 01:52:37 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 亚米
+11-19 01:54:41 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-19 02:02:02 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] [回复消息 [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 前几天还和朋友煮火锅了] 哇
+11-19 02:02:37 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 我们俩完全大胃王来的
+11-19 02:02:45 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 话说我好像没怎么吃过番茄锅
+11-19 02:02:57 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 我一般是选牛油+菌汤
+11-19 02:03:05 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 素牛油锅
+11-19 02:03:26 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 我喜欢加个番茄提味
+11-19 02:03:41 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 因为蔬菜比较多
+c7a9cd093b1fb60be1412d4d03422a0653626eeb51fd959ccabc0f467233cbc5
+11-19 02:12:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] Soga
+11-19 02:12:47 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 我觉得牛油底料比清油的好吃
+11-19 02:13:04 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+80e01dc2bf504ac8a01e918aed0e42a67f1ae5d6f8b807f2667ce9c11e5500a6
+[13917:1119/021319.686744:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
+[13917:1119/021319.694340:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[13917:1119/021319.702795:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[13917:1119/021319.708902:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[13917:1119/021319.709001:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+--- napcat-restart.log尾80行 ---
+777cc6af098dd09a29bcf997f6779a8b7431acff94358a596fa021682d992799
+2283c3fe4c49701835a538a0d1b2d56e413827321edeb80cc19a6f39bfc678b4
+a19a3638fbe2f4463dbf9892510628688bacdce643e20f6a4717aa54b5dc82a5
+f96d06010252c7c8f25c03ec9496415a2c6a1c6e48c40e085360322335ec5a27
+291ab3f8091834940c64849ff0308f18f41a0798c19a28ec422ae046cb990099
+b465ae5c30cef9ba0dcdc3866c8b8f7e94579de2ec076a5822b957d7a0da5dcc
+6c49542dba48b00ae4a8b1a93c28466217805ab30590ee996af15d1240f68889
+8b2e96c1bc95045a85bae6c969bb23f25c5b9cc7a6acb5414e699d853ab1a7de
+08063105bd7ed224466938a582caf1a859648cf7e639e335f127237663a7bf4b
+194890cd076d31e089d8108e729319d5de652059d280da4b207207693dd57e94
+9bfdcd98ad2a25dae8bc8ef4bec0d09fcca86f3e030524675cd85cbfe31000d2
+bdf0c46b8ecdd3ac932e8975f5a19167eea469fbab50f4f41d413e60bde5a9a7
+bd9bdc1a73df7b4b082ef27df5aa599e4e5b76473b1cc7f4b7f94549b3082efb
+403746b51b23cb1790070c7227b621e1b6084e23869a2d0873a638333de0701e
+b17a1f6db3f7fb2693a43910218d875f60234685b88e1a0afec4ba46b71a7cc0
+7be67ff54c0b121b08c1c0cb30bc924f344dc611db22df1ada8996e16ca29aa2
+fb784cdfaa7c699bd2c1c9c2d94faecd7b91ab999ceae527ab3d07a93efd1e89
+2fce9688d24b5529a8037121c50ae6c26ecc3d488a930a2ae140614b4176b186
+7cd84b91c5a63d7f30d32a1b2cdefdcbe0e8349faba51ba22da97bab24c4cb34
+7c7ef8e33fae2649015198d7b546c20ffc6febd6ba7491e826bc5467bdc8b7cb
+b4e7cc2794338e854841d0e5673bd3db9579e09890328455bfed46cb32a0b5a9
+3302a0b57544d64d93f3d453be8d51cfc570f37de2c6ed6da970352a540599e1
+05fc599ba1cdb6e555afe59ec0685dac7c51d65aad4bcf2daa5ad0c7ac85ba62
+76aca16238ebde4a2db47a5428ecfcc52f441de427f44f53a7c06dafbd20e26f
+6d86b03079dc0bccca4335a422c5bd641adbdc1f4af57d74502fdf3eca005ce6
+008ef398cfc5dbd8d0f0f9a4563cf8f9cef6ef6782ca350ffabc211487aaf786
+7b8ab7e9a020e89fef6dae0cbea42d15ed709502d74beafe69679069e1ddc203
+2691663d3af2c46d3b51832637d56b57a103041463114e08a70ef720a7686cc5
+ce399394bf14f2510fcd749feb52755f7d8198b6c1dc1c357cb55426eb20718b
+3af3ba56aaa0f96746f8c3a843d057c161538147622527ba753e064e386d133a
+ea0db3864260b1101959dbfc9111b32addfb3f75b7005dfcbd9ff234b04c97e6
+f17a0f5f10c3267baa01e66fd8aefc90a5077024702c59138d97fd329bff78d0
+aa0330faae80cee674957345758948e55d5c81e7a58e468844254eb3b3b65128
+cc9faf4137c508c2fcd9c0839608beb65085ae1f6d3e5d566848ff513c3c14fb
+6329314697ef1b84c30e21b94f7beeb0d6b7ec32c2d974ac193c95802bad9a0e
+12218886f8ef15131c4122050a5518b652a3003455b194a287536f150201eae7
+40d44615cf92530a75249b56ba3a5306f9e164bb32503fe2d3ac30f1c7b02b3f
+15034e5a235f5d60f0057215a670f8d94f97969502db8f4afafe90592a831963
+6b663419206b15af03f6ff6235bc1dd3e80cc305775802d7cd044bdf76753e65
+6f4ab76262d9e52dc18c2bea90b3e5853db5bf76c6b6837d8cbc2ff8670d5090
+91dd2f3926401991f0d165b32b9c1b4def3cf16affa86af081d313a6f4327cea
+732bead6c9e0f3dcbee7b10ddbf6e234b5c950e5302d4587fd2bdc524412b6db
+b5139f5fbe4905e7f757dfcb42d898064d69fc1a8f2c0cf3dd0f06409beab13b
+7a4d16b2ea3eb2f01bbf064e8bb4aebd4f5e60f4c2c97c7613dd0d5afd13e332
+12c439868d3ecf4ffacfc98bf2843b7d340fbf2dc4a14afe82092f6ff8a903fa
+530abc275fd3729ae63697ad156751d9f897db03e9b9c142050cf2cd983cc72a
+454b179853cc08061da295aa692e7ead292a505dd84f73ae5173dd1829129db9
+c5bf81ead77480ffcaf1d70293d76e512e2532510a0e2d84a1badd6c4dfd2507
+7b8ea9123498511572ff3815caee1b2ed9261d311856be1f9f802d63616d3226
+efee47d4c98405ba1ff07e8cdcc07fdd1b03be0281e08a740dabef40aafd788f
+5cd6f7b76706c57cdaaaa34ce16a982e747947ad6c0576c12d9edf6a730e6384
+f26ae2916933edec81dd551476bfc91545a4242744242b5cda5b6be6b219e5d3
+56c505465ad6e2e469fe8ad1abca8f5ce729d421ff8a944978cf1ac83c0481eb
+f420a8f82d9434483a4f07d0d6645549ce40926ae1513642e7a3b1d45c8a67fd
+62d437c427d91006eadc4d11a2a0d80a15392053615bc2d9f06b5f838d15c38d
+06d8a7ce32b849070a409b215969226e6d138df20ab3551c6d1976329ba89e1a
+0e1f7958369ad7935ec0997a8321e0108ddaf0256aacf9e9e4b77c44f326f45e
+826d40c4633b440851eb1cedf7a17793d47b42bb9bed08d1dda2d8fae008992c
+65a9661fb8033bda960599d3e4d46b474a64280188945fec6fd489cb8d80df5f
+e22783d9f1819ba187f17eddd5e597ecbf6319a87c22fd127c398f7514621356
+dccd1839dba2798e1c1632b46305323820d4e82bdb7719f057c19550d814db35
+09b83f85d9dc99b2a4ab8a3cc645181e2490b3e00cca065180679a1ee6601199
+a98482c59889c4b841cd5b8f9cd146285c2728c60e330325c643bf82d1d04db3
+23a83869d50ea912cd59507051bfa14c4e9c0b146a6631053491fafb68704988
+be6991f87657e0deaed001604da20b9688ddd588322e30611a45ff115789e395
+1d1b0d63303221e3a0e79f67fc7659f02b521130c51f7c660d6ff198b70e1bf3
+87ce811a91966a0a8bb141435ba82e95062dc6389d63558208ee274871efa04b
+ad8076a930cfe51a6e19a397a3c7f7905f273cf6704201e146fd7d991f0d206c
+9b6cbcad06f89526254abb4e94218495d472667f983ce8b3ee7e5660797fe20e
+b64e1511604282a973932cfb0c1dc437379c5eeaae03236f285309e1de0b8a0c
+125a57f5c556e616f73fe2ae0fe383928e58ad14b320760d1468e28c254aca99
+b5de78b67c66a64a592e1e81e6df85f0498addbc6ffed04f58360e15e3888c3c
+bebd07e8ee2d76e610ed585089244b60b756293db1962886ca0c7ee73769d3dd
+251a3a3409e4af7814c43daaedbcedd0b8d11c88bfdd65a3c83aff363e609917
+f4d60bd9efc9d5c9805281c44893da0939da8681f9b203db9c6cc63806a08c04
+a375e188fd1cbae2deeaa01e803de71a117a8a7e5d92a4432c1e507779c294be
+a59e8f65b1a4cdf9f2dcd8bbf8f2151d4122e7d736ebd1ddcb972529834de507
+542de8a2d8e7ab36d3c1338268b4dff54b875f09cda6d712c0e33cb4a9b8a194
+ea28b6584d0b078edcd0a7ed58971d8c65e4eea2e94ec25cb5be575b9fba4bbc
+389c10eddcf08ac96e2f865449e7db8daced7beed47d4a23eb26de86bf3b97c0
