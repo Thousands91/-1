@@ -1,11 +1,7 @@
-287000
-echo "===== 收不到回复+点歌 综合诊断 287000 $(date +%F\ %T) ====="
-echo "[1]大脑main.py:"; pgrep -af "main.py" | head -5
-echo "[2]NapCat/QQ:"; pgrep -af "QQ|napcat" | head -8
-echo "[3]登录态:"; bash /root/logincheck.sh 2>/dev/null | tail -8
-echo "[4]/root/bot.log尾15:"; tail -15 /root/bot.log 2>/dev/null
-echo "[5]/root/bot/bot/bot.log尾15:"; tail -15 /root/bot/bot/bot.log 2>/dev/null
-echo "[6]点歌/发卡日志:"; grep -E "点歌|发卡|song|music|签名|OIAPI|CIRCUIT" /root/bot.log 2>/dev/null | tail -20
-echo "[7]签名代理进程:"; pgrep -af "music_sign" | head -5
-echo "[8]worker实例:"; pgrep -fc remote_ctl_v6.sh
+287010
+echo "===== 聚焦诊断 287010 ====="
+echo "[1]登录判定:"; bash /root/logincheck.sh 2>/dev/null | grep -E "登录|在线|离线|掉线|二维码|\[OK\]" | head -8
+echo "[2]bot.log最后25行:"; tail -25 /root/bot.log 2>/dev/null
+echo "[3]发卡日志(全):"; grep -E "发卡|music|官方卡|CIRCUIT|签名|异常|ERROR|Traceback" /root/bot.log 2>/dev/null | tail -25
+echo "[4]大脑bot.log:"; tail -12 /root/bot/bot/bot.log 2>/dev/null
 echo "=====完====="
