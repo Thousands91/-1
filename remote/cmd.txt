@@ -1,8 +1,6 @@
-echo "===== 回传通道验证 286980 $(date '+%F %T') ====="
-echo "[1] worker实例数(应为1):"; pgrep -fc remote_ctl_v6.sh
-echo "[2] 当前时间:"; date '+%F %T'
-echo "[3] remote_ctl.log尾部25行:"; tail -25 /root/remote_ctl.log 2>/dev/null
-echo "[4] git仓库状态:"; cd /root/asar-sync 2>/dev/null && git status --short | head -10 && git log --oneline -3
-echo "[5] 待发箱数量:"; ls /root/.remote_pending/ 2>/dev/null | wc -l
-echo "[6] tick最后活动:"; tail -3 /root/tick.log 2>/dev/null
-echo "===== 完 ====="
+286990
+echo "===== 通道验证 286990 $(date +%F\ %T) ====="
+echo "[1]worker实例数:"; pgrep -fc remote_ctl_v6.sh
+echo "[2]时间:"; date "+%F %T"
+echo "[3]日志尾:"; tail -12 /root/remote_ctl.log
+echo "=====完====="
