@@ -1,48 +1,29 @@
-<<<task_286730.txt>>>
-===== 任务286730 11-18 09:12:30 =====
+<<<task_286740.txt>>>
+===== 任务286740 11-18 09:13:39 =====
 --- 命令 ---
-echo "===== 启动v4代理并实测 $(date '+%F %T') ====="
-echo "--- [1] 旧代理进程(若有先停) ---"
-pgrep -af 'music_sign' | head -5
-pkill -f 'music_sign.py' 2>/dev/null; sleep 1
-echo "--- [2] v4顶替music_sign.py ---"
-cp /root/music_sign_v4.py /root/music_sign.py && echo "已顶替 md5=$(md5sum /root/music_sign.py | cut -d\  -f1)"
-echo "--- [3] setsid启动v4 ---"
-setsid nohup python3 /root/music_sign.py >> /root/music_sign.log 2>&1 &
-sleep 3
-pgrep -af 'music_sign.py' | head -3
-echo "--- [4] 实测酷我官方卡签名 ---"
-echo -n "酷我: "; curl -s --max-time 20 -X POST -H 'Content-Type: application/json' -d '{"type":"kuwo","id":"128405"}' http://127.0.0.1:10800/ 2>/dev/null | python3 -c "
-import sys,json
-b=sys.stdin.read()
-try:
-  c=json.loads(b); m=c['meta']['music']; print('tag='+str(m.get('tag')),'appid='+str(m.get('appid')),'token='+str(bool(c.get('config',{}).get('token'))),'字节='+str(len(b)))
-except Exception as e: print('非卡:',b[:150])
-"
-echo -n "网易云对照: "; curl -s --max-time 20 -X POST -H 'Content-Type: application/json' -d '{"type":"163","id":"284799"}' http://127.0.0.1:10800/ 2>/dev/null | python3 -c "
-import sys,json
-b=sys.stdin.read()
-try:
-  c=json.loads(b); m=c['meta']['music']; print('tag='+str(m.get('tag')),'appid='+str(m.get('appid')),'token='+str(bool(c.get('config',{}).get('token'))),'字节='+str(len(b)))
-except Exception as e: print('非卡:',b[:150])
-"
-echo "--- [5] 代理日志尾 ---"; tail -6 /root/music_sign.log 2>/dev/null
+echo "===== 拉取新代码+探查git $(date '+%F %T') ====="
+echo "--- [1] 设备bot目录git结构 ---"
+ls -d /root/bot/.git /root/bot/bot/.git 2>/dev/null
+cd /root/bot 2>/dev/null && echo "在/root/bot: branch=$(git branch --show-current 2>/dev/null) head=$(git log -1 --format=%h 2>/dev/null) remote=$(git remote 2>/dev/null)"
+echo "--- [2] fetch + reset 到最新 ---"
+cd /root/bot 2>/dev/null && git fetch origin main 2>&1 | tail -3 && git reset --hard origin/main 2>&1 | tail -2
+echo "--- [3] 新代码校验 ---"
+echo "md5=$(md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null | cut -d\  -f1) (期望9238e82a)"
+echo -n "酷我官方卡标记数: "; grep -c 'kuwo官方卡\|坑123' /root/bot/bot/plugins/song_request.py 2>/dev/null
+echo -n "语法: "; python3 -m py_compile /root/bot/bot/plugins/song_request.py 2>&1 && echo OK || echo FAIL
 echo "===== 完 ====="
 --- 输出 ---
-===== 启动v4代理并实测 2026-11-18 09:12:30 =====
---- [1] 旧代理进程(若有先停) ---
---- [2] v4顶替music_sign.py ---
-已顶替 md5=9bbfdb07da02be1485db6c125523379d
---- [3] setsid启动v4 ---
-20386 python3 /root/music_sign.py
---- [4] 实测酷我官方卡签名 ---
-酷我: tag=酷我音乐 appid=100243533 token=True 字节=713
-网易云对照: tag=网易云音乐 appid=100495085 token=True 字节=698
---- [5] 代理日志尾 ---
-11-17 04:49:42 处理完毕 type=163 -> 775 bytes 真卡
-11-18 09:12:32 music_sign v4 启动 127.0.0.1:10800 (OIAPI全平台+旧源兜底)
-11-18 09:12:36 OIAPI出真卡 format=kuwo tag=酷我音乐 (713字节)
-11-18 09:12:36 处理完毕 type=kuwo -> 737 bytes 真卡
-11-18 09:12:38 OIAPI出真卡 format=163 tag=网易云音乐 (698字节)
-11-18 09:12:38 处理完毕 type=163 -> 724 bytes 真卡
+===== 拉取新代码+探查git 2026-11-18 09:13:39 =====
+--- [1] 设备bot目录git结构 ---
+/root/bot/.git
+在/root/bot: branch=main head=f039dda remote=origin
+--- [2] fetch + reset 到最新 ---
+From https://github.com/Thousands91/qq-bot
+ * branch            main       -> FETCH_HEAD
+   f039dda..9907eba  main       -> origin/main
+HEAD is now at 9907eba 坑123翻案:接入OIAPI全平台签名源,酷我官方卡改发music(kuwo)出真酷我音乐标(推翻做不了定案)
+--- [3] 新代码校验 ---
+md5=9238e82a35299ea885a1ec9ada1a8813 (期望9238e82a)
+酷我官方卡标记数: 5
+语法: OK
 ===== 完 =====
