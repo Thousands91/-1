@@ -1,37 +1,59 @@
-<<<task_286640.txt>>>
-===== 任务286640 11-18 08:53:02 =====
+<<<task_286650.txt>>>
+===== 任务286650 11-18 08:53:49 =====
 --- 命令 ---
-echo "===== 8080监听修复前探查 $(date '+%F %T') ====="
-echo "--- [1] 大脑日志最后15行原文 ---"
-tail -15 /root/bot/bot/bot.log 2>/dev/null
-echo "--- [2] 全端口监听(看大脑到底监听哪个端口) ---"
-netstat -tlnp 2>/dev/null | grep -iE 'python|8080|onebot' | head -15
-echo "--- [3] 大脑完整启动命令(从/proc读,看是否带端口参数) ---"
-tr '\0' ' ' < /proc/30989/cmdline 2>/dev/null; echo
-echo "--- [4] 大脑工作目录 ---"
-readlink /proc/30989/cwd 2>/dev/null
+echo "===== 实时回复终判 $(date '+%F %T') ====="
+echo "--- [1] NapCat出站发送最近10条(看08:50后有没有发出) ---"
+grep '发送 ->' /root/napcat.log 2>/dev/null | tail -10
+echo "--- [2] 收'在吗'之后大脑有无回复动作(08:50:50之后含发送/reply/ai_chat输出) ---"
+awk '$0 ~ /11-18 08:5/ ' /root/bot/bot/bot.log 2>/dev/null | grep -iE '发送|send|reply|回复|ai_chat.*发送|在吗' | tail -15
+echo "--- [3] ai_chat最新20行(看它对在吗做了什么) ---"
+grep 'ai_chat' /root/bot/bot/bot.log 2>/dev/null | tail -20
+echo "--- [4] 现在时间 ---"
+date '+%F %T'
 echo "===== 完 ====="
 --- 输出 ---
-===== 8080监听修复前探查 2026-11-18 08:53:02 =====
---- [1] 大脑日志最后15行原文 ---
-11-18 08:50:55 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794963055, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-18 08:50:55 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794963055, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+===== 实时回复终判 2026-11-18 08:53:49 =====
+--- [1] NapCat出站发送最近10条(看08:50后有没有发出) ---
+11-18 02:01:23 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 翻柜子找「小霞」，稍等一下……
+11-18 02:01:24 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 「小霞」翻出这几首，回复序号选哪首（60秒内有效）： ...
+11-18 02:01:43 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [卡片消息]
+11-18 02:01:45 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [语音 30s]
+11-18 02:02:31 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 翻柜子找「叹息瓶 齐豫」，稍等一下……
+11-18 02:02:33 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 🎵 叹息瓶 ...
+11-18 02:19:30 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 翻柜子找「叹息瓶 齐豫」，稍等一下……
+11-18 02:19:38 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [卡片消息]
+11-18 02:19:40 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 这首是「齐豫」的原曲，两边平台都要 VIP，柜上拿不来整首的音频——点上面这张卡片去网易云听（有会员就能听整首）。
+11-18 08:51:13 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 在的，先生。
+--- [2] 收'在吗'之后大脑有无回复动作(08:50:50之后含发送/reply/ai_chat输出) ---
 11-18 08:50:55 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 470656995 from 1561950850 '在吗？'
-11-18 08:50:55 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=92)
-11-18 08:50:55 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=188)
-11-18 08:50:55 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=92) running complete
-11-18 08:50:55 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=188) running complete
 11-18 08:50:55 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
 11-18 08:50:55 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-18 08:51:13 [INFO] ai_chat | [核对·调试] ask='在吗？' lead=False contra=False agree=False dodge=False ans='在的，先生。'
+11-18 08:53:38 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-18 08:53:38 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-18 08:53:43 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-18 08:53:43 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+--- [3] ai_chat最新20行(看它对在吗做了什么) ---
+11-18 08:45:53 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-18 08:45:53 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-18 08:45:53 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-18 08:45:53 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-18 08:45:53 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-18 08:45:53 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-18 08:45:53 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-18 08:45:53 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-18 08:45:53 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-18 08:45:53 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-18 08:45:53 [INFO] ai_chat | [积压跳过] 消息已延迟313秒，不回：''
+11-18 08:45:53 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
 11-18 08:50:55 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-18 08:51:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794963059, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
-11-18 08:51:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794963060, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
 11-18 08:51:10 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
 11-18 08:51:13 [INFO] ai_chat | [核对·调试] ask='在吗？' lead=False contra=False agree=False dodge=False ans='在的，先生。'
 11-18 08:51:13 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
---- [2] 全端口监听(看大脑到底监听哪个端口) ---
---- [3] 大脑完整启动命令(从/proc读,看是否带端口参数) ---
-/root/bot/venv/bin/python main.py 
---- [4] 大脑工作目录 ---
-/root/bot/bot
+11-18 08:53:38 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-18 08:53:38 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-18 08:53:43 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-18 08:53:43 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+--- [4] 现在时间 ---
+2026-11-18 08:53:50
 ===== 完 =====
