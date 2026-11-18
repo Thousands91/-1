@@ -1,13 +1,13 @@
-286570
-echo "===== 唤醒诊断 $(date '+%F %T') ====="
-echo "--- [1] 关键进程 ---"
-ps aux | grep -E '[m]ain.py|[n]apcat|[r]emote_ctl_v6|[t]ick.sh' | awk '{print $2, $11, $12, $13}' | head -15
-echo "--- [2] 四账心跳最新行 ---"
-for f in tick.log login_watch.log ipwatch.log health_probe.log offline_watch.log netmon.log; do echo -n "$f: "; tail -1 /root/$f 2>/dev/null || echo "无日志"; done
-echo "--- [3] 电量 ---"
-cat /sys/class/power_supply/battery/capacity 2>/dev/null || echo "读不到"
-echo "--- [4] 酷我官方卡代码是否在场 ---"
-grep -c 'kuwo官方卡' /root/bot/bot/plugins/song_request.py 2>/dev/null
-echo "--- [5] 当前源码md5 ---"
-md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null
+286580
+echo "===== NapCat状态普查 $(date '+%F %T') ====="
+echo "--- [1] 所有QQ/协议相关进程(宽匹配) ---"
+ps aux | grep -iE 'napcat|qq|wrapper|launcher|onebot|go-cq|node' | grep -v grep | awk '{print $2, $11, $12, $13, $14}' | head -25
+echo "--- [2] NapCat最近日志 ---"
+for f in /root/NapCat/logs/*.log /root/napcat/logs/*.log /root/napcat.log /root/napcat-restart.log; do [ -f "$f" ] && echo ">> $f" && tail -5 "$f" 2>/dev/null; done | tail -40
+echo "--- [3] 登录态文件 ---"
+cat /root/login_state.txt 2>/dev/null | tail -5; cat /root/bot/login_state.log 2>/dev/null | tail -5
+echo "--- [4] 大脑日志尾部(看有无入站消息) ---"
+tail -15 /root/bot/bot/bot.log 2>/dev/null
+echo "--- [5] 反向WS监听端口 ---"
+netstat -tlnp 2>/dev/null | grep -E '8080|8081|3000|6700|3001' | head
 echo "===== 完 ====="
