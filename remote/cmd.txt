@@ -1,2 +1,15 @@
-286900
-echo "状态 $(date '+%F %T'): 在线 | 代码md5=$(md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null | cut -d\  -f1) | 遥控=$(pgrep -f '[r]emote_ctl_v6' | wc -l)"
+286910
+echo "===== 重启大脑加载酷狗咪咕代码 $(date '+%F %T') ====="
+echo -n "[1] 代码md5: "; md5sum /root/bot/bot/plugins/song_request.py | cut -d\  -f1
+echo -n "[2] 酷狗接入标记: "; grep -c "kugou官方卡 OK 歌名" /root/bot/bot/plugins/song_request.py
+echo -n "[3] py_compile: "; cd /root/bot/bot && python3 -m py_compile plugins/song_request.py 2>&1 && echo OK || echo FAIL
+OLD=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
+echo "[4] 旧大脑PID=$OLD"
+[ -n "$OLD" ] && kill $OLD && sleep 2
+cd /root/bot/bot && setsid /root/bot/venv/bin/python main.py >>/root/bot/bot/bot.log 2>&1 < /dev/null &
+sleep 6
+NEWPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
+echo "[5] 新大脑PID=$NEWPID 实例数=$(pgrep -f '/root/bot/venv/bin/python main.py' | wc -l)"
+echo "[6] 启动日志尾部(插件加载/Bot连接):"
+tail -15 /root/bot/bot/bot.log 2>/dev/null | grep -E "song_request|Bot|connected|connected|加载|Loaded|ERROR|Traceback" | tail -8
+echo "===== 完 ====="
