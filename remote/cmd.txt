@@ -1,11 +1,8 @@
-287040
-echo "===== 登录验证+日志溯源+掉线时间线 287040 ====="
-echo "[1]登录态(验证站稳):"; bash /root/logincheck.sh 2>/dev/null | head -8
-echo "[2]大脑6446 cwd:"; readlink /proc/6446/cwd 2>/dev/null
-echo "[3]大脑6446启动命令:"; tr '\0' ' ' < /proc/6446/cmdline 2>/dev/null; echo
-echo "[4]各脚本里bot.log写法:"; grep -rn "bot.log" /root/*.sh /root/bot/*.sh /root/bot/bot/*.sh 2>/dev/null | head -20
-echo "[5]login_state.log尾35:"; tail -35 /root/login_state.log 2>/dev/null
-echo "[6]napcat.log掉线关键词:"; grep -nE "离线|掉线|未登录|二维码|waiting_qrcode|closed by peer|ERROR" /root/napcat.log 2>/dev/null | tail -20
-echo "[7]真日志bot.log尾25:"; tail -25 /root/bot/bot/bot.log 2>/dev/null
-echo "[8]当前时间:"; date '+%F %T'
+287050
+echo "===== 掉线时间线 287050 ====="
+echo "[1]login_state.log尾30:"; tail -30 /root/login_state.log 2>/dev/null
+echo "[2]napcat.log掉线关键词:"; grep -aE "离线|掉线|未登录|二维码|waiting_qrcode|closed by peer|Login Error" /root/napcat.log 2>/dev/null | tail -15
+echo "[3]真日志bot.log尾20:"; tail -20 /root/bot/bot/bot.log 2>/dev/null
+echo "[4]真日志里WS错误第一条:"; grep -an "send_msg timeout\|closed by peer\|WebSocket" /root/bot/bot/bot.log 2>/dev/null | tail -8
+echo "[5]当前时间:"; date '+%F %T'
 echo "=====完====="
