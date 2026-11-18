@@ -1,14 +1,16 @@
-286670
-echo "===== 冻结窗口四账核实 $(date '+%F %T') ====="
-echo "--- [1] tick.log首/尾/总行数 ---"
-head -1 /root/tick.log 2>/dev/null; tail -1 /root/tick.log 2>/dev/null; wc -l < /root/tick.log 2>/dev/null
-echo "--- [2] tick.log 凌晨到早上断档(每段最后2条) ---"
-echo "00点段:"; grep '11-18 00:' /root/tick.log 2>/dev/null | tail -2
-echo "01点段:"; grep '11-18 01:' /root/tick.log 2>/dev/null | tail -2
-echo "07点段:"; grep '11-18 07:' /root/tick.log 2>/dev/null | tail -2
-echo "08点段前5条:"; grep '11-18 08:' /root/tick.log 2>/dev/null | head -5
-echo "--- [3] 关键进程PID(证明没重启:应为旧PID) ---"
-ps -o pid,etime,cmd -p 30989,17992,18783,21596,21622 2>/dev/null
-echo "--- [4] proot的uptime(参考,不可作为重启依据) ---"
-cat /proc/uptime 2>/dev/null; uptime
+286680
+echo "===== NapCat签名配置精查 $(date '+%F %T') ====="
+echo "--- [1] 签名代理进程(端口10800) ---"
+ps aux | grep -iE 'music_sign|10800' | grep -v grep | head -5
+echo "--- [2] 代理文件内容前40行(看上游) ---"
+head -40 /root/music_sign.py 2>/dev/null
+echo "--- [3] NapCat配置里musicSignUrl(限定常见路径,用grep不用find) ---"
+for f in /root/Napcat/config/*.json /root/Napcat/config/**/*.json /root/NapCat/config/*.json /root/napcat/config/*.json; do
+  [ -f "$f" ] && grep -H "musicSignUrl" "$f" 2>/dev/null
+done
+echo "--- [4] 代理监听10800验证 ---"
+curl -s --max-time 5 -X POST -H 'Content-Type: application/json' -d '{"type":"kuwo","id":"128405"}' http://127.0.0.1:10800/ 2>/dev/null | head -c 200
+echo ""
+echo "--- [5] 当前代码md5 ---"
+md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null
 echo "===== 完 ====="
