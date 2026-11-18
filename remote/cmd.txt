@@ -1,11 +1,7 @@
-286650
-echo "===== 实时回复终判 $(date '+%F %T') ====="
-echo "--- [1] NapCat出站发送最近10条(看08:50后有没有发出) ---"
-grep '发送 ->' /root/napcat.log 2>/dev/null | tail -10
-echo "--- [2] 收'在吗'之后大脑有无回复动作(08:50:50之后含发送/reply/ai_chat输出) ---"
-awk '$0 ~ /11-18 08:5/ ' /root/bot/bot/bot.log 2>/dev/null | grep -iE '发送|send|reply|回复|ai_chat.*发送|在吗' | tail -15
-echo "--- [3] ai_chat最新20行(看它对在吗做了什么) ---"
-grep 'ai_chat' /root/bot/bot/bot.log 2>/dev/null | tail -20
-echo "--- [4] 现在时间 ---"
-date '+%F %T'
+286660
+echo "===== 当前在线状态确认 $(date '+%F %T') ====="
+echo "--- 最后出站发送 ---"; grep '发送 ->' /root/napcat.log 2>/dev/null | tail -3
+echo "--- 最后入站接收 ---"; grep '接收 <-' /root/napcat.log 2>/dev/null | tail -3
+echo "--- 大脑最后回复日志 ---"; grep 'ai_chat | \[核对' /root/bot/bot/bot.log 2>/dev/null | tail -2
+echo "--- 四账心跳 ---"; tail -1 /root/tick.log 2>/dev/null
 echo "===== 完 ====="
