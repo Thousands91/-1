@@ -1,12 +1,8 @@
-287110
-echo "===== 清理历史脚本残留路径 287110 ====="
-python3 -c '
-for p in ["/root/remote_ctl.sh","/root/remote_ctl_v5.sh"]:
-    s=open(p).read()
-    n=s.count("python main.py > /root/bot.log 2>&1")
-    s=s.replace("python main.py > /root/bot.log 2>&1","python main.py >> /root/bot/bot/bot.log 2>&1")
-    open(p,"w").write(s); print(p,"替换",n,"处")
-'
-echo "[校验]全脚本旧路径残留(应空):"; grep -rn '/root/bot.log' /root/*.sh 2>/dev/null | grep -v 'bot/bot/bot.log' | grep -v '\.bak' || echo "✓全部统一"
-echo "[语法]:"; for s in remote_ctl remote_ctl_v5; do bash -n /root/$s.sh 2>&1 && echo "$s OK" || echo "$s 错"; done
+287120
+echo "===== 点歌失败日志定位 287120 ====="
+echo "[1]真日志00:50前后发卡记录:"; grep -aE "发卡|official|官方卡|CIRCUIT|签名|OIAPI|music|占位|Exception|ERROR" /root/bot/bot/bot.log 2>/dev/null | tail -30
+echo "[2]签名代理日志:"; tail -30 /root/music_sign_v4.log 2>/dev/null; echo "---music_sign.log---"; tail -15 /root/music_sign.log 2>/dev/null
+echo "[3]签名代理进程:"; pgrep -af 'music_sign' | head -5
+echo "[4]签名代理端口:"; curl -s --max-time 5 -o /dev/null -w "10800 HTTP:%{http_code}\n" http://127.0.0.1:10800/ 2>/dev/null || echo "10800无响应"
+echo "[5]当前时间:"; date '+%F %T'
 echo "=====完====="
