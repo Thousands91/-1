@@ -1,83 +1,63 @@
-<<<task_287050.txt>>>
-===== 任务287050 11-19 00:45:09 =====
+<<<task_287060.txt>>>
+===== 任务287060 11-19 00:46:48 =====
 --- 命令 ---
-echo "===== 掉线时间线 287050 ====="
-echo "[1]login_state.log尾30:"; tail -30 /root/login_state.log 2>/dev/null
-echo "[2]napcat.log掉线关键词:"; grep -aE "离线|掉线|未登录|二维码|waiting_qrcode|closed by peer|Login Error" /root/napcat.log 2>/dev/null | tail -15
-echo "[3]真日志bot.log尾20:"; tail -20 /root/bot/bot/bot.log 2>/dev/null
-echo "[4]真日志里WS错误第一条:"; grep -an "send_msg timeout\|closed by peer\|WebSocket" /root/bot/bot/bot.log 2>/dev/null | tail -8
-echo "[5]当前时间:"; date '+%F %T'
+echo "===== 脚本原文取证 287060 ====="
+echo "[A]remote_ctl_v6.sh第168行:"; sed -n '168p' /root/remote_ctl_v6.sh
+echo "[B]restart_bot.sh全文:"; cat /root/restart_bot.sh
+echo "[C]selfcheck.sh头16行:"; sed -n '1,16p' /root/selfcheck.sh
+echo "[D]azar_guard.sh头14行:"; sed -n '1,14p' /root/azar_guard.sh
+echo "[E]morning.sh头10行:"; sed -n '1,10p' /root/morning.sh
+echo "[F]bot.log大小:"; ls -l /root/bot.log /root/bot/bot/bot.log 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-===== 掉线时间线 287050 =====
-[1]login_state.log尾30:
-2026-11-18 21:48:24 [在线]
-2026-11-18 21:53:25 [在线]
-2026-11-18 21:58:27 [在线]
-2026-11-18 22:03:28 [在线]
-2026-11-18 22:08:29 [在线]
-2026-11-18 22:13:31 [在线]
-2026-11-18 22:18:32 [在线]
-2026-11-18 22:23:33 [在线]
-2026-11-18 22:28:34 [在线]
-2026-11-18 22:33:38 [在线]
-2026-11-18 22:38:39 状态变化: [在线] -> [未登录]
-2026-11-18 22:43:41 [未登录]
-2026-11-18 22:48:42 [未登录]
-2026-11-18 22:53:43 [未登录]
-2026-11-18 22:58:44 [未登录]
-2026-11-18 23:03:45 [未登录]
-2026-11-18 23:08:47 [未登录]
-2026-11-18 23:13:48 [未登录]
-2026-11-18 23:18:49 [未登录]
-2026-11-18 23:23:50 [未登录]
-2026-11-18 23:28:51 [未登录]
-2026-11-18 23:33:52 [未登录]
-2026-11-18 23:38:53 [未登录]
-2026-11-18 23:43:54 [未登录]
-2026-11-18 23:48:56 [未登录]
-2026-11-19 00:22:00 [未登录]
-2026-11-19 00:27:01 [未登录]
-2026-11-19 00:32:02 [未登录]
-2026-11-19 00:37:03 [未登录]
-2026-11-19 00:42:03 状态变化: [未登录] -> [在线]
-[2]napcat.log掉线关键词:
-11-19 00:40:37 [[32minfo[39m] 没有 -q 指令指定快速登录，将使用二维码登录方式
-11-19 00:40:37 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
-二维码解码URL: https://txz.qq.com/p?k=7xoYxNj7ZEMcKHu2U*AGXMrl6tgavnDc&f=1600001615
-如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
-11-19 00:40:37 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-11-19 00:41:20 [[32minfo[39m] [Core] [Login] 二维码已被扫描，等待确认...
-[3]真日志bot.log尾20:
-11-19 00:43:16 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 40825399 from 1617095026@[群:590454333] '都怪你们天天冰冰冰 现在这个天气要给我冻死了'
-11-19 00:43:16 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 00:43:16 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 00:43:16 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 00:43:16 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 00:44:30 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1685774763 from 3327068725@[群:562796842] '对了。我想起来我一直要说的一件事'
-11-19 00:44:30 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 00:44:30 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 00:44:30 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 00:44:30 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 00:44:46 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1188327195 from 1561950850@[群:562796842] '？'
-11-19 00:44:46 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 00:44:46 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 00:44:46 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 00:44:46 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 00:44:55 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 330566282 from 3327068725@[群:562796842] '都怪330当时在群里放夜蝶这首歌，结果让我认识了卡黄这对CP，现在都走不出来'
-11-19 00:44:55 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 00:44:55 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 00:44:55 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 00:44:55 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-[4]真日志里WS错误第一条:
-16596:11-18 09:15:03 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
-16623:11-18 09:15:18 [INFO] uvicorn | 127.0.0.1:45308 - "WebSocket /onebot/v11/ws" [accepted]
-16707:11-18 10:08:02 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
-16734:11-18 10:08:17 [INFO] uvicorn | 127.0.0.1:48700 - "WebSocket /onebot/v11/ws" [accepted]
-19944:11-18 22:37:19 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
-19989:    raise NetworkError(f"WebSocket call api {api} timeout") from None
-19990:nonebot.adapters.onebot.v11.exception.NetworkError: NetWorkError(message='WebSocket call api send_msg timeout')
-19991:11-19 00:41:37 [INFO] uvicorn | 127.0.0.1:36312 - "WebSocket /onebot/v11/ws" [accepted]
-[5]当前时间:
-2026-11-19 00:45:09
+===== 脚本原文取证 287060 =====
+[A]remote_ctl_v6.sh第168行:
+  pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & cd "$REPO"; }
+[B]restart_bot.sh全文:
+pkill -f main.py; sleep 2; cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & sleep 12; echo ==加载验证==; tail -n 60 /root/bot.log | grep -c Succeeded; tail -n 60 /root/bot.log | grep -c Duplicated; tail -n 60 /root/bot.log | grep -ciE "failed|traceback"[C]selfcheck.sh头16行:
+#!/bin/bash
+# 阿萨尔自检 v1 (2026-11-08)
+echo "== 自检 $(date '+%F %H:%M:%S') =="
+echo "-- 服务 --"
+QQ_N=$(pgrep -fc "opt/QQ/[q]q" 2>/dev/null); echo "QQ进程数: ${QQ_N:-0}"
+pgrep -f "mai[n].py" >/dev/null && echo "bot: 在" || echo "bot: 不在"
+pgrep -f "remote_ct[l].sh" >/dev/null && echo "遥控: 在" || echo "遥控: 不在"
+pgrep -f "azar_guar[d].sh" >/dev/null && echo "守护: 在" || echo "守护: 不在"
+echo "-- 登录态 --"
+bash /root/logincheck.sh 2>/dev/null | tail -2
+echo "-- 资源 --"
+free -m 2>/dev/null | awk 'NR==2{print "内存: "$3"M 已用 / "$2"M 总量"}'
+echo "-- bot.log 尾3行 --"
+tail -3 /root/bot.log 2>/dev/null
+echo "-- guard_status 尾3行 --"
+tail -3 /root/guard_status.txt 2>/dev/null
+[D]azar_guard.sh头14行:
+#!/bin/bash
+# 阿萨尔掉线守护 v1.2 (2026-11-08)
+# v1.2 改动(依据2026-11-08社区调研): 被踢/等扫码期间完全停止自动重启
+#   —— 会话已被服务端作废,任何定时重试都是"频繁无效登录",只会加重风控
+#   —— 原v1.1的"被踢标记超6小时允许再试"已移除,被踢后只等人工扫码
+#   —— 人工恢复途径: 扫码后 connected 自动清标记;或 rm /root/.guard_kicked
+# 规则1: QQ进程死了且无近期二维码 -> 自动拉起(崩溃恢复,保留)
+# 规则2: WS断开+未被踢标记 -> 尝试重启NapCat免扫码恢复(登录态可能还在,保留)
+# 规则3: 重启后仍出新款二维码(=真被踢) -> 记被踢标记,此后不再自动重启,等人工扫码
+# 规则4: 每小时最多重启3次,重启后冷却5分钟;登录成功(connected)自动清被踢标记
+LOG=/root/bot.log
+QR=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+STATE=/root/guard_status.txt
+LAST_RESTART=/root/.guard_last
+[E]morning.sh头10行:
+#!/bin/bash
+echo "① 大脑进程:"
+if pgrep -f 'venv/bin/python main.py' >/dev/null; then echo "   ✅ 在跑"
+else
+  echo "   ✗ 没在跑，重启中..."
+  cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > bot.log 2>&1 &
+  sleep 8
+  pgrep -f 'venv/bin/python main.py' >/dev/null && echo "   ✅ 已重启" || echo "   ✗ 重启失败，把 bot.log 发我"
+fi
+
+[F]bot.log大小:
+-rw-r--r-- 1 root root    7775 Nov 18 02:09 /root/bot.log
+-rw-r--r-- 1 root root 2664168 Nov 19 00:45 /root/bot/bot/bot.log
 =====完=====
