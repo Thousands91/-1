@@ -1,9 +1,6 @@
-287060
-echo "===== 脚本原文取证 287060 ====="
-echo "[A]remote_ctl_v6.sh第168行:"; sed -n '168p' /root/remote_ctl_v6.sh
-echo "[B]restart_bot.sh全文:"; cat /root/restart_bot.sh
-echo "[C]selfcheck.sh头16行:"; sed -n '1,16p' /root/selfcheck.sh
-echo "[D]azar_guard.sh头14行:"; sed -n '1,14p' /root/azar_guard.sh
-echo "[E]morning.sh头10行:"; sed -n '1,10p' /root/morning.sh
-echo "[F]bot.log大小:"; ls -l /root/bot.log /root/bot/bot/bot.log 2>/dev/null
+287070
+echo "===== azar_guard LOG用法 287070 ====="
+echo "[1]azar_guard.sh里所有\$LOG引用:"; grep -n '\$LOG' /root/azar_guard.sh
+echo "[2]bot.log当前最后5行(看是守护还是大脑写的):"; tail -5 /root/bot.log 2>/dev/null
+echo "[3]start_all.sh里大脑启动:"; grep -n 'main.py' /root/start_all.sh 2>/dev/null
 echo "=====完====="
