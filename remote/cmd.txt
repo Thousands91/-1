@@ -1,8 +1,12 @@
-286810
-echo "===== 保活前置探查 $(date '+%F %T') ====="
-echo -n "[1] 当前保活锚: "; pgrep -af "sleep infinity" | head -5; echo "(上面为空=没有锚)"
-echo -n "[2] wake-lock全路径: "; ls -l /data/data/com.termux/files/usr/bin/termux-wake-lock 2>/dev/null || echo "不存在"
-echo -n "[3] Termux home: "; ls -ld /data/data/com.termux/files/home 2>/dev/null || echo "读不到"
-echo -n "[4] boot脚本: "; ls -l /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null || echo "无"
-echo "[5] 在线服务: 遥控=$(pgrep -f '[r]emote_ctl_v6' | wc -l) 大脑=$(pgrep -f '[m]ain.py' | wc -l) NapCat=$(pgrep -f '[Q]Q' | wc -l)"
+286820
+echo "===== 布置睡前保活脚本 $(date '+%F %T') ====="
+: > /data/data/com.termux/files/home/asar_keepalive.b64
+echo -n 'IyEvZGF0YS9kYXRhL2NvbS50ZXJtdXgvZmlsZXMvdXNyL2Jpbi9iYXNoCiMg6Zi/6JCo5bCU552h5YmN5L+d5rS76ZSa77ya552h5YmN5ZyoIFRlcm11eCDljp/nlJ8gc2hlbGwg5omn6KGM77yb6LeR6LW35p2l5ZCO5oyJIEhvbWUg5YiH6LWw77yM5YirIGV4aXTjgIHliKvlhbPnqpflj6MKIyDljp/nkIbvvJrljaDkvY/kuIDkuKrmtLvkvJror50gLT4gVGVybXV4IOaMgeWJjeWPsOacjeWKoei1hOagvCAtPiDojaPogIAgaUF3YXJlIOixgeWFje+8iOaJi+WGjOWdkTY177yJCldMPS9kYXRhL2RhdGEvY29tLnRlcm11eC9maWxlcy91c3IvYmluL3Rlcm11eC13YWtlLWxvY2sKZWNobyAiPT09PT0g6Zi/6JCo5bCU5L+d5rS76ZSa5ZCv5YqoICQoZGF0ZSAnKyVGICVUJykgPT09PT0iCmlmIFsgLXggIiRXTCIgXTsgdGhlbiAiJFdMIiAmJiBlY2hvICJbMV0g5ZSk6YaS6ZSB5bey55Sz6K+3IiB8fCBlY2hvICJbMV0g5ZSk6YaS6ZSB55Sz6K+35aSx6LSlKOS4jeW9seWTjea0u+S8muivnemUmikiOyBlbHNlIGVjaG8gIlsxXSDllKTphpLplIHot6/lvoTkuI3lrZjlnKgiOyBmaQplY2hvICJbMl0g5L+d5rS76ZSa6L+Q6KGM5Lit77ya6L+Z5Liq56qX5Y+j5Yir' >> /data/data/com.termux/files/home/asar_keepalive.b64
+echo -n '5YWz44CB5YirIGV4aXTvvIzmjIkgSG9tZSDliIfotbDljbPlj68iCmVjaG8gIlszXSDopoHlgZzmraLvvJrlnKjov5nkuKrnqpflj6PmjIkgQ3RybCtDIgplY2hvICI9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0iCndoaWxlIHRydWU7IGRvIHNsZWVwIGluZmluaXR5OyBkb25lCg==' >> /data/data/com.termux/files/home/asar_keepalive.b64
+base64 -d /data/data/com.termux/files/home/asar_keepalive.b64 > /data/data/com.termux/files/home/asar_keepalive.sh
+rm -f /data/data/com.termux/files/home/asar_keepalive.b64
+chmod +x /data/data/com.termux/files/home/asar_keepalive.sh
+echo -n "[1] 写入字节: "; stat -c%s /data/data/com.termux/files/home/asar_keepalive.sh
+bash -n /data/data/com.termux/files/home/asar_keepalive.sh 2>&1 && echo "[2] 语法OK" || echo "[2] 语法FAIL"
+echo -n "[3] md5: "; md5sum /data/data/com.termux/files/home/asar_keepalive.sh | cut -d\  -f1
 echo "===== 完 ====="
