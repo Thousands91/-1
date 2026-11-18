@@ -1,18 +1,2 @@
-286880
-echo "===== raw直拉点歌代码 $(date '+%F %T') ====="
-cd /root/bot
-echo -n "[1] 设备存活: "; echo OK
-echo -n "[2] 拉前md5: "; md5sum bot/plugins/song_request.py 2>/dev/null | cut -d\  -f1
-# 用raw下载新文件到临时文件(带超时),成功且语法对才覆盖
-curl -s --max-time 30 -o /tmp/sr.new "https://raw.githubusercontent.com/Thousands91/qq-bot/main/bot/plugins/song_request.py"
-echo -n "[3] 下载字节: "; stat -c%s /tmp/sr.new 2>/dev/null
-echo -n "[4] 新文件md5: "; md5sum /tmp/sr.new 2>/dev/null | cut -d\  -f1
-echo -n "[5] 语法: "; python3 -m py_compile /tmp/sr.new 2>&1 && echo OK || echo FAIL
-echo -n "[6] 酷狗标记: "; grep -c "kugou官方卡 OK 歌名" /tmp/sr.new 2>/dev/null
-# md5匹配才覆盖(本地目标md5=4cd2e170...)
-if [ "$(md5sum /tmp/sr.new 2>/dev/null | cut -d\  -f1)" = "4cd2e1709a592666316a41a74afabcc3" ]; then
-  cp /tmp/sr.new bot/plugins/song_request.py && echo "[7] 已覆盖 ✅"
-else
-  echo "[7] md5不符,未覆盖 ❌"
-fi
-echo "===== 完 ====="
+286890
+echo "唤醒探针 $(date '+%F %T') OK 在线"
