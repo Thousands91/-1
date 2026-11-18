@@ -1,13 +1,18 @@
-286870
-echo "===== 拉取酷狗咪咕点歌代码 $(date '+%F %T') ====="
+286880
+echo "===== raw直拉点歌代码 $(date '+%F %T') ====="
 cd /root/bot
-echo -n "[1] git仓库: "; git rev-parse --show-toplevel 2>/dev/null || echo "非git仓库"
-echo -n "[2] 当前song_request md5: "; md5sum bot/plugins/song_request.py 2>/dev/null | cut -d\  -f1
-echo "[3] 远程分支:"; git remote -v 2>/dev/null | head -2
-echo "[4] fetch+pull:"
-git fetch origin main 2>&1 | tail -2
-git reset --hard origin/main 2>&1 | tail -2
-echo -n "[5] 拉取后md5: "; md5sum bot/plugins/song_request.py | cut -d\  -f1
-echo -n "[6] Python语法: "; python3 -m py_compile bot/plugins/song_request.py 2>&1 && echo OK || echo FAIL
-echo -n "[7] 酷狗接入标记数: "; grep -c "kugou官方卡 OK 歌名" bot/plugins/song_request.py
+echo -n "[1] 设备存活: "; echo OK
+echo -n "[2] 拉前md5: "; md5sum bot/plugins/song_request.py 2>/dev/null | cut -d\  -f1
+# 用raw下载新文件到临时文件(带超时),成功且语法对才覆盖
+curl -s --max-time 30 -o /tmp/sr.new "https://raw.githubusercontent.com/Thousands91/qq-bot/main/bot/plugins/song_request.py"
+echo -n "[3] 下载字节: "; stat -c%s /tmp/sr.new 2>/dev/null
+echo -n "[4] 新文件md5: "; md5sum /tmp/sr.new 2>/dev/null | cut -d\  -f1
+echo -n "[5] 语法: "; python3 -m py_compile /tmp/sr.new 2>&1 && echo OK || echo FAIL
+echo -n "[6] 酷狗标记: "; grep -c "kugou官方卡 OK 歌名" /tmp/sr.new 2>/dev/null
+# md5匹配才覆盖(本地目标md5=4cd2e170...)
+if [ "$(md5sum /tmp/sr.new 2>/dev/null | cut -d\  -f1)" = "4cd2e1709a592666316a41a74afabcc3" ]; then
+  cp /tmp/sr.new bot/plugins/song_request.py && echo "[7] 已覆盖 ✅"
+else
+  echo "[7] md5不符,未覆盖 ❌"
+fi
 echo "===== 完 ====="
