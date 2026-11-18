@@ -1,28 +1,79 @@
-<<<task_286990.txt>>>
-===== 任务286990 11-19 00:32:01 =====
+<<<task_287000.txt>>>
+===== 任务287000 11-19 00:34:32 =====
 --- 命令 ---
-echo "===== 通道验证 286990 $(date +%F\ %T) ====="
-echo "[1]worker实例数:"; pgrep -fc remote_ctl_v6.sh
-echo "[2]时间:"; date "+%F %T"
-echo "[3]日志尾:"; tail -12 /root/remote_ctl.log
+echo "===== 收不到回复+点歌 综合诊断 287000 $(date +%F\ %T) ====="
+echo "[1]大脑main.py:"; pgrep -af "main.py" | head -5
+echo "[2]NapCat/QQ:"; pgrep -af "QQ|napcat" | head -8
+echo "[3]登录态:"; bash /root/logincheck.sh 2>/dev/null | tail -8
+echo "[4]/root/bot.log尾15:"; tail -15 /root/bot.log 2>/dev/null
+echo "[5]/root/bot/bot/bot.log尾15:"; tail -15 /root/bot/bot/bot.log 2>/dev/null
+echo "[6]点歌/发卡日志:"; grep -E "点歌|发卡|song|music|签名|OIAPI|CIRCUIT" /root/bot.log 2>/dev/null | tail -20
+echo "[7]签名代理进程:"; pgrep -af "music_sign" | head -5
+echo "[8]worker实例:"; pgrep -fc remote_ctl_v6.sh
 echo "=====完====="
 --- 输出 ---
-===== 通道验证 286990 2026-11-19 00:32:02 =====
-[1]worker实例数:
+===== 收不到回复+点歌 综合诊断 287000 2026-11-19 00:34:32 =====
+[1]大脑main.py:
+6446 /root/bot/venv/bin/python main.py
+[2]NapCat/QQ:
+17472 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --no-sandbox --disable-dev-shm-usage --enable-crash-reporter=ed95f686-be11-4e04-b899-7fe984b06b7b,no_channel --user-data-dir=/root/.config/QQ --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,762551994701865716,405713370097478564,262144 --enable-features=PdfUseShowSaveFilePicker --disable-features=LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708990997080739
+17473 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+17475 /proc/self/exe --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --no-sandbox --disable-dev-shm-usage --enable-crash-reporter=ed95f686-be11-4e04-b899-7fe984b06b7b,no_channel --user-data-dir=/root/.config/QQ --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,762551994701865716,405713370097478564,262144 --enable-features=PdfUseShowSaveFilePicker --disable-features=LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708992871164437
+21596 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+21622 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+21645 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+21649 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
+[3]登录态:
+=== 登录状态（权威判定）===
+[未登录] 当前没有有效会话
+阶段: waiting_qrcode
+最近错误: 无
+[4]/root/bot.log尾15:
+11-18 02:01:43 [INFO] song_request | [发卡] custom卡发送成功 src=netease id=1901319324
+11-18 02:01:43 [INFO] song_request | [发卡] custom卡 OK src=netease id=1901319324
+11-18 02:01:46 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=326) running complete
+11-18 02:02:15 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794938535, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+11-18 02:02:20 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794938540, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+11-18 02:02:31 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794938551, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-18 02:02:31 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794938551, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-18 02:02:31 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2099788745 from 1561950850 '点歌 叹息瓶 齐豫'
+11-18 02:02:31 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=42)
+11-18 02:02:34 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=42) running complete
+11-18 02:09:01 [INFO] uvicorn | Shutting down
+11-18 02:09:01 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+11-18 02:09:01 [INFO] uvicorn | Waiting for application shutdown.
+11-18 02:09:01 [INFO] uvicorn | Application shutdown complete.
+11-18 02:09:01 [INFO] uvicorn | Finished server process [18624]
+[5]/root/bot/bot/bot.log尾15:
+  File "/root/bot/bot/plugins/song_request.py", line 303, in deliver
+    await matcher.send(Message(build_card(s)))
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/internal/matcher/matcher.py", line 568, in send
+    return await bot.send(event=event, message=_message, **kwargs)
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/bot.py", line 237, in send
+    return await self.__class__.send_handler(self, event, message, **kwargs)
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/bot.py", line 190, in send
+    return await bot.send_msg(**params)
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/internal/adapter/bot.py", line 176, in call_api
+    raise exception
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/internal/adapter/bot.py", line 128, in call_api
+    result = await self.adapter._call_api(self, api, **data)
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/adapter.py", line 177, in _call_api
+    raise NetworkError(f"WebSocket call api {api} timeout") from None
+nonebot.adapters.onebot.v11.exception.NetworkError: NetWorkError(message='WebSocket call api send_msg timeout')
+[6]点歌/发卡日志:
+11-18 01:55:13 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-18 02:01:22 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 513936812 from 1561950850 '点歌 小霞'
+11-18 02:01:23 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=42)
+11-18 02:01:24 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=42) running complete
+11-18 02:01:38 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=326)
+11-18 02:01:43 [INFO] song_request | [发卡] custom卡发送成功 src=netease id=1901319324
+11-18 02:01:43 [INFO] song_request | [发卡] custom卡 OK src=netease id=1901319324
+11-18 02:01:46 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=326) running complete
+11-18 02:02:31 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2099788745 from 1561950850 '点歌 叹息瓶 齐豫'
+11-18 02:02:31 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=42)
+11-18 02:02:34 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=42) running complete
+[7]签名代理进程:
+31302 python3 /root/music_sign.py
+[8]worker实例:
 1
-[2]时间:
-2026-11-19 00:32:02
-[3]日志尾:
-[11-19 00:28] intake:API响应异常
-[11-19 00:29] intake:API响应异常
-[11-19 00:29] intake:API响应异常
-[11-19 00:29] intake:API响应异常
-[11-19 00:29] intake:API响应异常
-[11-19 00:30] intake:API响应异常
-[11-19 00:30] intake:API响应异常
-[11-19 00:30] intake:API响应异常
-[11-19 00:31] intake:API响应异常
-[11-19 00:31] intake:API响应异常
-[11-19 00:31] intake:API响应异常
-[11-19 00:31] intake:API响应异常
 =====完=====
