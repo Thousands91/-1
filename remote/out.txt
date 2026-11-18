@@ -1,27 +1,23 @@
-<<<task_287160.txt>>>
-===== 任务287160 11-19 01:00:04 =====
+<<<task_287170.txt>>>
+===== 任务287170 11-19 01:00:45 =====
 --- 命令 ---
-echo "===== 抓NapCat真实签名请求 287160 ====="
-python3 -c '
-import re
-p="/root/music_sign_v4.py"
-s=open(p).read()
-# 在do_POST开头加一行记录原始请求体(仅本次诊断,记录到独立文件)
-old="        raw = self._read_body()\n        try:"
-new="        raw = self._read_body()\n        open(\"/tmp/sig_raw.log\",\"a\").write(raw.decode(\"utf-8\",\"ignore\")[:500]+chr(10))\n        try:"
-if old in s and "sig_raw.log" not in s:
-    open(p,"w").write(s.replace(old,new,1)); print("已加请求记录")
-else: print("已有记录或未找到锚点")
-'
-# 重启签名代理使改动生效
-pkill -f 'python3 /root/music_sign.py'; sleep 2
-cd /root && setsid nohup python3 /root/music_sign.py >> /root/music_sign_v4.log 2>&1 < /dev/null &
-sleep 4
-echo "[新进程]:"; pgrep -af 'music_sign' | head -3
+echo "===== OIAPI恢复检测+请求记录现状 287170 ====="
+echo "[1]sig_raw.log(抓到的真实请求):"; cat /tmp/sig_raw.log 2>/dev/null | tail -10 || echo "暂无请求"
+echo "[2]OIAPI直连测试:"; curl -s --max-time 15 "https://oiapi.net/api/QQMusicJSONArk?format=163&url=https%3A%2F%2Fmusic.163.com%2Fsong%3Fid%3D33737547&song=%E5%A4%9C%E8%9D%B6" 2>/dev/null | head -c 300; echo
+echo "[3]签名日志尾:"; tail -8 /root/music_sign_v4.log 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-===== 抓NapCat真实签名请求 287160 =====
-已加请求记录
-[新进程]:
-19686 python3 /root/music_sign.py
+===== OIAPI恢复检测+请求记录现状 287170 =====
+[1]sig_raw.log(抓到的真实请求):
+[2]OIAPI直连测试:
+{"code":-10014,"data":null,"error_code":"UPSTREAM_CIRCUIT_OPEN","message":"上游服务暂时不可用，请稍后重试","meta":{"method":"GET","path":"/api/QQMusicJSONArk","reqTimestamp":1795021247857,"requestId":"01a1ef9a-9571-76ec-8eaa-5f8b404edf57","statusCode":503,"timestamp":"2026-11-18T17:00
+[3]签名日志尾:
+11-19 00:58:09 处理完毕 type=163 -> 40 bytes (全灭,走兜底)
+11-19 00:59:12 OIAPI失败 format=163: HTTPError HTTP Error 503: Service Unavailable
+11-19 00:59:12 处理完毕 type=163 -> 40 bytes (全灭,走兜底)
+11-19 00:59:16 OIAPI失败 format=163: HTTPError HTTP Error 503: Service Unavailable
+11-19 00:59:16 处理完毕 type=163 -> 40 bytes (全灭,走兜底)
+11-19 00:59:21 OIAPI失败 format=163: HTTPError HTTP Error 503: Service Unavailable
+11-19 00:59:21 处理完毕 type=163 -> 40 bytes (全灭,走兜底)
+11-19 01:00:07 music_sign v4 启动 127.0.0.1:10800 (OIAPI全平台+旧源兜底)
 =====完=====
