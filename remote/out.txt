@@ -1,30 +1,29 @@
-<<<task_287120.txt>>>
-===== 任务287120 11-19 00:56:11 =====
+<<<task_287130.txt>>>
+===== 任务287130 11-19 00:56:48 =====
 --- 命令 ---
-echo "===== 点歌失败日志定位 287120 ====="
-echo "[1]真日志00:50前后发卡记录:"; grep -aE "发卡|official|官方卡|CIRCUIT|签名|OIAPI|music|占位|Exception|ERROR" /root/bot/bot/bot.log 2>/dev/null | tail -30
-echo "[2]签名代理日志:"; tail -30 /root/music_sign_v4.log 2>/dev/null; echo "---music_sign.log---"; tail -15 /root/music_sign.log 2>/dev/null
-echo "[3]签名代理进程:"; pgrep -af 'music_sign' | head -5
-echo "[4]签名代理端口:"; curl -s --max-time 5 -o /dev/null -w "10800 HTTP:%{http_code}\n" http://127.0.0.1:10800/ 2>/dev/null || echo "10800无响应"
-echo "[5]当前时间:"; date '+%F %T'
+echo "===== 签名代理深查 287130 ====="
+echo "[1]签名进程:"; pgrep -af 'music_sign' | head -5
+echo "[2]监听10800的进程:"; netstat -tlnp 2>/dev/null | grep 10800 || ss -tlnp 2>/dev/null | grep 10800 || echo "netstat/ss无结果"
+echo "[3]端口测试:"; curl -s --max-time 6 -o /tmp/sigresp.txt -w "HTTP:%{http_code}\n" http://127.0.0.1:10800/ 2>/dev/null; head -c 200 /tmp/sigresp.txt 2>/dev/null; echo
+echo "[4]music_sign_v4.log尾20:"; tail -20 /root/music_sign_v4.log 2>/dev/null || echo "无此文件"
+echo "[5]NapCat签名配置:"; grep -ra "10800\|musicSignUrl" /root/Napcat/ 2>/dev/null | head -5
+echo "[6]真日志00:49-00:51全部song_request行:"; grep -a "11-19 00:4\|11-19 00:5" /root/bot/bot/bot.log 2>/dev/null | grep -iE "song|发卡|music|点歌|官方卡" | tail -20
 echo "=====完====="
 --- 输出 ---
-===== 点歌失败日志定位 287120 =====
-[1]真日志00:50前后发卡记录:
-11-17 04:20:50 [INFO] song_request | [发卡] custom卡发送成功 src=kuwo id=128405
-11-17 04:20:50 [INFO] song_request | [发卡] custom卡 OK src=kuwo id=128405
-11-17 04:22:55 [INFO] song_request | [发卡] custom卡发送成功 src=netease id=284793
-11-17 04:22:55 [INFO] song_request | [发卡] custom卡 OK src=netease id=284793
-11-17 04:49:44 [INFO] song_request | [发卡] 163官方卡(找补原曲) OK id=5262296
-11-18 01:55:27 [ERROR] uvicorn | [Errno 98] error while attempting to bind on address ('0.0.0.0', 8080): address already in use
-11-18 02:19:40 [INFO] song_request | [发卡] 163官方卡 OK id=284799
-11-18 22:36:23 [ERROR] nonebot | Running Matcher(type='message', module=plugins.ai_chat, lineno=1311) failed.
-11-18 22:36:27 [WARNING] song_request | [发卡] 163官方卡失败: ActionFailed ActionFailed(status='failed', retcode=1200, data=None, message='Timeout: NTEvent serviceAndMethod:NodeIKernelMsgService/sendMsg ListenerName:NodeIKernelMsgListener/onMsgInfoListUpdate EventRet:\n{}\n', wording='Timeout: NTEvent serviceAndMethod:NodeIKernelMsgService/sendMsg ListenerName:NodeIKernelMsgListener/onMsgInfoListUpdate EventRet:\n{}\n', echo='80', stream='normal-action')
-11-18 22:37:17 [WARNING] song_request | [发卡] custom卡发送异常: ActionFailed ActionFailed(status='failed', retcode=1200, data=None, message='Timeout: NTEvent serviceAndMethod:NodeIKernelMsgService/sendMsg ListenerName:NodeIKernelMsgListener/onMsgInfoListUpdate EventRet:\n{}\n', wording='Timeout: NTEvent serviceAndMethod:NodeIKernelMsgService/sendMsg ListenerName:NodeIKernelMsgListener/onMsgInfoListUpdate EventRet:\n{}\n', echo='83', stream='normal-action')
-11-18 22:37:17 [WARNING] song_request | [发卡] custom卡失败(封面缺或发送异常) src=netease id=419827620 → 落文字卡
-11-18 22:37:47 [ERROR] nonebot | Running Matcher(type='message', module=plugins.song_request, lineno=356) failed.
-11-19 00:49:22 [INFO] song_request | [发卡] 163官方卡 OK id=33737547
-[2]签名代理日志:
+===== 签名代理深查 287130 =====
+[1]签名进程:
+31302 python3 /root/music_sign.py
+[2]监听10800的进程:
+netstat/ss无结果
+[3]端口测试:
+HTTP:501
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+        
+[4]music_sign_v4.log尾20:
 11-18 09:49:39 music_sign v4 启动 127.0.0.1:10800 (OIAPI全平台+旧源兜底)
 11-18 09:49:42 OIAPI出真卡 format=kugou tag=酷狗音乐 (703字节)
 11-18 09:49:42 处理完毕 type=kugou -> 731 bytes 真卡
@@ -38,26 +37,18 @@ echo "=====完====="
 11-18 22:37:06 处理完毕 type=custom -> 739 bytes 真卡
 11-19 00:49:22 OIAPI出真卡 format=163 tag=网易云音乐 (700字节)
 11-19 00:49:22 处理完毕 type=163 -> 726 bytes 真卡
----music_sign.log---
-11-17 04:20:49 上游出真卡: https://ss.xingzhige.com/music_card/card (1234 bytes)
-11-17 04:20:49 处理完毕 type=custom -> 976 bytes 真卡
-11-17 04:22:49 处理完毕 type=qq -> 40 bytes (全灭,走兜底)
-11-17 04:22:52 上游出真卡: https://ss.xingzhige.com/music_card/card (1169 bytes)
-11-17 04:22:52 处理完毕 type=custom -> 911 bytes 真卡
-11-17 04:49:42 上游无token(拒收): http://106.55.0.102:10087/ -> b'"{\\"app\\":\\"com.tencent.music.lua\\",\\"bizsrc\\":\\"qqconnect.sdkshare_music\\",\\"co'
-11-17 04:49:42 上游出真卡: https://ss.xingzhige.com/music_card/card (1033 bytes)
-11-17 04:49:42 处理完毕 type=163 -> 775 bytes 真卡
-11-18 09:12:32 music_sign v4 启动 127.0.0.1:10800 (OIAPI全平台+旧源兜底)
-11-18 09:12:36 OIAPI出真卡 format=kuwo tag=酷我音乐 (713字节)
-11-18 09:12:36 处理完毕 type=kuwo -> 737 bytes 真卡
-11-18 09:12:38 OIAPI出真卡 format=163 tag=网易云音乐 (698字节)
-11-18 09:12:38 处理完毕 type=163 -> 724 bytes 真卡
-11-18 09:23:55 OIAPI出真卡 format=kuwo tag=酷我音乐 (713字节)
-11-18 09:23:55 处理完毕 type=kuwo -> 737 bytes 真卡
-[3]签名代理进程:
-31302 python3 /root/music_sign.py
-[4]签名代理端口:
-10800 HTTP:501
-[5]当前时间:
-2026-11-19 00:56:12
+[5]NapCat签名配置:
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json:  "musicSignUrl": "http://127.0.0.1:10800/",
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json.bak:  "musicSignUrl": "",
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:  musicSignUrl: l.String({ default: "" }),
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:  musicSignUrl: l.String({ default: "" }),
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:      let s = this.obContext.configLoader.configData.musicSignUrl;
+[6]真日志00:49-00:51全部song_request行:
+11-19 00:48:15 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 475112826 from 3327068725@[群:562796842] '点歌点了首夜蝶'
+11-19 00:49:11 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 613993864 from 1561950850@[群:562796842] '[at:qq=3427943187] 点歌 夜蝶'
+11-19 00:49:11 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=42)
+11-19 00:49:12 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=42) running complete
+11-19 00:49:17 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=356)
+11-19 00:49:22 [INFO] song_request | [发卡] 163官方卡 OK id=33737547
+11-19 00:49:30 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=356) running complete
 =====完=====
