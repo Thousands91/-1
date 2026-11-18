@@ -1,10 +1,7 @@
-286920
-echo "===== 大脑终检 $(date '+%F %T') ====="
-echo -n "[1] 大脑实例数: "; pgrep -f '/root/bot/venv/bin/python main.py' | wc -l
-echo -n "[2] PID: "; pgrep -f '/root/bot/venv/bin/python main.py' | head -1
-echo "[3] 启动完成标志(最近30行):"
-tail -30 /root/bot/bot/bot.log 2>/dev/null | grep -E "Bot 3427943187 connected|正在初始化|初始化完成|Application startup|Running on|ERROR|Traceback" | tail -6
-echo "[4] 酷狗标记(用正确串): "; grep -c "kugou官方卡 OK" /root/bot/bot/plugins/song_request.py
-echo "[5] 咪咕标记: "; grep -c '"migu"' /root/bot/bot/plugins/song_request.py
-echo "[6] 代理实例: "; pgrep -f 'python3 /root/music_sign.py' | wc -l
+286930
+echo "===== 核对酷狗代码真实内容 $(date '+%F %T') ====="
+echo "[1] src in kugou 分支的行:"
+grep -n "kugou\|migu" /root/bot/bot/plugins/song_request.py | head -20
+echo "[2] 发卡日志那行原文:"
+grep -n "官方卡 OK" /root/bot/bot/plugins/song_request.py | head -10
 echo "===== 完 ====="
