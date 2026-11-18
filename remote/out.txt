@@ -1,30 +1,36 @@
-<<<task_286770.txt>>>
-===== 任务286770 11-18 09:20:01 =====
+<<<task_286780.txt>>>
+===== 任务286780 11-18 09:21:27 =====
 --- 命令 ---
-echo "===== Termux层保活能力核查 $(date '+%F %T') ====="
-echo "--- [1] termux-api是否安装(Termux层) ---"
-which termux-notification termux-wake-lock 2>/dev/null
-/data/data/com.termux/files/usr/bin/termux-notification --help 2>&1 | head -5 || echo "termux-notification不可用"
-echo "--- [2] termux-api APK是否装(包管理器) ---"
-pm list packages 2>/dev/null | grep -i termux || /data/data/com.termux/files/usr/bin/pm list packages 2>/dev/null | grep -i termux || echo "pm不可用(在proot内)"
-echo "--- [3] 唤醒锁命令版本/参数 ---"
-/data/data/com.termux/files/usr/bin/termux-wake-lock --help 2>&1 | head -8 || echo "无--help"
-echo "--- [4] 当前持有的唤醒锁 ---"
-cat /sys/power/wake_lock 2>/dev/null || echo "proot内读不到宿主唤醒锁"
-echo "--- [5] Termux boot目录(Termux层真实路径) ---"
-ls -la /data/data/com.termux/files/home/.termux/boot/ 2>/dev/null | head -15 || echo "boot目录不存在"
+echo "===== 保活锚会话核查 $(date '+%F %T') ====="
+echo "--- [1] 所有Termux bash会话及其子进程 ---"
+ps -eo pid,ppid,stat,cmd | grep -E 'bash -l|sleep infinity|proot' | grep -v grep | head -20
+echo "--- [2] 是否有sleep infinity保活锚(单独查) ---"
+pgrep -af 'sleep infinity' || echo "!!! 没有sleep infinity保活锚 !!!"
+echo "--- [3] bash -l会话数 ---"
+echo -n "bash -l会话数: "; ps -eo cmd | grep -c '[b]ash -l'
+echo "--- [4] tick.sh心跳进程父链(看它挂在哪个会话下) ---"
+ps -o pid,ppid,cmd -p 18783 2>/dev/null
+PPID_OF_TICK=$(ps -o ppid= -p 18783 2>/dev/null | tr -d ' '); echo "tick父PID=$PPID_OF_TICK"; ps -o pid,ppid,cmd -p $PPID_OF_TICK 2>/dev/null
+echo "--- [5] wake-lock进程 ---"
+pgrep -af 'wake-lock' || echo "无独立wake-lock进程(正常,它是申请锁后退出)"
 echo "===== 完 ====="
 --- 输出 ---
-===== Termux层保活能力核查 2026-11-18 09:20:01 =====
---- [1] termux-api是否安装(Termux层) ---
-/data/data/com.termux/files/usr/bin/termux-wake-lock
-bash: line 4: /data/data/com.termux/files/usr/bin/termux-notification: No such file or directory
---- [2] termux-api APK是否装(包管理器) ---
-package:com.termux
---- [3] 唤醒锁命令版本/参数 ---
-usage: termux-wake-lock
-Acquire the Termux wake lock to prevent the CPU from sleeping.
---- [4] 当前持有的唤醒锁 ---
-proot内读不到宿主唤醒锁
---- [5] Termux boot目录(Termux层真实路径) ---
+===== 保活锚会话核查 2026-11-18 09:21:27 =====
+--- [1] 所有Termux bash会话及其子进程 ---
+13465 13276 S<s  /data/data/com.termux/files/usr/bin/bash -l
+17146 13465 S<   /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/storage --bind=/storage/emulated/0:/sdcard --bind=/storage/emulated/0:/mnt/sdcard --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/system/product --bind=/system --bind=/vendor --bind=/data/data/com.termux/files/usr /bin/bash -l
+17187 17146 S<+  /bin/bash -l
+18704     1 S<l  proot --shm-helper
+21594 17187 S<   /bin/bash -l
+--- [2] 是否有sleep infinity保活锚(单独查) ---
+!!! 没有sleep infinity保活锚 !!!
+--- [3] bash -l会话数 ---
+bash -l会话数: 4
+--- [4] tick.sh心跳进程父链(看它挂在哪个会话下) ---
+  PID  PPID CMD
+18783     1 bash /root/tick.sh
+tick父PID=1
+  PID  PPID CMD
+--- [5] wake-lock进程 ---
+无独立wake-lock进程(正常,它是申请锁后退出)
 ===== 完 =====
