@@ -1,36 +1,40 @@
-<<<task_286930.txt>>>
-===== 任务286930 11-18 10:10:37 =====
+<<<task_286940.txt>>>
+===== 任务286940 11-18 13:30:41 =====
 --- 命令 ---
-echo "===== 核对酷狗代码真实内容 $(date '+%F %T') ====="
-echo "[1] src in kugou 分支的行:"
-grep -n "kugou\|migu" /root/bot/bot/plugins/song_request.py | head -20
-echo "[2] 发卡日志那行原文:"
-grep -n "官方卡 OK" /root/bot/bot/plugins/song_request.py | head -10
+echo "===== 点歌验收前置核查 $(date '+%F %T') ====="
+echo "[1] 大脑进程:"
+ps -eo pid,etime,args | grep "[m]ain.py" | head -3
+echo "[2] song_request.py md5:"
+md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null
+echo "[3] music_sign.py md5 + OIAPI关键词:"
+md5sum /root/music_sign.py 2>/dev/null
+grep -c "oiapi.net" /root/music_sign.py 2>/dev/null
+echo "[4] 签名代理端口10800:"
+curl -s -m 5 -o /dev/null -w "HTTP %{http_code}\n" http://127.0.0.1:10800/ 2>&1
+echo "[5] 登录态:"
+bash /root/logincheck.sh 2>/dev/null | head -5
+echo "[6] 全平台标关键词命中数:"
+grep -oE "kugou|migu|kuwo|OIAPI" /root/bot/bot/plugins/song_request.py 2>/dev/null | sort | uniq -c
 echo "===== 完 ====="
 --- 输出 ---
-===== 核对酷狗代码真实内容 2026-11-18 10:10:37 =====
-[1] src in kugou 分支的行:
-85:    # 签名代理 v4 收到 music("kugou"/"migu", 歌名) 后用 OIAPI 出对应标真卡。
-87:    m = re.search(r"\s+(酷我|kuwo|qq|qq音乐|QQ音乐|酷狗|kugou|咪咕|migu)$", kw, re.I)
-95:        elif "酷狗" in tag or tag == "kugou":
-96:            src = "kugou"
-98:            src = "migu"
-105:    # 坑114：按平台后缀分发搜索；song 条目统一带 src 字段（netease/qq/kuwo/kugou/migu）
-111:    if src in ("kugou", "migu"):
-144:           else "〔酷狗〕" if s["src"] == "kugou"
-145:           else "〔咪咕〕" if s["src"] == "migu" else "〔QQ〕")
-157:    """发官方模板卡（163/qq/kuwo/kugou/migu）。卡片只是一张跳转链接，
-173:        elif src in ("kugou", "migu"):
-391:        if s.get("src") in ("kugou", "migu"):
-393:                label = "酷狗音乐" if s["src"] == "kugou" else "咪咕音乐"
-834:    if src in ("kugou", "migu"):
-[2] 发卡日志那行原文:
-169:            logger.info(f"[发卡] qq官方卡 OK id={s['id']}")
-172:            logger.info(f"[发卡] kuwo官方卡 OK id={s['id']} (坑123 OIAPI酷我标)")
-176:            logger.info(f"[发卡] {src}官方卡 OK 歌名={s['id']} (坑124 OIAPI全平台标)")
-179:            logger.info(f"[发卡] 163官方卡 OK id={s['id']}")
-232:                logger.info(f"[发卡] qq官方卡 OK id={s['id']}")
-244:                logger.info(f"[发卡] 163官方卡 OK id={s['id']}")
-255:                logger.info(f"[发卡] kuwo官方卡 OK id={s['id']} (坑123 OIAPI酷我标)")
-280:                    logger.info(f"[发卡] qq找补官方卡 OK mid={mid}")
+===== 点歌验收前置核查 2026-11-18 13:30:41 =====
+[1] 大脑进程:
+ 6446       00:00 /root/bot/venv/bin/python main.py
+[2] song_request.py md5:
+4cd2e1709a592666316a41a74afabcc3  /root/bot/bot/plugins/song_request.py
+[3] music_sign.py md5 + OIAPI关键词:
+e37965c54f76505d4411cdfe842d0d0d  /root/music_sign.py
+2
+[4] 签名代理端口10800:
+HTTP 501
+[5] 登录态:
+=== 登录状态（权威判定）===
+[在线] 已登录，一切正常
+阶段: ready
+最近错误: 无
+[6] 全平台标关键词命中数:
+      9 OIAPI
+     12 kugou
+     39 kuwo
+     10 migu
 ===== 完 =====
