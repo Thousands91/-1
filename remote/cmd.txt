@@ -1,19 +1,6 @@
-287160
-echo "===== 抓NapCat真实签名请求 287160 ====="
-python3 -c '
-import re
-p="/root/music_sign_v4.py"
-s=open(p).read()
-# 在do_POST开头加一行记录原始请求体(仅本次诊断,记录到独立文件)
-old="        raw = self._read_body()\n        try:"
-new="        raw = self._read_body()\n        open(\"/tmp/sig_raw.log\",\"a\").write(raw.decode(\"utf-8\",\"ignore\")[:500]+chr(10))\n        try:"
-if old in s and "sig_raw.log" not in s:
-    open(p,"w").write(s.replace(old,new,1)); print("已加请求记录")
-else: print("已有记录或未找到锚点")
-'
-# 重启签名代理使改动生效
-pkill -f 'python3 /root/music_sign.py'; sleep 2
-cd /root && setsid nohup python3 /root/music_sign.py >> /root/music_sign_v4.log 2>&1 < /dev/null &
-sleep 4
-echo "[新进程]:"; pgrep -af 'music_sign' | head -3
+287170
+echo "===== OIAPI恢复检测+请求记录现状 287170 ====="
+echo "[1]sig_raw.log(抓到的真实请求):"; cat /tmp/sig_raw.log 2>/dev/null | tail -10 || echo "暂无请求"
+echo "[2]OIAPI直连测试:"; curl -s --max-time 15 "https://oiapi.net/api/QQMusicJSONArk?format=163&url=https%3A%2F%2Fmusic.163.com%2Fsong%3Fid%3D33737547&song=%E5%A4%9C%E8%9D%B6" 2>/dev/null | head -c 300; echo
+echo "[3]签名日志尾:"; tail -8 /root/music_sign_v4.log 2>/dev/null
 echo "=====完====="
