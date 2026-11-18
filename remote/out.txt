@@ -1,38 +1,55 @@
-<<<task_286610.txt>>>
-===== 任务286610 11-18 08:50:37 =====
+<<<task_286620.txt>>>
+===== 任务286620 11-18 08:51:36 =====
 --- 命令 ---
-echo "===== 大脑活性核验 $(date '+%F %T') ====="
-echo "--- [1] main.py进程状态(STAT/CPU/运行时长) ---"
-ps -o pid,stat,pcpu,pmem,etime,time,wchan:20,cmd -p 30989 2>/dev/null
-echo "--- [2] 所有python进程 ---"
-ps aux | grep '[m]ain.py' 
-echo "--- [3] 大脑日志行数变化(间隔5秒取样) ---"
-A=$(wc -l < /root/bot/bot/bot.log 2>/dev/null); sleep 5; B=$(wc -l < /root/bot/bot/bot.log 2>/dev/null); echo "5秒前=$A 现在=$B 新增=$((B-A))"
-echo "--- [4] 系统负载与内存 ---"
-uptime; free -m | head -2
-echo "--- [5] 反向WS是否还连着(napcat日志grep WS) ---"
-grep -iE 'websocket|ws.*connect|反向|OneBot|反向WS' /root/napcat.log 2>/dev/null | tail -8
+echo "===== WS连接终判 $(date '+%F %T') ====="
+echo "--- [1] 系统开机时间 ---"
+uptime; echo "启动时间:"; stat -c '%y' /proc/1 2>/dev/null
+echo "--- [2] NapCat日志中WS相关全部(最后15条) ---"
+grep -iE 'WebSocket|WS|连接|connect|断开|connected' /root/napcat.log 2>/dev/null | tail -15
+echo "--- [3] 大脑日志里Bot connected ---"
+grep -iE 'connected|Bot .*connect|WebSocket' /root/bot/bot/bot.log 2>/dev/null | tail -10
+echo "--- [4] NapCat进程完整命令行(看启动时带没带-q) ---"
+ps aux | grep -iE 'napcat|qq' | grep -v grep | grep -v zygote | grep -v utility | head -8
+echo "--- [5] 大脑进程全部(确认单实例与启动时点) ---"
+ps -o pid,lstart,etime,cmd -C python 2>/dev/null | head; ps aux | grep '[m]ain.py'
 echo "===== 完 ====="
 --- 输出 ---
-===== 大脑活性核验 2026-11-18 08:50:37 =====
---- [1] main.py进程状态(STAT/CPU/运行时长) ---
-  PID STAT %CPU %MEM     ELAPSED     TIME WCHAN                CMD
-30989 S<sl  0.0  1.4       00:00 00:00:35 SyS_epoll_wait       /root/bot/venv/bin/python main.py
---- [2] 所有python进程 ---
-aid_u0_+ 30989  0.0  1.4 1761456 83640 ?       R<sl  2023   0:35 /root/bot/venv/bin/python main.py
---- [3] 大脑日志行数变化(间隔5秒取样) ---
-5秒前=16422 现在=16422 新增=0
---- [4] 系统负载与内存 ---
- 08:50:42 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
-               total        used        free      shared  buff/cache   available
-Mem:            5571        3188         242           8        2140        2153
---- [5] 反向WS是否还连着(napcat日志grep WS) ---
+===== WS连接终判 2026-11-18 08:51:36 =====
+--- [1] 系统开机时间 ---
+ 08:51:36 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
+启动时间:
+--- [2] NapCat日志中WS相关全部(最后15条) ---
+11-18 02:09:06 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
+11-18 02:09:11 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接错误 Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+11-18 02:09:11 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
 11-18 02:09:16 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接错误 Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
 11-18 02:09:16 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
 11-18 02:36:22 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接意外关闭
 11-18 02:36:22 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
 11-18 02:36:27 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接错误 Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
 11-18 02:36:27 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
 11-18 02:36:32 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接错误 Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
 11-18 02:36:32 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
+--- [3] 大脑日志里Bot connected ---
+11-17 04:46:01 [INFO] websockets | connection open
+11-17 04:46:01 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+11-17 15:33:48 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+11-18 02:09:21 [INFO] uvicorn | 127.0.0.1:44288 - "WebSocket /onebot/v11/ws" [accepted]
+11-18 02:09:21 [INFO] websockets | connection open
+11-18 02:09:21 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+11-18 02:36:22 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+11-18 02:36:37 [INFO] uvicorn | 127.0.0.1:54738 - "WebSocket /onebot/v11/ws" [accepted]
+11-18 02:36:37 [INFO] websockets | connection open
+11-18 02:36:37 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+--- [4] NapCat进程完整命令行(看启动时带没带-q) ---
+aid_u0_+ 21596  0.0  0.0   2340  1404 ?        S<s   2023   0:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+aid_u0_+ 21622  0.0  1.9 205515304 108556 ?    S<l   2023   1:52 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+--- [5] 大脑进程全部(确认单实例与启动时点) ---
+  PID                  STARTED     ELAPSED CMD
+30989 Wed Mar 29 01:16:55 2023       00:00 /root/bot/venv/bin/python main.py
+aid_u0_+ 30989  0.0  1.5 1704420 87808 ?       S<sl  2023   0:39 /root/bot/venv/bin/python main.py
 ===== 完 =====
