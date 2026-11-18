@@ -1,2 +1,2 @@
-286890
-echo "唤醒探针 $(date '+%F %T') OK 在线"
+286900
+echo "状态 $(date '+%F %T'): 在线 | 代码md5=$(md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null | cut -d\  -f1) | 遥控=$(pgrep -f '[r]emote_ctl_v6' | wc -l)"
