@@ -1,21 +1,16 @@
-287080
-echo "===== 统一日志路径修复 287080 ====="
-REAL=/root/bot/bot/bot.log
-# 1. remote_ctl_v6.sh 看护拉起大脑
-sed -i 's#python main.py > /root/bot.log 2>&1#python main.py >> /root/bot/bot/bot.log 2>&1#' /root/remote_ctl_v6.sh
-# 2. restart_bot.sh (stdout + 3处tail)
-sed -i 's#/root/bot.log#/root/bot/bot/bot.log#g' /root/restart_bot.sh
-# 3. selfcheck.sh tail
-sed -i 's#tail -3 /root/bot.log#tail -3 /root/bot/bot/bot.log#' /root/selfcheck.sh
-# 4. azar_guard.sh LOG变量(修隐藏bug:读旧日志判断掉线)
-sed -i 's#^LOG=/root/bot.log$#LOG=/root/bot/bot/bot.log#' /root/azar_guard.sh
-# 5. start_all.sh 大脑启动
-sed -i 's#python main.py > /root/bot.log 2>&1#python main.py >> /root/bot/bot/bot.log 2>&1#' /root/start_all.sh
-# 6. 旧日志归档(仅在真日志存在时)
-[ -f "$REAL" ] && [ -f /root/bot.log ] && mv /root/bot.log /root/bot.log.20261118.bak && echo "[6]旧日志已归档"
-echo "[校验1]残留旧路径(应为空):"; grep -rn '/root/bot.log' /root/remote_ctl_v6.sh /root/restart_bot.sh /root/selfcheck.sh /root/azar_guard.sh /root/start_all.sh 2>/dev/null | grep -v 'bot/bot/bot.log'
-echo "[校验2]remote_ctl_v6 L168:"; sed -n '168p' /root/remote_ctl_v6.sh
-echo "[校验3]azar_guard LOG:"; grep -n '^LOG=' /root/azar_guard.sh
-echo "[校验4]日志文件:"; ls -l /root/bot.log* /root/bot/bot/bot.log 2>/dev/null
-echo "[校验5]语法:"; for s in remote_ctl_v6 restart_bot selfcheck azar_guard start_all; do bash -n /root/$s.sh 2>&1 && echo "$s OK" || echo "$s 语法错"; done
+287090
+echo "===== 修复remote_ctl_v6第168行 287090 ====="
+python3 -c '
+p="/root/remote_ctl_v6.sh"
+s=open(p).read()
+bad="python main.py >> /root/bot/bot/bot.log 2>python main.py > /root/bot.log 2>&11"
+good="python main.py >> /root/bot/bot/bot.log 2>&1"
+if bad in s:
+    s=s.replace(bad,good); open(p,"w").write(s); print("已修复坏行")
+else:
+    print("未找到预期坏行,当前该行:",[l for l in s.splitlines() if "main.py" in l and "看护" not in l])
+'
+echo "[校验]第168行:"; sed -n '168p' /root/remote_ctl_v6.sh
+echo "[语法]:"; bash -n /root/remote_ctl_v6.sh && echo OK
+echo "[全脚本残留坏串检查]:"; grep -n '2>python\|bot.log 2>&11' /root/remote_ctl_v6.sh || echo "无残留"
 echo "=====完====="
