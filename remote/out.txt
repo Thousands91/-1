@@ -1,49 +1,27 @@
-<<<task_287150.txt>>>
-===== 任务287150 11-19 00:59:11 =====
+<<<task_287160.txt>>>
+===== 任务287160 11-19 01:00:04 =====
 --- 命令 ---
-echo "===== 验证修复思路 287150 ====="
+echo "===== 抓NapCat真实签名请求 287160 ====="
 python3 -c '
-import json,urllib.request,time,sys
-sys.path.insert(0,"/root")
-# 1. 测netease_meta按id查歌名
-try:
-    import music_sign as ms
-    print("[netease_meta 33737547]",ms.netease_meta("33737547"))
-except Exception as e: print("[netease_meta失败]",e)
-# 2. 带重试测带title的163卡
-def post(payload,tries=3):
-    for i in range(tries):
-        try:
-            req=urllib.request.Request("http://127.0.0.1:10800/",data=json.dumps(payload).encode(),headers={"Content-Type":"application/json"})
-            return urllib.request.urlopen(req,timeout=20).read().decode()
-        except Exception as e:
-            print("  第%d次失败:%s"%(i+1,str(e)[:60])); time.sleep(4)
-    return None
-r=post({"type":"163","id":"33737547","title":"夜蝶","singer":"李艺彤"})
-if r:
-    try:
-        c=json.loads(r); m=c.get("meta",{}).get("music",{})
-        print("[带title的163卡] title=",repr(m.get("title")),"desc=",repr(m.get("desc")),"tag=",m.get("tag"))
-    except Exception as e: print("[解析失败]",r[:200],e)
-else: print("[带title卡-全失败]")
-' 2>&1 | head -30
-echo "[日志尾]:"; tail -8 /root/music_sign_v4.log 2>/dev/null
+import re
+p="/root/music_sign_v4.py"
+s=open(p).read()
+# 在do_POST开头加一行记录原始请求体(仅本次诊断,记录到独立文件)
+old="        raw = self._read_body()\n        try:"
+new="        raw = self._read_body()\n        open(\"/tmp/sig_raw.log\",\"a\").write(raw.decode(\"utf-8\",\"ignore\")[:500]+chr(10))\n        try:"
+if old in s and "sig_raw.log" not in s:
+    open(p,"w").write(s.replace(old,new,1)); print("已加请求记录")
+else: print("已有记录或未找到锚点")
+'
+# 重启签名代理使改动生效
+pkill -f 'python3 /root/music_sign.py'; sleep 2
+cd /root && setsid nohup python3 /root/music_sign.py >> /root/music_sign_v4.log 2>&1 < /dev/null &
+sleep 4
+echo "[新进程]:"; pgrep -af 'music_sign' | head -3
 echo "=====完====="
 --- 输出 ---
-===== 验证修复思路 287150 =====
-11-19 00:59:12 music_sign v4 启动 127.0.0.1:10800 (OIAPI全平台+旧源兜底)
-[netease_meta失败] [Errno 98] Address already in use
-  第1次失败:HTTP Error 400: Bad Request
-  第2次失败:HTTP Error 400: Bad Request
-  第3次失败:HTTP Error 400: Bad Request
-[带title卡-全失败]
-[日志尾]:
-11-19 00:58:09 OIAPI失败 format=163: HTTPError HTTP Error 503: Service Unavailable
-11-19 00:58:09 处理完毕 type=163 -> 40 bytes (全灭,走兜底)
-11-19 00:59:12 OIAPI失败 format=163: HTTPError HTTP Error 503: Service Unavailable
-11-19 00:59:12 处理完毕 type=163 -> 40 bytes (全灭,走兜底)
-11-19 00:59:16 OIAPI失败 format=163: HTTPError HTTP Error 503: Service Unavailable
-11-19 00:59:16 处理完毕 type=163 -> 40 bytes (全灭,走兜底)
-11-19 00:59:21 OIAPI失败 format=163: HTTPError HTTP Error 503: Service Unavailable
-11-19 00:59:21 处理完毕 type=163 -> 40 bytes (全灭,走兜底)
+===== 抓NapCat真实签名请求 287160 =====
+已加请求记录
+[新进程]:
+19686 python3 /root/music_sign.py
 =====完=====
