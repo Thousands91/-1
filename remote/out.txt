@@ -1,35 +1,28 @@
-<<<task_286950.txt>>>
-===== 任务286950 11-18 13:31:56 =====
+<<<task_286990.txt>>>
+===== 任务286990 11-19 00:32:01 =====
 --- 命令 ---
-echo "===== 冻结根治前置诊断 $(date '+%F %T') ====="
-echo "[1] adb 是否可用:"
-command -v adb 2>/dev/null || echo "无adb"
-echo "[2] 已连接的adb设备:"
-adb devices 2>/dev/null | tail -5
-echo "[3] termux包名:"
-pm list packages 2>/dev/null | grep -i termux || echo "pm不可用(需adb shell前缀)"
-echo "[4] 当前唤醒锁:"
-cat /sys/power/wake_lock 2>/dev/null || echo "读不到(需adb)"
-echo "[5] tick最后活动(看是否正冻结):"
-tail -3 /root/health_probe.log 2>/dev/null || tail -3 /root/tick.log 2>/dev/null || echo "无日志"
-echo "[6] 电池优化白名单/待机桶(若adb可用):"
-adb shell dumpsys deviceidle whitelist 2>/dev/null | grep -i termux || echo "adb未连或不在白名单"
-echo "===== 完 ====="
+echo "===== 通道验证 286990 $(date +%F\ %T) ====="
+echo "[1]worker实例数:"; pgrep -fc remote_ctl_v6.sh
+echo "[2]时间:"; date "+%F %T"
+echo "[3]日志尾:"; tail -12 /root/remote_ctl.log
+echo "=====完====="
 --- 输出 ---
-===== 冻结根治前置诊断 2026-11-18 13:31:56 =====
-[1] adb 是否可用:
-/usr/bin/adb
-[2] 已连接的adb设备:
-List of devices attached
-
-[3] termux包名:
-package:com.termux
-[4] 当前唤醒锁:
-读不到(需adb)
-[5] tick最后活动(看是否正冻结):
-2026-11-18 13:30:00
-2026-11-18 13:31:00
-2026-11-18 13:32:00
-[6] 电池优化白名单/待机桶(若adb可用):
-adb未连或不在白名单
-===== 完 =====
+===== 通道验证 286990 2026-11-19 00:32:02 =====
+[1]worker实例数:
+1
+[2]时间:
+2026-11-19 00:32:02
+[3]日志尾:
+[11-19 00:28] intake:API响应异常
+[11-19 00:29] intake:API响应异常
+[11-19 00:29] intake:API响应异常
+[11-19 00:29] intake:API响应异常
+[11-19 00:29] intake:API响应异常
+[11-19 00:30] intake:API响应异常
+[11-19 00:30] intake:API响应异常
+[11-19 00:30] intake:API响应异常
+[11-19 00:31] intake:API响应异常
+[11-19 00:31] intake:API响应异常
+[11-19 00:31] intake:API响应异常
+[11-19 00:31] intake:API响应异常
+=====完=====
