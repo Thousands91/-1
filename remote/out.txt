@@ -1,54 +1,53 @@
-<<<task_287130.txt>>>
-===== 任务287130 11-19 00:56:48 =====
+<<<task_287140.txt>>>
+===== 任务287140 11-19 00:58:08 =====
 --- 命令 ---
-echo "===== 签名代理深查 287130 ====="
-echo "[1]签名进程:"; pgrep -af 'music_sign' | head -5
-echo "[2]监听10800的进程:"; netstat -tlnp 2>/dev/null | grep 10800 || ss -tlnp 2>/dev/null | grep 10800 || echo "netstat/ss无结果"
-echo "[3]端口测试:"; curl -s --max-time 6 -o /tmp/sigresp.txt -w "HTTP:%{http_code}\n" http://127.0.0.1:10800/ 2>/dev/null; head -c 200 /tmp/sigresp.txt 2>/dev/null; echo
-echo "[4]music_sign_v4.log尾20:"; tail -20 /root/music_sign_v4.log 2>/dev/null || echo "无此文件"
-echo "[5]NapCat签名配置:"; grep -ra "10800\|musicSignUrl" /root/Napcat/ 2>/dev/null | head -5
-echo "[6]真日志00:49-00:51全部song_request行:"; grep -a "11-19 00:4\|11-19 00:5" /root/bot/bot/bot.log 2>/dev/null | grep -iE "song|发卡|music|点歌|官方卡" | tail -20
+echo "===== 复现签名请求 287140 ====="
+python3 -c '
+import json,urllib.request
+def post(payload):
+    req=urllib.request.Request("http://127.0.0.1:10800/",data=json.dumps(payload).encode(),headers={"Content-Type":"application/json"})
+    return urllib.request.urlopen(req,timeout=20).read().decode()
+# 场景A:只传id不传title(模拟NapCat官方卡契约)
+a=post({"type":"163","id":"33737547"})
+print("[A只传id]返回前300:",a[:300])
+try:
+    card=json.loads(a)
+    m=card.get("meta",{}).get("music",{})
+    print("  卡内 title=",repr(m.get("title"))," singer=",repr(m.get("desc"))," tag=",m.get("tag"))
+except Exception as e: print("  解析失败",e)
+# 场景B:带title
+b=post({"type":"163","id":"33737547","title":"夜蝶","singer":"李艺彤"})
+print("[B带title]返回前300:",b[:300])
+try:
+    card=json.loads(b); m=card.get("meta",{}).get("music",{})
+    print("  卡内 title=",repr(m.get("title"))," singer=",repr(m.get("desc"))," tag=",m.get("tag"))
+except Exception as e: print("  解析失败",e)
+' 2>&1 | head -40
+echo "[日志尾]:"; tail -6 /root/music_sign_v4.log 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-===== 签名代理深查 287130 =====
-[1]签名进程:
-31302 python3 /root/music_sign.py
-[2]监听10800的进程:
-netstat/ss无结果
-[3]端口测试:
-HTTP:501
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-        "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-        
-[4]music_sign_v4.log尾20:
-11-18 09:49:39 music_sign v4 启动 127.0.0.1:10800 (OIAPI全平台+旧源兜底)
-11-18 09:49:42 OIAPI出真卡 format=kugou tag=酷狗音乐 (703字节)
-11-18 09:49:42 处理完毕 type=kugou -> 731 bytes 真卡
-11-18 09:49:42 OIAPI出真卡 format=migu tag=咪咕音乐 (718字节)
-11-18 09:49:42 处理完毕 type=migu -> 746 bytes 真卡
-11-18 22:36:07 OIAPI出真卡 format=163 tag=网易云音乐 (701字节)
-11-18 22:36:07 处理完毕 type=163 -> 727 bytes 真卡
-11-18 22:36:32 OIAPI出真卡 format=qq tag=QQ音乐 (724字节)
-11-18 22:36:32 处理完毕 type=qq -> 744 bytes 真卡
+===== 复现签名请求 287140 =====
+Traceback (most recent call last):
+  File "<string>", line 7, in <module>
+  File "<string>", line 5, in post
+  File "/usr/lib/python3.10/urllib/request.py", line 216, in urlopen
+    return opener.open(url, data, timeout)
+  File "/usr/lib/python3.10/urllib/request.py", line 525, in open
+    response = meth(req, response)
+  File "/usr/lib/python3.10/urllib/request.py", line 634, in http_response
+    response = self.parent.error(
+  File "/usr/lib/python3.10/urllib/request.py", line 563, in error
+    return self._call_chain(*args)
+  File "/usr/lib/python3.10/urllib/request.py", line 496, in _call_chain
+    result = func(*args)
+  File "/usr/lib/python3.10/urllib/request.py", line 643, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+[日志尾]:
 11-18 22:37:06 OIAPI出真卡 format=custom tag=QQ音乐 (691字节)
 11-18 22:37:06 处理完毕 type=custom -> 739 bytes 真卡
 11-19 00:49:22 OIAPI出真卡 format=163 tag=网易云音乐 (700字节)
 11-19 00:49:22 处理完毕 type=163 -> 726 bytes 真卡
-[5]NapCat签名配置:
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json:  "musicSignUrl": "http://127.0.0.1:10800/",
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json.bak:  "musicSignUrl": "",
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:  musicSignUrl: l.String({ default: "" }),
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:  musicSignUrl: l.String({ default: "" }),
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:      let s = this.obContext.configLoader.configData.musicSignUrl;
-[6]真日志00:49-00:51全部song_request行:
-11-19 00:48:15 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 475112826 from 3327068725@[群:562796842] '点歌点了首夜蝶'
-11-19 00:49:11 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 613993864 from 1561950850@[群:562796842] '[at:qq=3427943187] 点歌 夜蝶'
-11-19 00:49:11 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=42)
-11-19 00:49:12 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=42) running complete
-11-19 00:49:17 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=356)
-11-19 00:49:22 [INFO] song_request | [发卡] 163官方卡 OK id=33737547
-11-19 00:49:30 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=356) running complete
+11-19 00:58:09 OIAPI失败 format=163: HTTPError HTTP Error 503: Service Unavailable
+11-19 00:58:09 处理完毕 type=163 -> 40 bytes (全灭,走兜底)
 =====完=====
