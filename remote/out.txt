@@ -1,45 +1,68 @@
-<<<task_286670.txt>>>
-===== 任务286670 11-18 09:00:38 =====
+<<<task_286680.txt>>>
+===== 任务286680 11-18 09:03:58 =====
 --- 命令 ---
-echo "===== 冻结窗口四账核实 $(date '+%F %T') ====="
-echo "--- [1] tick.log首/尾/总行数 ---"
-head -1 /root/tick.log 2>/dev/null; tail -1 /root/tick.log 2>/dev/null; wc -l < /root/tick.log 2>/dev/null
-echo "--- [2] tick.log 凌晨到早上断档(每段最后2条) ---"
-echo "00点段:"; grep '11-18 00:' /root/tick.log 2>/dev/null | tail -2
-echo "01点段:"; grep '11-18 01:' /root/tick.log 2>/dev/null | tail -2
-echo "07点段:"; grep '11-18 07:' /root/tick.log 2>/dev/null | tail -2
-echo "08点段前5条:"; grep '11-18 08:' /root/tick.log 2>/dev/null | head -5
-echo "--- [3] 关键进程PID(证明没重启:应为旧PID) ---"
-ps -o pid,etime,cmd -p 30989,17992,18783,21596,21622 2>/dev/null
-echo "--- [4] proot的uptime(参考,不可作为重启依据) ---"
-cat /proc/uptime 2>/dev/null; uptime
+echo "===== NapCat签名配置精查 $(date '+%F %T') ====="
+echo "--- [1] 签名代理进程(端口10800) ---"
+ps aux | grep -iE 'music_sign|10800' | grep -v grep | head -5
+echo "--- [2] 代理文件内容前40行(看上游) ---"
+head -40 /root/music_sign.py 2>/dev/null
+echo "--- [3] NapCat配置里musicSignUrl(限定常见路径,用grep不用find) ---"
+for f in /root/Napcat/config/*.json /root/Napcat/config/**/*.json /root/NapCat/config/*.json /root/napcat/config/*.json; do
+  [ -f "$f" ] && grep -H "musicSignUrl" "$f" 2>/dev/null
+done
+echo "--- [4] 代理监听10800验证 ---"
+curl -s --max-time 5 -X POST -H 'Content-Type: application/json' -d '{"type":"kuwo","id":"128405"}' http://127.0.0.1:10800/ 2>/dev/null | head -c 200
+echo ""
+echo "--- [5] 当前代码md5 ---"
+md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null
 echo "===== 完 ====="
 --- 输出 ---
-===== 冻结窗口四账核实 2026-11-18 09:00:38 =====
---- [1] tick.log首/尾/总行数 ---
-2026-11-13 02:16:52
-2026-11-18 09:00:34
-5934
---- [2] tick.log 凌晨到早上断档(每段最后2条) ---
-00点段:
-01点段:
-2026-11-18 01:58:21
-2026-11-18 01:59:21
-07点段:
-08点段前5条:
-2026-11-18 08:45:33
-2026-11-18 08:46:33
-2026-11-18 08:47:33
-2026-11-18 08:48:33
-2026-11-18 08:49:33
---- [3] 关键进程PID(证明没重启:应为旧PID) ---
-  PID     ELAPSED CMD
-17992       00:00 bash /root/remote_ctl_v6.sh
-18783       00:00 bash /root/tick.sh
-21596       00:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
-21622       00:00 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
-30989       00:00 /root/bot/venv/bin/python main.py
---- [4] proot的uptime(参考,不可作为重启依据) ---
-124.08 932.76
- 09:00:38 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
+===== NapCat签名配置精查 2026-11-18 09:03:58 =====
+--- [1] 签名代理进程(端口10800) ---
+--- [2] 代理文件内容前40行(看上游) ---
+#!/usr/bin/env python3
+"""自托管音乐签名代理 v3（坑107终局，2026-11-14）。
+
+真相（18:35 定案）：正版音乐卡必须带腾讯签发的 config.token，
+token 只能由挂着的真 QQ 客户端从腾讯侧取得——本地凭空拼的 JSON
+（v1/v2）客户端一律显示"发送者版本过低"。公益签名服务全靠各自
+的真客户端活着，目前全网已知服务半死/僵尸。
+
+v3 策略：代理 + 验真 + 冷却。
+- 收到请求 → 从网易云补齐歌讯 → 以 custom 契约轮询上游真签名服务
+- 谁吐出带 config.token 的卡就转发谁（验真，绝不让占位符卡出门）
+- 全灭 → 400（NapCat 发卡失败，插件走文字卡兜底，体验不断）
+- 某上游挂掉记冷却 5 分钟，期间跳过，不拖累延迟
+"""
+import json
+import random
+import threading
+import time
+import urllib.request
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+PORT = 10800
+UIN = 3427943187
+UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+      "Content-Type": "application/json"}
+UPSTREAMS = [
+    "http://106.55.0.102:10087/",
+    "https://ss.xingzhige.com/music_card/card",
+    "https://qqbotark.569879.xyz/",
+    "https://llob.linyuchen.net/sign/music",
+]
+_cooldown = {}  # base -> 恢复时间戳
+_lock = threading.Lock()
+_cache = {}
+
+
+def _log(msg):
+    with _lock:
+        print(time.strftime("%m-%d %H:%M:%S ") + msg, flush=True)
+
+--- [3] NapCat配置里musicSignUrl(限定常见路径,用grep不用find) ---
+--- [4] 代理监听10800验证 ---
+
+--- [5] 当前代码md5 ---
+03bcc7db202ecd6e3a7b056b7f24e774  /root/bot/bot/plugins/song_request.py
 ===== 完 =====
