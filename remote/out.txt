@@ -1,29 +1,35 @@
-<<<task_286740.txt>>>
-===== 任务286740 11-18 09:13:39 =====
+<<<task_286750.txt>>>
+===== 任务286750 11-18 09:15:02 =====
 --- 命令 ---
-echo "===== 拉取新代码+探查git $(date '+%F %T') ====="
-echo "--- [1] 设备bot目录git结构 ---"
-ls -d /root/bot/.git /root/bot/bot/.git 2>/dev/null
-cd /root/bot 2>/dev/null && echo "在/root/bot: branch=$(git branch --show-current 2>/dev/null) head=$(git log -1 --format=%h 2>/dev/null) remote=$(git remote 2>/dev/null)"
-echo "--- [2] fetch + reset 到最新 ---"
-cd /root/bot 2>/dev/null && git fetch origin main 2>&1 | tail -3 && git reset --hard origin/main 2>&1 | tail -2
-echo "--- [3] 新代码校验 ---"
-echo "md5=$(md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null | cut -d\  -f1) (期望9238e82a)"
-echo -n "酷我官方卡标记数: "; grep -c 'kuwo官方卡\|坑123' /root/bot/bot/plugins/song_request.py 2>/dev/null
-echo -n "语法: "; python3 -m py_compile /root/bot/bot/plugins/song_request.py 2>&1 && echo OK || echo FAIL
+echo "===== 重启大脑加载酷我代码 $(date '+%F %T') ====="
+echo "--- [1] 停旧大脑 ---"
+OLDPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | tr '\n' ' ')
+echo "旧PID: $OLDPID"
+pkill -f '/root/bot/venv/bin/python main.py' 2>/dev/null; sleep 3
+pgrep -f '/root/bot/venv/bin/python main.py' | wc -l | xargs echo "停后剩余:"
+echo "--- [2] setsid拉起新大脑 ---"
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 &
+sleep 12
+echo "--- [3] 进程确认 ---"
+pgrep -af '/root/bot/venv/bin/python main.py' | head -3
+echo -n "实例数: "; pgrep -f '/root/bot/venv/bin/python main.py' | wc -l
+echo "--- [4] 启动日志确认(song_request加载+Bot连接) ---"
+tail -60 /root/bot/bot/bot.log 2>/dev/null | grep -iE 'song_request|Bot .*connected|加载|Loaded|WS|error|Error' | tail -12
 echo "===== 完 ====="
 --- 输出 ---
-===== 拉取新代码+探查git 2026-11-18 09:13:39 =====
---- [1] 设备bot目录git结构 ---
-/root/bot/.git
-在/root/bot: branch=main head=f039dda remote=origin
---- [2] fetch + reset 到最新 ---
-From https://github.com/Thousands91/qq-bot
- * branch            main       -> FETCH_HEAD
-   f039dda..9907eba  main       -> origin/main
-HEAD is now at 9907eba 坑123翻案:接入OIAPI全平台签名源,酷我官方卡改发music(kuwo)出真酷我音乐标(推翻做不了定案)
---- [3] 新代码校验 ---
-md5=9238e82a35299ea885a1ec9ada1a8813 (期望9238e82a)
-酷我官方卡标记数: 5
-语法: OK
+===== 重启大脑加载酷我代码 2026-11-18 09:15:03 =====
+--- [1] 停旧大脑 ---
+旧PID: 30989 
+停后剩余: 0
+--- [2] setsid拉起新大脑 ---
+--- [3] 进程确认 ---
+20977 /root/bot/venv/bin/python main.py
+实例数: 1
+--- [4] 启动日志确认(song_request加载+Bot连接) ---
+11-18 09:15:15 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+11-18 09:15:15 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-18 09:15:15 [SUCCESS] nonebot | Loaded adapters: OneBot V11
+11-18 09:15:16 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
+11-18 09:15:18 [INFO] uvicorn | 127.0.0.1:45308 - "WebSocket /onebot/v11/ws" [accepted]
+11-18 09:15:18 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
 ===== 完 =====
