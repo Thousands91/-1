@@ -1,16 +1,17 @@
-286750
-echo "===== 重启大脑加载酷我代码 $(date '+%F %T') ====="
-echo "--- [1] 停旧大脑 ---"
-OLDPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | tr '\n' ' ')
-echo "旧PID: $OLDPID"
-pkill -f '/root/bot/venv/bin/python main.py' 2>/dev/null; sleep 3
-pgrep -f '/root/bot/venv/bin/python main.py' | wc -l | xargs echo "停后剩余:"
-echo "--- [2] setsid拉起新大脑 ---"
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 &
-sleep 12
-echo "--- [3] 进程确认 ---"
-pgrep -af '/root/bot/venv/bin/python main.py' | head -3
-echo -n "实例数: "; pgrep -f '/root/bot/venv/bin/python main.py' | wc -l
-echo "--- [4] 启动日志确认(song_request加载+Bot连接) ---"
-tail -60 /root/bot/bot/bot.log 2>/dev/null | grep -iE 'song_request|Bot .*connected|加载|Loaded|WS|error|Error' | tail -12
+286760
+echo "===== 保活防线现状核查 $(date '+%F %T') ====="
+echo "--- [1] 唤醒锁状态 ---"
+termux-wake-lock 2>/dev/null; echo "唤醒锁执行返回=$?"
+ls /sys/power/wake_lock 2>/dev/null && cat /sys/power/wake_lock 2>/dev/null
+echo "--- [2] Termux常驻通知/前台服务 ---"
+pgrep -af 'termux|wake' | head -10
+echo "--- [3] 开机自启脚本内容 ---"
+cat /root/.termux/boot/asar_boot.sh 2>/dev/null | head -40
+echo "--- [4] 看门狗脚本 ---"
+ls -la /root/x10_watchdog.sh ~/x10_watchdog.sh 2>/dev/null
+cat ~/x10_watchdog.sh 2>/dev/null | head -30
+echo "--- [5] 幻影进程限制(需root读) ---"
+cat /proc/sys/kernel/pid_max 2>/dev/null
+echo "--- [6] 现有进程冻结相关 ---"
+cat /sys/fs/cgroup/freezer/*/freezer.state 2>/dev/null | head; ls /sys/fs/cgroup/ 2>/dev/null | grep -i freez
 echo "===== 完 ====="
