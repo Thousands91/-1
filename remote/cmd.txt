@@ -1,7 +1,14 @@
-286660
-echo "===== 当前在线状态确认 $(date '+%F %T') ====="
-echo "--- 最后出站发送 ---"; grep '发送 ->' /root/napcat.log 2>/dev/null | tail -3
-echo "--- 最后入站接收 ---"; grep '接收 <-' /root/napcat.log 2>/dev/null | tail -3
-echo "--- 大脑最后回复日志 ---"; grep 'ai_chat | \[核对' /root/bot/bot/bot.log 2>/dev/null | tail -2
-echo "--- 四账心跳 ---"; tail -1 /root/tick.log 2>/dev/null
+286670
+echo "===== 冻结窗口四账核实 $(date '+%F %T') ====="
+echo "--- [1] tick.log首/尾/总行数 ---"
+head -1 /root/tick.log 2>/dev/null; tail -1 /root/tick.log 2>/dev/null; wc -l < /root/tick.log 2>/dev/null
+echo "--- [2] tick.log 凌晨到早上断档(每段最后2条) ---"
+echo "00点段:"; grep '11-18 00:' /root/tick.log 2>/dev/null | tail -2
+echo "01点段:"; grep '11-18 01:' /root/tick.log 2>/dev/null | tail -2
+echo "07点段:"; grep '11-18 07:' /root/tick.log 2>/dev/null | tail -2
+echo "08点段前5条:"; grep '11-18 08:' /root/tick.log 2>/dev/null | head -5
+echo "--- [3] 关键进程PID(证明没重启:应为旧PID) ---"
+ps -o pid,etime,cmd -p 30989,17992,18783,21596,21622 2>/dev/null
+echo "--- [4] proot的uptime(参考,不可作为重启依据) ---"
+cat /proc/uptime 2>/dev/null; uptime
 echo "===== 完 ====="
