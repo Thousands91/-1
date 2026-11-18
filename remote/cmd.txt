@@ -1,12 +1,16 @@
-286740
-echo "===== 拉取新代码+探查git $(date '+%F %T') ====="
-echo "--- [1] 设备bot目录git结构 ---"
-ls -d /root/bot/.git /root/bot/bot/.git 2>/dev/null
-cd /root/bot 2>/dev/null && echo "在/root/bot: branch=$(git branch --show-current 2>/dev/null) head=$(git log -1 --format=%h 2>/dev/null) remote=$(git remote 2>/dev/null)"
-echo "--- [2] fetch + reset 到最新 ---"
-cd /root/bot 2>/dev/null && git fetch origin main 2>&1 | tail -3 && git reset --hard origin/main 2>&1 | tail -2
-echo "--- [3] 新代码校验 ---"
-echo "md5=$(md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null | cut -d\  -f1) (期望9238e82a)"
-echo -n "酷我官方卡标记数: "; grep -c 'kuwo官方卡\|坑123' /root/bot/bot/plugins/song_request.py 2>/dev/null
-echo -n "语法: "; python3 -m py_compile /root/bot/bot/plugins/song_request.py 2>&1 && echo OK || echo FAIL
+286750
+echo "===== 重启大脑加载酷我代码 $(date '+%F %T') ====="
+echo "--- [1] 停旧大脑 ---"
+OLDPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | tr '\n' ' ')
+echo "旧PID: $OLDPID"
+pkill -f '/root/bot/venv/bin/python main.py' 2>/dev/null; sleep 3
+pgrep -f '/root/bot/venv/bin/python main.py' | wc -l | xargs echo "停后剩余:"
+echo "--- [2] setsid拉起新大脑 ---"
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 &
+sleep 12
+echo "--- [3] 进程确认 ---"
+pgrep -af '/root/bot/venv/bin/python main.py' | head -3
+echo -n "实例数: "; pgrep -f '/root/bot/venv/bin/python main.py' | wc -l
+echo "--- [4] 启动日志确认(song_request加载+Bot连接) ---"
+tail -60 /root/bot/bot/bot.log 2>/dev/null | grep -iE 'song_request|Bot .*connected|加载|Loaded|WS|error|Error' | tail -12
 echo "===== 完 ====="
