@@ -1,51 +1,119 @@
-<<<task_287030.txt>>>
-===== 任务287030 11-19 00:38:31 =====
+<<<task_287040.txt>>>
+===== 任务287040 11-19 00:44:09 =====
 --- 命令 ---
-echo "===== 真日志定位 287030 ====="
-echo "[1]大脑6446启动时间:"; ps -o pid,lstart -p 6446 2>/dev/null
-echo "[2]大脑stdout/stderr指向(权威):"; readlink /proc/6446/fd/1 2>/dev/null; readlink /proc/6446/fd/2 2>/dev/null
-echo "[3]各日志mtime+大小:"; stat -c "%n | %s字节 | %y" /root/bot.log /root/bot/bot/bot.log 2>/dev/null
-echo "[4]/root/bot.log尾5:"; tail -5 /root/bot.log 2>/dev/null
-echo "[5]/root/bot/bot/bot.log尾5:"; tail -5 /root/bot/bot/bot.log 2>/dev/null
-echo "[6]最近被写的log文件(top15):"; ls -lt /root/*.log /root/bot/*.log /root/bot/bot/*.log 2>/dev/null | head -15
+echo "===== 登录验证+日志溯源+掉线时间线 287040 ====="
+echo "[1]登录态(验证站稳):"; bash /root/logincheck.sh 2>/dev/null | head -8
+echo "[2]大脑6446 cwd:"; readlink /proc/6446/cwd 2>/dev/null
+echo "[3]大脑6446启动命令:"; tr '\0' ' ' < /proc/6446/cmdline 2>/dev/null; echo
+echo "[4]各脚本里bot.log写法:"; grep -rn "bot.log" /root/*.sh /root/bot/*.sh /root/bot/bot/*.sh 2>/dev/null | head -20
+echo "[5]login_state.log尾35:"; tail -35 /root/login_state.log 2>/dev/null
+echo "[6]napcat.log掉线关键词:"; grep -nE "离线|掉线|未登录|二维码|waiting_qrcode|closed by peer|ERROR" /root/napcat.log 2>/dev/null | tail -20
+echo "[7]真日志bot.log尾25:"; tail -25 /root/bot/bot/bot.log 2>/dev/null
+echo "[8]当前时间:"; date '+%F %T'
 echo "=====完====="
 --- 输出 ---
-===== 真日志定位 287030 =====
-[1]大脑6446启动时间:
-  PID                  STARTED
- 6446 Wed Mar 29 08:48:34 2023
-[2]大脑stdout/stderr指向(权威):
-/root/bot/bot/bot.log
-/root/bot/bot/bot.log
-[3]各日志mtime+大小:
-/root/bot.log | 7775字节 | 2026-11-18 02:09:01.250000000 +0800
-/root/bot/bot/bot.log | 2657410字节 | 2026-11-18 22:37:47.840000000 +0800
-[4]/root/bot.log尾5:
-11-18 02:09:01 [INFO] uvicorn | Shutting down
-11-18 02:09:01 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
-11-18 02:09:01 [INFO] uvicorn | Waiting for application shutdown.
-11-18 02:09:01 [INFO] uvicorn | Application shutdown complete.
-11-18 02:09:01 [INFO] uvicorn | Finished server process [18624]
-[5]/root/bot/bot/bot.log尾5:
-  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/internal/adapter/bot.py", line 128, in call_api
+===== 登录验证+日志溯源+掉线时间线 287040 =====
+[1]登录态(验证站稳):
+=== 登录状态（权威判定）===
+[在线] 已登录，一切正常
+阶段: ready
+最近错误: 无
+[2]大脑6446 cwd:
+/root/bot/bot
+[3]大脑6446启动命令:
+/root/bot/venv/bin/python main.py 
+[4]各脚本里bot.log写法:
+/root/azar_guard.sh:11:LOG=/root/bot.log
+/root/morning.sh:6:  cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > bot.log 2>&1 &
+/root/morning.sh:8:  pgrep -f 'venv/bin/python main.py' >/dev/null && echo "   ✅ 已重启" || echo "   ✗ 重启失败，把 bot.log 发我"
+/root/remote_ctl.sh:125:  pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & cd "$REPO"; }
+/root/remote_ctl_v5.sh:125:  pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & cd "$REPO"; }
+/root/remote_ctl_v6.sh:168:  pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & cd "$REPO"; }
+/root/restart_bot.sh:1:pkill -f main.py; sleep 2; cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & sleep 12; echo ==加载验证==; tail -n 60 /root/bot.log | grep -c Succeeded; tail -n 60 /root/bot.log | grep -c Duplicated; tail -n 60 /root/bot.log | grep -ciE "failed|traceback"
+/root/selfcheck.sh:13:echo "-- bot.log 尾3行 --"
+/root/selfcheck.sh:14:tail -3 /root/bot.log 2>/dev/null
+/root/start_all.sh:3:nohup proot-distro login ubuntu -- bash -c 'cd /root && nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & nohup bash /root/azar_guard.sh >> /root/azar_guard.log 2>&1 & cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 & cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1' > /dev/null 2>&1 &
+[5]login_state.log尾35:
+2026-11-18 21:23:18 [在线]
+2026-11-18 21:28:19 [在线]
+2026-11-18 21:33:20 [在线]
+2026-11-18 21:38:22 [在线]
+2026-11-18 21:43:23 [在线]
+2026-11-18 21:48:24 [在线]
+2026-11-18 21:53:25 [在线]
+2026-11-18 21:58:27 [在线]
+2026-11-18 22:03:28 [在线]
+2026-11-18 22:08:29 [在线]
+2026-11-18 22:13:31 [在线]
+2026-11-18 22:18:32 [在线]
+2026-11-18 22:23:33 [在线]
+2026-11-18 22:28:34 [在线]
+2026-11-18 22:33:38 [在线]
+2026-11-18 22:38:39 状态变化: [在线] -> [未登录]
+2026-11-18 22:43:41 [未登录]
+2026-11-18 22:48:42 [未登录]
+2026-11-18 22:53:43 [未登录]
+2026-11-18 22:58:44 [未登录]
+2026-11-18 23:03:45 [未登录]
+2026-11-18 23:08:47 [未登录]
+2026-11-18 23:13:48 [未登录]
+2026-11-18 23:18:49 [未登录]
+2026-11-18 23:23:50 [未登录]
+2026-11-18 23:28:51 [未登录]
+2026-11-18 23:33:52 [未登录]
+2026-11-18 23:38:53 [未登录]
+2026-11-18 23:43:54 [未登录]
+2026-11-18 23:48:56 [未登录]
+2026-11-19 00:22:00 [未登录]
+2026-11-19 00:27:01 [未登录]
+2026-11-19 00:32:02 [未登录]
+2026-11-19 00:37:03 [未登录]
+2026-11-19 00:42:03 状态变化: [未登录] -> [在线]
+[6]napcat.log掉线关键词:
+4:[13917:1119/004032.604993:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+6:[13917:1119/004034.501376:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+7:[13917:1119/004034.503509:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+8:[13917:1119/004034.507844:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+9:[13917:1119/004034.508747:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+10:[13917:1119/004034.525546:ERROR:device/udev_linux/udev_watcher.cc:51] Failed to initialize a udev monitor.
+11:[13917:1119/004034.645502:ERROR:dbus/object_proxy.cc:573] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+12:[13917:1119/004034.646086:ERROR:dbus/object_proxy.cc:573] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+13:[13917:1119/004034.646462:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+14:[13917:1119/004034.646671:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+15:[13917:1119/004034.646800:ERROR:dbus/object_proxy.cc:573] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+16:[13917:1119/004034.723701:ERROR:dbus/object_proxy.cc:573] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+41:11-19 00:40:37 [[32minfo[39m] 没有 -q 指令指定快速登录，将使用二维码登录方式
+45:11-19 00:40:37 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+68:二维码解码URL: https://txz.qq.com/p?k=7xoYxNj7ZEMcKHu2U*AGXMrl6tgavnDc&f=1600001615
+69:如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+70:11-19 00:40:37 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+92:11-19 00:41:20 [[32minfo[39m] [Core] [Login] 二维码已被扫描，等待确认...
+[7]真日志bot.log尾25:
     result = await self.adapter._call_api(self, api, **data)
   File "/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/adapter.py", line 177, in _call_api
     raise NetworkError(f"WebSocket call api {api} timeout") from None
 nonebot.adapters.onebot.v11.exception.NetworkError: NetWorkError(message='WebSocket call api send_msg timeout')
-[6]最近被写的log文件(top15):
--rw-r--r-- 1 root root  456348 Nov 19 00:38 /root/napcat.log
--rw-r--r-- 1 root root   31943 Nov 19 00:38 /root/netmon.log
--rw-r--r-- 1 root root  179222 Nov 19 00:37 /root/health.log
--rw-r--r-- 1 root root  136800 Nov 19 00:37 /root/tick.log
--rw-r--r-- 1 root root   37602 Nov 19 00:37 /root/login_state.log
--rw-r--r-- 1 root root   19463 Nov 19 00:36 /root/remote_ctl.log
--rw-r--r-- 1 root root    3530 Nov 18 23:25 /root/ip.log
--rw-r--r-- 1 root root 2657410 Nov 18 22:37 /root/bot/bot/bot.log
--rw-r--r-- 1 root root     722 Nov 18 22:37 /root/music_sign_v4.log
--rw-r--r-- 1 root root    5285 Nov 18 09:23 /root/music_sign.log
--rw-r--r-- 1 root root    7775 Nov 18 02:09 /root/bot.log
--rw-r--r-- 1 root root 1436791 Nov 18 02:07 /root/napcat-restart.log
--rw-r--r-- 1 root root     835 Nov 12 13:06 /root/azar_login_run.log
--rw-r--r-- 1 root root      11 Nov 12 00:50 /root/remote_boot.log
--rw-r--r-- 1 root root      52 Nov 12 00:06 /root/asar_sync_boot.log
+11-19 00:41:37 [INFO] uvicorn | 127.0.0.1:36312 - "WebSocket /onebot/v11/ws" [accepted]
+11-19 00:41:37 [INFO] websockets | connection open
+11-19 00:41:37 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+11-19 00:41:44 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.group_increase.invite]: {'time': 1795020104, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'group_increase', 'sub_type': 'invite', 'user_id': 3427943187, 'group_id': 562796842, 'operator_id': 1561950850}
+11-19 00:41:44 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1257875289 from 1561950850@[群:562796842] '[at:qq=3427943187] '
+11-19 00:41:45 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=92)
+11-19 00:41:45 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=188)
+11-19 00:41:45 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=92) running complete
+11-19 00:41:45 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=188) running complete
+11-19 00:41:45 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-19 00:41:45 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-19 00:41:45 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-19 00:41:46 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-19 00:42:04 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 918144431 from 1561950850@[群:562796842] '[at:qq=3427943187] 菜单'
+11-19 00:42:04 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=130)
+11-19 00:42:04 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=130) running complete
+11-19 00:43:16 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 40825399 from 1617095026@[群:590454333] '都怪你们天天冰冰冰 现在这个天气要给我冻死了'
+11-19 00:43:16 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-19 00:43:16 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-19 00:43:16 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-19 00:43:16 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+[8]当前时间:
+2026-11-19 00:44:10
 =====完=====
