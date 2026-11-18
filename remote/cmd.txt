@@ -1,13 +1,13 @@
-286620
-echo "===== WS连接终判 $(date '+%F %T') ====="
-echo "--- [1] 系统开机时间 ---"
-uptime; echo "启动时间:"; stat -c '%y' /proc/1 2>/dev/null
-echo "--- [2] NapCat日志中WS相关全部(最后15条) ---"
-grep -iE 'WebSocket|WS|连接|connect|断开|connected' /root/napcat.log 2>/dev/null | tail -15
-echo "--- [3] 大脑日志里Bot connected ---"
-grep -iE 'connected|Bot .*connect|WebSocket' /root/bot/bot/bot.log 2>/dev/null | tail -10
-echo "--- [4] NapCat进程完整命令行(看启动时带没带-q) ---"
-ps aux | grep -iE 'napcat|qq' | grep -v grep | grep -v zygote | grep -v utility | head -8
-echo "--- [5] 大脑进程全部(确认单实例与启动时点) ---"
-ps -o pid,lstart,etime,cmd -C python 2>/dev/null | head; ps aux | grep '[m]ain.py'
+286630
+echo "===== WS实时链路终判 $(date '+%F %T') ====="
+echo "--- [1] 8080端口谁在监听 ---"
+netstat -tlnp 2>/dev/null | grep ':8080' || echo "8080无人监听!"
+echo "--- [2] 到8080的TCP连接(ESTABLISHED=WS通) ---"
+netstat -tnp 2>/dev/null | grep ':8080' | tail -10 || echo "无8080连接"
+echo "--- [3] 大脑进程当前CPU时间(间隔6秒看是否增长=是否活着) ---"
+C1=$(cat /proc/30989/stat 2>/dev/null | awk '{print $14+$15}'); sleep 6; C2=$(cat /proc/30989/stat 2>/dev/null | awk '{print $14+$15}'); echo "CPU滴答 前=$C1 后=$C2 增长=$((C2-C1))"
+echo "--- [4] NapCat日志最后修改(现在真实时间) ---"
+stat -c 'napcat.log %y' /root/napcat.log 2>/dev/null; date '+现在 %F %T'
+echo "--- [5] 大脑日志最后修改 ---"
+stat -c 'bot.log %y' /root/bot/bot/bot.log 2>/dev/null
 echo "===== 完 ====="
