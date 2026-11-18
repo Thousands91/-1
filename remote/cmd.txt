@@ -1,14 +1,14 @@
-286770
-echo "===== Termux层保活能力核查 $(date '+%F %T') ====="
-echo "--- [1] termux-api是否安装(Termux层) ---"
-which termux-notification termux-wake-lock 2>/dev/null
-/data/data/com.termux/files/usr/bin/termux-notification --help 2>&1 | head -5 || echo "termux-notification不可用"
-echo "--- [2] termux-api APK是否装(包管理器) ---"
-pm list packages 2>/dev/null | grep -i termux || /data/data/com.termux/files/usr/bin/pm list packages 2>/dev/null | grep -i termux || echo "pm不可用(在proot内)"
-echo "--- [3] 唤醒锁命令版本/参数 ---"
-/data/data/com.termux/files/usr/bin/termux-wake-lock --help 2>&1 | head -8 || echo "无--help"
-echo "--- [4] 当前持有的唤醒锁 ---"
-cat /sys/power/wake_lock 2>/dev/null || echo "proot内读不到宿主唤醒锁"
-echo "--- [5] Termux boot目录(Termux层真实路径) ---"
-ls -la /data/data/com.termux/files/home/.termux/boot/ 2>/dev/null | head -15 || echo "boot目录不存在"
+286780
+echo "===== 保活锚会话核查 $(date '+%F %T') ====="
+echo "--- [1] 所有Termux bash会话及其子进程 ---"
+ps -eo pid,ppid,stat,cmd | grep -E 'bash -l|sleep infinity|proot' | grep -v grep | head -20
+echo "--- [2] 是否有sleep infinity保活锚(单独查) ---"
+pgrep -af 'sleep infinity' || echo "!!! 没有sleep infinity保活锚 !!!"
+echo "--- [3] bash -l会话数 ---"
+echo -n "bash -l会话数: "; ps -eo cmd | grep -c '[b]ash -l'
+echo "--- [4] tick.sh心跳进程父链(看它挂在哪个会话下) ---"
+ps -o pid,ppid,cmd -p 18783 2>/dev/null
+PPID_OF_TICK=$(ps -o ppid= -p 18783 2>/dev/null | tr -d ' '); echo "tick父PID=$PPID_OF_TICK"; ps -o pid,ppid,cmd -p $PPID_OF_TICK 2>/dev/null
+echo "--- [5] wake-lock进程 ---"
+pgrep -af 'wake-lock' || echo "无独立wake-lock进程(正常,它是申请锁后退出)"
 echo "===== 完 ====="
