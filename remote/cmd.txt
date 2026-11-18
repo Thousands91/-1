@@ -1,14 +1,16 @@
-286780
-echo "===== 保活锚会话核查 $(date '+%F %T') ====="
-echo "--- [1] 所有Termux bash会话及其子进程 ---"
-ps -eo pid,ppid,stat,cmd | grep -E 'bash -l|sleep infinity|proot' | grep -v grep | head -20
-echo "--- [2] 是否有sleep infinity保活锚(单独查) ---"
-pgrep -af 'sleep infinity' || echo "!!! 没有sleep infinity保活锚 !!!"
-echo "--- [3] bash -l会话数 ---"
+286790
+echo "===== 保活加固(AI可做部分) $(date '+%F %T') ====="
+WL=/data/data/com.termux/files/usr/bin/termux-wake-lock
+echo "--- [1] 全路径重申唤醒锁(手册坑65:proot内短名会静默失败) ---"
+if [ -x "$WL" ]; then $WL 2>&1 && echo "全路径wake-lock申请成功" || echo "全路径wake-lock失败"; else echo "全路径wake-lock命令不存在"; fi
+echo "--- [2] 建立独立sleep锚(多一层存活保障,非终端会话但无害) ---"
+setsid nohup /bin/sleep infinity </dev/null >/dev/null 2>&1 & echo "锚PID=$!"
+sleep 1
+echo -n "锚存活: "; pgrep -af 'sleep infinity' | head -2
+echo "--- [3] 确认现有活会话数(Termux前台资格) ---"
 echo -n "bash -l会话数: "; ps -eo cmd | grep -c '[b]ash -l'
-echo "--- [4] tick.sh心跳进程父链(看它挂在哪个会话下) ---"
-ps -o pid,ppid,cmd -p 18783 2>/dev/null
-PPID_OF_TICK=$(ps -o ppid= -p 18783 2>/dev/null | tr -d ' '); echo "tick父PID=$PPID_OF_TICK"; ps -o pid,ppid,cmd -p $PPID_OF_TICK 2>/dev/null
-echo "--- [5] wake-lock进程 ---"
-pgrep -af 'wake-lock' || echo "无独立wake-lock进程(正常,它是申请锁后退出)"
+echo "--- [4] 关键服务在岗 ---"
+for p in 'remote_ctl_v6' 'tick.sh' 'main.py' 'music_sign.py'; do echo -n "$p: "; pgrep -f "$p" | wc -l; done
+echo "--- [5] NapCat在岗 ---"
+pgrep -f '/root/Napcat/opt/QQ/qq' | wc -l
 echo "===== 完 ====="
