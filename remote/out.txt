@@ -1,28 +1,32 @@
-<<<task_287090.txt>>>
-===== 任务287090 11-19 00:50:50 =====
+<<<task_287100.txt>>>
+===== 任务287100 11-19 00:52:04 =====
 --- 命令 ---
-echo "===== 修复remote_ctl_v6第168行 287090 ====="
-python3 -c '
-p="/root/remote_ctl_v6.sh"
-s=open(p).read()
-bad="python main.py >> /root/bot/bot/bot.log 2>python main.py > /root/bot.log 2>&11"
-good="python main.py >> /root/bot/bot/bot.log 2>&1"
-if bad in s:
-    s=s.replace(bad,good); open(p,"w").write(s); print("已修复坏行")
-else:
-    print("未找到预期坏行,当前该行:",[l for l in s.splitlines() if "main.py" in l and "看护" not in l])
-'
-echo "[校验]第168行:"; sed -n '168p' /root/remote_ctl_v6.sh
-echo "[语法]:"; bash -n /root/remote_ctl_v6.sh && echo OK
-echo "[全脚本残留坏串检查]:"; grep -n '2>python\|bot.log 2>&11' /root/remote_ctl_v6.sh || echo "无残留"
+echo "===== 最终全量校验 287100 ====="
+echo "[1]全脚本旧路径残留(应为空):"; grep -rn '/root/bot.log' /root/*.sh 2>/dev/null | grep -v 'bot/bot/bot.log' | grep -v '\.bak' || echo "✓无残留"
+echo "[2]真日志路径确认(大脑fd):"; readlink /proc/6446/fd/1 2>/dev/null
+echo "[3]大脑进程(应还是6446):"; pgrep -af 'venv/bin/python main.py' | head -3
+echo "[4]登录态:"; bash /root/logincheck.sh 2>/dev/null | head -4
+echo "[5]日志文件清单:"; ls -l /root/bot.log* /root/bot/bot/bot.log 2>/dev/null
+echo "[6]真日志最后活动:"; tail -2 /root/bot/bot/bot.log 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-===== 修复remote_ctl_v6第168行 287090 =====
-已修复坏行
-[校验]第168行:
-  pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 & cd "$REPO"; }
-[语法]:
-OK
-[全脚本残留坏串检查]:
-无残留
+===== 最终全量校验 287100 =====
+[1]全脚本旧路径残留(应为空):
+/root/remote_ctl.sh:125:  pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & cd "$REPO"; }
+/root/remote_ctl_v5.sh:125:  pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1 & cd "$REPO"; }
+[2]真日志路径确认(大脑fd):
+/root/bot/bot/bot.log
+[3]大脑进程(应还是6446):
+6446 /root/bot/venv/bin/python main.py
+[4]登录态:
+=== 登录状态（权威判定）===
+[在线] 已登录，一切正常
+阶段: ready
+最近错误: 无
+[5]日志文件清单:
+-rw-r--r-- 1 root root    7775 Nov 18 02:09 /root/bot.log.20261118.bak
+-rw-r--r-- 1 root root 2702951 Nov 19 00:51 /root/bot/bot/bot.log
+[6]真日志最后活动:
+11-19 00:51:49 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-19 00:51:49 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
 =====完=====
