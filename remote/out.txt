@@ -1,29 +1,26 @@
-<<<task_286910.txt>>>
-===== 任务286910 11-18 10:08:01 =====
+<<<task_286920.txt>>>
+===== 任务286920 11-18 10:10:03 =====
 --- 命令 ---
-echo "===== 重启大脑加载酷狗咪咕代码 $(date '+%F %T') ====="
-echo -n "[1] 代码md5: "; md5sum /root/bot/bot/plugins/song_request.py | cut -d\  -f1
-echo -n "[2] 酷狗接入标记: "; grep -c "kugou官方卡 OK 歌名" /root/bot/bot/plugins/song_request.py
-echo -n "[3] py_compile: "; cd /root/bot/bot && python3 -m py_compile plugins/song_request.py 2>&1 && echo OK || echo FAIL
-OLD=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
-echo "[4] 旧大脑PID=$OLD"
-[ -n "$OLD" ] && kill $OLD && sleep 2
-cd /root/bot/bot && setsid /root/bot/venv/bin/python main.py >>/root/bot/bot/bot.log 2>&1 < /dev/null &
-sleep 6
-NEWPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
-echo "[5] 新大脑PID=$NEWPID 实例数=$(pgrep -f '/root/bot/venv/bin/python main.py' | wc -l)"
-echo "[6] 启动日志尾部(插件加载/Bot连接):"
-tail -15 /root/bot/bot/bot.log 2>/dev/null | grep -E "song_request|Bot|connected|connected|加载|Loaded|ERROR|Traceback" | tail -8
+echo "===== 大脑终检 $(date '+%F %T') ====="
+echo -n "[1] 大脑实例数: "; pgrep -f '/root/bot/venv/bin/python main.py' | wc -l
+echo -n "[2] PID: "; pgrep -f '/root/bot/venv/bin/python main.py' | head -1
+echo "[3] 启动完成标志(最近30行):"
+tail -30 /root/bot/bot/bot.log 2>/dev/null | grep -E "Bot 3427943187 connected|正在初始化|初始化完成|Application startup|Running on|ERROR|Traceback" | tail -6
+echo "[4] 酷狗标记(用正确串): "; grep -c "kugou官方卡 OK" /root/bot/bot/plugins/song_request.py
+echo "[5] 咪咕标记: "; grep -c '"migu"' /root/bot/bot/plugins/song_request.py
+echo "[6] 代理实例: "; pgrep -f 'python3 /root/music_sign.py' | wc -l
 echo "===== 完 ====="
 --- 输出 ---
-===== 重启大脑加载酷狗咪咕代码 2026-11-18 10:08:01 =====
-[1] 代码md5: 4cd2e1709a592666316a41a74afabcc3
-[2] 酷狗接入标记: 0
-[3] py_compile: OK
-[4] 旧大脑PID=20977
-[5] 新大脑PID=6446 实例数=1
-[6] 启动日志尾部(插件加载/Bot连接):
-11-18 10:05:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1794967500, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
-11-18 10:08:02 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
-11-18 10:08:07 [SUCCESS] nonebot | NoneBot is initializing...
+===== 大脑终检 2026-11-18 10:10:03 =====
+[1] 大脑实例数: 1
+[2] PID: 6446
+[3] 启动完成标志(最近30行):
+11-18 10:08:14 [INFO] uvicorn | Application startup complete.
+11-18 10:08:17 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+[4] 酷狗标记(用正确串): 
+0
+[5] 咪咕标记: 
+7
+[6] 代理实例: 
+1
 ===== 完 =====
