@@ -1,17 +1,14 @@
-286760
-echo "===== 保活防线现状核查 $(date '+%F %T') ====="
-echo "--- [1] 唤醒锁状态 ---"
-termux-wake-lock 2>/dev/null; echo "唤醒锁执行返回=$?"
-ls /sys/power/wake_lock 2>/dev/null && cat /sys/power/wake_lock 2>/dev/null
-echo "--- [2] Termux常驻通知/前台服务 ---"
-pgrep -af 'termux|wake' | head -10
-echo "--- [3] 开机自启脚本内容 ---"
-cat /root/.termux/boot/asar_boot.sh 2>/dev/null | head -40
-echo "--- [4] 看门狗脚本 ---"
-ls -la /root/x10_watchdog.sh ~/x10_watchdog.sh 2>/dev/null
-cat ~/x10_watchdog.sh 2>/dev/null | head -30
-echo "--- [5] 幻影进程限制(需root读) ---"
-cat /proc/sys/kernel/pid_max 2>/dev/null
-echo "--- [6] 现有进程冻结相关 ---"
-cat /sys/fs/cgroup/freezer/*/freezer.state 2>/dev/null | head; ls /sys/fs/cgroup/ 2>/dev/null | grep -i freez
+286770
+echo "===== Termux层保活能力核查 $(date '+%F %T') ====="
+echo "--- [1] termux-api是否安装(Termux层) ---"
+which termux-notification termux-wake-lock 2>/dev/null
+/data/data/com.termux/files/usr/bin/termux-notification --help 2>&1 | head -5 || echo "termux-notification不可用"
+echo "--- [2] termux-api APK是否装(包管理器) ---"
+pm list packages 2>/dev/null | grep -i termux || /data/data/com.termux/files/usr/bin/pm list packages 2>/dev/null | grep -i termux || echo "pm不可用(在proot内)"
+echo "--- [3] 唤醒锁命令版本/参数 ---"
+/data/data/com.termux/files/usr/bin/termux-wake-lock --help 2>&1 | head -8 || echo "无--help"
+echo "--- [4] 当前持有的唤醒锁 ---"
+cat /sys/power/wake_lock 2>/dev/null || echo "proot内读不到宿主唤醒锁"
+echo "--- [5] Termux boot目录(Termux层真实路径) ---"
+ls -la /data/data/com.termux/files/home/.termux/boot/ 2>/dev/null | head -15 || echo "boot目录不存在"
 echo "===== 完 ====="
