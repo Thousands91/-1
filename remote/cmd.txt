@@ -1,15 +1,12 @@
-286690
-echo "===== NapCat配置全查 $(date '+%F %T') ====="
-echo "--- [1] NapCat目录结构(两层) ---"
-ls -la /root/Napcat/ 2>/dev/null | head -20
-echo "--- config目录 ---"
-ls -laR /root/Napcat/config/ 2>/dev/null | head -50
-echo "--- [2] 全配置grep musicSign(不用find,直接grep -r限定目录) ---"
-grep -rn "musicSign\|signUrl\|10800" /root/Napcat/config/ /root/NapCat/config/ 2>/dev/null | head -20
-echo "--- [3] onebot配置原文 ---"
-for f in /root/Napcat/config/onebot11.json /root/Napcat/config/onebot/*.json /root/Napcat/config/*/onebot*.json; do
-  [ -f "$f" ] && echo ">> $f" && cat "$f" 2>/dev/null | head -40
-done
-echo "--- [4] 代理日志最后10行(看凌晨出卡情况) ---"
-for f in /root/music_sign.log /root/music_sign*.log; do [ -f "$f" ] && echo ">> $f" && tail -10 "$f"; done
+286700
+echo "===== 定位NapCat签名配置 $(date '+%F %T') ====="
+echo "--- [1] 全/root搜musicSignUrl(限json/conf,排除node_modules和db) ---"
+grep -rln "musicSignUrl" /root --include="*.json" --include="*.conf" --include="*.yaml" --include="*.yml" 2>/dev/null | grep -v node_modules | head -20
+echo "--- [2] NapCat真实配置目录候选 ---"
+ls -la /root/.config/QQ/ 2>/dev/null | head; ls -la /root/.config/QQ/napcat/ 2>/dev/null | head
+ls -la /root/Napcat/config/ 2>/dev/null | head
+echo "--- [3] 从NapCat进程/cmdline找配置路径线索 ---"
+for p in 21596 21622; do echo "pid=$p"; tr '\0' ' ' < /proc/$p/cmdline 2>/dev/null; echo; done
+echo "--- [4] grep 10800在/root的配置里 ---"
+grep -rln "10800" /root --include="*.json" 2>/dev/null | grep -v node_modules | head -10
 echo "===== 完 ====="
