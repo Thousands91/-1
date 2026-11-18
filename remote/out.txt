@@ -1,45 +1,35 @@
-<<<task_286540.txt>>>
-===== 任务286540 11-18 03:07:10 =====
+<<<task_286570.txt>>>
+===== 任务286570 11-18 08:45:39 =====
 --- 命令 ---
-echo "===== 最终三问核验 $(date '+%F %T') ====="
-echo "--- [1] 点歌入口数(应=1个on_command点歌) ---"
-grep -rn "on_command(\"点歌\"\|on_command('点歌'" /root/bot/bot/plugins/ 2>/dev/null | wc -l
-grep -rn "on_command(\"点歌\"\|on_command('点歌'" /root/bot/bot/plugins/ 2>/dev/null
-echo "--- [2] VIP特判残留(应=0) ---"
-grep -c "vip_original\|free_original" /root/bot/bot/plugins/song_request.py 2>/dev/null
-echo "--- [3] song_cmd里所有finish(看有没有跳过列表直接发卡的) ---"
-grep -n "song_cmd.finish\|await song_cmd.send" /root/bot/bot/plugins/song_request.py 2>/dev/null | head -20
-echo "--- [4] 发列表的行(确认存在) ---"
-grep -n "候选\|_PENDING\[\|回.*序号\|PICK_N" /root/bot/bot/plugins/song_request.py 2>/dev/null | head -10
-echo "--- [5] 设备插件md5 ---"
+echo "===== 唤醒诊断 $(date '+%F %T') ====="
+echo "--- [1] 关键进程 ---"
+ps aux | grep -E '[m]ain.py|[n]apcat|[r]emote_ctl_v6|[t]ick.sh' | awk '{print $2, $11, $12, $13}' | head -15
+echo "--- [2] 四账心跳最新行 ---"
+for f in tick.log login_watch.log ipwatch.log health_probe.log offline_watch.log netmon.log; do echo -n "$f: "; tail -1 /root/$f 2>/dev/null || echo "无日志"; done
+echo "--- [3] 电量 ---"
+cat /sys/class/power_supply/battery/capacity 2>/dev/null || echo "读不到"
+echo "--- [4] 酷我官方卡代码是否在场 ---"
+grep -c 'kuwo官方卡' /root/bot/bot/plugins/song_request.py 2>/dev/null
+echo "--- [5] 当前源码md5 ---"
 md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null
 echo "===== 完 ====="
 --- 输出 ---
-===== 最终三问核验 2026-11-18 03:07:10 =====
---- [1] 点歌入口数(应=1个on_command点歌) ---
-2
-/root/bot/bot/plugins/song_request.py:42:song_cmd = on_command("点歌", aliases={"听歌", "来首歌"}, rule=to_me(), priority=20, block=True)
-/root/bot/bot/plugins/song_request.py.bak.trace:39:song_cmd = on_command("点歌", aliases={"听歌", "来首歌"}, rule=to_me(), priority=20, block=True)
---- [2] VIP特判残留(应=0) ---
+===== 唤醒诊断 2026-11-18 08:45:39 =====
+--- [1] 关键进程 ---
+17992 bash /root/remote_ctl_v6.sh 
+18783 bash /root/tick.sh 
+30989 /root/bot/venv/bin/python main.py 
+--- [2] 四账心跳最新行 ---
+tick.log: 2026-11-18 08:45:33
+login_watch.log: 无日志
+ipwatch.log: 无日志
+health_probe.log: 无日志
+offline_watch.log: 无日志
+netmon.log: 11-18 08:45:32 ping=255ms batt=
+--- [3] 电量 ---
+读不到
+--- [4] 酷我官方卡代码是否在场 ---
 0
---- [3] song_cmd里所有finish(看有没有跳过列表直接发卡的) ---
-96:            await song_cmd.finish(
-101:        await song_cmd.finish("想听什么？说个歌名、歌手名都行；后面加个'文件'就发文件版（能后台听）。")
-103:    await song_cmd.send(f"翻柜子找「{kw}」，稍等一下……")
-122:        await song_cmd.finish(f"「{kw}」这几个字，我在曲子和歌手里都翻不着。换个说法试试？")
-139:    await song_cmd.finish(
-511:        await song_cmd.send(MessageSegment.music_custom(
---- [4] 发列表的行(确认存在) ---
-58:# 搜索回来的候选，最多往下试几个
-111:    # 有没有带歌手名，一律先出候选列表。VIP 歌放行到列表里（下面 keep_all），
-117:    # 坑113续（2026-11-15 用户拍板）：候选**不过滤** VIP/现场/伴奏版——
-127:    # 坑111：多选点歌——不再默认点第一首，改成发候选列表让用户回序号挑。
-129:    picks = songs[:PICK_N]
-138:    _PENDING[event.get_session_id()] = (time.time() + PICK_TIMEOUT, picks, force_file, kw)
-140:        f"「{kw}」翻出这几首，回复序号选哪首（{PICK_TIMEOUT}秒内有效）：\n"
-311:# 待选表：session_id → (过期时间戳, 候选列表)
-314:PICK_N = 6
-358:            _PENDING[sid] = (expiry, picks, force_file, kw)
---- [5] 设备插件md5 ---
+--- [5] 当前源码md5 ---
 03bcc7db202ecd6e3a7b056b7f24e774  /root/bot/bot/plugins/song_request.py
 ===== 完 =====
