@@ -1,21 +1,41 @@
-<<<task_287070.txt>>>
-===== 任务287070 11-19 00:48:28 =====
+<<<task_287080.txt>>>
+===== 任务287080 11-19 00:50:01 =====
 --- 命令 ---
-echo "===== azar_guard LOG用法 287070 ====="
-echo "[1]azar_guard.sh里所有\$LOG引用:"; grep -n '\$LOG' /root/azar_guard.sh
-echo "[2]bot.log当前最后5行(看是守护还是大脑写的):"; tail -5 /root/bot.log 2>/dev/null
-echo "[3]start_all.sh里大脑启动:"; grep -n 'main.py' /root/start_all.sh 2>/dev/null
+echo "===== 统一日志路径修复 287080 ====="
+REAL=/root/bot/bot/bot.log
+# 1. remote_ctl_v6.sh 看护拉起大脑
+sed -i 's#python main.py > /root/bot.log 2>&1#python main.py >> /root/bot/bot/bot.log 2>&1#' /root/remote_ctl_v6.sh
+# 2. restart_bot.sh (stdout + 3处tail)
+sed -i 's#/root/bot.log#/root/bot/bot/bot.log#g' /root/restart_bot.sh
+# 3. selfcheck.sh tail
+sed -i 's#tail -3 /root/bot.log#tail -3 /root/bot/bot/bot.log#' /root/selfcheck.sh
+# 4. azar_guard.sh LOG变量(修隐藏bug:读旧日志判断掉线)
+sed -i 's#^LOG=/root/bot.log$#LOG=/root/bot/bot/bot.log#' /root/azar_guard.sh
+# 5. start_all.sh 大脑启动
+sed -i 's#python main.py > /root/bot.log 2>&1#python main.py >> /root/bot/bot/bot.log 2>&1#' /root/start_all.sh
+# 6. 旧日志归档(仅在真日志存在时)
+[ -f "$REAL" ] && [ -f /root/bot.log ] && mv /root/bot.log /root/bot.log.20261118.bak && echo "[6]旧日志已归档"
+echo "[校验1]残留旧路径(应为空):"; grep -rn '/root/bot.log' /root/remote_ctl_v6.sh /root/restart_bot.sh /root/selfcheck.sh /root/azar_guard.sh /root/start_all.sh 2>/dev/null | grep -v 'bot/bot/bot.log'
+echo "[校验2]remote_ctl_v6 L168:"; sed -n '168p' /root/remote_ctl_v6.sh
+echo "[校验3]azar_guard LOG:"; grep -n '^LOG=' /root/azar_guard.sh
+echo "[校验4]日志文件:"; ls -l /root/bot.log* /root/bot/bot/bot.log 2>/dev/null
+echo "[校验5]语法:"; for s in remote_ctl_v6 restart_bot selfcheck azar_guard start_all; do bash -n /root/$s.sh 2>&1 && echo "$s OK" || echo "$s 语法错"; done
 echo "=====完====="
 --- 输出 ---
-===== azar_guard LOG用法 287070 =====
-[1]azar_guard.sh里所有$LOG引用:
-37:  LAST=$(grep "WebSocket for Bot 3427943187" "$LOG" 2>/dev/null | tail -1)
-[2]bot.log当前最后5行(看是守护还是大脑写的):
-11-18 02:09:01 [INFO] uvicorn | Shutting down
-11-18 02:09:01 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
-11-18 02:09:01 [INFO] uvicorn | Waiting for application shutdown.
-11-18 02:09:01 [INFO] uvicorn | Application shutdown complete.
-11-18 02:09:01 [INFO] uvicorn | Finished server process [18624]
-[3]start_all.sh里大脑启动:
-3:nohup proot-distro login ubuntu -- bash -c 'cd /root && nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & nohup bash /root/azar_guard.sh >> /root/azar_guard.log 2>&1 & cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 & cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py > /root/bot.log 2>&1' > /dev/null 2>&1 &
+===== 统一日志路径修复 287080 =====
+[6]旧日志已归档
+[校验1]残留旧路径(应为空):
+[校验2]remote_ctl_v6 L168:
+  pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>python main.py > /root/bot.log 2>&11 & cd "$REPO"; }
+[校验3]azar_guard LOG:
+11:LOG=/root/bot/bot/bot.log
+[校验4]日志文件:
+-rw-r--r-- 1 root root    7775 Nov 18 02:09 /root/bot.log.20261118.bak
+-rw-r--r-- 1 root root 2695907 Nov 19 00:49 /root/bot/bot/bot.log
+[校验5]语法:
+remote_ctl_v6 OK
+restart_bot OK
+selfcheck OK
+azar_guard OK
+start_all OK
 =====完=====
