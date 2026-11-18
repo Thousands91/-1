@@ -1,14 +1,13 @@
-286600
-echo "===== 积压消化状态 $(date '+%F %T') ====="
-echo "--- [1] 大脑日志最后8行(看处理到几点) ---"
-tail -8 /root/bot/bot/bot.log 2>/dev/null
-echo "--- [2] 最近30行里正常回复vs积压跳过 ---"
-echo -n "积压跳过: "; tail -30 /root/bot/bot/bot.log 2>/dev/null | grep -c "积压跳过"
-echo -n "正常ai回复(ai_chat发送/回复): "; tail -30 /root/bot/bot/bot.log 2>/dev/null | grep -cE "发送|send|回复"
-echo "--- [3] NapCat最后5行(看是否还在涌入旧消息) ---"
-tail -5 /root/napcat.log 2>/dev/null
-echo "--- [4] 大脑日志最后修改时间 ---"
-stat -c '%y' /root/bot/bot/bot.log 2>/dev/null
-echo "--- [5] NapCat日志最后修改时间 ---"
-stat -c '%y' /root/napcat.log 2>/dev/null
+286610
+echo "===== 大脑活性核验 $(date '+%F %T') ====="
+echo "--- [1] main.py进程状态(STAT/CPU/运行时长) ---"
+ps -o pid,stat,pcpu,pmem,etime,time,wchan:20,cmd -p 30989 2>/dev/null
+echo "--- [2] 所有python进程 ---"
+ps aux | grep '[m]ain.py' 
+echo "--- [3] 大脑日志行数变化(间隔5秒取样) ---"
+A=$(wc -l < /root/bot/bot/bot.log 2>/dev/null); sleep 5; B=$(wc -l < /root/bot/bot/bot.log 2>/dev/null); echo "5秒前=$A 现在=$B 新增=$((B-A))"
+echo "--- [4] 系统负载与内存 ---"
+uptime; free -m | head -2
+echo "--- [5] 反向WS是否还连着(napcat日志grep WS) ---"
+grep -iE 'websocket|ws.*connect|反向|OneBot|反向WS' /root/napcat.log 2>/dev/null | tail -8
 echo "===== 完 ====="
