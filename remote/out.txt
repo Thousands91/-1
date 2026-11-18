@@ -1,25 +1,45 @@
-<<<task_286660.txt>>>
-===== 任务286660 11-18 08:54:49 =====
+<<<task_286670.txt>>>
+===== 任务286670 11-18 09:00:38 =====
 --- 命令 ---
-echo "===== 当前在线状态确认 $(date '+%F %T') ====="
-echo "--- 最后出站发送 ---"; grep '发送 ->' /root/napcat.log 2>/dev/null | tail -3
-echo "--- 最后入站接收 ---"; grep '接收 <-' /root/napcat.log 2>/dev/null | tail -3
-echo "--- 大脑最后回复日志 ---"; grep 'ai_chat | \[核对' /root/bot/bot/bot.log 2>/dev/null | tail -2
-echo "--- 四账心跳 ---"; tail -1 /root/tick.log 2>/dev/null
+echo "===== 冻结窗口四账核实 $(date '+%F %T') ====="
+echo "--- [1] tick.log首/尾/总行数 ---"
+head -1 /root/tick.log 2>/dev/null; tail -1 /root/tick.log 2>/dev/null; wc -l < /root/tick.log 2>/dev/null
+echo "--- [2] tick.log 凌晨到早上断档(每段最后2条) ---"
+echo "00点段:"; grep '11-18 00:' /root/tick.log 2>/dev/null | tail -2
+echo "01点段:"; grep '11-18 01:' /root/tick.log 2>/dev/null | tail -2
+echo "07点段:"; grep '11-18 07:' /root/tick.log 2>/dev/null | tail -2
+echo "08点段前5条:"; grep '11-18 08:' /root/tick.log 2>/dev/null | head -5
+echo "--- [3] 关键进程PID(证明没重启:应为旧PID) ---"
+ps -o pid,etime,cmd -p 30989,17992,18783,21596,21622 2>/dev/null
+echo "--- [4] proot的uptime(参考,不可作为重启依据) ---"
+cat /proc/uptime 2>/dev/null; uptime
 echo "===== 完 ====="
 --- 输出 ---
-===== 当前在线状态确认 2026-11-18 08:54:49 =====
---- 最后出站发送 ---
-11-18 02:19:38 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [卡片消息]
-11-18 02:19:40 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 这首是「齐豫」的原曲，两边平台都要 VIP，柜上拿不来整首的音频——点上面这张卡片去网易云听（有会员就能听整首）。
-11-18 08:51:13 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 在的，先生。
---- 最后入站接收 ---
-11-18 08:54:16 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [克莱恩·莫雷蒂(2045344206)] 然后有关那些那些的
-11-18 08:54:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [克莱恩·莫雷蒂(2045344206)] 果然是年轻老师
-11-18 08:54:38 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [克莱恩·莫雷蒂(2045344206)] 她自己憋不住笑了
---- 大脑最后回复日志 ---
-11-17 12:40:40 [INFO] ai_chat | [核对·调试] ask='？' lead=False contra=False agree=False dodge=True ans='书上没记，我不敢妄言。'
-11-18 08:51:13 [INFO] ai_chat | [核对·调试] ask='在吗？' lead=False contra=False agree=False dodge=False ans='在的，先生。'
---- 四账心跳 ---
-2026-11-18 08:54:33
+===== 冻结窗口四账核实 2026-11-18 09:00:38 =====
+--- [1] tick.log首/尾/总行数 ---
+2026-11-13 02:16:52
+2026-11-18 09:00:34
+5934
+--- [2] tick.log 凌晨到早上断档(每段最后2条) ---
+00点段:
+01点段:
+2026-11-18 01:58:21
+2026-11-18 01:59:21
+07点段:
+08点段前5条:
+2026-11-18 08:45:33
+2026-11-18 08:46:33
+2026-11-18 08:47:33
+2026-11-18 08:48:33
+2026-11-18 08:49:33
+--- [3] 关键进程PID(证明没重启:应为旧PID) ---
+  PID     ELAPSED CMD
+17992       00:00 bash /root/remote_ctl_v6.sh
+18783       00:00 bash /root/tick.sh
+21596       00:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+21622       00:00 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+30989       00:00 /root/bot/venv/bin/python main.py
+--- [4] proot的uptime(参考,不可作为重启依据) ---
+124.08 932.76
+ 09:00:38 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
 ===== 完 =====
