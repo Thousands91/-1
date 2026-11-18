@@ -1,53 +1,49 @@
-<<<task_287140.txt>>>
-===== 任务287140 11-19 00:58:08 =====
+<<<task_287150.txt>>>
+===== 任务287150 11-19 00:59:11 =====
 --- 命令 ---
-echo "===== 复现签名请求 287140 ====="
+echo "===== 验证修复思路 287150 ====="
 python3 -c '
-import json,urllib.request
-def post(payload):
-    req=urllib.request.Request("http://127.0.0.1:10800/",data=json.dumps(payload).encode(),headers={"Content-Type":"application/json"})
-    return urllib.request.urlopen(req,timeout=20).read().decode()
-# 场景A:只传id不传title(模拟NapCat官方卡契约)
-a=post({"type":"163","id":"33737547"})
-print("[A只传id]返回前300:",a[:300])
+import json,urllib.request,time,sys
+sys.path.insert(0,"/root")
+# 1. 测netease_meta按id查歌名
 try:
-    card=json.loads(a)
-    m=card.get("meta",{}).get("music",{})
-    print("  卡内 title=",repr(m.get("title"))," singer=",repr(m.get("desc"))," tag=",m.get("tag"))
-except Exception as e: print("  解析失败",e)
-# 场景B:带title
-b=post({"type":"163","id":"33737547","title":"夜蝶","singer":"李艺彤"})
-print("[B带title]返回前300:",b[:300])
-try:
-    card=json.loads(b); m=card.get("meta",{}).get("music",{})
-    print("  卡内 title=",repr(m.get("title"))," singer=",repr(m.get("desc"))," tag=",m.get("tag"))
-except Exception as e: print("  解析失败",e)
-' 2>&1 | head -40
-echo "[日志尾]:"; tail -6 /root/music_sign_v4.log 2>/dev/null
+    import music_sign as ms
+    print("[netease_meta 33737547]",ms.netease_meta("33737547"))
+except Exception as e: print("[netease_meta失败]",e)
+# 2. 带重试测带title的163卡
+def post(payload,tries=3):
+    for i in range(tries):
+        try:
+            req=urllib.request.Request("http://127.0.0.1:10800/",data=json.dumps(payload).encode(),headers={"Content-Type":"application/json"})
+            return urllib.request.urlopen(req,timeout=20).read().decode()
+        except Exception as e:
+            print("  第%d次失败:%s"%(i+1,str(e)[:60])); time.sleep(4)
+    return None
+r=post({"type":"163","id":"33737547","title":"夜蝶","singer":"李艺彤"})
+if r:
+    try:
+        c=json.loads(r); m=c.get("meta",{}).get("music",{})
+        print("[带title的163卡] title=",repr(m.get("title")),"desc=",repr(m.get("desc")),"tag=",m.get("tag"))
+    except Exception as e: print("[解析失败]",r[:200],e)
+else: print("[带title卡-全失败]")
+' 2>&1 | head -30
+echo "[日志尾]:"; tail -8 /root/music_sign_v4.log 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-===== 复现签名请求 287140 =====
-Traceback (most recent call last):
-  File "<string>", line 7, in <module>
-  File "<string>", line 5, in post
-  File "/usr/lib/python3.10/urllib/request.py", line 216, in urlopen
-    return opener.open(url, data, timeout)
-  File "/usr/lib/python3.10/urllib/request.py", line 525, in open
-    response = meth(req, response)
-  File "/usr/lib/python3.10/urllib/request.py", line 634, in http_response
-    response = self.parent.error(
-  File "/usr/lib/python3.10/urllib/request.py", line 563, in error
-    return self._call_chain(*args)
-  File "/usr/lib/python3.10/urllib/request.py", line 496, in _call_chain
-    result = func(*args)
-  File "/usr/lib/python3.10/urllib/request.py", line 643, in http_error_default
-    raise HTTPError(req.full_url, code, msg, hdrs, fp)
-urllib.error.HTTPError: HTTP Error 400: Bad Request
+===== 验证修复思路 287150 =====
+11-19 00:59:12 music_sign v4 启动 127.0.0.1:10800 (OIAPI全平台+旧源兜底)
+[netease_meta失败] [Errno 98] Address already in use
+  第1次失败:HTTP Error 400: Bad Request
+  第2次失败:HTTP Error 400: Bad Request
+  第3次失败:HTTP Error 400: Bad Request
+[带title卡-全失败]
 [日志尾]:
-11-18 22:37:06 OIAPI出真卡 format=custom tag=QQ音乐 (691字节)
-11-18 22:37:06 处理完毕 type=custom -> 739 bytes 真卡
-11-19 00:49:22 OIAPI出真卡 format=163 tag=网易云音乐 (700字节)
-11-19 00:49:22 处理完毕 type=163 -> 726 bytes 真卡
 11-19 00:58:09 OIAPI失败 format=163: HTTPError HTTP Error 503: Service Unavailable
 11-19 00:58:09 处理完毕 type=163 -> 40 bytes (全灭,走兜底)
+11-19 00:59:12 OIAPI失败 format=163: HTTPError HTTP Error 503: Service Unavailable
+11-19 00:59:12 处理完毕 type=163 -> 40 bytes (全灭,走兜底)
+11-19 00:59:16 OIAPI失败 format=163: HTTPError HTTP Error 503: Service Unavailable
+11-19 00:59:16 处理完毕 type=163 -> 40 bytes (全灭,走兜底)
+11-19 00:59:21 OIAPI失败 format=163: HTTPError HTTP Error 503: Service Unavailable
+11-19 00:59:21 处理完毕 type=163 -> 40 bytes (全灭,走兜底)
 =====完=====
