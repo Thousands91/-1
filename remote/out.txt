@@ -1,35 +1,25 @@
-<<<task_286790.txt>>>
-===== 任务286790 11-18 09:22:44 =====
+<<<task_286800.txt>>>
+===== 任务286800 11-18 09:23:48 =====
 --- 命令 ---
-echo "===== 保活加固(AI可做部分) $(date '+%F %T') ====="
-WL=/data/data/com.termux/files/usr/bin/termux-wake-lock
-echo "--- [1] 全路径重申唤醒锁(手册坑65:proot内短名会静默失败) ---"
-if [ -x "$WL" ]; then $WL 2>&1 && echo "全路径wake-lock申请成功" || echo "全路径wake-lock失败"; else echo "全路径wake-lock命令不存在"; fi
-echo "--- [2] 建立独立sleep锚(多一层存活保障,非终端会话但无害) ---"
-setsid nohup /bin/sleep infinity </dev/null >/dev/null 2>&1 & echo "锚PID=$!"
-sleep 1
-echo -n "锚存活: "; pgrep -af 'sleep infinity' | head -2
-echo "--- [3] 确认现有活会话数(Termux前台资格) ---"
-echo -n "bash -l会话数: "; ps -eo cmd | grep -c '[b]ash -l'
-echo "--- [4] 关键服务在岗 ---"
-for p in 'remote_ctl_v6' 'tick.sh' 'main.py' 'music_sign.py'; do echo -n "$p: "; pgrep -f "$p" | wc -l; done
-echo "--- [5] NapCat在岗 ---"
-pgrep -f '/root/Napcat/opt/QQ/qq' | wc -l
+echo "===== 交付前终检 $(date '+%F %T') ====="
+echo -n "大脑: "; pgrep -f '/root/bot/venv/bin/python main.py' | wc -l
+echo -n "签名代理: "; pgrep -f '/root/music_sign.py' | wc -l
+echo -n "代码md5: "; md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null | cut -d\  -f1
+echo -n "代理md5: "; md5sum /root/music_sign.py 2>/dev/null | cut -d\  -f1
+echo -n "酷我签名实测: "; curl -s --max-time 15 -X POST -H 'Content-Type: application/json' -d '{"type":"kuwo","id":"128405"}' http://127.0.0.1:10800/ 2>/dev/null | python3 -c "
+import sys,json
+try:
+  c=json.loads(sys.stdin.read()); print(c['meta']['music'].get('tag'), 'token='+str(bool(c.get('config',{}).get('token'))))
+except: print('失败')
+"
+echo -n "最后出站: "; grep '发送 ->' /root/napcat.log 2>/dev/null | tail -1
 echo "===== 完 ====="
 --- 输出 ---
-===== 保活加固(AI可做部分) 2026-11-18 09:22:44 =====
---- [1] 全路径重申唤醒锁(手册坑65:proot内短名会静默失败) ---
-全路径wake-lock申请成功
---- [2] 建立独立sleep锚(多一层存活保障,非终端会话但无害) ---
-锚PID=22952
-锚存活: 22952 /bin/sleep infinity
---- [3] 确认现有活会话数(Termux前台资格) ---
-bash -l会话数: 4
---- [4] 关键服务在岗 ---
-remote_ctl_v6: 1
-tick.sh: 1
-main.py: 1
-music_sign.py: 1
---- [5] NapCat在岗 ---
-5
+===== 交付前终检 2026-11-18 09:23:48 =====
+大脑: 1
+签名代理: 1
+代码md5: 9238e82a35299ea885a1ec9ada1a8813
+代理md5: 9bbfdb07da02be1485db6c125523379d
+酷我签名实测: 酷我音乐 token=True
+最后出站: 11-18 09:04:50 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [相亲相爱一家人(590454333)] [阿萨尔(3427943187)] [回复消息 [爱上齐豫是我的福报(1561950850)] @阿萨尔 (3427943187)   @克莱恩·莫雷蒂 (2045344206)  ] @克莱恩·莫雷蒂 (2045344206)  ...
 ===== 完 =====
