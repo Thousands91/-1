@@ -1,35 +1,32 @@
-<<<task_286750.txt>>>
-===== 任务286750 11-18 09:15:02 =====
+<<<task_286760.txt>>>
+===== 任务286760 11-18 09:16:56 =====
 --- 命令 ---
-echo "===== 重启大脑加载酷我代码 $(date '+%F %T') ====="
-echo "--- [1] 停旧大脑 ---"
-OLDPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | tr '\n' ' ')
-echo "旧PID: $OLDPID"
-pkill -f '/root/bot/venv/bin/python main.py' 2>/dev/null; sleep 3
-pgrep -f '/root/bot/venv/bin/python main.py' | wc -l | xargs echo "停后剩余:"
-echo "--- [2] setsid拉起新大脑 ---"
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 &
-sleep 12
-echo "--- [3] 进程确认 ---"
-pgrep -af '/root/bot/venv/bin/python main.py' | head -3
-echo -n "实例数: "; pgrep -f '/root/bot/venv/bin/python main.py' | wc -l
-echo "--- [4] 启动日志确认(song_request加载+Bot连接) ---"
-tail -60 /root/bot/bot/bot.log 2>/dev/null | grep -iE 'song_request|Bot .*connected|加载|Loaded|WS|error|Error' | tail -12
+echo "===== 保活防线现状核查 $(date '+%F %T') ====="
+echo "--- [1] 唤醒锁状态 ---"
+termux-wake-lock 2>/dev/null; echo "唤醒锁执行返回=$?"
+ls /sys/power/wake_lock 2>/dev/null && cat /sys/power/wake_lock 2>/dev/null
+echo "--- [2] Termux常驻通知/前台服务 ---"
+pgrep -af 'termux|wake' | head -10
+echo "--- [3] 开机自启脚本内容 ---"
+cat /root/.termux/boot/asar_boot.sh 2>/dev/null | head -40
+echo "--- [4] 看门狗脚本 ---"
+ls -la /root/x10_watchdog.sh ~/x10_watchdog.sh 2>/dev/null
+cat ~/x10_watchdog.sh 2>/dev/null | head -30
+echo "--- [5] 幻影进程限制(需root读) ---"
+cat /proc/sys/kernel/pid_max 2>/dev/null
+echo "--- [6] 现有进程冻结相关 ---"
+cat /sys/fs/cgroup/freezer/*/freezer.state 2>/dev/null | head; ls /sys/fs/cgroup/ 2>/dev/null | grep -i freez
 echo "===== 完 ====="
 --- 输出 ---
-===== 重启大脑加载酷我代码 2026-11-18 09:15:03 =====
---- [1] 停旧大脑 ---
-旧PID: 30989 
-停后剩余: 0
---- [2] setsid拉起新大脑 ---
---- [3] 进程确认 ---
-20977 /root/bot/venv/bin/python main.py
-实例数: 1
---- [4] 启动日志确认(song_request加载+Bot连接) ---
-11-18 09:15:15 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-11-18 09:15:15 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-18 09:15:15 [SUCCESS] nonebot | Loaded adapters: OneBot V11
-11-18 09:15:16 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
-11-18 09:15:18 [INFO] uvicorn | 127.0.0.1:45308 - "WebSocket /onebot/v11/ws" [accepted]
-11-18 09:15:18 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+===== 保活防线现状核查 2026-11-18 09:16:56 =====
+--- [1] 唤醒锁状态 ---
+唤醒锁执行返回=0
+--- [2] Termux常驻通知/前台服务 ---
+13276 com.termux                                                                  
+13465 /data/data/com.termux/files/usr/bin/bash -l
+17146 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/storage --bind=/storage/emulated/0:/sdcard --bind=/storage/emulated/0:/mnt/sdcard --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/system/product --bind=/system --bind=/vendor --bind=/data/data/com.termux/files/usr /bin/bash -l
+--- [3] 开机自启脚本内容 ---
+--- [4] 看门狗脚本 ---
+--- [5] 幻影进程限制(需root读) ---
+--- [6] 现有进程冻结相关 ---
 ===== 完 =====
