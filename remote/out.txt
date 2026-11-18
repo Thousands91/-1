@@ -1,68 +1,54 @@
-<<<task_286680.txt>>>
-===== 任务286680 11-18 09:03:58 =====
+<<<task_286690.txt>>>
+===== 任务286690 11-18 09:05:32 =====
 --- 命令 ---
-echo "===== NapCat签名配置精查 $(date '+%F %T') ====="
-echo "--- [1] 签名代理进程(端口10800) ---"
-ps aux | grep -iE 'music_sign|10800' | grep -v grep | head -5
-echo "--- [2] 代理文件内容前40行(看上游) ---"
-head -40 /root/music_sign.py 2>/dev/null
-echo "--- [3] NapCat配置里musicSignUrl(限定常见路径,用grep不用find) ---"
-for f in /root/Napcat/config/*.json /root/Napcat/config/**/*.json /root/NapCat/config/*.json /root/napcat/config/*.json; do
-  [ -f "$f" ] && grep -H "musicSignUrl" "$f" 2>/dev/null
+echo "===== NapCat配置全查 $(date '+%F %T') ====="
+echo "--- [1] NapCat目录结构(两层) ---"
+ls -la /root/Napcat/ 2>/dev/null | head -20
+echo "--- config目录 ---"
+ls -laR /root/Napcat/config/ 2>/dev/null | head -50
+echo "--- [2] 全配置grep musicSign(不用find,直接grep -r限定目录) ---"
+grep -rn "musicSign\|signUrl\|10800" /root/Napcat/config/ /root/NapCat/config/ 2>/dev/null | head -20
+echo "--- [3] onebot配置原文 ---"
+for f in /root/Napcat/config/onebot11.json /root/Napcat/config/onebot/*.json /root/Napcat/config/*/onebot*.json; do
+  [ -f "$f" ] && echo ">> $f" && cat "$f" 2>/dev/null | head -40
 done
-echo "--- [4] 代理监听10800验证 ---"
-curl -s --max-time 5 -X POST -H 'Content-Type: application/json' -d '{"type":"kuwo","id":"128405"}' http://127.0.0.1:10800/ 2>/dev/null | head -c 200
-echo ""
-echo "--- [5] 当前代码md5 ---"
-md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null
+echo "--- [4] 代理日志最后10行(看凌晨出卡情况) ---"
+for f in /root/music_sign.log /root/music_sign*.log; do [ -f "$f" ] && echo ">> $f" && tail -10 "$f"; done
 echo "===== 完 ====="
 --- 输出 ---
-===== NapCat签名配置精查 2026-11-18 09:03:58 =====
---- [1] 签名代理进程(端口10800) ---
---- [2] 代理文件内容前40行(看上游) ---
-#!/usr/bin/env python3
-"""自托管音乐签名代理 v3（坑107终局，2026-11-14）。
-
-真相（18:35 定案）：正版音乐卡必须带腾讯签发的 config.token，
-token 只能由挂着的真 QQ 客户端从腾讯侧取得——本地凭空拼的 JSON
-（v1/v2）客户端一律显示"发送者版本过低"。公益签名服务全靠各自
-的真客户端活着，目前全网已知服务半死/僵尸。
-
-v3 策略：代理 + 验真 + 冷却。
-- 收到请求 → 从网易云补齐歌讯 → 以 custom 契约轮询上游真签名服务
-- 谁吐出带 config.token 的卡就转发谁（验真，绝不让占位符卡出门）
-- 全灭 → 400（NapCat 发卡失败，插件走文字卡兜底，体验不断）
-- 某上游挂掉记冷却 5 分钟，期间跳过，不拖累延迟
-"""
-import json
-import random
-import threading
-import time
-import urllib.request
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-
-PORT = 10800
-UIN = 3427943187
-UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-      "Content-Type": "application/json"}
-UPSTREAMS = [
-    "http://106.55.0.102:10087/",
-    "https://ss.xingzhige.com/music_card/card",
-    "https://qqbotark.569879.xyz/",
-    "https://llob.linyuchen.net/sign/music",
-]
-_cooldown = {}  # base -> 恢复时间戳
-_lock = threading.Lock()
-_cache = {}
-
-
-def _log(msg):
-    with _lock:
-        print(time.strftime("%m-%d %H:%M:%S ") + msg, flush=True)
-
---- [3] NapCat配置里musicSignUrl(限定常见路径,用grep不用find) ---
---- [4] 代理监听10800验证 ---
-
---- [5] 当前代码md5 ---
-03bcc7db202ecd6e3a7b056b7f24e774  /root/bot/bot/plugins/song_request.py
+===== NapCat配置全查 2026-11-18 09:05:32 =====
+--- [1] NapCat目录结构(两层) ---
+total 0
+drwxr-xr-x  3 root root   3488 Nov 12 00:23 .
+drwx------ 14 root root   3488 Nov 18 09:05 ..
+-rw-r--r--  1 root root   4096 Nov 12 00:23 guild1.db
+-rw-r--r--  1 root root  32768 Nov 18 02:01 guild1.db-shm
+-rw-r--r--  1 root root 436752 Nov 13 02:23 guild1.db-wal
+drwxr-xr-x  3 root root   3488 Nov 11 23:49 opt
+--- config目录 ---
+--- [2] 全配置grep musicSign(不用find,直接grep -r限定目录) ---
+--- [3] onebot配置原文 ---
+--- [4] 代理日志最后10行(看凌晨出卡情况) ---
+>> /root/music_sign.log
+11-17 03:58:01 处理完毕 type=163 -> 831 bytes 真卡
+11-17 04:20:49 上游无token(拒收): http://106.55.0.102:10087/ -> b'"{\\"app\\":\\"com.tencent.music.lua\\",\\"bizsrc\\":\\"qqconnect.sdkshare_music\\",\\"co'
+11-17 04:20:49 上游出真卡: https://ss.xingzhige.com/music_card/card (1234 bytes)
+11-17 04:20:49 处理完毕 type=custom -> 976 bytes 真卡
+11-17 04:22:49 处理完毕 type=qq -> 40 bytes (全灭,走兜底)
+11-17 04:22:52 上游出真卡: https://ss.xingzhige.com/music_card/card (1169 bytes)
+11-17 04:22:52 处理完毕 type=custom -> 911 bytes 真卡
+11-17 04:49:42 上游无token(拒收): http://106.55.0.102:10087/ -> b'"{\\"app\\":\\"com.tencent.music.lua\\",\\"bizsrc\\":\\"qqconnect.sdkshare_music\\",\\"co'
+11-17 04:49:42 上游出真卡: https://ss.xingzhige.com/music_card/card (1033 bytes)
+11-17 04:49:42 处理完毕 type=163 -> 775 bytes 真卡
+>> /root/music_sign.log
+11-17 03:58:01 处理完毕 type=163 -> 831 bytes 真卡
+11-17 04:20:49 上游无token(拒收): http://106.55.0.102:10087/ -> b'"{\\"app\\":\\"com.tencent.music.lua\\",\\"bizsrc\\":\\"qqconnect.sdkshare_music\\",\\"co'
+11-17 04:20:49 上游出真卡: https://ss.xingzhige.com/music_card/card (1234 bytes)
+11-17 04:20:49 处理完毕 type=custom -> 976 bytes 真卡
+11-17 04:22:49 处理完毕 type=qq -> 40 bytes (全灭,走兜底)
+11-17 04:22:52 上游出真卡: https://ss.xingzhige.com/music_card/card (1169 bytes)
+11-17 04:22:52 处理完毕 type=custom -> 911 bytes 真卡
+11-17 04:49:42 上游无token(拒收): http://106.55.0.102:10087/ -> b'"{\\"app\\":\\"com.tencent.music.lua\\",\\"bizsrc\\":\\"qqconnect.sdkshare_music\\",\\"co'
+11-17 04:49:42 上游出真卡: https://ss.xingzhige.com/music_card/card (1033 bytes)
+11-17 04:49:42 处理完毕 type=163 -> 775 bytes 真卡
 ===== 完 =====
