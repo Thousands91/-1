@@ -1,26 +1,36 @@
-<<<task_286920.txt>>>
-===== 任务286920 11-18 10:10:03 =====
+<<<task_286930.txt>>>
+===== 任务286930 11-18 10:10:37 =====
 --- 命令 ---
-echo "===== 大脑终检 $(date '+%F %T') ====="
-echo -n "[1] 大脑实例数: "; pgrep -f '/root/bot/venv/bin/python main.py' | wc -l
-echo -n "[2] PID: "; pgrep -f '/root/bot/venv/bin/python main.py' | head -1
-echo "[3] 启动完成标志(最近30行):"
-tail -30 /root/bot/bot/bot.log 2>/dev/null | grep -E "Bot 3427943187 connected|正在初始化|初始化完成|Application startup|Running on|ERROR|Traceback" | tail -6
-echo "[4] 酷狗标记(用正确串): "; grep -c "kugou官方卡 OK" /root/bot/bot/plugins/song_request.py
-echo "[5] 咪咕标记: "; grep -c '"migu"' /root/bot/bot/plugins/song_request.py
-echo "[6] 代理实例: "; pgrep -f 'python3 /root/music_sign.py' | wc -l
+echo "===== 核对酷狗代码真实内容 $(date '+%F %T') ====="
+echo "[1] src in kugou 分支的行:"
+grep -n "kugou\|migu" /root/bot/bot/plugins/song_request.py | head -20
+echo "[2] 发卡日志那行原文:"
+grep -n "官方卡 OK" /root/bot/bot/plugins/song_request.py | head -10
 echo "===== 完 ====="
 --- 输出 ---
-===== 大脑终检 2026-11-18 10:10:03 =====
-[1] 大脑实例数: 1
-[2] PID: 6446
-[3] 启动完成标志(最近30行):
-11-18 10:08:14 [INFO] uvicorn | Application startup complete.
-11-18 10:08:17 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
-[4] 酷狗标记(用正确串): 
-0
-[5] 咪咕标记: 
-7
-[6] 代理实例: 
-1
+===== 核对酷狗代码真实内容 2026-11-18 10:10:37 =====
+[1] src in kugou 分支的行:
+85:    # 签名代理 v4 收到 music("kugou"/"migu", 歌名) 后用 OIAPI 出对应标真卡。
+87:    m = re.search(r"\s+(酷我|kuwo|qq|qq音乐|QQ音乐|酷狗|kugou|咪咕|migu)$", kw, re.I)
+95:        elif "酷狗" in tag or tag == "kugou":
+96:            src = "kugou"
+98:            src = "migu"
+105:    # 坑114：按平台后缀分发搜索；song 条目统一带 src 字段（netease/qq/kuwo/kugou/migu）
+111:    if src in ("kugou", "migu"):
+144:           else "〔酷狗〕" if s["src"] == "kugou"
+145:           else "〔咪咕〕" if s["src"] == "migu" else "〔QQ〕")
+157:    """发官方模板卡（163/qq/kuwo/kugou/migu）。卡片只是一张跳转链接，
+173:        elif src in ("kugou", "migu"):
+391:        if s.get("src") in ("kugou", "migu"):
+393:                label = "酷狗音乐" if s["src"] == "kugou" else "咪咕音乐"
+834:    if src in ("kugou", "migu"):
+[2] 发卡日志那行原文:
+169:            logger.info(f"[发卡] qq官方卡 OK id={s['id']}")
+172:            logger.info(f"[发卡] kuwo官方卡 OK id={s['id']} (坑123 OIAPI酷我标)")
+176:            logger.info(f"[发卡] {src}官方卡 OK 歌名={s['id']} (坑124 OIAPI全平台标)")
+179:            logger.info(f"[发卡] 163官方卡 OK id={s['id']}")
+232:                logger.info(f"[发卡] qq官方卡 OK id={s['id']}")
+244:                logger.info(f"[发卡] 163官方卡 OK id={s['id']}")
+255:                logger.info(f"[发卡] kuwo官方卡 OK id={s['id']} (坑123 OIAPI酷我标)")
+280:                    logger.info(f"[发卡] qq找补官方卡 OK mid={mid}")
 ===== 完 =====
