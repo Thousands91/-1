@@ -41,7 +41,15 @@
   var title = q.get('title') || '音乐';
   var singer = q.get('singer') || '';
   var cover = q.get('cover') || '';
-  var audio = q.get('audio') || '';
+  var id = q.get('id') || '';
+  // 坑133: audio直链带&,塞进jump会被OIAPI解码后当参数分隔符切断。
+  // 改传纯id,播放页现场拼meting音频地址,彻底避开编码问题。
+  var audio = '';
+  if (id) {
+    audio = 'https://api.injahow.cn/meting/?type=url&server=netease&id=' + encodeURIComponent(id);
+  } else if (q.get('audio')) {
+    audio = q.get('audio');
+  }
   document.getElementById('title').textContent = title;
   document.getElementById('singer').textContent = singer;
   if (cover) document.getElementById('cover').src = cover;
