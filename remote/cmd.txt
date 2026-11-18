@@ -1,28 +1,12 @@
-286730
-echo "===== 启动v4代理并实测 $(date '+%F %T') ====="
-echo "--- [1] 旧代理进程(若有先停) ---"
-pgrep -af 'music_sign' | head -5
-pkill -f 'music_sign.py' 2>/dev/null; sleep 1
-echo "--- [2] v4顶替music_sign.py ---"
-cp /root/music_sign_v4.py /root/music_sign.py && echo "已顶替 md5=$(md5sum /root/music_sign.py | cut -d\  -f1)"
-echo "--- [3] setsid启动v4 ---"
-setsid nohup python3 /root/music_sign.py >> /root/music_sign.log 2>&1 &
-sleep 3
-pgrep -af 'music_sign.py' | head -3
-echo "--- [4] 实测酷我官方卡签名 ---"
-echo -n "酷我: "; curl -s --max-time 20 -X POST -H 'Content-Type: application/json' -d '{"type":"kuwo","id":"128405"}' http://127.0.0.1:10800/ 2>/dev/null | python3 -c "
-import sys,json
-b=sys.stdin.read()
-try:
-  c=json.loads(b); m=c['meta']['music']; print('tag='+str(m.get('tag')),'appid='+str(m.get('appid')),'token='+str(bool(c.get('config',{}).get('token'))),'字节='+str(len(b)))
-except Exception as e: print('非卡:',b[:150])
-"
-echo -n "网易云对照: "; curl -s --max-time 20 -X POST -H 'Content-Type: application/json' -d '{"type":"163","id":"284799"}' http://127.0.0.1:10800/ 2>/dev/null | python3 -c "
-import sys,json
-b=sys.stdin.read()
-try:
-  c=json.loads(b); m=c['meta']['music']; print('tag='+str(m.get('tag')),'appid='+str(m.get('appid')),'token='+str(bool(c.get('config',{}).get('token'))),'字节='+str(len(b)))
-except Exception as e: print('非卡:',b[:150])
-"
-echo "--- [5] 代理日志尾 ---"; tail -6 /root/music_sign.log 2>/dev/null
+286740
+echo "===== 拉取新代码+探查git $(date '+%F %T') ====="
+echo "--- [1] 设备bot目录git结构 ---"
+ls -d /root/bot/.git /root/bot/bot/.git 2>/dev/null
+cd /root/bot 2>/dev/null && echo "在/root/bot: branch=$(git branch --show-current 2>/dev/null) head=$(git log -1 --format=%h 2>/dev/null) remote=$(git remote 2>/dev/null)"
+echo "--- [2] fetch + reset 到最新 ---"
+cd /root/bot 2>/dev/null && git fetch origin main 2>&1 | tail -3 && git reset --hard origin/main 2>&1 | tail -2
+echo "--- [3] 新代码校验 ---"
+echo "md5=$(md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null | cut -d\  -f1) (期望9238e82a)"
+echo -n "酷我官方卡标记数: "; grep -c 'kuwo官方卡\|坑123' /root/bot/bot/plugins/song_request.py 2>/dev/null
+echo -n "语法: "; python3 -m py_compile /root/bot/bot/plugins/song_request.py 2>&1 && echo OK || echo FAIL
 echo "===== 完 ====="
