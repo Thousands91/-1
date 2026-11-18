@@ -1,55 +1,51 @@
-<<<task_287020.txt>>>
-===== 任务287020 11-19 00:36:28 =====
+<<<task_287030.txt>>>
+===== 任务287030 11-19 00:38:31 =====
 --- 命令 ---
-echo "===== 登录态确认 287020 ====="
-echo "[1]logincheck完整输出:"; bash /root/logincheck.sh 2>/dev/null | head -20
-echo "[2]二维码文件:"; QR=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png; ls -l "$QR" 2>/dev/null; stat -c "二维码修改时间:%y" "$QR" 2>/dev/null
-echo "[3]NapCat日志尾20:"; tail -20 /root/napcat.log 2>/dev/null
-echo "[4]NapCat重启日志尾10:"; tail -10 /root/napcat-restart.log 2>/dev/null
-echo "[5]当前时间:"; date '+%F %T'
+echo "===== 真日志定位 287030 ====="
+echo "[1]大脑6446启动时间:"; ps -o pid,lstart -p 6446 2>/dev/null
+echo "[2]大脑stdout/stderr指向(权威):"; readlink /proc/6446/fd/1 2>/dev/null; readlink /proc/6446/fd/2 2>/dev/null
+echo "[3]各日志mtime+大小:"; stat -c "%n | %s字节 | %y" /root/bot.log /root/bot/bot/bot.log 2>/dev/null
+echo "[4]/root/bot.log尾5:"; tail -5 /root/bot.log 2>/dev/null
+echo "[5]/root/bot/bot/bot.log尾5:"; tail -5 /root/bot/bot/bot.log 2>/dev/null
+echo "[6]最近被写的log文件(top15):"; ls -lt /root/*.log /root/bot/*.log /root/bot/bot/*.log 2>/dev/null | head -15
 echo "=====完====="
 --- 输出 ---
-===== 登录态确认 287020 =====
-[1]logincheck完整输出:
-=== 登录状态（权威判定）===
-[未登录] 当前没有有效会话
-阶段: waiting_qrcode
-最近错误: 无
-[2]二维码文件:
--rw-r--r-- 1 root root 602 Nov 19 00:34 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-二维码修改时间:2026-11-19 00:34:54.240000000 +0800
-[3]NapCat日志尾20:
-29b7c663b37fa6ab2c68871637da5f31f9cf92073ed6ddf23181743c31bd4d77
-14e0655d3ee98a0615f65f483a6607e986efcbd5327b69c441fe2b04617cb13d
-cd3525e093f40088586868e40b24d8388807dee3bd1c0f3daeffe2e014cdb184
-92f86896dce3cf0abf4ad20a41aa8eb47393b97c3767dec0b15f6456d461fa74
-d5a86ba7a9b4738cd9650b46731b09d8b485281bd234bea338c4ac9a0318cb4c
-fbdfcc537c72aab8e27a592d891e48c64f0f3cc5199e3ebec263ef47d15c724d
-b77dfb78b052916abd78dea8f9f633916a21d6117ff8f890ea89f23c12b5b300
-120e9ea66c77cdd12ad3b245cf7a1d00e226dca129dd96424c75d90a15703a6f
-b03a68ae0fa62914744eb6acb7e69047b8356e7b68771bd14fc250e2b4a47ffc
-927917af6e790d9d9dbc8171e790f12ef15d0334ee87d47d7e2907bfd84bdda7
-f93022fea041bacf2aa4ee5ace26ca1229d809e84eacb87aacc14f1ea2dc8b6f
-b31fbd2f2eadc6eeeb7f00862b12f14a8be36d01ac2cd0558ab18674d7f979a5
-0e026aeb118394091c393a7cb48c9112130bbab2f41bdbc609a88686b4061c0f
-a358751c1a274fe526043fd5d308ff72c5060a267fbcb001900571605cf9c87c
-56d715360cd4bafb3b1a5fc34de76b6029f681dcdbe7496cb4d315bec0285666
-64833f1013797ebef5016034042cc262aede7bfd6fad9f7fb4b04efa19337d32
-0f8a4a3a58a4561aa8d07f6877895a6c501a050e777bf8f5b332ca7ae7af0015
-4d8ce27e64fb34b71ba0e1db9b2a4778aa16f8bb7a17f8d043ca4119ff67aa3d
-5648b76668c84f5a7a21351321501855ce4320b8324fc76d5d463cfef4615fee
-c23e71c44618c4e83f1d7a0213fe69446ec548401e0e9b5bb87a644df4cb4de5
-[4]NapCat重启日志尾10:
-[18888:1118/020018.429097:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[18631:1118/020018.431920:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[18888:1118/020018.434733:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[18631:1118/020018.436330:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[18631:1118/020018.438067:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
-[18888:1118/020018.441971:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[18888:1118/020018.449001:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[18888:1118/020018.457764:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[18888:1118/020018.466807:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[18888:1118/020018.466958:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
-[5]当前时间:
-2026-11-19 00:36:28
+===== 真日志定位 287030 =====
+[1]大脑6446启动时间:
+  PID                  STARTED
+ 6446 Wed Mar 29 08:48:34 2023
+[2]大脑stdout/stderr指向(权威):
+/root/bot/bot/bot.log
+/root/bot/bot/bot.log
+[3]各日志mtime+大小:
+/root/bot.log | 7775字节 | 2026-11-18 02:09:01.250000000 +0800
+/root/bot/bot/bot.log | 2657410字节 | 2026-11-18 22:37:47.840000000 +0800
+[4]/root/bot.log尾5:
+11-18 02:09:01 [INFO] uvicorn | Shutting down
+11-18 02:09:01 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+11-18 02:09:01 [INFO] uvicorn | Waiting for application shutdown.
+11-18 02:09:01 [INFO] uvicorn | Application shutdown complete.
+11-18 02:09:01 [INFO] uvicorn | Finished server process [18624]
+[5]/root/bot/bot/bot.log尾5:
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/internal/adapter/bot.py", line 128, in call_api
+    result = await self.adapter._call_api(self, api, **data)
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/adapter.py", line 177, in _call_api
+    raise NetworkError(f"WebSocket call api {api} timeout") from None
+nonebot.adapters.onebot.v11.exception.NetworkError: NetWorkError(message='WebSocket call api send_msg timeout')
+[6]最近被写的log文件(top15):
+-rw-r--r-- 1 root root  456348 Nov 19 00:38 /root/napcat.log
+-rw-r--r-- 1 root root   31943 Nov 19 00:38 /root/netmon.log
+-rw-r--r-- 1 root root  179222 Nov 19 00:37 /root/health.log
+-rw-r--r-- 1 root root  136800 Nov 19 00:37 /root/tick.log
+-rw-r--r-- 1 root root   37602 Nov 19 00:37 /root/login_state.log
+-rw-r--r-- 1 root root   19463 Nov 19 00:36 /root/remote_ctl.log
+-rw-r--r-- 1 root root    3530 Nov 18 23:25 /root/ip.log
+-rw-r--r-- 1 root root 2657410 Nov 18 22:37 /root/bot/bot/bot.log
+-rw-r--r-- 1 root root     722 Nov 18 22:37 /root/music_sign_v4.log
+-rw-r--r-- 1 root root    5285 Nov 18 09:23 /root/music_sign.log
+-rw-r--r-- 1 root root    7775 Nov 18 02:09 /root/bot.log
+-rw-r--r-- 1 root root 1436791 Nov 18 02:07 /root/napcat-restart.log
+-rw-r--r-- 1 root root     835 Nov 12 13:06 /root/azar_login_run.log
+-rw-r--r-- 1 root root      11 Nov 12 00:50 /root/remote_boot.log
+-rw-r--r-- 1 root root      52 Nov 12 00:06 /root/asar_sync_boot.log
 =====完=====
