@@ -1,8 +1,9 @@
-287050
-echo "===== 掉线时间线 287050 ====="
-echo "[1]login_state.log尾30:"; tail -30 /root/login_state.log 2>/dev/null
-echo "[2]napcat.log掉线关键词:"; grep -aE "离线|掉线|未登录|二维码|waiting_qrcode|closed by peer|Login Error" /root/napcat.log 2>/dev/null | tail -15
-echo "[3]真日志bot.log尾20:"; tail -20 /root/bot/bot/bot.log 2>/dev/null
-echo "[4]真日志里WS错误第一条:"; grep -an "send_msg timeout\|closed by peer\|WebSocket" /root/bot/bot/bot.log 2>/dev/null | tail -8
-echo "[5]当前时间:"; date '+%F %T'
+287060
+echo "===== 脚本原文取证 287060 ====="
+echo "[A]remote_ctl_v6.sh第168行:"; sed -n '168p' /root/remote_ctl_v6.sh
+echo "[B]restart_bot.sh全文:"; cat /root/restart_bot.sh
+echo "[C]selfcheck.sh头16行:"; sed -n '1,16p' /root/selfcheck.sh
+echo "[D]azar_guard.sh头14行:"; sed -n '1,14p' /root/azar_guard.sh
+echo "[E]morning.sh头10行:"; sed -n '1,10p' /root/morning.sh
+echo "[F]bot.log大小:"; ls -l /root/bot.log /root/bot/bot/bot.log 2>/dev/null
 echo "=====完====="
