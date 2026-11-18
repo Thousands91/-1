@@ -1,15 +1,15 @@
-286950
-echo "===== 冻结根治前置诊断 $(date '+%F %T') ====="
-echo "[1] adb 是否可用:"
-command -v adb 2>/dev/null || echo "无adb"
-echo "[2] 已连接的adb设备:"
-adb devices 2>/dev/null | tail -5
-echo "[3] termux包名:"
-pm list packages 2>/dev/null | grep -i termux || echo "pm不可用(需adb shell前缀)"
-echo "[4] 当前唤醒锁:"
-cat /sys/power/wake_lock 2>/dev/null || echo "读不到(需adb)"
-echo "[5] tick最后活动(看是否正冻结):"
-tail -3 /root/health_probe.log 2>/dev/null || tail -3 /root/tick.log 2>/dev/null || echo "无日志"
-echo "[6] 电池优化白名单/待机桶(若adb可用):"
-adb shell dumpsys deviceidle whitelist 2>/dev/null | grep -i termux || echo "adb未连或不在白名单"
-echo "===== 完 ====="
+只读核查任务286960（不改动设备、不执行任何 adb shell 命令，逐条回传原文）：
+
+1. 确认昨晚硬啃铺进 X10 的 adb 工具链还在：
+   ls -l /root/adblibs/adb
+   LD_LIBRARY_PATH=/root/adblibs:/data/data/com.termux/files/usr/lib /root/adblibs/adb version
+
+2. 确认 adb 客户端密钥已生成：
+   ls -l /root/.android/adbkey /root/.android/adbkey.pub
+
+3. 确认当前有没有 adb 设备（没插 OTG 前预期为空，这是预期结果，照传）：
+   LD_LIBRARY_PATH=/root/adblibs:/data/data/com.termux/files/usr/lib /root/adblibs/adb devices
+
+4. 确认现在没冻：tail -3 /root/tick.log
+
+把以上四条的输出原文回传即可，不要做任何修复动作。
