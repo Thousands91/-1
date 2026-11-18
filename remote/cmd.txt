@@ -1,14 +1,8 @@
-286800
-echo "===== 交付前终检 $(date '+%F %T') ====="
-echo -n "大脑: "; pgrep -f '/root/bot/venv/bin/python main.py' | wc -l
-echo -n "签名代理: "; pgrep -f '/root/music_sign.py' | wc -l
-echo -n "代码md5: "; md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null | cut -d\  -f1
-echo -n "代理md5: "; md5sum /root/music_sign.py 2>/dev/null | cut -d\  -f1
-echo -n "酷我签名实测: "; curl -s --max-time 15 -X POST -H 'Content-Type: application/json' -d '{"type":"kuwo","id":"128405"}' http://127.0.0.1:10800/ 2>/dev/null | python3 -c "
-import sys,json
-try:
-  c=json.loads(sys.stdin.read()); print(c['meta']['music'].get('tag'), 'token='+str(bool(c.get('config',{}).get('token'))))
-except: print('失败')
-"
-echo -n "最后出站: "; grep '发送 ->' /root/napcat.log 2>/dev/null | tail -1
+286810
+echo "===== 保活前置探查 $(date '+%F %T') ====="
+echo -n "[1] 当前保活锚: "; pgrep -af "sleep infinity" | head -5; echo "(上面为空=没有锚)"
+echo -n "[2] wake-lock全路径: "; ls -l /data/data/com.termux/files/usr/bin/termux-wake-lock 2>/dev/null || echo "不存在"
+echo -n "[3] Termux home: "; ls -ld /data/data/com.termux/files/home 2>/dev/null || echo "读不到"
+echo -n "[4] boot脚本: "; ls -l /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null || echo "无"
+echo "[5] 在线服务: 遥控=$(pgrep -f '[r]emote_ctl_v6' | wc -l) 大脑=$(pgrep -f '[m]ain.py' | wc -l) NapCat=$(pgrep -f '[Q]Q' | wc -l)"
 echo "===== 完 ====="
