@@ -1,13 +1,13 @@
-286560
-echo "===== 查NapCat签名服务指向 $(date '+%F %T') ====="
-echo "--- [1] 所有NapCat配置文件位置 ---"
-find /root /opt -type f \( -name "*.json" -o -name "*.yml" -o -name "*.yaml" \) 2>/dev/null | grep -iE "napcat|onebot|config" | grep -v node_modules | head -30
-echo "--- [2] 全盘搜musicSignUrl关键词(限定目录) ---"
-grep -rn "musicSignUrl" /root/NapCat /root/napcat /opt /root/bot 2>/dev/null | grep -v node_modules | head -10
-echo "--- [3] 签名代理进程和端口 ---"
-ps aux | grep -iE "music_sign|10800|sign.py" | grep -v grep | head -10
-echo "--- [4] NapCat进程 ---"
-ps aux | grep -iE "napcat|qq-wrapper|launcher" | grep -v grep | head -10
-echo "--- [5] 本地代理文件 ---"
-ls -la /root/music_sign.py 2>/dev/null
+286570
+echo "===== 唤醒诊断 $(date '+%F %T') ====="
+echo "--- [1] 关键进程 ---"
+ps aux | grep -E '[m]ain.py|[n]apcat|[r]emote_ctl_v6|[t]ick.sh' | awk '{print $2, $11, $12, $13}' | head -15
+echo "--- [2] 四账心跳最新行 ---"
+for f in tick.log login_watch.log ipwatch.log health_probe.log offline_watch.log netmon.log; do echo -n "$f: "; tail -1 /root/$f 2>/dev/null || echo "无日志"; done
+echo "--- [3] 电量 ---"
+cat /sys/class/power_supply/battery/capacity 2>/dev/null || echo "读不到"
+echo "--- [4] 酷我官方卡代码是否在场 ---"
+grep -c 'kuwo官方卡' /root/bot/bot/plugins/song_request.py 2>/dev/null
+echo "--- [5] 当前源码md5 ---"
+md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null
 echo "===== 完 ====="
