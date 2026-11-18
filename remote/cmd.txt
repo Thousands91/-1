@@ -1,16 +1,15 @@
-286940
-echo "===== 点歌验收前置核查 $(date '+%F %T') ====="
-echo "[1] 大脑进程:"
-ps -eo pid,etime,args | grep "[m]ain.py" | head -3
-echo "[2] song_request.py md5:"
-md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null
-echo "[3] music_sign.py md5 + OIAPI关键词:"
-md5sum /root/music_sign.py 2>/dev/null
-grep -c "oiapi.net" /root/music_sign.py 2>/dev/null
-echo "[4] 签名代理端口10800:"
-curl -s -m 5 -o /dev/null -w "HTTP %{http_code}\n" http://127.0.0.1:10800/ 2>&1
-echo "[5] 登录态:"
-bash /root/logincheck.sh 2>/dev/null | head -5
-echo "[6] 全平台标关键词命中数:"
-grep -oE "kugou|migu|kuwo|OIAPI" /root/bot/bot/plugins/song_request.py 2>/dev/null | sort | uniq -c
+286950
+echo "===== 冻结根治前置诊断 $(date '+%F %T') ====="
+echo "[1] adb 是否可用:"
+command -v adb 2>/dev/null || echo "无adb"
+echo "[2] 已连接的adb设备:"
+adb devices 2>/dev/null | tail -5
+echo "[3] termux包名:"
+pm list packages 2>/dev/null | grep -i termux || echo "pm不可用(需adb shell前缀)"
+echo "[4] 当前唤醒锁:"
+cat /sys/power/wake_lock 2>/dev/null || echo "读不到(需adb)"
+echo "[5] tick最后活动(看是否正冻结):"
+tail -3 /root/health_probe.log 2>/dev/null || tail -3 /root/tick.log 2>/dev/null || echo "无日志"
+echo "[6] 电池优化白名单/待机桶(若adb可用):"
+adb shell dumpsys deviceidle whitelist 2>/dev/null | grep -i termux || echo "adb未连或不在白名单"
 echo "===== 完 ====="
