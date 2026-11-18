@@ -1,40 +1,35 @@
-<<<task_286940.txt>>>
-===== 任务286940 11-18 13:30:41 =====
+<<<task_286950.txt>>>
+===== 任务286950 11-18 13:31:56 =====
 --- 命令 ---
-echo "===== 点歌验收前置核查 $(date '+%F %T') ====="
-echo "[1] 大脑进程:"
-ps -eo pid,etime,args | grep "[m]ain.py" | head -3
-echo "[2] song_request.py md5:"
-md5sum /root/bot/bot/plugins/song_request.py 2>/dev/null
-echo "[3] music_sign.py md5 + OIAPI关键词:"
-md5sum /root/music_sign.py 2>/dev/null
-grep -c "oiapi.net" /root/music_sign.py 2>/dev/null
-echo "[4] 签名代理端口10800:"
-curl -s -m 5 -o /dev/null -w "HTTP %{http_code}\n" http://127.0.0.1:10800/ 2>&1
-echo "[5] 登录态:"
-bash /root/logincheck.sh 2>/dev/null | head -5
-echo "[6] 全平台标关键词命中数:"
-grep -oE "kugou|migu|kuwo|OIAPI" /root/bot/bot/plugins/song_request.py 2>/dev/null | sort | uniq -c
+echo "===== 冻结根治前置诊断 $(date '+%F %T') ====="
+echo "[1] adb 是否可用:"
+command -v adb 2>/dev/null || echo "无adb"
+echo "[2] 已连接的adb设备:"
+adb devices 2>/dev/null | tail -5
+echo "[3] termux包名:"
+pm list packages 2>/dev/null | grep -i termux || echo "pm不可用(需adb shell前缀)"
+echo "[4] 当前唤醒锁:"
+cat /sys/power/wake_lock 2>/dev/null || echo "读不到(需adb)"
+echo "[5] tick最后活动(看是否正冻结):"
+tail -3 /root/health_probe.log 2>/dev/null || tail -3 /root/tick.log 2>/dev/null || echo "无日志"
+echo "[6] 电池优化白名单/待机桶(若adb可用):"
+adb shell dumpsys deviceidle whitelist 2>/dev/null | grep -i termux || echo "adb未连或不在白名单"
 echo "===== 完 ====="
 --- 输出 ---
-===== 点歌验收前置核查 2026-11-18 13:30:41 =====
-[1] 大脑进程:
- 6446       00:00 /root/bot/venv/bin/python main.py
-[2] song_request.py md5:
-4cd2e1709a592666316a41a74afabcc3  /root/bot/bot/plugins/song_request.py
-[3] music_sign.py md5 + OIAPI关键词:
-e37965c54f76505d4411cdfe842d0d0d  /root/music_sign.py
-2
-[4] 签名代理端口10800:
-HTTP 501
-[5] 登录态:
-=== 登录状态（权威判定）===
-[在线] 已登录，一切正常
-阶段: ready
-最近错误: 无
-[6] 全平台标关键词命中数:
-      9 OIAPI
-     12 kugou
-     39 kuwo
-     10 migu
+===== 冻结根治前置诊断 2026-11-18 13:31:56 =====
+[1] adb 是否可用:
+/usr/bin/adb
+[2] 已连接的adb设备:
+List of devices attached
+
+[3] termux包名:
+package:com.termux
+[4] 当前唤醒锁:
+读不到(需adb)
+[5] tick最后活动(看是否正冻结):
+2026-11-18 13:30:00
+2026-11-18 13:31:00
+2026-11-18 13:32:00
+[6] 电池优化白名单/待机桶(若adb可用):
+adb未连或不在白名单
 ===== 完 =====
