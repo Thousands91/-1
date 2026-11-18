@@ -1,35 +1,10 @@
-<<<task_286700.txt>>>
-===== 任务286700 11-18 09:06:18 =====
+<<<task_286710.txt>>>
+===== 任务286710 11-18 09:08:14 =====
 --- 命令 ---
-echo "===== 定位NapCat签名配置 $(date '+%F %T') ====="
-echo "--- [1] 全/root搜musicSignUrl(限json/conf,排除node_modules和db) ---"
-grep -rln "musicSignUrl" /root --include="*.json" --include="*.conf" --include="*.yaml" --include="*.yml" 2>/dev/null | grep -v node_modules | head -20
-echo "--- [2] NapCat真实配置目录候选 ---"
-ls -la /root/.config/QQ/ 2>/dev/null | head; ls -la /root/.config/QQ/napcat/ 2>/dev/null | head
-ls -la /root/Napcat/config/ 2>/dev/null | head
-echo "--- [3] 从NapCat进程/cmdline找配置路径线索 ---"
-for p in 21596 21622; do echo "pid=$p"; tr '\0' ' ' < /proc/$p/cmdline 2>/dev/null; echo; done
-echo "--- [4] grep 10800在/root的配置里 ---"
-grep -rln "10800" /root --include="*.json" 2>/dev/null | grep -v node_modules | head -10
+echo "===== 读签名配置 $(date '+%F %T') ====="
+grep -n "musicSignUrl" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json 2>/dev/null
 echo "===== 完 ====="
 --- 输出 ---
-===== 定位NapCat签名配置 2026-11-18 09:06:18 =====
---- [1] 全/root搜musicSignUrl(限json/conf,排除node_modules和db) ---
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json
---- [2] NapCat真实配置目录候选 ---
-total 0
-drwx------ 7 root root 3488 Nov 12 00:23 .
-drwxr-xr-x 4 root root 3488 Nov 12 00:08 ..
-drwx------ 2 root root 3488 Nov 12 00:08 Crashpad
-drwxr-xr-x 4 root root 3488 Nov 12 00:23 NapCat
-drwxr-x--- 2 root root 3488 Nov 12 00:23 crash_files
-drwx------ 5 root root 3488 Nov 12 00:08 global
-drwxr-xr-x 5 root root 3488 Nov 12 00:23 nt_qq_f31de70269f5ae9ebeb8d47e85491317
---- [3] 从NapCat进程/cmdline找配置路径线索 ---
-pid=21596
-/bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 
-pid=21622
-/root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 
---- [4] grep 10800在/root的配置里 ---
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json
+===== 读签名配置 2026-11-18 09:08:14 =====
+21:  "musicSignUrl": "http://127.0.0.1:10800/",
 ===== 完 =====
