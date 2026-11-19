@@ -1,18 +1,9 @@
-287426
-echo "===== 287426 行首字节检查+修正统计 ====="
-echo "[1]bot.log首行字节(查隐形前缀):"
-head -c 60 /root/bot/bot/bot.log | od -c | head -3
-echo "[2]逐日行数(不锚定):"
-awk '{print substr($0,1,5)}' /root/bot/bot/bot.log | sort | uniq -c | tail -12
-echo "[3]逐日群消息量:"
-awk '/message.group.normal/ {print substr($0,1,5)}' /root/bot/bot/bot.log | sort | uniq -c
-echo "[4]逐日ai_chat触发量:"
-awk '/module=plugins.ai_chat/ {print substr($0,1,5)}' /root/bot/bot/bot.log | sort | uniq -c
-echo "[5]napcat-restart.log覆盖范围:"
-head -c 120 /root/napcat-restart.log
-echo ""
-tail -c 120 /root/napcat-restart.log
-echo ""
-echo "[6]napcat-restart.log里发送记录格式:"
-grep -m2 "发送" /root/napcat-restart.log | head -2
+287427
+echo "===== 287427 交互内容抽取(11-17~11-20) ====="
+echo "[1]群里提到/发阿萨尔的消息(近3天全部):"
+grep -F "message.group.normal" /root/bot/bot/bot.log | grep -F "阿萨尔" | tail -30
+echo "[2]私聊消息(近3天全部):"
+awk '/message.private/ && (/11-17/ || /11-18/ || /11-19/ || /11-20/)' /root/bot/bot/bot.log | tail -20
+echo "[3]at消息样本(看格式):"
+grep -F "message.group.normal" /root/bot/bot/bot.log | grep -F "[at:" | tail -10
 echo "=====完====="
