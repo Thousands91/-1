@@ -1,34 +1,37 @@
-<<<task_287333.txt>>>
-===== 任务287333 11-19 13:01:35 =====
+<<<task_287334.txt>>>
+===== 任务287334 11-19 13:02:35 =====
 --- 命令 ---
-echo "===A on_meta_event全局搜索==="
-grep -rn "on_meta_event" /root/bot/venv/lib/python3.10/site-packages/nonebot/ 2>/dev/null | grep -v ".pyc" | head -10
-echo "===B nonebot顶层导出的on_函数==="
-grep -oE "on_[a-z_]+" /root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py 2>/dev/null | sort -u | head -20
-echo "===C 用on_type或on_message兜底==="
-grep -oE "on_(type|message|meta)[a-z_]*" /root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py 2>/dev/null | sort -u
-echo "===D nonebot版本对on_meta_event的支持(pip文档)==="
-grep -rn "meta_event" /root/bot/venv/lib/python3.10/site-packages/nonebot/matcher.py 2>/dev/null | head -5
+echo "===A on_metaevent定义==="
+python3 -c "print('看nonebot源码')" 2>/dev/null
+grep -rn "on_metaevent" /root/bot/venv/lib/python3.10/site-packages/nonebot/*.py 2>/dev/null | grep -v ".pyc" | head -5
+echo "===B 定义上下文==="
+F=$(grep -rl "def on_metaevent" /root/bot/venv/lib/python3.10/site-packages/nonebot/ 2>/dev/null | head -1); echo "文件:$F"
+grep -n -A6 "def on_metaevent" "$F" 2>/dev/null
+echo "===C 直接python验证导入==="
+/root/bot/venv/bin/python -c "from nonebot import on_metaevent; from nonebot.adapters.onebot.v11 import LifecycleMetaEvent, HeartbeatMetaEvent; print('导入OK', on_metaevent.__name__)" 2>&1 | head -3
 echo "=====完====="
 --- 输出 ---
-===A on_meta_event全局搜索===
-===B nonebot顶层导出的on_函数===
-on__
-on_command
-on_endswith
-on_fullmatch
-on_keyword
-on_message
-on_metaevent
-on_notice
-on_regex
-on_request
-on_shell_command
-on_startswith
-on_type
-===C 用on_type或on_message兜底===
-on_message
-on_metaevent
-on_type
-===D nonebot版本对on_meta_event的支持(pip文档)===
+===A on_metaevent定义===
+看nonebot源码
+/root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py:8:- `on_metaevent` => {ref}``on_metaevent` <nonebot.plugin.on.on_metaevent>`
+/root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py:360:from nonebot.plugin import on_metaevent as on_metaevent
+===B 定义上下文===
+文件:/root/bot/venv/lib/python3.10/site-packages/nonebot/plugin/on.py
+156:def on_metaevent(*args, _depth: int = 0, **kwargs) -> type[Matcher]:
+157-    """注册一个元事件响应器。
+158-
+159-    参数:
+160-        rule: 事件响应规则
+161-        permission: 事件响应权限
+162-        handlers: 事件处理函数列表
+--
+570:    def on_metaevent(self, **kwargs) -> type[Matcher]:
+571-        """注册一个元事件响应器。
+572-
+573-        参数:
+574-            rule: 事件响应规则
+575-            permission: 事件响应权限
+576-            handlers: 事件处理函数列表
+===C 直接python验证导入===
+导入OK on_metaevent
 =====完=====
