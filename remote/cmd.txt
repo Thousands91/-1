@@ -1,12 +1,5 @@
-287392
-echo "===== 探活+cmd状态 287392 $(date '+%F %T') ====="
-echo "[1]worker进程:"
-pgrep -af 'remote_ctl_v6\|v6_from_github' | head -3 || echo "  无worker!"
-echo "[2]cmd.txt首行与字节:"
-head -1 /root/-1/remote/cmd.txt 2>/dev/null || head -1 /root/*/remote/cmd.txt 2>/dev/null
-wc -c /root/-1/remote/cmd.txt 2>/dev/null
-echo "[3]bot大脑进程:"
-pgrep -af '/root/bot/venv/bin/python main.py' | head -1
-echo "[4]在线:"
-bash /root/logincheck.sh 2>/dev/null | grep -oE '\[[^]]+\]' | head -1
+287393
+echo "===== 探测 287393 $(date '+%F %T') ====="
+echo "ai_md5=$(md5sum /root/bot/bot/plugins/ai_chat.py|cut -c1-8) games_md5=$(md5sum /root/bot/bot/plugins/games.py|cut -c1-8)"
+echo "worker=$(pgrep -f remote_ctl_v6|head -1) bot=$(pgrep -f '/root/bot/venv/bin/python main.py'|head -1)"
 echo "=====完====="
