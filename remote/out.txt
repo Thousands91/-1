@@ -1,2 +1,76 @@
-<<<ALERT.txt>>>
-2026-11-19 22:54:16 阿萨尔掉线([未登录])! 已尝试自愈;若5分钟内不恢复需本人扫码
+<<<task_287405.txt>>>
+===== 任务287405 11-19 22:57:55 =====
+--- 命令 ---
+echo "===== 287405 掉线归因取证 ====="
+echo "[0]当前登录状态:"
+bash /root/logincheck.sh 2>&1 | head -5
+echo "[1]NapCat主进程启动时间(自杀重启证据):"
+ps -o pid,lstart,etime,cmd -p $(pgrep -f "disable-software-rasterizer" | head -1) 2>&1 | head -3
+echo "[2]今天全部登录报错时间线:"
+grep -E "Login Error|掉线|下线|Session|kicked" /root/napcat.log 2>/dev/null | grep "11-19" | tail -15
+echo "[3]bot.log今天心跳跳变时间线:"
+grep "状态跳变" /root/bot/bot/bot.log | grep "11-19" | tail -10
+echo "[4]内存压力:"
+free -m | head -3
+cat /proc/meminfo 2>/dev/null | grep -E "MemAvailable|SwapFree" | head -2
+echo "[5]看护/健康台账最近10行:"
+ls /root/*.log /root/health* /root/watch* 2>/dev/null | head -8
+tail -10 /root/health.log 2>/dev/null || tail -10 /root/watchdog.log 2>/dev/null || echo "无独立台账"
+echo "[6]napcat-run.log最近崩溃/OOM证据:"
+grep -E "Fatal|crash|OOM|killed|内存" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat-run.log 2>/dev/null | tail -5
+echo "=====完====="
+--- 输出 ---
+===== 287405 掉线归因取证 =====
+[0]当前登录状态:
+=== 登录状态（权威判定）===
+[未登录] 当前没有有效会话
+阶段: waiting_qrcode
+最近错误: 无
+[1]NapCat主进程启动时间(自杀重启证据):
+  PID                  STARTED     ELAPSED CMD
+28536 Thu Mar 30 13:22:43 2023       00:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+[2]今天全部登录报错时间线:
+11-19 22:49:08 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 22:51:09 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 22:53:19 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 22:55:21 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 22:57:28 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 22:57:38 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+[3]bot.log今天心跳跳变时间线:
+11-19 14:39:18 [WARNING] link_probe | [连接探针] [11-19 14:39:18.207] HEARTBEAT 状态跳变 online=False good=True 自启动累计心跳=17 self_id=3427943187
+11-19 14:43:34 [WARNING] link_probe | [连接探针] [11-19 14:43:34.611] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=19 self_id=3427943187
+11-19 14:57:04 [WARNING] link_probe | [连接探针] [11-19 14:57:04.730] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+11-19 15:22:04 [WARNING] link_probe | [连接探针] [11-19 15:22:04.932] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+11-19 19:38:57 [WARNING] link_probe | [连接探针] [11-19 19:38:57.449] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+11-19 20:45:57 [WARNING] link_probe | [连接探针] [11-19 20:45:57.154] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+11-19 22:02:28 [WARNING] link_probe | [连接探针] [11-19 22:02:28.000] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+11-19 22:18:28 [WARNING] link_probe | [连接探针] [11-19 22:18:28.161] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+11-19 22:24:28 [WARNING] link_probe | [连接探针] [11-19 22:24:28.265] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+11-19 22:45:13 [WARNING] link_probe | [连接探针] [11-19 22:45:13.122] HEARTBEAT 状态跳变 online=False good=True 自启动累计心跳=42 self_id=3427943187
+[4]内存压力:
+               total        used        free      shared  buff/cache   available
+Mem:            5571        2786         514          11        2270        2536
+Swap:           2799        1025        1774
+MemAvailable:    2596228 kB
+SwapFree:        1816696 kB
+[5]看护/健康台账最近10行:
+/root/asar_sync_boot.log
+/root/autoheal.log
+/root/azar_login_run.log
+/root/health.log
+/root/health.log
+/root/health_probe.sh
+/root/health_probe_v1.bak
+/root/health_probe_v2.bak
+11-19 22:47:56 elapsed=158s ip=192.168.31.142 if=无
+11-19 22:48:56 elapsed=60s ip=192.168.31.142 if=无
+11-19 22:49:57 elapsed=60s ip=192.168.31.142 if=无
+11-19 22:50:57 elapsed=61s ip=192.168.31.142 if=无
+11-19 22:51:57 elapsed=60s ip=192.168.31.142 if=无
+11-19 22:53:18 elapsed=68s ip=192.168.31.142 if=无
+11-19 22:54:19 elapsed=74s ip=192.168.31.142 if=无
+11-19 22:55:20 elapsed=61s ip=192.168.31.142 if=无
+11-19 22:56:20 elapsed=60s ip=192.168.31.142 if=无
+11-19 22:57:39 elapsed=73s ip=192.168.31.142 if=无
+[6]napcat-run.log最近崩溃/OOM证据:
+=====完=====
