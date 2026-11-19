@@ -1,9 +1,13 @@
-287383
-echo "===== 掷骰ERROR根因行 287383 ====="
-echo "[1]18:16:56 failed堆栈最后6行(异常类型在最后):"
-L=$(grep -n "18:16:56.*failed" /root/bot/bot/bot.log 2>/dev/null | tail -1 | cut -d: -f1); sed -n "$((L)),$((L+45))p" /root/bot/bot/bot.log 2>/dev/null | tail -12
-echo "[2]18:17:08 failed堆栈最后6行:"
-L=$(grep -n "18:17:08.*failed" /root/bot/bot/bot.log 2>/dev/null | tail -1 | cut -d: -f1); sed -n "$((L)),$((L+45))p" /root/bot/bot/bot.log 2>/dev/null | tail -12
-echo "[3]所有异常类型统计(今日):"
-grep -E "11-19" /root/bot/bot/bot.log 2>/dev/null | grep -oE "[A-Za-z]+(Error|Exception|Failed):" | sort | uniq -c | tail -15
+287384
+echo "===== 决斗/投掷/三把 三问题一次性诊断 287384 $(date '+%F %T') ====="
+echo "[1]18:17:10~18:17:35完整原文(决斗@用户A那条到底输出啥):"
+awk '/11-19 18:17:1[0-9]/,/11-19 18:17:3[5-9]/' /root/bot/bot/bot.log 2>/dev/null | head -50
+echo "[2]18:16:10~18:16:35完整原文(投掷那条分派):"
+awk '/11-19 18:16:1[0-9]/,/11-19 18:16:3[5-9]/' /root/bot/bot/bot.log 2>/dev/null | grep -iE "message.group|handled by|投掷|D20|六加两点|ai_chat|ask=|ans=" | head -30
+echo "[3]今日dice_cmd触发(lineno=38/54)及紧随发送,共几条:"
+grep -E "11-19" /root/bot/bot/bot.log 2>/dev/null | grep -E "games, lineno=(38|54|53)" | tail -20
+echo "[4]今日决斗分支特征串('你 .* 点,对方'/'赢了'/'输了')出现:"
+grep -E "11-19" /root/bot/bot/bot.log 2>/dev/null | grep -E "你.*点，对方|你赢了|你输了|跟我决斗" | tail -10
+echo "[5]games.py当前md5:"
+md5sum /root/bot/bot/plugins/games.py | cut -c1-8
 echo "=====完====="
