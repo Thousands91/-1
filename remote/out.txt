@@ -1,65 +1,86 @@
-<<<task_287328.txt>>>
-===== 任务287328 11-19 12:50:50 =====
+<<<task_287329.txt>>>
+===== 任务287329 11-19 12:51:35 =====
 --- 命令 ---
-echo "===A 所有config文件里的bypass/反检测关键字段==="
+echo "===A 配置文件修改时间==="
 CFG=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config
-for f in "$CFG"/*.json; do
-  echo "--- $(basename $f) ---"
-  grep -oE '"(bypass|o3HookMode|packetBackend|webui|token|enable|fileLog|consoleLog|logLevel|protocol|platform)"[[:space:]]*:[[:space:]]*("[^"]*"|true|false|[0-9]+)' "$f" 2>/dev/null | head -20
-done
-echo "===B napcat_3427943187完整前80行==="
-head -80 "$CFG/napcat_3427943187.json" 2>/dev/null
-echo "===C 搜bypass全文==="
-grep -rn "bypass\|o3Hook\|antiDetect\|反检测\|hook" "$CFG" 2>/dev/null | head -20
-echo "===D QQ本体版本==="
-grep -rhoE '"version"[[:space:]]*:[[:space:]]*"9\.[0-9]+\.[0-9]+' /root/Napcat/opt/QQ/resources/app/ 2>/dev/null | head -3
-cat /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null | grep -oE '"version"[^,]*' | head -2
+stat -c '%y %n' "$CFG"/napcat_3427943187.json "$CFG"/napcat.json "$CFG"/napcat_protocol_3427943187.json 2>/dev/null
+echo "===B napcat.json和3427943187配置是否一致==="
+diff "$CFG/napcat.json" "$CFG/napcat_3427943187.json" 2>/dev/null && echo "两文件完全相同" || echo "两文件有差异(见上)"
+echo "===C 协议配置全文==="
+cat "$CFG/napcat_protocol_3427943187.json" 2>/dev/null
+echo "===D onebot配置全文==="
+cat "$CFG/onebot11_3427943187.json" 2>/dev/null
+echo "===E 历史备份/旧配置==="
+find /root -maxdepth 6 -type f \( -name "*napcat*.json*" -o -name "*config*.bak" \) 2>/dev/null | grep -v node_modules | head -15
+echo "===F 启动脚本里有没有写bypass配置==="
+grep -rn "bypass\|o3HookMode\|config" /root/napcat.sh /root/start_nap.sh /root/azar_login.sh 2>/dev/null | head -15
 echo "=====完====="
 --- 输出 ---
-===A 所有config文件里的bypass/反检测关键字段===
---- napcat.json ---
-"fileLog": false
-"consoleLog": true
-"packetBackend": "auto"
-"o3HookMode": 1
---- napcat_3427943187.json ---
-"fileLog": false
-"consoleLog": true
-"packetBackend": "auto"
-"o3HookMode": 1
---- napcat_protocol_3427943187.json ---
-"enable": false
---- onebot11_3427943187.json ---
-"enable": true
-"token": ""
---- webui.json ---
-"token": "560aad98b99d"
-===B napcat_3427943187完整前80行===
+===A 配置文件修改时间===
+2026-11-12 00:23:44.170000000 +0800 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json
+2026-11-11 23:49:33.310000000 +0800 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json
+2026-11-12 00:23:45.170000000 +0800 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_protocol_3427943187.json
+===B napcat.json和3427943187配置是否一致===
+16c16,17
+<   }
+---
+>   },
+>   "autoTimeSync": true
+两文件有差异(见上)
+===C 协议配置全文===
 {
-  "fileLog": false,
-  "consoleLog": true,
-  "fileLogLevel": "debug",
-  "consoleLogLevel": "info",
-  "packetBackend": "auto",
-  "packetServer": "",
-  "o3HookMode": 1,
-  "bypass": {
-    "hook": false,
-    "window": false,
-    "module": false,
-    "process": false,
-    "container": false,
-    "js": false
+  "enable": false,
+  "network": {
+    "httpServers": [],
+    "websocketServers": [],
+    "websocketClients": []
+  }
+}===D onebot配置全文===
+{
+  "network": {
+    "httpServers": [],
+    "httpSseServers": [],
+    "httpClients": [],
+    "websocketServers": [],
+    "websocketClients": [
+      {
+        "enable": true,
+        "url": "ws://127.0.0.1:8080/onebot/v11/ws",
+        "messagePostFormat": "array",
+        "reportSelfMessage": false,
+        "token": "",
+        "debug": false,
+        "heartInterval": 30000,
+        "reconnectInterval": 5000
+      }
+    ],
+    "plugins": []
   },
-  "autoTimeSync": true
-}===C 搜bypass全文===
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json:8:  "o3HookMode": 1,
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json:9:  "bypass": {
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json:10:    "hook": false,
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json:8:  "o3HookMode": 1,
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json:9:  "bypass": {
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json:10:    "hook": false,
-===D QQ本体版本===
-"version": "9.9.22
-"version": "3.2.34-53644"
+  "musicSignUrl": "http://127.0.0.1:10800/",
+  "enableLocalFile2Url": false,
+  "parseMultMsg": false,
+  "imageDownloadProxy": "",
+  "timeout": {
+    "baseTimeout": 10000,
+    "uploadSpeedKBps": 256,
+    "downloadSpeedKBps": 256,
+    "maxTimeout": 1800000
+  }
+}===E 历史备份/旧配置===
+===F 启动脚本里有没有写bypass配置===
+/root/napcat.sh:270:    # 确保 config-manager 工具可用
+/root/napcat.sh:278:            execute_command "run_as_root dnf config-manager --set-enabled appstream" "启用 AppStream 仓库"
+/root/napcat.sh:353:        fonts="fontconfig dejavu-sans-fonts"
+/root/napcat.sh:471:        update_linuxqq_config "${linuxqq_installed_version}"
+/root/napcat.sh:565:    update_linuxqq_config "${linuxqq_target_version}"
+/root/napcat.sh:568:#  REWRITTEN: update_linuxqq_config for rootless 
+/root/napcat.sh:569:function update_linuxqq_config() {
+/root/napcat.sh:574:    local user_config_dir="$HOME/.config/QQ/versions"
+/root/napcat.sh:575:    local user_config_file="${user_config_dir}/config.json"
+/root/napcat.sh:577:    if [ -d "${user_config_dir}" ]; then
+/root/napcat.sh:578:        if [ -f "${user_config_file}" ]; then
+/root/napcat.sh:579:            log "正在修改 ${user_config_file}..."
+/root/napcat.sh:582:                '.baseVersion = $targetVer | .curVersion = $targetVer | .buildId = $buildId' "${user_config_file}" >"${user_config_file}.tmp" &&
+/root/napcat.sh:583:                mv "${user_config_file}.tmp" "${user_config_file}" || {
+/root/napcat.sh:588:            log "未找到用户配置文件 ${user_config_file}, QQ首次启动时会自动创建。"
 =====完=====
