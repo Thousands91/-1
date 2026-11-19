@@ -1,15 +1,17 @@
-287408
-echo "===== 287408 掉线前发送行为取证 ====="
-echo "[0]当前登录状态:"
-bash /root/logincheck.sh 2>&1 | grep -E "^\[|阶段" | head -3
-echo "[1]napcat.log今天全部发送记录(时间轴):"
-grep -E "发送|send" /root/napcat.log | grep "11-19" | tail -20
-echo "[2]22:44:00~22:45:15 掉线前最后窗口全事件:"
-grep -E "11-19 22:4[45]" /root/napcat.log | head -20
-echo "[3]14:30~14:41 第一次闪断前窗口:"
-grep -E "11-19 14:3[0-9]" /root/napcat.log | tail -12
-echo "[4]12:00~12:12 中午那次掉线前窗口:"
-grep -E "11-19 12:0" /root/napcat.log | tail -12
-echo "[5]bot.log今天发送类动作(retcode/发送失败):"
-grep -E "send_msg|ActionFailed|发送失败" /root/bot/bot/bot.log | grep "11-19" | tail -8
+287409
+echo "===== 287409 掉线-发送相关性深挖 ====="
+echo "[1]22:00~22:45:11 之间全部发送记录:"
+awk '/11-19 22:0/,/11-19 22:45:11/' /root/napcat.log | grep "发送" | tail -8
+echo "[2]20:19:25 Timeout后 NapCat 后续10行:"
+grep -A 10 "20:19:25" /root/napcat.log | head -12
+echo "[3]bot.log今天全部心跳跳变:"
+grep "状态跳变" /root/bot/bot/bot.log | tail -12
+echo "[4]autoheal 12:10与14:39前后明细:"
+grep -B2 -A4 "12:10:30" /root/autoheal.log | head -10
+grep -B2 -A4 "14:39:39" /root/autoheal.log | head -10
+echo "[5]新二维码时间:"
+ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+echo "[6]新码base64:"
+base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+echo ""
 echo "=====完====="
