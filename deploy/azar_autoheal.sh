@@ -1,5 +1,5 @@
 #!/bin/bash
-# azar_autoheal.sh v1.1 — 掉线自动愈合（独立进程，与 worker 解耦）
+# azar_autoheal.sh v1.2 — 掉线自动愈合（独立进程，与 worker 解耦）
 # 背景：v6.6 的看护寄生在 remote_ctl_v6.sh 主循环里，worker 一旦卡在回传/被冻结，
 #       看护停摆 + 告警发不出去 = 掉线9小时没人知道（11-19 事故）。
 # 职责（只做两件安全的事，不反复 pkill 触发风控）：
@@ -9,6 +9,8 @@
 #       本脚本不承诺免扫码登录，只保证"掉线第一时间报警 + 进程自愈"，把介入成本降到最低。
 # v1.1（2026-11-19 用户掉线相关性猜想）：掉线告警自带"距最后发送/最后收信秒数"，
 #       从 napcat.log 取最后一条 发送->/接收<- 的时间戳算间隔，长期积累数据验证猜想。
+# v1.2（2026-11-20）：① 掉线告警再加"本次在线X分"（会话寿命记账，验证"越扫越短"假设）；
+#       ② 每轮循环续持 termux-wake-lock——息屏不深睡、worker 回传不再断（用户不用一直亮屏）。
 
 LD=/root/.autoheal.lock
 if mkdir "$LD" 2>/dev/null; then
@@ -50,9 +52,13 @@ send_alert() {
   fi
 }
 
-say "===== autoheal v1.1 启动 $(date '+%F %T') ====="
+say "===== autoheal v1.2 启动 $(date '+%F %T') ====="
 PREV=""
+ON_TS=""   # 本次在线的起始时刻（v1.2 会话寿命记账用）
 while true; do
+  # ⓪ 息屏保活：续持 termux-wake-lock（每60秒刷一次；proot内可直调；失败静默不影响主职）
+  _WL=/data/data/com.termux/files/usr/bin/termux-wake-lock
+  [ -x "$_WL" ] && "$_WL" 2>/dev/null
   # ① 进程存活守护（掉线后的 NapCat 重启由 worker 的 restart_napcat 负责，这里只保"进程在"）
   pgrep -f '/root/bot/venv/bin/python main.py' >/dev/null || {
     say "大脑进程不在,拉起"
@@ -72,6 +78,16 @@ while true; do
     say "登录态: ${PREV:-初始} -> $ST"
     case "$ST" in
       *未登录*|*掉线*)
+        # v1.2：本次在线时长（优先本进程记账；进程重启丢了就查 login_state.log 最后一次上线时刻）
+        _ON=""
+        if [ -n "$ON_TS" ]; then
+          _ON=$(( ( $(date +%s) - ON_TS + 30 ) / 60 ))
+        else
+          _OT=$(grep -E "状态变化.*-> \[在线\]" /root/login_state.log 2>/dev/null | tail -1 | grep -oE "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}")
+          if [ -n "$_OT" ]; then
+            _OB=$(date -d "$_OT" +%s 2>/dev/null) && _ON=$(( ( $(date +%s) - _OB + 30 ) / 60 ))
+          fi
+        fi
         # v1.1：掉线告警带"距最后发送/最后收信秒数"，积累掉线-交互相关性数据
         _LT=$(grep "发送 ->" /root/napcat.log 2>/dev/null | grep -oE "11-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}" | tail -1)
         _LR=$(grep "接收 <-" /root/napcat.log 2>/dev/null | grep -oE "11-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}" | tail -1)
@@ -84,8 +100,10 @@ while true; do
           _B2=$(date -d "$(date +%Y)-${_LR}" +%s 2>/dev/null)
           [ -n "$_B2" ] && _G="${_G}/距最后收信$(( $(date +%s) - _B2 ))秒"
         fi
-        send_alert "阿萨尔掉线($ST)! ${_G:-间隔未知};已自愈,5分钟不恢复需本人扫码" ;;
-      *在线*) [ -n "$PREV" ] && send_alert "阿萨尔已恢复在线" ;;
+        send_alert "阿萨尔掉线($ST)! 本次在线${_ON:-?}分/${_G:-间隔未知};已自愈,5分钟不恢复需本人扫码" ;;
+      *在线*)
+        ON_TS=$(date +%s)
+        [ -n "$PREV" ] && send_alert "阿萨尔已恢复在线" ;;
     esac
     PREV="$ST"
   fi
