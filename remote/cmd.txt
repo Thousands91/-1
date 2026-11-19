@@ -1,15 +1,10 @@
-287377
-echo "===== 兔斯基回5无后续-一次性诊断 287377 $(date '+%F %T') ====="
-echo "[1]15:50~15:55 matcher分派+发送全日志:"
-grep -E "11-19 15:5[0-5]" /root/bot/bot/bot.log 2>/dev/null | grep -iE "message.group|handled by|running complete|点歌|发卡|语音|record|文件|柜上|找补|error|traceback|exception" | tail -80
-echo "[2]15:51~15:54 不过滤原文:"
-awk '/11-19 15:51:/,/11-19 15:54:/' /root/bot/bot/bot.log 2>/dev/null | head -70
-echo "[3]voice_probe尾部(audio成功发语音才写):"
-tail -6 /root/bot/bot/data/voice_probe.log 2>/dev/null
-echo "[4]设备md5(应65095faf=坑140修复版):"
-md5sum /root/bot/bot/plugins/song_request.py | cut -c1-8
-echo "[5]进程PID:"
-pgrep -f '/root/bot/venv/bin/python main.py' | head -1
-echo "[6]bot.log尾部15行:"
-tail -15 /root/bot/bot/bot.log 2>/dev/null
+287378
+echo "===== 点歌ERROR堆栈+回5去向 287378 ====="
+echo "[1]15:50:20~15:50:45完整原文(含ERROR堆栈):"
+awk '/11-19 15:50:2[0-9]/,/11-19 15:50:4[5-9]/' /root/bot/bot/bot.log 2>/dev/null | head -80
+echo "[2]全log里搜'5'这条消息(15:50~15:53所有message.group):"
+grep -E "11-19 15:5[0-3]" /root/bot/bot/bot.log 2>/dev/null | grep "message.group.normal" | tail -20
+echo "[3]Traceback行及后10行:"
+grep -n "15:50:28.*failed\|Traceback" /root/bot/bot/bot.log 2>/dev/null | tail -5
+L=$(grep -n "11-19 15:50:28.*failed" /root/bot/bot/bot.log 2>/dev/null | tail -1 | cut -d: -f1); [ -n "$L" ] && sed -n "$((L-2)),$((L+30))p" /root/bot/bot/bot.log
 echo "=====完====="
