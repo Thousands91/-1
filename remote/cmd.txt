@@ -1,9 +1,4 @@
-287388
-echo "===== 重启后Traceback溯源 287388 ====="
-echo "[1]19:38:00~19:38:40所有Traceback及前后:"
-awk '/11-19 19:38:0[0-9]/,/11-19 19:38:4[0-9]/' /root/bot/bot/bot.log 2>/dev/null | grep -A4 -B1 "Traceback" | head -40
-echo "[2]这40秒内所有ERROR/WARNING:"
-grep -E "11-19 19:38:[0-3]" /root/bot/bot/bot.log 2>/dev/null | grep -iE "ERROR|WARNING|exception|failed" | head -15
-echo "[3]进程稳定(etime应>1分钟):"
-PID=$(pgrep -f '/root/bot/venv/bin/python main.py'|head -1); ps -p "$PID" -o pid,etime,stat 2>/dev/null | tail -1
+287390
+echo "===== 大文件分块写入测试 287390 $(date '+%F %T') ====="
+echo "收到,准备接收ai_chat分块"
 echo "=====完====="
