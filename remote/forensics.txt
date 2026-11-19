@@ -1,6 +1,6 @@
-===== 掉线取证 v2.0 2026-11-19 12:41:46 CST =====
+===== 掉线取证 v2.0 2026-11-19 13:08:56 CST =====
 【判定类型】自检-模拟静默离线(SelfOffline)
-【触发原文】[SELFTEST] 账号状态变更为离线 1119/124146.000000
+【触发原文】[SELFTEST] 账号状态变更为离线 1119/130856.000000
 
 ---- ① 自动判定(秒级时间轴) ----
 静默离线(最新): (无时间戳)
@@ -18,39 +18,51 @@ GPU崩溃(最新): 11-19 06:50:35
 (本次无KickedOffLine → 静默离线,腾讯未下发原因码)
 
 ---- ④ 网络心跳(事发前后) ----
-11-19 12:29:59 ping=FAILms batt=
-11-19 12:31:01 ping=FAILms batt=
-11-19 12:32:07 ping=10.7ms batt=
-11-19 12:33:07 ping=FAILms batt=
-11-19 12:34:10 ping=FAILms batt=
-11-19 12:35:13 ping=FAILms batt=
-11-19 12:36:15 ping=FAILms batt=
-11-19 12:37:17 ping=FAILms batt=
-11-19 12:38:20 ping=FAILms batt=
-11-19 12:39:22 ping=FAILms batt=
-11-19 12:40:24 ping=FAILms batt=
-11-19 12:41:26 ping=FAILms batt=
+11-19 12:57:03 ping=FAILms batt=
+11-19 12:58:05 ping=FAILms batt=
+11-19 12:59:07 ping=FAILms batt=
+11-19 13:00:10 ping=FAILms batt=
+11-19 13:01:12 ping=FAILms batt=
+11-19 13:02:14 ping=FAILms batt=
+11-19 13:03:16 ping=FAILms batt=
+11-19 13:04:19 ping=FAILms batt=
+11-19 13:05:21 ping=FAILms batt=
+11-19 13:06:23 ping=FAILms batt=
+11-19 13:07:25 ping=FAILms batt=
+11-19 13:08:28 ping=FAILms batt=
 -- 即时网络 --
-2 packets transmitted, 0 received, 100% packet loss, time 1008ms
+2 packets transmitted, 0 received, 100% packet loss, time 1026ms
 
 
 ---- ⑤ 系统状态 ----
- 12:41:49 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
+ 13:08:59 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
                total        used        free      shared  buff/cache   available
-Mem:            5571        3131         134          12        2306        2191
+Mem:            5571        2988         175          12        2406        2333
 /dev/block/by-name/userdata  111G  101G  9.8G  92% /
 电量: 
 QQ进程数: 5
 
----- ⑥ 日志尾部 ----
-█ █   █ █▀▄ ██  █▄█   ▄   ▄▄▄▄█  ▄█
-█ █▄▄▄█ █  ▄▀▀██▄ ▀ ▀ ██▄▀▄ ▄▀█▄▄▀█
-█▄▄▄▄▄▄▄█▄███▄███▄█▄▄▄▄▄██▄███▄▄███
+---- ⑥ 连接探针(WS层权威信号,lifecycle/heartbeat) ----
+[11-19 13:03:27.885] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
 
-二维码解码URL: https://txz.qq.com/p?k=bxt6MAJ83XDb3Jns6YobTyH2E1uqERlu&f=1600001615
-如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
-11-19 12:41:45 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-a184a3aec6945daa845ca9415e59a8e80094fcd9b9f8864298e36f309cfab40e
-2543cc611da8b6275f300670e81b73948e2e6b594578e472e5ed426124a110f6
-984a055cd3d924a58671763fc0436adf78b394c0c35bee5e3caf9f59ef0a64e2
+---- ⑦ 环境指纹与配置(定位'为什么被踢'的关键变量) ----
+出口IP: 2026-11-19 12:54:30 14.19.177.57
+QQ版本: 
+NapCat版本: 
+反检测配置: "o3HookMode": 1 "bypass" "hook": false "window": false "module": false "process": false "container": false "js": false 
+WS心跳间隔: "heartInterval": 30000
+登录方式: qrcode
+登录态台账尾: 2026-11-19 12:54:07 [未登录] 2026-11-19 12:59:08 [未登录] 2026-11-19 13:04:08 [未登录] 
+
+---- ⑧ 日志尾部 ----
+e54f5f2ec39582082137e960dc788fa7b375bd31579e166b968dafa4b6b3156a
+d611ea5c8045c6d4357fb92b00186025812be854734de7ddc8803ea03451ce66
+d56e785f750075dbf08ed554b86ec3ada676003be5f4b5ddeba9bd40c7451d7f
+673736a54efb97057901a82722079edfadcec5f5fe589f0e3d24ea79118aeced
+04dfdf73c8f5cfac803a2c6670cf742ec606502279ac853c5aea010177fa2b72
+7f844784550d27c5b7b7655e330205babf19145cffd2f709ffd82d5b8501196f
+1c1bb07b8cb9eab87463b1f2c1431fa2eada03b8641d2fc5ad30f4f995842894
+4d666a96af521252d835916b26317bebf1390d31701fedecd13068fe9bec4456
+9233c5b3ee098de32d3c966fbce94feae89478147b9e59a1aa7b01769fca2a09
+990c620400157fd5752a854754583e9141f2aa27952155ea26bfd71da1848aba
 ===== 取证结束 =====
