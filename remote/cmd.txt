@@ -1,19 +1,18 @@
-287425
-echo "===== 287425 修正口径:bot.log逐日统计 ====="
-echo "[1]逐日总行数:"
-for d in 11-14 11-15 11-16 11-17 11-18 11-19 11-20; do
-  echo "  $d: $(grep -c "^11-$d" /root/bot/bot/bot.log)"
-done
-echo "[2]逐日收到的消息行数:"
-for d in 11-16 11-17 11-18 11-19 11-20; do
-  echo "  $d: $(grep "^11-$d" /root/bot/bot/bot.log | grep -cF "message.group.normal")  群 / 私聊 $(grep "^11-$d" /root/bot/bot/bot.log | grep -cF "message.private")"
-done
-echo "[3]逐日ai_chat触发:"
-for d in 11-16 11-17 11-18 11-19 11-20; do
-  echo "  $d: $(grep "^11-$d" /root/bot/bot/bot.log | grep -cF "module=plugins.ai_chat")"
-done
-echo "[4]napcat-restart.log格式抽样:"
-grep -m3 "11-19 15:5" /root/napcat-restart.log | head -3
-echo "[5]memory全目录(文件名=用户QQ,看更新时间分布):"
-ls -la --time-style=+%m-%d_%H:%M /root/bot/bot/data/memory/
+287426
+echo "===== 287426 行首字节检查+修正统计 ====="
+echo "[1]bot.log首行字节(查隐形前缀):"
+head -c 60 /root/bot/bot/bot.log | od -c | head -3
+echo "[2]逐日行数(不锚定):"
+awk '{print substr($0,1,5)}' /root/bot/bot/bot.log | sort | uniq -c | tail -12
+echo "[3]逐日群消息量:"
+awk '/message.group.normal/ {print substr($0,1,5)}' /root/bot/bot/bot.log | sort | uniq -c
+echo "[4]逐日ai_chat触发量:"
+awk '/module=plugins.ai_chat/ {print substr($0,1,5)}' /root/bot/bot/bot.log | sort | uniq -c
+echo "[5]napcat-restart.log覆盖范围:"
+head -c 120 /root/napcat-restart.log
+echo ""
+tail -c 120 /root/napcat-restart.log
+echo ""
+echo "[6]napcat-restart.log里发送记录格式:"
+grep -m2 "发送" /root/napcat-restart.log | head -2
 echo "=====完====="
