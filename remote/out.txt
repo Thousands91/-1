@@ -1,38 +1,42 @@
-<<<ALERT.txt>>>
-2026-11-19 20:23:08 阿萨尔已恢复在线
-<<<task_287393.txt>>>
-===== 任务287393 11-19 20:15:05 =====
+<<<task_287394.txt>>>
+===== 任务287394 11-19 20:45:21 =====
 --- 命令 ---
-echo "===== 探测 287393 $(date '+%F %T') ====="
-echo "ai_md5=$(md5sum /root/bot/bot/plugins/ai_chat.py|cut -c1-8) games_md5=$(md5sum /root/bot/bot/plugins/games.py|cut -c1-8)"
-echo "worker=$(pgrep -f remote_ctl_v6|head -1) bot=$(pgrep -f '/root/bot/venv/bin/python main.py'|head -1)"
-echo "=====完====="
---- 输出 ---
-===== 探测 287393 2026-11-19 20:15:05 =====
-ai_md5=4f1634c1 games_md5=d4c0268f
-worker=6857 bot=9354
-=====完=====
-<<<task_287392.txt>>>
-===== 任务287392 11-19 20:07:27 =====
---- 命令 ---
-echo "===== 探活+cmd状态 287392 $(date '+%F %T') ====="
-echo "[1]worker进程:"
-pgrep -af 'remote_ctl_v6\|v6_from_github' | head -3 || echo "  无worker!"
-echo "[2]cmd.txt首行与字节:"
-head -1 /root/-1/remote/cmd.txt 2>/dev/null || head -1 /root/*/remote/cmd.txt 2>/dev/null
-wc -c /root/-1/remote/cmd.txt 2>/dev/null
-echo "[3]bot大脑进程:"
-pgrep -af '/root/bot/venv/bin/python main.py' | head -1
-echo "[4]在线:"
+echo "===== 重启大脑加载修复版 287394 $(date '+%F %T') ====="
+echo "[1]确认md5(应ai=4f1634c1 games=d4c0268f):"
+echo "  ai=$(md5sum /root/bot/bot/plugins/ai_chat.py|cut -c1-8) games=$(md5sum /root/bot/bot/plugins/games.py|cut -c1-8)"
+OLDPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
+echo "[2]旧PID=$OLDPID,重启:"
+kill "$OLDPID" 2>/dev/null; sleep 3
+( cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null & )
+sleep 15
+NEWPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
+echo "[3]新PID=$NEWPID"
+echo "[4]插件加载:"
+grep -iE "Succeeded to load plugin|Failed to load plugin" /root/bot/bot/bot.log 2>/dev/null | tail -12
+echo "[5]横幅+在线:"
+grep "QQ 群机器人启动成功" /root/bot/bot/bot.log 2>/dev/null | tail -1
 bash /root/logincheck.sh 2>/dev/null | grep -oE '\[[^]]+\]' | head -1
 echo "=====完====="
 --- 输出 ---
-===== 探活+cmd状态 287392 2026-11-19 20:07:27 =====
-[1]worker进程:
-[2]cmd.txt首行与字节:
-287372
-[3]bot大脑进程:
-9354 /root/bot/venv/bin/python main.py
-[4]在线:
+===== 重启大脑加载修复版 287394 2026-11-19 20:45:21 =====
+[1]确认md5(应ai=4f1634c1 games=d4c0268f):
+  ai=4f1634c1 games=d4c0268f
+[2]旧PID=9354,重启:
+[3]新PID=25156
+[4]插件加载:
+11-19 19:38:34 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
+11-19 20:45:33 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
+11-19 20:45:34 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+11-19 20:45:34 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
+11-19 20:45:34 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
+11-19 20:45:34 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-19 20:45:35 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+11-19 20:45:35 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+11-19 20:45:35 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
+11-19 20:45:35 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
+11-19 20:45:35 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+11-19 20:45:35 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
+[5]横幅+在线:
+11-19 20:45:36 [INFO] __main__ | QQ 群机器人启动成功 ✅
 [在线]
 =====完=====
