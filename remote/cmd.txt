@@ -1,14 +1,21 @@
-287318
-echo "===== 昨晚登录方式细节 287318 ====="
-echo "---[1]00:42前后登录方式关键词---"
-grep -aE "快速登录|二维码登录方式|登录方式|loginType" /root/napcat.log 2>/dev/null | tail -15
-echo "[1完]"
-echo "---[2]remote_ctl.log昨晚看护动作---"
-grep -aE "11-18 (2[0-3]):|11-19 (0[0-2]):" /root/remote_ctl.log 2>/dev/null | grep -aE "看护|保险丝|拉起|重启|NapCat" | tail -35
-echo "[2完]"
-echo "---[3]当前QQ进程启动参数---"
-pgrep -af 'opt/QQ/[q]q' | head -2
-echo "---[4]离线/风控原因码---"
-grep -aE "ErrCode|errCode|Kicked|kicked|失效|风险|风控|验证" /root/napcat-restart.log 2>/dev/null | tail -20
-echo "[4完]"
+287319
+echo "===== 黑匣子v2诊断 287319 $(date '+%F %T') ====="
+echo "[1]现有offline_watch:"
+md5sum /root/offline_watch.sh 2>/dev/null
+cat /root/offline_watch.sh 2>/dev/null | head -36
+echo "[2]进程:"
+pgrep -af 'offline_watch|netmon' | head -6
+echo "[3]NapCat日志目录:"
+ls -lt /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat/logs/ 2>/dev/null | head -6
+echo "[4]离线事件行样本:"
+grep -h "账号状态变更为离线" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat/logs/*.log /root/napcat-restart.log 2>/dev/null | tail -3
+echo "[5]KickedOffLine行样本:"
+grep -h "KickedOffLine" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat/logs/*.log /root/napcat-restart.log 2>/dev/null | tail -3
+echo "[6]GPU崩溃行样本:"
+grep -h "GPU process launch failed" /root/napcat-restart.log /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat/logs/*.log 2>/dev/null | tail -3
+echo "[7]forensics现状:"
+wc -l /root/offline_forensics.log 2>/dev/null
+tail -12 /root/offline_forensics.log 2>/dev/null
+echo "[8]netmon尾部:"
+tail -3 /root/netmon.log 2>/dev/null
 echo "=====完====="
