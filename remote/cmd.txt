@@ -1,9 +1,9 @@
-287310
-echo "===== 掉线自动恢复机制体检 287310 $(date '+%F %T') ====="
-echo "---[1]相关脚本清单---"
-ls -la /root/*watch* /root/*guard* /root/*login* /root/start_all.sh /root/remote_ctl_v6.sh 2>/dev/null | grep -vE '\.log$' | awk '{print $5,$9}'
-echo "---[2]相关进程---"
-pgrep -af 'login_watch|offline_watch|netmon|azar_guard|health_probe|ipwatch|tick.sh|remote_ctl_v6|main.py' | head -20
-echo "---[3]login_watch.sh 全文---"
-cat /root/login_watch.sh 2>/dev/null | head -60
+287311
+echo "===== 恢复脚本真身 287311 ====="
+echo "---[1]azar_guard.sh---"
+cat /root/azar_guard.sh 2>/dev/null
+echo "---[2]watcher.sh---"
+cat /root/watcher.sh 2>/dev/null
+echo "---[3]start_all.sh---"
+cat /root/start_all.sh 2>/dev/null
 echo "=====完====="
