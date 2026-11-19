@@ -1,15 +1,15 @@
-287328
-echo "===A 所有config文件里的bypass/反检测关键字段==="
+287329
+echo "===A 配置文件修改时间==="
 CFG=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config
-for f in "$CFG"/*.json; do
-  echo "--- $(basename $f) ---"
-  grep -oE '"(bypass|o3HookMode|packetBackend|webui|token|enable|fileLog|consoleLog|logLevel|protocol|platform)"[[:space:]]*:[[:space:]]*("[^"]*"|true|false|[0-9]+)' "$f" 2>/dev/null | head -20
-done
-echo "===B napcat_3427943187完整前80行==="
-head -80 "$CFG/napcat_3427943187.json" 2>/dev/null
-echo "===C 搜bypass全文==="
-grep -rn "bypass\|o3Hook\|antiDetect\|反检测\|hook" "$CFG" 2>/dev/null | head -20
-echo "===D QQ本体版本==="
-grep -rhoE '"version"[[:space:]]*:[[:space:]]*"9\.[0-9]+\.[0-9]+' /root/Napcat/opt/QQ/resources/app/ 2>/dev/null | head -3
-cat /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null | grep -oE '"version"[^,]*' | head -2
+stat -c '%y %n' "$CFG"/napcat_3427943187.json "$CFG"/napcat.json "$CFG"/napcat_protocol_3427943187.json 2>/dev/null
+echo "===B napcat.json和3427943187配置是否一致==="
+diff "$CFG/napcat.json" "$CFG/napcat_3427943187.json" 2>/dev/null && echo "两文件完全相同" || echo "两文件有差异(见上)"
+echo "===C 协议配置全文==="
+cat "$CFG/napcat_protocol_3427943187.json" 2>/dev/null
+echo "===D onebot配置全文==="
+cat "$CFG/onebot11_3427943187.json" 2>/dev/null
+echo "===E 历史备份/旧配置==="
+find /root -maxdepth 6 -type f \( -name "*napcat*.json*" -o -name "*config*.bak" \) 2>/dev/null | grep -v node_modules | head -15
+echo "===F 启动脚本里有没有写bypass配置==="
+grep -rn "bypass\|o3HookMode\|config" /root/napcat.sh /root/start_nap.sh /root/azar_login.sh 2>/dev/null | head -15
 echo "=====完====="
