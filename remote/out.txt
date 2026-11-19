@@ -1,13 +1,12 @@
-<<<task_287418.txt>>>
-===== 任务287418 11-20 00:40:40 =====
+<<<task_287419.txt>>>
+===== 任务287419 11-20 00:43:34 =====
 --- 命令 ---
-echo "===== 部署 autoheal v1.2.1 287418 ====="
-echo "[1]下载+校验(应4cc1299a):"
-curl -sL -H "Cache-Control: no-cache" -o /tmp/ah3.sh "https://raw.githubusercontent.com/Thousands91/-1/main/deploy/azar_autoheal.sh?ts=$(date +%s)"
+echo "===== 重试部署 v1.2.1 287419 ====="
+curl -sL -H "Cache-Control: no-cache" -o /tmp/ah3.sh "https://raw.githubusercontent.com/Thousands91/-1/main/deploy/azar_autoheal.sh?ts=$(date +%s)&v=121"
 M=$(md5sum /tmp/ah3.sh | cut -d' ' -f1); echo "  md5: $M"
-if [ "$M" != "4cc1299ac0740dbcfc819facddb55dd5" ]; then echo "  md5不符,中止"; echo "=====完====="; exit 0; fi
+if [ "$M" != "4cc1299ac0740dbcfc819facddb55dd5" ]; then echo "  md5不符,中止(可能CDN未刷新,稍后再试)"; echo "=====完====="; exit 0; fi
 bash -n /tmp/ah3.sh && echo "  语法OK"
-echo "[2]wake-lock退出码测试:"
+echo "[2]wake-lock退出码:"
 /data/data/com.termux/files/usr/bin/termux-wake-lock; echo "  exit=$?"
 echo "[3]安装+重启看护:"
 cp /tmp/ah3.sh /root/azar_autoheal.sh
@@ -17,12 +16,20 @@ rm -rf /root/.autoheal.lock
 setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null &
 sleep 3
 echo "  新进程: $(pgrep -f azar_autoheal | head -1)"
-echo "[4]启动行+首条告警(会话寿命应显示?分,因22:47已掉线):"
+echo "[4]启动行+首条告警(会话寿命应?分):"
 tail -2 /root/autoheal.log
 echo "=====完====="
 --- 输出 ---
-===== 部署 autoheal v1.2.1 287418 =====
-[1]下载+校验(应4cc1299a):
-  md5: 80245de2ec3e2c817057da755638a473
-  md5不符,中止
+===== 重试部署 v1.2.1 287419 =====
+  md5: 4cc1299ac0740dbcfc819facddb55dd5
+  语法OK
+[2]wake-lock退出码:
+  exit=0
+[3]安装+重启看护:
+  新进程: 20822
+[4]启动行+首条告警(会话寿命应?分):
+[11-20 00:43:39] 登录态: 初始 -> [未登录]
+[11-20 00:43:39] ALERT: 阿萨尔掉线([未登录])! 本次在线?分/距最后发送7495秒/距最后收信7217秒;已自愈,5分钟不恢复需本人扫码
 =====完=====
+<<<ALERT.txt>>>
+2026-11-20 00:43:39 阿萨尔掉线([未登录])! 本次在线?分/距最后发送7495秒/距最后收信7217秒;已自愈,5分钟不恢复需本人扫码
