@@ -1,44 +1,44 @@
-<<<task_287381.txt>>>
-===== 任务287381 11-19 18:26:43 =====
+<<<task_287382.txt>>>
+===== 任务287382 11-19 18:28:11 =====
 --- 命令 ---
-echo "===== 18:15~18:18 消息流水+分派完整 287381 ====="
-echo "[1]18:15~18:18所有message.group.normal:"
-grep -E "11-19 18:1[5-8]" /root/bot/bot/bot.log 2>/dev/null | grep "message.group.normal" | head -40
-echo "[2]18:16全部handled by(看掷骰消息交给谁):"
-grep -E "11-19 18:16:" /root/bot/bot/bot.log 2>/dev/null | grep "handled by" | head -30
-echo "[3]dice_cmd(games lineno=38~81)今日触发次数:"
-grep -E "11-19" /root/bot/bot/bot.log 2>/dev/null | grep -E "plugins.games, lineno=(38|81)|三把骰子" | head -20
+echo "===== 掷骰ERROR堆栈 287382 ====="
+echo "[1]18:16:56 dice_cmd failed后8行:"
+grep -n "18:16:56.*failed" /root/bot/bot/bot.log 2>/dev/null | tail -1 | cut -d: -f1 | while read L; do sed -n "$((L)),$((L+12))p" /root/bot/bot/bot.log; done
+echo "[2]18:17:08 dice_cmd failed后8行:"
+grep -n "18:17:08.*failed" /root/bot/bot/bot.log 2>/dev/null | tail -1 | cut -d: -f1 | while read L; do sed -n "$((L)),$((L+12))p" /root/bot/bot/bot.log; done
+echo "[3]今日ActionFailed 1200总次数:"
+grep -E "11-19" /root/bot/bot/bot.log 2>/dev/null | grep -c "ActionFailed"
 echo "=====完====="
 --- 输出 ---
-===== 18:15~18:18 消息流水+分派完整 287381 =====
-[1]18:15~18:18所有message.group.normal:
-11-19 18:15:05 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1642421766 from 3327068725@[群:562796842] '[at:qq=3427943187] 吃什么'
-11-19 18:15:28 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2055317626 from 3327068725@[群:562796842] '贵是贵了点，但不烧心'
-11-19 18:16:16 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1706993528 from 3273077048@[群:562796842] '[at:qq=3427943187] 投掷'
-11-19 18:16:42 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1311971011 from 3273077048@[群:562796842] '[at:qq=3427943187] 掷骰'
-11-19 18:16:54 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 721612739 from 1561950850@[群:562796842] '[at:qq=3427943187] 掷骰'
-11-19 18:17:16 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1149490784 from 3273077048@[群:562796842] '决斗[at:qq=1561950850] '
-11-19 18:17:37 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1226639738 from 1561950850@[群:562796842] '？'
-11-19 18:17:49 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 535208909 from 1561950850@[群:562796842] '[at:qq=3427943187]  掷骰'
-11-19 18:18:04 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1173785040 from 1561950850@[群:562796842] '[reply:id=505496445][at:qq=3427943187] 这什么'
-11-19 18:18:36 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 582333586 from 3273077048@[群:562796842] '[reply:id=26315051][at:qq=3427943187] 这是谁的'
-11-19 18:18:56 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 70018912 from 1561950850@[群:562796842] '他bug一堆'
-[2]18:16全部handled by(看掷骰消息交给谁):
-11-19 18:16:16 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=92)
-11-19 18:16:16 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=188)
-11-19 18:16:16 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 18:16:16 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 18:16:23 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-19 18:16:44 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=38)
-11-19 18:16:52 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-19 18:16:56 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=38)
-[3]dice_cmd(games lineno=38~81)今日触发次数:
-11-19 18:16:44 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=38)
-11-19 18:16:56 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=38) running complete
+===== 掷骰ERROR堆栈 287382 =====
+[1]18:16:56 dice_cmd failed后8行:
 11-19 18:16:56 [ERROR] nonebot | Running Matcher(type='message', module=plugins.games, lineno=38) failed.
-11-19 18:16:56 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=38)
-11-19 18:17:08 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=38) running complete
+Traceback (most recent call last):
+  File "/root/bot/bot/main.py", line 42, in <module>
+    run()
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py", line 337, in run
+    get_driver().run(*args, **kwargs)
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/drivers/fastapi.py", line 187, in run
+    uvicorn.run(
+  File "/root/bot/venv/lib/python3.10/site-packages/uvicorn/main.py", line 632, in run
+    server.run()
+  File "/root/bot/venv/lib/python3.10/site-packages/uvicorn/server.py", line 86, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+  File "/root/bot/venv/lib/python3.10/site-packages/uvicorn/_compat.py", line 60, in asyncio_run
+[2]18:17:08 dice_cmd failed后8行:
 11-19 18:17:08 [ERROR] nonebot | Running Matcher(type='message', module=plugins.games, lineno=38) failed.
-11-19 18:17:50 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=38)
-11-19 18:17:50 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=38) running complete
+Traceback (most recent call last):
+  File "/root/bot/bot/main.py", line 42, in <module>
+    run()
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py", line 337, in run
+    get_driver().run(*args, **kwargs)
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/drivers/fastapi.py", line 187, in run
+    uvicorn.run(
+  File "/root/bot/venv/lib/python3.10/site-packages/uvicorn/main.py", line 632, in run
+    server.run()
+  File "/root/bot/venv/lib/python3.10/site-packages/uvicorn/server.py", line 86, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+  File "/root/bot/venv/lib/python3.10/site-packages/uvicorn/_compat.py", line 60, in asyncio_run
+[3]今日ActionFailed 1200总次数:
+1
 =====完=====
