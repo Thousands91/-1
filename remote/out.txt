@@ -1,61 +1,34 @@
-<<<task_287332.txt>>>
-===== 任务287332 11-19 13:00:01 =====
+<<<task_287333.txt>>>
+===== 任务287333 11-19 13:01:35 =====
 --- 命令 ---
-echo "===A on_meta_event导出位置==="
-grep -rn "def on_meta_event\|on_meta_event" /root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py /root/bot/venv/lib/python3.10/site-packages/nonebot/matcher.py 2>/dev/null | head -5
-echo "===B Status类字段==="
-sed -n '120,140p' /root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py 2>/dev/null
-echo "===C get_self_id方法==="
-grep -n "def get_self_id\|self_id" /root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py 2>/dev/null | head -5
-echo "===D Lifecycle/Heartbeat类定义==="
-sed -n '556,572p' /root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py 2>/dev/null
+echo "===A on_meta_event全局搜索==="
+grep -rn "on_meta_event" /root/bot/venv/lib/python3.10/site-packages/nonebot/ 2>/dev/null | grep -v ".pyc" | head -10
+echo "===B nonebot顶层导出的on_函数==="
+grep -oE "on_[a-z_]+" /root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py 2>/dev/null | sort -u | head -20
+echo "===C 用on_type或on_message兜底==="
+grep -oE "on_(type|message|meta)[a-z_]*" /root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py 2>/dev/null | sort -u
+echo "===D nonebot版本对on_meta_event的支持(pip文档)==="
+grep -rn "meta_event" /root/bot/venv/lib/python3.10/site-packages/nonebot/matcher.py 2>/dev/null | head -5
 echo "=====完====="
 --- 输出 ---
-===A on_meta_event导出位置===
-===B Status类字段===
-
-    if PYDANTIC_V2:
-        model_config = ConfigDict(extra="allow")
-    else:
-
-        class Config(ConfigDict):
-            extra = "allow"
-
-
-class Status(BaseModel):
-    online: bool
-    good: bool
-
-    if PYDANTIC_V2:
-        model_config = ConfigDict(extra="allow")
-    else:
-
-        class Config(ConfigDict):
-            extra = "allow"
-
-
-===C get_self_id方法===
-34:    self_id: int
-272:        return self.user_id == self.self_id
-294:        return self.user_id == self.self_id
-316:        return self.user_id == self.self_id
-339:        return self.user_id == self.self_id
-===D Lifecycle/Heartbeat类定义===
-class LifecycleMetaEvent(MetaEvent):
-    """生命周期元事件"""
-
-    meta_event_type: Literal["lifecycle"]
-    sub_type: str
-
-
-class HeartbeatMetaEvent(MetaEvent):
-    """心跳元事件"""
-
-    meta_event_type: Literal["heartbeat"]
-    status: Status
-    interval: int
-
-
-__all__ = [
-    "Event",
+===A on_meta_event全局搜索===
+===B nonebot顶层导出的on_函数===
+on__
+on_command
+on_endswith
+on_fullmatch
+on_keyword
+on_message
+on_metaevent
+on_notice
+on_regex
+on_request
+on_shell_command
+on_startswith
+on_type
+===C 用on_type或on_message兜底===
+on_message
+on_metaevent
+on_type
+===D nonebot版本对on_meta_event的支持(pip文档)===
 =====完=====
