@@ -1,39 +1,47 @@
-<<<task_287320.txt>>>
-===== 任务287320 11-19 12:31:58 =====
+<<<task_287321.txt>>>
+===== 任务287321 11-19 12:33:07 =====
 --- 命令 ---
-echo "===A 找NapCat日志真实位置==="
-find /root/Napcat /root -maxdepth 8 -type f -name "*.log" 2>/dev/null | grep -i -E "napcat|Napcat" | head -12
-echo "===B restart日志存在吗==="
-ls -la /root/napcat-restart.log 2>/dev/null
-echo "===C 全盘找离线事件行(限3)==="
-grep -rh "账号状态变更为离线" /root --include="*.log" 2>/dev/null | tail -3
-echo "===D 全盘找KickedOffLine(限3)==="
-grep -rh "KickedOffLine" /root --include="*.log" 2>/dev/null | tail -3
-echo "===E 全盘找GPU行(限3)==="
-grep -rh "GPU process launch failed" /root --include="*.log" 2>/dev/null | tail -3
-echo "===F forensics历史==="
-wc -l /root/offline_forensics.log 2>/dev/null
-tail -14 /root/offline_forensics.log 2>/dev/null
+echo "===A napcat.log大小与格式==="
+ls -la /root/napcat.log 2>/dev/null
+tail -6 /root/napcat.log 2>/dev/null
+echo "===B napcat-restart尾部格式==="
+tail -6 /root/napcat-restart.log 2>/dev/null
+echo "===C 历史离线事件在所有日志文件里找==="
+for f in /root/napcat.log /root/napcat-restart.log /root/bot.log; do
+  n=$(grep -c "账号状态变更为离线" "$f" 2>/dev/null); k=$(grep -c "KickedOffLine" "$f" 2>/dev/null)
+  echo "$f 离线=$n 被踢=$k"
+done
+echo "===D netmon时间格式==="
+head -2 /root/netmon.log 2>/dev/null
+tail -2 /root/netmon.log 2>/dev/null
+echo "===E 设备时区==="
+date '+%F %T %Z'
 echo "===完==="
 --- 输出 ---
-===A 找NapCat日志真实位置===
-/root/Napcat/opt/QQ/resources/app/rsds.log
-/root/Napcat/opt/QQ/resources/app/rsds.log
-/root/napcat-restart.log
-/root/napcat.log
-===B restart日志存在吗===
--rw-r--r-- 1 root root 1422882 Nov 19 11:58 /root/napcat-restart.log
-===C 全盘找离线事件行(限3)===
-# 掉线取证器：检测到"账号状态变更为离线"立即抓现场快照到 offline_forensics.log
-[ -n "$NEWEST" ] && PREV=$(grep -c "账号状态变更为离线" "$NEWEST" 2>/dev/null || echo 0)
-    N=$(grep -c "账号状态变更为离线" "$NEWEST" 2>/dev/null || echo 0)
-===D 全盘找KickedOffLine(限3)===
-echo "[5]KickedOffLine行样本:"
-grep -h "KickedOffLine" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat/logs/*.log /root/napcat-restart.log 2>/dev/null | tail -3
-[5]KickedOffLine行样本:
-===E 全盘找GPU行(限3)===
-[17993:1119/065035.034023:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[17993:1119/065035.039420:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[17993:1119/065035.044684:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-===F forensics历史===
+===A napcat.log大小与格式===
+-rw-r--r-- 1 root root 155122 Nov 19 12:33 /root/napcat.log
+ee3875efa4645cee41469891bd0eda400ae001d09356f1ed63c17f4bd9be4b07
+f5b04566cbac5944ebd84d3a98fdb62b57994ea35971e9a0c0027c5793842021
+64efb3802236965765770e8a248f5d5e7a701175f1a87b7f4754df1a43f97fbc
+7085f0a9c545536edec620df1c6e70ef40a728ff246f105d9536564c74637beb
+ae3768c90a78b7bbd732b72f027c1a77522eba8b4ee4df7e62ddbfc1920a90f9
+2437cc284f19c27c2845780097e48f41f539ad44ff8b8de324e20a801fdf70a3
+===B napcat-restart尾部格式===
+cdca3cd0e9f21ce7b771a0529acf4882719744215fc5eaa511333db6a5010b04
+be1ffe652bb564335091330fdb4ffe0a40095bee8a530572ecd60d58e8b8c7de
+6026e974d49be992c693524e1418180d0a3f158bc4245c21b7a99f6a43949058
+7b3e72b81e50566ef71423a7ed4bac679d9f62f7b2ae5dd2acf3d9db9cf86e2d
+497929851969d31109e15a921f9d68faad54af012a9dd2d408d5d26d6a74a9c8
+[19909:1119/114442.258023:FATAL:electron/shell/browser/electron_browser_main_parts.cc:529] Failed to shutdown.
+===C 历史离线事件在所有日志文件里找===
+/root/napcat.log 离线=0 被踢=0
+/root/napcat-restart.log 离线=0 被踢=0
+/root/bot.log 离线= 被踢=
+===D netmon时间格式===
+11-17 18:55:52 ping=FAILms batt=
+11-17 18:56:54 ping=FAILms batt=
+11-19 12:31:01 ping=FAILms batt=
+11-19 12:32:07 ping=10.7ms batt=
+===E 设备时区===
+2026-11-19 12:33:07 CST
 ===完===
