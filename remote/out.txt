@@ -1,21 +1,51 @@
-<<<task_287386.txt>>>
-===== 任务287386 11-19 19:36:14 =====
+<<<task_287387.txt>>>
+===== 任务287387 11-19 19:38:19 =====
 --- 命令 ---
-echo "===== 设备真实import探针 287386 ====="
-cd /root/bot/bot/plugins
-/root/bot/venv/bin/python -c "
-import nonebot; nonebot.init()
-import importlib.util
-spec=importlib.util.spec_from_file_location('games_chk','/root/bot/bot/plugins/games.py')
-m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
-print('IMPORT OK dice_cmd=', m.dice_cmd is not None, 'handlers=', len(m.dice_cmd.handlers))
-print('aliases=', sorted(m.dice_cmd.__dict__.get('_command',[])))
-" 2>&1 | tail -6
+echo "===== 重启大脑+验收掷骰决斗修复 287387 $(date '+%F %T') ====="
+OLDPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
+echo "旧PID=$OLDPID"
+kill "$OLDPID" 2>/dev/null; sleep 3
+( cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null & )
+sleep 15
+NEWPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
+echo "新PID=$NEWPID"
+echo "[1]插件加载(成功/失败/异常):"
+grep -iE "Succeeded to load plugin|Failed to load plugin|Traceback|SyntaxError|NameError" /root/bot/bot/bot.log 2>/dev/null | tail -13
+echo "[2]games插件加载确认:"
+grep -iE "games" /root/bot/bot/bot.log 2>/dev/null | grep -iE "Succeeded|Failed" | tail -2
+echo "[3]启动横幅:"
+grep "QQ 群机器人启动成功" /root/bot/bot/bot.log 2>/dev/null | tail -1
+echo "[4]新进程存活:"
+ps -p "$NEWPID" -o pid,etime,stat 2>/dev/null | tail -1 || echo "  进程不在!"
+echo "[5]登录态:"
+bash /root/logincheck.sh 2>/dev/null | grep -iE "在线|ready|阶段" | head -2
 echo "=====完====="
 --- 输出 ---
-===== 设备真实import探针 287386 =====
-11-19 19:36:18 [SUCCESS] nonebot | NoneBot is initializing...
-11-19 19:36:18 [INFO] nonebot | Current Env: prod
-IMPORT OK dice_cmd= True handlers= 1
-aliases= []
+===== 重启大脑+验收掷骰决斗修复 287387 2026-11-19 19:38:19 =====
+旧PID=9282
+新PID=9354
+[1]插件加载(成功/失败/异常):
+Traceback (most recent call last):
+Traceback (most recent call last):
+11-19 19:38:31 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
+11-19 19:38:32 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+11-19 19:38:34 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-19 19:38:34 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+11-19 19:38:34 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
+11-19 19:38:34 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+11-19 19:38:34 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
+11-19 19:38:34 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+11-19 19:38:34 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
+11-19 19:38:34 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
+11-19 19:38:34 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
+[2]games插件加载确认:
+11-19 18:17:08 [ERROR] nonebot | Running Matcher(type='message', module=plugins.games, lineno=38) failed.
+11-19 19:38:34 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
+[3]启动横幅:
+11-19 19:38:35 [INFO] __main__ | QQ 群机器人启动成功 ✅
+[4]新进程存活:
+ 9354       00:00 S<sl
+[5]登录态:
+[在线] 已登录，一切正常
+阶段: ready
 =====完=====
