@@ -1,18 +1,13 @@
-287357
-echo "===== 未完成事项只读盘点 287357 $(date '+%F %T') ====="
-echo "[1]登录态:"
-tail -3 /root/login_state.log 2>/dev/null
-echo "[2]关键进程:"
-for p in 'main.py' 'opt/QQ/[q]q' 'remote_ctl_v6' 'azar_autoheal' 'offline_watch' 'Xvfb'; do echo -n "  $p: "; pgrep -af "$p" | head -1 || echo 无; done
-echo "[3]脚本md5:"
-for f in /root/offline_watch_v2.sh /root/azar_autoheal.sh /root/bot/bot/plugins/link_probe.py; do echo "  $(md5sum "$f" 2>/dev/null|cut -c1-8) $(basename $f)"; done
-echo "[4]自启守卫:"
-grep -rl "azar_autoheal\|offline_watch_v2" /root/remote_ctl_v6.sh /root/start_all.sh 2>/dev/null | tr '\n' ' '; echo
-echo "[5]NapCat版本/配置(只读):"
-cat /root/Napcat/app/package.json 2>/dev/null | grep -o '"version"[^,]*' | head -1
-grep -o 'o3HookMode[^,}]*' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/*.json 2>/dev/null | head -3
-echo "[6]点歌签名代理版本:"
-head -3 /root/music_sign.py 2>/dev/null; md5sum /root/music_sign.py 2>/dev/null|cut -c1-8
-echo "[7]GitHub告警/取证通道:"
-for f in alert.txt forensics.txt link.txt; do echo -n "  $f: "; curl -s -H "Authorization: token $(cat /workspace/.gh_token)" "https://api.github.com/repos/Thousands91/-1/contents/remote/$f" | grep -o '"size":[0-9]*' | head -1; done
+287358
+echo "===== 在线状态精准探测 287358 $(date '+%F %T') ====="
+echo "[1]当前时刻与登录态尾部5行:"
+date '+%F %T'; tail -5 /root/login_state.log 2>/dev/null
+echo "[2]logincheck权威判定:"
+bash /root/logincheck.sh 2>/dev/null | tail -8 || echo "  无logincheck.sh"
+echo "[3]link_probe日志尾(WS权威):"
+tail -8 /root/link_probe.log 2>/dev/null || echo "  无"
+echo "[4]bot.log最近WS/离线事件:"
+grep -iE "lifecycle|offline|online|WebSocket|断开|连接|error" /root/bot/bot/bot.log 2>/dev/null | tail -8
+echo "[5]NapCat日志最近登录事件:"
+grep -iE "离线|online|offline|登录|Login|Kicked" /root/napcat-restart.log 2>/dev/null | tail -8
 echo "=====完====="
