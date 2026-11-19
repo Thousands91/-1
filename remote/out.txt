@@ -1,13 +1,2 @@
-<<<task_287410.txt>>>
-===== 任务287410 11-19 23:09:53 =====
---- 命令 ---
-echo "===== 287410 取码 ====="
-ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-echo ""
-echo "=====完====="
---- 输出 ---
-===== 287410 取码 =====
--rw-r--r-- 1 root root 605 Nov 19 23:09 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-iVBORw0KGgoAAAANSUhEUgAAAJMAAACTAQAAAACinha4AAAACXBIWXMAAAsTAAALEwEAmpwYAAACD0lEQVRIid2WMbK1IAyF41DY6QaYYRt0bEk3INcN6Jbo2AYzbEA6Csb8h3d99xZ/A+1jLPQrmOTkJJH4/0N/ml1EGynOfOliHQ09LHFZWVxjWEaxe3z2MCdtFpeJxxgGT2snW3TZdDydSv1sZYUk5kxzL+OyGTnnYDnyN7cmBv1WL5/nq2kTw7m0wNtkiv3WsondGrGLw5SZ42sUZw9Lnl+6kCkb8ZlVF7s0TTompy4St5ZzD2MXdyc4F+tp8JG7WKbNqBfJSYuLVOpjcUf2Bm6lIZPtYYnlQrwzak5EIvWwe4wXSaKwOri1zD3sGhGCeOlAY7zNW4NWlpw4nSRNC8XLPDVvZmGr1VNnpuk3t1bm+dDxMAIv7OXQw9jRjCFEYSGUPdgelryC0ZLjg8T5+KWVYXpt9Qt+oUW/a97MjDpI/bRmmPQzdxvZXcNHCHLI0PLxQSPj2hxhGksVPsu1h+EOhLCz3OC48beWjczDL5gi6nR8uqc/Ghn6srp7lIvBNPr0dBOryvl4w2sssaPmLlZvkoMvuJXMM7NbmYFT1O4Uxufqi+1iFGxG9eSE3qL3nmllOLAqHArxsKy4h9V9bqT1VfvdP7O4kdV9nuu/QPJlYLF3MezVHGZXMEteJLib1XLdGmKEoZPZrG7NCU7Xn1jaGPKAPeuV0rJcexj0w6THivtZFx/tm1jrP9zfYP8A5oVTWw+xV44AAAAASUVORK5CYII=
-=====完=====
+<<<ALERT.txt>>>
+2026-11-19 23:13:50 阿萨尔掉线([未登录])! 已尝试自愈;若5分钟内不恢复需本人扫码
