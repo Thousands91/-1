@@ -1,15 +1,13 @@
-287343
-echo "===最终验收 $(date '+%F %T') ==="
-echo "[1]关键进程:"
-for p in 'remote_ctl_v6.sh' 'main.py' 'offline_watch.sh' 'azar_autoheal.sh' 'health_probe.sh' 'netmon.sh' 'login_watch.sh' 'netmon'; do
-  n=$(pgrep -fc "$p" 2>/dev/null); echo "  $p: $n"
-done
-echo "[2]取证脚本md5:"
-md5sum /root/offline_watch.sh /root/bot/bot/plugins/link_probe.py 2>/dev/null
-echo "[3]自启守卫:"
-grep -c 'offline_watch.sh' /root/remote_ctl_v6.sh /root/start_all.sh 2>/dev/null
-echo "[4]探针日志:"
-wc -l /root/link_probe.log 2>/dev/null
-echo "[5]bot最近是否还活:"
-tail -2 /root/bot/bot/bot.log 2>/dev/null
+287344
+echo "===== 设备端bot代码指纹盘点 287344 $(date '+%F %T') ====="
+echo "===A 所有py文件md5+行数==="
+find /root/bot/bot -name "*.py" -not -path "*__pycache__*" | sort | while read f; do echo "$(md5sum "$f"|cut -c1-8) $(wc -l < "$f") ${f#/root/bot/bot/}"; done
+echo "===B 主程序与配置==="
+cat /root/bot/bot/main.py
+echo "---config---"
+cat /root/bot/bot/config.py
+echo "===C 插件加载日志==="
+grep -i "Succeeded to load plugin\|Failed to load plugin\|Plugin.*error" /root/bot/bot/bot.log 2>/dev/null | tail -25
+echo "===D bot进程与端口==="
+pgrep -af 'python main.py' | head -3
 echo "=====完====="
