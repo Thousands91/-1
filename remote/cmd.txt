@@ -1,13 +1,13 @@
-287315
-echo "===== 掉线瞬间证据 287315 ====="
-echo "---[1]napcat.log 02:12-02:14全部关键行(带上下文)---"
-grep -aE "02:1[234]" /root/napcat.log 2>/dev/null | tail -40
-echo "---[2]扫码成功次数---"
-for f in /root/napcat.log /root/napcat-restart.log; do printf "%s: " "$f"; grep -acE "扫码登录成功|登录成功|Login Success|登录成功" "$f" 2>/dev/null; done
-echo "---[3]账号离线/GPU/被踢关键词全日志计数---"
-echo -n "账号状态变更为离线: "; grep -ac "账号状态变更为离线" /root/napcat.log 2>/dev/null
-echo -n "KickedOffLine被踢: "; grep -ac "KickedOffLine\|被踢" /root/napcat.log 2>/dev/null
-echo -n "GPU error: "; grep -ac "GPU process launch failed" /root/napcat.log 2>/dev/null
-echo "---[4]offline_forensics尾20---"
-tail -20 /root/offline_forensics.log 2>/dev/null || echo 无
+287316
+echo "===== X10掉线周期+登录频率诊断 287316 ====="
+echo "---[1]login_state.log全部状态切换点(看在线周期)---"
+grep -a "状态变化" /root/login_state.log 2>/dev/null | tail -40
+echo "---[2]login_state首末行(记录跨度)---"
+head -2 /root/login_state.log 2>/dev/null; echo ...; tail -2 /root/login_state.log 2>/dev/null
+echo "---[3]昨晚登录操作痕迹:azar_login_run.log---"
+tail -40 /root/azar_login_run.log 2>/dev/null || echo 无此日志
+echo "---[4]napcat-restart.log里的二维码/登录痕迹(昨晚)---"
+grep -aE "11-18 2[23]|11-19 0[01]" /root/napcat-restart.log 2>/dev/null | grep -aE "二维码|扫码|登录|Login|快速" | tail -30 || echo 无匹配
+echo "---[5]remote_ctl.log昨晚重启NapCat记录---"
+grep -aE "11-18 2[23]|11-19 0[012]" /root/remote_ctl.log 2>/dev/null | grep -aE "看护|重启|保险丝|拉起NapCat|restart" | tail -30 || echo 无匹配
 echo "=====完====="
