@@ -1,49 +1,112 @@
-<<<task_287310.txt>>>
-===== 任务287310 11-19 11:53:07 =====
+<<<task_287313.txt>>>
+===== 任务287313 11-19 12:10:28 =====
 --- 命令 ---
-echo "===== 掉线自动恢复机制体检 287310 $(date '+%F %T') ====="
-echo "---[1]相关脚本清单---"
-ls -la /root/*watch* /root/*guard* /root/*login* /root/start_all.sh /root/remote_ctl_v6.sh 2>/dev/null | grep -vE '\.log$' | awk '{print $5,$9}'
-echo "---[2]相关进程---"
-pgrep -af 'login_watch|offline_watch|netmon|azar_guard|health_probe|ipwatch|tick.sh|remote_ctl_v6|main.py' | head -20
-echo "---[3]login_watch.sh 全文---"
-cat /root/login_watch.sh 2>/dev/null | head -60
+echo "===== 部署掉线自动愈合v1.0 287313 $(date '+%F %T') ====="
+echo "[1]写脚本:"
+printf '%s' 'IyEvYmluL2Jhc2gKIyBhemFyX2F1dG9oZWFsLnNoIHYxLjAg4oCUIOaOiee6v+iHquWKqOaEiOWQiO+8iOeLrOeri+i/m+eoi++8jOS4jiB3b3JrZXIg6Kej6ICm77yJCiMg6IOM5pmv77yadjYuNiDnmoTnnIvmiqTlr4TnlJ/lnKggcmVtb3RlX2N0bF92Ni5zaCDkuLvlvqrnjq/ph4zvvIx3b3JrZXIg5LiA5pem5Y2h5Zyo5Zue5LygL+iiq+WGu+e7k++8jAojICAgICAgIOeci+aKpOWBnOaRhiArIOWRiuitpuWPkeS4jeWHuuWOuyA9IOaOiee6vznlsI/ml7bmsqHkurrnn6XpgZPvvIgxMS0xOSDkuovmlYXvvInjgIIKIyDogYzotKPvvIjlj6rlgZrkuKTku7blronlhajnmoTkuovvvIzkuI3lj43lpI0gcGtpbGwg6Kem5Y+R6aOO5o6n77yJ77yaCiMgICDikaAg6L+b56iL5a2Y5rS75a6I5oqk77ya5aSn6ISRL1FRIOi/m+eoi+atu+S6huWwseaLiei1twojICAg4pGhIOaOiee6v+WNs+aXtuWRiuitpu+8mui1sOeLrOeriyBHaXRIdWIgQVBJIOmAmumBk++8jHdvcmtlciDljaHkvY/kuZ/og73lj5Hlh7rljrsKIyDovrnnlYzvvJpRUSDooqvmnI3liqHnq6/ouKLkuIvnur/lkI7ljY/orq7lsYLml6Dms5XlhY3miavnoIHmgaLlpI3vvIjmiYvlhozlnZE2Oea6kOeggee6p+WumuahiO+8ie+8jAojICAgICAgIOacrOiEmuacrOS4jeaJv+ivuuWFjeaJq+eggeeZu+W9le+8jOWPquS/neivgSLmjonnur/nrKzkuIDml7bpl7TmiqXoraYgKyDov5vnqIvoh6rmhIgi77yM5oqK5LuL5YWl5oiQ5pys6ZmN5Yiw5pyA5L2O44CCCgpMRD0vcm9vdC8uYXV0b2hlYWwubG9jawppZiBta2RpciAiJExEIiAyPi9kZXYvbnVsbDsgdGhlbgogIGVjaG8gJCQgPiAiJExEL3BpZCIKZWxzZQogIExQPSQoY2F0ICIkTEQvcGlkIiAyPi9kZXYvbnVsbCkKICBpZiBbIC1uICIkTFAiIF0gJiYga2lsbCAtMCAiJExQIiAyPi9kZXYvbnVsbCAmJiB0ciAtZCAnXDAnIDwgIi9wcm9jLyRMUC9jbWRsaW5lIiAyPi9kZXYvbnVsbCB8IGdyZXAgLXEgYXV0b2hlYWw7IHRoZW4KICAgIGV4aXQgMAogIGZpCiAgcm0gLXJmICIkTEQiOyBta2RpciAiJExEIjsgZWNobyAkJCA+ICIkTEQvcGlkIgpmaQp0cmFwICdybSAtcmYgIiRMRCIgMj4vZGV2L251bGwnIEVYSVQKCkxPRz0vcm9vdC9hdXRvaGVhbC5sb2cKUEJPWD0vcm9vdC8ucmVtb3RlX3BlbmRpbmcKbWtkaXIgLXAgIiRQQk9YIgpzYXkoKSB7IGVjaG8gIlskKGRhdGUgJyslbS0lZCAlSDolTTolUycpXSAkKiIgPj4gIiRMT0ciOyB9CgpnZXRfdG9rKCkgeyBwcmludGYgJ3Byb3RvY29sPWh0dHBzXG5ob3N0PWdpdGh1Yi5jb21cblxuJyB8IHRpbWVvdXQgMTAgZ2l0IGNyZWRlbnRpYWwgZmlsbCAyPi9kZXYvbnVsbCB8IHNlZCAtbiAncy9ecGFzc3dvcmQ9Ly9wJyB8IGhlYWQgLTE7IH0KVE9LPSQoZ2V0X3RvaykKWyAtbiAiJFRPSyIgXSB8fCBUT0s9JChncmVwIC1vRSAnZ2hwX1tBLVphLXowLTldKycgL3Jvb3QvLmdpdC1jcmVkZW50aWFscyAyPi9kZXYvbnVsbCB8IGhlYWQgLTEpCgpBTEVSVF9VUkw9Imh0dHBzOi8vYXBpLmdpdGh1Yi5jb20vcmVwb3MvVGhvdXNhbmRzOTEvLTEvY29udGVudHMvcmVtb3RlL2FsZXJ0LnR4dCIKCiMg5ZGK6K2m5Y+M6YCa6YGT77ya4pGgIOeLrOeriyBBUEkg55u05o6oIEdpdEh1Yu+8iOe7leW8gOWNoeS9j+eahCB3b3JrZXIg55qEIGdpdCBidW5kbGXvvInvvJvikaEg55WZ5LiA5Lu96L+bIFBCT1gg5YWc5bqVCnNlbmRfYWxlcnQoKSB7CiAgbG9jYWwgbXNnPSIkKGRhdGUgJyslRiAlVCcpICQxIgogIHNheSAiQUxFUlQ6ICQxIgogIGVjaG8gIiRtc2ciID4gIiRQQk9YL0FMRVJULnR4dCIgMj4vZGV2L251bGwKICBbIC1uICIkVE9LIiBdIHx8IHsgc2F5ICLlkYroraY65pegdG9rZW4s5LuF55WZUEJPWCI7IHJldHVybiAxOyB9CiAgbG9jYWwgc2hhPSQodGltZW91dCAyMCBjdXJsIC1zIC1IICJBdXRob3JpemF0aW9uOiB0b2tlbiAkVE9LIiAiJEFMRVJUX1VSTD9jYj0kKGRhdGUgKyVzKSIgfCB0ciAtZCAnICcgfCBncmVwIC1vICcic2hhIjoiW14iXSoiJyB8IGhlYWQgLTEgfCBjdXQgLWQnIicgLWY0KQogIGxvY2FsIGI2ND0kKHByaW50ZiAnJXNcbicgIiRtc2ciIHwgYmFzZTY0IC13MCkKICBpZiB0aW1lb3V0IDMwIGN1cmwgLXMgLVggUFVUIC1IICJBdXRob3JpemF0aW9uOiB0b2tlbiAkVE9LIiBcCiAgICAgIC1kICJ7XCJtZXNzYWdlXCI6XCLmjonnur/lkYroraYgJChkYXRlICcrJW0tJWQgJUg6JU0nKVwiLFwiY29udGVudFwiOlwiJGI2NFwiJHtzaGE6KyxcInNoYVwiOlwiJHNoYVwifX0iIFwKICAgICAgIiRBTEVSVF9VUkwiIDI+L2Rldi9udWxsIHwgZ3JlcCAtcSAnImNvbnRlbnQiJzsgdGhlbgogICAgc2F5ICLlkYroraY65bey5o6o6YCBR2l0SHViIgogIGVsc2UKICAgIHNheSAi5ZGK6K2mOuaOqOmAgeWksei0pSznlZlQQk9Y5b6Fd29ya2Vy5Zue5LygIgogIGZpCn0KCnNheSAiPT09PT0gYXV0b2hlYWwgdjEuMCDlkK/liqggJChkYXRlICcrJUYgJVQnKSA9PT09PSIKUFJFVj0iIgp3aGlsZSB0cnVlOyBkbwogICMg4pGgIOi/m+eoi+WtmOa0u+WuiOaKpO+8iOaOiee6v+WQjueahCBOYXBDYXQg6YeN5ZCv55SxIHdvcmtlciDnmoQgcmVzdGFydF9uYXBjYXQg6LSf6LSj77yM6L+Z6YeM5Y+q5L+dIui/m+eoi+WcqCLvvIkKICBwZ3JlcCAtZiAnL3Jvb3QvYm90L3ZlbnYvYmluL3B5dGhvbiBtYWluLnB5JyA+L2Rldi9udWxsIHx8IHsKICAgIHNheSAi5aSn6ISR6L+b56iL5LiN5ZyoLOaLiei1tyIKICAgIHNlbmRfYWxlcnQgIuWkp+iEkei/m+eoi+W8guW4uOmAgOWHuizlt7Loh6rliqjmi4notbciCiAgICAoIGNkIC9yb290L2JvdC9ib3QgJiYgc2V0c2lkIG5vaHVwIC9yb290L2JvdC92ZW52L2Jpbi9weXRob24gbWFpbi5weSA+PiAvcm9vdC9ib3QvYm90L2JvdC5sb2cgMj4mMSA8IC9kZXYvbnVsbCAmICkKICB9CiAgcGdyZXAgLWYgJ29wdC9RUS9bcV1xJyA+L2Rldi9udWxsIHx8IHsKICAgIHNheSAiUVHov5vnqIvkuI3lnKgs5ouJ6LW3KC1x5b+r6YCf55m75b2VKSIKICAgIHNlbmRfYWxlcnQgIlFR6L+b56iL5byC5bi46YCA5Ye6LOW3suiHquWKqOaLiei1tyIKICAgICggY2QgL3Jvb3QvTmFwY2F0ICYmIHNldHNpZCBub2h1cCB4dmZiLXJ1biAtYSAvcm9vdC9OYXBjYXQvb3B0L1FRL3FxIC1xIDM0Mjc5NDMxODcgLS1uby1zYW5kYm94IC0tZGlzYWJsZS1ncHUgLS1kaXNhYmxlLXNvZnR3YXJlLXJhc3Rlcml6ZXIgLS1kaXNhYmxlLWRldi1zaG0tdXNhZ2UgLS1qcy1mbGFncz0tLW1heC1vbGQtc3BhY2Utc2l6ZT01MTIgPj4gL3Jvb3QvbmFwY2F0LXJlc3RhcnQubG9nIDI+JjEgPCAvZGV2L251bGwgJiApCiAgfQoKICAjIOKRoSDnmbvlvZXmgIHnm5HmtYvvvIjmnYPlqIHliKTlrprotbAgbG9naW5jaGVja++8iQogIFNUPSQodGltZW91dCAyMCBiYXNoIC9yb290L2xvZ2luY2hlY2suc2ggMj4vZGV2L251bGwgfCBncmVwIC1vRSAnXFvlnKjnur9cXXxcW+aOiee6v1xdfFxb5pyq55m75b2VXF0nIHwgaGVhZCAtMSkKICBbIC16ICIkU1QiIF0gJiYgU1Q9IlvmnKrnn6VdIgogIGlmIFsgIiRTVCIgIT0gIiRQUkVWIiBdOyB0aGVuCiAgICBzYXkgIueZu+W9leaAgTogJHtQUkVWOi3liJ3lp4t9IC0+ICRTVCIKICAgIGNhc2UgIiRTVCIgaW4KICAgICAgKuacqueZu+W9lSp8KuaOiee6vyopIHNlbmRfYWxlcnQgIumYv+iQqOWwlOaOiee6vygkU1QpISDlt7LlsJ3or5Xoh6rmhIg76IulNeWIhumSn+WGheS4jeaBouWkjemcgOacrOS6uuaJq+eggSIgOzsKICAgICAgKuWcqOe6vyopIFsgLW4gIiRQUkVWIiBdICYmIHNlbmRfYWxlcnQgIumYv+iQqOWwlOW3suaBouWkjeWcqOe6vyIgOzsKICAgIGVzYWMKICAgIFBSRVY9IiRTVCIKICBmaQogIHNsZWVwIDYwCmRvbmUK' | base64 -d > /root/azar_autoheal.sh
+chmod +x /root/azar_autoheal.sh
+bash -n /root/azar_autoheal.sh && echo "  语法OK md5=$(md5sum /root/azar_autoheal.sh|cut -c1-8)" || { echo "  语法失败,中止"; exit 1; }
+echo "[2]拉起独立进程:"
+pkill -f 'bash /root/azar_autoheal.sh' 2>/dev/null; sleep 1
+( setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null & )
+sleep 3
+pgrep -af 'azar_autoheal' | head -2 || echo "  未拉起!"
+echo "[3]写v6自启守卫(worker重启时自动带起autoheal):"
+python3 -c "
+p='/root/remote_ctl_v6.sh'; s=open(p).read()
+g=\"pgrep -f 'bash /root/azar_autoheal.sh' >/dev/null || ( setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null & )\n\"
+if 'azar_autoheal' not in s:
+    i=s.find('trap ')
+    s=s[:i]+g+s[i:]; open(p,'w').write(s); print('  守卫已写入v6')
+else: print('  v6已有守卫,跳过')
+"
+bash -n /root/remote_ctl_v6.sh && echo "  v6语法OK" || echo "  v6语法异常!"
+echo "[4]自启守卫也写start_all.sh:"
+python3 -c "
+p='/root/start_all.sh'
+import os
+if not os.path.exists(p): print('  start_all.sh不存在,跳过'); raise SystemExit
+s=open(p).read()
+g=\"pgrep -f 'bash /root/azar_autoheal.sh' >/dev/null || ( setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null & )\n\"
+if 'azar_autoheal' not in s:
+    open(p,'w').write(s.rstrip()+'\n'+g); print('  守卫已写入start_all')
+else: print('  已有守卫,跳过')
+"
+echo "[5]验收:"
+echo "  autoheal进程:"; pgrep -af 'azar_autoheal' | head -2
+echo "  autoheal日志尾:"; tail -5 /root/autoheal.log 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-===== 掉线自动恢复机制体检 287310 2026-11-19 11:53:07 =====
----[1]相关脚本清单---
-3471 /root/azar_guard.sh
-3460 /root/azar_login.sh
-344 /root/ipwatch.sh
-462 /root/login_watch.sh
-462 /root/login_watch.sh
-1036 /root/logincheck.sh
-1326 /root/offline_watch.sh
-8538 /root/remote_ctl_v6.sh
-665 /root/start_all.sh
-1807 /root/watcher.sh
----[2]相关进程---
-6446 /root/bot/venv/bin/python main.py
-6857 bash /root/remote_ctl_v6.sh
-18783 bash /root/tick.sh
-18784 bash /root/login_watch.sh
-18785 bash /root/ipwatch.sh
-18786 bash /root/health_probe.sh
-18787 bash /root/offline_watch.sh
-18788 bash /root/netmon.sh
----[3]login_watch.sh 全文---
-#!/bin/bash
-# 登录态台账:每5分钟记一行logincheck结果,踢号时刻/在线时长/周期从此可回溯
-LAST=""
-while true; do
-  S=$(bash /root/logincheck.sh 2>/dev/null | grep -oE "\[在线\]|\[掉线\]|\[未登录\]" | head -1)
-  T=$(date '+%F %T')
-  if [ "$S" != "$LAST" ]; then
-    echo "$T 状态变化: ${LAST:-初始} -> ${S:-未知}" >> /root/login_state.log
-    LAST="$S"
-  else
-    echo "$T $S" >> /root/login_state.log
-  fi
-  sleep 300
-done
+===== 部署掉线自动愈合v1.0 287313 2026-11-19 12:10:28 =====
+[1]写脚本:
+  语法OK md5=84ca92ed
+[2]拉起独立进程:
+23393 bash /root/azar_autoheal.sh
+[3]写v6自启守卫(worker重启时自动带起autoheal):
+  守卫已写入v6
+  v6语法OK
+[4]自启守卫也写start_all.sh:
+  守卫已写入start_all
+[5]验收:
+  autoheal进程:
+23393 bash /root/azar_autoheal.sh
+  autoheal日志尾:
+[11-19 12:10:29] ===== autoheal v1.0 启动 2026-11-19 12:10:29 =====
+[11-19 12:10:30] 登录态: 初始 -> [未登录]
+[11-19 12:10:30] ALERT: 阿萨尔掉线([未登录])! 已尝试自愈;若5分钟内不恢复需本人扫码
+[11-19 12:10:32] 告警:已推送GitHub
 =====完=====
+<<<ALERT.txt>>>
+2026-11-19 12:10:30 阿萨尔掉线([未登录])! 已尝试自愈;若5分钟内不恢复需本人扫码
+<<<task_287312.txt>>>
+===== 任务287312 11-19 12:03:01 =====
+--- 命令 ---
+echo "PING $(date '+%F %T') worker_alive 287312"
+echo "--- azar_guard.sh 前25行 ---"
+head -25 /root/azar_guard.sh 2>/dev/null
+echo "--- remote_ctl_v6 看护段 ---"
+grep -nE 'logincheck|restart_napcat|保险丝|熔断|看护|sleep|%6|%60' /root/remote_ctl_v6.sh 2>/dev/null | tail -25
+echo "--- .napcat_pulls 保险丝计数 ---"
+wc -l < /root/.napcat_pulls 2>/dev/null || echo 0
+--- 输出 ---
+PING 2026-11-19 12:03:01 worker_alive 287312
+--- azar_guard.sh 前25行 ---
+#!/bin/bash
+# 阿萨尔掉线守护 v1.2 (2026-11-08)
+# v1.2 改动(依据2026-11-08社区调研): 被踢/等扫码期间完全停止自动重启
+#   —— 会话已被服务端作废,任何定时重试都是"频繁无效登录",只会加重风控
+#   —— 原v1.1的"被踢标记超6小时允许再试"已移除,被踢后只等人工扫码
+#   —— 人工恢复途径: 扫码后 connected 自动清标记;或 rm /root/.guard_kicked
+# 规则1: QQ进程死了且无近期二维码 -> 自动拉起(崩溃恢复,保留)
+# 规则2: WS断开+未被踢标记 -> 尝试重启NapCat免扫码恢复(登录态可能还在,保留)
+# 规则3: 重启后仍出新款二维码(=真被踢) -> 记被踢标记,此后不再自动重启,等人工扫码
+# 规则4: 每小时最多重启3次,重启后冷却5分钟;登录成功(connected)自动清被踢标记
+LOG=/root/bot/bot/bot.log
+QR=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+STATE=/root/guard_status.txt
+LAST_RESTART=/root/.guard_last
+CNT_FILE=/root/.guard_cnt
+KICKED=/root/.guard_kicked
+TS() { stat -c %Y "$1" 2>/dev/null || echo 0; }
+start_qq() {
+  cd /root && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 &
+}
+can_restart() {
+  NOW=$(date +%s)
+  LR=$(cat "$LAST_RESTART" 2>/dev/null || echo 0)
+  [ $(( NOW - LR )) -lt 300 ] && return 1
+  H=$(date +%H)
+--- remote_ctl_v6 看护段 ---
+112:restart_napcat() {
+126:    echo "[$(date '+%m-%d %H:%M')] 保险丝熔断:NapCat 24h内已自动拉起${CNT}次,停止自动重启,需人工排查" >> "$LOG"
+130:  echo "[$(date '+%m-%d %H:%M')] 看护:自动拉起NapCat(24h内第$((CNT+1))次)" >> "$LOG"
+131:  pkill -f "opt/QQ/qq" 2>/dev/null; sleep 3
+135:  ( sleep 60; E1=$(grep -a "Login Error" /root/napcat-restart.log 2>/dev/null | tail -1); S1=$(bash /root/logincheck.sh 2>/dev/null | grep -aE "\[在线\]|\[未登录\]" | head -1); echo "[$(date '+%m-%d %H:%M')] 验尸+60s:[$S1] 最新登录错误:${E1:-无}" >> "$LOG"; sleep 240; S2=$(bash /root/logincheck.sh 2>/dev/null | grep -aE "\[在线\]|\[未登录\]" | head -1); echo "[$(date '+%m-%d %H:%M')] 验尸+300s:[$S2]" >> "$LOG" ) &
+158:  ST=$(bash /root/logincheck.sh 2>/dev/null | grep -c "\[未登录\]\|\[掉线\]")
+163:      echo "[$(date '+%m-%d %H:%M')] 看护：未登录且码${AGE}s未刷新，尝试重启NapCat" >> "$LOG"
+164:      restart_napcat
+167:  pgrep -f "opt/QQ/qq" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：NapCat不在" >> "$LOG"; restart_napcat; }
+168:  pgrep -f "main.py" >/dev/null || { echo "[$(date '+%m-%d %H:%M')] 看护：大脑不在，拉起" >> "$LOG"; cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 & cd "$REPO"; }
+179:  sleep 10
+--- .napcat_pulls 保险丝计数 ---
+3
