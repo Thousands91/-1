@@ -1,78 +1,28 @@
-<<<task_287314.txt>>>
-===== 任务287314 11-19 12:13:47 =====
+<<<task_287315.txt>>>
+===== 任务287315 11-19 12:14:22 =====
 --- 命令 ---
-echo "===== 掉线快诊断 287314 $(date '+%F %T') ====="
-echo "---[1]login_state 昨晚到今晨在线周期---"
-grep -aE "11-18 22:3|11-19 00:|11-19 01:|11-19 02:0|11-19 02:1" /root/login_state.log 2>/dev/null | tail -45
-echo "---[2]ip.log 同期IP变动---"
-grep -aE "11-19 00:|11-19 01:|11-19 02:" /root/ip.log 2>/dev/null | tail -30
-echo "---[3]health.log 02点前后(冻结判定)---"
-grep -aE "11-19 01:5|11-19 02:0|11-19 02:1" /root/health.log 2>/dev/null | tail -20
-echo "---[4]napcat.log 02:10-02:16关键行---"
-grep -aE "02:1[0-6]" /root/napcat.log 2>/dev/null | grep -aE "离线|GPU|close|reconnect|Error|error|二维码|登录|Kick|kick" | tail -30
-echo "---[5]各登录日志扫码成功次数---"
-for f in /root/napcat.log /root/napcat-restart.log; do echo -n "$f: "; grep -acE "扫码登录成功|登录成功|Login Success" "$f" 2>/dev/null; done
-echo "---[6]offline_forensics 尾---"
-tail -15 /root/offline_forensics.log 2>/dev/null || echo 无
+echo "===== 掉线瞬间证据 287315 ====="
+echo "---[1]napcat.log 02:12-02:14全部关键行(带上下文)---"
+grep -aE "02:1[234]" /root/napcat.log 2>/dev/null | tail -40
+echo "---[2]扫码成功次数---"
+for f in /root/napcat.log /root/napcat-restart.log; do printf "%s: " "$f"; grep -acE "扫码登录成功|登录成功|Login Success|登录成功" "$f" 2>/dev/null; done
+echo "---[3]账号离线/GPU/被踢关键词全日志计数---"
+echo -n "账号状态变更为离线: "; grep -ac "账号状态变更为离线" /root/napcat.log 2>/dev/null
+echo -n "KickedOffLine被踢: "; grep -ac "KickedOffLine\|被踢" /root/napcat.log 2>/dev/null
+echo -n "GPU error: "; grep -ac "GPU process launch failed" /root/napcat.log 2>/dev/null
+echo "---[4]offline_forensics尾20---"
+tail -20 /root/offline_forensics.log 2>/dev/null || echo 无
 echo "=====完====="
 --- 输出 ---
-===== 掉线快诊断 287314 2026-11-19 12:13:47 =====
----[1]login_state 昨晚到今晨在线周期---
-2026-11-18 22:33:38 [在线]
-2026-11-18 22:38:39 状态变化: [在线] -> [未登录]
-2026-11-19 00:22:00 [未登录]
-2026-11-19 00:27:01 [未登录]
-2026-11-19 00:32:02 [未登录]
-2026-11-19 00:37:03 [未登录]
-2026-11-19 00:42:03 状态变化: [未登录] -> [在线]
-2026-11-19 00:47:04 [在线]
-2026-11-19 00:52:05 [在线]
-2026-11-19 00:57:06 [在线]
-2026-11-19 01:02:07 [在线]
-2026-11-19 01:07:08 [在线]
-2026-11-19 01:12:08 [在线]
-2026-11-19 01:17:09 [在线]
-2026-11-19 01:22:10 [在线]
-2026-11-19 01:27:11 [在线]
-2026-11-19 01:32:12 [在线]
-2026-11-19 01:37:13 [在线]
-2026-11-19 01:42:14 [在线]
-2026-11-19 01:47:15 [在线]
-2026-11-19 01:52:16 [在线]
-2026-11-19 01:57:17 [在线]
-2026-11-19 02:02:17 [在线]
-2026-11-19 02:07:18 [在线]
-2026-11-19 02:12:19 [在线]
-2026-11-19 02:17:20 状态变化: [在线] -> [未登录]
----[2]ip.log 同期IP变动---
-2026-11-19 00:53:57 14.19.177.57
-2026-11-19 01:54:00 14.19.177.57
-2026-11-19 02:54:02 14.19.177.57
----[3]health.log 02点前后(冻结判定)---
-11-19 02:00:10 elapsed=60s ip=192.168.31.142 if=无
-11-19 02:01:11 elapsed=61s ip=192.168.31.142 if=无
-11-19 02:02:11 elapsed=60s ip=192.168.31.142 if=无
-11-19 02:03:11 elapsed=60s ip=192.168.31.142 if=无
-11-19 02:04:12 elapsed=61s ip=192.168.31.142 if=无
-11-19 02:05:12 elapsed=60s ip=192.168.31.142 if=无
-11-19 02:06:12 elapsed=60s ip=192.168.31.142 if=无
-11-19 02:07:13 elapsed=61s ip=192.168.31.142 if=无
-11-19 02:08:13 elapsed=60s ip=192.168.31.142 if=无
-11-19 02:09:13 elapsed=60s ip=192.168.31.142 if=无
-11-19 02:10:14 elapsed=61s ip=192.168.31.142 if=无
-11-19 02:11:14 elapsed=60s ip=192.168.31.142 if=无
-11-19 02:12:14 elapsed=60s ip=192.168.31.142 if=无
-11-19 02:13:19 elapsed=63s ip=192.168.31.142 if=无
-11-19 02:14:19 elapsed=62s ip=192.168.31.142 if=无
-11-19 02:15:19 elapsed=60s ip=192.168.31.142 if=无
-11-19 02:16:19 elapsed=60s ip=192.168.31.142 if=无
-11-19 02:17:20 elapsed=61s ip=192.168.31.142 if=无
-11-19 02:18:20 elapsed=60s ip=192.168.31.142 if=无
-11-19 02:19:20 elapsed=60s ip=192.168.31.142 if=无
----[4]napcat.log 02:10-02:16关键行---
----[5]各登录日志扫码成功次数---
+===== 掉线瞬间证据 287315 =====
+---[1]napcat.log 02:12-02:14全部关键行(带上下文)---
+---[2]扫码成功次数---
 /root/napcat.log: 0
 /root/napcat-restart.log: 0
----[6]offline_forensics 尾---
+---[3]账号离线/GPU/被踢关键词全日志计数---
+账号状态变更为离线: 0
+KickedOffLine被踢: 0
+GPU error: 0
+---[4]offline_forensics尾20---
 无
 =====完=====
