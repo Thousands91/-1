@@ -1,8 +1,7 @@
-287280
-echo "===== 诊断5 登录态真相 287280 ====="
-echo "[A]/root/login_state.log 全文:"; cat /root/login_state.log 2>/dev/null | tail -30
-echo "[B]azar_login_run.log 尾20:"; tail -20 /root/azar_login_run.log 2>/dev/null
-echo "[C]当前扫码进程:"; pgrep -af 'azar_login|login|qq --no-sandbox' | head -10
-echo "[D]二维码解码URL(从日志):"; grep -oE 'https://txz.qq.com/p\?k=[^ ]+' /root/napcat.log 2>/dev/null | tail -3
-echo "[E]napcat.log最后5行:"; tail -5 /root/napcat.log 2>/dev/null
+287290
+echo "===== 诊断6 当前登录界面状态 287290 ====="
+echo "[A]QR图片内容(前2行,判断是否有效二维码):"; file /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null
+echo "[B]所有QQ主进程(带-q的):"; ps aux | grep -E 'qq -q|QQ/qq' | grep -v grep | grep -v type | head -8
+echo "[C]login_watch.sh内容:"; cat /root/login_watch.sh 2>/dev/null | head -30
+echo "[D]当前时间:"; date '+%F %T'
 echo "=====完====="
