@@ -1,9 +1,8 @@
-287250
-echo "===== 掉线诊断2 聚焦 287250 ====="
-echo "[A]bot主进程:"; pgrep -af 'bot.py|nonebot|main.py' | head -10 || echo 无bot进程
-echo "[B]大脑日志尾20:"; tail -20 /root/bot/bot/bot.log 2>/dev/null; echo "日志mtime:"; stat -c '%y %s字节' /root/bot/bot/bot.log 2>/dev/null
-echo "[C]登录态尾12:"; tail -12 /root/bot/bot/login_state.log 2>/dev/null; echo "登录态mtime:"; stat -c '%y' /root/bot/bot/login_state.log 2>/dev/null
-echo "[D]NapCat连接日志尾15:"; tail -15 /root/napcat.log 2>/dev/null
-echo "[E]签名代理HTTP:"; curl -s --max-time 5 -o /dev/null -w "%{http_code}\n" http://127.0.0.1:10800/
-echo "[F]bot目录:"; ls -la /root/bot/bot/ 2>/dev/null | head -20
+287260
+echo "===== 诊断3 尾部精确 287260 ====="
+echo "[B]大脑日志最后8行:"; tail -8 /root/bot/bot/bot.log 2>/dev/null
+echo "mtime:"; stat -c '%y' /root/bot/bot/bot.log 2>/dev/null
+echo "[C]登录态最后10行:"; tail -10 /root/bot/bot/login_state.log 2>/dev/null
+echo "[D]napcat.log最后12行:"; tail -12 /root/napcat.log 2>/dev/null
+echo "[D2]其他napcat日志:"; ls -la /root/Napcat/*.log /root/Napcat/napcat/logs/*.log 2>/dev/null | tail -8
 echo "=====完====="
