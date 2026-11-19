@@ -1,11 +1,11 @@
-287375
-echo "===== worker回传机制诊断 287375 ====="
-echo "[1]设备当前跑的worker脚本版本/路径:"
-pgrep -af 'remote_ctl|v6_|while' | grep -iE 'ctl|v6' | head -3
-echo "[2]v6脚本sleep间隔(全部sleep行):"
-for f in /root/remote_ctl_v6.sh /root/v6_from_github.sh; do echo "--- $f ---"; grep -n "sleep [0-9]" "$f" 2>/dev/null; done
-echo "[3]git push回传段(看有无低速保护/超时):"
-grep -n "git push\|lowSpeed\|timeout.*push\|make_bundle\|PBOX" /root/remote_ctl_v6.sh 2>/dev/null | head -15
-echo "[4]当前worker脚本md5:"
-md5sum /root/remote_ctl_v6.sh 2>/dev/null | cut -c1-8
+287376
+echo "===== 设备端回传方式耗时实测 287376 ====="
+cd /root/-1 2>/dev/null || cd $(dirname $(find /root -name '*.git' -type d 2>/dev/null | head -1)) 2>/dev/null
+echo "[1]定位仓库: $(pwd)"
+echo "[2]git ls-remote耗时(纯网络往返):"
+/usr/bin/time -f "  耗时%e秒" timeout 30 git -c http.lowSpeedLimit=0 -c http.lowSpeedTime=999 ls-remote origin HEAD 2>&1 | tail -2
+echo "[3]API PUT小文件往返耗时(本机→GitHub):"
+T=$(date +%s%N); curl -s -X PUT -H "Authorization: token $(cat /root/.gh_token 2>/dev/null || cat /workspace/.gh_token 2>/dev/null)" -d '{"message":"测速","content":"dGVzdA=="}' "https://api.github.com/repos/Thousands91/-1/contents/remote/_speedtest.txt" >/dev/null 2>&1; echo "  耗时$(( ($(date +%s%N)-T)/1000000 ))毫秒"
+echo "[4]raw直拉耗时:"
+/usr/bin/time -f "  耗时%e秒" curl -s -o /dev/null "https://raw.githubusercontent.com/Thousands91/-1/main/remote/cmd.txt?cb=$(date +%s)" 2>&1 | tail -1
 echo "=====完====="
