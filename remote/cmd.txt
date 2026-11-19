@@ -1,30 +1,6 @@
-287401
-echo "===== 部署坑149 引用识图修复 287401 ====="
-echo "[0]旧文件md5(应4f1634c1开头,坑145版):"
-md5sum /root/bot/bot/plugins/ai_chat.py
-echo "[1]下载新版:"
-curl -sL -H "Cache-Control: no-cache" -o /tmp/ai_new.py "https://raw.githubusercontent.com/Thousands91/-1/main/deploy/ai_chat.py?ts=$(date +%s)"
-md5sum /tmp/ai_new.py | cut -d' ' -f1 | sed 's/^/  新文件md5: /'
-if [ "$(md5sum /tmp/ai_new.py | cut -d' ' -f1)" != "65177dee709ed3cc26bbebe371047ccc" ]; then echo "  md5不符,中止不部署"; echo "=====完====="; exit 0; fi
-cp /root/bot/bot/plugins/ai_chat.py /tmp/ai_bak_before_149.py
-cp /tmp/ai_new.py /root/bot/bot/plugins/ai_chat.py
-echo "[2]安装后md5:"
-md5sum /root/bot/bot/plugins/ai_chat.py
-echo "[3]语法:"
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo "  OK" || echo "  FAIL"
-echo "[4]引用识图分支处数:"
-grep -c "quoted_raw" /root/bot/bot/plugins/ai_chat.py
-grep -c "对方引用了一条消息" /root/bot/bot/plugins/ai_chat.py
-echo "[5]重启大脑:"
-OLDPID=$(pgrep -f "venv/bin/python main.py" | head -1)
-kill "$OLDPID" 2>/dev/null; sleep 3
-( cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null & )
-sleep 15
-NEWPID=$(pgrep -f "venv/bin/python main.py" | head -1)
-echo "  旧$OLDPID→新$NEWPID  cwd:$(readlink /proc/$NEWPID/cwd 2>/dev/null)"
-echo "[6]插件加载:"
-grep -E "Succeeded to load plugin|Failed to load" /root/bot/bot/bot.log | tail -12
-echo "[7]横幅+在线:"
-grep "QQ 群机器人启动成功" /root/bot/bot/bot.log | tail -1
+287402
+echo "===== 287402 在线复查 ====="
+pgrep -af "venv/bin/python main.py" | head -1
 bash /root/logincheck.sh 2>/dev/null | grep -oE "\[[^]]+\]" | head -1
+tail -3 /root/bot/bot/bot.log | grep -E "WebSocket|connected|在线|message" | head -2
 echo "=====完====="
