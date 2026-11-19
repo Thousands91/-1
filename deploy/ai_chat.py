@@ -1420,6 +1420,9 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
             quoted_sender = (src.get("sender") or {}).get("user_id")
             if isinstance(quoted_raw, list):
                 # 文字段直接拼；语音段就地转写（引用语音=把耳朵伸到被引用那条上）
+                # 坑149（2026-11-19）：image/mface/face 段此前被忽略——群友引用着
+                # 一张梗图 @机器人，模型只收到"引用的不是文字，取不到内容"，
+                # 只能回"我在这，先生"。识图管线对引用图视而不见，现在接上。
                 _qparts = []
                 for s in quoted_raw:
                     if not isinstance(s, dict):
@@ -1432,6 +1435,24 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
                         except Exception:
                             _vt = ""
                         _qparts.append(f"[语音:{_vt}]" if _vt else "[语音:没听清]")
+                    elif s.get("type") == "image":
+                        _qu = str((s.get("data") or {}).get("url") or "")
+                        if _qu.startswith("http"):
+                            try:
+                                _qn = await _image_sticker_name(_qu)
+                            except Exception:
+                                _qn = "表情包"
+                            _qparts.append(f"[表情包:{_qn}]")
+                        else:
+                            _qparts.append("[表情包]")
+                    elif s.get("type") == "mface":
+                        _qs = str((s.get("data") or {}).get("summary") or "").strip()
+                        _qparts.append(f"[表情包:{_qs}]" if _qs else "[表情包]")
+                    elif s.get("type") == "face":
+                        try:
+                            _qparts.append(f"[表情:{_face_name(int((s.get('data') or {}).get('id')))}]")
+                        except (TypeError, ValueError):
+                            _qparts.append("[表情:表情]")
                 quoted = "".join(_qparts)
             else:
                 quoted = str(quoted_raw)
