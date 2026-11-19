@@ -1,76 +1,35 @@
-<<<task_287406.txt>>>
-===== 任务287406 11-19 22:58:59 =====
+<<<task_287407.txt>>>
+===== 任务287407 11-19 23:00:19 =====
 --- 命令 ---
-echo "===== 287406 掉线瞬间取证 ====="
-echo "[1]napcat.log第一行(日志起点=进程重启证据):"
-head -2 /root/napcat.log
-echo "[2]22:43~22:47掉线瞬间全部日志:"
-grep -E "11-19 22:4[3-7]" /root/napcat.log | head -25
-echo "[3]autoheal.log尾部:"
-tail -12 /root/autoheal.log
-echo "[4]azar_login_run.log尾部:"
-tail -8 /root/azar_login_run.log
-echo "[5]新二维码时间戳:"
+echo "===== 287407 掉线史统计+新码 ====="
+echo "[1]autoheal.log历次掉线ALERT(按天统计):"
+grep -oE "^\[11-[0-9]+ [0-9]{2}:[0-9]{2}:[0-9]{2}\] ALERT: 阿萨尔掉线" /root/autoheal.log | cut -c2-12 | uniq -c
+echo "[2]近3天掉线ALERT明细:"
+grep -E "ALERT: 阿萨尔掉线" /root/autoheal.log | tail -8
+echo "[3]napcat.log今天离线记录:"
+grep "账号状态变更为离线" /root/napcat.log
+echo "[4]新二维码时间戳:"
 ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-echo "[6]新二维码base64:"
+echo "[5]新二维码base64:"
 base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
 echo ""
 echo "=====完====="
 --- 输出 ---
-===== 287406 掉线瞬间取证 =====
-[1]napcat.log第一行(日志起点=进程重启证据):
-not mini app. 
-[preload] succeeded. /root/Napcat/opt/QQ/resources/app/major.node
-[2]22:43~22:47掉线瞬间全部日志:
-11-19 22:43:07 [[32minfo[39m] 阿萨尔 | [ServerTime] 时间同步完成，偏差 -444ms
-11-19 22:43:09 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [小冉(3819642626)] [图片]
-11-19 22:43:22 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [小冉(3819642626)] 等死吗。。。
-11-19 22:45:11 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-11-19 22:46:14 [[33mwarn[39m] 阿萨尔 | [Core] [Login] 账号已离线，正在重启 Worker 以重新创建 QQ 登录服务 {"result":true,"message":"进程重启请求已发送"}
-11-19 22:46:30 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接意外关闭
-11-19 22:46:30 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
-11-19 22:46:49 [[33mwarn[39m] [NapCat] [Process] Worker进程未在 5 秒内退出，尝试发送强制关闭信号
-11-19 22:46:55 [[33mwarn[39m] [NapCat] [Process] 进程 28630 仍在运行，尝试强制杀掉
-11-19 22:46:55 [[33mwarn[39m] [NapCat] [Process] Worker进程仍未退出，尝试 kill
-11-19 22:46:59 [[32minfo[39m] [NapCat] [Process] 已清理残留进程: PID 28619 (GPU)
-11-19 22:46:59 [[32minfo[39m] [NapCat] [Process] 已清理残留进程: PID 28631 (Utility)
-11-19 22:47:03 [[32minfo[39m] [PacketHandler] 加载成功
-11-19 22:47:03 [[32minfo[39m] [Napi2NativeLoader] 加载成功
-11-19 22:47:03 [[32minfo[39m] [FFmpeg] 检查 Native Addon 可用性...
-11-19 22:47:03 [[32minfo[39m] [FFmpeg] ✓ 使用 Native Addon 适配器
-11-19 22:47:04 [[32minfo[39m] [PacketHandler] 初始化成功
-11-19 22:47:04 [[32minfo[39m] [NapCat] [Core] NapCat.Core Version: 4.18.42
-11-19 22:47:05 [[32minfo[39m] 等待网络连接...
-11-19 22:47:05 [[32minfo[39m] 等待网络连接...
-11-19 22:47:05 [[32minfo[39m] [NapCat] [WebUi] WebUi Token: 560aad98b99d
-11-19 22:47:05 [[32minfo[39m] [NapCat] [WebUi] WebUi User Panel Url: http://127.0.0.1:6099/webui?token=560aad98b99d
-11-19 22:47:05 [[32minfo[39m] [NapCat] [WebUi] WebUi User Panel Url: http://[::]:6099/webui?token=560aad98b99d
-11-19 22:47:05 [[32minfo[39m] 网络已连接
-11-19 22:47:05 [[32minfo[39m] 没有 -q 指令指定快速登录，将使用二维码登录方式
-[3]autoheal.log尾部:
-[11-19 18:32:17] 告警:已推送GitHub
-[11-19 20:20:42] 登录态: [在线] -> [未知]
-[11-19 20:23:08] 登录态: [未知] -> [在线]
-[11-19 20:23:08] ALERT: 阿萨尔已恢复在线
-[11-19 20:23:18] 告警:已推送GitHub
-[11-19 22:45:58] 登录态: [在线] -> [未登录]
+===== 287407 掉线史统计+新码 =====
+[1]autoheal.log历次掉线ALERT(按天统计):
+      1 11-19 12:10
+      1 11-19 14:39
+      1 11-19 22:46
+      1 11-19 22:54
+[2]近3天掉线ALERT明细:
+[11-19 12:10:30] ALERT: 阿萨尔掉线([未登录])! 已尝试自愈;若5分钟内不恢复需本人扫码
+[11-19 14:39:39] ALERT: 阿萨尔掉线([未登录])! 已尝试自愈;若5分钟内不恢复需本人扫码
 [11-19 22:46:49] ALERT: 阿萨尔掉线([未登录])! 已尝试自愈;若5分钟内不恢复需本人扫码
-[11-19 22:47:11] 告警:推送失败,留PBOX待worker回传
-[11-19 22:52:59] 登录态: [未登录] -> [未知]
-[11-19 22:54:16] 登录态: [未知] -> [未登录]
 [11-19 22:54:16] ALERT: 阿萨尔掉线([未登录])! 已尝试自愈;若5分钟内不恢复需本人扫码
-[11-19 22:54:27] 告警:已推送GitHub
-[4]azar_login_run.log尾部:
-#   现在抓紧时间（剩约 107 秒）：                        #
-#   打开X10相册 -> DCIM/Camera -> asar_qr.png 全屏显示       #
-#   用另一台手机的QQ扫一扫 -> 确认登录                       #
-############################################################
-
-==> 第 5 步：盯着登录结果
-[12:57:58] 二维码刷新了，已复制新的到相册，请重新扫码
-!! 10 分钟没等到登录成功。重新运行本脚本再试一轮。
-[5]新二维码时间戳:
--rw-r--r-- 1 root root 596 Nov 19 22:57 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-[6]新二维码base64:
-iVBORw0KGgoAAAANSUhEUgAAAJMAAACTAQAAAACinha4AAAACXBIWXMAAAsTAAALEwEAmpwYAAACBklEQVRIid2WMc7kIAyFHaWgGy6AxDXouFJygSRzgeRKdFwDiQskHQWK9zEz+qf4G6ytdhENXySEn5/tEP9e9F+zk2hRZg58euZAg4RdXOeST0qLGo+Io4QFs4K5caO0RpqFbPKGfD6CZTmbi9181Uxayrgurq4lac7XN7YuBv3maD77q2kXwzpdPgo9XJ2/uexit8Pbx9tVXfIG+SXsCvl2aUA0lHeyInZ6erQv4xVo8UZLGJfMwd4u4zCEzCIWaI2GnNHBnspeMoY7KuKAa4ZCq4RdxRAl8glBEI2XhN0q784MATI042gJg35Edic8J99wuoRxGI9iFtfK6/RWyFDNcA0/S3qQmSUMeu8ub35E9k5IKGGwiWZ7K3qgG8W3x3sZR7jM4rKdMrQUsVPRQnhIJUeTe+e8l93e7q9QjpKG8qnLTnZFs8JuBUbjZ3znvJchDi5VRwg/wnezhKGHTS6RMgsZUvkSsTDuSHgkXfiIaZUw1CW51uknZR7+p6a7GOzJcDdhyIytvmUM/rLPmC/0P//p2b0MIxHCwy+qzrHOIuZaWUyQAR4nEjGsNlrhdDyHzSphbZ6jhQR7BGTg04s72Wue2wM7vMQQsTZXSYc6qbyhUKSMMVR597BMGoRsLehDltt4HJ8i1sTDNXAKLv6pjy4G/VYmOHRzlZRlCfub/7p/j/0B9wdH0/743/sAAAAASUVORK5CYII=
+[3]napcat.log今天离线记录:
+11-19 22:45:11 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+[4]新二维码时间戳:
+-rw-r--r-- 1 root root 602 Nov 19 22:59 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+[5]新二维码base64:
+iVBORw0KGgoAAAANSUhEUgAAAJMAAACTAQAAAACinha4AAAACXBIWXMAAAsTAAALEwEAmpwYAAACDElEQVRIid2WPY7kIBCFyyIga18AiWuQcSX7Anb7AvaVyLgGEhewMwLk2se4Z2elTah0ELLUX/Ca+uEVxP8v+tXsJJq02r1Zo7oCDRJ2cV1cXXSdS+aInxIWoMRvn+aITbOUBb59XdkecjaXOhYzBzNIGdc51sXzUew/sXUx5G+O5rN/ctrF2ioIog4B359a9rCbaAz2dLx7dRV7SdgV7dHyp7DfzswSdjqzcj6J366pHhLG7f9pCMhfJac2CWvVDmZkvl3efVpFjPKp01zMRPZ29pCwk1qPvxwSnyZnWcKQtq2YtaDL7BWeHPSy05sx2i2oU+fbPXH0Mo5217helXydw1PzXnaVRD4NXCcyk1csYxlXZPIovj21uiTsprrGfGt1ROhlEUO/3A6XgwggpkHC2kEoTbouEOZPHJ0Mes0JSh1KfXneJKwdBN2NHGhcryxjHmKZA42sdlIidpJZXBoD4Tu571nRx66QsXGKgw35R6+XMXwX40Kja+Alnz7tZGeTZPT4TWnxj2f3sovTy9md7BsB0aPXzyAG265j4F3nQ8QKvQjjAg6aITlKGFazz2iGgkFhNwlr89zbW6Pp1BYfvV721ePoGlpDghWxiKFumDOt2b9mnZDBDC5urfpyf98RvWyG+fk6uUT0eHY3QxwOUxHVM+0pIWE4O2zgYPhuwmtilbDeN9zvYH8A2sJ7Tv2qIwoAAAAASUVORK5CYII=
 =====完=====
