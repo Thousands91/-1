@@ -1,13 +1,32 @@
-<<<task_287402.txt>>>
-===== 任务287402 11-19 22:49:46 =====
+<<<task_287403.txt>>>
+===== 任务287403 11-19 22:50:40 =====
 --- 命令 ---
-echo "===== 287402 在线复查 ====="
-pgrep -af "venv/bin/python main.py" | head -1
-bash /root/logincheck.sh 2>/dev/null | grep -oE "\[[^]]+\]" | head -1
-tail -3 /root/bot/bot/bot.log | grep -E "WebSocket|connected|在线|message" | head -2
+echo "===== 287403 登录诊断 ====="
+echo "[1]logincheck全输出:"
+bash /root/logincheck.sh 2>&1 | head -10
+echo "[2]NapCat进程:"
+pgrep -af "napcat\|NapCat" | head -3
+echo "[3]bot.log最近WS/连接记录:"
+grep -E "WebSocket|OneBot V11 .*connect|连接" /root/bot/bot/bot.log | tail -5
+echo "[4]最近5条消息事件:"
+grep "message.group" /root/bot/bot/bot.log | tail -3
 echo "=====完====="
 --- 输出 ---
-===== 287402 在线复查 =====
-23361 /root/bot/venv/bin/python main.py
-[未登录]
+===== 287403 登录诊断 =====
+[1]logincheck全输出:
+=== 登录状态（权威判定）===
+[未登录] 当前没有有效会话
+阶段: waiting_qrcode
+最近错误: 无
+[2]NapCat进程:
+[3]bot.log最近WS/连接记录:
+11-19 22:24:26 [WARNING] link_probe | [连接探针] [11-19 22:24:26.289] LIFECYCLE sub_type=connect self_id=3427943187
+11-19 22:24:28 [WARNING] link_probe | [连接探针] [11-19 22:24:28.265] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+11-19 22:45:13 [WARNING] link_probe | [连接探针] [11-19 22:45:13.122] HEARTBEAT 状态跳变 online=False good=True 自启动累计心跳=42 self_id=3427943187
+11-19 22:46:22 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+11-19 22:46:35 [INFO] link_probe | [连接探针] 已启动，监听 lifecycle + heartbeat
+[4]最近5条消息事件:
+11-19 22:42:41 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1355040589 from 2338094559@[群:590454333] '[image:summary=[动画表情],file=6C4CF2AB01F1956D76B188F2EE6580AE.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTFDnNS...,file_size=95768]'
+11-19 22:43:09 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 85279662 from 3819642626@[群:590454333] '[image:summary=[？],file=390435C282C155B75378DBFD854CDA31.jpg,sub_type=7,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSrQNTl...,file_size=4059]'
+11-19 22:43:22 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 470440684 from 3819642626@[群:590454333] '等死吗。。。'
 =====完=====
