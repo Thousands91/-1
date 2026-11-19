@@ -1,85 +1,20 @@
-<<<task_287360.txt>>>
-===== 任务287360 11-19 14:50:37 =====
+<<<task_287361.txt>>>
+===== 任务287361 11-19 14:52:54 =====
 --- 命令 ---
-echo "===== 序号消息原始流水诊断 287360 $(date '+%F %T') ====="
-echo "[1]14:44:30~14:45:15 全部原始消息日志(PHP级):"
-grep -E "14:44:(3|4|5)|14:45:0" /root/bot/bot/bot.log 2>/dev/null | grep "message.group" | tail -30
-echo "[2]这段时间的完整bot.log原文(不过滤):"
-awk '/11-19 14:44:4[0-9]/,/11-19 14:45:1[0-9]/' /root/bot/bot/bot.log 2>/dev/null | head -60
-echo "[3]ai_chat里ask=1的上下文(前后5行):"
-grep -n "ask='1'\|ask=\"1\"" /root/bot/bot/bot.log 2>/dev/null | tail -3
-echo "[4]NapCat原始日志这段是否有序号消息:"
-grep -E "14:44:5|14:45:0" /root/napcat.log /root/napcat-restart.log 2>/dev/null | grep -iE "message|1\"|group" | tail -15
+echo "===== 部署前检查 song_request 287361 $(date '+%F %T') ====="
+echo "[1]设备当前md5(应为基线 50c433dc):"
+md5sum /root/bot/bot/plugins/song_request.py | cut -c1-8
+echo "[2]备份原文件:"
+cp /root/bot/bot/plugins/song_request.py /root/bot/bot/plugins/song_request.py.bak_287361 && echo "备份OK"
+echo "[3]群里此刻是否有互动(近2分钟消息数):"
+grep -E "11-19 14:(4[8-9]|5[0-9]):" /root/bot/bot/bot.log 2>/dev/null | grep -c "message.group" 
 echo "=====完====="
 --- 输出 ---
-===== 序号消息原始流水诊断 287360 2026-11-19 14:50:37 =====
-[1]14:44:30~14:45:15 全部原始消息日志(PHP级):
-11-19 14:44:42 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1386693179 from 3327068725@[群:562796842] '[at:qq=3427943187] 点歌 人鱼'
-11-19 14:44:48 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2093611479 from 1561950850@[群:562796842] '[at:qq=3427943187] 1'
-11-19 14:45:04 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1588928742 from 1561950850@[群:562796842] '[image:summary=[额],file=FDC5CE98D581FA21BEE37192471F7C66.jpg,sub_type=7,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhS9gY00...,file_size=21552]'
-[2]这段时间的完整bot.log原文(不过滤):
-11-19 14:44:42 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1386693179 from 3327068725@[群:562796842] '[at:qq=3427943187] 点歌 人鱼'
-11-19 14:44:42 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=42)
-11-19 14:44:45 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=42) running complete
-11-19 14:44:48 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2093611479 from 1561950850@[群:562796842] '[at:qq=3427943187] 1'
-11-19 14:44:48 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=92)
-11-19 14:44:48 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=188)
-11-19 14:44:48 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=92) running complete
-11-19 14:44:48 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=188) running complete
-11-19 14:44:48 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 14:44:48 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 14:44:48 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 14:45:02 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.group_recall]: {'time': 1795070702, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'group_recall', 'user_id': 1664743600, 'group_id': 590454333, 'operator_id': 1664743600, 'message_id': 757501162}
-11-19 14:45:04 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1588928742 from 1561950850@[群:562796842] '[image:summary=[额],file=FDC5CE98D581FA21BEE37192471F7C66.jpg,sub_type=7,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhS9gY00...,file_size=21552]'
-11-19 14:45:04 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 14:45:04 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 14:45:04 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 14:45:04 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 14:45:04 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-19 14:45:04 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-19 14:45:06 [INFO] ai_chat | [核对·调试] ask='1' lead=False contra=False agree=False dodge=False ans='您是想听《没那么简单》这首歌？这歌我听过，旋律倒是像这城里冬夜里的风，刮'
-11-19 14:45:06 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 14:45:34 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-19 14:45:34 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-19 14:46:04 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-19 14:46:04 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-19 14:46:34 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-19 14:46:34 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-19 14:47:04 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-19 14:47:04 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-19 14:47:34 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-19 14:47:34 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-19 14:48:04 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-19 14:48:04 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-19 14:48:23 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 59518174 from 3327068725@[群:562796842] '我真想听纯净版人鱼'
-11-19 14:48:23 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 14:48:23 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 14:48:23 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 14:48:23 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 14:48:34 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-19 14:48:34 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-19 14:48:45 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1319947324 from 3327068725@[群:562796842] '而不是前面吵的要死一直在喊黄婷婷名字伤害发卡号的人鱼'
-11-19 14:48:45 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 14:48:45 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 14:48:45 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 14:48:45 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 14:48:48 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.group_recall]: {'time': 1795070928, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'group_recall', 'user_id': 3327068725, 'group_id': 562796842, 'operator_id': 3327068725, 'message_id': 1319947324}
-11-19 14:48:52 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 548888847 from 3327068725@[群:562796842] '而不是前面吵的要死一直在喊黄婷婷名字伤害发卡的人鱼'
-11-19 14:48:52 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 14:48:52 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 14:48:52 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 14:48:52 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 14:48:58 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 545929856 from 1561950850@[群:562796842] '？'
-11-19 14:48:58 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 14:48:58 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 14:48:58 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 14:48:58 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 14:49:04 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-19 14:49:04 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-19 14:49:34 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-19 14:49:34 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-[3]ai_chat里ask=1的上下文(前后5行):
-6092:11-15 13:18:01 [INFO] ai_chat | [核对·调试] ask='1' lead=False contra=False agree=False dodge=False ans='您这故事讲得生动，若能整理成册，定能为“欢愉技艺”这一章节增色不少。📖'
-21411:11-19 14:45:06 [INFO] ai_chat | [核对·调试] ask='1' lead=False contra=False agree=False dodge=False ans='您是想听《没那么简单》这首歌？这歌我听过，旋律倒是像这城里冬夜里的风，刮'
-[4]NapCat原始日志这段是否有序号消息:
+===== 部署前检查 song_request 287361 2026-11-19 14:52:54 =====
+[1]设备当前md5(应为基线 50c433dc):
+50c433dc
+[2]备份原文件:
+备份OK
+[3]群里此刻是否有互动(近2分钟消息数):
+4
 =====完=====
