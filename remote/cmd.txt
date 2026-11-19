@@ -1,13 +1,18 @@
-287356
-echo "===== 扫码恢复后只读确认 287356 $(date '+%F %T') ====="
-echo "[1]登录态台账尾部:"
-tail -5 /root/login_state.log 2>/dev/null || echo "  (无此文件)"
-echo "[2]bot大脑进程:"
-pgrep -af '/root/bot/venv/bin/python main.py' | head -1
-echo "[3]NapCat进程:"
-pgrep -af 'opt/QQ/[q]q' | head -1 || echo "  未匹配"
-echo "[4]bot.log最近5分钟有无异常:"
-tail -60 /root/bot/bot/bot.log 2>/dev/null | grep -iE "traceback|exception|crash|离线|offline" | tail -3 || echo "  无异常"
-echo "[5]启动/连接横幅:"
-grep -E "QQ 群机器人启动成功|WebSocket connection|wss?://" /root/bot/bot/bot.log 2>/dev/null | tail -3
+287357
+echo "===== 未完成事项只读盘点 287357 $(date '+%F %T') ====="
+echo "[1]登录态:"
+tail -3 /root/login_state.log 2>/dev/null
+echo "[2]关键进程:"
+for p in 'main.py' 'opt/QQ/[q]q' 'remote_ctl_v6' 'azar_autoheal' 'offline_watch' 'Xvfb'; do echo -n "  $p: "; pgrep -af "$p" | head -1 || echo 无; done
+echo "[3]脚本md5:"
+for f in /root/offline_watch_v2.sh /root/azar_autoheal.sh /root/bot/bot/plugins/link_probe.py; do echo "  $(md5sum "$f" 2>/dev/null|cut -c1-8) $(basename $f)"; done
+echo "[4]自启守卫:"
+grep -rl "azar_autoheal\|offline_watch_v2" /root/remote_ctl_v6.sh /root/start_all.sh 2>/dev/null | tr '\n' ' '; echo
+echo "[5]NapCat版本/配置(只读):"
+cat /root/Napcat/app/package.json 2>/dev/null | grep -o '"version"[^,]*' | head -1
+grep -o 'o3HookMode[^,}]*' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/*.json 2>/dev/null | head -3
+echo "[6]点歌签名代理版本:"
+head -3 /root/music_sign.py 2>/dev/null; md5sum /root/music_sign.py 2>/dev/null|cut -c1-8
+echo "[7]GitHub告警/取证通道:"
+for f in alert.txt forensics.txt link.txt; do echo -n "  $f: "; curl -s -H "Authorization: token $(cat /workspace/.gh_token)" "https://api.github.com/repos/Thousands91/-1/contents/remote/$f" | grep -o '"size":[0-9]*' | head -1; done
 echo "=====完====="
