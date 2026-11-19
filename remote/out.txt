@@ -1,37 +1,39 @@
-<<<task_287421.txt>>>
-===== 任务287421 11-20 02:27:56 =====
+<<<task_287422.txt>>>
+===== 任务287422 11-20 02:28:44 =====
 --- 命令 ---
-echo "===== 287421 最近交互内容取证 ====="
-echo "[1]napcat.log最近收到的消息(接收<-):"
-grep "接收 <-" /root/napcat.log | tail -25
-echo "[2]napcat.log最近发出的消息(发送->):"
-grep "发送 ->" /root/napcat.log | tail -25
-echo "[3]bot.log最近的AI回复处理(近40行有内容的):"
-grep -E "ai_chat|LLM|大模型|回复|prompt" /root/bot/bot/bot.log | tail -15
-echo "[4]ai_chat有无独立日志/记忆文件:"
-ls -la /root/bot/bot/data/ 2>/dev/null | head -10
-find /root/bot/bot -name "*.log" -newer /root/bot/bot/pyproject.toml 2>/dev/null | head -5
-echo "[5]点歌/游戏最近记录:"
-grep -E "song_request|games" /root/bot/bot/bot.log | tail -6
+echo "===== 287422 私聊对话与积压消息取证 ====="
+echo "[1]1561950850的私聊往来全文:"
+grep "1561950850" /root/napcat.log | tail -15
+echo "[2]02:25:28积压涌入的总条数:"
+grep "接收 <-" /root/napcat.log | grep "02:25:2" | wc -l
+echo "[3]积压消息里@阿萨尔或提到阿萨尔的:"
+grep "接收 <-" /root/napcat.log | grep -E "@阿萨尔|\[回复消息.*阿萨尔|阿萨尔" | tail -10
+echo "[4]02:25:30~02:26:10之间的全部收发(看触发回复的是哪条):"
+awk '/11-20 02:25:3/,/11-20 02:26:1/' /root/napcat.log | head -30
+echo "[5]22:41~22:43掉线前最后的ai_chat处理(当时回复了什么):"
+awk '/11-19 22:4[123]/' /root/bot/bot/bot.log | grep -vE "Matcher|handled" | head -8
 echo "=====完====="
 --- 输出 ---
-===== 287421 最近交互内容取证 =====
-[1]napcat.log最近收到的消息(接收<-):
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [嘻嘻(3358627236)] [回复消息 [克莱恩·莫雷蒂(2045344206)] 我都不想出门] @克莱恩·莫雷蒂 (2045344206)  啊我这边16
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [嘻嘻(3358627236)] 风吹来的湿冷
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [嘻嘻(3358627236)] 但是还能接受
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [枫淞诗（已复活）(568187738)] 群里那个
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [枫淞诗（已复活）(568187738)] 算刷屏吗
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [七嘻ttl(3552275152)] 已制裁
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] [图片]
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 好像试一下这个
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 但是太便宜了不敢买
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 话说有人有知乎会员吗
+===== 287422 私聊对话与积压消息取证 =====
+[1]1561950850的私聊往来全文:
+11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [我爱这橙色的海洋🍀💛乐育群里的(1561950850)] [图片]
+11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [我爱这橙色的海洋🍀💛乐育群里的(1561950850)] 谁懂
+11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [我爱这橙色的海洋🍀💛乐育群里的(1561950850)] @二旬老人想玩4i发现对方是比我还猛的猛1 (2959186535)  
+11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [我爱这橙色的海洋🍀💛乐育群里的(1561950850)] [文件 录音机-20261120-0202.wav]
+11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爱上齐豫是我的福报(1561950850)] [图片]
+11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爱上齐豫是我的福报(1561950850)] 好冷啊
 11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [亖᳐卐冇卌⭐᳐੭ﾞ(1561950850)] 🈚
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 你要看文吗
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 是的
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 有一篇文开头有点好玩
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] [卡片消息]
+11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [亖᳐卐冇卌⭐᳐੭ﾞ(1561950850)] 你为什么不更新
+11-20 02:25:30 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-20 02:25:30 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-20 02:25:30 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-20 02:25:32 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) hi
+11-20 02:25:33 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 您好。想找点什么？
+11-20 02:25:35 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-20 02:25:35 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+[2]02:25:28积压涌入的总条数:
+61
+[3]积压消息里@阿萨尔或提到阿萨尔的:
 11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] @●᳐‖▜▜▙᳐੭ﾞ (1179127036)  发我
 11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 提示词
 11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] [图片]
@@ -42,42 +44,21 @@ echo "=====完====="
 11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [麻薯流心奶黄肉松荔枝榛子芒果薄脆奶芙千层(3273077048)] [回复消息 [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 宝我看不到这个] @●᳐‖▜▜▙᳐੭ﾞ (1179127036)  这个是习惯失恋
 11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [麻薯流心奶黄肉松荔枝榛子芒果薄脆奶芙千层(3273077048)] 说起来前几天还看见有人推荐这个歌来着
 11-20 02:25:32 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) hi
-[2]napcat.log最近发出的消息(发送->):
+[4]02:25:30~02:26:10之间的全部收发(看触发回复的是哪条):
+11-20 02:25:30 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-20 02:25:30 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-20 02:25:30 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-20 02:25:32 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) hi
 11-20 02:25:33 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 您好。想找点什么？
-[3]bot.log最近的AI回复处理(近40行有内容的):
-11-19 22:41:37 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1313)
-11-19 22:41:37 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1313) running complete
-11-19 22:42:13 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1313)
-11-19 22:42:13 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1313) running complete
-11-19 22:42:28 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1313)
-11-19 22:42:28 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1313) running complete
-11-19 22:42:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1313)
-11-19 22:42:41 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1313) running complete
-11-19 22:43:10 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1313)
-11-19 22:43:10 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1313) running complete
-11-19 22:43:22 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1313)
-11-19 22:43:22 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1313) running complete
-11-19 22:46:33 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
-11-20 02:25:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1313)
-11-20 02:25:35 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1313) running complete
-[4]ai_chat有无独立日志/记忆文件:
-total 0
-drwxr-xr-x 4 root root  3488 Nov 18 09:51 .
-drwxr-xr-x 7 root root  3488 Nov 14 22:14 ..
--rw-r--r-- 1 root root   735 Nov 19 17:19 fortune_log.json
--rw-r--r-- 1 root root 25369 Nov 11 22:41 gutenberg_zh.json
--rw-r--r-- 1 root root   122 Nov 17 03:56 image_captions.json
-drwxr-xr-x 2 root root  3488 Nov 19 20:39 memory
--rw-r--r-- 1 root root    83 Nov 12 15:01 mface_names.json
-drwxr-xr-x 2 root root  3488 Nov 19 15:59 music_cache
--rw-r--r-- 1 root root  6996 Nov 19 13:03 qface_index.json
-/root/bot/bot/data/voice_probe.log
-/root/bot/bot/bot.log
-[5]点歌/游戏最近记录:
-11-19 22:46:33 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
-11-19 22:46:33 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-20 02:25:33 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=101)
-11-20 02:25:33 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=197)
-11-20 02:25:33 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=101) running complete
-11-20 02:25:33 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=197) running complete
+514d228441c81aa552a5f21cceef7c736003933692d5a34abf21a01b18b9ceb0
+11-20 02:25:35 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-20 02:25:35 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+[5]22:41~22:43掉线前最后的ai_chat处理(当时回复了什么):
+11-19 22:41:30 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1401917848 from 3819642626@[群:590454333] '忙不完了'
+11-19 22:41:36 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 153121198 from 3819642626@[群:590454333] '好绝望'
+11-19 22:42:13 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 676692938 from 1106690331@[群:590454333] '没事'
+11-19 22:42:28 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1086491823 from 1106690331@[群:590454333] '忙不完了就算了'
+11-19 22:42:41 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1355040589 from 2338094559@[群:590454333] '[image:summary=[动画表情],file=6C4CF2AB01F1956D76B188F2EE6580AE.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTFDnNS...,file_size=95768]'
+11-19 22:43:09 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 85279662 from 3819642626@[群:590454333] '[image:summary=[？],file=390435C282C155B75378DBFD854CDA31.jpg,sub_type=7,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSrQNTl...,file_size=4059]'
+11-19 22:43:22 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 470440684 from 3819642626@[群:590454333] '等死吗。。。'
 =====完=====
