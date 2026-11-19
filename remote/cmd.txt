@@ -1,11 +1,10 @@
-287331
-echo "===A adapter事件模型文件==="
-EV=/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py
-ls -la "$EV" 2>/dev/null
-echo "===B Lifecycle/Heartbeat/Meta事件类==="
-grep -n -E "class .*Meta|class Lifecycle|class Heartbeat|meta_event_type|sub_type|LifecycleMetaEvent|HeartbeatMetaEvent|status|good|online" "$EV" 2>/dev/null | head -40
-echo "===C adapter支持的事件类型注册==="
-grep -rn -E "meta_event|lifecycle|heartbeat|bot_offline" /root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/ 2>/dev/null | grep -v ".pyc" | head -25
-echo "===D bot.log里那36条元事件原文==="
-grep -i -E "meta_event|lifecycle|heartbeat" /root/bot/bot/bot.log 2>/dev/null | tail -8
+287332
+echo "===A on_meta_event导出位置==="
+grep -rn "def on_meta_event\|on_meta_event" /root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py /root/bot/venv/lib/python3.10/site-packages/nonebot/matcher.py 2>/dev/null | head -5
+echo "===B Status类字段==="
+sed -n '120,140p' /root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py 2>/dev/null
+echo "===C get_self_id方法==="
+grep -n "def get_self_id\|self_id" /root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py 2>/dev/null | head -5
+echo "===D Lifecycle/Heartbeat类定义==="
+sed -n '556,572p' /root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py 2>/dev/null
 echo "=====完====="
