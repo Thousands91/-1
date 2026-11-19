@@ -1,63 +1,47 @@
-<<<task_287415.txt>>>
-===== 任务287415 11-20 00:28:25 =====
+<<<task_287416.txt>>>
+===== 任务287416 11-20 00:36:07 =====
 --- 命令 ---
-echo "===== 287415 每日在线时长统计 ====="
-awk '
-{
-  dd=substr($1,6,5)
-  if ($0 ~ /\[在线\]/) {on[dd]++}
-  else if ($0 ~ /\[未登录\]/) {off[dd]++}
-  else if ($0 ~ /未知/) {unk[dd]++}
-  if ($0 ~ /状态变化: \[在线\] -> \[未登录\]/) {drop[dd]++}
-  if ($0 ~ /状态变化.*-> \[在线\]/) {up[dd]++}
-}
-END {
-  printf "%-6s %-14s %-10s %-8s %-12s %-10s\n","日期","在线时长(约)","未登录","未知","扫码上线","运行中掉线"
-  n=asorti(on,ix); for(i=1;i<=n;i++){k=ix[i]
-    printf "%-6s %-14s %-10s %-8s %-12s %-10s\n", k, on[k]*5"分", off[k], unk[k], up[k]+0, drop[k]+0}
-}' /root/login_state.log 2>/dev/null || awk '
-{
-  dd=substr($1,6,5)
-  if ($0 ~ /\[在线\]/) {on[dd]++}
-  else if ($0 ~ /\[未登录\]/) {off[dd]++}
-  else if ($0 ~ /未知/) {unk[dd]++}
-  if ($0 ~ /状态变化: \[在线\] -> \[未登录\]/) {drop[dd]++}
-  if ($0 ~ /状态变化.*-> \[在线\]/) {up[dd]++}
-}
-END { for (k in on) printf "%s 在线约%d分 未登录%d 未知%d 上线%d次 掉线%d次\n", k, on[k]*5, off[k], unk[k], up[k]+0, drop[k]+0 }' /root/login_state.log | sort
-echo "[2]11-18与11-19两天的完整状态变化明细:"
-grep -E "^2026-11-1[89].*状态变化" /root/login_state.log
-echo "[3]11-17的状态变化明细:"
-grep -E "^2026-11-17.*状态变化" /root/login_state.log | head -20
+echo "===== 287416 worker环境诊断 ====="
+echo "[1]当前登录状态:"
+bash /root/logincheck.sh 2>&1 | grep -E "^\[" | head -1
+echo "[2]worker进程:"
+pgrep -af "remote_ctl" | head -3
+echo "[3]运行环境(Termux还是proot):"
+echo "  PREFIX=$PREFIX"
+echo "  uname: $(uname -r 2>/dev/null)"
+ls -d /data/data/com.termux 2>&1 | head -1
+echo "[4]termux-wake-lock可用性:"
+command -v termux-wake-lock 2>&1
+ls /data/data/com.termux/files/usr/bin/termux-wake-lock 2>&1 | head -1
+echo "[5]内核wake_lock现状:"
+head -c 300 /sys/power/wake_lock 2>/dev/null
+echo ""
+echo "[6]Termux boot目录:"
+ls /data/data/com.termux/files/home/.termux/boot/ 2>&1 | head -5
+echo "[7]worker怎么被拉起的:"
+grep -l "remote_ctl" /root/*.sh /data/data/com.termux/files/home/.termux/boot/* 2>/dev/null | head -5
 echo "=====完====="
 --- 输出 ---
-===== 287415 每日在线时长统计 =====
-11-13 在线约710分 未登录6 未知0 上线1次 掉线0次
-11-14 在线约1015分 未登录27 未知0 上线3次 掉线3次
-11-15 在线约1430分 未登录0 未知0 上线0次 掉线0次
-11-16 在线约385分 未登录126 未知0 上线2次 掉线1次
-11-17 在线约740分 未登录40 未知0 上线0次 掉线1次
-11-18 在线约905分 未登录16 未知0 上线2次 掉线2次
-11-19 在线约595分 未登录162 未知0 上线5次 掉线3次
-[2]11-18与11-19两天的完整状态变化明细:
-2026-11-18 01:55:21 状态变化: 初始 -> [未登录]
-2026-11-18 02:00:22 状态变化: [未登录] -> 未知
-2026-11-18 02:05:23 状态变化: 初始 -> [在线]
-2026-11-18 08:45:35 状态变化: [在线] -> [未登录]
-2026-11-18 08:50:36 状态变化: [未登录] -> [在线]
-2026-11-18 22:38:39 状态变化: [在线] -> [未登录]
-2026-11-19 00:42:03 状态变化: [未登录] -> [在线]
-2026-11-19 02:17:20 状态变化: [在线] -> [未登录]
-2026-11-19 14:34:27 状态变化: [未登录] -> [在线]
-2026-11-19 14:39:28 状态变化: [在线] -> [未登录]
-2026-11-19 14:44:28 状态变化: [未登录] -> [在线]
-2026-11-19 20:21:26 状态变化: [在线] -> 未知
-2026-11-19 20:26:27 状态变化: 初始 -> [在线]
-2026-11-19 22:27:31 状态变化: [在线] -> 未知
-2026-11-19 22:32:33 状态变化: 初始 -> [在线]
-2026-11-19 22:47:36 状态变化: [在线] -> [未登录]
-2026-11-19 22:53:15 状态变化: [未登录] -> 未知
-2026-11-19 22:58:20 状态变化: 初始 -> [未登录]
-[3]11-17的状态变化明细:
-2026-11-17 15:38:01 状态变化: [在线] -> [未登录]
+===== 287416 worker环境诊断 =====
+[1]当前登录状态:
+[未登录] 当前没有有效会话
+[2]worker进程:
+6857 bash /root/remote_ctl_v6.sh
+[3]运行环境(Termux还是proot):
+  PREFIX=
+  uname: 6.17.0-PRoot-Distro
+/data/data/com.termux
+[4]termux-wake-lock可用性:
+/data/data/com.termux/files/usr/bin/termux-wake-lock
+/data/data/com.termux/files/usr/bin/termux-wake-lock
+[5]内核wake_lock现状:
+
+[6]Termux boot目录:
+ls: cannot access '/data/data/com.termux/files/home/.termux/boot/': No such file or directory
+[7]worker怎么被拉起的:
+/root/azar_autoheal.sh
+/root/azar_guard.sh
+/root/remote_ctl.sh
+/root/remote_ctl_v5.sh
+/root/remote_ctl_v6.sh
 =====完=====
