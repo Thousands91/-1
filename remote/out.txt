@@ -1,44 +1,28 @@
-<<<task_287417.txt>>>
-===== 任务287417 11-20 00:38:19 =====
+<<<task_287418.txt>>>
+===== 任务287418 11-20 00:40:40 =====
 --- 命令 ---
-echo "===== 部署 autoheal v1.2 + wake-lock 287417 ====="
-echo "[1]下载:"
-curl -sL -H "Cache-Control: no-cache" -o /tmp/ah2.sh "https://raw.githubusercontent.com/Thousands91/-1/main/deploy/azar_autoheal.sh?ts=$(date +%s)"
-md5sum /tmp/ah2.sh | cut -d' ' -f1 | sed 's/^/  md5: /'
-if [ "$(md5sum /tmp/ah2.sh | cut -d' ' -f1)" != "80245de2ec3e2c817057da755638a473" ]; then echo "  md5不符,中止"; echo "=====完====="; exit 0; fi
-echo "[2]备份v1.1(37e2ad78)+语法:"
-cp /root/azar_autoheal.sh /tmp/azar_autoheal_bak_v11.sh && bash -n /tmp/ah2.sh && echo "  OK"
-echo "[3]wake-lock立即可用性测试:"
-_WL=/data/data/com.termux/files/usr/bin/termux-wake-lock
-"$_WL" 2>&1 | head -1
-sleep 2
-echo "  wake_lock内容: [$(head -c 120 /sys/power/wake_lock 2>/dev/null)]"
-echo "[4]安装+重启看护进程:"
-cp /tmp/ah2.sh /root/azar_autoheal.sh
+echo "===== 部署 autoheal v1.2.1 287418 ====="
+echo "[1]下载+校验(应4cc1299a):"
+curl -sL -H "Cache-Control: no-cache" -o /tmp/ah3.sh "https://raw.githubusercontent.com/Thousands91/-1/main/deploy/azar_autoheal.sh?ts=$(date +%s)"
+M=$(md5sum /tmp/ah3.sh | cut -d' ' -f1); echo "  md5: $M"
+if [ "$M" != "4cc1299ac0740dbcfc819facddb55dd5" ]; then echo "  md5不符,中止"; echo "=====完====="; exit 0; fi
+bash -n /tmp/ah3.sh && echo "  语法OK"
+echo "[2]wake-lock退出码测试:"
+/data/data/com.termux/files/usr/bin/termux-wake-lock; echo "  exit=$?"
+echo "[3]安装+重启看护:"
+cp /tmp/ah3.sh /root/azar_autoheal.sh
 LP=$(cat /root/.autoheal.lock/pid 2>/dev/null)
 kill "$LP" 2>/dev/null; sleep 2
 rm -rf /root/.autoheal.lock
 setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null &
 sleep 3
 echo "  新进程: $(pgrep -f azar_autoheal | head -1)"
-echo "[5]启动行(应v1.2)+wake_lock复查:"
+echo "[4]启动行+首条告警(会话寿命应显示?分,因22:47已掉线):"
 tail -2 /root/autoheal.log
-echo "  wake_lock: [$(head -c 120 /sys/power/wake_lock 2>/dev/null)]"
 echo "=====完====="
 --- 输出 ---
-===== 部署 autoheal v1.2 + wake-lock 287417 =====
-[1]下载:
+===== 部署 autoheal v1.2.1 287418 =====
+[1]下载+校验(应4cc1299a):
   md5: 80245de2ec3e2c817057da755638a473
-[2]备份v1.1(37e2ad78)+语法:
-  OK
-[3]wake-lock立即可用性测试:
-  wake_lock内容: []
-[4]安装+重启看护进程:
-  新进程: 19083
-[5]启动行(应v1.2)+wake_lock复查:
-[11-20 00:38:28] 登录态: 初始 -> [未登录]
-[11-20 00:38:28] ALERT: 阿萨尔掉线([未登录])! 本次在线126分/距最后发送7184秒/距最后收信6906秒;已自愈,5分钟不恢复需本人扫码
-  wake_lock: []
+  md5不符,中止
 =====完=====
-<<<ALERT.txt>>>
-2026-11-20 00:38:28 阿萨尔掉线([未登录])! 本次在线126分/距最后发送7184秒/距最后收信6906秒;已自愈,5分钟不恢复需本人扫码
