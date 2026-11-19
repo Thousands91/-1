@@ -1,27 +1,19 @@
-287424
-echo "===== 287424 bot.log时间覆盖与交互量统计 ====="
-echo "[1]bot.log起点与终点:"
-head -1 /root/bot/bot/bot.log | head -c 80
-echo ""
-tail -1 /root/bot/bot/bot.log | head -c 80
-echo ""
-echo "[2]每天消息量(收到的群/私聊消息行数):"
+287425
+echo "===== 287425 修正口径:bot.log逐日统计 ====="
+echo "[1]逐日总行数:"
 for d in 11-14 11-15 11-16 11-17 11-18 11-19 11-20; do
-  echo "  $d: $(grep -c "11-$d.*message\.\(group\|private\)" /root/bot/bot/bot.log)"
+  echo "  $d: $(grep -c "^11-$d" /root/bot/bot/bot.log)"
 done
-echo "[3]每天ai_chat触发量:"
+echo "[2]逐日收到的消息行数:"
 for d in 11-16 11-17 11-18 11-19 11-20; do
-  echo "  $d: $(grep "11-$d.*handled by Matcher" /root/bot/bot/bot.log | grep -c "ai_chat")"
+  echo "  $d: $(grep "^11-$d" /root/bot/bot/bot.log | grep -cF "message.group.normal")  群 / 私聊 $(grep "^11-$d" /root/bot/bot/bot.log | grep -cF "message.private")"
 done
-echo "[4]每天发送量(napcat两个日志合计):"
+echo "[3]逐日ai_chat触发:"
 for d in 11-16 11-17 11-18 11-19 11-20; do
-  A=$(grep -c "发送 ->" /root/napcat-restart.log 2>/dev/null; true)
-  echo "  napcat-restart.log: $A"
-  break
+  echo "  $d: $(grep "^11-$d" /root/bot/bot/bot.log | grep -cF "module=plugins.ai_chat")"
 done
-grep -c "发送 ->" /root/napcat-restart.log
-echo "[5]memory最新文件:"
-F=$(ls -t /root/bot/bot/data/memory/ | head -1)
-echo "文件: $F  大小: $(stat -c %s /root/bot/bot/data/memory/$F)B"
-head -c 800 "/root/bot/bot/data/memory/$F"
+echo "[4]napcat-restart.log格式抽样:"
+grep -m3 "11-19 15:5" /root/napcat-restart.log | head -3
+echo "[5]memory全目录(文件名=用户QQ,看更新时间分布):"
+ls -la --time-style=+%m-%d_%H:%M /root/bot/bot/data/memory/
 echo "=====完====="
