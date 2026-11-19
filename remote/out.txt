@@ -1,21 +1,50 @@
-<<<task_287364.txt>>>
-===== 任务287364 11-19 14:58:23 =====
+<<<task_287365.txt>>>
+===== 任务287365 11-19 15:02:25 =====
 --- 命令 ---
-echo "===== 重启后稳定性+上线确认 287364 $(date '+%F %T') ====="
-echo "[1]process etime(应>30s):"
-PID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1); ps -p "$PID" -o pid,etime,stat 2>/dev/null | tail -1
-echo "[2]logincheck:"
-bash /root/logincheck.sh 2>/dev/null | head -3
-echo "[3]近30秒异常:"
-tail -30 /root/bot/bot/bot.log 2>/dev/null | grep -iE "traceback|error|exception|crash" | tail -3 || echo "  无"
+echo "===== A首次回1无后续-根因日志验证 287365 \$(date '+%F %T') ====="
+echo "[1]14:43:40~14:44:15 完整matcher分派(看A第一次1交给谁):"
+grep -E "11-19 14:43:(4|5)|11-19 14:44:0|11-19 14:44:1" /root/bot/bot/bot.log 2>/dev/null | grep -iE "message.group|handled by|pick|song|点歌|audio|deliver|发卡|语音" | tail -40
+echo "[2]voice_probe.log尾部(audio成功才会写,看A第一次1后有无新记录):"
+tail -15 /root/bot/bot/data/voice_probe.log 2>/dev/null || echo "  无此文件"
+echo "[3]fetch_audio_any/audio相关日志(14:43~14:45):"
+grep -E "11-19 14:4[3-5]" /root/bot/bot/bot.log 2>/dev/null | grep -iE "fetch_audio|audio|秒|sec|语音|KB" | tail -20
+echo "[4]A两次回1之间_PENDING清扫痕迹(超时/淘汰日志):"
+grep -E "11-19 14:4[3-5]" /root/bot/bot/bot.log 2>/dev/null | grep -iE "清扫|过期|超时|淘汰|PENDING|expire" | tail -15
+echo "[5]当前设备song_request.py md5(确认是上轮改的bfaa7ace):"
+md5sum /root/bot/bot/plugins/song_request.py | cut -c1-8
+echo "[6]备份文件md5(应为原始基线50c433dc):"
+md5sum /root/bot/bot/plugins/song_request.py.bak_287361 2>/dev/null | cut -c1-8
 echo "=====完====="
 --- 输出 ---
-===== 重启后稳定性+上线确认 287364 2026-11-19 14:58:23 =====
-[1]process etime(应>30s):
- 2059       00:00 S<sl
-[2]logincheck:
-=== 登录状态（权威判定）===
-[在线] 已登录，一切正常
-阶段: ready
-[3]近30秒异常:
+===== A首次回1无后续-根因日志验证 287365 $(date '+%F %T') =====
+[1]14:43:40~14:44:15 完整matcher分派(看A第一次1交给谁):
+11-19 14:43:44 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 700616172 from 1561950850@[群:562796842] '[at:qq=3427943187] 点歌 夜蝶'
+11-19 14:43:44 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=42)
+11-19 14:43:46 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=42) running complete
+11-19 14:43:57 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 892892020 from 1561950850@[群:562796842] '1'
+11-19 14:43:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.song_request, lineno=361)
+11-19 14:44:03 [INFO] nonebot | Matcher(type='message', module=plugins.song_request, lineno=361) running complete
+11-19 14:44:04 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+[2]voice_probe.log尾部(audio成功才会写,看A第一次1后有无新记录):
+2026-11-14 22:19:09	307s	12009KB	ok	
+2026-11-15 11:34:56	307s	12009KB	ok	
+2026-11-15 13:18:32	307s	12009KB	ok	
+2026-11-15 15:19:13	333s	13019KB	ok	
+2026-11-17 03:40:28	466s	7296KB	ok	
+2026-11-17 03:58:27	266s	10424KB	ok	
+2026-11-17 04:07:38	466s	7296KB	ok	
+2026-11-17 04:21:12	466s	7296KB	ok	
+2026-11-17 04:23:03	45s	704KB	ok	
+2026-11-17 04:50:07	466s	7296KB	ok	
+2026-11-18 02:01:46	30s	469KB	ok	
+2026-11-19 00:49:30	164s	2566KB	ok	
+2026-11-19 01:07:04	164s	2566KB	ok	
+2026-11-19 01:22:55	308s	12038KB	ok	
+2026-11-19 01:49:54	308s	12038KB	ok	
+[3]fetch_audio_any/audio相关日志(14:43~14:45):
+[4]A两次回1之间_PENDING清扫痕迹(超时/淘汰日志):
+[5]当前设备song_request.py md5(确认是上轮改的bfaa7ace):
+bfaa7ace
+[6]备份文件md5(应为原始基线50c433dc):
+50c433dc
 =====完=====
