@@ -1,9 +1,36 @@
-287429
-echo "===== 287429 群聊交互正确口径统计 ====="
-echo "[1]每天@阿萨尔的群消息数:"
-awk '/message.group.normal/ && /\[at:qq=3427943187\]/ {print substr($0,1,5)}' /root/bot/bot/bot.log | sort | uniq -c
-echo "[2]近3天@阿萨尔的群消息内容:"
-awk '/message.group.normal/ && /\[at:qq=3427943187\]/' /root/bot/bot/bot.log | tail -20
-echo "[3]11-04的私聊猜数字上下文确认:"
-awk '/message.private/ && /11-04/' /root/bot/bot/bot.log | tail -10
+287430
+echo "===== 部署坑153 防复读持久化 287430 ====="
+echo "[0]旧文件md5:"
+md5sum /root/bot/bot/plugins/ai_chat.py /root/bot/bot/persona/__init__.py
+echo "[1]下载两个新文件:"
+curl -sL -H "Cache-Control: no-cache" -o /tmp/ai_new.py "https://raw.githubusercontent.com/Thousands91/-1/main/deploy/ai_chat.py?ts=$(date +%s)&v=153"
+curl -sL -H "Cache-Control: no-cache" -o /tmp/pe_new.py "https://raw.githubusercontent.com/Thousands91/-1/main/deploy/persona_init.py?ts=$(date +%s)&v=153"
+M1=$(md5sum /tmp/ai_new.py | cut -d' ' -f1)
+M2=$(md5sum /tmp/pe_new.py | cut -d' ' -f1)
+echo "  ai_chat: $M1 / persona: $M2"
+if [ "$M1" != "aedc6a5cba4322f3baff3ab94dbf81c9" ] || [ "$M2" != "59a9da03c81195a0439bb97cd7216e3d" ]; then echo "  md5不符,中止不部署(CDN未刷新稍后重试)"; echo "=====完====="; exit 0; fi
+echo "[2]备份旧版:"
+cp /root/bot/bot/plugins/ai_chat.py /tmp/ai_bak_before_153.py
+cp /root/bot/bot/persona/__init__.py /tmp/pe_bak_before_153.py
+echo "  OK"
+echo "[3]安装+语法:"
+cp /tmp/ai_new.py /root/bot/bot/plugins/ai_chat.py
+cp /tmp/pe_new.py /root/bot/bot/persona/__init__.py
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py /root/bot/bot/persona/__init__.py && echo "  py_compile OK" || echo "  FAIL"
+echo "[4]新特性计数:"
+grep -c "_save_reply_sigs\|_load_reply_sigs" /root/bot/bot/plugins/ai_chat.py
+grep -c "（抬头瞥了您一眼）" /root/bot/bot/plugins/ai_chat.py
+grep -c "不许回回一字不差" /root/bot/bot/persona/__init__.py
+echo "[5]重启大脑:"
+OLDPID=$(pgrep -f "venv/bin/python main.py" | head -1)
+kill "$OLDPID" 2>/dev/null; sleep 3
+( cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null & )
+sleep 15
+NEWPID=$(pgrep -f "venv/bin/python main.py" | head -1)
+echo "  旧$OLDPID→新$NEWPID  cwd:$(readlink /proc/$NEWPID/cwd 2>/dev/null)"
+echo "[6]插件加载:"
+grep -E "Succeeded to load plugin|Failed to load" /root/bot/bot/bot.log | tail -12
+echo "[7]横幅+在线:"
+grep "QQ 群机器人启动成功" /root/bot/bot/bot.log | tail -1
+bash /root/logincheck.sh 2>/dev/null | grep -oE "\[[^]]+\]" | head -1
 echo "=====完====="
