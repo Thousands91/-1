@@ -1,2 +1,34 @@
-<<<ALERT.txt>>>
-2026-11-19 23:13:50 阿萨尔掉线([未登录])! 已尝试自愈;若5分钟内不恢复需本人扫码
+<<<task_287411.txt>>>
+===== 任务287411 11-19 23:14:27 =====
+--- 命令 ---
+echo "===== 287411 定位看护脚本 ====="
+echo "[1]谁在写autoheal.log:"
+grep -l "ALERT" /root/*.sh 2>/dev/null
+grep -rn "阿萨尔掉线" /root/*.sh 2>/dev/null | head -4
+echo "[2]脚本里ALERT掉线那段上下文:"
+S=$(grep -l "阿萨尔掉线" /root/*.sh 2>/dev/null | head -1)
+echo "目标脚本: $S"
+grep -n -B6 -A8 "阿萨尔掉线" "$S" 2>/dev/null | head -30
+echo "=====完====="
+--- 输出 ---
+===== 287411 定位看护脚本 =====
+[1]谁在写autoheal.log:
+/root/azar_autoheal.sh
+/root/azar_autoheal.sh:72:      *未登录*|*掉线*) send_alert "阿萨尔掉线($ST)! 已尝试自愈;若5分钟内不恢复需本人扫码" ;;
+/root/azar_guard.sh:2:# 阿萨尔掉线守护 v1.2 (2026-11-08)
+[2]脚本里ALERT掉线那段上下文:
+目标脚本: /root/azar_autoheal.sh
+66-  # ② 登录态监测（权威判定走 logincheck）
+67-  ST=$(timeout 20 bash /root/logincheck.sh 2>/dev/null | grep -oE '\[在线\]|\[掉线\]|\[未登录\]' | head -1)
+68-  [ -z "$ST" ] && ST="[未知]"
+69-  if [ "$ST" != "$PREV" ]; then
+70-    say "登录态: ${PREV:-初始} -> $ST"
+71-    case "$ST" in
+72:      *未登录*|*掉线*) send_alert "阿萨尔掉线($ST)! 已尝试自愈;若5分钟内不恢复需本人扫码" ;;
+73-      *在线*) [ -n "$PREV" ] && send_alert "阿萨尔已恢复在线" ;;
+74-    esac
+75-    PREV="$ST"
+76-  fi
+77-  sleep 60
+78-done
+=====完=====
