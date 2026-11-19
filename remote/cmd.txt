@@ -1,17 +1,6 @@
-287409
-echo "===== 287409 掉线-发送相关性深挖 ====="
-echo "[1]22:00~22:45:11 之间全部发送记录:"
-awk '/11-19 22:0/,/11-19 22:45:11/' /root/napcat.log | grep "发送" | tail -8
-echo "[2]20:19:25 Timeout后 NapCat 后续10行:"
-grep -A 10 "20:19:25" /root/napcat.log | head -12
-echo "[3]bot.log今天全部心跳跳变:"
-grep "状态跳变" /root/bot/bot/bot.log | tail -12
-echo "[4]autoheal 12:10与14:39前后明细:"
-grep -B2 -A4 "12:10:30" /root/autoheal.log | head -10
-grep -B2 -A4 "14:39:39" /root/autoheal.log | head -10
-echo "[5]新二维码时间:"
+287410
+echo "===== 287410 取码 ====="
 ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-echo "[6]新码base64:"
 base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
 echo ""
 echo "=====完====="
