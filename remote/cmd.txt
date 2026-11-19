@@ -1,13 +1,9 @@
-287344
-echo "===== 设备端bot代码指纹盘点 287344 $(date '+%F %T') ====="
-echo "===A 所有py文件md5+行数==="
-find /root/bot/bot -name "*.py" -not -path "*__pycache__*" | sort | while read f; do echo "$(md5sum "$f"|cut -c1-8) $(wc -l < "$f") ${f#/root/bot/bot/}"; done
-echo "===B 主程序与配置==="
-cat /root/bot/bot/main.py
-echo "---config---"
-cat /root/bot/bot/config.py
-echo "===C 插件加载日志==="
-grep -i "Succeeded to load plugin\|Failed to load plugin\|Plugin.*error" /root/bot/bot/bot.log 2>/dev/null | tail -25
-echo "===D bot进程与端口==="
-pgrep -af 'python main.py' | head -3
+287345
+echo "===== 部署前状态确认 287345 $(date '+%F %T') ====="
+echo "[1]登录态(最后3行):"
+tail -3 /root/login_state.log 2>/dev/null
+echo "[2]bot进程:"
+pgrep -af 'python main.py' | head -2
+echo "[3]四个待改文件当前md5(应为原始版):"
+for f in ai_chat.py book_find.py image_search_multisource.py song_request.py; do echo "$(md5sum /root/bot/bot/plugins/$f|cut -c1-8) $f"; done
 echo "=====完====="
