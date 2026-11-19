@@ -1,32 +1,34 @@
-<<<task_287403.txt>>>
-===== 任务287403 11-19 22:50:40 =====
+<<<task_287404.txt>>>
+===== 任务287404 11-19 22:53:37 =====
 --- 命令 ---
-echo "===== 287403 登录诊断 ====="
-echo "[1]logincheck全输出:"
-bash /root/logincheck.sh 2>&1 | head -10
-echo "[2]NapCat进程:"
-pgrep -af "napcat\|NapCat" | head -3
-echo "[3]bot.log最近WS/连接记录:"
-grep -E "WebSocket|OneBot V11 .*connect|连接" /root/bot/bot/bot.log | tail -5
-echo "[4]最近5条消息事件:"
-grep "message.group" /root/bot/bot/bot.log | tail -3
+echo "===== 287404 NapCat诊断+取码 ====="
+echo "[1]QQ进程:"
+pgrep -af "opt/QQ" | head -3
+echo "[2]最近登录报错(归因先看日志):"
+grep -E "ErrType|ErrCode|Login.*[Ee]rror|掉线|下线|二维码" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat-run.log /root/napcat.log 2>/dev/null | tail -8
+echo "[3]二维码文件时间:"
+ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>&1
+echo "[4]二维码base64:"
+base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null | head -c 6000
+echo ""
 echo "=====完====="
 --- 输出 ---
-===== 287403 登录诊断 =====
-[1]logincheck全输出:
-=== 登录状态（权威判定）===
-[未登录] 当前没有有效会话
-阶段: waiting_qrcode
-最近错误: 无
-[2]NapCat进程:
-[3]bot.log最近WS/连接记录:
-11-19 22:24:26 [WARNING] link_probe | [连接探针] [11-19 22:24:26.289] LIFECYCLE sub_type=connect self_id=3427943187
-11-19 22:24:28 [WARNING] link_probe | [连接探针] [11-19 22:24:28.265] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
-11-19 22:45:13 [WARNING] link_probe | [连接探针] [11-19 22:45:13.122] HEARTBEAT 状态跳变 online=False good=True 自启动累计心跳=42 self_id=3427943187
-11-19 22:46:22 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
-11-19 22:46:35 [INFO] link_probe | [连接探针] 已启动，监听 lifecycle + heartbeat
-[4]最近5条消息事件:
-11-19 22:42:41 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1355040589 from 2338094559@[群:590454333] '[image:summary=[动画表情],file=6C4CF2AB01F1956D76B188F2EE6580AE.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTFDnNS...,file_size=95768]'
-11-19 22:43:09 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 85279662 from 3819642626@[群:590454333] '[image:summary=[？],file=390435C282C155B75378DBFD854CDA31.jpg,sub_type=7,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSrQNTl...,file_size=4059]'
-11-19 22:43:22 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 470440684 from 3819642626@[群:590454333] '等死吗。。。'
+===== 287404 NapCat诊断+取码 =====
+[1]QQ进程:
+23502 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+28536 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+28562 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+[2]最近登录报错(归因先看日志):
+/root/napcat.log:二维码解码URL: https://txz.qq.com/p?k=lQUqc*FrUfPsqVxmz8A3VX*-*fOm8XKP&f=1600001615
+/root/napcat.log:如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+/root/napcat.log:11-19 22:51:09 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+/root/napcat.log:11-19 22:53:19 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+/root/napcat.log:11-19 22:53:20 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+/root/napcat.log:二维码解码URL: https://txz.qq.com/p?k=TVCLjjAo9l5-gALmMVz6Z4ofRo5jwt*6&f=1600001615
+/root/napcat.log:如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+/root/napcat.log:11-19 22:53:20 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+[3]二维码文件时间:
+-rw-r--r-- 1 root root 593 Nov 19 22:53 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+[4]二维码base64:
+iVBORw0KGgoAAAANSUhEUgAAAJMAAACTAQAAAACinha4AAAACXBIWXMAAAsTAAALEwEAmpwYAAACA0lEQVRIid2WsY3kMAxFaShQZjcgQG0oU0t2A55xA3ZLytSGADVgZQoM877Wu3cLbCICFxxOmMDzDBAU+flp4p+H/mt2Ei2sbp2WmqZAg4QVvlYyS7VHNUvEXwkLZna8VeZghojYMrZEVeJFPr3kbPV5q2l1Rsz4WmK+td0Jufy+Wxdr9Yvm8/etpj0Mp0QzkuWgyp9edrHbJfKWaxodvyktEsbVcrQ32Y2Ri4yVaia+BjbkaeL0krDT2YNTY8jLm0HCbo0U0HN7a7UFtUnY6e0R7I2oAd3jQ8bQqzRT3ski6iZhhe35odARuUR1iFgbCzNrWmqbkk3Cbs+nRjzcwLzCo9NupmlqKlOnvxB1kLDTQadXS8e1SrCElYiJVByA00pP7btZVbun1UEy11AfvfQyRJqCbWVgM3poVsDO1joagiGNN19z3sc4plFjOml2+aRnPnpZqbnA/6qFIU0xHxJ2OsRDJDM1H3r00sugl7eGCaHhaLuQ6eYHE6oe4EZP33oZzu5QPIiF317GSkDDUQNkgRWXNwlj6EXn218LHpwqEtZ2o27204qBJSlhOLAT+D1YYTNI2Mc+pxWt03BB85Iw5DITrUSjR0ZC1vaqAUbfEHsSslnzjm+QCEOyLGTND2reUX62RcRwjyZVFD4f9XNmOhlyxz1ej16CErG//a33b7NfFcREndknTGsAAAAASUVORK5CYII=
 =====完=====
