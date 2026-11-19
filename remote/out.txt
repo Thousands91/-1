@@ -1,39 +1,34 @@
-<<<task_287260.txt>>>
-===== 任务287260 11-19 11:40:33 =====
+<<<task_287270.txt>>>
+===== 任务287270 11-19 11:42:14 =====
 --- 命令 ---
-echo "===== 诊断3 尾部精确 287260 ====="
-echo "[B]大脑日志最后8行:"; tail -8 /root/bot/bot/bot.log 2>/dev/null
-echo "mtime:"; stat -c '%y' /root/bot/bot/bot.log 2>/dev/null
-echo "[C]登录态最后10行:"; tail -10 /root/bot/bot/login_state.log 2>/dev/null
-echo "[D]napcat.log最后12行:"; tail -12 /root/napcat.log 2>/dev/null
-echo "[D2]其他napcat日志:"; ls -la /root/Napcat/*.log /root/Napcat/napcat/logs/*.log 2>/dev/null | tail -8
+echo "===== 诊断4 登录态文件位置 287270 ====="
+echo "[A]找登录态文件:"; find /root -name 'login_state.log' -o -name '*login*.log' 2>/dev/null | head -10
+echo "[B]QQ进程当下:"; ps aux | grep -E '[Qq][Qq] --no-sandbox|[Qq][Qq] -q|xvfb-run' | grep -v grep | head -5
+echo "[C]二维码缓存现状:"; ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null; stat -c '%y' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null
+echo "[D]napcat配置文件:"; ls -la /root/Napcat/*.json /root/Napcat/config/*.json 2>/dev/null | head -10
+echo "[E]当前账号在线判定(napcat日志最后账号状态):"; grep -E '账号状态变更|离线|在线|扫码|二维码' /root/napcat.log 2>/dev/null | tail -15
 echo "=====完====="
 --- 输出 ---
-===== 诊断3 尾部精确 287260 =====
-[B]大脑日志最后8行:
-11-19 02:12:28 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 02:12:28 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 02:12:47 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1663676000 from 1179127036@[群:562796842] '我觉得牛油底料比清油的好吃'
-11-19 02:12:48 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 02:12:48 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 02:12:48 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 02:12:48 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 02:13:19 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
-mtime:
-2026-11-19 02:13:19.820000000 +0800
-[C]登录态最后10行:
-[D]napcat.log最后12行:
-11-19 02:03:26 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 我喜欢加个番茄提味
-11-19 02:03:41 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 因为蔬菜比较多
-c7a9cd093b1fb60be1412d4d03422a0653626eeb51fd959ccabc0f467233cbc5
-11-19 02:12:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] Soga
-11-19 02:12:47 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 我觉得牛油底料比清油的好吃
+===== 诊断4 登录态文件位置 287270 =====
+[A]找登录态文件:
+/root/azar_login_run.log
+/root/login_state.log
+[B]QQ进程当下:
+aid_u0_+  3805  0.0  0.8 200736 45776 pts/0    S<    2023   0:00 Xvfb :135 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.4oPbGv/Xauthority
+aid_u0_+ 13914  0.0  0.7 200716 44472 ?        S<    2023   0:00 Xvfb :134 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.CAdG3e/Xauthority
+aid_u0_+ 17982  0.0  0.9 200736 55892 pts/0    S<    2023   0:00 Xvfb :136 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.aw4Csy/Xauthority
+aid_u0_+ 18628  0.0  0.0 200736  3228 pts/0    S<    2023   0:00 Xvfb :131 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.7Qyoly/Xauthority
+aid_u0_+ 18885  0.0  0.0 200736  3284 ?        S<    2023   0:00 Xvfb :132 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.ebezum/Xauthority
+[C]二维码缓存现状:
+-rw-r--r-- 1 root root 596 Nov 19 11:41 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+2026-11-19 11:41:17.350000000 +0800
+[D]napcat配置文件:
+[E]当前账号在线判定(napcat日志最后账号状态):
+11-19 00:40:37 [[32minfo[39m] 没有 -q 指令指定快速登录，将使用二维码登录方式
+11-19 00:40:37 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+二维码解码URL: https://txz.qq.com/p?k=7xoYxNj7ZEMcKHu2U*AGXMrl6tgavnDc&f=1600001615
+如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+11-19 00:40:37 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+11-19 00:41:20 [[32minfo[39m] [Core] [Login] 二维码已被扫描，等待确认...
 11-19 02:13:04 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-80e01dc2bf504ac8a01e918aed0e42a67f1ae5d6f8b807f2667ce9c11e5500a6
-[13917:1119/021319.686744:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
-[13917:1119/021319.694340:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[13917:1119/021319.702795:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[13917:1119/021319.708902:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[13917:1119/021319.709001:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
-[D2]其他napcat日志:
 =====完=====
