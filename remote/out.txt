@@ -1,29 +1,59 @@
-<<<task_287330.txt>>>
-===== 任务287330 11-19 12:54:43 =====
+<<<task_287331.txt>>>
+===== 任务287331 11-19 12:56:46 =====
 --- 命令 ---
-echo "===A NoneBot与Adapter版本==="
-cd /root/bot/bot && /root/bot/venv/bin/pip show nonebot2 nonebot-adapter-onebot 2>/dev/null | grep -E "^(Name|Version):"
-echo "===B bot.log里history有没有元事件痕迹==="
-grep -c -i -E "meta_event|lifecycle|heartbeat|connect|disconnect" /root/bot/bot/bot.log 2>/dev/null
-echo "===C bot.log最后在线时段的事件类型样本==="
-grep -oE '"post_type": ?"[a-z_]+"|"meta_event_type": ?"[a-z_]+"|\[Info\]|\[Warning\]' /root/bot/bot/bot.log 2>/dev/null | sort | uniq -c | head -15
-echo "===D NapCat是否上报bot_offline到WS==="
-grep -c -i -E "bot_offline|self_offline|lifecycle|meta_event" /root/napcat.log 2>/dev/null
-echo "===E onebot heartInterval当前值==="
-grep "heartInterval\|reconnectInterval" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json 2>/dev/null
+echo "===A adapter事件模型文件==="
+EV=/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py
+ls -la "$EV" 2>/dev/null
+echo "===B Lifecycle/Heartbeat/Meta事件类==="
+grep -n -E "class .*Meta|class Lifecycle|class Heartbeat|meta_event_type|sub_type|LifecycleMetaEvent|HeartbeatMetaEvent|status|good|online" "$EV" 2>/dev/null | head -40
+echo "===C adapter支持的事件类型注册==="
+grep -rn -E "meta_event|lifecycle|heartbeat|bot_offline" /root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/ 2>/dev/null | grep -v ".pyc" | head -25
+echo "===D bot.log里那36条元事件原文==="
+grep -i -E "meta_event|lifecycle|heartbeat" /root/bot/bot/bot.log 2>/dev/null | tail -8
 echo "=====完====="
 --- 输出 ---
-===A NoneBot与Adapter版本===
-Name: nonebot2
-Version: 2.5.0
-Name: nonebot-adapter-onebot
-Version: 2.4.6
-===B bot.log里history有没有元事件痕迹===
-36
-===C bot.log最后在线时段的事件类型样本===
-===D NapCat是否上报bot_offline到WS===
-0
-===E onebot heartInterval当前值===
-        "heartInterval": 30000,
-        "reconnectInterval": 5000
+===A adapter事件模型文件===
+-rw-r--r-- 1 root root 13247 Nov 11 23:32 /root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py
+===B Lifecycle/Heartbeat/Meta事件类===
+130:    online: bool
+131:    good: bool
+146:    sub_type: str
+176:        sub_type = getattr(self, "sub_type", None)
+178:            f".{sub_type}" if sub_type else ""
+239:        sub_type = getattr(self, "sub_type", None)
+241:            f".{sub_type}" if sub_type else ""
+266:    sub_type: str
+287:    sub_type: str
+309:    sub_type: str
+331:    sub_type: str
+407:    sub_type: str
+423:    sub_type: Literal["poke"]
+441:    sub_type: Literal["lucky_king"]
+460:    sub_type: Literal["honor"]
+477:        sub_type = getattr(self, "sub_type", None)
+479:            f".{sub_type}" if sub_type else ""
+512:    sub_type: str
+528:            flag=self.flag, sub_type=self.sub_type, approve=True
+533:            flag=self.flag, sub_type=self.sub_type, approve=False, reason=reason
+538:class MetaEvent(Event):
+542:    meta_event_type: str
+546:        sub_type = getattr(self, "sub_type", None)
+547:        return f"{self.post_type}.{self.meta_event_type}" + (
+548:            f".{sub_type}" if sub_type else ""
+556:class LifecycleMetaEvent(MetaEvent):
+559:    meta_event_type: Literal["lifecycle"]
+560:    sub_type: str
+563:class HeartbeatMetaEvent(MetaEvent):
+566:    meta_event_type: Literal["heartbeat"]
+567:    status: Status
+593:    "LifecycleMetaEvent",
+594:    "HeartbeatMetaEvent",
+===C adapter支持的事件类型注册===
+/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/adapter.py:62:            ("message_type", "notice_type", "request_type", "meta_event_type"),
+/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py:541:    post_type: Literal["meta_event"]
+/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py:542:    meta_event_type: str
+/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py:547:        return f"{self.post_type}.{self.meta_event_type}" + (
+/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py:559:    meta_event_type: Literal["lifecycle"]
+/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py:566:    meta_event_type: Literal["heartbeat"]
+===D bot.log里那36条元事件原文===
 =====完=====
