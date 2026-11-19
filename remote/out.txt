@@ -1,48 +1,19 @@
-<<<task_287326.txt>>>
-===== 任务287326 11-19 12:48:25 =====
+<<<task_287327.txt>>>
+===== 任务287327 11-19 12:49:13 =====
 --- 命令 ---
-echo "===C 日志文件清单==="
-find /root -maxdepth 3 -type f -name "*.log" 2>/dev/null | while read f; do echo "$(du -h "$f"|cut -f1) $(stat -c %y "$f"|cut -d' ' -f1,2|cut -d. -f1) $f"; done
-echo "===D NapCat配置==="
-find /root/Napcat -type f -name "*.json" 2>/dev/null | grep -i -E "config|onebot" | head -10
 echo "===E 进程==="
 ps aux 2>/dev/null | grep -E "main.py|napcat|QQ/qq|offline_watch|autoheal|remote_ctl|netmon|health_probe|login_watch|guard|watcher" | grep -v grep | awk '{print $2, $11, $12, $13, $14}' | head -25
 echo "===F 凭据文件==="
 find /root -maxdepth 4 -type f 2>/dev/null | grep -i -E "credential|token|sig|device|session" | grep -v -E "venv|node_modules" | head -20
 echo "===G QQ版本==="
-/root/Napcat/opt/QQ/qq --version 2>/dev/null | head -2 || grep -rhoE '9\.[0-9]+\.[0-9]+' /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null | head -2
+grep -rhoE '"version"[[:space:]]*:[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+' /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null | head -2
+grep -rhoE '9\.[0-9]+\.[0-9]+' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/package.json 2>/dev/null | head -2
+echo "===H 反检测配置napcat_3427943187.json==="
+cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json 2>/dev/null | head -60
+echo "===I 协议配置==="
+cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_protocol_3427943187.json 2>/dev/null | head -40
 echo "=====完====="
 --- 输出 ---
-===C 日志文件清单===
-2.7M 2026-11-19 02:13:19 /root/bot/bot/bot.log
-12K 2026-11-11 23:33:15 /root/asar-sync/logs/bot.log
-4.0K 2026-11-12 00:06:45 /root/asar_sync_boot.log
-4.0K 2026-11-12 00:50:39 /root/remote_boot.log
-268K 2026-11-19 12:48:00 /root/remote_ctl.log
-1.4M 2026-11-19 11:58:08 /root/napcat-restart.log
-200K 2026-11-19 12:48:24 /root/napcat.log
-4.0K 2026-11-12 13:06:02 /root/azar_login_run.log
-148K 2026-11-19 12:47:27 /root/tick.log
-4.0K 2026-11-19 11:54:28 /root/ip.log
-44K 2026-11-19 12:44:05 /root/login_state.log
-8.0K 2026-11-18 09:23:55 /root/music_sign.log
-212K 2026-11-19 12:48:14 /root/health.log
-56K 2026-11-19 12:47:45 /root/netmon.log
-4.0K 2026-11-19 02:26:58 /root/music_sign_v4.log
-4.0K 2026-11-19 12:10:32 /root/autoheal.log
-4.0K 2026-11-19 12:41:56 /root/offline_watch2.log
-4.0K 2026-11-19 12:41:49 /root/offline_forensics.log
-===D NapCat配置===
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_protocol_3427943187.json
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/node_modules/side-channel-list/tsconfig.json
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/node_modules/math-intrinsics/tsconfig.json
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/node_modules/call-bind-apply-helpers/tsconfig.json
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/node_modules/es-define-property/tsconfig.json
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/node_modules/get-proto/tsconfig.json
 ===E 进程===
 1194 bash /root/offline_watch.sh  
 6446 /root/bot/venv/bin/python main.py  
@@ -78,5 +49,31 @@ echo "=====完====="
 /root/music_sign_v6.py
 /root/music_sign_v5.bak
 ===G QQ版本===
-not mini app. 
-=====完=====
+"version": "3.2.34
+===H 反检测配置napcat_3427943187.json===
+{
+  "fileLog": false,
+  "consoleLog": true,
+  "fileLogLevel": "debug",
+  "consoleLogLevel": "info",
+  "packetBackend": "auto",
+  "packetServer": "",
+  "o3HookMode": 1,
+  "bypass": {
+    "hook": false,
+    "window": false,
+    "module": false,
+    "process": false,
+    "container": false,
+    "js": false
+  },
+  "autoTimeSync": true
+}===I 协议配置===
+{
+  "enable": false,
+  "network": {
+    "httpServers": [],
+    "websocketServers": [],
+    "websocketClients": []
+  }
+}=====完=====
