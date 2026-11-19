@@ -1,13 +1,11 @@
-287316
-echo "===== X10掉线周期+登录频率诊断 287316 ====="
-echo "---[1]login_state.log全部状态切换点(看在线周期)---"
-grep -a "状态变化" /root/login_state.log 2>/dev/null | tail -40
-echo "---[2]login_state首末行(记录跨度)---"
-head -2 /root/login_state.log 2>/dev/null; echo ...; tail -2 /root/login_state.log 2>/dev/null
-echo "---[3]昨晚登录操作痕迹:azar_login_run.log---"
-tail -40 /root/azar_login_run.log 2>/dev/null || echo 无此日志
-echo "---[4]napcat-restart.log里的二维码/登录痕迹(昨晚)---"
-grep -aE "11-18 2[23]|11-19 0[01]" /root/napcat-restart.log 2>/dev/null | grep -aE "二维码|扫码|登录|Login|快速" | tail -30 || echo 无匹配
-echo "---[5]remote_ctl.log昨晚重启NapCat记录---"
-grep -aE "11-18 2[23]|11-19 0[012]" /root/remote_ctl.log 2>/dev/null | grep -aE "看护|重启|保险丝|拉起NapCat|restart" | tail -30 || echo 无匹配
+287317
+echo "===== 昨晚登录方式细节 287317 ====="
+echo "---[1]00:42前后napcat.log登录方式(没有-q=二维码,-q=快速)---"
+grep -aE "快速登录|二维码登录方式|登录方式|本次登录|账号.*登录|loginType|Login" /root/napcat.log 2>/dev/null | tail -15 || echo 无(可能被11:44重启覆盖)
+echo "---[2]remote_ctl.log昨晚整段(看护是否反复重启NapCat)---"
+grep -aE "11-18 (2[0-3]):|11-19 (0[0-2]):" /root/remote_ctl.log 2>/dev/null | grep -aE "看护|保险丝|拉起|重启|NapCat|心跳" | tail -35 || echo 无匹配
+echo "---[3]当前QQ进程启动参数(是否带-q)---"
+pgrep -af 'opt/QQ/[q]q' | head -2
+echo "---[4]ErrorCode/KickedOff/离线原因码 全日志搜---"
+grep -aE "ErrCode|errCode|Kicked|kicked|离线|失效|风险|风控|验证" /root/napcat-restart.log 2>/dev/null | tail -20 || echo 无
 echo "=====完====="
