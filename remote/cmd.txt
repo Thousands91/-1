@@ -1,11 +1,15 @@
-287376
-echo "===== 设备端回传方式耗时实测 287376 ====="
-cd /root/-1 2>/dev/null || cd $(dirname $(find /root -name '*.git' -type d 2>/dev/null | head -1)) 2>/dev/null
-echo "[1]定位仓库: $(pwd)"
-echo "[2]git ls-remote耗时(纯网络往返):"
-/usr/bin/time -f "  耗时%e秒" timeout 30 git -c http.lowSpeedLimit=0 -c http.lowSpeedTime=999 ls-remote origin HEAD 2>&1 | tail -2
-echo "[3]API PUT小文件往返耗时(本机→GitHub):"
-T=$(date +%s%N); curl -s -X PUT -H "Authorization: token $(cat /root/.gh_token 2>/dev/null || cat /workspace/.gh_token 2>/dev/null)" -d '{"message":"测速","content":"dGVzdA=="}' "https://api.github.com/repos/Thousands91/-1/contents/remote/_speedtest.txt" >/dev/null 2>&1; echo "  耗时$(( ($(date +%s%N)-T)/1000000 ))毫秒"
-echo "[4]raw直拉耗时:"
-/usr/bin/time -f "  耗时%e秒" curl -s -o /dev/null "https://raw.githubusercontent.com/Thousands91/-1/main/remote/cmd.txt?cb=$(date +%s)" 2>&1 | tail -1
+287377
+echo "===== 兔斯基回5无后续-一次性诊断 287377 $(date '+%F %T') ====="
+echo "[1]15:50~15:55 matcher分派+发送全日志:"
+grep -E "11-19 15:5[0-5]" /root/bot/bot/bot.log 2>/dev/null | grep -iE "message.group|handled by|running complete|点歌|发卡|语音|record|文件|柜上|找补|error|traceback|exception" | tail -80
+echo "[2]15:51~15:54 不过滤原文:"
+awk '/11-19 15:51:/,/11-19 15:54:/' /root/bot/bot/bot.log 2>/dev/null | head -70
+echo "[3]voice_probe尾部(audio成功发语音才写):"
+tail -6 /root/bot/bot/data/voice_probe.log 2>/dev/null
+echo "[4]设备md5(应65095faf=坑140修复版):"
+md5sum /root/bot/bot/plugins/song_request.py | cut -c1-8
+echo "[5]进程PID:"
+pgrep -f '/root/bot/venv/bin/python main.py' | head -1
+echo "[6]bot.log尾部15行:"
+tail -15 /root/bot/bot/bot.log 2>/dev/null
 echo "=====完====="
