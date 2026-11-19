@@ -1,9 +1,13 @@
-287427
-echo "===== 287427 交互内容抽取(11-17~11-20) ====="
-echo "[1]群里提到/发阿萨尔的消息(近3天全部):"
-grep -F "message.group.normal" /root/bot/bot/bot.log | grep -F "阿萨尔" | tail -30
-echo "[2]私聊消息(近3天全部):"
-awk '/message.private/ && (/11-17/ || /11-18/ || /11-19/ || /11-20/)' /root/bot/bot/bot.log | tail -20
-echo "[3]at消息样本(看格式):"
-grep -F "message.group.normal" /root/bot/bot/bot.log | grep -F "[at:" | tail -10
+287428
+echo "===== 287428 记忆库全文取回 ====="
+echo "[1]1561950850.json:"
+cat /root/bot/bot/data/memory/1561950850.json
+echo ""
+echo "[2]其他近期记忆:"
+cat /root/bot/bot/data/memory/1179127036.json
+echo ""
+cat /root/bot/bot/data/memory/3273077048.json
+echo ""
+echo "[3]fortune_log:"
+cat /root/bot/bot/data/fortune_log.json
 echo "=====完====="
