@@ -1,18 +1,54 @@
-<<<task_287317.txt>>>
-===== 任务287317 11-19 12:22:05 =====
+<<<task_287318.txt>>>
+===== 任务287318 11-19 12:22:38 =====
 --- 命令 ---
-echo "===== 昨晚登录方式细节 287317 ====="
-echo "---[1]00:42前后napcat.log登录方式(没有-q=二维码,-q=快速)---"
-grep -aE "快速登录|二维码登录方式|登录方式|本次登录|账号.*登录|loginType|Login" /root/napcat.log 2>/dev/null | tail -15 || echo 无(可能被11:44重启覆盖)
-echo "---[2]remote_ctl.log昨晚整段(看护是否反复重启NapCat)---"
-grep -aE "11-18 (2[0-3]):|11-19 (0[0-2]):" /root/remote_ctl.log 2>/dev/null | grep -aE "看护|保险丝|拉起|重启|NapCat|心跳" | tail -35 || echo 无匹配
-echo "---[3]当前QQ进程启动参数(是否带-q)---"
+echo "===== 昨晚登录方式细节 287318 ====="
+echo "---[1]00:42前后登录方式关键词---"
+grep -aE "快速登录|二维码登录方式|登录方式|loginType" /root/napcat.log 2>/dev/null | tail -15
+echo "[1完]"
+echo "---[2]remote_ctl.log昨晚看护动作---"
+grep -aE "11-18 (2[0-3]):|11-19 (0[0-2]):" /root/remote_ctl.log 2>/dev/null | grep -aE "看护|保险丝|拉起|重启|NapCat" | tail -35
+echo "[2完]"
+echo "---[3]当前QQ进程启动参数---"
 pgrep -af 'opt/QQ/[q]q' | head -2
-echo "---[4]ErrorCode/KickedOff/离线原因码 全日志搜---"
-grep -aE "ErrCode|errCode|Kicked|kicked|离线|失效|风险|风控|验证" /root/napcat-restart.log 2>/dev/null | tail -20 || echo 无
+echo "---[4]离线/风控原因码---"
+grep -aE "ErrCode|errCode|Kicked|kicked|失效|风险|风控|验证" /root/napcat-restart.log 2>/dev/null | tail -20
+echo "[4完]"
 echo "=====完====="
 --- 输出 ---
-===== 昨晚登录方式细节 287317 =====
----[1]00:42前后napcat.log登录方式(没有-q=二维码,-q=快速)---
-bash: line 3: syntax error near unexpected token `('
-bash: line 3: `grep -aE "快速登录|二维码登录方式|登录方式|本次登录|账号.*登录|loginType|Login" /root/napcat.log 2>/dev/null | tail -15 || echo 无(可能被11:44重启覆盖)'
+===== 昨晚登录方式细节 287318 =====
+---[1]00:42前后登录方式关键词---
+11-19 11:44:55 [[32minfo[39m] 没有 -q 指令指定快速登录，将使用二维码登录方式
+11-19 11:44:55 [[32minfo[39m] 可用于快速登录 of QQ：
+[1完]
+---[2]remote_ctl.log昨晚看护动作---
+[11-19 02:13] 看护：未登录且码5562s未刷新，尝试重启NapCat
+[11-19 02:13] 看护:自动拉起NapCat(24h内第1次)
+[11-19 02:13] 看护：未登录且码5562s未刷新，尝试重启NapCat
+[11-19 02:13] 看护:自动拉起NapCat(24h内第1次)
+[2完]
+---[3]当前QQ进程启动参数---
+10788 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+10801 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+---[4]离线/风控原因码---
+11-19 11:04:43 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 11:06:45 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 11:08:47 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 11:10:50 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 11:12:52 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 11:14:53 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 11:16:55 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 11:18:56 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 11:20:58 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 11:22:59 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 11:25:01 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 11:27:02 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 11:29:04 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 11:31:06 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 11:33:09 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 11:35:11 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 11:37:14 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 11:39:16 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 11:41:17 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-19 11:43:18 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+[4完]
+=====完=====
