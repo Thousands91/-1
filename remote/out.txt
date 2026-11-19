@@ -1,10 +1,38 @@
-<<<task_287390.txt>>>
-===== 任务287390 11-19 19:59:02 =====
+<<<ALERT.txt>>>
+2026-11-19 20:23:08 阿萨尔已恢复在线
+<<<task_287393.txt>>>
+===== 任务287393 11-19 20:15:05 =====
 --- 命令 ---
-echo "===== 大文件分块写入测试 287390 $(date '+%F %T') ====="
-echo "收到,准备接收ai_chat分块"
+echo "===== 探测 287393 $(date '+%F %T') ====="
+echo "ai_md5=$(md5sum /root/bot/bot/plugins/ai_chat.py|cut -c1-8) games_md5=$(md5sum /root/bot/bot/plugins/games.py|cut -c1-8)"
+echo "worker=$(pgrep -f remote_ctl_v6|head -1) bot=$(pgrep -f '/root/bot/venv/bin/python main.py'|head -1)"
 echo "=====完====="
 --- 输出 ---
-===== 大文件分块写入测试 287390 2026-11-19 19:59:02 =====
-收到,准备接收ai_chat分块
+===== 探测 287393 2026-11-19 20:15:05 =====
+ai_md5=4f1634c1 games_md5=d4c0268f
+worker=6857 bot=9354
+=====完=====
+<<<task_287392.txt>>>
+===== 任务287392 11-19 20:07:27 =====
+--- 命令 ---
+echo "===== 探活+cmd状态 287392 $(date '+%F %T') ====="
+echo "[1]worker进程:"
+pgrep -af 'remote_ctl_v6\|v6_from_github' | head -3 || echo "  无worker!"
+echo "[2]cmd.txt首行与字节:"
+head -1 /root/-1/remote/cmd.txt 2>/dev/null || head -1 /root/*/remote/cmd.txt 2>/dev/null
+wc -c /root/-1/remote/cmd.txt 2>/dev/null
+echo "[3]bot大脑进程:"
+pgrep -af '/root/bot/venv/bin/python main.py' | head -1
+echo "[4]在线:"
+bash /root/logincheck.sh 2>/dev/null | grep -oE '\[[^]]+\]' | head -1
+echo "=====完====="
+--- 输出 ---
+===== 探活+cmd状态 287392 2026-11-19 20:07:27 =====
+[1]worker进程:
+[2]cmd.txt首行与字节:
+287372
+[3]bot大脑进程:
+9354 /root/bot/venv/bin/python main.py
+[4]在线:
+[在线]
 =====完=====
