@@ -1,15 +1,17 @@
-287320
-echo "===A 找NapCat日志真实位置==="
-find /root/Napcat /root -maxdepth 8 -type f -name "*.log" 2>/dev/null | grep -i -E "napcat|Napcat" | head -12
-echo "===B restart日志存在吗==="
-ls -la /root/napcat-restart.log 2>/dev/null
-echo "===C 全盘找离线事件行(限3)==="
-grep -rh "账号状态变更为离线" /root --include="*.log" 2>/dev/null | tail -3
-echo "===D 全盘找KickedOffLine(限3)==="
-grep -rh "KickedOffLine" /root --include="*.log" 2>/dev/null | tail -3
-echo "===E 全盘找GPU行(限3)==="
-grep -rh "GPU process launch failed" /root --include="*.log" 2>/dev/null | tail -3
-echo "===F forensics历史==="
-wc -l /root/offline_forensics.log 2>/dev/null
-tail -14 /root/offline_forensics.log 2>/dev/null
+287321
+echo "===A napcat.log大小与格式==="
+ls -la /root/napcat.log 2>/dev/null
+tail -6 /root/napcat.log 2>/dev/null
+echo "===B napcat-restart尾部格式==="
+tail -6 /root/napcat-restart.log 2>/dev/null
+echo "===C 历史离线事件在所有日志文件里找==="
+for f in /root/napcat.log /root/napcat-restart.log /root/bot.log; do
+  n=$(grep -c "账号状态变更为离线" "$f" 2>/dev/null); k=$(grep -c "KickedOffLine" "$f" 2>/dev/null)
+  echo "$f 离线=$n 被踢=$k"
+done
+echo "===D netmon时间格式==="
+head -2 /root/netmon.log 2>/dev/null
+tail -2 /root/netmon.log 2>/dev/null
+echo "===E 设备时区==="
+date '+%F %T %Z'
 echo "===完==="
