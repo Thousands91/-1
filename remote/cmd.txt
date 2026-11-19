@@ -1,13 +1,14 @@
-287420
-echo "===== 287420 回线核对 ====="
-echo "[1]登录状态:"
-bash /root/logincheck.sh 2>&1 | grep -E "^\[" | head -1
-echo "[2]登录成功时刻:"
-grep -E "登录成功|扫码" /root/napcat.log | tail -3
-echo "[3]login_state最新状态变化:"
-tail -2 /root/login_state.log
-echo "[4]大脑进程:"
-pgrep -f "main.py" | head -1
-echo "[5]最近收到的消息:"
-grep "message" /root/bot/bot/bot.log | tail -2
+287421
+echo "===== 287421 最近交互内容取证 ====="
+echo "[1]napcat.log最近收到的消息(接收<-):"
+grep "接收 <-" /root/napcat.log | tail -25
+echo "[2]napcat.log最近发出的消息(发送->):"
+grep "发送 ->" /root/napcat.log | tail -25
+echo "[3]bot.log最近的AI回复处理(近40行有内容的):"
+grep -E "ai_chat|LLM|大模型|回复|prompt" /root/bot/bot/bot.log | tail -15
+echo "[4]ai_chat有无独立日志/记忆文件:"
+ls -la /root/bot/bot/data/ 2>/dev/null | head -10
+find /root/bot/bot -name "*.log" -newer /root/bot/bot/pyproject.toml 2>/dev/null | head -5
+echo "[5]点歌/游戏最近记录:"
+grep -E "song_request|games" /root/bot/bot/bot.log | tail -6
 echo "=====完====="
