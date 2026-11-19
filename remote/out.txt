@@ -1,115 +1,167 @@
-<<<task_287324.txt>>>
-===== 任务287324 11-19 12:41:43 =====
+<<<task_287325.txt>>>
+===== 任务287325 11-19 12:47:41 =====
 --- 命令 ---
-echo "===== 补守卫+验证取证推送 287324 $(date '+%F %T') ====="
-echo "[1]给v6和start_all补offline_watch守卫:"
-python3 -c "
-import os
-guard=\"pgrep -f 'bash /root/offline_watch.sh' >/dev/null || ( setsid nohup bash /root/offline_watch.sh >> /root/offline_watch2.log 2>&1 < /dev/null & )\n\"
-for p in ['/root/remote_ctl_v6.sh','/root/start_all.sh']:
-    if not os.path.exists(p):
-        print('  '+p+' 不存在,跳过'); continue
-    s=open(p).read()
-    if 'offline_watch.sh' in s:
-        print('  '+p+' 已有守卫'); continue
-    if 'remote_ctl_v6' in p:
-        i=s.find('trap ')
-        s=s[:i]+guard+s[i:] if i>0 else s.rstrip()+'\n'+guard
-    else:
-        s=s.rstrip()+'\n'+guard
-    open(p,'w').write(s); print('  '+p+' 守卫已写入')
-"
-for f in /root/remote_ctl_v6.sh /root/start_all.sh; do bash -n "$f" 2>/dev/null && echo "  $f 语法OK" || echo "  $f 语法异常"; done
-echo "[2]临时停主进程,跑自检验证GitHub推送:"
-pkill -f 'bash /root/offline_watch.sh' 2>/dev/null; sleep 2
-rm -rf /root/.offline_watch_v2.lock 2>/dev/null
-OW_SELFTEST=1 bash /root/offline_watch_v2.sh
-sleep 3
-echo "  forensics.log行数:"; wc -l /root/offline_forensics.log 2>/dev/null
-echo "  运行日志尾:"; tail -5 /root/offline_watch2.log
-echo "[3]重新拉起主进程:"
-rm -rf /root/.offline_watch_v2.lock 2>/dev/null
-( setsid nohup bash /root/offline_watch.sh >> /root/offline_watch2.log 2>&1 < /dev/null & )
-sleep 3
-pgrep -af 'offline_watch' | head -3 || echo "  未拉起!"
-echo "[4]验收守卫落位:"
-grep -c 'offline_watch.sh' /root/remote_ctl_v6.sh /root/start_all.sh 2>/dev/null
+echo "===== 全量代码与日志盘点 287325 $(date '+%F %T') ====="
+echo "===A /root下的脚本(root) ==="
+ls -la /root/*.sh 2>/dev/null | awk '{print $5, $6, $7, $8, $9}'
+echo "===B bot插件代码==="
+find /root/bot -type f \( -name "*.py" -o -name "*.sh" \) 2>/dev/null | grep -v venv | head -40
+echo "===C 所有日志文件(大小/时间)==="
+find /root -maxdepth 4 -type f -name "*.log" 2>/dev/null | while read f; do echo "$(du -h "$f"|cut -f1) $(stat -c %y "$f"|cut -d. -f1) $f"; done | sort
+echo "===D NapCat配置清单==="
+find /root/Napcat -type f \( -name "*.json" -o -name "*.yaml" -o -name "*.yml" \) 2>/dev/null | grep -i -E "config|onebot|napcat" | head -20
+echo "===E 正在跑的进程==="
+ps aux 2>/dev/null | grep -E "main.py|napcat|QQ/qq|offline_watch|autoheal|remote_ctl|netmon|health_probe|login_watch|offline_watch" | grep -v grep | awk '{print $2, $11, $12, $13}' | head -25
+echo "===F 登录凭据相关文件==="
+find /root -maxdepth 5 -type f 2>/dev/null | grep -i -E "credential|token|sig|device|login|session" | grep -v -E "venv|node_modules|/proc/" | head -25
 echo "=====完====="
 --- 输出 ---
-===== 补守卫+验证取证推送 287324 2026-11-19 12:41:43 =====
-[1]给v6和start_all补offline_watch守卫:
-  /root/remote_ctl_v6.sh 守卫已写入
-  /root/start_all.sh 守卫已写入
-  /root/remote_ctl_v6.sh 语法OK
-  /root/start_all.sh 语法OK
-[2]临时停主进程,跑自检验证GitHub推送:
-  forensics.log行数:
-56 /root/offline_forensics.log
-  运行日志尾:
-[11-19 12:39:42] ===== 取证器v2.0启动 基线:静默=0 被踢=0 日志A=/root/napcat.log 日志B=/root/napcat-restart.log =====
-[11-19 12:41:46] ===== 自检模式:模拟静默离线,验证取证链路 =====
-[11-19 12:41:49] 抓到[自检-模拟静默离线(SelfOffline)],取证已落盘 56行
-[11-19 12:41:52] 取证:已推送GitHub forensics.txt
-[3]重新拉起主进程:
-1194 bash /root/offline_watch.sh
-[4]验收守卫落位:
-/root/remote_ctl_v6.sh:1
-/root/start_all.sh:1
+===== 全量代码与日志盘点 287325 2026-11-19 12:47:42 =====
+===A /root下的脚本(root) ===
+3822 Nov 19 12:10 /root/azar_autoheal.sh
+3471 Nov 19 00:50 /root/azar_guard.sh
+3460 Nov 3 20:24 /root/azar_login.sh
+1612 Oct 30 01:28 /root/check.sh
+1000 Nov 16 18:30 /root/health_probe.sh
+344 Nov 13 11:35 /root/ipwatch.sh
+462 Nov 13 11:41 /root/login_watch.sh
+1036 Nov 1 01:23 /root/logincheck.sh
+3050 Nov 3 20:24 /root/morning.sh
+43797 Nov 11 23:33 /root/napcat.sh
+566 Nov 17 18:55 /root/netmon.sh
+7623 Nov 19 12:39 /root/offline_watch.sh
+7623 Nov 19 12:39 /root/offline_watch_v2.sh
+96 Nov 5 00:43 /root/p.sh
+6046 Nov 19 00:52 /root/remote_ctl.sh
+5531 Nov 19 00:52 /root/remote_ctl_v5.sh
+8822 Nov 19 12:41 /root/remote_ctl_v6.sh
+331 Nov 19 00:50 /root/restart_bot.sh
+768 Nov 19 00:50 /root/selfcheck.sh
+5173 Nov 11 23:30 /root/setup.sh
+899 Nov 3 20:24 /root/st.sh
+949 Nov 19 12:41 /root/start_all.sh
+442 Nov 5 07:55 /root/start_nap.sh
+155 Nov 13 02:16 /root/tick.sh
+1807 Nov 5 00:54 /root/watcher.sh
+===B bot插件代码===
+/root/bot/.devcontainer/setup.sh
+/root/bot/.devcontainer/start-bot.sh
+/root/bot/bot/config.py
+/root/bot/bot/main.py
+/root/bot/bot/persona/__init__.py
+/root/bot/bot/plugins/ai_chat.py
+/root/bot/bot/plugins/book_find.py
+/root/bot/bot/plugins/chess_game.py
+/root/bot/bot/plugins/fortune.py
+/root/bot/bot/plugins/games.py
+/root/bot/bot/plugins/image_search_multisource.py
+/root/bot/bot/plugins/keyword_reply.py
+/root/bot/bot/plugins/news.py
+/root/bot/bot/plugins/song_request.py
+/root/bot/bot/plugins/weather.py
+/root/bot/bot/tests_test_games_full.py
+/root/bot/bot/tests_test_mute_v2.py
+/root/bot/entrypoint.sh
+/root/bot/scripts/e2e_book.py
+/root/bot/scripts/e2e_book_dl.py
+/root/bot/scripts/e2e_chess.py
+/root/bot/scripts/e2e_chess_extreme.py
+/root/bot/scripts/e2e_keyword.py
+/root/bot/scripts/e2e_long_voice.py
+/root/bot/scripts/e2e_song.py
+/root/bot/scripts/fetch_gutenberg.py
+/root/bot/scripts/gen_t2s.py
+/root/bot/scripts/healthcheck.py
+/root/bot/scripts/probe_match.py
+/root/bot/scripts/qrcode.sh
+/root/bot/scripts/restart.sh
+/root/bot/scripts/run-daemon.sh
+/root/bot/scripts/run.sh
+/root/bot/scripts/status.sh
+/root/bot/scripts/stop.sh
+/root/bot/scripts/test_book.py
+/root/bot/scripts/test_book_dl.py
+/root/bot/scripts/test_keyword.py
+/root/bot/scripts/test_match.py
+/root/bot/scripts/test_mirror.py
+===C 所有日志文件(大小/时间)===
+1.4M 2026-11-19 11:58:08 /root/napcat-restart.log
+12K 2026-11-11 23:33:15 /root/asar-sync/logs/bot.log
+148K 2026-11-19 12:47:27 /root/tick.log
+196K 2026-11-19 12:47:45 /root/napcat.log
+2.7M 2026-11-19 02:13:19 /root/bot/bot/bot.log
+212K 2026-11-19 12:47:14 /root/health.log
+260K 2026-11-19 12:42:12 /root/remote_ctl.log
+4.0K 2026-11-12 00:06:45 /root/asar_sync_boot.log
+4.0K 2026-11-12 00:50:39 /root/remote_boot.log
+4.0K 2026-11-12 13:06:02 /root/azar_login_run.log
+4.0K 2026-11-19 01:49:54 /root/bot/bot/data/voice_probe.log
+4.0K 2026-11-19 02:26:58 /root/music_sign_v4.log
+4.0K 2026-11-19 11:54:28 /root/ip.log
+4.0K 2026-11-19 12:10:32 /root/autoheal.log
+4.0K 2026-11-19 12:41:49 /root/offline_forensics.log
+4.0K 2026-11-19 12:41:56 /root/offline_watch2.log
+44K 2026-11-19 12:44:05 /root/login_state.log
+56K 2026-11-19 12:47:45 /root/netmon.log
+8.0K 2026-11-18 09:23:55 /root/music_sign.log
+===D NapCat配置清单===
+/root/Napcat/opt/QQ/vk_swiftshader_icd.json
+/root/Napcat/opt/QQ/version.json
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_protocol_3427943187.json
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/node_modules/body-parser/package.json
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/node_modules/accepts/package.json
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/node_modules/cookie-signature/package.json
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/node_modules/encodeurl/package.json
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/node_modules/type-is/package.json
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/node_modules/side-channel-list/package.json
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/node_modules/side-channel-list/tsconfig.json
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/node_modules/math-intrinsics/package.json
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/node_modules/math-intrinsics/tsconfig.json
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/node_modules/parseurl/package.json
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/node_modules/statuses/codes.json
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/node_modules/statuses/package.json
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/node_modules/media-typer/package.json
+===E 正在跑的进程===
+1194 bash /root/offline_watch.sh 
+6446 /root/bot/venv/bin/python main.py 
+6857 bash /root/remote_ctl_v6.sh 
+10788 /bin/sh /usr/bin/xvfb-run -a
+10801 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu
+10804 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox
+10805 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
+10834 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox
+18784 bash /root/login_watch.sh 
+18786 bash /root/health_probe.sh 
+18788 bash /root/netmon.sh 
+23393 bash /root/azar_autoheal.sh 
+===F 登录凭据相关文件===
+/root/.git-credentials
+/root/root/azar_login.sh
+/root/root/logincheck.sh
+/root/asar-sync/x10/azar_login_x10.sh
+/root/.config/QQ/global/nt_db/login.db
+/root/.config/QQ/global/nt_db/login.db-wal
+/root/.config/QQ/global/nt_db/login.db-shm
+/root/azar_login.sh
+/root/logincheck.sh
+/root/music_sign_v5.py
+/root/azar_login_run.log
+/root/asr_model/tokens.txt
+/root/login_watch.sh
+/root/login_state.log
+/root/music_sign.py
+/root/music_sign.log
+/root/__pycache__/music_sign_v4.cpython-310.pyc
+/root/__pycache__/music_sign.cpython-310.pyc
+/root/__pycache__/music_sign_v5.cpython-310.pyc
+/root/__pycache__/music_sign_v6.cpython-310.pyc
+/root/__pycache__/music_sign_v7.cpython-310.pyc
+/root/__pycache__/music_sign_v8.cpython-310.pyc
+/root/__pycache__/music_sign_v10.cpython-310.pyc
+/root/music_sign.py.bak.ups
+/root/music_sign.py.bak_v3
 =====完=====
-<<<FORENSICS.txt>>>
-===== 掉线取证 v2.0 2026-11-19 12:41:46 CST =====
-【判定类型】自检-模拟静默离线(SelfOffline)
-【触发原文】[SELFTEST] 账号状态变更为离线 1119/124146.000000
-
----- ① 自动判定(秒级时间轴) ----
-静默离线(最新): (无时间戳)
-GPU崩溃(最新): 11-19 06:50:35
-结论: 日志缺可解析时间戳,无法定先后(见原始行)
-
----- ② 完整时间轴(离线/被踢/GPU,按时间排序) ----
-11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.027503:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.034023:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.039420:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.044684:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.044774:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
-
----- ③ 被踢原因字段(KickedOffLine原文) ----
-(本次无KickedOffLine → 静默离线,腾讯未下发原因码)
-
----- ④ 网络心跳(事发前后) ----
-11-19 12:29:59 ping=FAILms batt=
-11-19 12:31:01 ping=FAILms batt=
-11-19 12:32:07 ping=10.7ms batt=
-11-19 12:33:07 ping=FAILms batt=
-11-19 12:34:10 ping=FAILms batt=
-11-19 12:35:13 ping=FAILms batt=
-11-19 12:36:15 ping=FAILms batt=
-11-19 12:37:17 ping=FAILms batt=
-11-19 12:38:20 ping=FAILms batt=
-11-19 12:39:22 ping=FAILms batt=
-11-19 12:40:24 ping=FAILms batt=
-11-19 12:41:26 ping=FAILms batt=
--- 即时网络 --
-2 packets transmitted, 0 received, 100% packet loss, time 1008ms
-
-
----- ⑤ 系统状态 ----
- 12:41:49 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
-               total        used        free      shared  buff/cache   available
-Mem:            5571        3131         134          12        2306        2191
-/dev/block/by-name/userdata  111G  101G  9.8G  92% /
-电量: 
-QQ进程数: 5
-
----- ⑥ 日志尾部 ----
-█ █   █ █▀▄ ██  █▄█   ▄   ▄▄▄▄█  ▄█
-█ █▄▄▄█ █  ▄▀▀██▄ ▀ ▀ ██▄▀▄ ▄▀█▄▄▀█
-█▄▄▄▄▄▄▄█▄███▄███▄█▄▄▄▄▄██▄███▄▄███
-
-二维码解码URL: https://txz.qq.com/p?k=bxt6MAJ83XDb3Jns6YobTyH2E1uqERlu&f=1600001615
-如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
-11-19 12:41:45 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-a184a3aec6945daa845ca9415e59a8e80094fcd9b9f8864298e36f309cfab40e
-2543cc611da8b6275f300670e81b73948e2e6b594578e472e5ed426124a110f6
-984a055cd3d924a58671763fc0436adf78b394c0c35bee5e3caf9f59ef0a64e2
-===== 取证结束 =====
