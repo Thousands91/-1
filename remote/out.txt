@@ -1,34 +1,71 @@
-<<<task_287270.txt>>>
-===== 任务287270 11-19 11:42:14 =====
+<<<task_287280.txt>>>
+===== 任务287280 11-19 11:43:22 =====
 --- 命令 ---
-echo "===== 诊断4 登录态文件位置 287270 ====="
-echo "[A]找登录态文件:"; find /root -name 'login_state.log' -o -name '*login*.log' 2>/dev/null | head -10
-echo "[B]QQ进程当下:"; ps aux | grep -E '[Qq][Qq] --no-sandbox|[Qq][Qq] -q|xvfb-run' | grep -v grep | head -5
-echo "[C]二维码缓存现状:"; ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null; stat -c '%y' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null
-echo "[D]napcat配置文件:"; ls -la /root/Napcat/*.json /root/Napcat/config/*.json 2>/dev/null | head -10
-echo "[E]当前账号在线判定(napcat日志最后账号状态):"; grep -E '账号状态变更|离线|在线|扫码|二维码' /root/napcat.log 2>/dev/null | tail -15
+echo "===== 诊断5 登录态真相 287280 ====="
+echo "[A]/root/login_state.log 全文:"; cat /root/login_state.log 2>/dev/null | tail -30
+echo "[B]azar_login_run.log 尾20:"; tail -20 /root/azar_login_run.log 2>/dev/null
+echo "[C]当前扫码进程:"; pgrep -af 'azar_login|login|qq --no-sandbox' | head -10
+echo "[D]二维码解码URL(从日志):"; grep -oE 'https://txz.qq.com/p\?k=[^ ]+' /root/napcat.log 2>/dev/null | tail -3
+echo "[E]napcat.log最后5行:"; tail -5 /root/napcat.log 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-===== 诊断4 登录态文件位置 287270 =====
-[A]找登录态文件:
-/root/azar_login_run.log
-/root/login_state.log
-[B]QQ进程当下:
-aid_u0_+  3805  0.0  0.8 200736 45776 pts/0    S<    2023   0:00 Xvfb :135 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.4oPbGv/Xauthority
-aid_u0_+ 13914  0.0  0.7 200716 44472 ?        S<    2023   0:00 Xvfb :134 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.CAdG3e/Xauthority
-aid_u0_+ 17982  0.0  0.9 200736 55892 pts/0    S<    2023   0:00 Xvfb :136 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.aw4Csy/Xauthority
-aid_u0_+ 18628  0.0  0.0 200736  3228 pts/0    S<    2023   0:00 Xvfb :131 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.7Qyoly/Xauthority
-aid_u0_+ 18885  0.0  0.0 200736  3284 ?        S<    2023   0:00 Xvfb :132 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.ebezum/Xauthority
-[C]二维码缓存现状:
--rw-r--r-- 1 root root 596 Nov 19 11:41 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-2026-11-19 11:41:17.350000000 +0800
-[D]napcat配置文件:
-[E]当前账号在线判定(napcat日志最后账号状态):
-11-19 00:40:37 [[32minfo[39m] 没有 -q 指令指定快速登录，将使用二维码登录方式
-11-19 00:40:37 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
-二维码解码URL: https://txz.qq.com/p?k=7xoYxNj7ZEMcKHu2U*AGXMrl6tgavnDc&f=1600001615
-如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
-11-19 00:40:37 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-11-19 00:41:20 [[32minfo[39m] [Core] [Login] 二维码已被扫描，等待确认...
-11-19 02:13:04 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+===== 诊断5 登录态真相 287280 =====
+[A]/root/login_state.log 全文:
+2026-11-19 09:13:31 [未登录]
+2026-11-19 09:18:32 [未登录]
+2026-11-19 09:23:33 [未登录]
+2026-11-19 09:28:34 [未登录]
+2026-11-19 09:33:34 [未登录]
+2026-11-19 09:38:35 [未登录]
+2026-11-19 09:43:36 [未登录]
+2026-11-19 09:48:37 [未登录]
+2026-11-19 09:53:37 [未登录]
+2026-11-19 09:58:38 [未登录]
+2026-11-19 10:03:39 [未登录]
+2026-11-19 10:08:40 [未登录]
+2026-11-19 10:13:41 [未登录]
+2026-11-19 10:18:41 [未登录]
+2026-11-19 10:23:42 [未登录]
+2026-11-19 10:28:43 [未登录]
+2026-11-19 10:33:43 [未登录]
+2026-11-19 10:38:44 [未登录]
+2026-11-19 10:43:45 [未登录]
+2026-11-19 10:48:46 [未登录]
+2026-11-19 10:53:47 [未登录]
+2026-11-19 10:58:48 [未登录]
+2026-11-19 11:03:48 [未登录]
+2026-11-19 11:08:49 [未登录]
+2026-11-19 11:13:50 [未登录]
+2026-11-19 11:18:51 [未登录]
+2026-11-19 11:23:52 [未登录]
+2026-11-19 11:28:52 [未登录]
+2026-11-19 11:33:53 [未登录]
+2026-11-19 11:38:54 [未登录]
+[B]azar_login_run.log 尾20:
+==> 第 1 步：清理旧进程
+No screen session found.
+==> 第 2 步：启动 NapCat（后台，日志在 /root/napcat.log）
+==> 第 3 步：等二维码生成（NapCat 启动约需 20~40 秒）
+==> 第 4 步：复制二维码到相册
+   二维码已就位（生成于 3 秒前），有效期约 110 秒
+
+############################################################
+#   现在抓紧时间（剩约 107 秒）：                        #
+#   打开X10相册 -> DCIM/Camera -> asar_qr.png 全屏显示       #
+#   用另一台手机的QQ扫一扫 -> 确认登录                       #
+############################################################
+
+==> 第 5 步：盯着登录结果
+[12:57:58] 二维码刷新了，已复制新的到相册，请重新扫码
+!! 10 分钟没等到登录成功。重新运行本脚本再试一轮。
+[C]当前扫码进程:
+18784 bash /root/login_watch.sh
+[D]二维码解码URL(从日志):
+https://txz.qq.com/p?k=7xoYxNj7ZEMcKHu2U*AGXMrl6tgavnDc&f=1600001615
+[E]napcat.log最后5行:
+[13917:1119/021319.686744:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
+[13917:1119/021319.694340:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[13917:1119/021319.702795:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[13917:1119/021319.708902:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[13917:1119/021319.709001:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
 =====完=====
