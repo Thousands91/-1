@@ -1,21 +1,15 @@
-287319
-echo "===== 黑匣子v2诊断 287319 $(date '+%F %T') ====="
-echo "[1]现有offline_watch:"
-md5sum /root/offline_watch.sh 2>/dev/null
-cat /root/offline_watch.sh 2>/dev/null | head -36
-echo "[2]进程:"
-pgrep -af 'offline_watch|netmon' | head -6
-echo "[3]NapCat日志目录:"
-ls -lt /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat/logs/ 2>/dev/null | head -6
-echo "[4]离线事件行样本:"
-grep -h "账号状态变更为离线" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat/logs/*.log /root/napcat-restart.log 2>/dev/null | tail -3
-echo "[5]KickedOffLine行样本:"
-grep -h "KickedOffLine" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat/logs/*.log /root/napcat-restart.log 2>/dev/null | tail -3
-echo "[6]GPU崩溃行样本:"
-grep -h "GPU process launch failed" /root/napcat-restart.log /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat/logs/*.log 2>/dev/null | tail -3
-echo "[7]forensics现状:"
+287320
+echo "===A 找NapCat日志真实位置==="
+find /root/Napcat /root -maxdepth 8 -type f -name "*.log" 2>/dev/null | grep -i -E "napcat|Napcat" | head -12
+echo "===B restart日志存在吗==="
+ls -la /root/napcat-restart.log 2>/dev/null
+echo "===C 全盘找离线事件行(限3)==="
+grep -rh "账号状态变更为离线" /root --include="*.log" 2>/dev/null | tail -3
+echo "===D 全盘找KickedOffLine(限3)==="
+grep -rh "KickedOffLine" /root --include="*.log" 2>/dev/null | tail -3
+echo "===E 全盘找GPU行(限3)==="
+grep -rh "GPU process launch failed" /root --include="*.log" 2>/dev/null | tail -3
+echo "===F forensics历史==="
 wc -l /root/offline_forensics.log 2>/dev/null
-tail -12 /root/offline_forensics.log 2>/dev/null
-echo "[8]netmon尾部:"
-tail -3 /root/netmon.log 2>/dev/null
-echo "=====完====="
+tail -14 /root/offline_forensics.log 2>/dev/null
+echo "===完==="
