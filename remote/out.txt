@@ -1,62 +1,19 @@
-<<<task_287240.txt>>>
-===== 任务287240 11-19 11:38:43 =====
+<<<task_287250.txt>>>
+===== 任务287250 11-19 11:40:01 =====
 --- 命令 ---
-echo "===== 掉线诊断 287240 只读 ====="
-echo "[1]时间:"; date '+%F %T'
-echo "[2]进程(bot/QQ/签名):"; ps aux 2>/dev/null | grep -E 'bot.py|python3|napcat|[Qq][Qq]' | grep -v grep | head -25
-echo "[3]端口:"; netstat -tlnp 2>/dev/null | grep -E ':10800|:8080|:6099|:3000' | head -10
-echo "[4]大脑日志尾:"; tail -50 /root/bot/bot/bot.log 2>/dev/null || echo 无此日志
-echo "[5]日志文件时间:"; ls -la /root/bot/bot/*.log 2>/dev/null | tail -6
-echo "[6]登录态:"; ls -la /root/bot/bot/login_state.log 2>/dev/null; tail -15 /root/bot/bot/login_state.log 2>/dev/null
-echo "[7]NapCat日志尾:"; tail -25 /root/napcat.log 2>/dev/null || echo 无
-echo "[8]签名代理:"; curl -s --max-time 5 -o /dev/null -w "HTTP:%{http_code}\n" http://127.0.0.1:10800/
-echo "[9]磁盘:"; df -h /root 2>/dev/null | tail -2
+echo "===== 掉线诊断2 聚焦 287250 ====="
+echo "[A]bot主进程:"; pgrep -af 'bot.py|nonebot|main.py' | head -10 || echo 无bot进程
+echo "[B]大脑日志尾20:"; tail -20 /root/bot/bot/bot.log 2>/dev/null; echo "日志mtime:"; stat -c '%y %s字节' /root/bot/bot/bot.log 2>/dev/null
+echo "[C]登录态尾12:"; tail -12 /root/bot/bot/login_state.log 2>/dev/null; echo "登录态mtime:"; stat -c '%y' /root/bot/bot/login_state.log 2>/dev/null
+echo "[D]NapCat连接日志尾15:"; tail -15 /root/napcat.log 2>/dev/null
+echo "[E]签名代理HTTP:"; curl -s --max-time 5 -o /dev/null -w "%{http_code}\n" http://127.0.0.1:10800/
+echo "[F]bot目录:"; ls -la /root/bot/bot/ 2>/dev/null | head -20
 echo "=====完====="
 --- 输出 ---
-===== 掉线诊断 287240 只读 =====
-[1]时间:
-2026-11-19 11:38:43
-[2]进程(bot/QQ/签名):
-aid_u0_+  7608  0.0  0.1  98628 10472 ?        S<s   2023   0:10 python3 /root/music_sign.py
-aid_u0_+ 19893  0.0  0.0   2340  1508 pts/0    S<    2023   0:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox
-aid_u0_+ 19909  0.0  3.4 138398184 199664 pts/0 S<l  2023   4:21 /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox
-aid_u0_+ 19911  0.0  0.9 50703292 55632 pts/0  S<    2023   0:00 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-aid_u0_+ 19912  0.0  0.9 50703292 53448 pts/0  S<    2023   0:00 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
-aid_u0_+ 19941  0.0  2.2 51079624 128032 pts/0 S<l   2023   0:06 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-aid_u0_+ 19946  0.0  5.3 207558128 305468 pts/0 Sl   2023 101:51 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --no-sandbox --enable-crash-reporter=ed95f686-be11-4e04-b899-7fe984b06b7b,no_channel --user-data-dir=/root/.config/QQ --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,3555797763535575197,9149317203853884456,262144 --enable-features=PdfUseShowSaveFilePicker --disable-features=LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708989122997041
-aid_u0_+ 19947  0.0  1.1 50652932 66144 pts/0  Sl    2023   0:04 /proc/self/exe --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --no-sandbox --enable-crash-reporter=ed95f686-be11-4e04-b899-7fe984b06b7b,no_channel --user-data-dir=/root/.config/QQ --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,3555797763535575197,9149317203853884456,262144 --enable-features=PdfUseShowSaveFilePicker --disable-features=LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708990060038890
-[3]端口:
-[4]大脑日志尾:
-11-19 01:52:37 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 01:52:37 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 01:52:37 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 01:54:41 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795024481, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-19 02:02:02 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1306538654 from 1179127036@[群:562796842] '[reply:id=934313705]哇'
-11-19 02:02:02 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 02:02:02 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 02:02:02 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 02:02:02 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 02:02:37 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2127686944 from 2939420548@[群:562796842] '我们俩完全大胃王来的'
-11-19 02:02:37 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 02:02:37 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 02:02:37 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 02:02:37 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 02:02:45 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1774446252 from 1179127036@[群:562796842] '话说我好像没怎么吃过番茄锅'
-11-19 02:02:45 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 02:02:45 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 02:02:45 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 02:02:45 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 02:02:58 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1146765356 from 1179127036@[群:562796842] '我一般是选牛油+菌汤'
-11-19 02:02:58 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 02:02:58 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 02:02:58 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 02:02:58 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 02:03:05 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1821082679 from 2939420548@[群:562796842] '素牛油锅'
-11-19 02:03:05 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 02:03:05 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 02:03:05 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 02:03:05 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 02:03:26 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 731918675 from 2939420548@[群:562796842] '我喜欢加个番茄提味'
+===== 掉线诊断2 聚焦 287250 =====
+[A]bot主进程:
+6446 /root/bot/venv/bin/python main.py
+[B]大脑日志尾20:
 11-19 02:03:27 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
 11-19 02:03:27 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
 11-19 02:03:27 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
@@ -77,20 +34,11 @@ aid_u0_+ 19947  0.0  1.1 50652932 66144 pts/0  Sl    2023   0:04 /proc/self/exe 
 11-19 02:12:48 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
 11-19 02:12:48 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
 11-19 02:13:19 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
-[5]日志文件时间:
--rw-r--r-- 1 root root 2817134 Nov 19 02:13 /root/bot/bot/bot.log
-[6]登录态:
-[7]NapCat日志尾:
-11-19 01:51:25 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] [回复消息 [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 其实你们如果想来西安玩的话，现在可以来，西安暖气来了] @●᳐‖▜▜▙᳐੭ﾞ (1179127036)  好心动呀但是我们离得太远了
-11-19 01:51:29 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 呜呜
-11-19 01:51:35 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-19 01:52:04 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] [图片]
-11-19 01:52:17 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 前几天还喝朋友煮火锅了
-11-19 01:52:25 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 前几天还和朋友煮火锅了
-11-19 01:52:37 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 亚米
-11-19 01:54:41 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-19 02:02:02 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] [回复消息 [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 前几天还和朋友煮火锅了] 哇
-11-19 02:02:37 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 我们俩完全大胃王来的
+日志mtime:
+2026-11-19 02:13:19.820000000 +0800 2817134字节
+[C]登录态尾12:
+登录态mtime:
+[D]NapCat连接日志尾15:
 11-19 02:02:45 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 话说我好像没怎么吃过番茄锅
 11-19 02:02:57 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 我一般是选牛油+菌汤
 11-19 02:03:05 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 素牛油锅
@@ -106,9 +54,24 @@ c7a9cd093b1fb60be1412d4d03422a0653626eeb51fd959ccabc0f467233cbc5
 [13917:1119/021319.702795:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
 [13917:1119/021319.708902:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
 [13917:1119/021319.709001:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
-[8]签名代理:
-HTTP:501
-[9]磁盘:
-Filesystem                   Size  Used Avail Use% Mounted on
-/dev/block/by-name/userdata  111G  101G  9.8G  92% /
+[E]签名代理HTTP:
+501
+[F]bot目录:
+total 0
+drwxr-xr-x  7 root root    3488 Nov 14 22:14 .
+drwxr-xr-x 11 root root    3488 Nov 11 23:30 ..
+-rw-r--r--  1 root root     518 Nov 12 15:26 .env
+-rw-r--r--  1 root root    1218 Nov 11 22:41 .env.example
+drwxr-xr-x  2 root root    3488 Nov 12 00:06 __pycache__
+drwxr-xr-x  2 root root    3488 Nov 11 22:41 assets
+-rw-r--r--  1 root root 2817134 Nov 19 02:13 bot.log
+-rw-r--r--  1 root root     705 Nov 11 22:41 config.py
+drwxr-xr-x  4 root root    3488 Nov 18 09:51 data
+-rw-r--r--  1 root root     979 Nov 11 22:41 main.py
+drwxr-xr-x  3 root root    3488 Nov 12 00:07 persona
+drwxr-xr-x  3 root root    3488 Nov 18 09:51 plugins
+-rw-r--r--  1 root root     461 Nov 11 22:41 pyproject.toml
+-rw-r--r--  1 root root    1077 Nov 13 15:37 requirements.txt
+-rw-r--r--  1 root root    7540 Nov 11 22:41 tests_test_games_full.py
+-rw-r--r--  1 root root    4909 Nov 11 22:41 tests_test_mute_v2.py
 =====完=====
