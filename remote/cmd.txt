@@ -1,13 +1,9 @@
-287380
-echo "===== 掷骰对话异常诊断 287380 $(date '+%F %T') ====="
-echo "[1]18:15~18:19 全部消息+处理器分派:"
-grep -E "11-19 18:1[5-9]" /root/bot/bot/bot.log 2>/dev/null | grep -iE "message.group|handled by|running complete|D20|六加两点|三把骰子|点子正|命运站在|这是什么|这是谁|线装书" | tail -90
-echo "[2]D20/六加两点/解释骰子 是谁生成的:"
-grep -E "11-19 18:1[5-9]" /root/bot/bot/bot.log 2>/dev/null | grep -iE "D20|六加两点|骰子戏|二十面|点数是八|核对|ask=" | tail -20
-echo "[3]掷骰命令被谁接:")
-grep -E "11-19 18:1[5-9]" /root/bot/bot/bot.log 2>/dev/null | grep -B1 -A2 "掷骰" | tail -40
-echo "[4]18:16~18:18 ai_chat的ask/ans:"
-grep -E "11-19 18:1[6-8]" /root/bot/bot/bot.log 2>/dev/null | grep "ai_chat" | tail -15
-echo "[5]games掷骰是否有报错/重复:"
-grep -E "11-19 18:1[5-9]" /root/bot/bot/bot.log 2>/dev/null | grep -iE "games|dice|error|traceback|exception" | tail -15
+287381
+echo "===== 18:15~18:18 消息流水+分派完整 287381 ====="
+echo "[1]18:15~18:18所有message.group.normal:"
+grep -E "11-19 18:1[5-8]" /root/bot/bot/bot.log 2>/dev/null | grep "message.group.normal" | head -40
+echo "[2]18:16全部handled by(看掷骰消息交给谁):"
+grep -E "11-19 18:16:" /root/bot/bot/bot.log 2>/dev/null | grep "handled by" | head -30
+echo "[3]dice_cmd(games lineno=38~81)今日触发次数:"
+grep -E "11-19" /root/bot/bot/bot.log 2>/dev/null | grep -E "plugins.games, lineno=(38|81)|三把骰子" | head -20
 echo "=====完====="
