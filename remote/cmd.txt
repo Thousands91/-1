@@ -1,10 +1,10 @@
-287332
-echo "===A on_meta_event导出位置==="
-grep -rn "def on_meta_event\|on_meta_event" /root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py /root/bot/venv/lib/python3.10/site-packages/nonebot/matcher.py 2>/dev/null | head -5
-echo "===B Status类字段==="
-sed -n '120,140p' /root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py 2>/dev/null
-echo "===C get_self_id方法==="
-grep -n "def get_self_id\|self_id" /root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py 2>/dev/null | head -5
-echo "===D Lifecycle/Heartbeat类定义==="
-sed -n '556,572p' /root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py 2>/dev/null
+287333
+echo "===A on_meta_event全局搜索==="
+grep -rn "on_meta_event" /root/bot/venv/lib/python3.10/site-packages/nonebot/ 2>/dev/null | grep -v ".pyc" | head -10
+echo "===B nonebot顶层导出的on_函数==="
+grep -oE "on_[a-z_]+" /root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py 2>/dev/null | sort -u | head -20
+echo "===C 用on_type或on_message兜底==="
+grep -oE "on_(type|message|meta)[a-z_]*" /root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py 2>/dev/null | sort -u
+echo "===D nonebot版本对on_meta_event的支持(pip文档)==="
+grep -rn "meta_event" /root/bot/venv/lib/python3.10/site-packages/nonebot/matcher.py 2>/dev/null | head -5
 echo "=====完====="
