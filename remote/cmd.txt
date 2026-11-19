@@ -1,13 +1,9 @@
-287358
-echo "===== 在线状态精准探测 287358 $(date '+%F %T') ====="
-echo "[1]当前时刻与登录态尾部5行:"
-date '+%F %T'; tail -5 /root/login_state.log 2>/dev/null
-echo "[2]logincheck权威判定:"
-bash /root/logincheck.sh 2>/dev/null | tail -8 || echo "  无logincheck.sh"
-echo "[3]link_probe日志尾(WS权威):"
-tail -8 /root/link_probe.log 2>/dev/null || echo "  无"
-echo "[4]bot.log最近WS/离线事件:"
-grep -iE "lifecycle|offline|online|WebSocket|断开|连接|error" /root/bot/bot/bot.log 2>/dev/null | tail -8
-echo "[5]NapCat日志最近登录事件:"
-grep -iE "离线|online|offline|登录|Login|Kicked" /root/napcat-restart.log 2>/dev/null | tail -8
+287359
+echo "===== 点歌选序号失败日志诊断 287359 $(date '+%F %T') ====="
+echo "[1]14:42~14:47 点歌/选歌关键日志:"
+grep -E "14:4[2-7]:" /root/bot/bot/bot.log 2>/dev/null | grep -iE "点歌|选歌|序号|pick|deliver|发卡|翻出|翻柜|audio|灯灭|error|exception|traceback|没那么简单" | tail -60
+echo "[2]最近200行里的点歌相关(不限时间):"
+tail -300 /root/bot/bot/bot.log 2>/dev/null | grep -iE "点歌|选歌|序号|pick|deliver|发卡|fetch_audio|没那么简单|灯灭|异常" | tail -40
+echo "[3]pick_cmd规则源码确认:"
+grep -n "def _pick_rule\|re.fullmatch\|get_plaintext\|pick_cmd = on_message\|priority=1" /root/bot/bot/plugins/song_request.py | head -12
 echo "=====完====="
