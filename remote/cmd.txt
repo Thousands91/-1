@@ -1,9 +1,11 @@
-287359
-echo "===== 点歌选序号失败日志诊断 287359 $(date '+%F %T') ====="
-echo "[1]14:42~14:47 点歌/选歌关键日志:"
-grep -E "14:4[2-7]:" /root/bot/bot/bot.log 2>/dev/null | grep -iE "点歌|选歌|序号|pick|deliver|发卡|翻出|翻柜|audio|灯灭|error|exception|traceback|没那么简单" | tail -60
-echo "[2]最近200行里的点歌相关(不限时间):"
-tail -300 /root/bot/bot/bot.log 2>/dev/null | grep -iE "点歌|选歌|序号|pick|deliver|发卡|fetch_audio|没那么简单|灯灭|异常" | tail -40
-echo "[3]pick_cmd规则源码确认:"
-grep -n "def _pick_rule\|re.fullmatch\|get_plaintext\|pick_cmd = on_message\|priority=1" /root/bot/bot/plugins/song_request.py | head -12
+287360
+echo "===== 序号消息原始流水诊断 287360 $(date '+%F %T') ====="
+echo "[1]14:44:30~14:45:15 全部原始消息日志(PHP级):"
+grep -E "14:44:(3|4|5)|14:45:0" /root/bot/bot/bot.log 2>/dev/null | grep "message.group" | tail -30
+echo "[2]这段时间的完整bot.log原文(不过滤):"
+awk '/11-19 14:44:4[0-9]/,/11-19 14:45:1[0-9]/' /root/bot/bot/bot.log 2>/dev/null | head -60
+echo "[3]ai_chat里ask=1的上下文(前后5行):"
+grep -n "ask='1'\|ask=\"1\"" /root/bot/bot/bot.log 2>/dev/null | tail -3
+echo "[4]NapCat原始日志这段是否有序号消息:"
+grep -E "14:44:5|14:45:0" /root/napcat.log /root/napcat-restart.log 2>/dev/null | grep -iE "message|1\"|group" | tail -15
 echo "=====完====="
