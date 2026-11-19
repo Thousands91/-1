@@ -1,131 +1,86 @@
-<<<forensic_restart_1119_0946.txt>>>
-===== 重启取证 11-19 09:46:13 =====
---- napcat.log尾150行 ---
-11-19 01:09:04 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 而且万花世界这个编剧其中一个好像和李艺彤是有关联的
-11-19 01:09:11 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 我想想
-11-19 01:09:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 忘了
-11-19 01:09:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [亖᳐卐冇卌⭐᳐੭ﾞ(1561950850)] [回复消息 [修᳐勾᳐੭ﾞ(3549246127)] 今年年底李艺彤生日会，如果我有钱有时间就去了] @修᳐勾᳐੭ﾞ (3549246127)  去
-11-19 01:09:35 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 但是还有一个就是黄婷婷现在折月亮那个女主
-11-19 01:09:38 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] [回复消息 [修᳐勾᳐੭ﾞ(3549246127)] 而且万花世界这个编剧其中一个好像和李艺彤是有关联的] @修᳐勾᳐੭ﾞ (3549246127)  是的是的
-11-19 01:09:43 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 李艺彤粉丝
-11-19 01:09:43 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 是个kt
-11-19 01:09:59 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 唯爱卡推
-11-19 01:10:02 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 唯爱kt
-11-19 01:10:07 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 唯爱卡婷
-11-19 01:10:11 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 我不管一定是这样的
-11-19 01:10:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 那个折月亮那个女主也是个kt而且经纪人是李艺彤的前经纪人
-11-19 01:10:17 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] [图片]
-11-19 01:10:33 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 我管他的，卡黄本来就是双推应援会
-11-19 01:10:38 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 站中间串三边
-11-19 01:10:52 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 但是我觉得ht太恶心了，说我是ht我一定不会接受的
-11-19 01:11:01 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] ht就是一堆精虫
-11-19 01:11:07 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] [回复消息 [亖᳐卐冇卌⭐᳐੭ﾞ(1561950850)] @修᳐勾᳐੭ﾞ (3549246127)  去] @亖᳐卐冇卌⭐᳐੭ﾞ (1561950850)  没钱没时间啊
-11-19 01:11:11 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] [图片]
-11-19 01:11:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] [图片]
-11-19 01:11:17 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 我连票都买不起
-11-19 01:11:25 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 还有黄婷婷的六七年没有见的朋友
-11-19 01:11:27 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 是谁阿
-11-19 01:11:30 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 谁呢
-11-19 01:11:34 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 妈妈要是知道我花这么多钱给卡黄她肯定生气
-a65dd42f71a505febe04b7bb25af0f445297ea8c886fc7e18e092eee4a8c8d12
-11-19 01:11:48 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] [回复消息 [梨᳐拾亦᳐੭ﾞ(3327068725)] 还有黄婷婷的六七年没有见的朋友] @梨᳐拾亦᳐੭ﾞ (3327068725)  而且黄婷婷当时再见朋友放的那个图
-[I] <MMKV_IO.cpp:516::writeActualSize> [nt_mmkv_united_config_no_login_v3] increase sequence to 64, crc 3232474925, actualSize 15972
-[I] <MMKV.cpp:1178::sync> MMKV::sync, SyncFlag = 1
-11-19 01:11:58 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 和300多个女生一起生活的经历
-11-19 01:12:04 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 直接就是李艺彤的照片在上面
-11-19 01:12:14 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 放的是cp30的图
-11-19 01:12:24 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 李艺彤就在右上角
-11-19 01:12:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 她怎么可能不知道
-11-19 01:12:33 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 怎么可能只有这一张图
-11-19 01:12:43 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 最后其实我觉得芒果也是真贴脸
-11-19 01:12:55 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 但是我只想黄婷婷和李艺彤能赚钱
-11-19 01:13:07 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 卡黄的热度和流量应该给她们真正的主人
-11-19 01:13:30 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] [回复消息 [修᳐勾᳐੭ﾞ(3549246127)] 最后其实我觉得芒果也是真贴脸] 最后一期嘉宾室还有几张图
-11-19 01:13:42 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 里面有李艺彤读信的截频
-11-19 01:13:44 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 黄婷婷参加无限超越班是26年3月，表演中并没有限定好友是多久后久别重逢，但是她自己说有6、7年没有见。她是在2019年离开塞纳河，所以时间对的上，那这段表演的是谁不言而喻，黄婷婷你到底想起了谁
-11-19 01:13:45 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 真的牛逼
-11-19 01:14:13 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] [回复消息 [梨᳐拾亦᳐੭ﾞ(3327068725)] 黄婷婷参加无限超越班是26年3月，表演中并没有限定好友是多久后久别重逢，但是她自己说有6、7年没有见。她是在2019年离开塞纳河，所以时间对的上，那这段表演的是谁不言而喻，黄婷婷你到底想起了谁] @梨᳐拾亦᳐੭ﾞ (3327068725)  好久不见这首歌我感觉她和男主完全就像被迫卖还买不明白
-11-19 01:14:19 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 黄婷婷一眼拉拉
-11-19 01:14:26 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 然后九年是什么
-11-19 01:14:41 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 不是十年，八年
-11-19 01:14:43 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 是九年
-11-19 01:14:57 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] [图片]
-11-19 01:15:14 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 我要嗑一辈子卡黄
-11-19 01:15:24 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 我妈妈妈咪早在一起了
-11-19 01:17:32 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] [转发消息]
-11-19 01:17:32 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 当时看后会友期和恩恩聊的
-08fd3a7a06525874c8b86dda0a9a82722f2d20c3e4d6b76847715f268c0804b9
-11-19 01:17:49 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 黄婷婷说得对 抖音乐子人多
-11-19 01:18:27 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [枫淞诗（已复活）(568187738)] 哼哼哼～
-11-19 01:18:31 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [枫淞诗（已复活）(568187738)] 哼哼哼哼哼哼～
-11-19 01:18:33 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [枫淞诗（已复活）(568187738)] ～～～
-11-19 01:21:03 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [M250通用机枪-烽火地带-6LJO4T40AMN4BFKBN7S74(3611220879)] 换头像了
-11-19 01:21:15 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [M250通用机枪-烽火地带-6LJO4T40AMN4BFKBN7S74(3611220879)] 哟
-11-19 01:21:17 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [M250通用机枪-烽火地带-6LJO4T40AMN4BFKBN7S74(3611220879)] 和龙龙和好了
-11-19 01:21:39 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
-11-19 01:21:44 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
-11-19 01:21:46 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [枫淞诗（已复活）(568187738)] 哼哼哼～
-11-19 01:21:48 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-19 01:21:48 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-19 01:21:48 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 阿萨尔 点歌 黄小琥
-11-19 01:21:52 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-19 01:21:58 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [枫淞诗（已复活）(568187738)] 哼哼哼哼哼哼～～
-11-19 01:22:01 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 黄小琥的《没那么简单》，我听过。她的歌声像沙漠里的清泉，唱尽了人心里的苦与甜。🎶📚
-2f36a0fb433c584a2a0507046066f04919939716bc7d5757482c73f32eb72a0c
-11-19 01:22:03 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
-11-19 01:22:08 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
-11-19 01:22:09 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-19 01:22:09 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-19 01:22:09 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 点歌 黄小琥 没那么简单
-11-19 01:22:10 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 翻柜子找「黄小琥 没那么简单」，稍等一下……
-f3fd3d2a6fd61f67504b67bc380c790b54852c36ec5338faf638fc43754ded6f
-11-19 01:22:12 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 「黄小琥 没那么简单」翻出这几首，回复序号选哪首（60秒内有效）： ...
-1aa8274d2b449087f4e0e304c9047b75fcf823e68f51db8626beea2cf52f5e1d
-11-19 01:22:21 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
-11-19 01:22:22 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-19 01:22:22 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-19 01:22:22 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 5
-11-19 01:22:23 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [M250通用机枪-烽火地带-6LJO4T40AMN4BFKBN7S74(3611220879)] 猪猪
-11-19 01:22:26 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
-11-19 01:22:31 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-19 01:22:37 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [卡片消息]
-17bdb4ea2736d26fb14417668ef7be8a2d0cf238469e36a0823df916db93d944
-11-19 01:22:41 [[32minfo[39m] 阿萨尔 | 语音文件/root/.config/QQ/NapCat/temp/07587109-1e72-484c-8758-e8b9e414d5f4需要转换成silk
-[mp3float @ 0x1c03f5c380] Could not update timestamps for skipped samples.
-11-19 01:22:48 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爱上齐豫是我的福报(1561950850)] ttl
-[mp3float @ 0x1c03f5c380] Could not update timestamps for discarded samples.
-11-19 01:22:54 [[32minfo[39m] 阿萨尔 | 语音文件已就绪: /root/.config/QQ/NapCat/temp/dbfa604b-6d2e-49e3-b7fd-2b32a44deb41 时长: 308.14
-11-19 01:22:54 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [语音 308s]
-bbe6b0dcae8bed8e2a9cc72bbe7d391f4071a5b7915a9935296fa8b84074c035
-11-19 01:23:18 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [枫淞诗（已复活）(568187738)] ttl
-11-19 01:24:43 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-19 01:29:56 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-19 01:36:35 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-19 01:36:38 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-19 01:41:33 [[32minfo[39m] 阿萨尔 | [ServerTime] 时间同步完成，偏差 1637ms
-e03578a7146a08989ecef16c779c4283babb93f531796b09ea985aec1500155d
-11-19 01:49:03 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
-11-19 01:49:08 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
-11-19 01:49:09 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-19 01:49:09 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-19 01:49:09 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 点歌 没那么简单
-11-19 01:49:09 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 翻柜子找「没那么简单」，稍等一下……
-944ae14a03bdc6c37494fd52060a7e65d51fe4c03a9b84002e5868109648a840
-11-19 01:49:11 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 「没那么简单」翻出这几首，回复序号选哪首（60秒内有效）： ...
-6591cb66fd1d248ac76ef73446e0f03ede97f67e8c7fa51844aa2ff4796dd06f
-11-19 01:49:17 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
-11-19 01:49:18 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-19 01:49:18 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-19 01:49:18 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 2
-11-19 01:49:22 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
-11-19 01:49:31 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [卡片消息]
-a4576dcb17d5ffac287be11b1bdb13d19b2edb30c2f9483d2d2522ba6e27ea28
-11-19 01:49:39 [[32minfo[39m] 阿萨尔 | 语音文件/root/.config/QQ/NapCat/temp/6518f453-5602-4eaf-b39c-665ecae01dc5需要转换成silk
-[mp3float @ 0x1c03f5d500] Could not update timestamps for skipped samples.
-[mp3float @ 0x1c03f5d500] Could not update timestamps for discarded samples.
-11-19 01:49:49 [[32minfo[39m] 阿萨尔 | 语音文件已就绪: /root/.config/QQ/NapCat/temp/19dcd4c0-f52f-4f32-b268-14e1d50c8ae7 时长: 308.14
-11-19 01:49:49 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) [语音 308s]
-9a1b8a20728a0db063aa48703f180ea475f730a76f5ab2151e49d34a7db7f1b4
+<<<task_287240.txt>>>
+===== 任务287240 11-19 11:38:43 =====
+--- 命令 ---
+echo "===== 掉线诊断 287240 只读 ====="
+echo "[1]时间:"; date '+%F %T'
+echo "[2]进程(bot/QQ/签名):"; ps aux 2>/dev/null | grep -E 'bot.py|python3|napcat|[Qq][Qq]' | grep -v grep | head -25
+echo "[3]端口:"; netstat -tlnp 2>/dev/null | grep -E ':10800|:8080|:6099|:3000' | head -10
+echo "[4]大脑日志尾:"; tail -50 /root/bot/bot/bot.log 2>/dev/null || echo 无此日志
+echo "[5]日志文件时间:"; ls -la /root/bot/bot/*.log 2>/dev/null | tail -6
+echo "[6]登录态:"; ls -la /root/bot/bot/login_state.log 2>/dev/null; tail -15 /root/bot/bot/login_state.log 2>/dev/null
+echo "[7]NapCat日志尾:"; tail -25 /root/napcat.log 2>/dev/null || echo 无
+echo "[8]签名代理:"; curl -s --max-time 5 -o /dev/null -w "HTTP:%{http_code}\n" http://127.0.0.1:10800/
+echo "[9]磁盘:"; df -h /root 2>/dev/null | tail -2
+echo "=====完====="
+--- 输出 ---
+===== 掉线诊断 287240 只读 =====
+[1]时间:
+2026-11-19 11:38:43
+[2]进程(bot/QQ/签名):
+aid_u0_+  7608  0.0  0.1  98628 10472 ?        S<s   2023   0:10 python3 /root/music_sign.py
+aid_u0_+ 19893  0.0  0.0   2340  1508 pts/0    S<    2023   0:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox
+aid_u0_+ 19909  0.0  3.4 138398184 199664 pts/0 S<l  2023   4:21 /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox
+aid_u0_+ 19911  0.0  0.9 50703292 55632 pts/0  S<    2023   0:00 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+aid_u0_+ 19912  0.0  0.9 50703292 53448 pts/0  S<    2023   0:00 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
+aid_u0_+ 19941  0.0  2.2 51079624 128032 pts/0 S<l   2023   0:06 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+aid_u0_+ 19946  0.0  5.3 207558128 305468 pts/0 Sl   2023 101:51 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --no-sandbox --enable-crash-reporter=ed95f686-be11-4e04-b899-7fe984b06b7b,no_channel --user-data-dir=/root/.config/QQ --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,3555797763535575197,9149317203853884456,262144 --enable-features=PdfUseShowSaveFilePicker --disable-features=LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708989122997041
+aid_u0_+ 19947  0.0  1.1 50652932 66144 pts/0  Sl    2023   0:04 /proc/self/exe --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --no-sandbox --enable-crash-reporter=ed95f686-be11-4e04-b899-7fe984b06b7b,no_channel --user-data-dir=/root/.config/QQ --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,3555797763535575197,9149317203853884456,262144 --enable-features=PdfUseShowSaveFilePicker --disable-features=LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708990060038890
+[3]端口:
+[4]大脑日志尾:
+11-19 01:52:37 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-19 01:52:37 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-19 01:52:37 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-19 01:54:41 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795024481, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-19 02:02:02 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1306538654 from 1179127036@[群:562796842] '[reply:id=934313705]哇'
+11-19 02:02:02 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-19 02:02:02 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-19 02:02:02 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-19 02:02:02 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-19 02:02:37 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2127686944 from 2939420548@[群:562796842] '我们俩完全大胃王来的'
+11-19 02:02:37 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-19 02:02:37 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-19 02:02:37 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-19 02:02:37 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-19 02:02:45 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1774446252 from 1179127036@[群:562796842] '话说我好像没怎么吃过番茄锅'
+11-19 02:02:45 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-19 02:02:45 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-19 02:02:45 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-19 02:02:45 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-19 02:02:58 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1146765356 from 1179127036@[群:562796842] '我一般是选牛油+菌汤'
+11-19 02:02:58 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-19 02:02:58 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-19 02:02:58 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-19 02:02:58 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-19 02:03:05 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1821082679 from 2939420548@[群:562796842] '素牛油锅'
+11-19 02:03:05 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-19 02:03:05 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-19 02:03:05 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-19 02:03:05 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-19 02:03:26 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 731918675 from 2939420548@[群:562796842] '我喜欢加个番茄提味'
+11-19 02:03:27 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-19 02:03:27 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-19 02:03:27 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-19 02:03:27 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-19 02:03:41 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1961437829 from 2939420548@[群:562796842] '因为蔬菜比较多'
+11-19 02:03:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-19 02:03:41 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-19 02:03:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-19 02:03:41 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-19 02:12:28 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 782959670 from 1179127036@[群:562796842] 'Soga'
+11-19 02:12:28 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-19 02:12:28 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-19 02:12:28 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-19 02:12:28 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-19 02:12:47 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1663676000 from 1179127036@[群:562796842] '我觉得牛油底料比清油的好吃'
+11-19 02:12:48 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-19 02:12:48 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-19 02:12:48 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-19 02:12:48 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-19 02:13:19 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+[5]日志文件时间:
+-rw-r--r-- 1 root root 2817134 Nov 19 02:13 /root/bot/bot/bot.log
+[6]登录态:
+[7]NapCat日志尾:
 11-19 01:51:25 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] [回复消息 [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 其实你们如果想来西安玩的话，现在可以来，西安暖气来了] @●᳐‖▜▜▙᳐੭ﾞ (1179127036)  好心动呀但是我们离得太远了
 11-19 01:51:29 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 呜呜
 11-19 01:51:35 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
@@ -151,84 +106,9 @@ c7a9cd093b1fb60be1412d4d03422a0653626eeb51fd959ccabc0f467233cbc5
 [13917:1119/021319.702795:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
 [13917:1119/021319.708902:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
 [13917:1119/021319.709001:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
---- napcat-restart.log尾80行 ---
-b7c8b3f11c0b4b37beba8f3bc786bcbb2eece3bc3ef0d6ff4ad399ffca669388
-b286f3e6ce55e1831adab34a92beb2ed0a97c5eeed603503edcab6c6efdd4a3a
-edb1ef176303108640e76091b4b58e1ee25e4f5b323067e9a2d896d0032a94f4
-99899a1c5ade3b3cfe8bcfa9cadd4ca932cb615686796376ff1ac288047fe57e
-c143f973612f42251fcf3b837e57e530674a31973da01679b8149790e3b45534
-cfe3032ac505a63a267bcd5c036dcca20ab8bfcceae0781f9f4de2af369019e9
-eb77442a0efacf0b72f3223c5600b0b37c9ecf70e213bb3ee3a0dd4a35c6a0cf
-10a860c52813352245bca6fface41fe4ab6c1e8c890994b5cb13eda5640dd4d2
-a892a93f94cfddebc3f8bb5b3a6f99d0820083d4ed926ba471295fc49f9e914a
-37b394f8f0e6a775e0f4cf71ab50b32b8e0b54a59d3e04cd9697fd5a135f9d48
-2ca033bd485e45c159c40870b14f98d96eba0e7ecff85b8b5184b70cfe48e436
-e29699896dfefa57cfe6c3b66c01c677a47438a0de1b0397cde04e4945e3702f
-93d4952c1d015135ea58e7f9b5f975ed3e11c2bb6bebfff7cd30ba0c45f5f626
-f240e738bc019cf432a31ab6cf30c20df725c9fbf411a796d482651a8197c40b
-8660fee7e4ad1e62b64e3a89880213b288bc4d139ca4841b358a6e8ea57f9879
-73c90bb4b8d007e7c4c5e72b2a52165d864a41381bec3adad34117b38ab05dae
-d3aec43d016ca31e6856241b493cc041171c849a1986803b231b1150e8d95945
-37fb84390c56df84905612797ae03163164407f8e6ed5ef6232a93027c872949
-de86e312a389ff6aaf9ad173e086dc5995fc8b32c144ad2c7261472f79f81187
-915229c287778605a84849f11297fd3ca5b4a13da45ca8896a007a6582d6d9d0
-7e2481f7b11fb23316dbb5abc2cc49622aad36e86438165977f8173baa4a69d1
-883814989270541054630955ecd9aa85ced48d9254899b2bea042b2fc6a1616c
-fba3418f8bc1b6444c0b26f6707acf908d298f900581cfd241af85fceacc7cee
-63f4f18c5b7767e56303f35ec66d0082f1498c26d5b87e2bd614b4e0cfa004a5
-081f0d9f13700427c5c35625f387d0e7f3b4a3cea7b95dc8a799b9185c60a880
-7c543c6c9682a58d815fe5cae1acdc7f31e7e4df2c72b73f0c2be6761690421f
-8d2e663736465f7e877c3cdb815d524d81bc7420bf0b2f45fb1996c66760acfd
-c1c1242316c30a54031e02bca31b9d6d810c615c28d6318734a997d924b5d94f
-a646c13114cffb829bfd555c025dafa9ddb4365880b554391f214f5e2fe413ef
-01e5044a59fcf8a1bfb5bbf7dbbd68db52c45a2c93acd6ef7d037195853ec175
-ebd1b23f1cea1090384d81b5de57cf0d118045d3ee96d8c75d96c639a2f61820
-dc38a0c885c256dd423c29a5273da066f6eff26f249733d64f25be4ee3640c0c
-9ca6f3259d5f28a797d07a0012a823907d0f7d222649fcf58bd7d5937300ac74
-ad51bbc4289b68b1bd8d29348e0ae41159fadade413161afb35df8848fc53521
-1274eb4d98b9816b77bb3a129139bd0d57ee0f65f7e4d9aa616ed6220eb4851a
-184f097139e50e62234025ef9a4829e5551c4b6ffd4bf8482b1c81f3f0308ad5
-b7ecb166993b1b7cb5c47777fde28244780f7df527c91c9a9240f8f0d16bed01
-54d355d788633d36442e90d62248e336c7f320d7ba9649f01db93d9289531256
-e74539550eeda1089b8f82d4e0bb005c9a22718beac92cb33a029a34c6b280a6
-362b6d8d15fbc3040b0df3a391ae68cf800510897e1e1b22f486e3040bb261a5
-ca0924d6ccdb09ac3ed11f3611c13b9564023bc5a2ce14f681ecb9f8cc35d3cd
-4441d59ce87325196f1c266423cd99d4846a02272678023ab375376df83a7c96
-a61d4cd173eab36dee76b72ec43f107bb23c8e98aa35991433bc036940a2f57f
-c61c51cc578d035ca324f48b268b9e26bb7997d1f7dd03a92d64b09a02502c74
-402ce906ea0aa79f4bc3bb869341f9152dc7f9da4d91b201958d7360e2992f82
-a79e665362cc8ccd67cca5631a82af77a09def6f93e2e2665e091ff07c7658f2
-76ddc6f090fee4c9a6dedf23c87cb0920086f355f325839e70f4feda38e59be9
-7517b2299dec8d1e1b042123215a5ddfa44e87ac8bf86129939faafd4b932206
-a5e0957dfd455c430882ab436699e09615e0d22e9080e25ccea09dc7f46ff409
-5f70bfbc004ea9a98b61af1d73cdcc7049ae6dcf7b03665a3d15e13810aad087
-0aa834e9c42907394d9dbd66921baba25a5f734e35d4889a4669df51acf4c00d
-668594a78b3af0bbb0da0e54afab98bd4a20f05ec961caf311e49915a88cc81c
-027a7752b342193a30e97b11d51197d5f9508c5e099238591e34a6dd0f8d1858
-03f16c629536dd88e9d01ccdec41814f32178011071c43ff5f48d694d7953526
-1be0d7361b071f9fc74dc8c5e34c22b8a73dd03842ed274c939d94f18da3aa9f
-d40ce499f4f9b07d012607dbf9f8c7e3f2668a9714dea98589779300a3e4d7e3
-21360a582d9da9e6f2f2b99dc3d6feb6ec38610058d465c97c684cbded6d0feb
-00ec2d960094d6cbbe0e998b98987257388d08f8d1d31377b9b257d6c5b754ac
-b3f11bc76434676a37c7e29c0bf5a4035525974d9386b1a9e248374978314b6f
-25c3418afdf17c87168506ed9024f2abba57b7e9ac715b7d374dacb707e84e59
-c09c20678571af5f6d9ade81fd38099db0d4068b3dd2900f0611f2b901f7bea0
-796968ad992d492f2a9a456a7da5693e39bf23726f33929039ba94d2a011a460
-9b953fc320a87d80fef0355f7c5ef67d18a015b25d6290429c348be13074f1f5
-b110737b220a57786d1146f3360bfd707844e8496dfbdc49c9012d56620116c4
-cdd7635f7d10b01b408e5f725559701d377b38a3792fa7cdbc496e916a539edd
-76c7b6ee6eb257c82458df8bc9e286ca17f0cfe4473c37436fe344fe39a5dd18
-fc7d85003f02d8c53838d994a38a014c02e12223fb945cbdd9a81d8473fd0fb6
-a48d69d71e6c5314e49099b12179d01e986d81cf2228f9a4b268b519db46094f
-c9cb70b3c4b4b4d321132fc509099aa546a54585a479beeb61edcc1fe9127f49
-56026bbb2aaad92b73cbe9882730f009ba30ba6591c4711a932f76a4e4ad22b8
-bab0c757b8cba205979ece20d3b815e730c4cf0d9ef78c6ecab618a1822f2017
-cc99a8d9ae9145f50eaf28c8b94ddf98b896a8bbc9945e3fcfc34c347b96cee5
-5bab373d4519388974c877846db4bb1ccda4953dc71d4c10c34fb7cda4139e4e
-4bc91e2431833b1f7ad432565c0b1e0c69b2fe69a1259dd35ec1fb23f50a5dae
-9d43adf8a1e3729c27f606e97ce27494155cdfbae9c61ca886f41a35f86e839b
-166b8ba8251ac79ed1ad09f608e8fa1a6157aea90c31eb603db1b553e3f83589
-7d9169734650c62d257d1f9c2ea6e34b217d26cec102d020f4ae3e2d3e70034d
-31fbdaac6af6f5de9295d467407789d3f04e36fe01bd048680363abe2947c359
-7074d6e5c07494f7f5f1f1497c5546fee568b267b98b8eccb044e75397f00502
-1785e82acdd4fd82db0d447b6fb32b3e0e6fa3f284c61a8e533e6d62df065adb
+[8]签名代理:
+HTTP:501
+[9]磁盘:
+Filesystem                   Size  Used Avail Use% Mounted on
+/dev/block/by-name/userdata  111G  101G  9.8G  92% /
+=====完=====
