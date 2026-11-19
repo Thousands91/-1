@@ -1,9 +1,9 @@
-287382
-echo "===== 掷骰ERROR堆栈 287382 ====="
-echo "[1]18:16:56 dice_cmd failed后8行:"
-grep -n "18:16:56.*failed" /root/bot/bot/bot.log 2>/dev/null | tail -1 | cut -d: -f1 | while read L; do sed -n "$((L)),$((L+12))p" /root/bot/bot/bot.log; done
-echo "[2]18:17:08 dice_cmd failed后8行:"
-grep -n "18:17:08.*failed" /root/bot/bot/bot.log 2>/dev/null | tail -1 | cut -d: -f1 | while read L; do sed -n "$((L)),$((L+12))p" /root/bot/bot/bot.log; done
-echo "[3]今日ActionFailed 1200总次数:"
-grep -E "11-19" /root/bot/bot/bot.log 2>/dev/null | grep -c "ActionFailed"
+287383
+echo "===== 掷骰ERROR根因行 287383 ====="
+echo "[1]18:16:56 failed堆栈最后6行(异常类型在最后):"
+L=$(grep -n "18:16:56.*failed" /root/bot/bot/bot.log 2>/dev/null | tail -1 | cut -d: -f1); sed -n "$((L)),$((L+45))p" /root/bot/bot/bot.log 2>/dev/null | tail -12
+echo "[2]18:17:08 failed堆栈最后6行:"
+L=$(grep -n "18:17:08.*failed" /root/bot/bot/bot.log 2>/dev/null | tail -1 | cut -d: -f1); sed -n "$((L)),$((L+45))p" /root/bot/bot/bot.log 2>/dev/null | tail -12
+echo "[3]所有异常类型统计(今日):"
+grep -E "11-19" /root/bot/bot/bot.log 2>/dev/null | grep -oE "[A-Za-z]+(Error|Exception|Failed):" | sort | uniq -c | tail -15
 echo "=====完====="
