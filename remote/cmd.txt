@@ -1,14 +1,13 @@
-287421
-echo "===== 287421 最近交互内容取证 ====="
-echo "[1]napcat.log最近收到的消息(接收<-):"
-grep "接收 <-" /root/napcat.log | tail -25
-echo "[2]napcat.log最近发出的消息(发送->):"
-grep "发送 ->" /root/napcat.log | tail -25
-echo "[3]bot.log最近的AI回复处理(近40行有内容的):"
-grep -E "ai_chat|LLM|大模型|回复|prompt" /root/bot/bot/bot.log | tail -15
-echo "[4]ai_chat有无独立日志/记忆文件:"
-ls -la /root/bot/bot/data/ 2>/dev/null | head -10
-find /root/bot/bot -name "*.log" -newer /root/bot/bot/pyproject.toml 2>/dev/null | head -5
-echo "[5]点歌/游戏最近记录:"
-grep -E "song_request|games" /root/bot/bot/bot.log | tail -6
+287422
+echo "===== 287422 私聊对话与积压消息取证 ====="
+echo "[1]1561950850的私聊往来全文:"
+grep "1561950850" /root/napcat.log | tail -15
+echo "[2]02:25:28积压涌入的总条数:"
+grep "接收 <-" /root/napcat.log | grep "02:25:2" | wc -l
+echo "[3]积压消息里@阿萨尔或提到阿萨尔的:"
+grep "接收 <-" /root/napcat.log | grep -E "@阿萨尔|\[回复消息.*阿萨尔|阿萨尔" | tail -10
+echo "[4]02:25:30~02:26:10之间的全部收发(看触发回复的是哪条):"
+awk '/11-20 02:25:3/,/11-20 02:26:1/' /root/napcat.log | head -30
+echo "[5]22:41~22:43掉线前最后的ai_chat处理(当时回复了什么):"
+awk '/11-19 22:4[123]/' /root/bot/bot/bot.log | grep -vE "Matcher|handled" | head -8
 echo "=====完====="
