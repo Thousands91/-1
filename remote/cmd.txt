@@ -1,11 +1,12 @@
-287403
-echo "===== 287403 登录诊断 ====="
-echo "[1]logincheck全输出:"
-bash /root/logincheck.sh 2>&1 | head -10
-echo "[2]NapCat进程:"
-pgrep -af "napcat\|NapCat" | head -3
-echo "[3]bot.log最近WS/连接记录:"
-grep -E "WebSocket|OneBot V11 .*connect|连接" /root/bot/bot/bot.log | tail -5
-echo "[4]最近5条消息事件:"
-grep "message.group" /root/bot/bot/bot.log | tail -3
+287404
+echo "===== 287404 NapCat诊断+取码 ====="
+echo "[1]QQ进程:"
+pgrep -af "opt/QQ" | head -3
+echo "[2]最近登录报错(归因先看日志):"
+grep -E "ErrType|ErrCode|Login.*[Ee]rror|掉线|下线|二维码" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat-run.log /root/napcat.log 2>/dev/null | tail -8
+echo "[3]二维码文件时间:"
+ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>&1
+echo "[4]二维码base64:"
+base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null | head -c 6000
+echo ""
 echo "=====完====="
