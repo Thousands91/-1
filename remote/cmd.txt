@@ -1,17 +1,15 @@
-287394
-echo "===== 重启大脑加载修复版 287394 $(date '+%F %T') ====="
-echo "[1]确认md5(应ai=4f1634c1 games=d4c0268f):"
-echo "  ai=$(md5sum /root/bot/bot/plugins/ai_chat.py|cut -c1-8) games=$(md5sum /root/bot/bot/plugins/games.py|cut -c1-8)"
-OLDPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
-echo "[2]旧PID=$OLDPID,重启:"
-kill "$OLDPID" 2>/dev/null; sleep 3
-( cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null & )
-sleep 15
-NEWPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
-echo "[3]新PID=$NEWPID"
-echo "[4]插件加载:"
-grep -iE "Succeeded to load plugin|Failed to load plugin" /root/bot/bot/bot.log 2>/dev/null | tail -12
-echo "[5]横幅+在线:"
-grep "QQ 群机器人启动成功" /root/bot/bot/bot.log 2>/dev/null | tail -1
-bash /root/logincheck.sh 2>/dev/null | grep -oE '\[[^]]+\]' | head -1
+287395
+echo "===== 重复发卡诊断 287395 $(date '+%F %T') ====="
+echo "[1]song_request.py md5(坑140版应65095faf):"
+md5sum /root/bot/bot/plugins/song_request.py | cut -c1-8
+echo "[2]插件目录全部py文件:"
+ls /root/bot/bot/plugins/
+echo "[3]全插件目录搜'逃不过':"
+grep -rln "逃不过" /root/bot/bot/plugins/ 2>/dev/null || echo "  无"
+echo "[4]'点歌'命令定义在几个文件:"
+grep -rln "on_command(\"点歌\"\|点歌.*on_command\|on_command('点歌'" /root/bot/bot/plugins/ 2>/dev/null
+echo "[5]15:57~16:08 发送日志(卡/语音/文件/文字卡):"
+grep -E "11-19 15:5[7-9]|11-19 16:0[0-8]" /root/bot/bot/bot.log 2>/dev/null | grep -iE "发卡|record|send_file|upload|custom|官方卡|找补|deliver|序号|pick|兔斯基|2menG|逃不过" | tail -40
+echo "[6]15:57~16:08 matcher分派:"
+grep -E "11-19 15:5[7-9]|11-19 16:0[0-5]" /root/bot/bot/bot.log 2>/dev/null | grep -E "handled by|running complete|failed" | tail -25
 echo "=====完====="
