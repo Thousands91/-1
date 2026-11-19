@@ -1,4 +1,2 @@
-287368
-echo "===== 上一轮改动精确diff(基线bak vs 当前) 287368 ====="
-diff -u /root/bot/bot/plugins/song_request.py.bak_287361 /root/bot/bot/plugins/song_request.py 2>/dev/null | head -120
-echo "=====完====="
+287369
+wc -c /root/bot/bot/plugins/song_request.py.bak_287361
