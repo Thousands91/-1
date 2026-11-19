@@ -1,9 +1,9 @@
-287381
-echo "===== 18:15~18:18 消息流水+分派完整 287381 ====="
-echo "[1]18:15~18:18所有message.group.normal:"
-grep -E "11-19 18:1[5-8]" /root/bot/bot/bot.log 2>/dev/null | grep "message.group.normal" | head -40
-echo "[2]18:16全部handled by(看掷骰消息交给谁):"
-grep -E "11-19 18:16:" /root/bot/bot/bot.log 2>/dev/null | grep "handled by" | head -30
-echo "[3]dice_cmd(games lineno=38~81)今日触发次数:"
-grep -E "11-19" /root/bot/bot/bot.log 2>/dev/null | grep -E "plugins.games, lineno=(38|81)|三把骰子" | head -20
+287382
+echo "===== 掷骰ERROR堆栈 287382 ====="
+echo "[1]18:16:56 dice_cmd failed后8行:"
+grep -n "18:16:56.*failed" /root/bot/bot/bot.log 2>/dev/null | tail -1 | cut -d: -f1 | while read L; do sed -n "$((L)),$((L+12))p" /root/bot/bot/bot.log; done
+echo "[2]18:17:08 dice_cmd failed后8行:"
+grep -n "18:17:08.*failed" /root/bot/bot/bot.log 2>/dev/null | tail -1 | cut -d: -f1 | while read L; do sed -n "$((L)),$((L+12))p" /root/bot/bot/bot.log; done
+echo "[3]今日ActionFailed 1200总次数:"
+grep -E "11-19" /root/bot/bot/bot.log 2>/dev/null | grep -c "ActionFailed"
 echo "=====完====="
