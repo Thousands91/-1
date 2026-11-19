@@ -1,11 +1,5 @@
-287373
-echo "===== 坑140修复后稳定性确认 287373 $(date '+%F %T') ====="
-echo "[1]进程存活时间(应>1分钟):"
-PID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1); ps -p "$PID" -o pid,etime,stat 2>/dev/null | tail -1
-echo "[2]登录态:"
-bash /root/logincheck.sh 2>/dev/null | grep -iE "在线|ready|阶段" | head -2
-echo "[3]重启后有无异常:"
-grep -E "11-19 15:2[1-9]|11-19 15:3" /root/bot/bot/bot.log 2>/dev/null | grep -iE "traceback|exception|error|crash" | tail -3 || echo "  无异常"
-echo "[4]设备当前md5(应65095faf):"
-md5sum /root/bot/bot/plugins/song_request.py | cut -c1-8
+287374
+echo "===== 提效验证-轻量往返 287374 $(date '+%F %T') ====="
+echo "设备收到时刻: $(date '+%H:%M:%S')"
+echo "[在线] $(bash /root/logincheck.sh 2>/dev/null | grep -o '\[在线\][^ ]*' | head -1)"
 echo "=====完====="
