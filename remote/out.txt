@@ -1,68 +1,44 @@
-<<<task_287337.txt>>>
-===== 任务287337 11-19 13:06:43 =====
+<<<task_287338.txt>>>
+===== 任务287338 11-19 13:07:32 =====
 --- 命令 ---
-echo "===A bot.log里WS连接/heartbeat证据==="
-grep -i -E "websocket|反向WS|connected|disconnect|heartbeat|meta|onebot|127.0.0.1:8080" /root/bot/bot/bot.log 2>/dev/null | tail -20
-echo "===B bot.log最后20行==="
-tail -20 /root/bot/bot/bot.log 2>/dev/null
-echo "===C 8080端口在不在监听(bot的WS服务端)==="
-netstat -tlnp 2>/dev/null | grep 8080 || ss -tlnp 2>/dev/null | grep 8080
-echo "===D NapCat到bot的WS连接状态==="
-netstat -tnp 2>/dev/null | grep 8080 | tail -5 || ss -tnp 2>/dev/null | grep 8080 | tail -5
-echo "===E NapCat日志里WS上报相关==="
-grep -i -E "websocket|ws://|onebot|connect" /root/napcat.log 2>/dev/null | tail -10
+echo "===A 在线时段元事件原文(那36条)==="
+grep -i -E "meta_event|lifecycle|heartbeat|connect|disconnect|WebSocket for Bot" /root/bot/bot/bot.log 2>/dev/null | grep -v "13:03" | head -20
+echo "===B C段补:8080监听==="
+netstat -tln 2>/dev/null | grep 8080 || ss -tln 2>/dev/null | grep 8080 || echo "8080未监听"
+echo "===C D段补:NapCat到bot连接==="
+netstat -tn 2>/dev/null | grep 8080 | tail -3 || ss -tn 2>/dev/null | grep 8080 | tail -3 || echo "无8080连接"
+echo "===D onebot ws客户端配置确认==="
+grep -A4 "websocketClients" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json 2>/dev/null | head -8
 echo "=====完====="
 --- 输出 ---
-===A bot.log里WS连接/heartbeat证据===
-11-19 02:12:48 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 02:12:48 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 02:13:19 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
-11-19 13:03:22 [SUCCESS] nonebot | NoneBot is initializing...
-11-19 13:03:22 [INFO] nonebot | Current Env: prod
-11-19 13:03:25 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
-11-19 13:03:27 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
-11-19 13:03:27 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
-11-19 13:03:27 [SUCCESS] nonebot | Running NoneBot...
-11-19 13:03:27 [SUCCESS] nonebot | Loaded adapters: OneBot V11
-11-19 13:03:27 [INFO] link_probe | [连接探针] 已启动，监听 lifecycle + heartbeat
-11-19 13:03:27 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
-===B bot.log最后20行===
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
-11-19 13:03:27 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
-11-19 13:03:27 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
-11-19 13:03:27 [SUCCESS] nonebot | Running NoneBot...
-11-19 13:03:27 [SUCCESS] nonebot | Loaded adapters: OneBot V11
-11-19 13:03:27 [INFO] uvicorn | Started server process [9869]
-11-19 13:03:27 [INFO] uvicorn | Waiting for application startup.
-11-19 13:03:27 [INFO] link_probe | [连接探针] 已启动，监听 lifecycle + heartbeat
-11-19 13:03:27 [INFO] __main__ | ==================================================
-11-19 13:03:27 [INFO] __main__ | QQ 群机器人启动成功 ✅
-11-19 13:03:27 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
-11-19 13:03:27 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
-11-19 13:03:27 [INFO] __main__ | ==================================================
-11-19 13:03:27 [INFO] uvicorn | Application startup complete.
-11-19 13:03:27 [INFO] uvicorn | Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
-11-19 13:03:29 [INFO] ai_chat | [表情动态层] 已加载 QFace 全量表 381 条（来源 koishi.js.org）
-===C 8080端口在不在监听(bot的WS服务端)===
-===D NapCat到bot的WS连接状态===
-===E NapCat日志里WS上报相关===
-[10801:1119/114445.880421:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
-[10801:1119/114450.063344:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
-[10801:1119/114450.063485:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
-[10801:1119/114450.068194:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
-[10801:1119/114450.075852:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
-[10801:1119/114450.288103:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
-[10801:1119/114450.288233:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+===A 在线时段元事件原文(那36条)===
+11-14 22:14:51 [INFO] websockets | connection open
+11-14 22:14:51 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+11-15 12:34:38 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+11-15 12:34:53 [INFO] websockets | connection open
+11-15 12:34:53 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+11-15 14:21:03 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+11-15 14:21:18 [INFO] websockets | connection open
+11-15 14:21:18 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+11-15 14:52:32 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+11-15 14:52:47 [INFO] websockets | connection open
+11-15 14:52:47 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+11-15 16:38:45 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+11-15 16:39:00 [INFO] websockets | connection open
+11-15 16:39:00 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+11-16 07:00:50 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+11-16 17:37:41 [INFO] websockets | connection open
+11-16 17:37:41 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+11-17 03:53:51 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+11-17 03:54:06 [INFO] websockets | connection open
+11-17 03:54:06 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+===B C段补:8080监听===
+8080未监听
+===C D段补:NapCat到bot连接===
+===D onebot ws客户端配置确认===
+    "websocketClients": [
+      {
+        "enable": true,
+        "url": "ws://127.0.0.1:8080/onebot/v11/ws",
+        "messagePostFormat": "array",
 =====完=====
