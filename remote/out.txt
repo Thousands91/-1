@@ -1,34 +1,91 @@
-<<<task_287411.txt>>>
-===== 任务287411 11-19 23:14:27 =====
+<<<task_287412.txt>>>
+===== 任务287412 11-19 23:15:31 =====
 --- 命令 ---
-echo "===== 287411 定位看护脚本 ====="
-echo "[1]谁在写autoheal.log:"
-grep -l "ALERT" /root/*.sh 2>/dev/null
-grep -rn "阿萨尔掉线" /root/*.sh 2>/dev/null | head -4
-echo "[2]脚本里ALERT掉线那段上下文:"
-S=$(grep -l "阿萨尔掉线" /root/*.sh 2>/dev/null | head -1)
-echo "目标脚本: $S"
-grep -n -B6 -A8 "阿萨尔掉线" "$S" 2>/dev/null | head -30
+echo "===== 287412 拉取看护脚本全文 ====="
+wc -l /root/azar_autoheal.sh
+md5sum /root/azar_autoheal.sh
+cat /root/azar_autoheal.sh
 echo "=====完====="
 --- 输出 ---
-===== 287411 定位看护脚本 =====
-[1]谁在写autoheal.log:
-/root/azar_autoheal.sh
-/root/azar_autoheal.sh:72:      *未登录*|*掉线*) send_alert "阿萨尔掉线($ST)! 已尝试自愈;若5分钟内不恢复需本人扫码" ;;
-/root/azar_guard.sh:2:# 阿萨尔掉线守护 v1.2 (2026-11-08)
-[2]脚本里ALERT掉线那段上下文:
-目标脚本: /root/azar_autoheal.sh
-66-  # ② 登录态监测（权威判定走 logincheck）
-67-  ST=$(timeout 20 bash /root/logincheck.sh 2>/dev/null | grep -oE '\[在线\]|\[掉线\]|\[未登录\]' | head -1)
-68-  [ -z "$ST" ] && ST="[未知]"
-69-  if [ "$ST" != "$PREV" ]; then
-70-    say "登录态: ${PREV:-初始} -> $ST"
-71-    case "$ST" in
-72:      *未登录*|*掉线*) send_alert "阿萨尔掉线($ST)! 已尝试自愈;若5分钟内不恢复需本人扫码" ;;
-73-      *在线*) [ -n "$PREV" ] && send_alert "阿萨尔已恢复在线" ;;
-74-    esac
-75-    PREV="$ST"
-76-  fi
-77-  sleep 60
-78-done
+===== 287412 拉取看护脚本全文 =====
+78 /root/azar_autoheal.sh
+84ca92ed7d7bcb01528a845d934fa928  /root/azar_autoheal.sh
+#!/bin/bash
+# azar_autoheal.sh v1.0 — 掉线自动愈合（独立进程，与 worker 解耦）
+# 背景：v6.6 的看护寄生在 remote_ctl_v6.sh 主循环里，worker 一旦卡在回传/被冻结，
+#       看护停摆 + 告警发不出去 = 掉线9小时没人知道（11-19 事故）。
+# 职责（只做两件安全的事，不反复 pkill 触发风控）：
+#   ① 进程存活守护：大脑/QQ 进程死了就拉起
+#   ② 掉线即时告警：走独立 GitHub API 通道，worker 卡住也能发出去
+# 边界：QQ 被服务端踢下线后协议层无法免扫码恢复（手册坑69源码级定案），
+#       本脚本不承诺免扫码登录，只保证"掉线第一时间报警 + 进程自愈"，把介入成本降到最低。
+
+LD=/root/.autoheal.lock
+if mkdir "$LD" 2>/dev/null; then
+  echo $$ > "$LD/pid"
+else
+  LP=$(cat "$LD/pid" 2>/dev/null)
+  if [ -n "$LP" ] && kill -0 "$LP" 2>/dev/null && tr -d '\0' < "/proc/$LP/cmdline" 2>/dev/null | grep -q autoheal; then
+    exit 0
+  fi
+  rm -rf "$LD"; mkdir "$LD"; echo $$ > "$LD/pid"
+fi
+trap 'rm -rf "$LD" 2>/dev/null' EXIT
+
+LOG=/root/autoheal.log
+PBOX=/root/.remote_pending
+mkdir -p "$PBOX"
+say() { echo "[$(date '+%m-%d %H:%M:%S')] $*" >> "$LOG"; }
+
+get_tok() { printf 'protocol=https\nhost=github.com\n\n' | timeout 10 git credential fill 2>/dev/null | sed -n 's/^password=//p' | head -1; }
+TOK=$(get_tok)
+[ -n "$TOK" ] || TOK=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
+
+ALERT_URL="https://api.github.com/repos/Thousands91/-1/contents/remote/alert.txt"
+
+# 告警双通道：① 独立 API 直推 GitHub（绕开卡住的 worker 的 git bundle）；② 留一份进 PBOX 兜底
+send_alert() {
+  local msg="$(date '+%F %T') $1"
+  say "ALERT: $1"
+  echo "$msg" > "$PBOX/ALERT.txt" 2>/dev/null
+  [ -n "$TOK" ] || { say "告警:无token,仅留PBOX"; return 1; }
+  local sha=$(timeout 20 curl -s -H "Authorization: token $TOK" "$ALERT_URL?cb=$(date +%s)" | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+  local b64=$(printf '%s\n' "$msg" | base64 -w0)
+  if timeout 30 curl -s -X PUT -H "Authorization: token $TOK" \
+      -d "{\"message\":\"掉线告警 $(date '+%m-%d %H:%M')\",\"content\":\"$b64\"${sha:+,\"sha\":\"$sha\"}}" \
+      "$ALERT_URL" 2>/dev/null | grep -q '"content"'; then
+    say "告警:已推送GitHub"
+  else
+    say "告警:推送失败,留PBOX待worker回传"
+  fi
+}
+
+say "===== autoheal v1.0 启动 $(date '+%F %T') ====="
+PREV=""
+while true; do
+  # ① 进程存活守护（掉线后的 NapCat 重启由 worker 的 restart_napcat 负责，这里只保"进程在"）
+  pgrep -f '/root/bot/venv/bin/python main.py' >/dev/null || {
+    say "大脑进程不在,拉起"
+    send_alert "大脑进程异常退出,已自动拉起"
+    ( cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null & )
+  }
+  pgrep -f 'opt/QQ/[q]q' >/dev/null || {
+    say "QQ进程不在,拉起(-q快速登录)"
+    send_alert "QQ进程异常退出,已自动拉起"
+    ( cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 < /dev/null & )
+  }
+
+  # ② 登录态监测（权威判定走 logincheck）
+  ST=$(timeout 20 bash /root/logincheck.sh 2>/dev/null | grep -oE '\[在线\]|\[掉线\]|\[未登录\]' | head -1)
+  [ -z "$ST" ] && ST="[未知]"
+  if [ "$ST" != "$PREV" ]; then
+    say "登录态: ${PREV:-初始} -> $ST"
+    case "$ST" in
+      *未登录*|*掉线*) send_alert "阿萨尔掉线($ST)! 已尝试自愈;若5分钟内不恢复需本人扫码" ;;
+      *在线*) [ -n "$PREV" ] && send_alert "阿萨尔已恢复在线" ;;
+    esac
+    PREV="$ST"
+  fi
+  sleep 60
+done
 =====完=====
