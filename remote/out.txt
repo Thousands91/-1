@@ -1,64 +1,90 @@
-<<<task_287422.txt>>>
-===== 任务287422 11-20 02:28:44 =====
+<<<task_287423.txt>>>
+===== 任务287423 11-20 02:32:14 =====
 --- 命令 ---
-echo "===== 287422 私聊对话与积压消息取证 ====="
-echo "[1]1561950850的私聊往来全文:"
-grep "1561950850" /root/napcat.log | tail -15
-echo "[2]02:25:28积压涌入的总条数:"
-grep "接收 <-" /root/napcat.log | grep "02:25:2" | wc -l
-echo "[3]积压消息里@阿萨尔或提到阿萨尔的:"
-grep "接收 <-" /root/napcat.log | grep -E "@阿萨尔|\[回复消息.*阿萨尔|阿萨尔" | tail -10
-echo "[4]02:25:30~02:26:10之间的全部收发(看触发回复的是哪条):"
-awk '/11-20 02:25:3/,/11-20 02:26:1/' /root/napcat.log | head -30
-echo "[5]22:41~22:43掉线前最后的ai_chat处理(当时回复了什么):"
-awk '/11-19 22:4[123]/' /root/bot/bot/bot.log | grep -vE "Matcher|handled" | head -8
+echo "===== 287423 历史日志库存盘点 ====="
+echo "[1]所有日志文件及轮转版(按时间排):"
+ls -la /root/*.log* /root/*.log.[0-9] /root/*.gz 2>/dev/null
+ls -la /root/bot/bot/*.log* /root/bot/bot/*.log.[0-9]* /root/bot/bot/*.gz 2>/dev/null
+find /root -maxdepth 3 -name "*.log.*" -o -maxdepth 3 -name "*.log.gz" 2>/dev/null | head -10
+echo "[2]napcat日志目录里有没有历史:"
+find /root/Napcat -name "*.log*" -o -name "*.gz" 2>/dev/null | head -10
+echo "[3]memory记忆库内容(交互记忆在这):"
+ls -la /root/bot/bot/data/memory/
+echo "[4]memory最新文件头部(看存的是什么):"
+F=$(ls -t /root/bot/bot/data/memory/ | head -1)
+echo "最新文件: $F"
+head -c 1500 "/root/bot/bot/data/memory/$F"
+echo ""
+echo "[5]bot.log起点时间:"
+head -3 /root/bot/bot/bot.log | head -1
+echo "[6]找一切带日期的交互痕迹(json/数据库):"
+find /root/bot/bot/data -name "*.json" -newer /root/bot/bot/pyproject.toml 2>/dev/null
+ls -la /root/bot/bot/data/*.json 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-===== 287422 私聊对话与积压消息取证 =====
-[1]1561950850的私聊往来全文:
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [我爱这橙色的海洋🍀💛乐育群里的(1561950850)] [图片]
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [我爱这橙色的海洋🍀💛乐育群里的(1561950850)] 谁懂
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [我爱这橙色的海洋🍀💛乐育群里的(1561950850)] @二旬老人想玩4i发现对方是比我还猛的猛1 (2959186535)  
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [我爱这橙色的海洋🍀💛乐育群里的(1561950850)] [文件 录音机-20261120-0202.wav]
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爱上齐豫是我的福报(1561950850)] [图片]
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [爱上齐豫是我的福报(1561950850)] 好冷啊
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [亖᳐卐冇卌⭐᳐੭ﾞ(1561950850)] 🈚
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [亖᳐卐冇卌⭐᳐੭ﾞ(1561950850)] 你为什么不更新
-11-20 02:25:30 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
-11-20 02:25:30 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-20 02:25:30 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-20 02:25:32 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) hi
-11-20 02:25:33 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 您好。想找点什么？
-11-20 02:25:35 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-20 02:25:35 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
-[2]02:25:28积压涌入的总条数:
-61
-[3]积压消息里@阿萨尔或提到阿萨尔的:
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] @●᳐‖▜▜▙᳐੭ﾞ (1179127036)  发我
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 提示词
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] [图片]
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 宝我看不到这个
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [亖᳐卐冇卌⭐᳐੭ﾞ(1561950850)] 你为什么不更新
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 因为不喜欢新版本
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 我觉得越更新越难用，旧版本不到完全用不了，我绝对不会更新的
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [麻薯流心奶黄肉松荔枝榛子芒果薄脆奶芙千层(3273077048)] [回复消息 [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 宝我看不到这个] @●᳐‖▜▜▙᳐੭ﾞ (1179127036)  这个是习惯失恋
-11-20 02:25:28 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [麻薯流心奶黄肉松荔枝榛子芒果薄脆奶芙千层(3273077048)] 说起来前几天还看见有人推荐这个歌来着
-11-20 02:25:32 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) hi
-[4]02:25:30~02:26:10之间的全部收发(看触发回复的是哪条):
-11-20 02:25:30 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
-11-20 02:25:30 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-20 02:25:30 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-20 02:25:32 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) hi
-11-20 02:25:33 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 您好。想找点什么？
-514d228441c81aa552a5f21cceef7c736003933692d5a34abf21a01b18b9ceb0
-11-20 02:25:35 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-20 02:25:35 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
-[5]22:41~22:43掉线前最后的ai_chat处理(当时回复了什么):
-11-19 22:41:30 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1401917848 from 3819642626@[群:590454333] '忙不完了'
-11-19 22:41:36 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 153121198 from 3819642626@[群:590454333] '好绝望'
-11-19 22:42:13 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 676692938 from 1106690331@[群:590454333] '没事'
-11-19 22:42:28 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1086491823 from 1106690331@[群:590454333] '忙不完了就算了'
-11-19 22:42:41 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1355040589 from 2338094559@[群:590454333] '[image:summary=[动画表情],file=6C4CF2AB01F1956D76B188F2EE6580AE.jpg,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhTFDnNS...,file_size=95768]'
-11-19 22:43:09 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 85279662 from 3819642626@[群:590454333] '[image:summary=[？],file=390435C282C155B75378DBFD854CDA31.jpg,sub_type=7,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSrQNTl...,file_size=4059]'
-11-19 22:43:22 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 470440684 from 3819642626@[群:590454333] '等死吗。。。'
+===== 287423 历史日志库存盘点 =====
+[1]所有日志文件及轮转版(按时间排):
+-rw-r--r-- 1 root root      52 Nov 12 00:06 /root/asar_sync_boot.log
+-rw-r--r-- 1 root root    4739 Nov 20 02:25 /root/autoheal.log
+-rw-r--r-- 1 root root     835 Nov 12 13:06 /root/azar_login_run.log
+-rw-r--r-- 1 root root    7775 Nov 18 02:09 /root/bot.log.20261118.bak
+-rw-r--r-- 1 root root  257092 Nov 20 02:31 /root/health.log
+-rw-r--r-- 1 root root    4388 Nov 20 02:28 /root/ip.log
+-rw-r--r-- 1 root root    3047 Nov 20 02:25 /root/link_probe.log
+-rw-r--r-- 1 root root   47301 Nov 20 02:27 /root/login_state.log
+-rw-r--r-- 1 root root    5285 Nov 18 09:23 /root/music_sign.log
+-rw-r--r-- 1 root root    3377 Nov 19 15:58 /root/music_sign_v4.log
+-rw-r--r-- 1 root root 1422882 Nov 19 11:58 /root/napcat-restart.log
+-rw-r--r-- 1 root root   24510 Nov 20 02:25 /root/napcat.log
+-rw-r--r-- 1 root root   80220 Nov 20 02:31 /root/netmon.log
+-rw-r--r-- 1 root root   16098 Nov 19 22:46 /root/offline_forensics.log
+-rw-r--r-- 1 root root    1431 Nov 19 22:47 /root/offline_watch2.log
+-rw-r--r-- 1 root root      11 Nov 12 00:50 /root/remote_boot.log
+-rw-r--r-- 1 root root 1192264 Nov 20 02:28 /root/remote_ctl.log
+-rw-r--r-- 1 root root  167020 Nov 20 02:31 /root/tick.log
+-rw-r--r-- 1 root root 3900655 Nov 20 02:31 /root/bot/bot/bot.log
+/root/bot.log.20261118.bak
+[2]napcat日志目录里有没有历史:
+/root/Napcat/opt/QQ/resources/app/rsds.log
+[3]memory记忆库内容(交互记忆在这):
+total 0
+drwxr-xr-x 2 root root  3488 Nov 19 20:39 .
+drwxr-xr-x 4 root root  3488 Nov 18 09:51 ..
+-rw-r--r-- 1 root root    85 Nov 12 14:22 1062461846.json
+-rw-r--r-- 1 root root   160 Nov 19 20:24 1179127036.json
+-rw-r--r-- 1 root root 15231 Nov 19 20:38 1561950850.json
+-rw-r--r-- 1 root root 19254 Nov 12 14:22 1561950850.json.bak_1108手术前
+-rw-r--r-- 1 root root 13481 Nov 12 14:00 1561950850.json.bak_1112手术前
+-rw-r--r-- 1 root root   133 Nov 12 14:22 22222.json
+-rw-r--r-- 1 root root  3846 Nov 12 14:22 2419770062.json
+-rw-r--r-- 1 root root   133 Nov 12 14:22 2423816346.json
+-rw-r--r-- 1 root root   226 Nov 19 18:19 3273077048.json
+-rw-r--r-- 1 root root   190 Nov 19 20:39 3611220879.json
+-rw-r--r-- 1 root root   298 Nov 12 14:22 649203747.json
+[4]memory最新文件头部(看存的是什么):
+最新文件: 3611220879.json
+[{"t": 1795091993, "m": "？？？？", "r": "这话您说得有趣，好比是先问我要哪一页的书，再让我给您讲故事。您是想听关于书的，还是关于这城的？"}]
+[5]bot.log起点时间:
+11-14 22:14:46 [SUCCESS] nonebot | NoneBot is initializing...
+[6]找一切带日期的交互痕迹(json/数据库):
+/root/bot/bot/data/fortune_log.json
+/root/bot/bot/data/memory/1062461846.json
+/root/bot/bot/data/memory/1561950850.json
+/root/bot/bot/data/memory/22222.json
+/root/bot/bot/data/memory/2419770062.json
+/root/bot/bot/data/memory/2423816346.json
+/root/bot/bot/data/memory/649203747.json
+/root/bot/bot/data/memory/3273077048.json
+/root/bot/bot/data/memory/1179127036.json
+/root/bot/bot/data/memory/3611220879.json
+/root/bot/bot/data/qface_index.json
+/root/bot/bot/data/mface_names.json
+/root/bot/bot/data/search_tag_cache.json
+/root/bot/bot/data/image_captions.json
+-rw-r--r-- 1 root root   735 Nov 19 17:19 /root/bot/bot/data/fortune_log.json
+-rw-r--r-- 1 root root 25369 Nov 11 22:41 /root/bot/bot/data/gutenberg_zh.json
+-rw-r--r-- 1 root root   122 Nov 17 03:56 /root/bot/bot/data/image_captions.json
+-rw-r--r-- 1 root root    83 Nov 12 15:01 /root/bot/bot/data/mface_names.json
+-rw-r--r-- 1 root root  6996 Nov 19 13:03 /root/bot/bot/data/qface_index.json
+-rw-r--r-- 1 root root  1617 Nov 13 03:13 /root/bot/bot/data/search_tag_cache.json
 =====完=====
