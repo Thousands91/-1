@@ -1,37 +1,36 @@
-<<<task_287334.txt>>>
-===== 任务287334 11-19 13:02:35 =====
+<<<task_287335.txt>>>
+===== 任务287335 11-19 13:03:16 =====
 --- 命令 ---
-echo "===A on_metaevent定义==="
-python3 -c "print('看nonebot源码')" 2>/dev/null
-grep -rn "on_metaevent" /root/bot/venv/lib/python3.10/site-packages/nonebot/*.py 2>/dev/null | grep -v ".pyc" | head -5
-echo "===B 定义上下文==="
-F=$(grep -rl "def on_metaevent" /root/bot/venv/lib/python3.10/site-packages/nonebot/ 2>/dev/null | head -1); echo "文件:$F"
-grep -n -A6 "def on_metaevent" "$F" 2>/dev/null
-echo "===C 直接python验证导入==="
-/root/bot/venv/bin/python -c "from nonebot import on_metaevent; from nonebot.adapters.onebot.v11 import LifecycleMetaEvent, HeartbeatMetaEvent; print('导入OK', on_metaevent.__name__)" 2>&1 | head -3
+echo "===== 部署连接探针 link_probe.py 287335 $(date '+%F %T') ====="
+echo "[1]写插件:"
+printf '%s' 'IiIiCui/nuaOpeaOoumSiCBsaW5rX3Byb2JlLnB5IOKAlOKAlCDmjonnur/ljp/lm6DlrprkvY3nmoQi5Y2P6K6u5bGC5p2D5aiB5pel5b+XIgoK5Li65LuA5LmI6ZyA6KaB5a6D77yI6KGl55qE5bCx5pivIuiDveWBmuS9huayoeWBmiLnmoTml6Xlv5fvvInvvJoKICBOYXBDYXQg55qE5pel5b+X5piv5paH5pys44CB5Lya6KKr6YeN5ZCv6KaG55uW77yM6ICM5LiU5LiN6K6w5b2VIFdTIOWxgueahOi/nuaOpeeKtuaAgeOAggogIE9uZUJvdCB2MTEg5Y2P6K6u5bGC5YW25a6e5Lya5Li75Yqo5LiK5oql5Lik57G75YWD5LqL5Lu277yM5piv5Yik5patIuaOiee6v+aAp+i0qCLnmoTmnYPlqIHkv6Hlj7fvvJoKICAgIC0gbGlmZWN5Y2xlIOWFg+S6i+S7tu+8mmNvbm5lY3QgLyBkaXNjb25uZWN0IC8gZW5hYmxlIC8gZGlzYWJsZSDigJTigJQgV1Mg6L+e5o6l5LuA5LmI5pe25YCZ5pat55qECiAgICAtIGhlYXJ0YmVhdCDlhYPkuovku7bvvJpzdGF0dXMub25saW5lIC8gc3RhdHVzLmdvb2Qg4oCU4oCUIOWNj+iuruWxguiHquaKpSLotKblj7flnKjkuI3lnKjjgIHov57mjqXlpb3kuI3lpb0iCiAg6L+Z5Lik57G75q2k5YmNIGJvdCDnq6/lrozlhajmsqHnm5HlkKzvvIhtYWluLnB5IOayoeacieS7u+S9lSBvbl9tZXRhX2V2ZW5077yJ77yM5piv5pyA5aSn55qE6YeH6ZuG55uy5Yy644CCCgrlroPog73lm57nrZTnmoTlhbPplK7pl67popjvvIjmraTliY3lj6rog73njJzvvInvvJoKICDmjonnur/pgqPkuIDliLvvvIzmmK8gV1Mg6L+e5o6l5YWI5pat77yI572R57ucL+WGu+e7ky/ov5vnqIvph43lkK/vvInvvIzov5jmmK/ov57mjqXov5jlnKjkvYYgc3RhdHVzLm9ubGluZT1mYWxzZe+8iOacjeWKoeerr+i4ouWPt++8ie+8nwogIOKAlOKAlCBoZWFydGJlYXQg55qEIG9ubGluZS9nb29kIOaYr+WNj+iuruWxguiHquW3seaKpeeahO+8jOavlCBncmVwIOaXpeW/l+WHhu+8jOS4lOS4jeWPl+aXpeW/l+imhuebluW9seWTjeOAggoK6K6+6K6h5Y6f5YiZ77yaCiAgLSBwcmlvcml0eT0xLCBibG9jaz1GYWxzZe+8mue7neS4jeaLpuaIqi/lvbHlk43ku7vkvZXmtojmga/lpITnkIYKICAtIOacrOWcsOWGmeaWh+S7tuWQjOatpe+8iOW+ruenkue6p++8jOaXoOmYu+Whnu+8ie+8m0dpdEh1YiDmjqjpgIHkuKLlkI7lj7Dnur/nqIvvvIzkuI3mi5bkuovku7blvqrnjq8KICAtIOWPquWcqOeKtuaAgei3s+WPmOaXtuaOqCBHaXRIdWLvvIjkuI3liLflsY/vvInvvJvlv4Pot7Plj6rorrDorqHmlbDkuI7mnIDlkI7ml7bpl7QKICAtIOS7u+S9leW8guW4uOmDveWQnuaOie+8jOaOoumSiOe7neS4jeiDveiuqSBib3Qg5bSpCiIiIgppbXBvcnQgYXN5bmNpbwppbXBvcnQgdGhyZWFkaW5nCmZyb20gZGF0ZXRpbWUgaW1wb3J0IGRhdGV0aW1lCmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aAoKZnJvbSBub25lYm90IGltcG9ydCBvbl9tZXRhZXZlbnQsIGdldF9kcml2ZXIKZnJvbSBub25lYm90LmFkYXB0ZXJzLm9uZWJvdC52MTEgaW1wb3J0IExpZmVjeWNsZU1ldGFFdmVudCwgSGVhcnRiZWF0TWV0YUV2ZW50CmZyb20gbm9uZWJvdC5sb2cgaW1wb3J0IGxvZ2dlcgoKTE9HID0gUGF0aCgiL3Jvb3QvbGlua19wcm9iZS5sb2ciKQpQQk9YID0gUGF0aCgiL3Jvb3QvLnJlbW90ZV9wZW5kaW5nIikKUEJPWC5ta2RpcihwYXJlbnRzPVRydWUsIGV4aXN0X29rPVRydWUpCgojIOWGheWtmOeKtuaAge+8muWPquWcqOi3s+WPmOaXtuiQveebmCvmjqjpgIHvvIzpgb/lhY3mr48zMOenkuW/g+i3s+WIt+WxjwpfbGFzdF9zdGF0dXMgPSB7Im9ubGluZSI6IE5vbmUsICJnb29kIjogTm9uZX0KX2hiX2NvdW50ID0gMAoKCmRlZiBfdHMoKSAtPiBzdHI6CiAgICByZXR1cm4gZGF0ZXRpbWUubm93KCkuc3RyZnRpbWUoIiVtLSVkICVIOiVNOiVTLiVmIilbOi0zXQoKCmRlZiBfd3JpdGUobGluZTogc3RyKToKICAgIHRyeToKICAgICAgICB3aXRoIExPRy5vcGVuKCJhIiwgZW5jb2Rpbmc9InV0Zi04IikgYXMgZjoKICAgICAgICAgICAgZi53cml0ZShsaW5lICsgIlxuIikKICAgIGV4Y2VwdCBFeGNlcHRpb246CiAgICAgICAgcGFzcwoKCmRlZiBfcHVzaF9naXRodWIobXNnOiBzdHIpOgogICAgIiIi5ZCO5Y+w57q/56iL5o6oIEdpdEh1YiByZW1vdGUvbGluay50eHTvvIzkuI3pmLvloZ7kuovku7blvqrnjq/jgILlpI3nlKggYXV0b2hlYWwg55qEIHRva2VuIOmAmumBk+OAgiIiIgogICAgZGVmIF9kbygpOgogICAgICAgIHRyeToKICAgICAgICAgICAgaW1wb3J0IHN1YnByb2Nlc3MKICAgICAgICAgICAgdXJsID0gImh0dHBzOi8vYXBpLmdpdGh1Yi5jb20vcmVwb3MvVGhvdXNhbmRzOTEvLTEvY29udGVudHMvcmVtb3RlL2xpbmsudHh0IgogICAgICAgICAgICB0b2sgPSBzdWJwcm9jZXNzLnJ1bigKICAgICAgICAgICAgICAgICJwcmludGYgJ3Byb3RvY29sPWh0dHBzXFxuaG9zdD1naXRodWIuY29tXFxuXFxuJyB8ICIKICAgICAgICAgICAgICAgICJ0aW1lb3V0IDEwIGdpdCBjcmVkZW50aWFsIGZpbGwgMj4vZGV2L251bGwgfCBzZWQgLW4gJ3MvXnBhc3N3b3JkPS8vcCcgfCBoZWFkIC0xIiwKICAgICAgICAgICAgICAgIHNoZWxsPVRydWUsIGNhcHR1cmVfb3V0cHV0PVRydWUsIHRleHQ9VHJ1ZSwgdGltZW91dD0xNSkuc3Rkb3V0LnN0cmlwKCkKICAgICAgICAgICAgaWYgbm90IHRvazoKICAgICAgICAgICAgICAgIHJldHVybgogICAgICAgICAgICBpbXBvcnQgdXJsbGliLnJlcXVlc3QsIGpzb24sIGJhc2U2NCwgdGltZQogICAgICAgICAgICByZXEgPSB1cmxsaWIucmVxdWVzdC5SZXF1ZXN0KHVybCArICI/Y2I9IiArIHN0cih0aW1lLnRpbWUoKSksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBoZWFkZXJzPXsiQXV0aG9yaXphdGlvbiI6ICJ0b2tlbiAiICsgdG9rLCAiVXNlci1BZ2VudCI6ICJ4In0pCiAgICAgICAgICAgIHNoYSA9ICIiCiAgICAgICAgICAgIHRyeToKICAgICAgICAgICAgICAgIGQgPSBqc29uLmxvYWQodXJsbGliLnJlcXVlc3QudXJsb3BlbihyZXEsIHRpbWVvdXQ9MTUpKQogICAgICAgICAgICAgICAgc2hhID0gZC5nZXQoInNoYSIsICIiKQogICAgICAgICAgICBleGNlcHQgRXhjZXB0aW9uOgogICAgICAgICAgICAgICAgcGFzcwogICAgICAgICAgICBib2R5ID0geyJtZXNzYWdlIjogIui/nuaOpeeKtuaAgei3s+WPmCAiICsgZGF0ZXRpbWUubm93KCkuc3RyZnRpbWUoIiVtLSVkICVIOiVNIiksCiAgICAgICAgICAgICAgICAgICAgImNvbnRlbnQiOiBiYXNlNjQuYjY0ZW5jb2RlKChtc2cgKyAiXG4iKS5lbmNvZGUoKSkuZGVjb2RlKCl9CiAgICAgICAgICAgIGlmIHNoYToKICAgICAgICAgICAgICAgIGJvZHlbInNoYSJdID0gc2hhCiAgICAgICAgICAgIHIgPSB1cmxsaWIucmVxdWVzdC5SZXF1ZXN0KHVybCwgZGF0YT1qc29uLmR1bXBzKGJvZHkpLmVuY29kZSgpLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBoZWFkZXJzPXsiQXV0aG9yaXphdGlvbiI6ICJ0b2tlbiAiICsgdG9rLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiVXNlci1BZ2VudCI6ICJ4IiwgIkNvbnRlbnQtVHlwZSI6ICJhcHBsaWNhdGlvbi9qc29uIn0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG1ldGhvZD0iUFVUIikKICAgICAgICAgICAgdXJsbGliLnJlcXVlc3QudXJsb3BlbihyLCB0aW1lb3V0PTIwKS5yZWFkKCkKICAgICAgICBleGNlcHQgRXhjZXB0aW9uOgogICAgICAgICAgICBwYXNzCiAgICB0cnk6CiAgICAgICAgdGhyZWFkaW5nLlRocmVhZCh0YXJnZXQ9X2RvLCBkYWVtb249VHJ1ZSkuc3RhcnQoKQogICAgZXhjZXB0IEV4Y2VwdGlvbjoKICAgICAgICBwYXNzCgoKbWV0YV9wcm9iZSA9IG9uX21ldGFldmVudChwcmlvcml0eT0xLCBibG9jaz1GYWxzZSkKCgpAbWV0YV9wcm9iZS5oYW5kbGUoKQphc3luYyBkZWYgX29uX21ldGEoZXZlbnQpOgogICAgZ2xvYmFsIF9oYl9jb3VudAogICAgdHJ5OgogICAgICAgIHRzID0gX3RzKCkKICAgICAgICBpZiBpc2luc3RhbmNlKGV2ZW50LCBMaWZlY3ljbGVNZXRhRXZlbnQpOgogICAgICAgICAgICAjIFdTIOi/nuaOpeeUn+WRveWRqOacn++8mmNvbm5lY3QvZGlzY29ubmVjdC9lbmFibGUvZGlzYWJsZQogICAgICAgICAgICBzdWIgPSBnZXRhdHRyKGV2ZW50LCAic3ViX3R5cGUiLCAiPyIpCiAgICAgICAgICAgIGxpbmUgPSBmIlt7dHN9XSBMSUZFQ1lDTEUgc3ViX3R5cGU9e3N1Yn0gc2VsZl9pZD17ZXZlbnQuc2VsZl9pZH0iCiAgICAgICAgICAgIF93cml0ZShsaW5lKQogICAgICAgICAgICBsb2dnZXIud2FybmluZygiW+i/nuaOpeaOoumSiF0gIiArIGxpbmUpCiAgICAgICAgICAgIF9wdXNoX2dpdGh1YihsaW5lKQogICAgICAgIGVsaWYgaXNpbnN0YW5jZShldmVudCwgSGVhcnRiZWF0TWV0YUV2ZW50KToKICAgICAgICAgICAgX2hiX2NvdW50ICs9IDEKICAgICAgICAgICAgc3QgPSBldmVudC5zdGF0dXMKICAgICAgICAgICAgb25saW5lID0gZ2V0YXR0cihzdCwgIm9ubGluZSIsIE5vbmUpCiAgICAgICAgICAgIGdvb2QgPSBnZXRhdHRyKHN0LCAiZ29vZCIsIE5vbmUpCiAgICAgICAgICAgICMg5Y+q5ZyoIG9ubGluZS9nb29kIOi3s+WPmOaXtuiQveebmCvmjqjpgIHvvJvlubPml7blj6rmm7TmlrDlhoXlrZjorqHmlbDvvIjkuI3lhpnmlofku7bvvIzpmLLliLflsY/vvIkKICAgICAgICAgICAgaWYgb25saW5lICE9IF9sYXN0X3N0YXR1c1sib25saW5lIl0gb3IgZ29vZCAhPSBfbGFzdF9zdGF0dXNbImdvb2QiXToKICAgICAgICAgICAgICAgIGxpbmUgPSAoZiJbe3RzfV0gSEVBUlRCRUFUIOeKtuaAgei3s+WPmCBvbmxpbmU9e29ubGluZX0gZ29vZD17Z29vZH0gIgogICAgICAgICAgICAgICAgICAgICAgICBmIuiHquWQr+WKqOe0r+iuoeW/g+i3sz17X2hiX2NvdW50fSBzZWxmX2lkPXtldmVudC5zZWxmX2lkfSIpCiAgICAgICAgICAgICAgICBfd3JpdGUobGluZSkKICAgICAgICAgICAgICAgIGxvZ2dlci53YXJuaW5nKCJb6L+e5o6l5o6i6ZKIXSAiICsgbGluZSkKICAgICAgICAgICAgICAgIF9wdXNoX2dpdGh1YihsaW5lKQogICAgICAgICAgICAgICAgX2xhc3Rfc3RhdHVzWyJvbmxpbmUiXSA9IG9ubGluZQogICAgICAgICAgICAgICAgX2xhc3Rfc3RhdHVzWyJnb29kIl0gPSBnb29kCiAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgIyDmjqLpkojnu53kuI3og73mi5blnq4gYm90CiAgICAgICAgdHJ5OgogICAgICAgICAgICBsb2dnZXIud2FybmluZyhmIlvov57mjqXmjqLpkohdIOW8guW4uCjlt7Llv73nlaUpOiB7dHlwZShlKS5fX25hbWVfX306IHtlfSIpCiAgICAgICAgZXhjZXB0IEV4Y2VwdGlvbjoKICAgICAgICAgICAgcGFzcwoKCkBnZXRfZHJpdmVyKCkub25fc3RhcnR1cAphc3luYyBkZWYgX3Byb2JlX3N0YXJ0dXAoKToKICAgIGxpbmUgPSBmIlt7X3RzKCl9XSDov57mjqXmjqLpkojlkK/liqggKE5vbmVCb3Tlt7Lov57kuIpXUyznrYnlvoVsaWZlY3ljbGUvaGVhcnRiZWF05LqL5Lu2KSIKICAgIF93cml0ZShsaW5lKQogICAgbG9nZ2VyLmluZm8oIlvov57mjqXmjqLpkohdIOW3suWQr+WKqO+8jOebkeWQrCBsaWZlY3ljbGUgKyBoZWFydGJlYXQiKQo=' | base64 -d > /root/bot/bot/plugins/link_probe.py
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/link_probe.py && echo "  语法OK md5=$(md5sum /root/bot/bot/plugins/link_probe.py|cut -c1-8)" || { echo "  语法失败中止"; exit 1; }
+echo "[2]平滑重启bot(当前未登录,不影响使用):"
+OLDPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
+echo "  旧bot PID=$OLDPID"
+kill "$OLDPID" 2>/dev/null; sleep 3
+( cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null & )
+sleep 12
+NEWPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
+echo "  新bot PID=$NEWPID"
+echo "[3]确认插件加载+探针日志:"
+grep -i "连接探针\|link_probe" /root/bot/bot/bot.log 2>/dev/null | tail -5 || echo "  日志暂无探针字样"
+echo "  link_probe.log:"; tail -5 /root/link_probe.log 2>/dev/null || echo "  尚无link_probe.log"
+echo "[4]确认bot无报错退出:"
+ps -p "$NEWPID" -o pid,etime,cmd 2>/dev/null | tail -1 || echo "  进程不在!"
 echo "=====完====="
 --- 输出 ---
-===A on_metaevent定义===
-看nonebot源码
-/root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py:8:- `on_metaevent` => {ref}``on_metaevent` <nonebot.plugin.on.on_metaevent>`
-/root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py:360:from nonebot.plugin import on_metaevent as on_metaevent
-===B 定义上下文===
-文件:/root/bot/venv/lib/python3.10/site-packages/nonebot/plugin/on.py
-156:def on_metaevent(*args, _depth: int = 0, **kwargs) -> type[Matcher]:
-157-    """注册一个元事件响应器。
-158-
-159-    参数:
-160-        rule: 事件响应规则
-161-        permission: 事件响应权限
-162-        handlers: 事件处理函数列表
---
-570:    def on_metaevent(self, **kwargs) -> type[Matcher]:
-571-        """注册一个元事件响应器。
-572-
-573-        参数:
-574-            rule: 事件响应规则
-575-            permission: 事件响应权限
-576-            handlers: 事件处理函数列表
-===C 直接python验证导入===
-导入OK on_metaevent
+===== 部署连接探针 link_probe.py 287335 2026-11-19 13:03:16 =====
+[1]写插件:
+  语法OK md5=635b50d4
+[2]平滑重启bot(当前未登录,不影响使用):
+  旧bot PID=6446
+  新bot PID=9869
+[3]确认插件加载+探针日志:
+11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
+11-19 13:03:27 [INFO] link_probe | [连接探针] 已启动，监听 lifecycle + heartbeat
+  link_probe.log:
+[11-19 13:03:27.885] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[4]确认bot无报错退出:
+ 9869       00:00 /root/bot/venv/bin/python main.py
 =====完=====
