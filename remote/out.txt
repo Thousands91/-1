@@ -1,7 +1,7 @@
-<<<task_287397.txt>>>
-===== 任务287397 11-19 22:15:50 =====
+<<<task_287398.txt>>>
+===== 任务287398 11-19 22:17:14 =====
 --- 命令 ---
-===== 部署坑148修复(点歌全路径审计) 287397 =====
+===== 部署坑148修复 点歌全路径审计 287398 =====
 cd /root/bot/bot
 echo "[1]下载新版:"
 curl -sL -H "Cache-Control: no-cache" -o /tmp/sr_new.py "https://raw.githubusercontent.com/Thousands91/-1/main/deploy/song_request.py?ts=$(date +%s)"
@@ -33,5 +33,33 @@ grep "QQ 群机器人启动成功" /root/bot/bot/bot.log | tail -1
 bash /root/logincheck.sh 2>/dev/null | grep -oE '\[[^]]+\]' | head -1
 echo "=====完====="
 --- 输出 ---
-bash: line 1: syntax error near unexpected token `('
-bash: line 1: `===== 部署坑148修复(点歌全路径审计) 287397 ====='
+bash: line 1: =====: command not found
+[1]下载新版:
+  新文件md5: 9a5c7617f5ad331f6c2cdc38e5b88726 (应9a5c7617)
+cp: cannot stat 'bot/plugins/song_request.py': No such file or directory
+cp: cannot create regular file 'bot/plugins/song_request.py': No such file or directory
+[2]语法:
+[Errno 2] No such file or directory: 'bot/plugins/song_request.py'  FAIL
+[3]import探针+假超时判定处数:
+    raise ValueError("NoneBot has not been initialized.")
+ValueError: NoneBot has not been initialized.
+grep: bot/plugins/song_request.py: No such file or directory
+[4]重启大脑:
+  旧12210→新15848
+[5]插件加载(最近一次重启):
+11-19 22:02:01 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
+11-19 22:18:01 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
+11-19 22:18:01 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
+11-19 22:18:01 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
+11-19 22:18:01 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-19 22:18:01 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+11-19 22:18:01 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
+11-19 22:18:02 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+11-19 22:18:02 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+11-19 22:18:02 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
+11-19 22:18:02 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
+11-19 22:18:02 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+[6]横幅+在线:
+11-19 22:18:03 [INFO] __main__ | QQ 群机器人启动成功 ✅
+[在线]
+=====完=====
