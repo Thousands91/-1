@@ -1,36 +1,15 @@
-287313
-echo "===== 部署掉线自动愈合v1.0 287313 $(date '+%F %T') ====="
-echo "[1]写脚本:"
-printf '%s' 'IyEvYmluL2Jhc2gKIyBhemFyX2F1dG9oZWFsLnNoIHYxLjAg4oCUIOaOiee6v+iHquWKqOaEiOWQiO+8iOeLrOeri+i/m+eoi++8jOS4jiB3b3JrZXIg6Kej6ICm77yJCiMg6IOM5pmv77yadjYuNiDnmoTnnIvmiqTlr4TnlJ/lnKggcmVtb3RlX2N0bF92Ni5zaCDkuLvlvqrnjq/ph4zvvIx3b3JrZXIg5LiA5pem5Y2h5Zyo5Zue5LygL+iiq+WGu+e7k++8jAojICAgICAgIOeci+aKpOWBnOaRhiArIOWRiuitpuWPkeS4jeWHuuWOuyA9IOaOiee6vznlsI/ml7bmsqHkurrnn6XpgZPvvIgxMS0xOSDkuovmlYXvvInjgIIKIyDogYzotKPvvIjlj6rlgZrkuKTku7blronlhajnmoTkuovvvIzkuI3lj43lpI0gcGtpbGwg6Kem5Y+R6aOO5o6n77yJ77yaCiMgICDikaAg6L+b56iL5a2Y5rS75a6I5oqk77ya5aSn6ISRL1FRIOi/m+eoi+atu+S6huWwseaLiei1twojICAg4pGhIOaOiee6v+WNs+aXtuWRiuitpu+8mui1sOeLrOeriyBHaXRIdWIgQVBJIOmAmumBk++8jHdvcmtlciDljaHkvY/kuZ/og73lj5Hlh7rljrsKIyDovrnnlYzvvJpRUSDooqvmnI3liqHnq6/ouKLkuIvnur/lkI7ljY/orq7lsYLml6Dms5XlhY3miavnoIHmgaLlpI3vvIjmiYvlhozlnZE2Oea6kOeggee6p+WumuahiO+8ie+8jAojICAgICAgIOacrOiEmuacrOS4jeaJv+ivuuWFjeaJq+eggeeZu+W9le+8jOWPquS/neivgSLmjonnur/nrKzkuIDml7bpl7TmiqXoraYgKyDov5vnqIvoh6rmhIgi77yM5oqK5LuL5YWl5oiQ5pys6ZmN5Yiw5pyA5L2O44CCCgpMRD0vcm9vdC8uYXV0b2hlYWwubG9jawppZiBta2RpciAiJExEIiAyPi9kZXYvbnVsbDsgdGhlbgogIGVjaG8gJCQgPiAiJExEL3BpZCIKZWxzZQogIExQPSQoY2F0ICIkTEQvcGlkIiAyPi9kZXYvbnVsbCkKICBpZiBbIC1uICIkTFAiIF0gJiYga2lsbCAtMCAiJExQIiAyPi9kZXYvbnVsbCAmJiB0ciAtZCAnXDAnIDwgIi9wcm9jLyRMUC9jbWRsaW5lIiAyPi9kZXYvbnVsbCB8IGdyZXAgLXEgYXV0b2hlYWw7IHRoZW4KICAgIGV4aXQgMAogIGZpCiAgcm0gLXJmICIkTEQiOyBta2RpciAiJExEIjsgZWNobyAkJCA+ICIkTEQvcGlkIgpmaQp0cmFwICdybSAtcmYgIiRMRCIgMj4vZGV2L251bGwnIEVYSVQKCkxPRz0vcm9vdC9hdXRvaGVhbC5sb2cKUEJPWD0vcm9vdC8ucmVtb3RlX3BlbmRpbmcKbWtkaXIgLXAgIiRQQk9YIgpzYXkoKSB7IGVjaG8gIlskKGRhdGUgJyslbS0lZCAlSDolTTolUycpXSAkKiIgPj4gIiRMT0ciOyB9CgpnZXRfdG9rKCkgeyBwcmludGYgJ3Byb3RvY29sPWh0dHBzXG5ob3N0PWdpdGh1Yi5jb21cblxuJyB8IHRpbWVvdXQgMTAgZ2l0IGNyZWRlbnRpYWwgZmlsbCAyPi9kZXYvbnVsbCB8IHNlZCAtbiAncy9ecGFzc3dvcmQ9Ly9wJyB8IGhlYWQgLTE7IH0KVE9LPSQoZ2V0X3RvaykKWyAtbiAiJFRPSyIgXSB8fCBUT0s9JChncmVwIC1vRSAnZ2hwX1tBLVphLXowLTldKycgL3Jvb3QvLmdpdC1jcmVkZW50aWFscyAyPi9kZXYvbnVsbCB8IGhlYWQgLTEpCgpBTEVSVF9VUkw9Imh0dHBzOi8vYXBpLmdpdGh1Yi5jb20vcmVwb3MvVGhvdXNhbmRzOTEvLTEvY29udGVudHMvcmVtb3RlL2FsZXJ0LnR4dCIKCiMg5ZGK6K2m5Y+M6YCa6YGT77ya4pGgIOeLrOeriyBBUEkg55u05o6oIEdpdEh1Yu+8iOe7leW8gOWNoeS9j+eahCB3b3JrZXIg55qEIGdpdCBidW5kbGXvvInvvJvikaEg55WZ5LiA5Lu96L+bIFBCT1gg5YWc5bqVCnNlbmRfYWxlcnQoKSB7CiAgbG9jYWwgbXNnPSIkKGRhdGUgJyslRiAlVCcpICQxIgogIHNheSAiQUxFUlQ6ICQxIgogIGVjaG8gIiRtc2ciID4gIiRQQk9YL0FMRVJULnR4dCIgMj4vZGV2L251bGwKICBbIC1uICIkVE9LIiBdIHx8IHsgc2F5ICLlkYroraY65pegdG9rZW4s5LuF55WZUEJPWCI7IHJldHVybiAxOyB9CiAgbG9jYWwgc2hhPSQodGltZW91dCAyMCBjdXJsIC1zIC1IICJBdXRob3JpemF0aW9uOiB0b2tlbiAkVE9LIiAiJEFMRVJUX1VSTD9jYj0kKGRhdGUgKyVzKSIgfCB0ciAtZCAnICcgfCBncmVwIC1vICcic2hhIjoiW14iXSoiJyB8IGhlYWQgLTEgfCBjdXQgLWQnIicgLWY0KQogIGxvY2FsIGI2ND0kKHByaW50ZiAnJXNcbicgIiRtc2ciIHwgYmFzZTY0IC13MCkKICBpZiB0aW1lb3V0IDMwIGN1cmwgLXMgLVggUFVUIC1IICJBdXRob3JpemF0aW9uOiB0b2tlbiAkVE9LIiBcCiAgICAgIC1kICJ7XCJtZXNzYWdlXCI6XCLmjonnur/lkYroraYgJChkYXRlICcrJW0tJWQgJUg6JU0nKVwiLFwiY29udGVudFwiOlwiJGI2NFwiJHtzaGE6KyxcInNoYVwiOlwiJHNoYVwifX0iIFwKICAgICAgIiRBTEVSVF9VUkwiIDI+L2Rldi9udWxsIHwgZ3JlcCAtcSAnImNvbnRlbnQiJzsgdGhlbgogICAgc2F5ICLlkYroraY65bey5o6o6YCBR2l0SHViIgogIGVsc2UKICAgIHNheSAi5ZGK6K2mOuaOqOmAgeWksei0pSznlZlQQk9Y5b6Fd29ya2Vy5Zue5LygIgogIGZpCn0KCnNheSAiPT09PT0gYXV0b2hlYWwgdjEuMCDlkK/liqggJChkYXRlICcrJUYgJVQnKSA9PT09PSIKUFJFVj0iIgp3aGlsZSB0cnVlOyBkbwogICMg4pGgIOi/m+eoi+WtmOa0u+WuiOaKpO+8iOaOiee6v+WQjueahCBOYXBDYXQg6YeN5ZCv55SxIHdvcmtlciDnmoQgcmVzdGFydF9uYXBjYXQg6LSf6LSj77yM6L+Z6YeM5Y+q5L+dIui/m+eoi+WcqCLvvIkKICBwZ3JlcCAtZiAnL3Jvb3QvYm90L3ZlbnYvYmluL3B5dGhvbiBtYWluLnB5JyA+L2Rldi9udWxsIHx8IHsKICAgIHNheSAi5aSn6ISR6L+b56iL5LiN5ZyoLOaLiei1tyIKICAgIHNlbmRfYWxlcnQgIuWkp+iEkei/m+eoi+W8guW4uOmAgOWHuizlt7Loh6rliqjmi4notbciCiAgICAoIGNkIC9yb290L2JvdC9ib3QgJiYgc2V0c2lkIG5vaHVwIC9yb290L2JvdC92ZW52L2Jpbi9weXRob24gbWFpbi5weSA+PiAvcm9vdC9ib3QvYm90L2JvdC5sb2cgMj4mMSA8IC9kZXYvbnVsbCAmICkKICB9CiAgcGdyZXAgLWYgJ29wdC9RUS9bcV1xJyA+L2Rldi9udWxsIHx8IHsKICAgIHNheSAiUVHov5vnqIvkuI3lnKgs5ouJ6LW3KC1x5b+r6YCf55m75b2VKSIKICAgIHNlbmRfYWxlcnQgIlFR6L+b56iL5byC5bi46YCA5Ye6LOW3suiHquWKqOaLiei1tyIKICAgICggY2QgL3Jvb3QvTmFwY2F0ICYmIHNldHNpZCBub2h1cCB4dmZiLXJ1biAtYSAvcm9vdC9OYXBjYXQvb3B0L1FRL3FxIC1xIDM0Mjc5NDMxODcgLS1uby1zYW5kYm94IC0tZGlzYWJsZS1ncHUgLS1kaXNhYmxlLXNvZnR3YXJlLXJhc3Rlcml6ZXIgLS1kaXNhYmxlLWRldi1zaG0tdXNhZ2UgLS1qcy1mbGFncz0tLW1heC1vbGQtc3BhY2Utc2l6ZT01MTIgPj4gL3Jvb3QvbmFwY2F0LXJlc3RhcnQubG9nIDI+JjEgPCAvZGV2L251bGwgJiApCiAgfQoKICAjIOKRoSDnmbvlvZXmgIHnm5HmtYvvvIjmnYPlqIHliKTlrprotbAgbG9naW5jaGVja++8iQogIFNUPSQodGltZW91dCAyMCBiYXNoIC9yb290L2xvZ2luY2hlY2suc2ggMj4vZGV2L251bGwgfCBncmVwIC1vRSAnXFvlnKjnur9cXXxcW+aOiee6v1xdfFxb5pyq55m75b2VXF0nIHwgaGVhZCAtMSkKICBbIC16ICIkU1QiIF0gJiYgU1Q9IlvmnKrnn6VdIgogIGlmIFsgIiRTVCIgIT0gIiRQUkVWIiBdOyB0aGVuCiAgICBzYXkgIueZu+W9leaAgTogJHtQUkVWOi3liJ3lp4t9IC0+ICRTVCIKICAgIGNhc2UgIiRTVCIgaW4KICAgICAgKuacqueZu+W9lSp8KuaOiee6vyopIHNlbmRfYWxlcnQgIumYv+iQqOWwlOaOiee6vygkU1QpISDlt7LlsJ3or5Xoh6rmhIg76IulNeWIhumSn+WGheS4jeaBouWkjemcgOacrOS6uuaJq+eggSIgOzsKICAgICAgKuWcqOe6vyopIFsgLW4gIiRQUkVWIiBdICYmIHNlbmRfYWxlcnQgIumYv+iQqOWwlOW3suaBouWkjeWcqOe6vyIgOzsKICAgIGVzYWMKICAgIFBSRVY9IiRTVCIKICBmaQogIHNsZWVwIDYwCmRvbmUK' | base64 -d > /root/azar_autoheal.sh
-chmod +x /root/azar_autoheal.sh
-bash -n /root/azar_autoheal.sh && echo "  语法OK md5=$(md5sum /root/azar_autoheal.sh|cut -c1-8)" || { echo "  语法失败,中止"; exit 1; }
-echo "[2]拉起独立进程:"
-pkill -f 'bash /root/azar_autoheal.sh' 2>/dev/null; sleep 1
-( setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null & )
-sleep 3
-pgrep -af 'azar_autoheal' | head -2 || echo "  未拉起!"
-echo "[3]写v6自启守卫(worker重启时自动带起autoheal):"
-python3 -c "
-p='/root/remote_ctl_v6.sh'; s=open(p).read()
-g=\"pgrep -f 'bash /root/azar_autoheal.sh' >/dev/null || ( setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null & )\n\"
-if 'azar_autoheal' not in s:
-    i=s.find('trap ')
-    s=s[:i]+g+s[i:]; open(p,'w').write(s); print('  守卫已写入v6')
-else: print('  v6已有守卫,跳过')
-"
-bash -n /root/remote_ctl_v6.sh && echo "  v6语法OK" || echo "  v6语法异常!"
-echo "[4]自启守卫也写start_all.sh:"
-python3 -c "
-p='/root/start_all.sh'
-import os
-if not os.path.exists(p): print('  start_all.sh不存在,跳过'); raise SystemExit
-s=open(p).read()
-g=\"pgrep -f 'bash /root/azar_autoheal.sh' >/dev/null || ( setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null & )\n\"
-if 'azar_autoheal' not in s:
-    open(p,'w').write(s.rstrip()+'\n'+g); print('  守卫已写入start_all')
-else: print('  已有守卫,跳过')
-"
-echo "[5]验收:"
-echo "  autoheal进程:"; pgrep -af 'azar_autoheal' | head -2
-echo "  autoheal日志尾:"; tail -5 /root/autoheal.log 2>/dev/null
+287314
+echo "===== 掉线快诊断 287314 $(date '+%F %T') ====="
+echo "---[1]login_state 昨晚到今晨在线周期---"
+grep -aE "11-18 22:3|11-19 00:|11-19 01:|11-19 02:0|11-19 02:1" /root/login_state.log 2>/dev/null | tail -45
+echo "---[2]ip.log 同期IP变动---"
+grep -aE "11-19 00:|11-19 01:|11-19 02:" /root/ip.log 2>/dev/null | tail -30
+echo "---[3]health.log 02点前后(冻结判定)---"
+grep -aE "11-19 01:5|11-19 02:0|11-19 02:1" /root/health.log 2>/dev/null | tail -20
+echo "---[4]napcat.log 02:10-02:16关键行---"
+grep -aE "02:1[0-6]" /root/napcat.log 2>/dev/null | grep -aE "离线|GPU|close|reconnect|Error|error|二维码|登录|Kick|kick" | tail -30
+echo "---[5]各登录日志扫码成功次数---"
+for f in /root/napcat.log /root/napcat-restart.log; do echo -n "$f: "; grep -acE "扫码登录成功|登录成功|Login Success" "$f" 2>/dev/null; done
+echo "---[6]offline_forensics 尾---"
+tail -15 /root/offline_forensics.log 2>/dev/null || echo 无
 echo "=====完====="
