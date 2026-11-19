@@ -1,60 +1,62 @@
-<<<task_287425.txt>>>
-===== 任务287425 11-20 02:33:56 =====
+<<<task_287426.txt>>>
+===== 任务287426 11-20 02:37:17 =====
 --- 命令 ---
-echo "===== 287425 修正口径:bot.log逐日统计 ====="
-echo "[1]逐日总行数:"
-for d in 11-14 11-15 11-16 11-17 11-18 11-19 11-20; do
-  echo "  $d: $(grep -c "^11-$d" /root/bot/bot/bot.log)"
-done
-echo "[2]逐日收到的消息行数:"
-for d in 11-16 11-17 11-18 11-19 11-20; do
-  echo "  $d: $(grep "^11-$d" /root/bot/bot/bot.log | grep -cF "message.group.normal")  群 / 私聊 $(grep "^11-$d" /root/bot/bot/bot.log | grep -cF "message.private")"
-done
-echo "[3]逐日ai_chat触发:"
-for d in 11-16 11-17 11-18 11-19 11-20; do
-  echo "  $d: $(grep "^11-$d" /root/bot/bot/bot.log | grep -cF "module=plugins.ai_chat")"
-done
-echo "[4]napcat-restart.log格式抽样:"
-grep -m3 "11-19 15:5" /root/napcat-restart.log | head -3
-echo "[5]memory全目录(文件名=用户QQ,看更新时间分布):"
-ls -la --time-style=+%m-%d_%H:%M /root/bot/bot/data/memory/
+echo "===== 287426 行首字节检查+修正统计 ====="
+echo "[1]bot.log首行字节(查隐形前缀):"
+head -c 60 /root/bot/bot/bot.log | od -c | head -3
+echo "[2]逐日行数(不锚定):"
+awk '{print substr($0,1,5)}' /root/bot/bot/bot.log | sort | uniq -c | tail -12
+echo "[3]逐日群消息量:"
+awk '/message.group.normal/ {print substr($0,1,5)}' /root/bot/bot/bot.log | sort | uniq -c
+echo "[4]逐日ai_chat触发量:"
+awk '/module=plugins.ai_chat/ {print substr($0,1,5)}' /root/bot/bot/bot.log | sort | uniq -c
+echo "[5]napcat-restart.log覆盖范围:"
+head -c 120 /root/napcat-restart.log
+echo ""
+tail -c 120 /root/napcat-restart.log
+echo ""
+echo "[6]napcat-restart.log里发送记录格式:"
+grep -m2 "发送" /root/napcat-restart.log | head -2
 echo "=====完====="
 --- 输出 ---
-===== 287425 修正口径:bot.log逐日统计 =====
-[1]逐日总行数:
-  11-14: 0
-  11-15: 0
-  11-16: 0
-  11-17: 0
-  11-18: 0
-  11-19: 0
-  11-20: 0
-[2]逐日收到的消息行数:
-  11-16: 0  群 / 私聊 0
-  11-17: 0  群 / 私聊 0
-  11-18: 0  群 / 私聊 0
-  11-19: 0  群 / 私聊 0
-  11-20: 0  群 / 私聊 0
-[3]逐日ai_chat触发:
-  11-16: 0
-  11-17: 0
-  11-18: 0
-  11-19: 0
-  11-20: 0
-[4]napcat-restart.log格式抽样:
-[5]memory全目录(文件名=用户QQ,看更新时间分布):
-total 0
-drwxr-xr-x 2 root root  3488 11-19_20:39 .
-drwxr-xr-x 4 root root  3488 11-18_09:51 ..
--rw-r--r-- 1 root root    85 11-12_14:22 1062461846.json
--rw-r--r-- 1 root root   160 11-19_20:24 1179127036.json
--rw-r--r-- 1 root root 15231 11-19_20:38 1561950850.json
--rw-r--r-- 1 root root 19254 11-12_14:22 1561950850.json.bak_1108手术前
--rw-r--r-- 1 root root 13481 11-12_14:00 1561950850.json.bak_1112手术前
--rw-r--r-- 1 root root   133 11-12_14:22 22222.json
--rw-r--r-- 1 root root  3846 11-12_14:22 2419770062.json
--rw-r--r-- 1 root root   133 11-12_14:22 2423816346.json
--rw-r--r-- 1 root root   226 11-19_18:19 3273077048.json
--rw-r--r-- 1 root root   190 11-19_20:39 3611220879.json
--rw-r--r-- 1 root root   298 11-12_14:22 649203747.json
+===== 287426 行首字节检查+修正统计 =====
+[1]bot.log首行字节(查隐形前缀):
+0000000   1   1   -   1   4       2   2   :   1   4   :   4   6       [
+0000020   S   U   C   C   E   S   S   ]       n   o   n   e   b   o   t
+0000040       |       N   o   n   e   B   o   t       i   s       i   n
+[2]逐日行数(不锚定):
+      7     u
+    146   Fil
+   2935 11-14
+   4879 11-15
+   4247 11-16
+   4030 11-17
+   3809 11-18
+   9323 11-19
+     67 11-20
+      7 > Fil
+      7 Trace
+      7 noneb
+[3]逐日群消息量:
+    578 11-14
+    916 11-15
+    842 11-16
+    703 11-17
+    699 11-18
+   1369 11-19
+[4]逐日ai_chat触发量:
+   1156 11-14
+   1836 11-15
+   1678 11-16
+   1424 11-17
+   1397 11-18
+   2691 11-19
+      2 11-20
+[5]napcat-restart.log覆盖范围:
+732f209b479ce49c8e7535a2a4e920ffb36d9bdff842e8e5c5fe69c0392f3b99
+17bd9a81365c84cd8ee3786ad6e2407b83645c372726c0b39181a12
+6a74a9c8
+[19909:1119/114442.258023:FATAL:electron/shell/browser/electron_browser_main_parts.cc:529] Failed to shutdown.
+
+[6]napcat-restart.log里发送记录格式:
 =====完=====
