@@ -1,86 +1,29 @@
-<<<task_287329.txt>>>
-===== 任务287329 11-19 12:51:35 =====
+<<<task_287330.txt>>>
+===== 任务287330 11-19 12:54:43 =====
 --- 命令 ---
-echo "===A 配置文件修改时间==="
-CFG=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config
-stat -c '%y %n' "$CFG"/napcat_3427943187.json "$CFG"/napcat.json "$CFG"/napcat_protocol_3427943187.json 2>/dev/null
-echo "===B napcat.json和3427943187配置是否一致==="
-diff "$CFG/napcat.json" "$CFG/napcat_3427943187.json" 2>/dev/null && echo "两文件完全相同" || echo "两文件有差异(见上)"
-echo "===C 协议配置全文==="
-cat "$CFG/napcat_protocol_3427943187.json" 2>/dev/null
-echo "===D onebot配置全文==="
-cat "$CFG/onebot11_3427943187.json" 2>/dev/null
-echo "===E 历史备份/旧配置==="
-find /root -maxdepth 6 -type f \( -name "*napcat*.json*" -o -name "*config*.bak" \) 2>/dev/null | grep -v node_modules | head -15
-echo "===F 启动脚本里有没有写bypass配置==="
-grep -rn "bypass\|o3HookMode\|config" /root/napcat.sh /root/start_nap.sh /root/azar_login.sh 2>/dev/null | head -15
+echo "===A NoneBot与Adapter版本==="
+cd /root/bot/bot && /root/bot/venv/bin/pip show nonebot2 nonebot-adapter-onebot 2>/dev/null | grep -E "^(Name|Version):"
+echo "===B bot.log里history有没有元事件痕迹==="
+grep -c -i -E "meta_event|lifecycle|heartbeat|connect|disconnect" /root/bot/bot/bot.log 2>/dev/null
+echo "===C bot.log最后在线时段的事件类型样本==="
+grep -oE '"post_type": ?"[a-z_]+"|"meta_event_type": ?"[a-z_]+"|\[Info\]|\[Warning\]' /root/bot/bot/bot.log 2>/dev/null | sort | uniq -c | head -15
+echo "===D NapCat是否上报bot_offline到WS==="
+grep -c -i -E "bot_offline|self_offline|lifecycle|meta_event" /root/napcat.log 2>/dev/null
+echo "===E onebot heartInterval当前值==="
+grep "heartInterval\|reconnectInterval" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-===A 配置文件修改时间===
-2026-11-12 00:23:44.170000000 +0800 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json
-2026-11-11 23:49:33.310000000 +0800 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json
-2026-11-12 00:23:45.170000000 +0800 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_protocol_3427943187.json
-===B napcat.json和3427943187配置是否一致===
-16c16,17
-<   }
----
->   },
->   "autoTimeSync": true
-两文件有差异(见上)
-===C 协议配置全文===
-{
-  "enable": false,
-  "network": {
-    "httpServers": [],
-    "websocketServers": [],
-    "websocketClients": []
-  }
-}===D onebot配置全文===
-{
-  "network": {
-    "httpServers": [],
-    "httpSseServers": [],
-    "httpClients": [],
-    "websocketServers": [],
-    "websocketClients": [
-      {
-        "enable": true,
-        "url": "ws://127.0.0.1:8080/onebot/v11/ws",
-        "messagePostFormat": "array",
-        "reportSelfMessage": false,
-        "token": "",
-        "debug": false,
+===A NoneBot与Adapter版本===
+Name: nonebot2
+Version: 2.5.0
+Name: nonebot-adapter-onebot
+Version: 2.4.6
+===B bot.log里history有没有元事件痕迹===
+36
+===C bot.log最后在线时段的事件类型样本===
+===D NapCat是否上报bot_offline到WS===
+0
+===E onebot heartInterval当前值===
         "heartInterval": 30000,
         "reconnectInterval": 5000
-      }
-    ],
-    "plugins": []
-  },
-  "musicSignUrl": "http://127.0.0.1:10800/",
-  "enableLocalFile2Url": false,
-  "parseMultMsg": false,
-  "imageDownloadProxy": "",
-  "timeout": {
-    "baseTimeout": 10000,
-    "uploadSpeedKBps": 256,
-    "downloadSpeedKBps": 256,
-    "maxTimeout": 1800000
-  }
-}===E 历史备份/旧配置===
-===F 启动脚本里有没有写bypass配置===
-/root/napcat.sh:270:    # 确保 config-manager 工具可用
-/root/napcat.sh:278:            execute_command "run_as_root dnf config-manager --set-enabled appstream" "启用 AppStream 仓库"
-/root/napcat.sh:353:        fonts="fontconfig dejavu-sans-fonts"
-/root/napcat.sh:471:        update_linuxqq_config "${linuxqq_installed_version}"
-/root/napcat.sh:565:    update_linuxqq_config "${linuxqq_target_version}"
-/root/napcat.sh:568:#  REWRITTEN: update_linuxqq_config for rootless 
-/root/napcat.sh:569:function update_linuxqq_config() {
-/root/napcat.sh:574:    local user_config_dir="$HOME/.config/QQ/versions"
-/root/napcat.sh:575:    local user_config_file="${user_config_dir}/config.json"
-/root/napcat.sh:577:    if [ -d "${user_config_dir}" ]; then
-/root/napcat.sh:578:        if [ -f "${user_config_file}" ]; then
-/root/napcat.sh:579:            log "正在修改 ${user_config_file}..."
-/root/napcat.sh:582:                '.baseVersion = $targetVer | .curVersion = $targetVer | .buildId = $buildId' "${user_config_file}" >"${user_config_file}.tmp" &&
-/root/napcat.sh:583:                mv "${user_config_file}.tmp" "${user_config_file}" || {
-/root/napcat.sh:588:            log "未找到用户配置文件 ${user_config_file}, QQ首次启动时会自动创建。"
 =====完=====
