@@ -1,5 +1,5 @@
-287397
-===== 部署坑148修复(点歌全路径审计) 287397 =====
+287398
+===== 部署坑148修复 点歌全路径审计 287398 =====
 cd /root/bot/bot
 echo "[1]下载新版:"
 curl -sL -H "Cache-Control: no-cache" -o /tmp/sr_new.py "https://raw.githubusercontent.com/Thousands91/-1/main/deploy/song_request.py?ts=$(date +%s)"
