@@ -1,6 +1,29 @@
-287412
-echo "===== 287412 拉取看护脚本全文 ====="
-wc -l /root/azar_autoheal.sh
-md5sum /root/azar_autoheal.sh
-cat /root/azar_autoheal.sh
+287413
+echo "===== 部署 autoheal v1.1 287413 ====="
+echo "[1]下载:"
+curl -sL -H "Cache-Control: no-cache" -o /tmp/ah_new.sh "https://raw.githubusercontent.com/Thousands91/-1/main/deploy/azar_autoheal.sh?ts=$(date +%s)"
+md5sum /tmp/ah_new.sh | cut -d' ' -f1 | sed 's/^/  md5: /'
+if [ "$(md5sum /tmp/ah_new.sh | cut -d' ' -f1)" != "37e2ad78dbe86cec5e02e5077c2e1299" ]; then echo "  md5不符,中止"; echo "=====完====="; exit 0; fi
+echo "[2]备份旧版(84ca92ed):"
+cp /root/azar_autoheal.sh /tmp/azar_autoheal_bak_84ca92ed.sh && echo "  OK"
+echo "[3]bash语法:"
+bash -n /tmp/ah_new.sh && echo "  OK" || echo "  FAIL"
+echo "[4]间隔计算逻辑真机实测:"
+bash -c '
+_LT=$(grep "发送 ->" /root/napcat.log 2>/dev/null | grep -oE "11-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}" | tail -1)
+_LR=$(grep "接收 <-" /root/napcat.log 2>/dev/null | grep -oE "11-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}" | tail -1)
+echo "  最后发送: $_LT / 最后收信: $_LR"
+_B=$(date -d "$(date +%Y)-${_LT}" +%s 2>/dev/null) && echo "  距最后发送: $(( $(date +%s) - _B ))秒"
+_B2=$(date -d "$(date +%Y)-${_LR}" +%s 2>/dev/null) && echo "  距最后收信: $(( $(date +%s) - _B2 ))秒"
+'
+echo "[5]安装+重启看护进程:"
+cp /tmp/ah_new.sh /root/azar_autoheal.sh
+LP=$(cat /root/.autoheal.lock/pid 2>/dev/null)
+kill "$LP" 2>/dev/null; sleep 2
+rm -rf /root/.autoheal.lock
+setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null &
+sleep 3
+echo "  新进程: $(pgrep -f azar_autoheal | head -1)  旧进程$LP已退"
+echo "[6]启动行验证(应v1.1):"
+tail -2 /root/autoheal.log
 echo "=====完====="
