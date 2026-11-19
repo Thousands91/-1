@@ -1,2 +1,52 @@
-<<<ALERT.txt>>>
-2026-11-19 18:32:14 阿萨尔已恢复在线
+<<<task_287384.txt>>>
+===== 任务287384 11-19 19:26:46 =====
+--- 命令 ---
+echo "===== 决斗/投掷/三把 三问题一次性诊断 287384 $(date '+%F %T') ====="
+echo "[1]18:17:10~18:17:35完整原文(决斗@用户A那条到底输出啥):"
+awk '/11-19 18:17:1[0-9]/,/11-19 18:17:3[5-9]/' /root/bot/bot/bot.log 2>/dev/null | head -50
+echo "[2]18:16:10~18:16:35完整原文(投掷那条分派):"
+awk '/11-19 18:16:1[0-9]/,/11-19 18:16:3[5-9]/' /root/bot/bot/bot.log 2>/dev/null | grep -iE "message.group|handled by|投掷|D20|六加两点|ai_chat|ask=|ans=" | head -30
+echo "[3]今日dice_cmd触发(lineno=38/54)及紧随发送,共几条:"
+grep -E "11-19" /root/bot/bot/bot.log 2>/dev/null | grep -E "games, lineno=(38|54|53)" | tail -20
+echo "[4]今日决斗分支特征串('你 .* 点,对方'/'赢了'/'输了')出现:"
+grep -E "11-19" /root/bot/bot/bot.log 2>/dev/null | grep -E "你.*点，对方|你赢了|你输了|跟我决斗" | tail -10
+echo "[5]games.py当前md5:"
+md5sum /root/bot/bot/plugins/games.py | cut -c1-8
+echo "=====完====="
+--- 输出 ---
+===== 决斗/投掷/三把 三问题一次性诊断 287384 2026-11-19 19:26:46 =====
+[1]18:17:10~18:17:35完整原文(决斗@用户A那条到底输出啥):
+11-19 18:17:16 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1149490784 from 3273077048@[群:562796842] '决斗[at:qq=1561950850] '
+11-19 18:17:16 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-19 18:17:16 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-19 18:17:16 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-19 18:17:16 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
+11-19 18:17:22 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-19 18:17:22 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+11-19 18:17:37 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1226639738 from 1561950850@[群:562796842] '？'
+[2]18:16:10~18:16:35完整原文(投掷那条分派):
+11-19 18:16:16 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1706993528 from 3273077048@[群:562796842] '[at:qq=3427943187] 投掷'
+11-19 18:16:16 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=92)
+11-19 18:16:16 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=188)
+11-19 18:16:16 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-19 18:16:16 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
+11-19 18:16:18 [INFO] ai_chat | [联网] 模型自报搜词：投掷 d20
+11-19 18:16:21 [INFO] ai_chat | [联网] 走搜狗抓到 3 条
+11-19 18:16:22 [INFO] ai_chat | [联网] 「投掷」检索到线索，重答一次
+11-19 18:16:23 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-19 18:16:24 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-19 18:16:32 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+11-19 18:16:38 [INFO] ai_chat | [核对·调试] ask='投掷' lead=False contra=False agree=False dodge=False ans='D20，六加两点。'
+[3]今日dice_cmd触发(lineno=38/54)及紧随发送,共几条:
+11-19 18:16:44 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=38)
+11-19 18:16:56 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=38) running complete
+11-19 18:16:56 [ERROR] nonebot | Running Matcher(type='message', module=plugins.games, lineno=38) failed.
+11-19 18:16:56 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=38)
+11-19 18:17:08 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=38) running complete
+11-19 18:17:08 [ERROR] nonebot | Running Matcher(type='message', module=plugins.games, lineno=38) failed.
+11-19 18:17:50 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=38)
+11-19 18:17:50 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=38) running complete
+[4]今日决斗分支特征串('你 .* 点,对方'/'赢了'/'输了')出现:
+[5]games.py当前md5:
+ca96803f
+=====完=====
