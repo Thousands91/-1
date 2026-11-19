@@ -1,11 +1,5 @@
-287366
-echo "===== 14:43:57回1那6秒精细日志 287366 ====="
-echo "[1]14:43:57~14:44:10 全部bot.log原文(不过滤):"
-awk '/11-19 14:43:5[7-9]/,/11-19 14:44:1[0-2]/' /root/bot/bot/bot.log 2>/dev/null | head -80
-echo "[2]14:43~14:46 发卡/语音/文件/如实告知关键字:"
-grep -E "11-19 14:4[3-6]" /root/bot/bot/bot.log 2>/dev/null | grep -iE "发卡|语音条|record|send_file|文件|柜上真放|没那么简单|如实|error|exception|traceback|custom卡|官方卡|找补" | tail -30
-echo "[3]14:43~14:46 点歌handler内部日志(取音频/年份/秒):"
-grep -E "11-19 14:4[3-6]" /root/bot/bot/bot.log 2>/dev/null | grep -iE "fetch|音频|sec|秒|KB|src=|netease|kuwo|kugou|migu|qq" | tail -25
-echo "[4]确认pick_cmd行号361和42各是什么(日志里的两个matcher):"
-sed -n '40,44p;359,363p' /root/bot/bot/plugins/song_request.py
-echo "=====完====="
+287367
+echo "BASE64_START"
+base64 -w0 /root/bot/bot/plugins/song_request.py.bak_287361
+echo ""
+echo "BASE64_END"
