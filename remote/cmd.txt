@@ -1,12 +1,19 @@
-287404
-echo "===== 287404 NapCat诊断+取码 ====="
-echo "[1]QQ进程:"
-pgrep -af "opt/QQ" | head -3
-echo "[2]最近登录报错(归因先看日志):"
-grep -E "ErrType|ErrCode|Login.*[Ee]rror|掉线|下线|二维码" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat-run.log /root/napcat.log 2>/dev/null | tail -8
-echo "[3]二维码文件时间:"
-ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>&1
-echo "[4]二维码base64:"
-base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null | head -c 6000
-echo ""
+287405
+echo "===== 287405 掉线归因取证 ====="
+echo "[0]当前登录状态:"
+bash /root/logincheck.sh 2>&1 | head -5
+echo "[1]NapCat主进程启动时间(自杀重启证据):"
+ps -o pid,lstart,etime,cmd -p $(pgrep -f "disable-software-rasterizer" | head -1) 2>&1 | head -3
+echo "[2]今天全部登录报错时间线:"
+grep -E "Login Error|掉线|下线|Session|kicked" /root/napcat.log 2>/dev/null | grep "11-19" | tail -15
+echo "[3]bot.log今天心跳跳变时间线:"
+grep "状态跳变" /root/bot/bot/bot.log | grep "11-19" | tail -10
+echo "[4]内存压力:"
+free -m | head -3
+cat /proc/meminfo 2>/dev/null | grep -E "MemAvailable|SwapFree" | head -2
+echo "[5]看护/健康台账最近10行:"
+ls /root/*.log /root/health* /root/watch* 2>/dev/null | head -8
+tail -10 /root/health.log 2>/dev/null || tail -10 /root/watchdog.log 2>/dev/null || echo "无独立台账"
+echo "[6]napcat-run.log最近崩溃/OOM证据:"
+grep -E "Fatal|crash|OOM|killed|内存" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat-run.log 2>/dev/null | tail -5
 echo "=====完====="
