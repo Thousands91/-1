@@ -1,54 +1,76 @@
-<<<task_287318.txt>>>
-===== 任务287318 11-19 12:22:38 =====
+<<<task_287319.txt>>>
+===== 任务287319 11-19 12:31:05 =====
 --- 命令 ---
-echo "===== 昨晚登录方式细节 287318 ====="
-echo "---[1]00:42前后登录方式关键词---"
-grep -aE "快速登录|二维码登录方式|登录方式|loginType" /root/napcat.log 2>/dev/null | tail -15
-echo "[1完]"
-echo "---[2]remote_ctl.log昨晚看护动作---"
-grep -aE "11-18 (2[0-3]):|11-19 (0[0-2]):" /root/remote_ctl.log 2>/dev/null | grep -aE "看护|保险丝|拉起|重启|NapCat" | tail -35
-echo "[2完]"
-echo "---[3]当前QQ进程启动参数---"
-pgrep -af 'opt/QQ/[q]q' | head -2
-echo "---[4]离线/风控原因码---"
-grep -aE "ErrCode|errCode|Kicked|kicked|失效|风险|风控|验证" /root/napcat-restart.log 2>/dev/null | tail -20
-echo "[4完]"
+echo "===== 黑匣子v2诊断 287319 $(date '+%F %T') ====="
+echo "[1]现有offline_watch:"
+md5sum /root/offline_watch.sh 2>/dev/null
+cat /root/offline_watch.sh 2>/dev/null | head -36
+echo "[2]进程:"
+pgrep -af 'offline_watch|netmon' | head -6
+echo "[3]NapCat日志目录:"
+ls -lt /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat/logs/ 2>/dev/null | head -6
+echo "[4]离线事件行样本:"
+grep -h "账号状态变更为离线" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat/logs/*.log /root/napcat-restart.log 2>/dev/null | tail -3
+echo "[5]KickedOffLine行样本:"
+grep -h "KickedOffLine" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat/logs/*.log /root/napcat-restart.log 2>/dev/null | tail -3
+echo "[6]GPU崩溃行样本:"
+grep -h "GPU process launch failed" /root/napcat-restart.log /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat/logs/*.log 2>/dev/null | tail -3
+echo "[7]forensics现状:"
+wc -l /root/offline_forensics.log 2>/dev/null
+tail -12 /root/offline_forensics.log 2>/dev/null
+echo "[8]netmon尾部:"
+tail -3 /root/netmon.log 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-===== 昨晚登录方式细节 287318 =====
----[1]00:42前后登录方式关键词---
-11-19 11:44:55 [[32minfo[39m] 没有 -q 指令指定快速登录，将使用二维码登录方式
-11-19 11:44:55 [[32minfo[39m] 可用于快速登录 of QQ：
-[1完]
----[2]remote_ctl.log昨晚看护动作---
-[11-19 02:13] 看护：未登录且码5562s未刷新，尝试重启NapCat
-[11-19 02:13] 看护:自动拉起NapCat(24h内第1次)
-[11-19 02:13] 看护：未登录且码5562s未刷新，尝试重启NapCat
-[11-19 02:13] 看护:自动拉起NapCat(24h内第1次)
-[2完]
----[3]当前QQ进程启动参数---
-10788 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
-10801 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
----[4]离线/风控原因码---
-11-19 11:04:43 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-19 11:06:45 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-19 11:08:47 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-19 11:10:50 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-19 11:12:52 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-19 11:14:53 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-19 11:16:55 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-19 11:18:56 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-19 11:20:58 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-19 11:22:59 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-19 11:25:01 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-19 11:27:02 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-19 11:29:04 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-19 11:31:06 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-19 11:33:09 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-19 11:35:11 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-19 11:37:14 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-19 11:39:16 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-19 11:41:17 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-19 11:43:18 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-[4完]
+===== 黑匣子v2诊断 287319 2026-11-19 12:31:05 =====
+[1]现有offline_watch:
+1dcf574f15272e00ffc5ca3f1406ab7b  /root/offline_watch.sh
+#!/bin/bash
+# 掉线取证器：检测到"账号状态变更为离线"立即抓现场快照到 offline_forensics.log
+CONF=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat
+OUT=/root/offline_forensics.log
+NEWEST=$(ls -t "$CONF/napcat/logs/"*.log /root/napcat-restart.log 2>/dev/null | head -1)
+PREV=0
+[ -n "$NEWEST" ] && PREV=$(grep -c "账号状态变更为离线" "$NEWEST" 2>/dev/null || echo 0)
+while true; do
+  NEWEST=$(ls -t "$CONF/napcat/logs/"*.log /root/napcat-restart.log 2>/dev/null | head -1)
+  if [ -n "$NEWEST" ]; then
+    N=$(grep -c "账号状态变更为离线" "$NEWEST" 2>/dev/null || echo 0)
+    if [ "${N:-0}" -gt "$PREV" ]; then
+      {
+        echo "===== 掉线事件 $(date '+%m-%d %H:%M:%S') ====="
+        echo "来源: $NEWEST"
+        echo "-- 事发前网络心跳(最近8条) --"
+        tail -8 /root/netmon.log 2>/dev/null
+        echo "-- 即时网络 --"
+        ping -c2 -W2 223.5.5.5 2>&1 | tail -2
+        echo "-- 系统状态 --"
+        uptime
+        free -m | head -2
+        df -h / | tail -1
+        echo "电量: $(cat /sys/class/power_supply/battery/capacity 2>/dev/null)"
+        echo "QQ进程数: $(pgrep -fc 'opt/QQ/qq' 2>/dev/null)"
+        echo "-- 日志尾部 --"
+        tail -15 "$NEWEST" 2>/dev/null
+      } >> "$OUT" 2>&1
+      PREV=$N
+    fi
+  fi
+  sleep 10
+done
+[2]进程:
+18787 bash /root/offline_watch.sh
+18788 bash /root/netmon.sh
+[3]NapCat日志目录:
+[4]离线事件行样本:
+[5]KickedOffLine行样本:
+[6]GPU崩溃行样本:
+[17993:1119/065035.034023:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[17993:1119/065035.039420:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[17993:1119/065035.044684:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[7]forensics现状:
+[8]netmon尾部:
+11-19 12:28:57 ping=FAILms batt=
+11-19 12:29:59 ping=FAILms batt=
+11-19 12:31:01 ping=FAILms batt=
 =====完=====
