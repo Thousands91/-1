@@ -1,47 +1,52 @@
-<<<task_287321.txt>>>
-===== 任务287321 11-19 12:33:07 =====
+<<<task_287322.txt>>>
+===== 任务287322 11-19 12:34:00 =====
 --- 命令 ---
-echo "===A napcat.log大小与格式==="
-ls -la /root/napcat.log 2>/dev/null
-tail -6 /root/napcat.log 2>/dev/null
-echo "===B napcat-restart尾部格式==="
-tail -6 /root/napcat-restart.log 2>/dev/null
-echo "===C 历史离线事件在所有日志文件里找==="
-for f in /root/napcat.log /root/napcat-restart.log /root/bot.log; do
-  n=$(grep -c "账号状态变更为离线" "$f" 2>/dev/null); k=$(grep -c "KickedOffLine" "$f" 2>/dev/null)
-  echo "$f 离线=$n 被踢=$k"
-done
-echo "===D netmon时间格式==="
-head -2 /root/netmon.log 2>/dev/null
-tail -2 /root/netmon.log 2>/dev/null
-echo "===E 设备时区==="
-date '+%F %T %Z'
+echo "===A napcat.log开头与类型==="
+head -4 /root/napcat.log 2>/dev/null
+file /root/napcat.log 2>/dev/null
+echo "行数:"
+wc -l /root/napcat.log 2>/dev/null
+echo "含[NapCat]可读行数:"
+grep -a -c "NapCat\|login\|离线\|\[I\]\|\[E\]" /root/napcat.log 2>/dev/null
+echo "===B 所有日志按时间排序(近20)==="
+find /root -type f -name "*.log" -newermt "2026-11-19 00:00:00" 2>/dev/null | head -20
+echo "===C NapCat配置里的日志路径==="
+grep -rn "logPath\|log_path\|logDir\|日志" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/ 2>/dev/null | head -8
+echo "===D 全盘搜NapCat真实日志(内容特征)==="
+grep -rl "NapCat Started\|[NapCat]\|账号状态" /root --include="*.log" 2>/dev/null | head -8
 echo "===完==="
 --- 输出 ---
-===A napcat.log大小与格式===
--rw-r--r-- 1 root root 155122 Nov 19 12:33 /root/napcat.log
-ee3875efa4645cee41469891bd0eda400ae001d09356f1ed63c17f4bd9be4b07
-f5b04566cbac5944ebd84d3a98fdb62b57994ea35971e9a0c0027c5793842021
-64efb3802236965765770e8a248f5d5e7a701175f1a87b7f4754df1a43f97fbc
-7085f0a9c545536edec620df1c6e70ef40a728ff246f105d9536564c74637beb
-ae3768c90a78b7bbd732b72f027c1a77522eba8b4ee4df7e62ddbfc1920a90f9
-2437cc284f19c27c2845780097e48f41f539ad44ff8b8de324e20a801fdf70a3
-===B napcat-restart尾部格式===
-cdca3cd0e9f21ce7b771a0529acf4882719744215fc5eaa511333db6a5010b04
-be1ffe652bb564335091330fdb4ffe0a40095bee8a530572ecd60d58e8b8c7de
-6026e974d49be992c693524e1418180d0a3f158bc4245c21b7a99f6a43949058
-7b3e72b81e50566ef71423a7ed4bac679d9f62f7b2ae5dd2acf3d9db9cf86e2d
-497929851969d31109e15a921f9d68faad54af012a9dd2d408d5d26d6a74a9c8
-[19909:1119/114442.258023:FATAL:electron/shell/browser/electron_browser_main_parts.cc:529] Failed to shutdown.
-===C 历史离线事件在所有日志文件里找===
-/root/napcat.log 离线=0 被踢=0
-/root/napcat-restart.log 离线=0 被踢=0
-/root/bot.log 离线= 被踢=
-===D netmon时间格式===
-11-17 18:55:52 ping=FAILms batt=
-11-17 18:56:54 ping=FAILms batt=
-11-19 12:31:01 ping=FAILms batt=
-11-19 12:32:07 ping=10.7ms batt=
-===E 设备时区===
-2026-11-19 12:33:07 CST
+===A napcat.log开头与类型===
+not mini app. 
+[preload] succeeded. /root/Napcat/opt/QQ/resources/app/major.node
+[preload] succeeded. /root/Napcat/opt/QQ/resources/app/major.node
+[10801:1119/114445.880421:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+/root/napcat.log: data
+行数:
+2208 /root/napcat.log
+含[NapCat]可读行数:
+16
+===B 所有日志按时间排序(近20)===
+/root/bot/bot/data/voice_probe.log
+/root/bot/bot/bot.log
+/root/remote_ctl.log
+/root/napcat-restart.log
+/root/napcat.log
+/root/tick.log
+/root/ip.log
+/root/login_state.log
+/root/health.log
+/root/netmon.log
+/root/music_sign_v4.log
+/root/autoheal.log
+===C NapCat配置里的日志路径===
+===D 全盘搜NapCat真实日志(内容特征)===
+/root/bot/bot/data/voice_probe.log
+/root/bot/bot/bot.log
+/root/asar-sync/logs/bot.log
+/root/Napcat/opt/QQ/resources/app/rsds.log
+/root/asar_sync_boot.log
+/root/remote_boot.log
+/root/remote_ctl.log
+/root/napcat-restart.log
 ===完===
