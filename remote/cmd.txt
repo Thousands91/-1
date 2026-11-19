@@ -1,6 +1,11 @@
-287402
-echo "===== 287402 在线复查 ====="
-pgrep -af "venv/bin/python main.py" | head -1
-bash /root/logincheck.sh 2>/dev/null | grep -oE "\[[^]]+\]" | head -1
-tail -3 /root/bot/bot/bot.log | grep -E "WebSocket|connected|在线|message" | head -2
+287403
+echo "===== 287403 登录诊断 ====="
+echo "[1]logincheck全输出:"
+bash /root/logincheck.sh 2>&1 | head -10
+echo "[2]NapCat进程:"
+pgrep -af "napcat\|NapCat" | head -3
+echo "[3]bot.log最近WS/连接记录:"
+grep -E "WebSocket|OneBot V11 .*connect|连接" /root/bot/bot/bot.log | tail -5
+echo "[4]最近5条消息事件:"
+grep "message.group" /root/bot/bot/bot.log | tail -3
 echo "=====完====="
