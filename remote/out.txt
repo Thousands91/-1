@@ -1,76 +1,39 @@
-<<<task_287319.txt>>>
-===== 任务287319 11-19 12:31:05 =====
+<<<task_287320.txt>>>
+===== 任务287320 11-19 12:31:58 =====
 --- 命令 ---
-echo "===== 黑匣子v2诊断 287319 $(date '+%F %T') ====="
-echo "[1]现有offline_watch:"
-md5sum /root/offline_watch.sh 2>/dev/null
-cat /root/offline_watch.sh 2>/dev/null | head -36
-echo "[2]进程:"
-pgrep -af 'offline_watch|netmon' | head -6
-echo "[3]NapCat日志目录:"
-ls -lt /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat/logs/ 2>/dev/null | head -6
-echo "[4]离线事件行样本:"
-grep -h "账号状态变更为离线" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat/logs/*.log /root/napcat-restart.log 2>/dev/null | tail -3
+echo "===A 找NapCat日志真实位置==="
+find /root/Napcat /root -maxdepth 8 -type f -name "*.log" 2>/dev/null | grep -i -E "napcat|Napcat" | head -12
+echo "===B restart日志存在吗==="
+ls -la /root/napcat-restart.log 2>/dev/null
+echo "===C 全盘找离线事件行(限3)==="
+grep -rh "账号状态变更为离线" /root --include="*.log" 2>/dev/null | tail -3
+echo "===D 全盘找KickedOffLine(限3)==="
+grep -rh "KickedOffLine" /root --include="*.log" 2>/dev/null | tail -3
+echo "===E 全盘找GPU行(限3)==="
+grep -rh "GPU process launch failed" /root --include="*.log" 2>/dev/null | tail -3
+echo "===F forensics历史==="
+wc -l /root/offline_forensics.log 2>/dev/null
+tail -14 /root/offline_forensics.log 2>/dev/null
+echo "===完==="
+--- 输出 ---
+===A 找NapCat日志真实位置===
+/root/Napcat/opt/QQ/resources/app/rsds.log
+/root/Napcat/opt/QQ/resources/app/rsds.log
+/root/napcat-restart.log
+/root/napcat.log
+===B restart日志存在吗===
+-rw-r--r-- 1 root root 1422882 Nov 19 11:58 /root/napcat-restart.log
+===C 全盘找离线事件行(限3)===
+# 掉线取证器：检测到"账号状态变更为离线"立即抓现场快照到 offline_forensics.log
+[ -n "$NEWEST" ] && PREV=$(grep -c "账号状态变更为离线" "$NEWEST" 2>/dev/null || echo 0)
+    N=$(grep -c "账号状态变更为离线" "$NEWEST" 2>/dev/null || echo 0)
+===D 全盘找KickedOffLine(限3)===
 echo "[5]KickedOffLine行样本:"
 grep -h "KickedOffLine" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat/logs/*.log /root/napcat-restart.log 2>/dev/null | tail -3
-echo "[6]GPU崩溃行样本:"
-grep -h "GPU process launch failed" /root/napcat-restart.log /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat/logs/*.log 2>/dev/null | tail -3
-echo "[7]forensics现状:"
-wc -l /root/offline_forensics.log 2>/dev/null
-tail -12 /root/offline_forensics.log 2>/dev/null
-echo "[8]netmon尾部:"
-tail -3 /root/netmon.log 2>/dev/null
-echo "=====完====="
---- 输出 ---
-===== 黑匣子v2诊断 287319 2026-11-19 12:31:05 =====
-[1]现有offline_watch:
-1dcf574f15272e00ffc5ca3f1406ab7b  /root/offline_watch.sh
-#!/bin/bash
-# 掉线取证器：检测到"账号状态变更为离线"立即抓现场快照到 offline_forensics.log
-CONF=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat
-OUT=/root/offline_forensics.log
-NEWEST=$(ls -t "$CONF/napcat/logs/"*.log /root/napcat-restart.log 2>/dev/null | head -1)
-PREV=0
-[ -n "$NEWEST" ] && PREV=$(grep -c "账号状态变更为离线" "$NEWEST" 2>/dev/null || echo 0)
-while true; do
-  NEWEST=$(ls -t "$CONF/napcat/logs/"*.log /root/napcat-restart.log 2>/dev/null | head -1)
-  if [ -n "$NEWEST" ]; then
-    N=$(grep -c "账号状态变更为离线" "$NEWEST" 2>/dev/null || echo 0)
-    if [ "${N:-0}" -gt "$PREV" ]; then
-      {
-        echo "===== 掉线事件 $(date '+%m-%d %H:%M:%S') ====="
-        echo "来源: $NEWEST"
-        echo "-- 事发前网络心跳(最近8条) --"
-        tail -8 /root/netmon.log 2>/dev/null
-        echo "-- 即时网络 --"
-        ping -c2 -W2 223.5.5.5 2>&1 | tail -2
-        echo "-- 系统状态 --"
-        uptime
-        free -m | head -2
-        df -h / | tail -1
-        echo "电量: $(cat /sys/class/power_supply/battery/capacity 2>/dev/null)"
-        echo "QQ进程数: $(pgrep -fc 'opt/QQ/qq' 2>/dev/null)"
-        echo "-- 日志尾部 --"
-        tail -15 "$NEWEST" 2>/dev/null
-      } >> "$OUT" 2>&1
-      PREV=$N
-    fi
-  fi
-  sleep 10
-done
-[2]进程:
-18787 bash /root/offline_watch.sh
-18788 bash /root/netmon.sh
-[3]NapCat日志目录:
-[4]离线事件行样本:
 [5]KickedOffLine行样本:
-[6]GPU崩溃行样本:
+===E 全盘找GPU行(限3)===
 [17993:1119/065035.034023:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
 [17993:1119/065035.039420:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
 [17993:1119/065035.044684:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[7]forensics现状:
-[8]netmon尾部:
-11-19 12:28:57 ping=FAILms batt=
-11-19 12:29:59 ping=FAILms batt=
-11-19 12:31:01 ping=FAILms batt=
-=====完=====
+===F forensics历史===
+===完===
