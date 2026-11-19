@@ -1,17 +1,15 @@
-287321
-echo "===A napcat.log大小与格式==="
-ls -la /root/napcat.log 2>/dev/null
-tail -6 /root/napcat.log 2>/dev/null
-echo "===B napcat-restart尾部格式==="
-tail -6 /root/napcat-restart.log 2>/dev/null
-echo "===C 历史离线事件在所有日志文件里找==="
-for f in /root/napcat.log /root/napcat-restart.log /root/bot.log; do
-  n=$(grep -c "账号状态变更为离线" "$f" 2>/dev/null); k=$(grep -c "KickedOffLine" "$f" 2>/dev/null)
-  echo "$f 离线=$n 被踢=$k"
-done
-echo "===D netmon时间格式==="
-head -2 /root/netmon.log 2>/dev/null
-tail -2 /root/netmon.log 2>/dev/null
-echo "===E 设备时区==="
-date '+%F %T %Z'
+287322
+echo "===A napcat.log开头与类型==="
+head -4 /root/napcat.log 2>/dev/null
+file /root/napcat.log 2>/dev/null
+echo "行数:"
+wc -l /root/napcat.log 2>/dev/null
+echo "含[NapCat]可读行数:"
+grep -a -c "NapCat\|login\|离线\|\[I\]\|\[E\]" /root/napcat.log 2>/dev/null
+echo "===B 所有日志按时间排序(近20)==="
+find /root -type f -name "*.log" -newermt "2026-11-19 00:00:00" 2>/dev/null | head -20
+echo "===C NapCat配置里的日志路径==="
+grep -rn "logPath\|log_path\|logDir\|日志" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/ 2>/dev/null | head -8
+echo "===D 全盘搜NapCat真实日志(内容特征)==="
+grep -rl "NapCat Started\|[NapCat]\|账号状态" /root --include="*.log" 2>/dev/null | head -8
 echo "===完==="
