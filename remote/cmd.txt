@@ -1,5 +1,17 @@
-287393
-echo "===== 探测 287393 $(date '+%F %T') ====="
-echo "ai_md5=$(md5sum /root/bot/bot/plugins/ai_chat.py|cut -c1-8) games_md5=$(md5sum /root/bot/bot/plugins/games.py|cut -c1-8)"
-echo "worker=$(pgrep -f remote_ctl_v6|head -1) bot=$(pgrep -f '/root/bot/venv/bin/python main.py'|head -1)"
+287394
+echo "===== 重启大脑加载修复版 287394 $(date '+%F %T') ====="
+echo "[1]确认md5(应ai=4f1634c1 games=d4c0268f):"
+echo "  ai=$(md5sum /root/bot/bot/plugins/ai_chat.py|cut -c1-8) games=$(md5sum /root/bot/bot/plugins/games.py|cut -c1-8)"
+OLDPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
+echo "[2]旧PID=$OLDPID,重启:"
+kill "$OLDPID" 2>/dev/null; sleep 3
+( cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null & )
+sleep 15
+NEWPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
+echo "[3]新PID=$NEWPID"
+echo "[4]插件加载:"
+grep -iE "Succeeded to load plugin|Failed to load plugin" /root/bot/bot/bot.log 2>/dev/null | tail -12
+echo "[5]横幅+在线:"
+grep "QQ 群机器人启动成功" /root/bot/bot/bot.log 2>/dev/null | tail -1
+bash /root/logincheck.sh 2>/dev/null | grep -oE '\[[^]]+\]' | head -1
 echo "=====完====="
