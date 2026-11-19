@@ -1,130 +1,25 @@
-<<<task_287344.txt>>>
-===== 任务287344 11-19 13:27:21 =====
+<<<task_287345.txt>>>
+===== 任务287345 11-19 13:39:06 =====
 --- 命令 ---
-echo "===== 设备端bot代码指纹盘点 287344 $(date '+%F %T') ====="
-echo "===A 所有py文件md5+行数==="
-find /root/bot/bot -name "*.py" -not -path "*__pycache__*" | sort | while read f; do echo "$(md5sum "$f"|cut -c1-8) $(wc -l < "$f") ${f#/root/bot/bot/}"; done
-echo "===B 主程序与配置==="
-cat /root/bot/bot/main.py
-echo "---config---"
-cat /root/bot/bot/config.py
-echo "===C 插件加载日志==="
-grep -i "Succeeded to load plugin\|Failed to load plugin\|Plugin.*error" /root/bot/bot/bot.log 2>/dev/null | tail -25
-echo "===D bot进程与端口==="
-pgrep -af 'python main.py' | head -3
+echo "===== 部署前状态确认 287345 $(date '+%F %T') ====="
+echo "[1]登录态(最后3行):"
+tail -3 /root/login_state.log 2>/dev/null
+echo "[2]bot进程:"
+pgrep -af 'python main.py' | head -2
+echo "[3]四个待改文件当前md5(应为原始版):"
+for f in ai_chat.py book_find.py image_search_multisource.py song_request.py; do echo "$(md5sum /root/bot/bot/plugins/$f|cut -c1-8) $f"; done
 echo "=====完====="
 --- 输出 ---
-===== 设备端bot代码指纹盘点 287344 2026-11-19 13:27:21 =====
-===A 所有py文件md5+行数===
-f938bfa2 23 config.py
-2ce3f1af 42 main.py
-1b5727cc 247 persona/__init__.py
-11ff2e0c 2283 plugins/ai_chat.py
-2316c160 584 plugins/book_find.py
-4e5d5151 298 plugins/chess_game.py
-a6604753 516 plugins/fortune.py
-ca96803f 266 plugins/games.py
-969ef8f4 913 plugins/image_search_multisource.py
-cff3795a 202 plugins/keyword_reply.py
-635b50d4 130 plugins/link_probe.py
-7a66d0bf 97 plugins/news.py
-4cd2e170 975 plugins/song_request.py
-0b78a02b 174 plugins/weather.py
-0e7c8400 166 tests_test_games_full.py
-c34edb2c 117 tests_test_mute_v2.py
-===B 主程序与配置===
-"""
-NoneBot 启动入口
-"""
-
-import sys
-from pathlib import Path
-
-from nonebot import get_driver, init, load_plugins
-
-from config import config  # noqa: F401  导入即完成配置注册
-
-# 让 persona 能被插件 import
-sys.path.insert(0, str(Path(__file__).parent))
-
-# 初始化（NoneBot 2.x 的 init() 不接受参数）
-init()
-
-# 必须显式注册适配器，否则机器人收不到任何 QQ 消息
-from nonebot.adapters.onebot.v11 import Adapter  # noqa: E402
-
-get_driver().register_adapter(Adapter)
-
-# 加载所有插件
-plugins_path = Path(__file__).parent / "plugins"
-load_plugins(str(plugins_path))
-
-
-@get_driver().on_startup
-async def _startup():
-    from loguru import logger
-
-    logger.info("=" * 50)
-    logger.info("QQ 群机器人启动成功 ✅")
-    logger.info("OneBot v11 反向 WS：/onebot/v11/ws")
-    logger.info("请确认 NapCat / go-cqhttp 已登录")
-    logger.info("=" * 50)
-
-
-if __name__ == "__main__":
-    from nonebot import run
-
-    run()
----config---
-from pathlib import Path
-
-from dotenv import load_dotenv
-from nonebot.config import Env, Config
-
-# 加载 .env
-load_dotenv(Path(__file__).parent / ".env")
-
-env = Env()
-
-# 默认配置（可被 .env 同名项覆盖）
-defaults = {
-    "superusers": set(),
-    "nickname": {"Bot", "机器人", "bot", "BOT"},
-    # 空字符串让命令不带前缀也能用；.env 里的 COMMAND_START 是同一件事的权威来源
-    "command_start": {"", "/", "!", "！"},
-    "apscheduler_autostart": True,
-    "apscheduler_config": {"apscheduler.timezone": "Asia/Shanghai"},
-}
-
-# 先合并再传：defaults 和 env 里同名键重复传会报 TypeError
-_merged = {**defaults, **env.dict()}
-config = Config(**_merged)
-===C 插件加载日志===
-11-18 09:15:15 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-11-18 09:15:15 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-18 09:15:15 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
-11-18 09:15:15 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
-11-18 10:08:11 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
-11-18 10:08:12 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
-11-18 10:08:12 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-18 10:08:12 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
-11-18 10:08:12 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-11-18 10:08:13 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
-11-18 10:08:13 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
-11-18 10:08:13 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
-11-18 10:08:13 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
-11-18 10:08:13 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
-11-19 13:03:25 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
-11-19 13:03:27 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
-11-19 13:03:27 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
-===D bot进程与端口===
+===== 部署前状态确认 287345 2026-11-19 13:39:06 =====
+[1]登录态(最后3行):
+2026-11-19 13:24:12 [未登录]
+2026-11-19 13:29:13 [未登录]
+2026-11-19 13:34:14 [未登录]
+[2]bot进程:
 9869 /root/bot/venv/bin/python main.py
+[3]四个待改文件当前md5(应为原始版):
+11ff2e0c ai_chat.py
+2316c160 book_find.py
+969ef8f4 image_search_multisource.py
+4cd2e170 song_request.py
 =====完=====
