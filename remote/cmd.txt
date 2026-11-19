@@ -1,19 +1,13 @@
-287419
-echo "===== 重试部署 v1.2.1 287419 ====="
-curl -sL -H "Cache-Control: no-cache" -o /tmp/ah3.sh "https://raw.githubusercontent.com/Thousands91/-1/main/deploy/azar_autoheal.sh?ts=$(date +%s)&v=121"
-M=$(md5sum /tmp/ah3.sh | cut -d' ' -f1); echo "  md5: $M"
-if [ "$M" != "4cc1299ac0740dbcfc819facddb55dd5" ]; then echo "  md5不符,中止(可能CDN未刷新,稍后再试)"; echo "=====完====="; exit 0; fi
-bash -n /tmp/ah3.sh && echo "  语法OK"
-echo "[2]wake-lock退出码:"
-/data/data/com.termux/files/usr/bin/termux-wake-lock; echo "  exit=$?"
-echo "[3]安装+重启看护:"
-cp /tmp/ah3.sh /root/azar_autoheal.sh
-LP=$(cat /root/.autoheal.lock/pid 2>/dev/null)
-kill "$LP" 2>/dev/null; sleep 2
-rm -rf /root/.autoheal.lock
-setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null &
-sleep 3
-echo "  新进程: $(pgrep -f azar_autoheal | head -1)"
-echo "[4]启动行+首条告警(会话寿命应?分):"
-tail -2 /root/autoheal.log
+287420
+echo "===== 287420 回线核对 ====="
+echo "[1]登录状态:"
+bash /root/logincheck.sh 2>&1 | grep -E "^\[" | head -1
+echo "[2]登录成功时刻:"
+grep -E "登录成功|扫码" /root/napcat.log | tail -3
+echo "[3]login_state最新状态变化:"
+tail -2 /root/login_state.log
+echo "[4]大脑进程:"
+pgrep -f "main.py" | head -1
+echo "[5]最近收到的消息:"
+grep "message" /root/bot/bot/bot.log | tail -2
 echo "=====完====="
