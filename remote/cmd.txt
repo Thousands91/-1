@@ -1,15 +1,12 @@
-287329
-echo "===A 配置文件修改时间==="
-CFG=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config
-stat -c '%y %n' "$CFG"/napcat_3427943187.json "$CFG"/napcat.json "$CFG"/napcat_protocol_3427943187.json 2>/dev/null
-echo "===B napcat.json和3427943187配置是否一致==="
-diff "$CFG/napcat.json" "$CFG/napcat_3427943187.json" 2>/dev/null && echo "两文件完全相同" || echo "两文件有差异(见上)"
-echo "===C 协议配置全文==="
-cat "$CFG/napcat_protocol_3427943187.json" 2>/dev/null
-echo "===D onebot配置全文==="
-cat "$CFG/onebot11_3427943187.json" 2>/dev/null
-echo "===E 历史备份/旧配置==="
-find /root -maxdepth 6 -type f \( -name "*napcat*.json*" -o -name "*config*.bak" \) 2>/dev/null | grep -v node_modules | head -15
-echo "===F 启动脚本里有没有写bypass配置==="
-grep -rn "bypass\|o3HookMode\|config" /root/napcat.sh /root/start_nap.sh /root/azar_login.sh 2>/dev/null | head -15
+287330
+echo "===A NoneBot与Adapter版本==="
+cd /root/bot/bot && /root/bot/venv/bin/pip show nonebot2 nonebot-adapter-onebot 2>/dev/null | grep -E "^(Name|Version):"
+echo "===B bot.log里history有没有元事件痕迹==="
+grep -c -i -E "meta_event|lifecycle|heartbeat|connect|disconnect" /root/bot/bot/bot.log 2>/dev/null
+echo "===C bot.log最后在线时段的事件类型样本==="
+grep -oE '"post_type": ?"[a-z_]+"|"meta_event_type": ?"[a-z_]+"|\[Info\]|\[Warning\]' /root/bot/bot/bot.log 2>/dev/null | sort | uniq -c | head -15
+echo "===D NapCat是否上报bot_offline到WS==="
+grep -c -i -E "bot_offline|self_offline|lifecycle|meta_event" /root/napcat.log 2>/dev/null
+echo "===E onebot heartInterval当前值==="
+grep "heartInterval\|reconnectInterval" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json 2>/dev/null
 echo "=====完====="
