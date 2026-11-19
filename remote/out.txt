@@ -1,40 +1,60 @@
-<<<task_287399.txt>>>
-===== 任务287399 11-19 22:21:53 =====
+<<<task_287400.txt>>>
+===== 任务287400 11-19 22:24:10 =====
 --- 命令 ---
-echo "===== 诊断287398现场 287399 ====="
-echo "[1]插件文件实际位置和md5:"
-ls -la /root/bot/bot/bot/plugins/song_request.py 2>&1
-md5sum /root/bot/bot/bot/plugins/song_request.py 2>&1
-echo "[2]下载的临时文件还在吗:"
-ls -la /tmp/sr_new.py /tmp/sr_bak_e4d365cc.py 2>&1
-echo "[3]当前大脑进程:"
-pgrep -af "main.py"
-P=$(pgrep -f "venv/bin/python main.py" | head -1)
-echo "[4]大脑工作目录:"
-readlink /proc/$P/cwd 2>&1
-echo "[5]最近日志:"
-tail -5 /root/bot/bot/bot.log
-echo "[6]在线状态:"
+echo "===== 部署坑148修复 绝对路径版 287400 ====="
+echo "[0]旧文件md5(应e4d365cc):"
+md5sum /root/bot/bot/plugins/song_request.py
+echo "[1]新文件md5(应9a5c7617):"
+md5sum /tmp/sr_new.py
+cp /root/bot/bot/plugins/song_request.py /tmp/sr_bak_e4d365cc.py
+cp /tmp/sr_new.py /root/bot/bot/plugins/song_request.py
+echo "[2]安装后md5(应9a5c7617):"
+md5sum /root/bot/bot/plugins/song_request.py
+echo "[3]语法:"
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/song_request.py && echo "  OK" || echo "  FAIL"
+echo "[4]假超时判定处数:"
+grep -c "_is_fake_timeout" /root/bot/bot/plugins/song_request.py
+echo "[5]重启大脑:"
+OLDPID=$(pgrep -f "venv/bin/python main.py" | head -1)
+kill "$OLDPID" 2>/dev/null; sleep 3
+( cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null & )
+sleep 15
+NEWPID=$(pgrep -f "venv/bin/python main.py" | head -1)
+echo "  旧$OLDPID→新$NEWPID  cwd:$(readlink /proc/$NEWPID/cwd 2>/dev/null)"
+echo "[6]插件加载(最近一次重启):"
+grep -E "Succeeded to load plugin|Failed to load" /root/bot/bot/bot.log | tail -12
+echo "[7]横幅+在线:"
+grep "QQ 群机器人启动成功" /root/bot/bot/bot.log | tail -1
 bash /root/logincheck.sh 2>/dev/null | grep -oE "\[[^]]+\]" | head -1
 echo "=====完====="
 --- 输出 ---
-===== 诊断287398现场 287399 =====
-[1]插件文件实际位置和md5:
-ls: cannot access '/root/bot/bot/bot/plugins/song_request.py': No such file or directory
-md5sum: /root/bot/bot/bot/plugins/song_request.py: No such file or directory
-[2]下载的临时文件还在吗:
-ls: cannot access '/tmp/sr_bak_e4d365cc.py': No such file or directory
--rw-r--r-- 1 root root 53391 Nov 19 22:17 /tmp/sr_new.py
-[3]当前大脑进程:
-15848 /root/bot/venv/bin/python main.py
-[4]大脑工作目录:
-/root/bot/bot
-[5]最近日志:
-11-19 22:21:52 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 584123871 from 2534970154@[群:1109952783] '[image:summary=[动画表情],file=6578DA4CC6759ABF46654190D6851BAC.png,sub_type=1,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhSZvhMU...,file_size=15838]'
-11-19 22:21:53 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 22:21:53 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 22:21:53 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1313)
-11-19 22:21:53 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1313) running complete
-[6]在线状态:
+===== 部署坑148修复 绝对路径版 287400 =====
+[0]旧文件md5(应e4d365cc):
+e4d365cc5ac37e272749f649f6d05eb2  /root/bot/bot/plugins/song_request.py
+[1]新文件md5(应9a5c7617):
+9a5c7617f5ad331f6c2cdc38e5b88726  /tmp/sr_new.py
+[2]安装后md5(应9a5c7617):
+9a5c7617f5ad331f6c2cdc38e5b88726  /root/bot/bot/plugins/song_request.py
+[3]语法:
+  OK
+[4]假超时判定处数:
+9
+[5]重启大脑:
+  旧15848→新17341  cwd:/root/bot/bot
+[6]插件加载(最近一次重启):
+11-19 22:18:02 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+11-19 22:24:24 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+11-19 22:24:24 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
+11-19 22:24:25 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+11-19 22:24:25 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+11-19 22:24:25 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
+11-19 22:24:25 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+11-19 22:24:25 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
+11-19 22:24:25 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
+11-19 22:24:25 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-19 22:24:25 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
+11-19 22:24:25 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
+[7]横幅+在线:
+11-19 22:24:26 [INFO] __main__ | QQ 群机器人启动成功 ✅
 [在线]
 =====完=====
