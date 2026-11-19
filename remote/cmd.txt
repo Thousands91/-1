@@ -1,30 +1,21 @@
-287415
-echo "===== 287415 每日在线时长统计 ====="
-awk '
-{
-  dd=substr($1,6,5)
-  if ($0 ~ /\[在线\]/) {on[dd]++}
-  else if ($0 ~ /\[未登录\]/) {off[dd]++}
-  else if ($0 ~ /未知/) {unk[dd]++}
-  if ($0 ~ /状态变化: \[在线\] -> \[未登录\]/) {drop[dd]++}
-  if ($0 ~ /状态变化.*-> \[在线\]/) {up[dd]++}
-}
-END {
-  printf "%-6s %-14s %-10s %-8s %-12s %-10s\n","日期","在线时长(约)","未登录","未知","扫码上线","运行中掉线"
-  n=asorti(on,ix); for(i=1;i<=n;i++){k=ix[i]
-    printf "%-6s %-14s %-10s %-8s %-12s %-10s\n", k, on[k]*5"分", off[k], unk[k], up[k]+0, drop[k]+0}
-}' /root/login_state.log 2>/dev/null || awk '
-{
-  dd=substr($1,6,5)
-  if ($0 ~ /\[在线\]/) {on[dd]++}
-  else if ($0 ~ /\[未登录\]/) {off[dd]++}
-  else if ($0 ~ /未知/) {unk[dd]++}
-  if ($0 ~ /状态变化: \[在线\] -> \[未登录\]/) {drop[dd]++}
-  if ($0 ~ /状态变化.*-> \[在线\]/) {up[dd]++}
-}
-END { for (k in on) printf "%s 在线约%d分 未登录%d 未知%d 上线%d次 掉线%d次\n", k, on[k]*5, off[k], unk[k], up[k]+0, drop[k]+0 }' /root/login_state.log | sort
-echo "[2]11-18与11-19两天的完整状态变化明细:"
-grep -E "^2026-11-1[89].*状态变化" /root/login_state.log
-echo "[3]11-17的状态变化明细:"
-grep -E "^2026-11-17.*状态变化" /root/login_state.log | head -20
+287416
+echo "===== 287416 worker环境诊断 ====="
+echo "[1]当前登录状态:"
+bash /root/logincheck.sh 2>&1 | grep -E "^\[" | head -1
+echo "[2]worker进程:"
+pgrep -af "remote_ctl" | head -3
+echo "[3]运行环境(Termux还是proot):"
+echo "  PREFIX=$PREFIX"
+echo "  uname: $(uname -r 2>/dev/null)"
+ls -d /data/data/com.termux 2>&1 | head -1
+echo "[4]termux-wake-lock可用性:"
+command -v termux-wake-lock 2>&1
+ls /data/data/com.termux/files/usr/bin/termux-wake-lock 2>&1 | head -1
+echo "[5]内核wake_lock现状:"
+head -c 300 /sys/power/wake_lock 2>/dev/null
+echo ""
+echo "[6]Termux boot目录:"
+ls /data/data/com.termux/files/home/.termux/boot/ 2>&1 | head -5
+echo "[7]worker怎么被拉起的:"
+grep -l "remote_ctl" /root/*.sh /data/data/com.termux/files/home/.termux/boot/* 2>/dev/null | head -5
 echo "=====完====="
