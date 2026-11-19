@@ -1,7 +1,15 @@
-287290
-echo "===== 诊断6 当前登录界面状态 287290 ====="
-echo "[A]QR图片内容(前2行,判断是否有效二维码):"; file /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null
-echo "[B]所有QQ主进程(带-q的):"; ps aux | grep -E 'qq -q|QQ/qq' | grep -v grep | grep -v type | head -8
-echo "[C]login_watch.sh内容:"; cat /root/login_watch.sh 2>/dev/null | head -30
-echo "[D]当前时间:"; date '+%F %T'
+287300
+echo "===== 掉线恢复:重启QQ走二维码登录 287300 ====="
+echo "[1]杀旧QQ全家(精确匹配,防自杀):"
+pkill -9 -x Xvfb 2>/dev/null; pkill -9 -f 'opt/QQ/[q]q' 2>/dev/null; sleep 2
+echo "  残留QQ进程:"; pgrep -af 'opt/QQ/[q]q' | head -3 || echo 已清空
+echo "[2]删旧二维码:"
+rm -f /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png && echo 已删
+echo "[3]重启NapCat(不带-q,走二维码):"
+cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & sleep 28
+echo "[4]新二维码状态:"
+stat -c '%y %s字节' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null || echo 码还没生成
+echo "[5]复制到相册:"
+cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo "码已放进相册,去QQ扫" || echo 复制失败
+echo "[6]日志尾(确认在等扫码):"; grep -E '二维码|扫码|登录' /root/napcat.log 2>/dev/null | tail -6
 echo "=====完====="
