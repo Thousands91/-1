@@ -1,62 +1,49 @@
-<<<task_287426.txt>>>
-===== 任务287426 11-20 02:37:17 =====
+<<<task_287427.txt>>>
+===== 任务287427 11-20 02:40:39 =====
 --- 命令 ---
-echo "===== 287426 行首字节检查+修正统计 ====="
-echo "[1]bot.log首行字节(查隐形前缀):"
-head -c 60 /root/bot/bot/bot.log | od -c | head -3
-echo "[2]逐日行数(不锚定):"
-awk '{print substr($0,1,5)}' /root/bot/bot/bot.log | sort | uniq -c | tail -12
-echo "[3]逐日群消息量:"
-awk '/message.group.normal/ {print substr($0,1,5)}' /root/bot/bot/bot.log | sort | uniq -c
-echo "[4]逐日ai_chat触发量:"
-awk '/module=plugins.ai_chat/ {print substr($0,1,5)}' /root/bot/bot/bot.log | sort | uniq -c
-echo "[5]napcat-restart.log覆盖范围:"
-head -c 120 /root/napcat-restart.log
-echo ""
-tail -c 120 /root/napcat-restart.log
-echo ""
-echo "[6]napcat-restart.log里发送记录格式:"
-grep -m2 "发送" /root/napcat-restart.log | head -2
+echo "===== 287427 交互内容抽取(11-17~11-20) ====="
+echo "[1]群里提到/发阿萨尔的消息(近3天全部):"
+grep -F "message.group.normal" /root/bot/bot/bot.log | grep -F "阿萨尔" | tail -30
+echo "[2]私聊消息(近3天全部):"
+awk '/message.private/ && (/11-17/ || /11-18/ || /11-19/ || /11-20/)' /root/bot/bot/bot.log | tail -20
+echo "[3]at消息样本(看格式):"
+grep -F "message.group.normal" /root/bot/bot/bot.log | grep -F "[at:" | tail -10
 echo "=====完====="
 --- 输出 ---
-===== 287426 行首字节检查+修正统计 =====
-[1]bot.log首行字节(查隐形前缀):
-0000000   1   1   -   1   4       2   2   :   1   4   :   4   6       [
-0000020   S   U   C   C   E   S   S   ]       n   o   n   e   b   o   t
-0000040       |       N   o   n   e   B   o   t       i   s       i   n
-[2]逐日行数(不锚定):
-      7     u
-    146   Fil
-   2935 11-14
-   4879 11-15
-   4247 11-16
-   4030 11-17
-   3809 11-18
-   9323 11-19
-     67 11-20
-      7 > Fil
-      7 Trace
-      7 noneb
-[3]逐日群消息量:
-    578 11-14
-    916 11-15
-    842 11-16
-    703 11-17
-    699 11-18
-   1369 11-19
-[4]逐日ai_chat触发量:
-   1156 11-14
-   1836 11-15
-   1678 11-16
-   1424 11-17
-   1397 11-18
-   2691 11-19
-      2 11-20
-[5]napcat-restart.log覆盖范围:
-732f209b479ce49c8e7535a2a4e920ffb36d9bdff842e8e5c5fe69c0392f3b99
-17bd9a81365c84cd8ee3786ad6e2407b83645c372726c0b39181a12
-6a74a9c8
-[19909:1119/114442.258023:FATAL:electron/shell/browser/electron_browser_main_parts.cc:529] Failed to shutdown.
-
-[6]napcat-restart.log里发送记录格式:
+===== 287427 交互内容抽取(11-17~11-20) =====
+[1]群里提到/发阿萨尔的消息(近3天全部):
+11-19 17:23:22 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1716475279 from 1179127036@[群:562796842] '为什么阿萨尔还是LV1'
+11-19 20:38:54 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 670004572 from 1179127036@[群:562796842] '[at:qq=3611220879] 阿萨尔如此爱你，你有什么想说的吗？'
+[2]私聊消息(近3天全部):
+11-17 04:49:13 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 692521035 from 1561950850 '点歌 齐豫'
+11-17 04:49:25 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 537398201 from 1561950850 '3'
+11-17 05:08:08 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 662201735 from 1561950850 '[reply:id=734213232]这是什么歌'
+11-17 05:08:48 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1524961448 from 1561950850 '人呢'
+11-17 05:09:24 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 632292700 from 1561950850 '[reply:id=734213232]这是什么歌'
+11-17 15:33:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 70293303 from 1561950850 '点歌 黄绮珊'
+11-18 02:19:29 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 227451039 from 1561950850 '点歌 叹息瓶 齐豫'
+11-18 08:45:38 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1650233018 from 1561950850 '你在干什么'
+11-18 08:50:55 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 470656995 from 1561950850 '在吗？'
+11-18 10:03:33 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 137921319 from 1561950850 '你还在吗'
+11-18 10:04:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 473585538 from 1561950850 '你在干什么'
+11-18 10:04:57 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1022164200 from 1561950850 '这不是群'
+11-18 10:24:43 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 111073976 from 1561950850 '我们在私聊不是群聊'
+11-18 14:36:28 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 9235826 from 1561950850 '在吗'
+11-19 01:21:48 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 946016591 from 1561950850 '阿萨尔 点歌 黄小琥'
+11-19 01:22:09 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 33352539 from 1561950850 '点歌 黄小琥 没那么简单'
+11-19 01:22:22 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1952171732 from 1561950850 '5'
+11-19 01:49:09 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 104557568 from 1561950850 '点歌 没那么简单'
+11-19 01:49:18 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2077377642 from 1561950850 '2'
+11-20 02:25:32 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 84086878 from 1561950850 'hi'
+[3]at消息样本(看格式):
+11-19 22:06:05 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 571199314 from 2939420548@[群:562796842] '[reply:id=814478496][at:qq=1561950850] 夹在恰巴塔里吃呀'
+11-19 22:07:55 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1889290168 from 2959186535@[群:1109952783] '[reply:id=367308878][at:qq=3301654337] 不是'
+11-19 22:08:44 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 122235175 from 2959186535@[群:1109952783] '[reply:id=1742698250][at:qq=553414459] 我都拉黑了'
+11-19 22:17:42 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 967473397 from 3970501428@[群:1109952783] '[reply:id=2142895443][at:qq=2959186535] 当狗吠了'
+11-19 22:18:41 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 225209830 from 2959186535@[群:1109952783] '[reply:id=967473397][at:qq=3970501428] 嗯呐'
+11-19 22:21:47 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1994007303 from 2534970154@[群:1109952783] '[reply:id=1742698250][at:qq=553414459] 欸，这是怎么了'
+11-19 22:25:39 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1453114420 from 2959186535@[群:1109952783] '[reply:id=2126834632][at:qq=3301654337] 可能没有了'
+11-19 22:29:02 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 73331245 from 1561950850@[群:1109952783] '[reply:id=605245728][at:qq=553414459] 康康'
+11-19 22:38:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 99891471 from 553414459@[群:1109952783] '[reply:id=981016244][at:qq=2534970154] 这话我记下了'
+11-19 22:38:31 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1991445449 from 1561950850@[群:1109952783] '[reply:id=981016244][at:qq=2534970154] [at:qq=3427943187] '
 =====完=====
