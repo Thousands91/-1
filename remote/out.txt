@@ -1,24 +1,2 @@
-<<<task_287373.txt>>>
-===== 任务287373 11-19 15:23:58 =====
---- 命令 ---
-echo "===== 坑140修复后稳定性确认 287373 $(date '+%F %T') ====="
-echo "[1]进程存活时间(应>1分钟):"
-PID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1); ps -p "$PID" -o pid,etime,stat 2>/dev/null | tail -1
-echo "[2]登录态:"
-bash /root/logincheck.sh 2>/dev/null | grep -iE "在线|ready|阶段" | head -2
-echo "[3]重启后有无异常:"
-grep -E "11-19 15:2[1-9]|11-19 15:3" /root/bot/bot/bot.log 2>/dev/null | grep -iE "traceback|exception|error|crash" | tail -3 || echo "  无异常"
-echo "[4]设备当前md5(应65095faf):"
-md5sum /root/bot/bot/plugins/song_request.py | cut -c1-8
-echo "=====完====="
---- 输出 ---
-===== 坑140修复后稳定性确认 287373 2026-11-19 15:23:58 =====
-[1]进程存活时间(应>1分钟):
- 9282       00:00 S<sl
-[2]登录态:
-[在线] 已登录，一切正常
-阶段: ready
-[3]重启后有无异常:
-[4]设备当前md5(应65095faf):
-65095faf
-=====完=====
+<<<ALERT.txt>>>
+2026-11-19 15:27:07 阿萨尔已恢复在线
