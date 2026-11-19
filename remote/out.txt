@@ -1,59 +1,61 @@
-<<<task_287331.txt>>>
-===== 任务287331 11-19 12:56:46 =====
+<<<task_287332.txt>>>
+===== 任务287332 11-19 13:00:01 =====
 --- 命令 ---
-echo "===A adapter事件模型文件==="
-EV=/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py
-ls -la "$EV" 2>/dev/null
-echo "===B Lifecycle/Heartbeat/Meta事件类==="
-grep -n -E "class .*Meta|class Lifecycle|class Heartbeat|meta_event_type|sub_type|LifecycleMetaEvent|HeartbeatMetaEvent|status|good|online" "$EV" 2>/dev/null | head -40
-echo "===C adapter支持的事件类型注册==="
-grep -rn -E "meta_event|lifecycle|heartbeat|bot_offline" /root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/ 2>/dev/null | grep -v ".pyc" | head -25
-echo "===D bot.log里那36条元事件原文==="
-grep -i -E "meta_event|lifecycle|heartbeat" /root/bot/bot/bot.log 2>/dev/null | tail -8
+echo "===A on_meta_event导出位置==="
+grep -rn "def on_meta_event\|on_meta_event" /root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py /root/bot/venv/lib/python3.10/site-packages/nonebot/matcher.py 2>/dev/null | head -5
+echo "===B Status类字段==="
+sed -n '120,140p' /root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py 2>/dev/null
+echo "===C get_self_id方法==="
+grep -n "def get_self_id\|self_id" /root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py 2>/dev/null | head -5
+echo "===D Lifecycle/Heartbeat类定义==="
+sed -n '556,572p' /root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-===A adapter事件模型文件===
--rw-r--r-- 1 root root 13247 Nov 11 23:32 /root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py
-===B Lifecycle/Heartbeat/Meta事件类===
-130:    online: bool
-131:    good: bool
-146:    sub_type: str
-176:        sub_type = getattr(self, "sub_type", None)
-178:            f".{sub_type}" if sub_type else ""
-239:        sub_type = getattr(self, "sub_type", None)
-241:            f".{sub_type}" if sub_type else ""
-266:    sub_type: str
-287:    sub_type: str
-309:    sub_type: str
-331:    sub_type: str
-407:    sub_type: str
-423:    sub_type: Literal["poke"]
-441:    sub_type: Literal["lucky_king"]
-460:    sub_type: Literal["honor"]
-477:        sub_type = getattr(self, "sub_type", None)
-479:            f".{sub_type}" if sub_type else ""
-512:    sub_type: str
-528:            flag=self.flag, sub_type=self.sub_type, approve=True
-533:            flag=self.flag, sub_type=self.sub_type, approve=False, reason=reason
-538:class MetaEvent(Event):
-542:    meta_event_type: str
-546:        sub_type = getattr(self, "sub_type", None)
-547:        return f"{self.post_type}.{self.meta_event_type}" + (
-548:            f".{sub_type}" if sub_type else ""
-556:class LifecycleMetaEvent(MetaEvent):
-559:    meta_event_type: Literal["lifecycle"]
-560:    sub_type: str
-563:class HeartbeatMetaEvent(MetaEvent):
-566:    meta_event_type: Literal["heartbeat"]
-567:    status: Status
-593:    "LifecycleMetaEvent",
-594:    "HeartbeatMetaEvent",
-===C adapter支持的事件类型注册===
-/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/adapter.py:62:            ("message_type", "notice_type", "request_type", "meta_event_type"),
-/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py:541:    post_type: Literal["meta_event"]
-/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py:542:    meta_event_type: str
-/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py:547:        return f"{self.post_type}.{self.meta_event_type}" + (
-/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py:559:    meta_event_type: Literal["lifecycle"]
-/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/event.py:566:    meta_event_type: Literal["heartbeat"]
-===D bot.log里那36条元事件原文===
+===A on_meta_event导出位置===
+===B Status类字段===
+
+    if PYDANTIC_V2:
+        model_config = ConfigDict(extra="allow")
+    else:
+
+        class Config(ConfigDict):
+            extra = "allow"
+
+
+class Status(BaseModel):
+    online: bool
+    good: bool
+
+    if PYDANTIC_V2:
+        model_config = ConfigDict(extra="allow")
+    else:
+
+        class Config(ConfigDict):
+            extra = "allow"
+
+
+===C get_self_id方法===
+34:    self_id: int
+272:        return self.user_id == self.self_id
+294:        return self.user_id == self.self_id
+316:        return self.user_id == self.self_id
+339:        return self.user_id == self.self_id
+===D Lifecycle/Heartbeat类定义===
+class LifecycleMetaEvent(MetaEvent):
+    """生命周期元事件"""
+
+    meta_event_type: Literal["lifecycle"]
+    sub_type: str
+
+
+class HeartbeatMetaEvent(MetaEvent):
+    """心跳元事件"""
+
+    meta_event_type: Literal["heartbeat"]
+    status: Status
+    interval: int
+
+
+__all__ = [
+    "Event",
 =====完=====
