@@ -1,17 +1,30 @@
-287414
-echo "===== 287414 在线时长账本取证 ====="
-echo "[0]当前登录状态:"
-bash /root/logincheck.sh 2>&1 | grep -E "^\[|阶段" | head -3
-echo "[1]autoheal.log全部登录态流转:"
-grep "登录态" /root/autoheal.log
-echo "[2]napcat.log今天的登录成功/离线记录:"
-grep -E "登录成功|账号状态变更|扫码|Login.*uccess|掉线|下线" /root/napcat.log | tail -15
-echo "[3]各台账的覆盖起点(第一行时间)和大小:"
-for f in /root/login_state.log /root/health.log /root/tick.log /root/ip.log /root/asar_sync_boot.log /root/azar_login_run.log; do
-  [ -f "$f" ] && echo "  $f $(ls -la "$f" | awk '{print $5"B"}') 首行:$(head -1 "$f" | head -c 60)"
-done
-echo "[4]login_state.log尾部20行:"
-tail -20 /root/login_state.log 2>/dev/null
-echo "[5]bot.log今天心跳跳变全表:"
-grep "状态跳变" /root/bot/bot/bot.log | tail -15
+287415
+echo "===== 287415 每日在线时长统计 ====="
+awk '
+{
+  dd=substr($1,6,5)
+  if ($0 ~ /\[在线\]/) {on[dd]++}
+  else if ($0 ~ /\[未登录\]/) {off[dd]++}
+  else if ($0 ~ /未知/) {unk[dd]++}
+  if ($0 ~ /状态变化: \[在线\] -> \[未登录\]/) {drop[dd]++}
+  if ($0 ~ /状态变化.*-> \[在线\]/) {up[dd]++}
+}
+END {
+  printf "%-6s %-14s %-10s %-8s %-12s %-10s\n","日期","在线时长(约)","未登录","未知","扫码上线","运行中掉线"
+  n=asorti(on,ix); for(i=1;i<=n;i++){k=ix[i]
+    printf "%-6s %-14s %-10s %-8s %-12s %-10s\n", k, on[k]*5"分", off[k], unk[k], up[k]+0, drop[k]+0}
+}' /root/login_state.log 2>/dev/null || awk '
+{
+  dd=substr($1,6,5)
+  if ($0 ~ /\[在线\]/) {on[dd]++}
+  else if ($0 ~ /\[未登录\]/) {off[dd]++}
+  else if ($0 ~ /未知/) {unk[dd]++}
+  if ($0 ~ /状态变化: \[在线\] -> \[未登录\]/) {drop[dd]++}
+  if ($0 ~ /状态变化.*-> \[在线\]/) {up[dd]++}
+}
+END { for (k in on) printf "%s 在线约%d分 未登录%d 未知%d 上线%d次 掉线%d次\n", k, on[k]*5, off[k], unk[k], up[k]+0, drop[k]+0 }' /root/login_state.log | sort
+echo "[2]11-18与11-19两天的完整状态变化明细:"
+grep -E "^2026-11-1[89].*状态变化" /root/login_state.log
+echo "[3]11-17的状态变化明细:"
+grep -E "^2026-11-17.*状态变化" /root/login_state.log | head -20
 echo "=====完====="
