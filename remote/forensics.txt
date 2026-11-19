@@ -1,0 +1,56 @@
+===== 掉线取证 v2.0 2026-11-19 12:41:46 CST =====
+【判定类型】自检-模拟静默离线(SelfOffline)
+【触发原文】[SELFTEST] 账号状态变更为离线 1119/124146.000000
+
+---- ① 自动判定(秒级时间轴) ----
+静默离线(最新): (无时间戳)
+GPU崩溃(最新): 11-19 06:50:35
+结论: 日志缺可解析时间戳,无法定先后(见原始行)
+
+---- ② 完整时间轴(离线/被踢/GPU,按时间排序) ----
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.027503:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.034023:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.039420:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.044684:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.044774:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+
+---- ③ 被踢原因字段(KickedOffLine原文) ----
+(本次无KickedOffLine → 静默离线,腾讯未下发原因码)
+
+---- ④ 网络心跳(事发前后) ----
+11-19 12:29:59 ping=FAILms batt=
+11-19 12:31:01 ping=FAILms batt=
+11-19 12:32:07 ping=10.7ms batt=
+11-19 12:33:07 ping=FAILms batt=
+11-19 12:34:10 ping=FAILms batt=
+11-19 12:35:13 ping=FAILms batt=
+11-19 12:36:15 ping=FAILms batt=
+11-19 12:37:17 ping=FAILms batt=
+11-19 12:38:20 ping=FAILms batt=
+11-19 12:39:22 ping=FAILms batt=
+11-19 12:40:24 ping=FAILms batt=
+11-19 12:41:26 ping=FAILms batt=
+-- 即时网络 --
+2 packets transmitted, 0 received, 100% packet loss, time 1008ms
+
+
+---- ⑤ 系统状态 ----
+ 12:41:49 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
+               total        used        free      shared  buff/cache   available
+Mem:            5571        3131         134          12        2306        2191
+/dev/block/by-name/userdata  111G  101G  9.8G  92% /
+电量: 
+QQ进程数: 5
+
+---- ⑥ 日志尾部 ----
+█ █   █ █▀▄ ██  █▄█   ▄   ▄▄▄▄█  ▄█
+█ █▄▄▄█ █  ▄▀▀██▄ ▀ ▀ ██▄▀▄ ▄▀█▄▄▀█
+█▄▄▄▄▄▄▄█▄███▄███▄█▄▄▄▄▄██▄███▄▄███
+
+二维码解码URL: https://txz.qq.com/p?k=bxt6MAJ83XDb3Jns6YobTyH2E1uqERlu&f=1600001615
+如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+11-19 12:41:45 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+a184a3aec6945daa845ca9415e59a8e80094fcd9b9f8864298e36f309cfab40e
+2543cc611da8b6275f300670e81b73948e2e6b594578e472e5ed426124a110f6
+984a055cd3d924a58671763fc0436adf78b394c0c35bee5e3caf9f59ef0a64e2
+===== 取证结束 =====
