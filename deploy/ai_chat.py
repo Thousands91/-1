@@ -1072,14 +1072,57 @@ _EMOJI_STYLES = (
     "一本正经地故意歪解这个动作的意思，逗他一句",
     "假装没看清，让他自己交代刚才那是什么意思",
 )
-_EMOJI_OPENERS = ("哟，", "好家伙，", "行了行了，", "嚯，", "得，", "（放下手里的书）")
+_EMOJI_OPENERS = (
+    "哟，", "好家伙，", "行了行了，", "嚯，", "得，", "（放下手里的书）",
+    # 坑153：原来只有6个，"（放下手里的书）"每隔几回就被抽中，配相似正文=雷同句。
+    # 扩到14个，动作类分店老板日常小节，风格对齐原作口吻。
+    "（抬头瞥了您一眼）", "（拿书轻轻敲了下桌面）", "（掸了掸袖口的灰）",
+    "（把茶盏往您那边推了推）", "（翻过一页书）", "（眯眼把您上下打量了一遍）",
+    "（收起手里的笔）", "（把柜门随手带上）",
+)
 _EMOJI_RECENT: Deque[str] = deque(maxlen=6)   # 最近接表情回复的开头（防雷同）
 
-# ============ 文本防复读护栏（坑73，2026-11-09）============
+# ============ 文本防复读护栏（坑73，2026-11-09；坑153 持久化，2026-11-20）============
 # 弱模型兜底时爱原地打转：用户换三种问法，它用近似句式回三遍（11-08晚聊天实锤）。
-# 原理同 _EMOJI_RECENT：把最近4条回复的"签名"（去标点取前60字）存着，
+# 原理同 _EMOJI_RECENT：把最近回复的"签名"（去标点取前60字）存着，
 # 新回复与任一条开头雷同或整体相似度过高 → 带禁令重答一次。
-_TEXT_RECENT: Dict[tuple, Deque[str]] = defaultdict(lambda: deque(maxlen=4))
+# 坑153（记忆库实锤）：内存护栏重启即清零、maxlen=4 太浅——"你还在吗"隔13天
+# 回同款"我在这，先生"，"请安"句隔11天复现。改 maxlen=12 + 签名落盘，跨天也拦。
+_TEXT_SIGS_FILE = Path(__file__).parent.parent / "data" / "reply_sigs.json"
+_TEXT_RECENT: Dict[tuple, Deque[str]] = defaultdict(lambda: deque(maxlen=12))
+
+
+def _load_reply_sigs() -> None:
+    """启动时把上一会话的回复签名装回内存（文件缺失/损坏静默跳过，护栏丢了不断线）。"""
+    try:
+        if _TEXT_SIGS_FILE.exists():
+            _raw = _json.loads(_TEXT_SIGS_FILE.read_text(encoding="utf-8"))
+            if isinstance(_raw, dict):
+                for _k, _v in _raw.items():
+                    try:
+                        _g, _u = _k.rsplit("_", 1)
+                        _kk = (int(_g), int(_u))
+                    except (ValueError, AttributeError):
+                        continue
+                    for _s in _v[-12:]:
+                        if isinstance(_s, str) and _s:
+                            _TEXT_RECENT[_kk].append(_s)
+    except Exception:
+        pass
+
+
+def _save_reply_sigs() -> None:
+    """签名落盘（原子写：先 .tmp 再 replace，防写一半进程死掉留烂文件）。"""
+    try:
+        _raw = {f"{k[0]}_{k[1]}": list(v)[-12:] for k, v in _TEXT_RECENT.items() if v}
+        _tmp = _TEXT_SIGS_FILE.with_suffix(".tmp")
+        _tmp.write_text(_json.dumps(_raw, ensure_ascii=False), encoding="utf-8")
+        _tmp.replace(_TEXT_SIGS_FILE)
+    except Exception:
+        pass
+
+
+_load_reply_sigs()
 
 
 def _norm_text(s: str) -> str:
@@ -1779,6 +1822,7 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
             except Exception:
                 pass  # 重答失败就用原答案，至少不断线
         _TEXT_RECENT[key].append(_norm_text(answer))
+        _save_reply_sigs()  # 坑153：立刻落盘，重启/隔天护栏不清零
 
     msgs.append({"role": "user", "content": _hist_text if _hist_text is not None else text})
     msgs.append({"role": "assistant", "content": answer})
