@@ -1,10 +1,13 @@
-287378
-echo "===== 点歌ERROR堆栈+回5去向 287378 ====="
-echo "[1]15:50:20~15:50:45完整原文(含ERROR堆栈):"
-awk '/11-19 15:50:2[0-9]/,/11-19 15:50:4[5-9]/' /root/bot/bot/bot.log 2>/dev/null | head -80
-echo "[2]全log里搜'5'这条消息(15:50~15:53所有message.group):"
-grep -E "11-19 15:5[0-3]" /root/bot/bot/bot.log 2>/dev/null | grep "message.group.normal" | tail -20
-echo "[3]Traceback行及后10行:"
-grep -n "15:50:28.*failed\|Traceback" /root/bot/bot/bot.log 2>/dev/null | tail -5
-L=$(grep -n "11-19 15:50:28.*failed" /root/bot/bot/bot.log 2>/dev/null | tail -1 | cut -d: -f1); [ -n "$L" ] && sed -n "$((L-2)),$((L+30))p" /root/bot/bot/bot.log
+287379
+echo "===== WS闪断频率+今日事件 287379 ====="
+echo "[1]今天(11-19)所有WS关闭/重连事件:"
+grep -E "11-19" /root/bot/bot/bot.log 2>/dev/null | grep -iE "closed by peer|connected|connection open|LIFECYCLE.*connect|LIFECYCLE.*disconnect" | tail -40
+echo "[2]今天WS关闭次数:"
+grep -E "11-19" /root/bot/bot/bot.log 2>/dev/null | grep -c "closed by peer"
+echo "[3]今天连接成功次数:"
+grep -E "11-19" /root/bot/bot/bot.log 2>/dev/null | grep -c "Bot 3427943187 connected"
+echo "[4]sendMsg超时(1200)今天次数:"
+grep -E "11-19" /root/bot/bot/bot.log 2>/dev/null | grep -c "retcode=1200"
+echo "[5]link_probe日志今日WS跳变:"
+grep -E "11-19" /root/link_probe.log 2>/dev/null | grep -iE "online|LIFECYCLE|disconnect|connect" | tail -25
 echo "=====完====="
