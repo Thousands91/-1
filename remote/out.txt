@@ -1,56 +1,40 @@
-<<<task_287327.txt>>>
-===== 任务287327 11-19 12:49:13 =====
+<<<task_287328.txt>>>
+===== 任务287328 11-19 12:50:50 =====
 --- 命令 ---
-echo "===E 进程==="
-ps aux 2>/dev/null | grep -E "main.py|napcat|QQ/qq|offline_watch|autoheal|remote_ctl|netmon|health_probe|login_watch|guard|watcher" | grep -v grep | awk '{print $2, $11, $12, $13, $14}' | head -25
-echo "===F 凭据文件==="
-find /root -maxdepth 4 -type f 2>/dev/null | grep -i -E "credential|token|sig|device|session" | grep -v -E "venv|node_modules" | head -20
-echo "===G QQ版本==="
-grep -rhoE '"version"[[:space:]]*:[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+' /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null | head -2
-grep -rhoE '9\.[0-9]+\.[0-9]+' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/package.json 2>/dev/null | head -2
-echo "===H 反检测配置napcat_3427943187.json==="
-cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json 2>/dev/null | head -60
-echo "===I 协议配置==="
-cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_protocol_3427943187.json 2>/dev/null | head -40
+echo "===A 所有config文件里的bypass/反检测关键字段==="
+CFG=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config
+for f in "$CFG"/*.json; do
+  echo "--- $(basename $f) ---"
+  grep -oE '"(bypass|o3HookMode|packetBackend|webui|token|enable|fileLog|consoleLog|logLevel|protocol|platform)"[[:space:]]*:[[:space:]]*("[^"]*"|true|false|[0-9]+)' "$f" 2>/dev/null | head -20
+done
+echo "===B napcat_3427943187完整前80行==="
+head -80 "$CFG/napcat_3427943187.json" 2>/dev/null
+echo "===C 搜bypass全文==="
+grep -rn "bypass\|o3Hook\|antiDetect\|反检测\|hook" "$CFG" 2>/dev/null | head -20
+echo "===D QQ本体版本==="
+grep -rhoE '"version"[[:space:]]*:[[:space:]]*"9\.[0-9]+\.[0-9]+' /root/Napcat/opt/QQ/resources/app/ 2>/dev/null | head -3
+cat /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null | grep -oE '"version"[^,]*' | head -2
 echo "=====完====="
 --- 输出 ---
-===E 进程===
-1194 bash /root/offline_watch.sh  
-6446 /root/bot/venv/bin/python main.py  
-6857 bash /root/remote_ctl_v6.sh  
-10788 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq
-10801 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer
-10804 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-10805 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox 
-10834 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-18784 bash /root/login_watch.sh  
-18786 bash /root/health_probe.sh  
-18788 bash /root/netmon.sh  
-23393 bash /root/azar_autoheal.sh  
-===F 凭据文件===
-/root/.git-credentials
-/root/music_sign_v5.py
-/root/asr_model/tokens.txt
-/root/music_sign.py
-/root/music_sign.log
-/root/__pycache__/music_sign_v4.cpython-310.pyc
-/root/__pycache__/music_sign.cpython-310.pyc
-/root/__pycache__/music_sign_v5.cpython-310.pyc
-/root/__pycache__/music_sign_v6.cpython-310.pyc
-/root/__pycache__/music_sign_v7.cpython-310.pyc
-/root/__pycache__/music_sign_v8.cpython-310.pyc
-/root/__pycache__/music_sign_v10.cpython-310.pyc
-/root/music_sign.py.bak.ups
-/root/music_sign.py.bak_v3
-/root/music_sign_v4.py
-/root/music_sign.py.bak_pre_kugou
-/root/music_sign_v4.log
-/root/music_sign_v4.bak
-/root/music_sign_v6.py
-/root/music_sign_v5.bak
-===G QQ版本===
-"version": "3.2.34
-===H 反检测配置napcat_3427943187.json===
+===A 所有config文件里的bypass/反检测关键字段===
+--- napcat.json ---
+"fileLog": false
+"consoleLog": true
+"packetBackend": "auto"
+"o3HookMode": 1
+--- napcat_3427943187.json ---
+"fileLog": false
+"consoleLog": true
+"packetBackend": "auto"
+"o3HookMode": 1
+--- napcat_protocol_3427943187.json ---
+"enable": false
+--- onebot11_3427943187.json ---
+"enable": true
+"token": ""
+--- webui.json ---
+"token": "560aad98b99d"
+===B napcat_3427943187完整前80行===
 {
   "fileLog": false,
   "consoleLog": true,
@@ -68,12 +52,14 @@ echo "=====完====="
     "js": false
   },
   "autoTimeSync": true
-}===I 协议配置===
-{
-  "enable": false,
-  "network": {
-    "httpServers": [],
-    "websocketServers": [],
-    "websocketClients": []
-  }
-}=====完=====
+}===C 搜bypass全文===
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json:8:  "o3HookMode": 1,
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json:9:  "bypass": {
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat.json:10:    "hook": false,
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json:8:  "o3HookMode": 1,
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json:9:  "bypass": {
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json:10:    "hook": false,
+===D QQ本体版本===
+"version": "9.9.22
+"version": "3.2.34-53644"
+=====完=====
