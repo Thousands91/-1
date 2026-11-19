@@ -1,8 +1,8 @@
-287270
-echo "===== 诊断4 登录态文件位置 287270 ====="
-echo "[A]找登录态文件:"; find /root -name 'login_state.log' -o -name '*login*.log' 2>/dev/null | head -10
-echo "[B]QQ进程当下:"; ps aux | grep -E '[Qq][Qq] --no-sandbox|[Qq][Qq] -q|xvfb-run' | grep -v grep | head -5
-echo "[C]二维码缓存现状:"; ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null; stat -c '%y' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null
-echo "[D]napcat配置文件:"; ls -la /root/Napcat/*.json /root/Napcat/config/*.json 2>/dev/null | head -10
-echo "[E]当前账号在线判定(napcat日志最后账号状态):"; grep -E '账号状态变更|离线|在线|扫码|二维码' /root/napcat.log 2>/dev/null | tail -15
+287280
+echo "===== 诊断5 登录态真相 287280 ====="
+echo "[A]/root/login_state.log 全文:"; cat /root/login_state.log 2>/dev/null | tail -30
+echo "[B]azar_login_run.log 尾20:"; tail -20 /root/azar_login_run.log 2>/dev/null
+echo "[C]当前扫码进程:"; pgrep -af 'azar_login|login|qq --no-sandbox' | head -10
+echo "[D]二维码解码URL(从日志):"; grep -oE 'https://txz.qq.com/p\?k=[^ ]+' /root/napcat.log 2>/dev/null | tail -3
+echo "[E]napcat.log最后5行:"; tail -5 /root/napcat.log 2>/dev/null
 echo "=====完====="
