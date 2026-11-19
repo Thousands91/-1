@@ -1,15 +1,13 @@
-287314
-echo "===== 掉线快诊断 287314 $(date '+%F %T') ====="
-echo "---[1]login_state 昨晚到今晨在线周期---"
-grep -aE "11-18 22:3|11-19 00:|11-19 01:|11-19 02:0|11-19 02:1" /root/login_state.log 2>/dev/null | tail -45
-echo "---[2]ip.log 同期IP变动---"
-grep -aE "11-19 00:|11-19 01:|11-19 02:" /root/ip.log 2>/dev/null | tail -30
-echo "---[3]health.log 02点前后(冻结判定)---"
-grep -aE "11-19 01:5|11-19 02:0|11-19 02:1" /root/health.log 2>/dev/null | tail -20
-echo "---[4]napcat.log 02:10-02:16关键行---"
-grep -aE "02:1[0-6]" /root/napcat.log 2>/dev/null | grep -aE "离线|GPU|close|reconnect|Error|error|二维码|登录|Kick|kick" | tail -30
-echo "---[5]各登录日志扫码成功次数---"
-for f in /root/napcat.log /root/napcat-restart.log; do echo -n "$f: "; grep -acE "扫码登录成功|登录成功|Login Success" "$f" 2>/dev/null; done
-echo "---[6]offline_forensics 尾---"
-tail -15 /root/offline_forensics.log 2>/dev/null || echo 无
+287315
+echo "===== 掉线瞬间证据 287315 ====="
+echo "---[1]napcat.log 02:12-02:14全部关键行(带上下文)---"
+grep -aE "02:1[234]" /root/napcat.log 2>/dev/null | tail -40
+echo "---[2]扫码成功次数---"
+for f in /root/napcat.log /root/napcat-restart.log; do printf "%s: " "$f"; grep -acE "扫码登录成功|登录成功|Login Success|登录成功" "$f" 2>/dev/null; done
+echo "---[3]账号离线/GPU/被踢关键词全日志计数---"
+echo -n "账号状态变更为离线: "; grep -ac "账号状态变更为离线" /root/napcat.log 2>/dev/null
+echo -n "KickedOffLine被踢: "; grep -ac "KickedOffLine\|被踢" /root/napcat.log 2>/dev/null
+echo -n "GPU error: "; grep -ac "GPU process launch failed" /root/napcat.log 2>/dev/null
+echo "---[4]offline_forensics尾20---"
+tail -20 /root/offline_forensics.log 2>/dev/null || echo 无
 echo "=====完====="
