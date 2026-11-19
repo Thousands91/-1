@@ -1,5 +1,11 @@
-287374
-echo "===== 提效验证-轻量往返 287374 $(date '+%F %T') ====="
-echo "设备收到时刻: $(date '+%H:%M:%S')"
-echo "[在线] $(bash /root/logincheck.sh 2>/dev/null | grep -o '\[在线\][^ ]*' | head -1)"
+287375
+echo "===== worker回传机制诊断 287375 ====="
+echo "[1]设备当前跑的worker脚本版本/路径:"
+pgrep -af 'remote_ctl|v6_|while' | grep -iE 'ctl|v6' | head -3
+echo "[2]v6脚本sleep间隔(全部sleep行):"
+for f in /root/remote_ctl_v6.sh /root/v6_from_github.sh; do echo "--- $f ---"; grep -n "sleep [0-9]" "$f" 2>/dev/null; done
+echo "[3]git push回传段(看有无低速保护/超时):"
+grep -n "git push\|lowSpeed\|timeout.*push\|make_bundle\|PBOX" /root/remote_ctl_v6.sh 2>/dev/null | head -15
+echo "[4]当前worker脚本md5:"
+md5sum /root/remote_ctl_v6.sh 2>/dev/null | cut -c1-8
 echo "=====完====="
