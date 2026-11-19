@@ -1,44 +1,41 @@
-<<<task_287382.txt>>>
-===== 任务287382 11-19 18:28:11 =====
+<<<task_287383.txt>>>
+===== 任务287383 11-19 18:29:42 =====
 --- 命令 ---
-echo "===== 掷骰ERROR堆栈 287382 ====="
-echo "[1]18:16:56 dice_cmd failed后8行:"
-grep -n "18:16:56.*failed" /root/bot/bot/bot.log 2>/dev/null | tail -1 | cut -d: -f1 | while read L; do sed -n "$((L)),$((L+12))p" /root/bot/bot/bot.log; done
-echo "[2]18:17:08 dice_cmd failed后8行:"
-grep -n "18:17:08.*failed" /root/bot/bot/bot.log 2>/dev/null | tail -1 | cut -d: -f1 | while read L; do sed -n "$((L)),$((L+12))p" /root/bot/bot/bot.log; done
-echo "[3]今日ActionFailed 1200总次数:"
-grep -E "11-19" /root/bot/bot/bot.log 2>/dev/null | grep -c "ActionFailed"
+echo "===== 掷骰ERROR根因行 287383 ====="
+echo "[1]18:16:56 failed堆栈最后6行(异常类型在最后):"
+L=$(grep -n "18:16:56.*failed" /root/bot/bot/bot.log 2>/dev/null | tail -1 | cut -d: -f1); sed -n "$((L)),$((L+45))p" /root/bot/bot/bot.log 2>/dev/null | tail -12
+echo "[2]18:17:08 failed堆栈最后6行:"
+L=$(grep -n "18:17:08.*failed" /root/bot/bot/bot.log 2>/dev/null | tail -1 | cut -d: -f1); sed -n "$((L)),$((L+45))p" /root/bot/bot/bot.log 2>/dev/null | tail -12
+echo "[3]所有异常类型统计(今日):"
+grep -E "11-19" /root/bot/bot/bot.log 2>/dev/null | grep -oE "[A-Za-z]+(Error|Exception|Failed):" | sort | uniq -c | tail -15
 echo "=====完====="
 --- 输出 ---
-===== 掷骰ERROR堆栈 287382 =====
-[1]18:16:56 dice_cmd failed后8行:
-11-19 18:16:56 [ERROR] nonebot | Running Matcher(type='message', module=plugins.games, lineno=38) failed.
-Traceback (most recent call last):
-  File "/root/bot/bot/main.py", line 42, in <module>
-    run()
-  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py", line 337, in run
-    get_driver().run(*args, **kwargs)
-  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/drivers/fastapi.py", line 187, in run
-    uvicorn.run(
-  File "/root/bot/venv/lib/python3.10/site-packages/uvicorn/main.py", line 632, in run
-    server.run()
-  File "/root/bot/venv/lib/python3.10/site-packages/uvicorn/server.py", line 86, in run
-    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-  File "/root/bot/venv/lib/python3.10/site-packages/uvicorn/_compat.py", line 60, in asyncio_run
-[2]18:17:08 dice_cmd failed后8行:
-11-19 18:17:08 [ERROR] nonebot | Running Matcher(type='message', module=plugins.games, lineno=38) failed.
-Traceback (most recent call last):
-  File "/root/bot/bot/main.py", line 42, in <module>
-    run()
-  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/__init__.py", line 337, in run
-    get_driver().run(*args, **kwargs)
-  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/drivers/fastapi.py", line 187, in run
-    uvicorn.run(
-  File "/root/bot/venv/lib/python3.10/site-packages/uvicorn/main.py", line 632, in run
-    server.run()
-  File "/root/bot/venv/lib/python3.10/site-packages/uvicorn/server.py", line 86, in run
-    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-  File "/root/bot/venv/lib/python3.10/site-packages/uvicorn/_compat.py", line 60, in asyncio_run
-[3]今日ActionFailed 1200总次数:
-1
+===== 掷骰ERROR根因行 287383 =====
+[1]18:16:56 failed堆栈最后6行(异常类型在最后):
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/bot.py", line 237, in send
+    return await self.__class__.send_handler(self, event, message, **kwargs)
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/bot.py", line 190, in send
+    return await bot.send_msg(**params)
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/internal/adapter/bot.py", line 176, in call_api
+    raise exception
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/internal/adapter/bot.py", line 128, in call_api
+    result = await self.adapter._call_api(self, api, **data)
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/adapter.py", line 175, in _call_api
+    return handle_api_result(await self._result_store.fetch(seq, timeout))
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/utils.py", line 58, in handle_api_result
+    raise ActionFailed(**result)
+[2]18:17:08 failed堆栈最后6行:
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/bot.py", line 237, in send
+    return await self.__class__.send_handler(self, event, message, **kwargs)
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/bot.py", line 190, in send
+    return await bot.send_msg(**params)
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/internal/adapter/bot.py", line 176, in call_api
+    raise exception
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/internal/adapter/bot.py", line 128, in call_api
+    result = await self.adapter._call_api(self, api, **data)
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/adapter.py", line 175, in _call_api
+    return handle_api_result(await self._result_store.fetch(seq, timeout))
+  File "/root/bot/venv/lib/python3.10/site-packages/nonebot/adapters/onebot/v11/utils.py", line 58, in handle_api_result
+    raise ActionFailed(**result)
+[3]所有异常类型统计(今日):
 =====完=====
