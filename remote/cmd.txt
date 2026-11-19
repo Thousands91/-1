@@ -1,6 +1,10 @@
-287410
-echo "===== 287410 取码 ====="
-ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-echo ""
+287411
+echo "===== 287411 定位看护脚本 ====="
+echo "[1]谁在写autoheal.log:"
+grep -l "ALERT" /root/*.sh 2>/dev/null
+grep -rn "阿萨尔掉线" /root/*.sh 2>/dev/null | head -4
+echo "[2]脚本里ALERT掉线那段上下文:"
+S=$(grep -l "阿萨尔掉线" /root/*.sh 2>/dev/null | head -1)
+echo "目标脚本: $S"
+grep -n -B6 -A8 "阿萨尔掉线" "$S" 2>/dev/null | head -30
 echo "=====完====="
