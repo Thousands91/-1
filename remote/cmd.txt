@@ -1,13 +1,9 @@
-287428
-echo "===== 287428 记忆库全文取回 ====="
-echo "[1]1561950850.json:"
-cat /root/bot/bot/data/memory/1561950850.json
-echo ""
-echo "[2]其他近期记忆:"
-cat /root/bot/bot/data/memory/1179127036.json
-echo ""
-cat /root/bot/bot/data/memory/3273077048.json
-echo ""
-echo "[3]fortune_log:"
-cat /root/bot/bot/data/fortune_log.json
+287429
+echo "===== 287429 群聊交互正确口径统计 ====="
+echo "[1]每天@阿萨尔的群消息数:"
+awk '/message.group.normal/ && /\[at:qq=3427943187\]/ {print substr($0,1,5)}' /root/bot/bot/bot.log | sort | uniq -c
+echo "[2]近3天@阿萨尔的群消息内容:"
+awk '/message.group.normal/ && /\[at:qq=3427943187\]/' /root/bot/bot/bot.log | tail -20
+echo "[3]11-04的私聊猜数字上下文确认:"
+awk '/message.private/ && /11-04/' /root/bot/bot/bot.log | tail -10
 echo "=====完====="
