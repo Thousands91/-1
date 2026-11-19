@@ -1,31 +1,16 @@
-<<<task_287250.txt>>>
-===== 任务287250 11-19 11:40:01 =====
+<<<task_287260.txt>>>
+===== 任务287260 11-19 11:40:33 =====
 --- 命令 ---
-echo "===== 掉线诊断2 聚焦 287250 ====="
-echo "[A]bot主进程:"; pgrep -af 'bot.py|nonebot|main.py' | head -10 || echo 无bot进程
-echo "[B]大脑日志尾20:"; tail -20 /root/bot/bot/bot.log 2>/dev/null; echo "日志mtime:"; stat -c '%y %s字节' /root/bot/bot/bot.log 2>/dev/null
-echo "[C]登录态尾12:"; tail -12 /root/bot/bot/login_state.log 2>/dev/null; echo "登录态mtime:"; stat -c '%y' /root/bot/bot/login_state.log 2>/dev/null
-echo "[D]NapCat连接日志尾15:"; tail -15 /root/napcat.log 2>/dev/null
-echo "[E]签名代理HTTP:"; curl -s --max-time 5 -o /dev/null -w "%{http_code}\n" http://127.0.0.1:10800/
-echo "[F]bot目录:"; ls -la /root/bot/bot/ 2>/dev/null | head -20
+echo "===== 诊断3 尾部精确 287260 ====="
+echo "[B]大脑日志最后8行:"; tail -8 /root/bot/bot/bot.log 2>/dev/null
+echo "mtime:"; stat -c '%y' /root/bot/bot/bot.log 2>/dev/null
+echo "[C]登录态最后10行:"; tail -10 /root/bot/bot/login_state.log 2>/dev/null
+echo "[D]napcat.log最后12行:"; tail -12 /root/napcat.log 2>/dev/null
+echo "[D2]其他napcat日志:"; ls -la /root/Napcat/*.log /root/Napcat/napcat/logs/*.log 2>/dev/null | tail -8
 echo "=====完====="
 --- 输出 ---
-===== 掉线诊断2 聚焦 287250 =====
-[A]bot主进程:
-6446 /root/bot/venv/bin/python main.py
-[B]大脑日志尾20:
-11-19 02:03:27 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 02:03:27 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 02:03:27 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 02:03:27 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 02:03:41 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1961437829 from 2939420548@[群:562796842] '因为蔬菜比较多'
-11-19 02:03:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 02:03:41 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-19 02:03:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
-11-19 02:03:41 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
-11-19 02:12:28 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 782959670 from 1179127036@[群:562796842] 'Soga'
-11-19 02:12:28 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-19 02:12:28 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+===== 诊断3 尾部精确 287260 =====
+[B]大脑日志最后8行:
 11-19 02:12:28 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
 11-19 02:12:28 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
 11-19 02:12:47 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1663676000 from 1179127036@[群:562796842] '我觉得牛油底料比清油的好吃'
@@ -34,14 +19,10 @@ echo "=====完====="
 11-19 02:12:48 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1311)
 11-19 02:12:48 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1311) running complete
 11-19 02:13:19 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
-日志mtime:
-2026-11-19 02:13:19.820000000 +0800 2817134字节
-[C]登录态尾12:
-登录态mtime:
-[D]NapCat连接日志尾15:
-11-19 02:02:45 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 话说我好像没怎么吃过番茄锅
-11-19 02:02:57 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] 我一般是选牛油+菌汤
-11-19 02:03:05 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 素牛油锅
+mtime:
+2026-11-19 02:13:19.820000000 +0800
+[C]登录态最后10行:
+[D]napcat.log最后12行:
 11-19 02:03:26 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 我喜欢加个番茄提味
 11-19 02:03:41 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [涩᳐味瓜子千金难求᳐੭ﾞ(2939420548)] 因为蔬菜比较多
 c7a9cd093b1fb60be1412d4d03422a0653626eeb51fd959ccabc0f467233cbc5
@@ -54,24 +35,5 @@ c7a9cd093b1fb60be1412d4d03422a0653626eeb51fd959ccabc0f467233cbc5
 [13917:1119/021319.702795:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
 [13917:1119/021319.708902:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
 [13917:1119/021319.709001:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
-[E]签名代理HTTP:
-501
-[F]bot目录:
-total 0
-drwxr-xr-x  7 root root    3488 Nov 14 22:14 .
-drwxr-xr-x 11 root root    3488 Nov 11 23:30 ..
--rw-r--r--  1 root root     518 Nov 12 15:26 .env
--rw-r--r--  1 root root    1218 Nov 11 22:41 .env.example
-drwxr-xr-x  2 root root    3488 Nov 12 00:06 __pycache__
-drwxr-xr-x  2 root root    3488 Nov 11 22:41 assets
--rw-r--r--  1 root root 2817134 Nov 19 02:13 bot.log
--rw-r--r--  1 root root     705 Nov 11 22:41 config.py
-drwxr-xr-x  4 root root    3488 Nov 18 09:51 data
--rw-r--r--  1 root root     979 Nov 11 22:41 main.py
-drwxr-xr-x  3 root root    3488 Nov 12 00:07 persona
-drwxr-xr-x  3 root root    3488 Nov 18 09:51 plugins
--rw-r--r--  1 root root     461 Nov 11 22:41 pyproject.toml
--rw-r--r--  1 root root    1077 Nov 13 15:37 requirements.txt
--rw-r--r--  1 root root    7540 Nov 11 22:41 tests_test_games_full.py
--rw-r--r--  1 root root    4909 Nov 11 22:41 tests_test_mute_v2.py
+[D2]其他napcat日志:
 =====完=====
