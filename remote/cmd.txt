@@ -1,11 +1,12 @@
-287336
-echo "===A 等待heartbeat后探针日志==="
-sleep 35
-cat /root/link_probe.log 2>/dev/null | tail -10
-echo "===B lifecycle事件日志(WS连接态)==="
-grep -i "LIFECYCLE\|HEARTBEAT\|状态跳变" /root/bot/bot/bot.log 2>/dev/null | tail -8
-echo "===C GitHub link.txt是否建立==="
-echo "  待probe跳变后才推,当前查log即可"
-echo "===D bot进程稳定==="
-pgrep -f '/root/bot/venv/bin/python main.py' | head -1
+287337
+echo "===A bot.log里WS连接/heartbeat证据==="
+grep -i -E "websocket|反向WS|connected|disconnect|heartbeat|meta|onebot|127.0.0.1:8080" /root/bot/bot/bot.log 2>/dev/null | tail -20
+echo "===B bot.log最后20行==="
+tail -20 /root/bot/bot/bot.log 2>/dev/null
+echo "===C 8080端口在不在监听(bot的WS服务端)==="
+netstat -tlnp 2>/dev/null | grep 8080 || ss -tlnp 2>/dev/null | grep 8080
+echo "===D NapCat到bot的WS连接状态==="
+netstat -tnp 2>/dev/null | grep 8080 | tail -5 || ss -tnp 2>/dev/null | grep 8080 | tail -5
+echo "===E NapCat日志里WS上报相关==="
+grep -i -E "websocket|ws://|onebot|connect" /root/napcat.log 2>/dev/null | tail -10
 echo "=====完====="
