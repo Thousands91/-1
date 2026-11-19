@@ -1,2 +1,30 @@
-<<<ALERT.txt>>>
-2026-11-20 02:25:35 阿萨尔已恢复在线
+<<<task_287420.txt>>>
+===== 任务287420 11-20 02:26:20 =====
+--- 命令 ---
+echo "===== 287420 回线核对 ====="
+echo "[1]登录状态:"
+bash /root/logincheck.sh 2>&1 | grep -E "^\[" | head -1
+echo "[2]登录成功时刻:"
+grep -E "登录成功|扫码" /root/napcat.log | tail -3
+echo "[3]login_state最新状态变化:"
+tail -2 /root/login_state.log
+echo "[4]大脑进程:"
+pgrep -f "main.py" | head -1
+echo "[5]最近收到的消息:"
+grep "message" /root/bot/bot/bot.log | tail -2
+echo "=====完====="
+--- 输出 ---
+===== 287420 回线核对 =====
+[1]登录状态:
+[在线] 已登录，一切正常
+[2]登录成功时刻:
+如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+[3]login_state最新状态变化:
+2026-11-20 02:17:43 [未登录]
+2026-11-20 02:22:44 [未登录]
+[4]大脑进程:
+23361
+[5]最近收到的消息:
+11-20 02:25:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1313)
+11-20 02:25:35 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1313) running complete
+=====完=====
