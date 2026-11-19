@@ -1,55 +1,22 @@
-<<<task_287352.txt>>>
-===== 任务287352 11-19 13:55:05 =====
+<<<task_287353.txt>>>
+===== 任务287353 11-19 13:57:57 =====
 --- 命令 ---
-echo "===== 重启bot+验收优化 287352 $(date '+%F %T') ====="
-echo "[1]四文件最终md5:"
-for f in ai_chat.py book_find.py image_search_multisource.py song_request.py; do echo "  $(md5sum /root/bot/bot/plugins/$f|cut -c1-8) $f"; done
-echo "[2]平滑重启bot:"
-OLDPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
-kill "$OLDPID" 2>/dev/null; sleep 3
-( cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null & )
-sleep 14
-NEWPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
-echo "  旧PID=$OLDPID 新PID=$NEWPID"
-echo "[3]插件加载情况(成功/失败):"
-grep -i "Succeeded to load plugin\|Failed to load plugin\|Traceback\|SyntaxError" /root/bot/bot/bot.log 2>/dev/null | tail -20
-echo "[4]启动横幅:"
+echo "===== 重启后稳定性确认 287353 $(date '+%F %T') ====="
+echo "[1]bot进程(应存活且etime>30s):"
+pgrep -af '/root/bot/venv/bin/python main.py' | head -2
+PID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
+ps -p "$PID" -o pid,etime,stat,cmd 2>/dev/null | tail -1
+echo "[2]最近30秒有无崩溃/异常:"
+tail -40 /root/bot/bot/bot.log 2>/dev/null | grep -iE "traceback|error|exception|crash|killed" | tail -5 || echo "  无"
+echo "[3]启动横幅:"
 grep "QQ 群机器人启动成功" /root/bot/bot/bot.log 2>/dev/null | tail -1
-echo "[5]新进程存活:"
-ps -p "$NEWPID" -o pid,etime,stat 2>/dev/null | tail -1 || echo "  进程不在!"
 echo "=====完====="
 --- 输出 ---
-===== 重启bot+验收优化 287352 2026-11-19 13:55:05 =====
-[1]四文件最终md5:
-  20c01cd2 ai_chat.py
-  dd1bd568 book_find.py
-  37a3901c image_search_multisource.py
-  50c433dc song_request.py
-[2]平滑重启bot:
-  旧PID=9869 新PID=32643
-[3]插件加载情况(成功/失败):
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
-11-19 13:03:26 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
-11-19 13:03:27 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
-11-19 13:03:27 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
-11-19 13:55:11 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
-11-19 13:55:11 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
-11-19 13:55:12 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-11-19 13:55:12 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
-11-19 13:55:12 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
-11-19 13:55:12 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
-11-19 13:55:12 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-19 13:55:12 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
-11-19 13:55:12 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
-11-19 13:55:12 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
-11-19 13:55:13 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
-[4]启动横幅:
+===== 重启后稳定性确认 287353 2026-11-19 13:57:57 =====
+[1]bot进程(应存活且etime>30s):
+32643 /root/bot/venv/bin/python main.py
+32643       00:00 S<sl /root/bot/venv/bin/python main.py
+[2]最近30秒有无崩溃/异常:
+[3]启动横幅:
 11-19 13:55:13 [INFO] __main__ | QQ 群机器人启动成功 ✅
-[5]新进程存活:
-32643       00:00 S<sl
 =====完=====
