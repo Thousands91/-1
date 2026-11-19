@@ -1,72 +1,13 @@
-<<<task_287409.txt>>>
-===== 任务287409 11-19 23:07:53 =====
+<<<task_287410.txt>>>
+===== 任务287410 11-19 23:09:53 =====
 --- 命令 ---
-echo "===== 287409 掉线-发送相关性深挖 ====="
-echo "[1]22:00~22:45:11 之间全部发送记录:"
-awk '/11-19 22:0/,/11-19 22:45:11/' /root/napcat.log | grep "发送" | tail -8
-echo "[2]20:19:25 Timeout后 NapCat 后续10行:"
-grep -A 10 "20:19:25" /root/napcat.log | head -12
-echo "[3]bot.log今天全部心跳跳变:"
-grep "状态跳变" /root/bot/bot/bot.log | tail -12
-echo "[4]autoheal 12:10与14:39前后明细:"
-grep -B2 -A4 "12:10:30" /root/autoheal.log | head -10
-grep -B2 -A4 "14:39:39" /root/autoheal.log | head -10
-echo "[5]新二维码时间:"
+echo "===== 287410 取码 ====="
 ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-echo "[6]新码base64:"
 base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
 echo ""
 echo "=====完====="
 --- 输出 ---
-===== 287409 掉线-发送相关性深挖 =====
-[1]22:00~22:45:11 之间全部发送记录:
-11-19 22:27:04 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] 您好。想找点什么？
-11-19 22:27:31 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] 您好，书在柜上，茶在壶里，您随意。
-11-19 22:27:32 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] 来了？随便看，看中了我给您取。
-11-19 22:38:44 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] [回复消息 [我爱这橙色的海洋🍀💛乐育群里的(1561950850)] @小企鹅转圈抓尾巴肚皮朝上摔了一跤 (2534970154)   @阿萨尔 (3427943187)  ] 我在这，先生。
-[2]20:19:25 Timeout后 NapCat 后续10行:
-11-19 20:19:25 [[31merror[39m] 阿萨尔 | 发生错误 Error: Timeout: NTEvent serviceAndMethod:NodeIKernelMsgService/sendMsg ListenerName:NodeIKernelMsgListener/onMsgInfoListUpdate EventRet:
-{}
-
-    at f (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:30561:9)
-    at Timeout._onTimeout (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:30571:36)
-    at listOnTimeout (node:internal/timers:605:17)
-    at process.processTimers (node:internal/timers:541:7)
-[28562][131732824736]LongTask(40): duration=76ms, container=Browser
-11-19 20:20:42 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [云逸(4G📶淡人机(1664743600)] [回复消息 未找到消息记录 (MsgId = 0)] @小冉 (3819642626)  打什么哑谜
-11-19 20:20:42 [[33mwarn[39m] 阿萨尔 | 似乎是旧版客户端，尝试仅通过序号获取引用消息 737547
-11-19 20:20:43 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [亖᳐卐冇卌⭐᳐੭ﾞ(1561950850)] [图片]
-[3]bot.log今天全部心跳跳变:
-11-19 14:31:18 [WARNING] link_probe | [连接探针] [11-19 14:31:18.094] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
-11-19 14:39:18 [WARNING] link_probe | [连接探针] [11-19 14:39:18.207] HEARTBEAT 状态跳变 online=False good=True 自启动累计心跳=17 self_id=3427943187
-11-19 14:43:34 [WARNING] link_probe | [连接探针] [11-19 14:43:34.611] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=19 self_id=3427943187
-11-19 14:57:04 [WARNING] link_probe | [连接探针] [11-19 14:57:04.730] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
-11-19 15:22:04 [WARNING] link_probe | [连接探针] [11-19 15:22:04.932] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
-11-19 19:38:57 [WARNING] link_probe | [连接探针] [11-19 19:38:57.449] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
-11-19 20:45:57 [WARNING] link_probe | [连接探针] [11-19 20:45:57.154] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
-11-19 22:02:28 [WARNING] link_probe | [连接探针] [11-19 22:02:28.000] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
-11-19 22:18:28 [WARNING] link_probe | [连接探针] [11-19 22:18:28.161] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
-11-19 22:24:28 [WARNING] link_probe | [连接探针] [11-19 22:24:28.265] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
-11-19 22:45:13 [WARNING] link_probe | [连接探针] [11-19 22:45:13.122] HEARTBEAT 状态跳变 online=False good=True 自启动累计心跳=42 self_id=3427943187
-[4]autoheal 12:10与14:39前后明细:
-[11-19 12:10:29] ===== autoheal v1.0 启动 2026-11-19 12:10:29 =====
-[11-19 12:10:30] 登录态: 初始 -> [未登录]
-[11-19 12:10:30] ALERT: 阿萨尔掉线([未登录])! 已尝试自愈;若5分钟内不恢复需本人扫码
-[11-19 12:10:32] 告警:已推送GitHub
-[11-19 14:31:29] 登录态: [未登录] -> [在线]
-[11-19 14:31:29] ALERT: 阿萨尔已恢复在线
-[11-19 14:31:32] 告警:已推送GitHub
-[11-19 14:31:29] ALERT: 阿萨尔已恢复在线
-[11-19 14:31:32] 告警:已推送GitHub
-[11-19 14:39:39] 登录态: [在线] -> [未登录]
-[11-19 14:39:39] ALERT: 阿萨尔掉线([未登录])! 已尝试自愈;若5分钟内不恢复需本人扫码
-[11-19 14:39:39] 告警:推送失败,留PBOX待worker回传
-[11-19 14:43:42] 登录态: [未登录] -> [在线]
-[11-19 14:43:42] ALERT: 阿萨尔已恢复在线
-[11-19 14:43:51] 告警:已推送GitHub
-[11-19 15:25:59] 登录态: [在线] -> [未知]
-[5]新二维码时间:
--rw-r--r-- 1 root root 602 Nov 19 23:07 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-[6]新码base64:
-iVBORw0KGgoAAAANSUhEUgAAAJMAAACTAQAAAACinha4AAAACXBIWXMAAAsTAAALEwEAmpwYAAACDElEQVRIid2WTarsIBCFKzhw1r0BwW04c0tmA0ncQHpLzrINwQ0kMweSeiedvtwLd2LBGzxeaJr4BaR+zikl/v3Qf812onGjiUrcSkw0SNjBLXgaagvODBuWEpZM8Ia8xWLeaBSyMSn8Pxw95SxcEZVY2yxljNc8b7y6/PzOrYu962c+v5817WB4jkqTbg8qP3rZxU5tHt5M/modb/d+3cypRVtOdvEIKo8SthN6zq+koBdGKiLm1Ku2YcuByu45SthJ755DLGxjKiJ2oFdJ7VqtZFdfWMJ2Db1cAp/IzMkMEnZUyxufXq0eZVBRwnbXgi5cUQPFnzx62anL6TN5BELDVy+7mXle2+ALxG6jiDkbKxxpudLD3f7oZcw5OIi0zbXBWy8JQ/3gyIfLM7fxu/ZdDHqZWe2kkEfQJGJcEU45dSOH2Xn3rZehfqQxSCj4smioVcAOBOLt6a8JOunbH70MenkmZN8mjN7to91OdhKv2qDwwatvX/YxfrcrMhGV10en3SxBZTZudqGyujZK2IEZX2HNPKDntRwSdvpL3SO85cpJliXs4EzudrNayEYJw7Nr6JQXj+9mkLD7nCHCMYVd7SFhON8mjVWerkC+8uhk7/N8wq7p2vspZBOGH4a9xlGjDiELl6dhr4wGjiJ23V/sTvZENrW8JAyxT/p998ENKN1962V/+673b7M/ibEtck68CawAAAAASUVORK5CYII=
+===== 287410 取码 =====
+-rw-r--r-- 1 root root 605 Nov 19 23:09 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+iVBORw0KGgoAAAANSUhEUgAAAJMAAACTAQAAAACinha4AAAACXBIWXMAAAsTAAALEwEAmpwYAAACD0lEQVRIid2WMbK1IAyF41DY6QaYYRt0bEk3INcN6Jbo2AYzbEA6Csb8h3d99xZ/A+1jLPQrmOTkJJH4/0N/ml1EGynOfOliHQ09LHFZWVxjWEaxe3z2MCdtFpeJxxgGT2snW3TZdDydSv1sZYUk5kxzL+OyGTnnYDnyN7cmBv1WL5/nq2kTw7m0wNtkiv3WsondGrGLw5SZ42sUZw9Lnl+6kCkb8ZlVF7s0TTompy4St5ZzD2MXdyc4F+tp8JG7WKbNqBfJSYuLVOpjcUf2Bm6lIZPtYYnlQrwzak5EIvWwe4wXSaKwOri1zD3sGhGCeOlAY7zNW4NWlpw4nSRNC8XLPDVvZmGr1VNnpuk3t1bm+dDxMAIv7OXQw9jRjCFEYSGUPdgelryC0ZLjg8T5+KWVYXpt9Qt+oUW/a97MjDpI/bRmmPQzdxvZXcNHCHLI0PLxQSPj2hxhGksVPsu1h+EOhLCz3OC48beWjczDL5gi6nR8uqc/Ghn6srp7lIvBNPr0dBOryvl4w2sssaPmLlZvkoMvuJXMM7NbmYFT1O4Uxufqi+1iFGxG9eSE3qL3nmllOLAqHArxsKy4h9V9bqT1VfvdP7O4kdV9nuu/QPJlYLF3MezVHGZXMEteJLib1XLdGmKEoZPZrG7NCU7Xn1jaGPKAPeuV0rJcexj0w6THivtZFx/tm1jrP9zfYP8A5oVTWw+xV44AAAAASUVORK5CYII=
 =====完=====
