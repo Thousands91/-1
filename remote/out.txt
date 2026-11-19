@@ -1,46 +1,24 @@
-<<<task_287372.txt>>>
-===== 任务287372 11-19 15:21:30 =====
+<<<task_287373.txt>>>
+===== 任务287373 11-19 15:23:58 =====
 --- 命令 ---
-echo "===== 重启大脑+验收坑140修复 287372 $(date '+%F %T') ====="
-OLDPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
-echo "旧PID=$OLDPID"
-kill "$OLDPID" 2>/dev/null; sleep 3
-( cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null & )
-sleep 15
-NEWPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
-echo "新PID=$NEWPID"
-echo "[1]插件加载:"
-grep -iE "Succeeded to load plugin|Failed to load plugin|Traceback|SyntaxError" /root/bot/bot/bot.log 2>/dev/null | tail -13
-echo "[2]启动横幅:"
-grep "QQ 群机器人启动成功" /root/bot/bot/bot.log 2>/dev/null | tail -1
-echo "[3]新进程存活:"
-ps -p "$NEWPID" -o pid,etime,stat 2>/dev/null | tail -1 || echo "  进程不在!"
-echo "[4]登录态:"
-bash /root/logincheck.sh 2>/dev/null | grep -iE "在线|离线|ready|\[" | head -3
+echo "===== 坑140修复后稳定性确认 287373 $(date '+%F %T') ====="
+echo "[1]进程存活时间(应>1分钟):"
+PID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1); ps -p "$PID" -o pid,etime,stat 2>/dev/null | tail -1
+echo "[2]登录态:"
+bash /root/logincheck.sh 2>/dev/null | grep -iE "在线|ready|阶段" | head -2
+echo "[3]重启后有无异常:"
+grep -E "11-19 15:2[1-9]|11-19 15:3" /root/bot/bot/bot.log 2>/dev/null | grep -iE "traceback|exception|error|crash" | tail -3 || echo "  无异常"
+echo "[4]设备当前md5(应65095faf):"
+md5sum /root/bot/bot/plugins/song_request.py | cut -c1-8
 echo "=====完====="
 --- 输出 ---
-===== 重启大脑+验收坑140修复 287372 2026-11-19 15:21:30 =====
-旧PID=2059
-新PID=9282
-[1]插件加载:
-11-19 14:56:43 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
-11-19 14:56:43 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
-11-19 15:21:45 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
-11-19 15:21:45 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
-11-19 15:21:45 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
-11-19 15:21:45 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
-11-19 15:21:45 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
-11-19 15:21:45 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
-11-19 15:21:45 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
-11-19 15:21:45 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-19 15:21:46 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
-11-19 15:21:46 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
-11-19 15:21:46 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-[2]启动横幅:
-11-19 15:21:47 [INFO] __main__ | QQ 群机器人启动成功 ✅
-[3]新进程存活:
+===== 坑140修复后稳定性确认 287373 2026-11-19 15:23:58 =====
+[1]进程存活时间(应>1分钟):
  9282       00:00 S<sl
-[4]登录态:
+[2]登录态:
 [在线] 已登录，一切正常
 阶段: ready
+[3]重启后有无异常:
+[4]设备当前md5(应65095faf):
+65095faf
 =====完=====
