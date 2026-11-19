@@ -1,90 +1,55 @@
-<<<task_287423.txt>>>
-===== 任务287423 11-20 02:32:14 =====
+<<<task_287424.txt>>>
+===== 任务287424 11-20 02:32:57 =====
 --- 命令 ---
-echo "===== 287423 历史日志库存盘点 ====="
-echo "[1]所有日志文件及轮转版(按时间排):"
-ls -la /root/*.log* /root/*.log.[0-9] /root/*.gz 2>/dev/null
-ls -la /root/bot/bot/*.log* /root/bot/bot/*.log.[0-9]* /root/bot/bot/*.gz 2>/dev/null
-find /root -maxdepth 3 -name "*.log.*" -o -maxdepth 3 -name "*.log.gz" 2>/dev/null | head -10
-echo "[2]napcat日志目录里有没有历史:"
-find /root/Napcat -name "*.log*" -o -name "*.gz" 2>/dev/null | head -10
-echo "[3]memory记忆库内容(交互记忆在这):"
-ls -la /root/bot/bot/data/memory/
-echo "[4]memory最新文件头部(看存的是什么):"
-F=$(ls -t /root/bot/bot/data/memory/ | head -1)
-echo "最新文件: $F"
-head -c 1500 "/root/bot/bot/data/memory/$F"
+echo "===== 287424 bot.log时间覆盖与交互量统计 ====="
+echo "[1]bot.log起点与终点:"
+head -1 /root/bot/bot/bot.log | head -c 80
 echo ""
-echo "[5]bot.log起点时间:"
-head -3 /root/bot/bot/bot.log | head -1
-echo "[6]找一切带日期的交互痕迹(json/数据库):"
-find /root/bot/bot/data -name "*.json" -newer /root/bot/bot/pyproject.toml 2>/dev/null
-ls -la /root/bot/bot/data/*.json 2>/dev/null
+tail -1 /root/bot/bot/bot.log | head -c 80
+echo ""
+echo "[2]每天消息量(收到的群/私聊消息行数):"
+for d in 11-14 11-15 11-16 11-17 11-18 11-19 11-20; do
+  echo "  $d: $(grep -c "11-$d.*message\.\(group\|private\)" /root/bot/bot/bot.log)"
+done
+echo "[3]每天ai_chat触发量:"
+for d in 11-16 11-17 11-18 11-19 11-20; do
+  echo "  $d: $(grep "11-$d.*handled by Matcher" /root/bot/bot/bot.log | grep -c "ai_chat")"
+done
+echo "[4]每天发送量(napcat两个日志合计):"
+for d in 11-16 11-17 11-18 11-19 11-20; do
+  A=$(grep -c "发送 ->" /root/napcat-restart.log 2>/dev/null; true)
+  echo "  napcat-restart.log: $A"
+  break
+done
+grep -c "发送 ->" /root/napcat-restart.log
+echo "[5]memory最新文件:"
+F=$(ls -t /root/bot/bot/data/memory/ | head -1)
+echo "文件: $F  大小: $(stat -c %s /root/bot/bot/data/memory/$F)B"
+head -c 800 "/root/bot/bot/data/memory/$F"
 echo "=====完====="
 --- 输出 ---
-===== 287423 历史日志库存盘点 =====
-[1]所有日志文件及轮转版(按时间排):
--rw-r--r-- 1 root root      52 Nov 12 00:06 /root/asar_sync_boot.log
--rw-r--r-- 1 root root    4739 Nov 20 02:25 /root/autoheal.log
--rw-r--r-- 1 root root     835 Nov 12 13:06 /root/azar_login_run.log
--rw-r--r-- 1 root root    7775 Nov 18 02:09 /root/bot.log.20261118.bak
--rw-r--r-- 1 root root  257092 Nov 20 02:31 /root/health.log
--rw-r--r-- 1 root root    4388 Nov 20 02:28 /root/ip.log
--rw-r--r-- 1 root root    3047 Nov 20 02:25 /root/link_probe.log
--rw-r--r-- 1 root root   47301 Nov 20 02:27 /root/login_state.log
--rw-r--r-- 1 root root    5285 Nov 18 09:23 /root/music_sign.log
--rw-r--r-- 1 root root    3377 Nov 19 15:58 /root/music_sign_v4.log
--rw-r--r-- 1 root root 1422882 Nov 19 11:58 /root/napcat-restart.log
--rw-r--r-- 1 root root   24510 Nov 20 02:25 /root/napcat.log
--rw-r--r-- 1 root root   80220 Nov 20 02:31 /root/netmon.log
--rw-r--r-- 1 root root   16098 Nov 19 22:46 /root/offline_forensics.log
--rw-r--r-- 1 root root    1431 Nov 19 22:47 /root/offline_watch2.log
--rw-r--r-- 1 root root      11 Nov 12 00:50 /root/remote_boot.log
--rw-r--r-- 1 root root 1192264 Nov 20 02:28 /root/remote_ctl.log
--rw-r--r-- 1 root root  167020 Nov 20 02:31 /root/tick.log
--rw-r--r-- 1 root root 3900655 Nov 20 02:31 /root/bot/bot/bot.log
-/root/bot.log.20261118.bak
-[2]napcat日志目录里有没有历史:
-/root/Napcat/opt/QQ/resources/app/rsds.log
-[3]memory记忆库内容(交互记忆在这):
-total 0
-drwxr-xr-x 2 root root  3488 Nov 19 20:39 .
-drwxr-xr-x 4 root root  3488 Nov 18 09:51 ..
--rw-r--r-- 1 root root    85 Nov 12 14:22 1062461846.json
--rw-r--r-- 1 root root   160 Nov 19 20:24 1179127036.json
--rw-r--r-- 1 root root 15231 Nov 19 20:38 1561950850.json
--rw-r--r-- 1 root root 19254 Nov 12 14:22 1561950850.json.bak_1108手术前
--rw-r--r-- 1 root root 13481 Nov 12 14:00 1561950850.json.bak_1112手术前
--rw-r--r-- 1 root root   133 Nov 12 14:22 22222.json
--rw-r--r-- 1 root root  3846 Nov 12 14:22 2419770062.json
--rw-r--r-- 1 root root   133 Nov 12 14:22 2423816346.json
--rw-r--r-- 1 root root   226 Nov 19 18:19 3273077048.json
--rw-r--r-- 1 root root   190 Nov 19 20:39 3611220879.json
--rw-r--r-- 1 root root   298 Nov 12 14:22 649203747.json
-[4]memory最新文件头部(看存的是什么):
-最新文件: 3611220879.json
-[{"t": 1795091993, "m": "？？？？", "r": "这话您说得有趣，好比是先问我要哪一页的书，再让我给您讲故事。您是想听关于书的，还是关于这城的？"}]
-[5]bot.log起点时间:
+===== 287424 bot.log时间覆盖与交互量统计 =====
+[1]bot.log起点与终点:
 11-14 22:14:46 [SUCCESS] nonebot | NoneBot is initializing...
-[6]找一切带日期的交互痕迹(json/数据库):
-/root/bot/bot/data/fortune_log.json
-/root/bot/bot/data/memory/1062461846.json
-/root/bot/bot/data/memory/1561950850.json
-/root/bot/bot/data/memory/22222.json
-/root/bot/bot/data/memory/2419770062.json
-/root/bot/bot/data/memory/2423816346.json
-/root/bot/bot/data/memory/649203747.json
-/root/bot/bot/data/memory/3273077048.json
-/root/bot/bot/data/memory/1179127036.json
-/root/bot/bot/data/memory/3611220879.json
-/root/bot/bot/data/qface_index.json
-/root/bot/bot/data/mface_names.json
-/root/bot/bot/data/search_tag_cache.json
-/root/bot/bot/data/image_captions.json
--rw-r--r-- 1 root root   735 Nov 19 17:19 /root/bot/bot/data/fortune_log.json
--rw-r--r-- 1 root root 25369 Nov 11 22:41 /root/bot/bot/data/gutenberg_zh.json
--rw-r--r-- 1 root root   122 Nov 17 03:56 /root/bot/bot/data/image_captions.json
--rw-r--r-- 1 root root    83 Nov 12 15:01 /root/bot/bot/data/mface_names.json
--rw-r--r-- 1 root root  6996 Nov 19 13:03 /root/bot/bot/data/qface_index.json
--rw-r--r-- 1 root root  1617 Nov 13 03:13 /root/bot/bot/data/search_tag_cache.json
-=====完=====
+
+11-20 02:32:55 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_p
+[2]每天消息量(收到的群/私聊消息行数):
+  11-14: 0
+  11-15: 0
+  11-16: 0
+  11-17: 0
+  11-18: 0
+  11-19: 0
+  11-20: 0
+[3]每天ai_chat触发量:
+  11-16: 0
+  11-17: 0
+  11-18: 0
+  11-19: 0
+  11-20: 0
+[4]每天发送量(napcat两个日志合计):
+  napcat-restart.log: 0
+0
+[5]memory最新文件:
+文件: 3611220879.json  大小: 190B
+[{"t": 1795091993, "m": "？？？？", "r": "这话您说得有趣，好比是先问我要哪一页的书，再让我给您讲故事。您是想听关于书的，还是关于这城的？"}]=====完=====
