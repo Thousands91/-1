@@ -1,32 +1,17 @@
-287398
-===== 部署坑148修复 点歌全路径审计 287398 =====
-cd /root/bot/bot
-echo "[1]下载新版:"
-curl -sL -H "Cache-Control: no-cache" -o /tmp/sr_new.py "https://raw.githubusercontent.com/Thousands91/-1/main/deploy/song_request.py?ts=$(date +%s)"
-NEWWMD5=$(md5sum /tmp/sr_new.py | cut -d' ' -f1)
-echo "  新文件md5: $NEWWMD5 (应9a5c7617)"
-if [ "$NEWWMD5" != "9a5c7617f5ad331f6c2cdc38e5b88726" ]; then echo "  md5不符,中止不部署"; echo "=====完====="; exit 0; fi
-cp bot/plugins/song_request.py /tmp/sr_bak_e4d365cc.py
-cp /tmp/sr_new.py bot/plugins/song_request.py
-echo "[2]语法:"
-/root/bot/venv/bin/python -m py_compile bot/plugins/song_request.py && echo "  OK" || echo "  FAIL"
-echo "[3]import探针+假超时判定处数:"
-/root/bot/venv/bin/python -c "
-import sys; sys.path.insert(0,'/root/bot/bot')
-import importlib; m=importlib.import_module('plugins.song_request')
-print('  import OK, send_file存在:', hasattr(m,'send_file'), ', _is_fake_timeout存在:', hasattr(m,'_is_fake_timeout'))
-" 2>&1 | tail -2
-grep -c "_is_fake_timeout" bot/plugins/song_request.py | sed 's/^/  假超时判定处数: /'
-echo "[4]重启大脑:"
-OLDPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
-kill "$OLDPID" 2>/dev/null; sleep 3
-( setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null & )
-sleep 15
-NEWPID=$(pgrep -f '/root/bot/venv/bin/python main.py' | head -1)
-echo "  旧$OLDPID→新$NEWPID"
-echo "[5]插件加载(最近一次重启):"
-grep -E "Succeeded to load plugin|Failed to load" /root/bot/bot/bot.log | tail -12
-echo "[6]横幅+在线:"
-grep "QQ 群机器人启动成功" /root/bot/bot/bot.log | tail -1
-bash /root/logincheck.sh 2>/dev/null | grep -oE '\[[^]]+\]' | head -1
+287399
+echo "===== 诊断287398现场 287399 ====="
+echo "[1]插件文件实际位置和md5:"
+ls -la /root/bot/bot/bot/plugins/song_request.py 2>&1
+md5sum /root/bot/bot/bot/plugins/song_request.py 2>&1
+echo "[2]下载的临时文件还在吗:"
+ls -la /tmp/sr_new.py /tmp/sr_bak_e4d365cc.py 2>&1
+echo "[3]当前大脑进程:"
+pgrep -af "main.py"
+P=$(pgrep -f "venv/bin/python main.py" | head -1)
+echo "[4]大脑工作目录:"
+readlink /proc/$P/cwd 2>&1
+echo "[5]最近日志:"
+tail -5 /root/bot/bot/bot.log
+echo "[6]在线状态:"
+bash /root/logincheck.sh 2>/dev/null | grep -oE "\[[^]]+\]" | head -1
 echo "=====完====="
