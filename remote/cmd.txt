@@ -1,21 +1,27 @@
-287423
-echo "===== 287423 历史日志库存盘点 ====="
-echo "[1]所有日志文件及轮转版(按时间排):"
-ls -la /root/*.log* /root/*.log.[0-9] /root/*.gz 2>/dev/null
-ls -la /root/bot/bot/*.log* /root/bot/bot/*.log.[0-9]* /root/bot/bot/*.gz 2>/dev/null
-find /root -maxdepth 3 -name "*.log.*" -o -maxdepth 3 -name "*.log.gz" 2>/dev/null | head -10
-echo "[2]napcat日志目录里有没有历史:"
-find /root/Napcat -name "*.log*" -o -name "*.gz" 2>/dev/null | head -10
-echo "[3]memory记忆库内容(交互记忆在这):"
-ls -la /root/bot/bot/data/memory/
-echo "[4]memory最新文件头部(看存的是什么):"
-F=$(ls -t /root/bot/bot/data/memory/ | head -1)
-echo "最新文件: $F"
-head -c 1500 "/root/bot/bot/data/memory/$F"
+287424
+echo "===== 287424 bot.log时间覆盖与交互量统计 ====="
+echo "[1]bot.log起点与终点:"
+head -1 /root/bot/bot/bot.log | head -c 80
 echo ""
-echo "[5]bot.log起点时间:"
-head -3 /root/bot/bot/bot.log | head -1
-echo "[6]找一切带日期的交互痕迹(json/数据库):"
-find /root/bot/bot/data -name "*.json" -newer /root/bot/bot/pyproject.toml 2>/dev/null
-ls -la /root/bot/bot/data/*.json 2>/dev/null
+tail -1 /root/bot/bot/bot.log | head -c 80
+echo ""
+echo "[2]每天消息量(收到的群/私聊消息行数):"
+for d in 11-14 11-15 11-16 11-17 11-18 11-19 11-20; do
+  echo "  $d: $(grep -c "11-$d.*message\.\(group\|private\)" /root/bot/bot/bot.log)"
+done
+echo "[3]每天ai_chat触发量:"
+for d in 11-16 11-17 11-18 11-19 11-20; do
+  echo "  $d: $(grep "11-$d.*handled by Matcher" /root/bot/bot/bot.log | grep -c "ai_chat")"
+done
+echo "[4]每天发送量(napcat两个日志合计):"
+for d in 11-16 11-17 11-18 11-19 11-20; do
+  A=$(grep -c "发送 ->" /root/napcat-restart.log 2>/dev/null; true)
+  echo "  napcat-restart.log: $A"
+  break
+done
+grep -c "发送 ->" /root/napcat-restart.log
+echo "[5]memory最新文件:"
+F=$(ls -t /root/bot/bot/data/memory/ | head -1)
+echo "文件: $F  大小: $(stat -c %s /root/bot/bot/data/memory/$F)B"
+head -c 800 "/root/bot/bot/data/memory/$F"
 echo "=====完====="
