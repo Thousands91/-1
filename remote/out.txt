@@ -1,39 +1,27 @@
-<<<task_287424.txt>>>
-===== 任务287424 11-20 02:32:57 =====
+<<<task_287425.txt>>>
+===== 任务287425 11-20 02:33:56 =====
 --- 命令 ---
-echo "===== 287424 bot.log时间覆盖与交互量统计 ====="
-echo "[1]bot.log起点与终点:"
-head -1 /root/bot/bot/bot.log | head -c 80
-echo ""
-tail -1 /root/bot/bot/bot.log | head -c 80
-echo ""
-echo "[2]每天消息量(收到的群/私聊消息行数):"
+echo "===== 287425 修正口径:bot.log逐日统计 ====="
+echo "[1]逐日总行数:"
 for d in 11-14 11-15 11-16 11-17 11-18 11-19 11-20; do
-  echo "  $d: $(grep -c "11-$d.*message\.\(group\|private\)" /root/bot/bot/bot.log)"
+  echo "  $d: $(grep -c "^11-$d" /root/bot/bot/bot.log)"
 done
-echo "[3]每天ai_chat触发量:"
+echo "[2]逐日收到的消息行数:"
 for d in 11-16 11-17 11-18 11-19 11-20; do
-  echo "  $d: $(grep "11-$d.*handled by Matcher" /root/bot/bot/bot.log | grep -c "ai_chat")"
+  echo "  $d: $(grep "^11-$d" /root/bot/bot/bot.log | grep -cF "message.group.normal")  群 / 私聊 $(grep "^11-$d" /root/bot/bot/bot.log | grep -cF "message.private")"
 done
-echo "[4]每天发送量(napcat两个日志合计):"
+echo "[3]逐日ai_chat触发:"
 for d in 11-16 11-17 11-18 11-19 11-20; do
-  A=$(grep -c "发送 ->" /root/napcat-restart.log 2>/dev/null; true)
-  echo "  napcat-restart.log: $A"
-  break
+  echo "  $d: $(grep "^11-$d" /root/bot/bot/bot.log | grep -cF "module=plugins.ai_chat")"
 done
-grep -c "发送 ->" /root/napcat-restart.log
-echo "[5]memory最新文件:"
-F=$(ls -t /root/bot/bot/data/memory/ | head -1)
-echo "文件: $F  大小: $(stat -c %s /root/bot/bot/data/memory/$F)B"
-head -c 800 "/root/bot/bot/data/memory/$F"
+echo "[4]napcat-restart.log格式抽样:"
+grep -m3 "11-19 15:5" /root/napcat-restart.log | head -3
+echo "[5]memory全目录(文件名=用户QQ,看更新时间分布):"
+ls -la --time-style=+%m-%d_%H:%M /root/bot/bot/data/memory/
 echo "=====完====="
 --- 输出 ---
-===== 287424 bot.log时间覆盖与交互量统计 =====
-[1]bot.log起点与终点:
-11-14 22:14:46 [SUCCESS] nonebot | NoneBot is initializing...
-
-11-20 02:32:55 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_p
-[2]每天消息量(收到的群/私聊消息行数):
+===== 287425 修正口径:bot.log逐日统计 =====
+[1]逐日总行数:
   11-14: 0
   11-15: 0
   11-16: 0
@@ -41,15 +29,32 @@ echo "=====完====="
   11-18: 0
   11-19: 0
   11-20: 0
-[3]每天ai_chat触发量:
+[2]逐日收到的消息行数:
+  11-16: 0  群 / 私聊 0
+  11-17: 0  群 / 私聊 0
+  11-18: 0  群 / 私聊 0
+  11-19: 0  群 / 私聊 0
+  11-20: 0  群 / 私聊 0
+[3]逐日ai_chat触发:
   11-16: 0
   11-17: 0
   11-18: 0
   11-19: 0
   11-20: 0
-[4]每天发送量(napcat两个日志合计):
-  napcat-restart.log: 0
-0
-[5]memory最新文件:
-文件: 3611220879.json  大小: 190B
-[{"t": 1795091993, "m": "？？？？", "r": "这话您说得有趣，好比是先问我要哪一页的书，再让我给您讲故事。您是想听关于书的，还是关于这城的？"}]=====完=====
+[4]napcat-restart.log格式抽样:
+[5]memory全目录(文件名=用户QQ,看更新时间分布):
+total 0
+drwxr-xr-x 2 root root  3488 11-19_20:39 .
+drwxr-xr-x 4 root root  3488 11-18_09:51 ..
+-rw-r--r-- 1 root root    85 11-12_14:22 1062461846.json
+-rw-r--r-- 1 root root   160 11-19_20:24 1179127036.json
+-rw-r--r-- 1 root root 15231 11-19_20:38 1561950850.json
+-rw-r--r-- 1 root root 19254 11-12_14:22 1561950850.json.bak_1108手术前
+-rw-r--r-- 1 root root 13481 11-12_14:00 1561950850.json.bak_1112手术前
+-rw-r--r-- 1 root root   133 11-12_14:22 22222.json
+-rw-r--r-- 1 root root  3846 11-12_14:22 2419770062.json
+-rw-r--r-- 1 root root   133 11-12_14:22 2423816346.json
+-rw-r--r-- 1 root root   226 11-19_18:19 3273077048.json
+-rw-r--r-- 1 root root   190 11-19_20:39 3611220879.json
+-rw-r--r-- 1 root root   298 11-12_14:22 649203747.json
+=====完=====
