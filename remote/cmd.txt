@@ -1,5 +1,4 @@
-287367
-echo "BASE64_START"
-base64 -w0 /root/bot/bot/plugins/song_request.py.bak_287361
-echo ""
-echo "BASE64_END"
+287368
+echo "===== 上一轮改动精确diff(基线bak vs 当前) 287368 ====="
+diff -u /root/bot/bot/plugins/song_request.py.bak_287361 /root/bot/bot/plugins/song_request.py 2>/dev/null | head -120
+echo "=====完====="
