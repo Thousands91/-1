@@ -1,35 +1,52 @@
-<<<task_287407.txt>>>
-===== 任务287407 11-19 23:00:19 =====
+<<<task_287408.txt>>>
+===== 任务287408 11-19 23:06:36 =====
 --- 命令 ---
-echo "===== 287407 掉线史统计+新码 ====="
-echo "[1]autoheal.log历次掉线ALERT(按天统计):"
-grep -oE "^\[11-[0-9]+ [0-9]{2}:[0-9]{2}:[0-9]{2}\] ALERT: 阿萨尔掉线" /root/autoheal.log | cut -c2-12 | uniq -c
-echo "[2]近3天掉线ALERT明细:"
-grep -E "ALERT: 阿萨尔掉线" /root/autoheal.log | tail -8
-echo "[3]napcat.log今天离线记录:"
-grep "账号状态变更为离线" /root/napcat.log
-echo "[4]新二维码时间戳:"
-ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-echo "[5]新二维码base64:"
-base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-echo ""
+echo "===== 287408 掉线前发送行为取证 ====="
+echo "[0]当前登录状态:"
+bash /root/logincheck.sh 2>&1 | grep -E "^\[|阶段" | head -3
+echo "[1]napcat.log今天全部发送记录(时间轴):"
+grep -E "发送|send" /root/napcat.log | grep "11-19" | tail -20
+echo "[2]22:44:00~22:45:15 掉线前最后窗口全事件:"
+grep -E "11-19 22:4[45]" /root/napcat.log | head -20
+echo "[3]14:30~14:41 第一次闪断前窗口:"
+grep -E "11-19 14:3[0-9]" /root/napcat.log | tail -12
+echo "[4]12:00~12:12 中午那次掉线前窗口:"
+grep -E "11-19 12:0" /root/napcat.log | tail -12
+echo "[5]bot.log今天发送类动作(retcode/发送失败):"
+grep -E "send_msg|ActionFailed|发送失败" /root/bot/bot/bot.log | grep "11-19" | tail -8
 echo "=====完====="
 --- 输出 ---
-===== 287407 掉线史统计+新码 =====
-[1]autoheal.log历次掉线ALERT(按天统计):
-      1 11-19 12:10
-      1 11-19 14:39
-      1 11-19 22:46
-      1 11-19 22:54
-[2]近3天掉线ALERT明细:
-[11-19 12:10:30] ALERT: 阿萨尔掉线([未登录])! 已尝试自愈;若5分钟内不恢复需本人扫码
-[11-19 14:39:39] ALERT: 阿萨尔掉线([未登录])! 已尝试自愈;若5分钟内不恢复需本人扫码
-[11-19 22:46:49] ALERT: 阿萨尔掉线([未登录])! 已尝试自愈;若5分钟内不恢复需本人扫码
-[11-19 22:54:16] ALERT: 阿萨尔掉线([未登录])! 已尝试自愈;若5分钟内不恢复需本人扫码
-[3]napcat.log今天离线记录:
+===== 287408 掉线前发送行为取证 =====
+[0]当前登录状态:
+[未登录] 当前没有有效会话
+阶段: waiting_qrcode
+[1]napcat.log今天全部发送记录(时间轴):
+11-19 18:17:16 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [简简单单第一附属精神病院(562796842)] [阿萨尔(3427943187)] 🎲 三把骰子，共 12 点。 ...
+11-19 18:17:50 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [简简单单第一附属精神病院(562796842)] [阿萨尔(3427943187)] 🎲 三把骰子，共 12 点。 ...
+11-19 18:18:08 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [简简单单第一附属精神病院(562796842)] [阿萨尔(3427943187)] [回复消息 [亖᳐卐冇卌⭐᳐੭ﾞ(1561950850)] @阿萨尔 (3427943187)  这什么] 「D20，六加两点」——这是骰子戏的说法，掷出二十面骰子，点数是八。
+11-19 18:19:00 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [简简单单第一附属精神病院(562796842)] [阿萨尔(3427943187)] [回复消息 [麻薯流心奶黄肉松荔枝榛子芒果薄脆奶芙千层(3273077048)] @阿萨尔 (3427943187)  这是谁的] [动作:捧起一本泛黄的线装书，指尖轻轻摩挲着封皮上模糊的字迹][动作:伸出手指，指向封底][动作:书页间夹着一片干枯的玫瑰花瓣]。
+11-19 18:22:07 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [简简单单第一附属精神病院(562796842)] [阿萨尔(3427943187)] [回复消息 [亖᳐卐冇卌⭐᳐੭ﾞ(1561950850)] @阿萨尔 (3427943187)  ？] 这是一本书，先生，书页间夹着干枯的玫瑰花瓣——这花香，比那《孤女复仇记》里描写的还要稠一点。
+11-19 18:26:08 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [相亲相爱一家人(590454333)] [阿萨尔(3427943187)] 不必谢，这一条我记下了。
+11-19 18:30:36 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [简简单单第一附属精神病院(562796842)] [阿萨尔(3427943187)] [回复消息 [亖᳐卐冇卌⭐᳐੭ﾞ(1561950850)] @阿萨尔 (3427943187)   @麻薯流心奶黄肉松荔枝榛子芒果薄脆奶芙千层 (3273077048)  这是你那个撤回的消息的回复] 「D20，六加两点」是掷骰子的点数，先生，八点。
+11-19 20:18:22 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [简简单单第一附属精神病院(562796842)] [阿萨尔(3427943187)] [回复消息 [亖᳐卐冇卌⭐᳐੭ﾞ(1561950850)] @涩᳐味瓜子千金难求᳐੭ﾞ (2939420548)   @阿萨尔 (3427943187)  吃哪个] 红烧肉吧，油重，配一碗白饭正好。
+11-19 20:19:08 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [简简单单第一附属精神病院(562796842)] [阿萨尔(3427943187)] [回复消息 [亖᳐卐冇卌⭐᳐੭ﾞ(1561950850)] @阿萨尔 (3427943187)  你没看图吗] （放下手里的书）您这手摊得，倒是像是在给刚到的客人请安。
+11-19 20:19:25 [[31merror[39m] 阿萨尔 | 发生错误 Error: Timeout: NTEvent serviceAndMethod:NodeIKernelMsgService/sendMsg ListenerName:NodeIKernelMsgListener/onMsgInfoListUpdate EventRet:
+11-19 20:24:13 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [简简单单第一附属精神病院(562796842)] [阿萨尔(3427943187)] [回复消息 [●᳐‖▜▜▙᳐੭ﾞ(1179127036)] hhhhhhhhhhh] @阿萨尔 @贰᳐拾壹᳐੭ﾞ 您要是想从我这儿讨一句话，得先告诉我，您想听哪一句。
+11-19 20:38:06 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [简简单单第一附属精神病院(562796842)] [阿萨尔(3427943187)] [回复消息 [亖᳐卐冇卌⭐᳐੭ﾞ(1561950850)] @阿萨尔 (3427943187)  你在艾特谁] @阿萨尔 (3427943187)   @贰拾壹 (3611220879)  艾特的是您和另一位常客。
+11-19 20:39:53 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [简简单单第一附属精神病院(562796842)] [阿萨尔(3427943187)] [回复消息 [贰᳐拾壹᳐੭ﾞ(3611220879)] ？？？？] 这话您说得有趣，好比是先问我要哪一页的书，再让我给您讲故事。您是想听关于书的，还是关于这城的？
+11-19 22:27:04 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] 您好。想找点什么？
+11-19 22:27:31 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] 您好，书在柜上，茶在壶里，您随意。
+11-19 22:27:32 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] 来了？随便看，看中了我给您取。
+11-19 22:27:44 [[31merror[39m] 阿萨尔 | 获取语音url失败 Error: [PacketClient] sendPacket 超时 cmd=OidbSvcTrpcTcp.0x126E_200 timeout=1500ms
+11-19 22:38:44 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [快乐的基友在一起🌱(1109952783)] [阿萨尔(3427943187)] [回复消息 [我爱这橙色的海洋🍀💛乐育群里的(1561950850)] @小企鹅转圈抓尾巴肚皮朝上摔了一跤 (2534970154)   @阿萨尔 (3427943187)  ] 我在这，先生。
+11-19 22:46:14 [[33mwarn[39m] 阿萨尔 | [Core] [Login] 账号已离线，正在重启 Worker 以重新创建 QQ 登录服务 {"result":true,"message":"进程重启请求已发送"}
+11-19 22:46:49 [[33mwarn[39m] [NapCat] [Process] Worker进程未在 5 秒内退出，尝试发送强制关闭信号
+[2]22:44:00~22:45:15 掉线前最后窗口全事件:
 11-19 22:45:11 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-[4]新二维码时间戳:
--rw-r--r-- 1 root root 602 Nov 19 22:59 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-[5]新二维码base64:
-iVBORw0KGgoAAAANSUhEUgAAAJMAAACTAQAAAACinha4AAAACXBIWXMAAAsTAAALEwEAmpwYAAACDElEQVRIid2WPY7kIBCFyyIga18AiWuQcSX7Anb7AvaVyLgGEhewMwLk2se4Z2elTah0ELLUX/Ca+uEVxP8v+tXsJJq02r1Zo7oCDRJ2cV1cXXSdS+aInxIWoMRvn+aITbOUBb59XdkecjaXOhYzBzNIGdc51sXzUew/sXUx5G+O5rN/ctrF2ioIog4B359a9rCbaAz2dLx7dRV7SdgV7dHyp7DfzswSdjqzcj6J366pHhLG7f9pCMhfJac2CWvVDmZkvl3efVpFjPKp01zMRPZ29pCwk1qPvxwSnyZnWcKQtq2YtaDL7BWeHPSy05sx2i2oU+fbPXH0Mo5217helXydw1PzXnaVRD4NXCcyk1csYxlXZPIovj21uiTsprrGfGt1ROhlEUO/3A6XgwggpkHC2kEoTbouEOZPHJ0Mes0JSh1KfXneJKwdBN2NHGhcryxjHmKZA42sdlIidpJZXBoD4Tu571nRx66QsXGKgw35R6+XMXwX40Kja+Alnz7tZGeTZPT4TWnxj2f3sovTy9md7BsB0aPXzyAG265j4F3nQ8QKvQjjAg6aITlKGFazz2iGgkFhNwlr89zbW6Pp1BYfvV721ePoGlpDghWxiKFumDOt2b9mnZDBDC5urfpyf98RvWyG+fk6uUT0eHY3QxwOUxHVM+0pIWE4O2zgYPhuwmtilbDeN9zvYH8A2sJ7Tv2qIwoAAAAASUVORK5CYII=
+[3]14:30~14:41 第一次闪断前窗口:
+[4]12:00~12:12 中午那次掉线前窗口:
+[5]bot.log今天发送类动作(retcode/发送失败):
+11-19 15:58:09 [WARNING] song_request | [发卡] 163官方卡失败: ActionFailed ActionFailed(status='failed', retcode=1200, data=None, message='Timeout: NTEvent serviceAndMethod:NodeIKernelMsgService/sendMsg ListenerName:NodeIKernelMsgListener/onMsgInfoListUpdate EventRet:\n{}\n', wording='Timeout: NTEvent serviceAndMethod:NodeIKernelMsgService/sendMsg ListenerName:NodeIKernelMsgListener/onMsgInfoListUpdate EventRet:\n{}\n', echo='11', stream='normal-action')
+11-19 20:36:27 [WARNING] nonebot | OneBot V11 | Error when getting message reply info: ActionFailed(status='failed', retcode=1200, data=None, message='消息不存在或已被撤回: PromiseTimer: Operation timed out', wording='消息不存在或已被撤回: PromiseTimer: Operation timed out', echo='38', stream='normal-action')
+11-19 20:43:31 [WARNING] nonebot | OneBot V11 | Error when getting message reply info: ActionFailed(status='failed', retcode=1200, data=None, message='消息不存在或已被撤回: PromiseTimer: Operation timed out', wording='消息不存在或已被撤回: PromiseTimer: Operation timed out', echo='47', stream='normal-action')
 =====完=====
