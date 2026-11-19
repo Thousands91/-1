@@ -1,2 +1,33 @@
-<<<ALERT.txt>>>
-2026-11-19 14:31:29 阿萨尔已恢复在线
+<<<task_287356.txt>>>
+===== 任务287356 11-19 14:32:05 =====
+--- 命令 ---
+echo "===== 扫码恢复后只读确认 287356 $(date '+%F %T') ====="
+echo "[1]登录态台账尾部:"
+tail -5 /root/login_state.log 2>/dev/null || echo "  (无此文件)"
+echo "[2]bot大脑进程:"
+pgrep -af '/root/bot/venv/bin/python main.py' | head -1
+echo "[3]NapCat进程:"
+pgrep -af 'opt/QQ/[q]q' | head -1 || echo "  未匹配"
+echo "[4]bot.log最近5分钟有无异常:"
+tail -60 /root/bot/bot/bot.log 2>/dev/null | grep -iE "traceback|exception|crash|离线|offline" | tail -3 || echo "  无异常"
+echo "[5]启动/连接横幅:"
+grep -E "QQ 群机器人启动成功|WebSocket connection|wss?://" /root/bot/bot/bot.log 2>/dev/null | tail -3
+echo "=====完====="
+--- 输出 ---
+===== 扫码恢复后只读确认 287356 2026-11-19 14:32:05 =====
+[1]登录态台账尾部:
+2026-11-19 14:09:21 [未登录]
+2026-11-19 14:14:22 [未登录]
+2026-11-19 14:19:24 [未登录]
+2026-11-19 14:24:25 [未登录]
+2026-11-19 14:29:26 [未登录]
+[2]bot大脑进程:
+32643 /root/bot/venv/bin/python main.py
+[3]NapCat进程:
+21310 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+[4]bot.log最近5分钟有无异常:
+[5]启动/连接横幅:
+11-18 10:08:14 [INFO] __main__ | QQ 群机器人启动成功 ✅
+11-19 13:03:27 [INFO] __main__ | QQ 群机器人启动成功 ✅
+11-19 13:55:13 [INFO] __main__ | QQ 群机器人启动成功 ✅
+=====完=====
