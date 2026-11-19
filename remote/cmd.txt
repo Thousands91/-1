@@ -1,15 +1,12 @@
-287325
-echo "===== 全量代码与日志盘点 287325 $(date '+%F %T') ====="
-echo "===A /root下的脚本(root) ==="
-ls -la /root/*.sh 2>/dev/null | awk '{print $5, $6, $7, $8, $9}'
-echo "===B bot插件代码==="
-find /root/bot -type f \( -name "*.py" -o -name "*.sh" \) 2>/dev/null | grep -v venv | head -40
-echo "===C 所有日志文件(大小/时间)==="
-find /root -maxdepth 4 -type f -name "*.log" 2>/dev/null | while read f; do echo "$(du -h "$f"|cut -f1) $(stat -c %y "$f"|cut -d. -f1) $f"; done | sort
-echo "===D NapCat配置清单==="
-find /root/Napcat -type f \( -name "*.json" -o -name "*.yaml" -o -name "*.yml" \) 2>/dev/null | grep -i -E "config|onebot|napcat" | head -20
-echo "===E 正在跑的进程==="
-ps aux 2>/dev/null | grep -E "main.py|napcat|QQ/qq|offline_watch|autoheal|remote_ctl|netmon|health_probe|login_watch|offline_watch" | grep -v grep | awk '{print $2, $11, $12, $13}' | head -25
-echo "===F 登录凭据相关文件==="
-find /root -maxdepth 5 -type f 2>/dev/null | grep -i -E "credential|token|sig|device|login|session" | grep -v -E "venv|node_modules|/proc/" | head -25
+287326
+echo "===C 日志文件清单==="
+find /root -maxdepth 3 -type f -name "*.log" 2>/dev/null | while read f; do echo "$(du -h "$f"|cut -f1) $(stat -c %y "$f"|cut -d' ' -f1,2|cut -d. -f1) $f"; done
+echo "===D NapCat配置==="
+find /root/Napcat -type f -name "*.json" 2>/dev/null | grep -i -E "config|onebot" | head -10
+echo "===E 进程==="
+ps aux 2>/dev/null | grep -E "main.py|napcat|QQ/qq|offline_watch|autoheal|remote_ctl|netmon|health_probe|login_watch|guard|watcher" | grep -v grep | awk '{print $2, $11, $12, $13, $14}' | head -25
+echo "===F 凭据文件==="
+find /root -maxdepth 4 -type f 2>/dev/null | grep -i -E "credential|token|sig|device|session" | grep -v -E "venv|node_modules" | head -20
+echo "===G QQ版本==="
+/root/Napcat/opt/QQ/qq --version 2>/dev/null | head -2 || grep -rhoE '9\.[0-9]+\.[0-9]+' /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null | head -2
 echo "=====完====="
