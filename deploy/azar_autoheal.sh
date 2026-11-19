@@ -83,10 +83,16 @@ while true; do
         if [ -n "$ON_TS" ]; then
           _ON=$(( ( $(date +%s) - ON_TS + 30 ) / 60 ))
         else
-          _OT=$(grep -E "状态变化.*-> \[在线\]" /root/login_state.log 2>/dev/null | tail -1 | grep -oE "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}")
-          if [ -n "$_OT" ]; then
-            _OB=$(date -d "$_OT" +%s 2>/dev/null) && _ON=$(( ( $(date +%s) - _OB + 30 ) / 60 ))
-          fi
+          # fallback：看台账最后一条状态变化——只有它恰好是"-> 在线"才说明会话还活着可计时；
+          # 若已是"-> 未登录"（会话早结束了，如本例22:47掉线），不许把掉线期也算进在线时长（v1.2.1 修账bug）
+          _LT=$(grep "状态变化" /root/login_state.log 2>/dev/null | tail -1)
+          case "$_LT" in
+            *"-> [在线]")
+              _OT=$(echo "$_LT" | grep -oE "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}")
+              if [ -n "$_OT" ]; then
+                _OB=$(date -d "$_OT" +%s 2>/dev/null) && _ON=$(( ( $(date +%s) - _OB + 30 ) / 60 ))
+              fi ;;
+          esac
         fi
         # v1.1：掉线告警带"距最后发送/最后收信秒数"，积累掉线-交互相关性数据
         _LT=$(grep "发送 ->" /root/napcat.log 2>/dev/null | grep -oE "11-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}" | tail -1)
