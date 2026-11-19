@@ -1,13 +1,15 @@
-287327
-echo "===E 进程==="
-ps aux 2>/dev/null | grep -E "main.py|napcat|QQ/qq|offline_watch|autoheal|remote_ctl|netmon|health_probe|login_watch|guard|watcher" | grep -v grep | awk '{print $2, $11, $12, $13, $14}' | head -25
-echo "===F 凭据文件==="
-find /root -maxdepth 4 -type f 2>/dev/null | grep -i -E "credential|token|sig|device|session" | grep -v -E "venv|node_modules" | head -20
-echo "===G QQ版本==="
-grep -rhoE '"version"[[:space:]]*:[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+' /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null | head -2
-grep -rhoE '9\.[0-9]+\.[0-9]+' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/package.json 2>/dev/null | head -2
-echo "===H 反检测配置napcat_3427943187.json==="
-cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_3427943187.json 2>/dev/null | head -60
-echo "===I 协议配置==="
-cat /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/napcat_protocol_3427943187.json 2>/dev/null | head -40
+287328
+echo "===A 所有config文件里的bypass/反检测关键字段==="
+CFG=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config
+for f in "$CFG"/*.json; do
+  echo "--- $(basename $f) ---"
+  grep -oE '"(bypass|o3HookMode|packetBackend|webui|token|enable|fileLog|consoleLog|logLevel|protocol|platform)"[[:space:]]*:[[:space:]]*("[^"]*"|true|false|[0-9]+)' "$f" 2>/dev/null | head -20
+done
+echo "===B napcat_3427943187完整前80行==="
+head -80 "$CFG/napcat_3427943187.json" 2>/dev/null
+echo "===C 搜bypass全文==="
+grep -rn "bypass\|o3Hook\|antiDetect\|反检测\|hook" "$CFG" 2>/dev/null | head -20
+echo "===D QQ本体版本==="
+grep -rhoE '"version"[[:space:]]*:[[:space:]]*"9\.[0-9]+\.[0-9]+' /root/Napcat/opt/QQ/resources/app/ 2>/dev/null | head -3
+cat /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null | grep -oE '"version"[^,]*' | head -2
 echo "=====完====="
