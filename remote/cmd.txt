@@ -1,12 +1,10 @@
-287337
-echo "===A bot.log里WS连接/heartbeat证据==="
-grep -i -E "websocket|反向WS|connected|disconnect|heartbeat|meta|onebot|127.0.0.1:8080" /root/bot/bot/bot.log 2>/dev/null | tail -20
-echo "===B bot.log最后20行==="
-tail -20 /root/bot/bot/bot.log 2>/dev/null
-echo "===C 8080端口在不在监听(bot的WS服务端)==="
-netstat -tlnp 2>/dev/null | grep 8080 || ss -tlnp 2>/dev/null | grep 8080
-echo "===D NapCat到bot的WS连接状态==="
-netstat -tnp 2>/dev/null | grep 8080 | tail -5 || ss -tnp 2>/dev/null | grep 8080 | tail -5
-echo "===E NapCat日志里WS上报相关==="
-grep -i -E "websocket|ws://|onebot|connect" /root/napcat.log 2>/dev/null | tail -10
+287338
+echo "===A 在线时段元事件原文(那36条)==="
+grep -i -E "meta_event|lifecycle|heartbeat|connect|disconnect|WebSocket for Bot" /root/bot/bot/bot.log 2>/dev/null | grep -v "13:03" | head -20
+echo "===B C段补:8080监听==="
+netstat -tln 2>/dev/null | grep 8080 || ss -tln 2>/dev/null | grep 8080 || echo "8080未监听"
+echo "===C D段补:NapCat到bot连接==="
+netstat -tn 2>/dev/null | grep 8080 | tail -3 || ss -tn 2>/dev/null | grep 8080 | tail -3 || echo "无8080连接"
+echo "===D onebot ws客户端配置确认==="
+grep -A4 "websocketClients" /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json 2>/dev/null | head -8
 echo "=====完====="
