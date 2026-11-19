@@ -1,12 +1,42 @@
-<<<task_287374.txt>>>
-===== 任务287374 11-19 15:44:54 =====
+<<<task_287375.txt>>>
+===== 任务287375 11-19 15:46:49 =====
 --- 命令 ---
-echo "===== 提效验证-轻量往返 287374 $(date '+%F %T') ====="
-echo "设备收到时刻: $(date '+%H:%M:%S')"
-echo "[在线] $(bash /root/logincheck.sh 2>/dev/null | grep -o '\[在线\][^ ]*' | head -1)"
+echo "===== worker回传机制诊断 287375 ====="
+echo "[1]设备当前跑的worker脚本版本/路径:"
+pgrep -af 'remote_ctl|v6_|while' | grep -iE 'ctl|v6' | head -3
+echo "[2]v6脚本sleep间隔(全部sleep行):"
+for f in /root/remote_ctl_v6.sh /root/v6_from_github.sh; do echo "--- $f ---"; grep -n "sleep [0-9]" "$f" 2>/dev/null; done
+echo "[3]git push回传段(看有无低速保护/超时):"
+grep -n "git push\|lowSpeed\|timeout.*push\|make_bundle\|PBOX" /root/remote_ctl_v6.sh 2>/dev/null | head -15
+echo "[4]当前worker脚本md5:"
+md5sum /root/remote_ctl_v6.sh 2>/dev/null | cut -c1-8
 echo "=====完====="
 --- 输出 ---
-===== 提效验证-轻量往返 287374 2026-11-19 15:44:54 =====
-设备收到时刻: 15:44:54
-[在线] [在线]
+===== worker回传机制诊断 287375 =====
+[1]设备当前跑的worker脚本版本/路径:
+6857 bash /root/remote_ctl_v6.sh
+[2]v6脚本sleep间隔(全部sleep行):
+--- /root/remote_ctl_v6.sh ---
+133:  pkill -f "opt/QQ/qq" 2>/dev/null; sleep 3
+137:  ( sleep 60; E1=$(grep -a "Login Error" /root/napcat-restart.log 2>/dev/null | tail -1); S1=$(bash /root/logincheck.sh 2>/dev/null | grep -aE "\[在线\]|\[未登录\]" | head -1); echo "[$(date '+%m-%d %H:%M')] 验尸+60s:[$S1] 最新登录错误:${E1:-无}" >> "$LOG"; sleep 240; S2=$(bash /root/logincheck.sh 2>/dev/null | grep -aE "\[在线\]|\[未登录\]" | head -1); echo "[$(date '+%m-%d %H:%M')] 验尸+300s:[$S2]" >> "$LOG" ) &
+181:  sleep 10
+--- /root/v6_from_github.sh ---
+[3]git push回传段(看有无低速保护/超时):
+2:# remote_ctl_v6.6 (2026-11-17)：+git push低速保护+PBOX防堆积(根治回传卡死)
+6:# 兜底：git push 失败自动回退 v5 的 api PUT 老路，绝不弄死链路。
+14:PBOX=/root/.remote_pending
+15:mkdir -p "$PBOX"
+61:  O="$PBOX/task_$1.txt"
+66:make_bundle() {
+68:  ALL=$(ls -1t "$PBOX" 2>/dev/null)
+71:  [ -n "$DROPPED" ] && echo "$DROPPED" | while read -r d; do rm -f "$PBOX/$d" 2>/dev/null; done
+74:  for f in $F; do echo "<<<$f>>>" >> /tmp/remote_bundle.txt; cat "$PBOX/$f" >> /tmp/remote_bundle.txt; done
+79:  make_bundle || return 0
+86:    rm -f "$PBOX"/*
+93:# ---- v6核心：回传走git push（与拉命令同通道） ----
+95:  make_bundle || return 0
+99:    if timeout 120 git -c http.lowSpeedLimit=0 -c http.lowSpeedTime=999 pull --rebase origin main >/dev/null 2>&1 && timeout 120 git -c http.lowSpeedLimit=0 -c http.lowSpeedTime=999 push origin main >/dev/null 2>&1; then
+100:      rm -f "$PBOX"/*
+[4]当前worker脚本md5:
+1b2a423a
 =====完=====
