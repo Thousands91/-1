@@ -1,17 +1,27 @@
-287399
-echo "===== 诊断287398现场 287399 ====="
-echo "[1]插件文件实际位置和md5:"
-ls -la /root/bot/bot/bot/plugins/song_request.py 2>&1
-md5sum /root/bot/bot/bot/plugins/song_request.py 2>&1
-echo "[2]下载的临时文件还在吗:"
-ls -la /tmp/sr_new.py /tmp/sr_bak_e4d365cc.py 2>&1
-echo "[3]当前大脑进程:"
-pgrep -af "main.py"
-P=$(pgrep -f "venv/bin/python main.py" | head -1)
-echo "[4]大脑工作目录:"
-readlink /proc/$P/cwd 2>&1
-echo "[5]最近日志:"
-tail -5 /root/bot/bot/bot.log
-echo "[6]在线状态:"
+287400
+echo "===== 部署坑148修复 绝对路径版 287400 ====="
+echo "[0]旧文件md5(应e4d365cc):"
+md5sum /root/bot/bot/plugins/song_request.py
+echo "[1]新文件md5(应9a5c7617):"
+md5sum /tmp/sr_new.py
+cp /root/bot/bot/plugins/song_request.py /tmp/sr_bak_e4d365cc.py
+cp /tmp/sr_new.py /root/bot/bot/plugins/song_request.py
+echo "[2]安装后md5(应9a5c7617):"
+md5sum /root/bot/bot/plugins/song_request.py
+echo "[3]语法:"
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/song_request.py && echo "  OK" || echo "  FAIL"
+echo "[4]假超时判定处数:"
+grep -c "_is_fake_timeout" /root/bot/bot/plugins/song_request.py
+echo "[5]重启大脑:"
+OLDPID=$(pgrep -f "venv/bin/python main.py" | head -1)
+kill "$OLDPID" 2>/dev/null; sleep 3
+( cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null & )
+sleep 15
+NEWPID=$(pgrep -f "venv/bin/python main.py" | head -1)
+echo "  旧$OLDPID→新$NEWPID  cwd:$(readlink /proc/$NEWPID/cwd 2>/dev/null)"
+echo "[6]插件加载(最近一次重启):"
+grep -E "Succeeded to load plugin|Failed to load" /root/bot/bot/bot.log | tail -12
+echo "[7]横幅+在线:"
+grep "QQ 群机器人启动成功" /root/bot/bot/bot.log | tail -1
 bash /root/logincheck.sh 2>/dev/null | grep -oE "\[[^]]+\]" | head -1
 echo "=====完====="
