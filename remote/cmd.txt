@@ -1,11 +1,32 @@
-287443
-echo "===== 查autoheal重复拉起源头(只读) ====="
-echo "--- autoheal进程启动时间/父进程 ---"
-for p in $(pgrep -f 'bash /root/azar_autoheal.[s]h'); do ps -o pid,ppid,lstart,args -p $p | tail -1; done
-echo "--- crontab ---"
-crontab -l 2>/dev/null | grep -vE '^#|^$' | head -20 || echo "(无crontab)"
-echo "--- v6/offline_watch里的自拉逻辑 ---"
-grep -nE 'autoheal|azar_autoheal' /root/remote_ctl_v6.sh /root/offline_watch.sh 2>/dev/null | head -20
-echo "--- 谁在起autoheal(近1小时日志) ---"
-grep -E 'autoheal|自愈|拉起' /root/remote_ctl.log 2>/dev/null | tail -15
+287444
+echo "===== 修v6第29行pgrep自匹配(延迟手术) ====="
+echo "--- 改前 25~32行 ---"
+sed -n '25,32p' /root/remote_ctl_v6.sh
+cp /root/remote_ctl_v6.sh /root/remote_ctl_v6.sh.bak_fix29_$(date +%m%d%H%M)
+# 精确替换:只改pgrep的匹配模式为方括号隔离(坑60b),不动后面的setsid启动命令
+sed -i "s|pgrep -f 'bash /root/azar_autoheal.sh'|pgrep -f 'bash /root/azar_autoheal.[s]h'|" /root/remote_ctl_v6.sh
+echo "--- 改后 25~32行 ---"
+sed -n '25,32p' /root/remote_ctl_v6.sh
+echo "--- 语法检查 ---"
+bash -n /root/remote_ctl_v6.sh && echo "语法OK"
+# 延迟手术:任务先安全回传(实测最长31秒),50秒后重启v6加载新代码
+if [ ! -f /root/.v6fix29_armed ]; then
+  touch /root/.v6fix29_armed
+  cat > /root/.v6fix29.sh <<'EOS'
+#!/bin/bash
+sleep 50
+for p in $(pgrep -f 'bash /root/remote_ctl_[v]6.sh'); do kill "$p" 2>/dev/null; done
+sleep 3
+rm -f /root/.remote_pid /root/.remote_ctl.lock
+rm -rf /root/.remote_ctl_lock 2>/dev/null
+pgrep -f 'bash /root/azar_autoheal.[s]h' >/dev/null || ( setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null & )
+cd /root/asar-sync
+setsid nohup bash /root/remote_ctl_v6.sh >/dev/null 2>&1 </dev/null &
+echo "$(date '+%m-%d %H:%M:%S') v6fix29 restart done" >> /root/v6fix29.log
+rm -f /root/.v6fix29_armed
+EOS
+  chmod +x /root/.v6fix29.sh
+  setsid nohup bash /root/.v6fix29.sh >/dev/null 2>&1 </dev/null &
+  echo "延迟手术已挂载(50秒后重启v6)"
+fi
 echo "=====完====="
