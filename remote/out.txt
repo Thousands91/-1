@@ -1,7 +1,1 @@
-<<<task_287448.txt>>>
-===== 任务287448 11-20 14:30:38 =====
---- 命令 ---
-echo x
-pgrep -f "bash /root/azar_autoheal.[s]h" >/dev/null || echo no
---- 输出 ---
-x
+diag_probe
