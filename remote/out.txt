@@ -1,35 +1,31 @@
-<<<task_287446.txt>>>
-===== 任务287446 11-20 14:19:37 =====
+<<<task_287447.txt>>>
+===== 任务287447 11-20 14:21:17 =====
 --- 命令 ---
-echo "===== 诊断延迟手术为何没执行(只读) ====="
-echo "--- armed标记(还在=脚本没跑完) ---"
-ls -la /root/.v6fix29_armed 2>/dev/null || echo "(无armed标记=脚本跑完或没挂上)"
-echo "--- 延迟脚本本体 ---"
-ls -la /root/.v6fix29.sh 2>/dev/null || echo "(无脚本)"
-echo "--- 重启日志 ---"
-ls -la /root/v6fix29.log 2>/dev/null; cat /root/v6fix29.log 2>/dev/null
-echo "--- 延迟脚本进程是否活着 ---"
-ps -eo pid,args | grep -E 'v6fix29|sleep 50' | grep -v grep || echo "(无延迟脚本进程)"
-echo "--- v6脚本第29行+md5 ---"
+echo "===== 287445 验收v6第29行修复(只读) ====="
+echo "--- v6第29行当前内容 ---"
 sed -n '29p' /root/remote_ctl_v6.sh
-md5sum /root/remote_ctl_v6.sh
-echo "--- 当前v6进程启动时刻 ---"
-for p in $(pgrep -f 'bash /root/remote_ctl_[v]6.sh'); do ps -o pid,lstart,args -p $p | tail -1; done
+echo "--- 修复标记检查(应为方括号[s]h) ---"
+grep -n "azar_autoheal.\\[s\\]h" /root/remote_ctl_v6.sh | head -3
+echo "--- 实例清单(各应1个) ---"
+ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch" | grep -v grep
+echo "--- 重启日志 ---"
+cat /root/v6fix29.log 2>/dev/null || echo "(无重启日志)"
+echo "--- 水位 ---"
+cat /root/.remote_last 2>/dev/null; echo
 echo "=====完====="
 --- 输出 ---
-===== 诊断延迟手术为何没执行(只读) =====
---- armed标记(还在=脚本没跑完) ---
-(无armed标记=脚本跑完或没挂上)
---- 延迟脚本本体 ---
--rwxr-xr-x 1 root root 535 Nov 20 14:16 /root/.v6fix29.sh
---- 重启日志 ---
--rw-r--r-- 1 root root 36 Nov 20 14:17 /root/v6fix29.log
-11-20 14:17:00 v6fix29 restart done
---- 延迟脚本进程是否活着 ---
-(无延迟脚本进程)
---- v6脚本第29行+md5 ---
+===== 287445 验收v6第29行修复(只读) =====
+--- v6第29行当前内容 ---
 pgrep -f 'bash /root/azar_autoheal.[s]h' >/dev/null || ( setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null & )
-3cfa43a6e9c97eb5039f574eb7b2395e  /root/remote_ctl_v6.sh
---- 当前v6进程启动时刻 ---
-24484 Fri Mar 31 12:57:27 2023 bash /root/remote_ctl_v6.sh
+--- 修复标记检查(应为方括号[s]h) ---
+29:pgrep -f 'bash /root/azar_autoheal.[s]h' >/dev/null || ( setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null & )
+--- 实例清单(各应1个) ---
+17138 bash /root/azar_autoheal.sh
+17145 bash /root/offline_watch.sh
+24484 bash /root/remote_ctl_v6.sh
+--- 重启日志 ---
+11-20 14:17:00 v6fix29 restart done
+--- 水位 ---
+287447
+
 =====完=====
