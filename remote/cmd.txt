@@ -1,17 +1,43 @@
-287434
-echo "===== 287434 掉线时间线精确取证 ====="
-echo "[1]tick.log冻结断档检测(60秒粒度,找2分钟以上断档):"
-awk 'NR>1{split($0,a," "); t_prev=a[2]; if(prev!="" ){n=system_call=0}} {print}' /root/tick.log > /dev/null 2>&1
-python3 - << 'PYEOF' 2>/dev/null || awk '{gsub("-"," ");print}' /root/tick.log | awk '{d=$2; h=$3; gsub(":"," ",h); ts=d*86400+h*3600+3600; if(pt!=""&&ts-pt>120){print "断档: "pdate" "ptime" -> "$1" "$2" "$3"  ("ts-pt"秒)"} pt=ts; pdate=$1; ptime=$2}' /root/tick.log | tail -10
+287435
+echo "===== 287435 冻结窗口与掉线相关性分析 ====="
+/root/bot/venv/bin/python << 'PYEOF'
+import datetime, re
+
+# 1. tick.log 全量断档(>120秒)
+ticks = []
+for ln in open('/root/tick.log', errors='ignore'):
+    m = re.match(r'(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})', ln)
+    if m:
+        try: ticks.append(datetime.datetime.strptime(m.group(1), '%Y-%m-%d %H:%M:%S'))
+        except: pass
+ticks.sort()
+print("[1]tick.log总样本:", len(ticks), "覆盖:", ticks[0], "->", ticks[-1] if ticks else "")
+gaps = []
+for i in range(1, len(ticks)):
+    d = (ticks[i] - ticks[i-1]).total_seconds()
+    if d > 120:
+        gaps.append((ticks[i-1], ticks[i], int(d)))
+print("[2]冻结断档(>2分钟)共%d个:" % len(gaps))
+byday = {}
+for a, b, d in gaps:
+    k = a.strftime('%m-%d')
+    byday.setdefault(k, []).append((a, b, d))
+for k in sorted(byday):
+    day = byday[k]
+    total = sum(d for _,_,d in day)
+    mx = max(day, key=lambda x:x[2])
+    print(f"  {k}: 冻结{len(day)}次 总{total//60}分 最长{mx[2]//60}分(单次 {mx[0].strftime('%H:%M')}->{mx[1].strftime('%H:%M')})")
+# 11-19与11-20的断档明细
+for k in ('11-19','11-20'):
+    if k in byday:
+        print(f"[3]{k}断档明细(>10分钟的):")
+        for a,b,d in byday[k]:
+            if d > 600:
+                print(f"  {a.strftime('%H:%M')} -> {b.strftime('%H:%M')}  {d//60}分")
+
+# 2. login_state 状态变化时刻
+print("[4]login_state最近状态变化:")
+for ln in open('/root/login_state.log', errors='ignore'):
+    if '状态变化' in ln: print(" ", ln.strip()[-80:])
 PYEOF
-echo "[2]tick.log最后10行:"
-tail -10 /root/tick.log
-echo "[3]bot.log最后一口气息(最后消息/错误):"
-tail -3 /root/bot/bot/bot.log
-echo "[4]napcat.log冻结前后分界(02:30前后各3行):"
-grep -E "11-20 02:2[5-9]|11-20 02:3" /root/napcat.log | tail -6
-echo "[5]login_state.log最近4行:"
-tail -4 /root/login_state.log
-echo "[6]当前状态:"
-bash /root/logincheck.sh 2>&1 | grep -E "^\[" | head -1
 echo "=====完====="
