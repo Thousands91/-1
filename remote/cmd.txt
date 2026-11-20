@@ -1,32 +1,22 @@
-287432
-echo "===== 部署坑154 兜底句扩池 287432 ====="
-echo "[0]先诊断收不到回复:"
+287433
+echo "===== 部署看护v1.2.2 287433 ====="
+echo "[0]doze豁免现状检查:"
+dumpsys deviceidle 2>/dev/null | head -2 || echo "  proot内无权限,需adb"
+echo "[1]下载+校验:"
+curl -sL -H "Cache-Control: no-cache" -o /tmp/ah4.sh "https://raw.githubusercontent.com/Thousands91/-1/main/deploy/azar_autoheal.sh?ts=$(date +%s)&v=122"
+M=$(md5sum /tmp/ah4.sh | cut -d' ' -f1); echo "  md5: $M"
+if [ "$M" != "3d7ca5c4100189f01448aafcc08d1e86" ]; then echo "  md5不符,中止"; echo "=====完====="; exit 0; fi
+bash -n /tmp/ah4.sh && echo "  语法OK"
+echo "[2]备份+安装+重启看护:"
+cp /root/azar_autoheal.sh /tmp/azar_autoheal_bak_v121.sh
+cp /tmp/ah4.sh /root/azar_autoheal.sh
+LP=$(cat /root/.autoheal.lock/pid 2>/dev/null)
+kill "$LP" 2>/dev/null; sleep 2
+rm -rf /root/.autoheal.lock
+setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null &
+sleep 3
+echo "  新进程: $(pgrep -f azar_autoheal | head -1)"
+echo "[3]启动行(应v1.2.2)+当前登录态:"
+tail -2 /root/autoheal.log
 bash /root/logincheck.sh 2>&1 | grep -E "^\[" | head -1
-pgrep -f "venv/bin/python main.py" | head -1 | sed 's/^/  大脑PID: /'
-pgrep -f "remote_ctl" | head -1 | sed 's/^/  workerPID: /'
-tail -4 /root/autoheal.log | sed 's/^/  看护: /'
-grep -E "接收 <-|发送 ->" /root/napcat.log | tail -4 | sed 's/^/  napcat: /'
-echo "[1]下载新文件:"
-curl -sL -H "Cache-Control: no-cache" -o /tmp/ai_new.py "https://raw.githubusercontent.com/Thousands91/-1/main/deploy/ai_chat.py?ts=$(date +%s)&v=154"
-M=$(md5sum /tmp/ai_new.py | cut -d' ' -f1); echo "  md5: $M"
-if [ "$M" != "508ee60985eeeeba6b451d3ae5b92b8f" ]; then echo "  md5不符,中止(CDN未刷新稍后重试)"; echo "=====完====="; exit 0; fi
-bash -n /tmp/ai_new.py && echo "  语法OK"
-echo "[2]备份+安装:"
-cp /root/bot/bot/plugins/ai_chat.py /tmp/ai_bak_before_154.py
-cp /tmp/ai_new.py /root/bot/bot/plugins/ai_chat.py
-/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo "  py_compile OK"
-echo "[3]新特性计数:"
-grep -c "_pick_fallback_line" /root/bot/bot/plugins/ai_chat.py
-grep -c "_FALLBACK_LINES" /root/bot/bot/plugins/ai_chat.py
-echo "[4]重启大脑:"
-OLDPID=$(pgrep -f "venv/bin/python main.py" | head -1)
-kill "$OLDPID" 2>/dev/null; sleep 3
-( cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null & )
-sleep 15
-NEWPID=$(pgrep -f "venv/bin/python main.py" | head -1)
-echo "  旧$OLDPID→新$NEWPID"
-echo "[5]加载+在线:"
-grep -E "Succeeded to load plugin|Failed to load" /root/bot/bot/bot.log | tail -12 | grep -c "SUCCESS" | sed 's/^/  加载成功数: /'
-grep "QQ 群机器人启动成功" /root/bot/bot/bot.log | tail -1
-bash /root/logincheck.sh 2>/dev/null | grep -oE "\[[^]]+\]" | head -1
 echo "=====完====="
