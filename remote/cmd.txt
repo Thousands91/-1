@@ -1,13 +1,3 @@
-287447
-echo "===== 287445 验收v6第29行修复(只读) ====="
-echo "--- v6第29行当前内容 ---"
-sed -n '29p' /root/remote_ctl_v6.sh
-echo "--- 修复标记检查(应为方括号[s]h) ---"
-grep -n "azar_autoheal.\\[s\\]h" /root/remote_ctl_v6.sh | head -3
-echo "--- 实例清单(各应1个) ---"
-ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch" | grep -v grep
-echo "--- 重启日志 ---"
-cat /root/v6fix29.log 2>/dev/null || echo "(无重启日志)"
-echo "--- 水位 ---"
-cat /root/.remote_last 2>/dev/null; echo
-echo "=====完====="
+287448
+echo x
+pgrep -f "bash /root/azar_autoheal.[s]h" >/dev/null || echo no
