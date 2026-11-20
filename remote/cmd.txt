@@ -1,13 +1,11 @@
-287455
-echo "===== 延长在线:保活开关现状体检(只读) ====="
-echo "--- 1.保活锚 sleep infinity(坑65最强开关) ---"
-pgrep -af 'sleep [i]nfinity' || echo "(无保活锚!)"
-echo "--- 2.休眠时保持网络连接(wifi_sleep_policy:2=休眠不断网) ---"
-settings get global wifi_sleep_policy 2>/dev/null || echo "(proot不可读)"
-echo "--- 3.充电时保持唤醒(stay_on_while_plugged_in) ---"
-settings get global stay_on_while_plugged_in 2>/dev/null || echo "(proot不可读)"
-echo "--- 4.wake-lock持锁 ---"
-dumpsys power 2>/dev/null | grep -iE 'wake.*lock|Partial|termux' | head -10 || echo "(proot不可读)"
-echo "--- 5.当前四件套进程 ---"
-ps -eo pid,args | grep -E 'tick.sh|netmon|health_probe|remote_ctl_v6|azar_autoheal' | grep -v grep
+287456
+echo "===== 零成本保活招体检:termux常驻通知 ====="
+echo "--- 1.termux-notification 命令是否存在 ---"
+command -v termux-notification || echo "(无 termux-notification)"
+echo "--- 2.termux-api 包是否安装(termux层) ---"
+ls /data/data/com.termux/files/usr/bin/termux-notification 2>/dev/null || echo "(termux层无)"
+echo "--- 3.当前Termux通知里有没有ongoing ---"
+dumpsys notification 2>/dev/null | grep -iE 'termux|ongoing' | head -5 || echo "(proot不可读,略)"
+echo "--- 4.termux-api app是否装(Android层) ---"
+pm list packages 2>/dev/null | grep -i termux || echo "(pm不可读,略)"
 echo "=====完====="
