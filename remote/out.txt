@@ -1,2 +1,40 @@
-<<<ALERT.txt>>>
-2026-11-20 13:53:43 阿萨尔掉线([未登录])! 本次在线?分/距最后发送6733秒/距最后收信6772秒;已自愈,5分钟不恢复需本人扫码
+<<<task_287438.txt>>>
+===== 任务287438 11-20 13:55:20 =====
+--- 命令 ---
+echo "===== 287438 多实例清理(延迟手术) ====="
+echo "--- 清理前实例 ---"
+ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch" | grep -v grep
+if [ -f /root/.cleanup_1120_armed ]; then
+  echo "手术已挂载过(pending)，跳过重复挂载"
+else
+  touch /root/.cleanup_1120_armed
+  cat > /root/.cleanup_1120.sh <<'EOS'
+#!/bin/bash
+sleep 18
+for p in $(pgrep -f 'bash /root/remote_ctl_[v]'); do kill "$p" 2>/dev/null; done
+for p in $(pgrep -f 'bash /root/azar_autoheal.[s]h'); do kill "$p" 2>/dev/null; done
+for p in $(pgrep -f 'bash /root/offline_watch.[s]h'); do kill "$p" 2>/dev/null; done
+sleep 3
+rm -f /root/.remote_pid /root/.remote_ctl.lock
+rm -rf /root/.remote_ctl_lock 2>/dev/null
+cd /root/asar-sync
+setsid nohup bash /root/remote_ctl_v6.sh >/dev/null 2>&1 </dev/null &
+echo "$(date '+%m-%d %H:%M:%S') cleanup done" >> /root/cleanup_1120.log
+rm -f /root/.cleanup_1120_armed
+EOS
+  chmod +x /root/.cleanup_1120.sh
+  setsid nohup bash /root/.cleanup_1120.sh >/dev/null 2>&1 </dev/null &
+  echo "延迟手术已挂载(18秒后执行,本任务先安全回传)"
+fi
+echo "=====完====="
+--- 输出 ---
+===== 287438 多实例清理(延迟手术) =====
+--- 清理前实例 ---
+ 1520 bash /root/remote_ctl_v5.sh
+ 6857 bash /root/remote_ctl_v6.sh
+14024 bash /root/offline_watch.sh
+24696 bash /root/remote_ctl_v6.sh
+24740 bash /root/azar_autoheal.sh
+26533 bash /root/azar_autoheal.sh
+延迟手术已挂载(18秒后执行,本任务先安全回传)
+=====完=====
