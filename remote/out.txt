@@ -1,6 +1,41 @@
-<<<task_287441.txt>>>
-===== 任务287441 11-20 14:03:07 =====
+<<<task_287442.txt>>>
+===== 任务287442 11-20 14:04:54 =====
 --- 命令 ---
-echo 占位-无实际操作
+echo "===== auto实战首单:只读验收 ====="
+echo "--- 实例 ---"
+ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch|opt/QQ/[q]q" | grep -v grep
+echo "--- 水位 ---"
+cat /root/.remote_last 2>/dev/null; echo
+echo "--- 清理日志 ---"
+cat /root/cleanup_1120.log 2>/dev/null || echo "(无)"
+echo "--- 循环日志尾 ---"
+tail -4 /root/remote_ctl.log
+echo "=====完====="
+--- 输出 ---
+===== auto实战首单:只读验收 =====
+--- 实例 ---
+17115 bash /root/remote_ctl_v6.sh
+17138 bash /root/azar_autoheal.sh
+17145 bash /root/offline_watch.sh
+20334 bash /root/azar_autoheal.sh
+24699 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox
+24716 /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox
+24726 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+24727 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
+24742 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+24767 /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+24771 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+24772 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
+24796 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+24865 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+--- 水位 ---
+287442
+
+--- 清理日志 ---
+11-20 13:55:42 cleanup done
+--- 循环日志尾 ---
 --- 输出 ---
 占位-无实际操作
+[11-20 14:03] report:git push失败,回退API
+[11-20 14:03] report:API回传成功
+=====完=====
