@@ -11,6 +11,9 @@
 #       从 napcat.log 取最后一条 发送->/接收<- 的时间戳算间隔，长期积累数据验证猜想。
 # v1.2（2026-11-20）：① 掉线告警再加"本次在线X分"（会话寿命记账，验证"越扫越短"假设）；
 #       ② 每轮循环续持 termux-wake-lock——息屏不深睡、worker 回传不再断（用户不用一直亮屏）。
+# v1.2.2（2026-11-20 12:05）：冻结苏醒记账修复——设备息屏被doze冻结时看护自己也停摆，
+#       苏醒后第一轮循环会把冻结期错算成"在线X分"（12:00实测错报575分）。加 _LAST_LOOP
+#       时间戳：循环间隔>300秒=冻过，在线时长从苏醒时刻重算，告警另标"含冻结X分"。
 
 LD=/root/.autoheal.lock
 if mkdir "$LD" 2>/dev/null; then
@@ -55,10 +58,14 @@ send_alert() {
 say "===== autoheal v1.2 启动 $(date '+%F %T') ====="
 PREV=""
 ON_TS=""   # 本次在线的起始时刻（v1.2 会话寿命记账用）
+_LAST_LOOP=$(date +%s)   # v1.2.2: 上一轮循环时刻，检测冻结跳变
 while true; do
   # ⓪ 息屏保活：续持 termux-wake-lock（每60秒刷一次；proot内可直调；失败静默不影响主职）
   _WL=/data/data/com.termux/files/usr/bin/termux-wake-lock
   [ -x "$_WL" ] && "$_WL" 2>/dev/null
+  # v1.2.2: 冻结检测——本轮与上轮间隔>300秒=期间被doze冻结过
+  _NOW=$(date +%s); _FROZEN=$(( _NOW - _LAST_LOOP )); _LAST_LOOP=$_NOW
+  [ "$_FROZEN" -gt 300 ] && _FRZ_NOTE="含冻结$(( (_FROZEN + 30) / 60 ))分" || _FRZ_NOTE=""
   # ① 进程存活守护（掉线后的 NapCat 重启由 worker 的 restart_napcat 负责，这里只保"进程在"）
   pgrep -f '/root/bot/venv/bin/python main.py' >/dev/null || {
     say "大脑进程不在,拉起"
@@ -78,6 +85,10 @@ while true; do
     say "登录态: ${PREV:-初始} -> $ST"
     case "$ST" in
       *未登录*|*掉线*)
+        # v1.2.2：冻结期不算在线——若刚从冻结苏醒，在线时长起点重置为苏醒时刻
+        if [ -n "$_FRZ_NOTE" ] && [ -n "$ON_TS" ]; then
+          ON_TS=$_NOW
+        fi
         # v1.2：本次在线时长（优先本进程记账；进程重启丢了就查 login_state.log 最后一次上线时刻）
         _ON=""
         if [ -n "$ON_TS" ]; then
@@ -106,7 +117,7 @@ while true; do
           _B2=$(date -d "$(date +%Y)-${_LR}" +%s 2>/dev/null)
           [ -n "$_B2" ] && _G="${_G}/距最后收信$(( $(date +%s) - _B2 ))秒"
         fi
-        send_alert "阿萨尔掉线($ST)! 本次在线${_ON:-?}分/${_G:-间隔未知};已自愈,5分钟不恢复需本人扫码" ;;
+        send_alert "阿萨尔掉线($ST)! 本次在线${_ON:-?}分${_FRZ_NOTE:+,$_FRZ_NOTE}/${_G:-间隔未知};已自愈,5分钟不恢复需本人扫码" ;;
       *在线*)
         ON_TS=$(date +%s)
         [ -n "$PREV" ] && send_alert "阿萨尔已恢复在线" ;;
