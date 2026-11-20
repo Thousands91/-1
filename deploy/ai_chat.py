@@ -1139,6 +1139,24 @@ def _sig_sim(a: str, b: str) -> bool:
     import difflib
     return difflib.SequenceMatcher(None, a, b).ratio() >= 0.72
 _EMOJI_LAZY_RE = re.compile(r"表情|像是在说|像是|似乎在说|仿佛在说|展示了|传达了|如同")
+
+# 坑154：[动作:] 全剥后的纯动作兜底句池。原为 3 句 random.choice，1/3 概率
+# 连着抽同一句——用户抓包过复读。扩池到 10 句 + 记住上一句绝不连续重复。
+_FALLBACK_LINES = (
+    "（抬眼看了您一下）", "你说，我在听。", "嗯？接着说。",
+    "（往柜台后头靠了靠）", "您说，我听着。", "（把手里的账本合上）",
+    "讲。", "（指尖在柜台上敲了两下）", "我搁这儿呢，您讲。", "嗯，说下去。",
+)
+_LAST_FALLBACK = {"line": ""}
+
+def _pick_fallback_line() -> str:
+    """纯动作兜底句抽取：绝不与上一句相同（上一句记在 _LAST_FALLBACK）。"""
+    global _LAST_FALLBACK
+    pool = [s for s in _FALLBACK_LINES if s != _LAST_FALLBACK["line"]] or list(_FALLBACK_LINES)
+    _line = random.choice(pool)
+    _LAST_FALLBACK["line"] = _line
+    return _line
+
 _EMOJI_TAIL_RE = re.compile(r"[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF\uFE0F\u203C\u2049\u3030\u303D\u3297\u3299\u00A9\u00AE\u2122]+\s*$")
 
 def _emoji_scrub(a: str, fname: str) -> str:
@@ -1844,7 +1862,8 @@ async def _(bot: Bot, event: GroupMessageEvent | PrivateMessageEvent, state: T_S
     elif _re.search(r"\[(?:表情|表情包|动作)", answer or ""):
         # 整条只有动作标记、剥完空了——不能回退原文(那正是漏出去的怪串)，
         # 用一句人设内的短话兜底，绝不让 [动作:] 出现在群里。
-        answer = random.choice(["（抬眼看了您一下）", "你说，我在听。", "嗯？接着说。"])
+        # 坑154：兜底句也是回复，照样要防复读——池子扩到10句+不连续抽同一句。
+        answer = _pick_fallback_line()
     # 把模型回复里的 @数字 转成真正的艾特段
     import re as _re2
     _out = Message()
