@@ -1,43 +1,80 @@
-287435
-echo "===== 287435 冻结窗口与掉线相关性分析 ====="
+287436
+echo "===== 287436 11-19全天冻结时间线取证 ====="
+echo "--- A. autoheal 落盘路径 ---"
+grep -nE "TICK|tick\.log|>>" /root/azar_autoheal.sh | grep -v "^\s*#" | head -15
+echo "--- B. 状态快照 ---"
+date '+%m-%d %H:%M:%S'; uptime; ls -la /root/*tick* /root/tick* 2>/dev/null
+echo "--- C. 11-19 全天断档分析 ---"
 /root/bot/venv/bin/python << 'PYEOF'
-import datetime, re
+import re, glob, os, datetime
 
-# 1. tick.log 全量断档(>120秒)
-ticks = []
-for ln in open('/root/tick.log', errors='ignore'):
-    m = re.match(r'(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})', ln)
-    if m:
-        try: ticks.append(datetime.datetime.strptime(m.group(1), '%Y-%m-%d %H:%M:%S'))
-        except: pass
-ticks.sort()
-print("[1]tick.log总样本:", len(ticks), "覆盖:", ticks[0], "->", ticks[-1] if ticks else "")
-gaps = []
-for i in range(1, len(ticks)):
-    d = (ticks[i] - ticks[i-1]).total_seconds()
-    if d > 120:
-        gaps.append((ticks[i-1], ticks[i], int(d)))
-print("[2]冻结断档(>2分钟)共%d个:" % len(gaps))
-byday = {}
-for a, b, d in gaps:
-    k = a.strftime('%m-%d')
-    byday.setdefault(k, []).append((a, b, d))
-for k in sorted(byday):
-    day = byday[k]
-    total = sum(d for _,_,d in day)
-    mx = max(day, key=lambda x:x[2])
-    print(f"  {k}: 冻结{len(day)}次 总{total//60}分 最长{mx[2]//60}分(单次 {mx[0].strftime('%H:%M')}->{mx[1].strftime('%H:%M')})")
-# 11-19与11-20的断档明细
-for k in ('11-19','11-20'):
-    if k in byday:
-        print(f"[3]{k}断档明细(>10分钟的):")
-        for a,b,d in byday[k]:
-            if d > 600:
-                print(f"  {a.strftime('%H:%M')} -> {b.strftime('%H:%M')}  {d//60}分")
+# 1) 找候选 tick 文件：/root 下含 11-19 时间戳记录、按时间递增的小日志
+cands = []
+for p in glob.glob('/root/*') + glob.glob('/root/logs/*'):
+    if not os.path.isfile(p):
+        continue
+    if os.path.getsize(p) > 30 * 1024 * 1024:
+        continue
+    try:
+        with open(p, errors='replace') as f:
+            f.seek(max(0, os.path.getsize(p) - 300 * 1024))
+            tail = f.read()
+    except Exception:
+        continue
+    if re.search(r'11-19 \d{2}:\d{2}:\d{2}', tail) or re.search(r'11-19T\d{2}:\d{2}', tail):
+        cands.append((p, os.path.getsize(p)))
+print('候选文件:', cands)
 
-# 2. login_state 状态变化时刻
-print("[4]login_state最近状态变化:")
-for ln in open('/root/login_state.log', errors='ignore'):
-    if '状态变化' in ln: print(" ", ln.strip()[-80:])
+def parse_lines(path):
+    rows = []
+    with open(path, errors='replace') as f:
+        for ln in f:
+            m = re.search(r'(11-\d{2}) (\d{2}:\d{2}:\d{2})', ln)
+            if m:
+                hh, mm, ss = m.group(2).split(':')
+                rows.append((m.group(1), int(hh)*3600+int(mm)*60+int(ss), ln.strip()[:80]))
+            else:
+                m2 = re.search(r'(11-\d{2})T(\d{2}:\d{2}:\d{2})', ln)
+                if m2:
+                    hh, mm, ss = m2.group(2).split(':')
+                    rows.append((m2.group(1), int(hh)*3600+int(mm)*60+int(ss), ln.strip()[:80]))
+    return rows
+
+def grade(sec):
+    if sec > 900: return '深冻'
+    if sec > 300: return '半冻'
+    if sec > 60:  return '浅冻'
+    return '微冻'
+
+for path, _ in cands:
+    rows = parse_lines(path)
+    d19 = [r for r in rows if r[0] == '11-19']
+    if len(d19) < 20:
+        continue
+    print(f'>>> {path}  11-19记录 {len(d19)} 条')
+    prev = None
+    gaps = []
+    for day, sec, ln in d19:
+        if prev is not None and sec > prev[0]:
+            g = sec - prev[0]
+            if g > 55:
+                gaps.append((prev[0], sec, g, prev[1]))
+        prev = (sec, ln)
+    if not gaps:
+        print('  11-19 全天无 >55s 断档')
+    for s, e, g, lastln in gaps:
+        fs, fe = s % 86400, e % 86400
+        def fmt(x):
+            return f'{x//3600:02d}:{(x%3600)//60:02d}:{x%60:02d}'
+        print(f'  [{grade(g)}] {fmt(fs)} -> {fmt(e%86400)}  断 {g}s  (断前最后一条: {lastln[:60]})')
+    # 汇总：15:30 前后对比
+    am = [g for s, e, g, _ in gaps if (s % 86400) < 15.5*3600]
+    pm = [g for s, e, g, _ in gaps if (s % 86400) >= 15.5*3600]
+    print(f'  15:30前 断档{len(am)}个 最大{max(am) if am else 0}s | 15:30后 断档{len(pm)}个 最大{max(pm) if pm else 0}s')
+print('--- C 完 ---')
 PYEOF
+echo "--- D. heal 日志 11-19 相关行 ---"
+for f in /root/asar_heal.log /root/autoheal.log /root/bot.log; do [ -f "$f" ] && echo "[$f]" && grep -a "11-19" "$f" | grep -aE "在线|掉线|告警|wake|循环|冻结" | tail -30; done
+echo "--- E. 登录状态 ---"
+bash /root/logincheck.sh 2>&1 | head -8
 echo "=====完====="
