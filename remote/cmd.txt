@@ -1,4 +1,31 @@
-287452
-echo "===== 所有状态变化行原文 ====="
-grep '状态变化:' /root/login_state.log 2>/dev/null
+287453
+echo "===== tick全量真断档+崩溃记录取证 ====="
+echo "--- tick.log 全历史>120s断档(60s心跳正常,>120s才是真漏跳) ---"
+python3 - <<'PY'
+import re
+from datetime import datetime
+ts=[]
+try:
+    for ln in open('/root/tick.log',errors='replace'):
+        m=re.match(r'(\d{4}-\d\d-\d\d \d\d:\d\d:\d\d)',ln)
+        if m:
+            try: ts.append(datetime.strptime(m.group(1),'%Y-%m-%d %H:%M:%S'))
+            except: pass
+except Exception as e:
+    print('读取失败',e)
+if not ts:
+    print('无tick数据')
+else:
+    print(f"tick总行数={len(ts)} 范围 {ts[0].strftime('%m-%d %H:%M')} ~ {ts[-1].strftime('%m-%d %H:%M')}")
+    gaps=[]
+    for i in range(1,len(ts)):
+        d=(ts[i]-ts[i-1]).total_seconds()
+        if d>120:
+            gaps.append((ts[i-1],ts[i],int(d)))
+    print(f">120s真断档共{len(gaps)}段:")
+    for a,b,d in gaps:
+        print(f"  {a.strftime('%m-%d %H:%M:%S')} -> {b.strftime('%m-%d %H:%M:%S')} 断{d}s({d//60}分)")
+PY
+echo "--- NapCat崩溃/FATAL记录(近40行) ---"
+grep -iE 'FATAL|crash|崩溃|SIGSEGV|段错误|Fatal error' /root/napcat.log 2>/dev/null | tail -40 || echo "(无崩溃记录)"
 echo "=====完====="
