@@ -1,80 +1,27 @@
-287437
-echo "===== 287437 11-19全天冻结时间线取证 ====="
-echo "--- A. autoheal 落盘路径 ---"
-grep -nE "TICK|tick\.log|>>" /root/azar_autoheal.sh | grep -v "^\s*#" | head -15
-echo "--- B. 状态快照 ---"
-date '+%m-%d %H:%M:%S'; uptime; ls -la /root/*tick* /root/tick* 2>/dev/null
-echo "--- C. 11-19 全天断档分析 ---"
-/root/bot/venv/bin/python << 'PYEOF'
-import re, glob, os, datetime
-
-# 1) 找候选 tick 文件：/root 下含 11-19 时间戳记录、按时间递增的小日志
-cands = []
-for p in glob.glob('/root/*') + glob.glob('/root/logs/*'):
-    if not os.path.isfile(p):
-        continue
-    if os.path.getsize(p) > 30 * 1024 * 1024:
-        continue
-    try:
-        with open(p, errors='replace') as f:
-            f.seek(max(0, os.path.getsize(p) - 300 * 1024))
-            tail = f.read()
-    except Exception:
-        continue
-    if re.search(r'11-19 \d{2}:\d{2}:\d{2}', tail) or re.search(r'11-19T\d{2}:\d{2}', tail):
-        cands.append((p, os.path.getsize(p)))
-print('候选文件:', cands)
-
-def parse_lines(path):
-    rows = []
-    with open(path, errors='replace') as f:
-        for ln in f:
-            m = re.search(r'(11-\d{2}) (\d{2}:\d{2}:\d{2})', ln)
-            if m:
-                hh, mm, ss = m.group(2).split(':')
-                rows.append((m.group(1), int(hh)*3600+int(mm)*60+int(ss), ln.strip()[:80]))
-            else:
-                m2 = re.search(r'(11-\d{2})T(\d{2}:\d{2}:\d{2})', ln)
-                if m2:
-                    hh, mm, ss = m2.group(2).split(':')
-                    rows.append((m2.group(1), int(hh)*3600+int(mm)*60+int(ss), ln.strip()[:80]))
-    return rows
-
-def grade(sec):
-    if sec > 900: return '深冻'
-    if sec > 300: return '半冻'
-    if sec > 60:  return '浅冻'
-    return '微冻'
-
-for path, _ in cands:
-    rows = parse_lines(path)
-    d19 = [r for r in rows if r[0] == '11-19']
-    if len(d19) < 20:
-        continue
-    print(f'>>> {path}  11-19记录 {len(d19)} 条')
-    prev = None
-    gaps = []
-    for day, sec, ln in d19:
-        if prev is not None and sec > prev[0]:
-            g = sec - prev[0]
-            if g > 55:
-                gaps.append((prev[0], sec, g, prev[1]))
-        prev = (sec, ln)
-    if not gaps:
-        print('  11-19 全天无 >55s 断档')
-    for s, e, g, lastln in gaps:
-        fs, fe = s % 86400, e % 86400
-        def fmt(x):
-            return f'{x//3600:02d}:{(x%3600)//60:02d}:{x%60:02d}'
-        print(f'  [{grade(g)}] {fmt(fs)} -> {fmt(e%86400)}  断 {g}s  (断前最后一条: {lastln[:60]})')
-    # 汇总：15:30 前后对比
-    am = [g for s, e, g, _ in gaps if (s % 86400) < 15.5*3600]
-    pm = [g for s, e, g, _ in gaps if (s % 86400) >= 15.5*3600]
-    print(f'  15:30前 断档{len(am)}个 最大{max(am) if am else 0}s | 15:30后 断档{len(pm)}个 最大{max(pm) if pm else 0}s')
-print('--- C 完 ---')
-PYEOF
-echo "--- D. heal 日志 11-19 相关行 ---"
-for f in /root/asar_heal.log /root/autoheal.log /root/bot.log; do [ -f "$f" ] && echo "[$f]" && grep -a "11-19" "$f" | grep -aE "在线|掉线|告警|wake|循环|冻结" | tail -30; done
-echo "--- E. 登录状态 ---"
-bash /root/logincheck.sh 2>&1 | head -8
+287438
+echo "===== 287438 多实例清理(延迟手术) ====="
+echo "--- 清理前实例 ---"
+ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch" | grep -v grep
+if [ -f /root/.cleanup_1120_armed ]; then
+  echo "手术已挂载过(pending)，跳过重复挂载"
+else
+  touch /root/.cleanup_1120_armed
+  cat > /root/.cleanup_1120.sh <<'EOS'
+#!/bin/bash
+sleep 18
+for p in $(pgrep -f 'bash /root/remote_ctl_[v]'); do kill "$p" 2>/dev/null; done
+for p in $(pgrep -f 'bash /root/azar_autoheal.[s]h'); do kill "$p" 2>/dev/null; done
+for p in $(pgrep -f 'bash /root/offline_watch.[s]h'); do kill "$p" 2>/dev/null; done
+sleep 3
+rm -f /root/.remote_pid /root/.remote_ctl.lock
+rm -rf /root/.remote_ctl_lock 2>/dev/null
+cd /root/asar-sync
+setsid nohup bash /root/remote_ctl_v6.sh >/dev/null 2>&1 </dev/null &
+echo "$(date '+%m-%d %H:%M:%S') cleanup done" >> /root/cleanup_1120.log
+rm -f /root/.cleanup_1120_armed
+EOS
+  chmod +x /root/.cleanup_1120.sh
+  setsid nohup bash /root/.cleanup_1120.sh >/dev/null 2>&1 </dev/null &
+  echo "延迟手术已挂载(18秒后执行,本任务先安全回传)"
+fi
 echo "=====完====="
