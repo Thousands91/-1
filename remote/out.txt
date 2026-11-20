@@ -1,2 +1,54 @@
+<<<task_287434.txt>>>
+===== 任务287434 11-20 12:15:58 =====
+--- 命令 ---
+echo "===== 287434 掉线时间线精确取证 ====="
+echo "[1]tick.log冻结断档检测(60秒粒度,找2分钟以上断档):"
+awk 'NR>1{split($0,a," "); t_prev=a[2]; if(prev!="" ){n=system_call=0}} {print}' /root/tick.log > /dev/null 2>&1
+python3 - << 'PYEOF' 2>/dev/null || awk '{gsub("-"," ");print}' /root/tick.log | awk '{d=$2; h=$3; gsub(":"," ",h); ts=d*86400+h*3600+3600; if(pt!=""&&ts-pt>120){print "断档: "pdate" "ptime" -> "$1" "$2" "$3"  ("ts-pt"秒)"} pt=ts; pdate=$1; ptime=$2}' /root/tick.log | tail -10
+PYEOF
+echo "[2]tick.log最后10行:"
+tail -10 /root/tick.log
+echo "[3]bot.log最后一口气息(最后消息/错误):"
+tail -3 /root/bot/bot/bot.log
+echo "[4]napcat.log冻结前后分界(02:30前后各3行):"
+grep -E "11-20 02:2[5-9]|11-20 02:3" /root/napcat.log | tail -6
+echo "[5]login_state.log最近4行:"
+tail -4 /root/login_state.log
+echo "[6]当前状态:"
+bash /root/logincheck.sh 2>&1 | grep -E "^\[" | head -1
+echo "=====完====="
+--- 输出 ---
+===== 287434 掉线时间线精确取证 =====
+[1]tick.log冻结断档检测(60秒粒度,找2分钟以上断档):
+[2]tick.log最后10行:
+2026-11-20 12:01:40
+2026-11-20 12:02:42
+2026-11-20 12:03:43
+2026-11-20 12:04:43
+2026-11-20 12:05:51
+2026-11-20 12:06:55
+2026-11-20 12:08:56
+2026-11-20 12:11:59
+2026-11-20 12:13:39
+2026-11-20 12:15:17
+[3]bot.log最后一口气息(最后消息/错误):
+11-20 12:02:18 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-20 12:02:18 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1374)
+11-20 12:02:18 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1374) running complete
+[4]napcat.log冻结前后分界(02:30前后各3行):
+11-20 02:25:30 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-20 02:25:32 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) hi
+11-20 02:25:33 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 您好。想找点什么？
+11-20 02:25:35 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-20 02:25:35 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-20 02:32:52 [[32minfo[39m] 阿萨尔 | 接收 <- 临时消息 (2290230341)
+[5]login_state.log最近4行:
+2026-11-20 03:33:02 [在线]
+2026-11-20 12:00:42 状态变化: [在线] -> [未登录]
+2026-11-20 12:05:55 [未登录]
+2026-11-20 12:11:00 [未登录]
+[6]当前状态:
+[未登录] 当前没有有效会话
+=====完=====
 <<<ALERT.txt>>>
-2026-11-20 12:08:53 阿萨尔掉线([未登录])! 本次在线?分/距最后发送443秒/距最后收信482秒;已自愈,5分钟不恢复需本人扫码
+2026-11-20 12:15:47 阿萨尔掉线([未登录])! 本次在线?分/距最后发送857秒/距最后收信896秒;已自愈,5分钟不恢复需本人扫码
