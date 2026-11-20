@@ -1,2 +1,11 @@
-287441
-echo 占位-无实际操作
+287442
+echo "===== auto实战首单:只读验收 ====="
+echo "--- 实例 ---"
+ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch|opt/QQ/[q]q" | grep -v grep
+echo "--- 水位 ---"
+cat /root/.remote_last 2>/dev/null; echo
+echo "--- 清理日志 ---"
+cat /root/cleanup_1120.log 2>/dev/null || echo "(无)"
+echo "--- 循环日志尾 ---"
+tail -4 /root/remote_ctl.log
+echo "=====完====="
