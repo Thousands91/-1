@@ -1,37 +1,28 @@
-<<<task_287439.txt>>>
-===== 任务287439 11-20 13:55:45 =====
+<<<task_287440.txt>>>
+===== 任务287440 11-20 13:58:54 =====
 --- 命令 ---
-echo "===== 287439 清理验收(只读) ====="
-echo "--- 实例清单 ---"
+echo "===== 287440 清多余autoheal(只读验收同任务) ====="
+echo "--- 当前实例 ---"
 ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch" | grep -v grep
-echo "--- 清理日志 ---"
-cat /root/cleanup_1120.log 2>/dev/null || echo "(无清理日志=手术未执行)"
-echo "--- 水位 ---"
-cat /root/.remote_last 2>/dev/null; echo
-echo "--- 循环日志尾 ---"
-tail -8 /root/remote_ctl.log
+PIDS=$(pgrep -f 'bash /root/azar_autoheal.[s]h' | sort -n)
+KEEP=$(echo "$PIDS" | head -1)
+echo "autoheal PIDs: $PIDS | 保留: $KEEP"
+for p in $PIDS; do
+  if [ "$p" != "$KEEP" ]; then kill "$p" 2>/dev/null && echo "已杀多余autoheal: $p"; fi
+done
+sleep 2
+echo "--- 清理后实例 ---"
+ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch" | grep -v grep
 echo "=====完====="
 --- 输出 ---
-===== 287439 清理验收(只读) =====
---- 实例清单 ---
+===== 287440 清多余autoheal(只读验收同任务) =====
+--- 当前实例 ---
 17115 bash /root/remote_ctl_v6.sh
 17138 bash /root/azar_autoheal.sh
 17145 bash /root/offline_watch.sh
-17280 bash /root/azar_autoheal.sh
---- 清理日志 ---
-11-20 13:55:42 cleanup done
---- 水位 ---
-287439
-
---- 循环日志尾 ---
- 6857 bash /root/remote_ctl_v6.sh
-14024 bash /root/offline_watch.sh
-24696 bash /root/remote_ctl_v6.sh
-24740 bash /root/azar_autoheal.sh
-26533 bash /root/azar_autoheal.sh
-延迟手术已挂载(18秒后执行,本任务先安全回传)
+autoheal PIDs: 17138 | 保留: 17138
+--- 清理后实例 ---
+17115 bash /root/remote_ctl_v6.sh
+17138 bash /root/azar_autoheal.sh
+17145 bash /root/offline_watch.sh
 =====完=====
-[11-20 13:55] report:API回传成功
-=====完=====
-<<<ALERT.txt>>>
-2026-11-20 13:55:45 阿萨尔掉线([未登录])! 本次在线?分/距最后发送6855秒/距最后收信6894秒;已自愈,5分钟不恢复需本人扫码
