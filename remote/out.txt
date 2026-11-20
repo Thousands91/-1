@@ -1,23 +1,2 @@
-<<<task_287456.txt>>>
-===== 任务287456 11-20 19:28:38 =====
---- 命令 ---
-echo "===== 零成本保活招体检:termux常驻通知 ====="
-echo "--- 1.termux-notification 命令是否存在 ---"
-command -v termux-notification || echo "(无 termux-notification)"
-echo "--- 2.termux-api 包是否安装(termux层) ---"
-ls /data/data/com.termux/files/usr/bin/termux-notification 2>/dev/null || echo "(termux层无)"
-echo "--- 3.当前Termux通知里有没有ongoing ---"
-dumpsys notification 2>/dev/null | grep -iE 'termux|ongoing' | head -5 || echo "(proot不可读,略)"
-echo "--- 4.termux-api app是否装(Android层) ---"
-pm list packages 2>/dev/null | grep -i termux || echo "(pm不可读,略)"
-echo "=====完====="
---- 输出 ---
-===== 零成本保活招体检:termux常驻通知 =====
---- 1.termux-notification 命令是否存在 ---
-(无 termux-notification)
---- 2.termux-api 包是否安装(termux层) ---
-(termux层无)
---- 3.当前Termux通知里有没有ongoing ---
---- 4.termux-api app是否装(Android层) ---
-package:com.termux
-=====完=====
+<<<ALERT.txt>>>
+2026-11-20 19:32:14 阿萨尔掉线([未登录])! 本次在线?分/距最后发送27044秒/距最后收信27083秒;已自愈,5分钟不恢复需本人扫码
