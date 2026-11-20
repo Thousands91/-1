@@ -1,16 +1,14 @@
-287449
-echo "===== rc.sh diag 回传静默四查 $(date '+%F %T') ====="
-echo "---[1]循环日志尾(循环死活+失败原文)---"
-tail -15 /root/remote_ctl.log
-echo "---[2]小包PUT手测(一锤定音通道好坏)---"
-TOK=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
-curl -s -o /dev/null -w "api.github.com HTTP:%{http_code} 耗时:%{time_total}s\n" --max-time 15 https://api.github.com
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" https://api.github.com/repos/Thousands91/-1/contents/remote/out.txt | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
-curl -s -o /dev/null -w "PUT out.txt HTTP:%{http_code} 耗时:%{time_total}s\n" --max-time 30 -X PUT -H "Authorization: token $TOK" https://api.github.com/repos/Thousands91/-1/contents/remote/out.txt -d "{\"message\":\"diag probe\",\"content\":\"ZGlhZ19wcm9iZQ==\",\"sha\":\"$SHA\",\"branch\":\"main\"}"
-echo "---[3]git push手测(non-fast-forward=仓库不同步)---"
-cd /root/asar-sync && git push origin main 2>&1 | tail -3
-echo "---[4]水位(任务被谁消费)---"
-cat /root/.remote_last 2>/dev/null; echo
-echo "---[判据]tick.log心跳(60s连续=CPU没冻)---"
-tail -3 /root/tick.log 2>/dev/null
-echo "=====四查完毕,拿到结果前不许说冻结====="
+287450
+echo "===== 扫码时刻 vs 会话存活时长取证(只读) ====="
+LS=/root/login_state.log
+echo "--- 文件信息 ---"
+ls -la "$LS" 2>/dev/null; echo "总行数: $(wc -l < "$LS" 2>/dev/null)"
+echo "--- 状态变化全记录(去掉每5分钟重复采样,只留变化点) ---"
+awk '
+{
+  # 行格式猜测: 时间 状态, 先原样打印前20行确认
+  if (NR<=20) print NR": "$0
+}' "$LS" 2>/dev/null
+echo "--- 采样样例(头10尾10) ---"
+head -10 "$LS" 2>/dev/null; echo "..."; tail -10 "$LS" 2>/dev/null
+echo "=====完====="
