@@ -1,27 +1,11 @@
-287438
-echo "===== 287438 多实例清理(延迟手术) ====="
-echo "--- 清理前实例 ---"
+287439
+echo "===== 287439 清理验收(只读) ====="
+echo "--- 实例清单 ---"
 ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch" | grep -v grep
-if [ -f /root/.cleanup_1120_armed ]; then
-  echo "手术已挂载过(pending)，跳过重复挂载"
-else
-  touch /root/.cleanup_1120_armed
-  cat > /root/.cleanup_1120.sh <<'EOS'
-#!/bin/bash
-sleep 18
-for p in $(pgrep -f 'bash /root/remote_ctl_[v]'); do kill "$p" 2>/dev/null; done
-for p in $(pgrep -f 'bash /root/azar_autoheal.[s]h'); do kill "$p" 2>/dev/null; done
-for p in $(pgrep -f 'bash /root/offline_watch.[s]h'); do kill "$p" 2>/dev/null; done
-sleep 3
-rm -f /root/.remote_pid /root/.remote_ctl.lock
-rm -rf /root/.remote_ctl_lock 2>/dev/null
-cd /root/asar-sync
-setsid nohup bash /root/remote_ctl_v6.sh >/dev/null 2>&1 </dev/null &
-echo "$(date '+%m-%d %H:%M:%S') cleanup done" >> /root/cleanup_1120.log
-rm -f /root/.cleanup_1120_armed
-EOS
-  chmod +x /root/.cleanup_1120.sh
-  setsid nohup bash /root/.cleanup_1120.sh >/dev/null 2>&1 </dev/null &
-  echo "延迟手术已挂载(18秒后执行,本任务先安全回传)"
-fi
+echo "--- 清理日志 ---"
+cat /root/cleanup_1120.log 2>/dev/null || echo "(无清理日志=手术未执行)"
+echo "--- 水位 ---"
+cat /root/.remote_last 2>/dev/null; echo
+echo "--- 循环日志尾 ---"
+tail -8 /root/remote_ctl.log
 echo "=====完====="
