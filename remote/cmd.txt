@@ -1,31 +1,13 @@
-287453
-echo "===== tick全量真断档+崩溃记录取证 ====="
-echo "--- tick.log 全历史>120s断档(60s心跳正常,>120s才是真漏跳) ---"
-python3 - <<'PY'
-import re
-from datetime import datetime
-ts=[]
-try:
-    for ln in open('/root/tick.log',errors='replace'):
-        m=re.match(r'(\d{4}-\d\d-\d\d \d\d:\d\d:\d\d)',ln)
-        if m:
-            try: ts.append(datetime.strptime(m.group(1),'%Y-%m-%d %H:%M:%S'))
-            except: pass
-except Exception as e:
-    print('读取失败',e)
-if not ts:
-    print('无tick数据')
-else:
-    print(f"tick总行数={len(ts)} 范围 {ts[0].strftime('%m-%d %H:%M')} ~ {ts[-1].strftime('%m-%d %H:%M')}")
-    gaps=[]
-    for i in range(1,len(ts)):
-        d=(ts[i]-ts[i-1]).total_seconds()
-        if d>120:
-            gaps.append((ts[i-1],ts[i],int(d)))
-    print(f">120s真断档共{len(gaps)}段:")
-    for a,b,d in gaps:
-        print(f"  {a.strftime('%m-%d %H:%M:%S')} -> {b.strftime('%m-%d %H:%M:%S')} 断{d}s({d//60}分)")
-PY
-echo "--- NapCat崩溃/FATAL记录(近40行) ---"
-grep -iE 'FATAL|crash|崩溃|SIGSEGV|段错误|Fatal error' /root/napcat.log 2>/dev/null | tail -40 || echo "(无崩溃记录)"
+287454
+echo "===== 11-20 掉线真相取证:状态采样vs实际消息 ====="
+echo "--- login_state.log 11-20 全天采样(看采样何时停) ---"
+grep '2026-11-20' /root/login_state.log 2>/dev/null | tail -60
+echo "--- autoheal.log 11-20 告警(含距最后收信秒数) ---"
+grep '11-20' /root/autoheal.log 2>/dev/null | grep -E '掉线|在线|收信|发送' | tail -30
+echo "--- bot消息日志最后活动(找实际收消息时刻) ---"
+for f in /root/qq-bot-project/bot/*.log /root/*.log; do
+  [ -f "$f" ] || continue
+  m=$(grep -hE '11-20 (1[01]|12):' "$f" 2>/dev/null | tail -3)
+  [ -n "$m" ] && { echo "[$f]"; echo "$m"; }
+done
 echo "=====完====="
