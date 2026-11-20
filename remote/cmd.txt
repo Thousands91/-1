@@ -1,15 +1,32 @@
-287431
-echo "===== 287431 收不到回复诊断 ====="
-echo "[1]登录状态:"
+287432
+echo "===== 部署坑154 兜底句扩池 287432 ====="
+echo "[0]先诊断收不到回复:"
 bash /root/logincheck.sh 2>&1 | grep -E "^\[" | head -1
-echo "[2]autoheal最近告警(应有本次在线X分):"
-tail -6 /root/autoheal.log
-echo "[3]大脑进程:"
-pgrep -f "venv/bin/python main.py" | head -1
-echo "[4]bot.log最近10行:"
-tail -10 /root/bot/bot/bot.log
-echo "[5]napcat最近收发:"
-grep -E "接收 <-|发送 ->" /root/napcat.log | tail -6
-echo "[6]login_state最新3行:"
-tail -3 /root/login_state.log
+pgrep -f "venv/bin/python main.py" | head -1 | sed 's/^/  大脑PID: /'
+pgrep -f "remote_ctl" | head -1 | sed 's/^/  workerPID: /'
+tail -4 /root/autoheal.log | sed 's/^/  看护: /'
+grep -E "接收 <-|发送 ->" /root/napcat.log | tail -4 | sed 's/^/  napcat: /'
+echo "[1]下载新文件:"
+curl -sL -H "Cache-Control: no-cache" -o /tmp/ai_new.py "https://raw.githubusercontent.com/Thousands91/-1/main/deploy/ai_chat.py?ts=$(date +%s)&v=154"
+M=$(md5sum /tmp/ai_new.py | cut -d' ' -f1); echo "  md5: $M"
+if [ "$M" != "508ee60985eeeeba6b451d3ae5b92b8f" ]; then echo "  md5不符,中止(CDN未刷新稍后重试)"; echo "=====完====="; exit 0; fi
+bash -n /tmp/ai_new.py && echo "  语法OK"
+echo "[2]备份+安装:"
+cp /root/bot/bot/plugins/ai_chat.py /tmp/ai_bak_before_154.py
+cp /tmp/ai_new.py /root/bot/bot/plugins/ai_chat.py
+/root/bot/venv/bin/python -m py_compile /root/bot/bot/plugins/ai_chat.py && echo "  py_compile OK"
+echo "[3]新特性计数:"
+grep -c "_pick_fallback_line" /root/bot/bot/plugins/ai_chat.py
+grep -c "_FALLBACK_LINES" /root/bot/bot/plugins/ai_chat.py
+echo "[4]重启大脑:"
+OLDPID=$(pgrep -f "venv/bin/python main.py" | head -1)
+kill "$OLDPID" 2>/dev/null; sleep 3
+( cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null & )
+sleep 15
+NEWPID=$(pgrep -f "venv/bin/python main.py" | head -1)
+echo "  旧$OLDPID→新$NEWPID"
+echo "[5]加载+在线:"
+grep -E "Succeeded to load plugin|Failed to load" /root/bot/bot/bot.log | tail -12 | grep -c "SUCCESS" | sed 's/^/  加载成功数: /'
+grep "QQ 群机器人启动成功" /root/bot/bot/bot.log | tail -1
+bash /root/logincheck.sh 2>/dev/null | grep -oE "\[[^]]+\]" | head -1
 echo "=====完====="
