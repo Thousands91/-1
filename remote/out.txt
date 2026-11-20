@@ -1,2 +1,33 @@
-<<<ALERT.txt>>>
-2026-11-20 19:02:09 阿萨尔掉线([未登录])! 本次在线?分/距最后发送25239秒/距最后收信25278秒;已自愈,5分钟不恢复需本人扫码
+<<<task_287455.txt>>>
+===== 任务287455 11-20 19:12:17 =====
+--- 命令 ---
+echo "===== 延长在线:保活开关现状体检(只读) ====="
+echo "--- 1.保活锚 sleep infinity(坑65最强开关) ---"
+pgrep -af 'sleep [i]nfinity' || echo "(无保活锚!)"
+echo "--- 2.休眠时保持网络连接(wifi_sleep_policy:2=休眠不断网) ---"
+settings get global wifi_sleep_policy 2>/dev/null || echo "(proot不可读)"
+echo "--- 3.充电时保持唤醒(stay_on_while_plugged_in) ---"
+settings get global stay_on_while_plugged_in 2>/dev/null || echo "(proot不可读)"
+echo "--- 4.wake-lock持锁 ---"
+dumpsys power 2>/dev/null | grep -iE 'wake.*lock|Partial|termux' | head -10 || echo "(proot不可读)"
+echo "--- 5.当前四件套进程 ---"
+ps -eo pid,args | grep -E 'tick.sh|netmon|health_probe|remote_ctl_v6|azar_autoheal' | grep -v grep
+echo "=====完====="
+--- 输出 ---
+===== 延长在线:保活开关现状体检(只读) =====
+--- 1.保活锚 sleep infinity(坑65最强开关) ---
+22952 /bin/sleep infinity
+28001 sleep infinity
+--- 2.休眠时保持网络连接(wifi_sleep_policy:2=休眠不断网) ---
+(proot不可读)
+--- 3.充电时保持唤醒(stay_on_while_plugged_in) ---
+(proot不可读)
+--- 4.wake-lock持锁 ---
+--- 5.当前四件套进程 ---
+17138 bash /root/azar_autoheal.sh
+18783 bash /root/tick.sh
+18786 bash /root/health_probe.sh
+18788 bash /root/netmon.sh
+24484 bash /root/remote_ctl_v6.sh
+30063 bash /root/remote_ctl_v6.sh
+=====完=====
