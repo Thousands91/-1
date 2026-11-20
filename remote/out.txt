@@ -1,60 +1,31 @@
-<<<task_287444.txt>>>
-===== 任务287444 11-20 14:16:07 =====
+<<<task_287445.txt>>>
+===== 任务287445 11-20 14:16:48 =====
 --- 命令 ---
-echo "===== 修v6第29行pgrep自匹配(延迟手术) ====="
-echo "--- 改前 25~32行 ---"
-sed -n '25,32p' /root/remote_ctl_v6.sh
-cp /root/remote_ctl_v6.sh /root/remote_ctl_v6.sh.bak_fix29_$(date +%m%d%H%M)
-# 精确替换:只改pgrep的匹配模式为方括号隔离(坑60b),不动后面的setsid启动命令
-sed -i "s|pgrep -f 'bash /root/azar_autoheal.sh'|pgrep -f 'bash /root/azar_autoheal.[s]h'|" /root/remote_ctl_v6.sh
-echo "--- 改后 25~32行 ---"
-sed -n '25,32p' /root/remote_ctl_v6.sh
-echo "--- 语法检查 ---"
-bash -n /root/remote_ctl_v6.sh && echo "语法OK"
-# 延迟手术:任务先安全回传(实测最长31秒),50秒后重启v6加载新代码
-if [ ! -f /root/.v6fix29_armed ]; then
-  touch /root/.v6fix29_armed
-  cat > /root/.v6fix29.sh <<'EOS'
-#!/bin/bash
-sleep 50
-for p in $(pgrep -f 'bash /root/remote_ctl_[v]6.sh'); do kill "$p" 2>/dev/null; done
-sleep 3
-rm -f /root/.remote_pid /root/.remote_ctl.lock
-rm -rf /root/.remote_ctl_lock 2>/dev/null
-pgrep -f 'bash /root/azar_autoheal.[s]h' >/dev/null || ( setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null & )
-cd /root/asar-sync
-setsid nohup bash /root/remote_ctl_v6.sh >/dev/null 2>&1 </dev/null &
-echo "$(date '+%m-%d %H:%M:%S') v6fix29 restart done" >> /root/v6fix29.log
-rm -f /root/.v6fix29_armed
-EOS
-  chmod +x /root/.v6fix29.sh
-  setsid nohup bash /root/.v6fix29.sh >/dev/null 2>&1 </dev/null &
-  echo "延迟手术已挂载(50秒后重启v6)"
-fi
+echo "===== 287445 验收v6第29行修复(只读) ====="
+echo "--- v6第29行当前内容 ---"
+sed -n '29p' /root/remote_ctl_v6.sh
+echo "--- 修复标记检查(应为方括号[s]h) ---"
+grep -n "azar_autoheal.\\[s\\]h" /root/remote_ctl_v6.sh | head -3
+echo "--- 实例清单(各应1个) ---"
+ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch" | grep -v grep
+echo "--- 重启日志 ---"
+cat /root/v6fix29.log 2>/dev/null || echo "(无重启日志)"
+echo "--- 水位 ---"
+cat /root/.remote_last 2>/dev/null; echo
 echo "=====完====="
 --- 输出 ---
-===== 修v6第29行pgrep自匹配(延迟手术) =====
---- 改前 25~32行 ---
-    exit 0
-  fi
-  rm -rf "$LD" && mkdir "$LD" && echo $$ > "$LD/pid"
-fi
-pgrep -f 'bash /root/azar_autoheal.sh' >/dev/null || ( setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null & )
-pgrep -f 'bash /root/offline_watch.sh' >/dev/null || ( setsid nohup bash /root/offline_watch.sh >> /root/offline_watch2.log 2>&1 < /dev/null & )
-trap 'rm -rf "$LD" 2>/dev/null' EXIT
-echo $$ > /root/.remote_pid
---- 改后 25~32行 ---
-    exit 0
-  fi
-  rm -rf "$LD" && mkdir "$LD" && echo $$ > "$LD/pid"
-fi
+===== 287445 验收v6第29行修复(只读) =====
+--- v6第29行当前内容 ---
 pgrep -f 'bash /root/azar_autoheal.[s]h' >/dev/null || ( setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null & )
-pgrep -f 'bash /root/offline_watch.sh' >/dev/null || ( setsid nohup bash /root/offline_watch.sh >> /root/offline_watch2.log 2>&1 < /dev/null & )
-trap 'rm -rf "$LD" 2>/dev/null' EXIT
-echo $$ > /root/.remote_pid
---- 语法检查 ---
-语法OK
-延迟手术已挂载(50秒后重启v6)
+--- 修复标记检查(应为方括号[s]h) ---
+29:pgrep -f 'bash /root/azar_autoheal.[s]h' >/dev/null || ( setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null & )
+--- 实例清单(各应1个) ---
+17115 bash /root/remote_ctl_v6.sh
+17138 bash /root/azar_autoheal.sh
+17145 bash /root/offline_watch.sh
+--- 重启日志 ---
+(无重启日志)
+--- 水位 ---
+287445
+
 =====完=====
-<<<ALERT.txt>>>
-2026-11-20 14:15:56 阿萨尔掉线([未登录])! 本次在线?分/距最后发送8066秒/距最后收信8105秒;已自愈,5分钟不恢复需本人扫码
