@@ -1,41 +1,37 @@
-<<<task_287442.txt>>>
-===== 任务287442 11-20 14:04:54 =====
+<<<task_287443.txt>>>
+===== 任务287443 11-20 14:05:42 =====
 --- 命令 ---
-echo "===== auto实战首单:只读验收 ====="
-echo "--- 实例 ---"
-ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch|opt/QQ/[q]q" | grep -v grep
-echo "--- 水位 ---"
-cat /root/.remote_last 2>/dev/null; echo
-echo "--- 清理日志 ---"
-cat /root/cleanup_1120.log 2>/dev/null || echo "(无)"
-echo "--- 循环日志尾 ---"
-tail -4 /root/remote_ctl.log
+echo "===== 查autoheal重复拉起源头(只读) ====="
+echo "--- autoheal进程启动时间/父进程 ---"
+for p in $(pgrep -f 'bash /root/azar_autoheal.[s]h'); do ps -o pid,ppid,lstart,args -p $p | tail -1; done
+echo "--- crontab ---"
+crontab -l 2>/dev/null | grep -vE '^#|^$' | head -20 || echo "(无crontab)"
+echo "--- v6/offline_watch里的自拉逻辑 ---"
+grep -nE 'autoheal|azar_autoheal' /root/remote_ctl_v6.sh /root/offline_watch.sh 2>/dev/null | head -20
+echo "--- 谁在起autoheal(近1小时日志) ---"
+grep -E 'autoheal|自愈|拉起' /root/remote_ctl.log 2>/dev/null | tail -15
 echo "=====完====="
 --- 输出 ---
-===== auto实战首单:只读验收 =====
---- 实例 ---
-17115 bash /root/remote_ctl_v6.sh
+===== 查autoheal重复拉起源头(只读) =====
+--- autoheal进程启动时间/父进程 ---
+17138     1 Fri Mar 31 12:36:09 2023 bash /root/azar_autoheal.sh
+--- crontab ---
+--- v6/offline_watch里的自拉逻辑 ---
+/root/remote_ctl_v6.sh:29:pgrep -f 'bash /root/azar_autoheal.sh' >/dev/null || ( setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null & )
+--- 谁在起autoheal(近1小时日志) ---
+24740 bash /root/azar_autoheal.sh
+26533 bash /root/azar_autoheal.sh
+echo "===== 287440 清多余autoheal(只读验收同任务) ====="
+ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch" | grep -v grep
+PIDS=$(pgrep -f 'bash /root/azar_autoheal.[s]h' | sort -n)
+echo "autoheal PIDs: $PIDS | 保留: $KEEP"
+  if [ "$p" != "$KEEP" ]; then kill "$p" 2>/dev/null && echo "已杀多余autoheal: $p"; fi
+ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch" | grep -v grep
+===== 287440 清多余autoheal(只读验收同任务) =====
 17138 bash /root/azar_autoheal.sh
-17145 bash /root/offline_watch.sh
+autoheal PIDs: 17138 | 保留: 17138
+17138 bash /root/azar_autoheal.sh
+ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch|opt/QQ/[q]q" | grep -v grep
+17138 bash /root/azar_autoheal.sh
 20334 bash /root/azar_autoheal.sh
-24699 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox
-24716 /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox
-24726 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-24727 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
-24742 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
-24767 /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
-24771 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-24772 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
-24796 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-24865 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
---- 水位 ---
-287442
-
---- 清理日志 ---
-11-20 13:55:42 cleanup done
---- 循环日志尾 ---
---- 输出 ---
-占位-无实际操作
-[11-20 14:03] report:git push失败,回退API
-[11-20 14:03] report:API回传成功
 =====完=====
