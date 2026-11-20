@@ -1,2 +1,96 @@
-<<<ALERT.txt>>>
-2026-11-20 19:37:04 阿萨尔掉线([未登录])! 本次在线?分/距最后发送27334秒/距最后收信27373秒;已自愈,5分钟不恢复需本人扫码
+<<<task_287457.txt>>>
+===== 任务287457 11-20 19:53:04 =====
+--- 命令 ---
+echo "===== 查掉线真因:NapCat/服务端侧证据(只读) ====="
+echo "--- 日志文件清单 ---"
+ls -lat /root/*.log 2>/dev/null | head -25
+echo "--- NapCat日志:离线/断连/踢线原因关键行 ---"
+grep -iE "离线|下线|掉线|踢|ErrType|ErrCode|WebSocket|disconnect|closed|close:|登录失效|登录状态|会话失效|token|DeviceLock|被挤|另登|login" /root/napcat.log 2>/dev/null | tail -60
+echo "--- NapCat日志尾部30行 ---"
+tail -30 /root/napcat.log 2>/dev/null
+echo "=====完====="
+--- 输出 ---
+===== 查掉线真因:NapCat/服务端侧证据(只读) =====
+--- 日志文件清单 ---
+-rw-r--r-- 1 root root 1437563 Nov 20 19:53 /root/napcat-restart.log
+-rw-r--r-- 1 root root 2334241 Nov 20 19:52 /root/remote_ctl.log
+-rw-r--r-- 1 root root   95070 Nov 20 19:52 /root/netmon.log
+-rw-r--r-- 1 root root  281471 Nov 20 19:52 /root/health.log
+-rw-r--r-- 1 root root  176540 Nov 20 19:52 /root/tick.log
+-rw-r--r-- 1 root root   50760 Nov 20 19:48 /root/login_state.log
+-rw-r--r-- 1 root root    4685 Nov 20 19:46 /root/ip.log
+-rw-r--r-- 1 root root   16157 Nov 20 19:37 /root/autoheal.log
+-rw-r--r-- 1 root root      36 Nov 20 14:17 /root/v6fix29.log
+-rw-r--r-- 1 root root    1733 Nov 20 13:55 /root/offline_watch2.log
+-rw-r--r-- 1 root root      28 Nov 20 13:55 /root/cleanup_1120.log
+-rw-r--r-- 1 root root   43819 Nov 20 12:01 /root/napcat.log
+-rw-r--r-- 1 root root    3585 Nov 20 12:01 /root/link_probe.log
+-rw-r--r-- 1 root root   21559 Nov 20 12:00 /root/offline_forensics.log
+-rw-r--r-- 1 root root    3377 Nov 19 15:58 /root/music_sign_v4.log
+-rw-r--r-- 1 root root    5285 Nov 18 09:23 /root/music_sign.log
+-rw-r--r-- 1 root root     835 Nov 12 13:06 /root/azar_login_run.log
+-rw-r--r-- 1 root root      11 Nov 12 00:50 /root/remote_boot.log
+-rw-r--r-- 1 root root      52 Nov 12 00:06 /root/asar_sync_boot.log
+--- NapCat日志:离线/断连/踢线原因关键行 ---
+11-20 02:24:42 [[32minfo[39m] [NapCat] [WebUi] WebUi Token: 560aad98b99d
+11-20 02:24:42 [[32minfo[39m] [NapCat] [WebUi] WebUi User Panel Url: http://127.0.0.1:6099/webui?token=560aad98b99d
+11-20 02:24:42 [[32minfo[39m] [NapCat] [WebUi] WebUi User Panel Url: http://[::]:6099/webui?token=560aad98b99d
+11-20 02:25:10 [[32minfo[39m] [Core] [Login] 二维码已被扫描，等待确认...
+[I] <MMKV.cpp:260::mmkvWithID> prepare to load nt_mmkv_united_config_no_login_v3 (id nt_mmkv_united_config_no_login_v3) from rootPath /root/.config/QQ/global/nt_data/mmkv
+[I] <MemoryFile.cpp:98::open> open fd[0x68], /root/.config/QQ/global/nt_data/mmkv/nt_mmkv_united_config_no_login_v3
+[I] <MemoryFile.cpp:98::open> open fd[0x69], /root/.config/QQ/global/nt_data/mmkv/nt_mmkv_united_config_no_login_v3.crc
+[I] <MMKV_IO.cpp:213::loadMetaInfoAndCheck> meta file [nt_mmkv_united_config_no_login_v3] has flag [0]
+[I] <MMKV_IO.cpp:87::loadFromFile> loading [nt_mmkv_united_config_no_login_v3] with 19966 actual size, file size 32768, InterProcess 1, meta info version:4
+[I] <MMKV_IO.cpp:92::loadFromFile> loading [nt_mmkv_united_config_no_login_v3] with crc 262559925 sequence 69 version 4
+[I] <MMKV_IO.cpp:136::loadFromFile> loaded [nt_mmkv_united_config_no_login_v3] with 393 key-values
+WebSocket反向服务: ws://127.0.0.1:8080/onebot/v11/ws, : 已启动
+[I] <MMKV_IO.cpp:516::writeActualSize> [nt_mmkv_united_config_no_login_v3] increase sequence to 70, crc 47275141, actualSize 15972
+11-20 03:09:31 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接意外关闭
+11-20 03:09:31 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
+11-20 03:09:36 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接错误 Error: connect ECONNREFUSED 127.0.0.1:8080
+11-20 03:09:36 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
+11-20 03:09:41 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接错误 Error: connect ECONNREFUSED 127.0.0.1:8080
+11-20 03:09:41 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
+11-20 03:09:46 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接错误 Error: connect ECONNREFUSED 127.0.0.1:8080
+11-20 03:09:46 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
+11-20 12:00:40 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+11-20 12:00:55 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接意外关闭
+11-20 12:00:55 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
+11-20 12:01:01 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接错误 Error: connect ECONNREFUSED 127.0.0.1:8080
+11-20 12:01:01 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
+11-20 12:01:06 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接错误 Error: connect ECONNREFUSED 127.0.0.1:8080
+11-20 12:01:06 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
+    at async o_e.websocketHandle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:36621:17)
+    at async o_e.websocketHandle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:36621:17)
+--- NapCat日志尾部30行 ---
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+11-20 12:01:01 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
+11-20 12:01:06 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接错误 Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+11-20 12:01:06 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
+11-20 12:01:09 [[33mwarn[39m] 阿萨尔 | 似乎是旧版客户端，尝试仅通过序号获取引用消息 1211825
+11-20 12:01:26 [[31merror[39m] 阿萨尔 | 发生错误 Error: 消息不存在或已被撤回: PromiseTimer: Operation timed out
+    at file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:78607:75
+    at async o_e._handle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:78603:154)
+    at async o_e.websocketHandle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:36621:17)
+    at async pO.handleMessage (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:67875:15)
+11-20 12:01:28 [[31merror[39m] 阿萨尔 | 发生错误 Error: 消息不存在或已被撤回: PromiseTimer: Operation timed out
+    at file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:78607:75
+    at async o_e._handle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:78603:154)
+    at async o_e.websocketHandle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:36621:17)
+    at async pO.handleMessage (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:67875:15)
+11-20 12:01:30 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [简简单单第一附属精神病院(562796842)] [阿萨尔(3427943187)] [图片]
+11-20 12:01:33 [[31merror[39m] 阿萨尔 | 发生错误 Error: Timeout: NTEvent serviceAndMethod:NodeIKernelMsgService/sendMsg ListenerName:NodeIKernelMsgListener/onMsgInfoListUpdate EventRet:
+{}
+
+    at f (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:30561:9)
+    at Timeout._onTimeout (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:30571:36)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+11-20 12:01:38 [[33mwarn[39m] 阿萨尔 | 似乎是旧版客户端，尝试仅通过序号获取引用消息 95653
+[27093:1120/120146.843040:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
+[27093:1120/120146.911370:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[27093:1120/120146.934054:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[27093:1120/120146.950012:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[27093:1120/120146.950681:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+=====完=====
