@@ -1,17 +1,248 @@
-<<<task_287458.txt>>>
-===== 任务287458 11-20 19:53:46 =====
+<<<task_287459.txt>>>
+===== 任务287459 11-20 19:59:01 =====
 --- 命令 ---
-echo "===== 掉线真因取证2:验尸日志+restart日志 ====="
-echo "--- offline_forensics.log 全文(掉线验尸,21KB) ---"
-cat /root/offline_forensics.log 2>/dev/null | tail -120
-echo "--- napcat-restart.log 登出/踢/错误关键行(全历史grep) ---"
-grep -iE "离线|下线|掉线|踢|ErrType|ErrCode|kick|disconnect|登录失效|会话失效|token.*expire|被挤|另登|offline|force.*logout|logout|无法登录|二维码失效|登录过期" /root/napcat-restart.log 2>/dev/null | tail -80
-echo "--- napcat-restart.log 尾部20行 ---"
-tail -20 /root/napcat-restart.log 2>/dev/null
+echo "===== 全量掉线段取证:网断/冻结/踢线逐段比对 ====="
+echo "--- 文件规模 ---"
+wc -lc /root/offline_forensics.log /root/napcat-restart.log 2>/dev/null
+echo "--- offline_forensics.log 全文 ---"
+cat /root/offline_forensics.log 2>/dev/null
+echo "--- napcat-restart.log 全量掉线/离线关键行 ---"
+grep -inE "离线|下线|掉线|踢|ErrType|ErrCode|kick|disconnect|登录失效|会话失效|token.*expire|被挤|另登|offline|force.*logout|logout|无法登录|二维码失效|登录过期|ping.*FAIL|网络|net|重启|restart" /root/napcat-restart.log 2>/dev/null | head -200
 echo "=====完====="
 --- 输出 ---
-===== 掉线真因取证2:验尸日志+restart日志 =====
---- offline_forensics.log 全文(掉线验尸,21KB) ---
+===== 全量掉线段取证:网断/冻结/踢线逐段比对 =====
+--- 文件规模 ---
+    347   21559 /root/offline_forensics.log
+  20269 1455518 /root/napcat-restart.log
+  20616 1477077 total
+--- offline_forensics.log 全文 ---
+===== 掉线取证 v2.0 2026-11-19 12:41:46 CST =====
+【判定类型】自检-模拟静默离线(SelfOffline)
+【触发原文】[SELFTEST] 账号状态变更为离线 1119/124146.000000
+
+---- ① 自动判定(秒级时间轴) ----
+静默离线(最新): (无时间戳)
+GPU崩溃(最新): 11-19 06:50:35
+结论: 日志缺可解析时间戳,无法定先后(见原始行)
+
+---- ② 完整时间轴(离线/被踢/GPU,按时间排序) ----
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.027503:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.034023:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.039420:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.044684:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.044774:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+
+---- ③ 被踢原因字段(KickedOffLine原文) ----
+(本次无KickedOffLine → 静默离线,腾讯未下发原因码)
+
+---- ④ 网络心跳(事发前后) ----
+11-19 12:29:59 ping=FAILms batt=
+11-19 12:31:01 ping=FAILms batt=
+11-19 12:32:07 ping=10.7ms batt=
+11-19 12:33:07 ping=FAILms batt=
+11-19 12:34:10 ping=FAILms batt=
+11-19 12:35:13 ping=FAILms batt=
+11-19 12:36:15 ping=FAILms batt=
+11-19 12:37:17 ping=FAILms batt=
+11-19 12:38:20 ping=FAILms batt=
+11-19 12:39:22 ping=FAILms batt=
+11-19 12:40:24 ping=FAILms batt=
+11-19 12:41:26 ping=FAILms batt=
+-- 即时网络 --
+2 packets transmitted, 0 received, 100% packet loss, time 1008ms
+
+
+---- ⑤ 系统状态 ----
+ 12:41:49 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
+               total        used        free      shared  buff/cache   available
+Mem:            5571        3131         134          12        2306        2191
+/dev/block/by-name/userdata  111G  101G  9.8G  92% /
+电量: 
+QQ进程数: 5
+
+---- ⑥ 日志尾部 ----
+█ █   █ █▀▄ ██  █▄█   ▄   ▄▄▄▄█  ▄█
+█ █▄▄▄█ █  ▄▀▀██▄ ▀ ▀ ██▄▀▄ ▄▀█▄▄▀█
+█▄▄▄▄▄▄▄█▄███▄███▄█▄▄▄▄▄██▄███▄▄███
+
+二维码解码URL: https://txz.qq.com/p?k=bxt6MAJ83XDb3Jns6YobTyH2E1uqERlu&f=1600001615
+如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+11-19 12:41:45 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+a184a3aec6945daa845ca9415e59a8e80094fcd9b9f8864298e36f309cfab40e
+2543cc611da8b6275f300670e81b73948e2e6b594578e472e5ed426124a110f6
+984a055cd3d924a58671763fc0436adf78b394c0c35bee5e3caf9f59ef0a64e2
+===== 取证结束 =====
+===== 掉线取证 v2.0 2026-11-19 13:08:56 CST =====
+【判定类型】自检-模拟静默离线(SelfOffline)
+【触发原文】[SELFTEST] 账号状态变更为离线 1119/130856.000000
+
+---- ① 自动判定(秒级时间轴) ----
+静默离线(最新): (无时间戳)
+GPU崩溃(最新): 11-19 06:50:35
+结论: 日志缺可解析时间戳,无法定先后(见原始行)
+
+---- ② 完整时间轴(离线/被踢/GPU,按时间排序) ----
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.027503:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.034023:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.039420:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.044684:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.044774:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+
+---- ③ 被踢原因字段(KickedOffLine原文) ----
+(本次无KickedOffLine → 静默离线,腾讯未下发原因码)
+
+---- ④ 网络心跳(事发前后) ----
+11-19 12:57:03 ping=FAILms batt=
+11-19 12:58:05 ping=FAILms batt=
+11-19 12:59:07 ping=FAILms batt=
+11-19 13:00:10 ping=FAILms batt=
+11-19 13:01:12 ping=FAILms batt=
+11-19 13:02:14 ping=FAILms batt=
+11-19 13:03:16 ping=FAILms batt=
+11-19 13:04:19 ping=FAILms batt=
+11-19 13:05:21 ping=FAILms batt=
+11-19 13:06:23 ping=FAILms batt=
+11-19 13:07:25 ping=FAILms batt=
+11-19 13:08:28 ping=FAILms batt=
+-- 即时网络 --
+2 packets transmitted, 0 received, 100% packet loss, time 1026ms
+
+
+---- ⑤ 系统状态 ----
+ 13:08:59 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
+               total        used        free      shared  buff/cache   available
+Mem:            5571        2988         175          12        2406        2333
+/dev/block/by-name/userdata  111G  101G  9.8G  92% /
+电量: 
+QQ进程数: 5
+
+---- ⑥ 连接探针(WS层权威信号,lifecycle/heartbeat) ----
+[11-19 13:03:27.885] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+
+---- ⑦ 环境指纹与配置(定位'为什么被踢'的关键变量) ----
+出口IP: 2026-11-19 12:54:30 14.19.177.57
+QQ版本: 
+NapCat版本: 
+反检测配置: "o3HookMode": 1 "bypass" "hook": false "window": false "module": false "process": false "container": false "js": false 
+WS心跳间隔: "heartInterval": 30000
+登录方式: qrcode
+登录态台账尾: 2026-11-19 12:54:07 [未登录] 2026-11-19 12:59:08 [未登录] 2026-11-19 13:04:08 [未登录] 
+
+---- ⑧ 日志尾部 ----
+e54f5f2ec39582082137e960dc788fa7b375bd31579e166b968dafa4b6b3156a
+d611ea5c8045c6d4357fb92b00186025812be854734de7ddc8803ea03451ce66
+d56e785f750075dbf08ed554b86ec3ada676003be5f4b5ddeba9bd40c7451d7f
+673736a54efb97057901a82722079edfadcec5f5fe589f0e3d24ea79118aeced
+04dfdf73c8f5cfac803a2c6670cf742ec606502279ac853c5aea010177fa2b72
+7f844784550d27c5b7b7655e330205babf19145cffd2f709ffd82d5b8501196f
+1c1bb07b8cb9eab87463b1f2c1431fa2eada03b8641d2fc5ad30f4f995842894
+4d666a96af521252d835916b26317bebf1390d31701fedecd13068fe9bec4456
+9233c5b3ee098de32d3c966fbce94feae89478147b9e59a1aa7b01769fca2a09
+990c620400157fd5752a854754583e9141f2aa27952155ea26bfd71da1848aba
+===== 取证结束 =====
+===== 掉线取证 v2.0 2026-11-19 14:39:02 CST =====
+【判定类型】静默离线(SelfOffline/status20)-服务端作废会话无原因码
+【触发原文】11-19 14:38:52 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+
+---- ① 自动判定(秒级时间轴) ----
+静默离线(最新): (无时间戳)
+GPU崩溃(最新): 11-19 06:50:35
+结论: 日志缺可解析时间戳,无法定先后(见原始行)
+
+---- ② 完整时间轴(离线/被踢/GPU,按时间排序) ----
+(无时间戳) | 静默离线(status20) | 11-19 14:38:52 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.027503:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.034023:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.039420:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.044684:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.044774:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+
+---- ③ 被踢原因字段(KickedOffLine原文) ----
+(本次无KickedOffLine → 静默离线,腾讯未下发原因码)
+
+---- ④ 网络心跳(事发前后) ----
+11-19 14:27:11 ping=11.3ms batt=
+11-19 14:28:12 ping=12.0ms batt=
+11-19 14:29:12 ping=17.0ms batt=
+11-19 14:30:12 ping=18.9ms batt=
+11-19 14:31:12 ping=13.4ms batt=
+11-19 14:32:12 ping=25.9ms batt=
+11-19 14:33:13 ping=17.9ms batt=
+11-19 14:34:13 ping=16.3ms batt=
+11-19 14:35:13 ping=11.8ms batt=
+11-19 14:36:13 ping=19.8ms batt=
+11-19 14:37:14 ping=11.8ms batt=
+11-19 14:38:14 ping=16.3ms batt=
+-- 即时网络 --
+connect: Network is unreachable
+
+---- ⑤ 系统状态 ----
+ 14:39:02 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
+               total        used        free      shared  buff/cache   available
+Mem:            5571        3208         126          26        2236        2104
+/dev/block/by-name/userdata  111G  101G  9.7G  92% /
+电量: 
+QQ进程数: 5
+
+---- ⑥ 连接探针(WS层权威信号,lifecycle/heartbeat) ----
+[11-19 13:03:27.885] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-19 13:55:13.551] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-19 14:30:48.646] LIFECYCLE sub_type=connect self_id=3427943187
+[11-19 14:31:18.094] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+
+---- ⑦ 环境指纹与配置(定位'为什么被踢'的关键变量) ----
+出口IP: 2026-11-19 13:54:32 14.19.177.57
+QQ版本: 9.9.22
+NapCat版本: 3.2.34
+反检测配置: "o3HookMode": 1 "bypass" "hook": false "window": false "module": false "process": false "container": false "js": false 
+WS心跳间隔: "heartInterval": 30000
+登录方式: qrcode
+登录态台账尾: 2026-11-19 14:24:25 [未登录] 2026-11-19 14:29:26 [未登录] 2026-11-19 14:34:27 状态变化: [未登录] -> [在线] 
+
+---- ⑧ 日志尾部 ----
+11-19 14:34:22 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [麻薯流心奶黄肉松荔枝榛子芒果薄脆奶芙千层(3273077048)] 居然是小凶吗
+11-19 14:34:27 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [天开始〆渐渐转晴了(649203747)] 曾妄想仗剑走天涯
+11-19 14:37:09 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 抽两次会怎么样
+11-19 14:37:17 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] @阿萨尔 (3427943187)  抽签
+11-19 14:37:17 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [简简单单第一附属精神病院(562796842)] [阿萨尔(3427943187)] [图片]
+1afd77dbf0e59b86aa8faccb047bdf1d52a129d7f7c1a1d4837228c4e79f1477
+11-19 14:37:29 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 哦～
+11-19 14:37:37 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [亖᳐卐冇卌⭐᳐੭ﾞ(1561950850)] [回复消息 [梨᳐拾亦᳐੭ﾞ(3327068725)] 抽两次会怎么样] @梨᳐拾亦᳐੭ﾞ (3327068725)  同一天是一样的
+11-19 14:38:03 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神病院(562796842)] [梨᳐拾亦᳐੭ﾞ(3327068725)] 可惜了不能改命了
+11-19 14:38:52 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+===== 取证结束 =====
+===== 掉线取证 v2.0 2026-11-19 22:45:57 CST =====
+【判定类型】静默离线(SelfOffline/status20)-服务端作废会话无原因码
+【触发原文】11-19 22:45:11 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+
+---- ① 自动判定(秒级时间轴) ----
+静默离线(最新): (无时间戳)
+GPU崩溃(最新): 11-19 06:50:35
+结论: 日志缺可解析时间戳,无法定先后(见原始行)
+
+---- ② 完整时间轴(离线/被踢/GPU,按时间排序) ----
+(无时间戳) | 静默离线(status20) | 11-19 22:45:11 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.027503:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.034023:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.039420:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.044684:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.044774:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+
+---- ③ 被踢原因字段(KickedOffLine原文) ----
+(本次无KickedOffLine → 静默离线,腾讯未下发原因码)
+
+---- ④ 网络心跳(事发前后) ----
+11-19 22:33:06 ping=FAILms batt=
+11-19 22:34:09 ping=FAILms batt=
+11-19 22:35:11 ping=FAILms batt=
+11-19 22:36:14 ping=FAILms batt=
+11-19 22:37:16 ping=11.0ms batt=
+11-19 22:38:16 ping=FAILms batt=
+11-19 22:39:19 ping=FAILms batt=
+11-19 22:40:21 ping=FAILms batt=
+11-19 22:41:23 ping=FAILms batt=
+11-19 22:42:25 ping=FAILms batt=
+11-19 22:43:28 ping=FAILms batt=
 11-19 22:44:30 ping=FAILms batt=
 -- 即时网络 --
 2 packets transmitted, 0 received, 100% packet loss, time 1010ms
@@ -132,106 +363,205 @@ WS心跳间隔: "heartInterval": 30000
 11-20 12:00:51 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [麻᳐辣兔斯基᳐੭ﾞ(987897043)] 怎么没有宾语
 11-20 12:00:51 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 在吗？
 ===== 取证结束 =====
---- napcat-restart.log 登出/踢/错误关键行(全历史grep) ---
-11-20 17:13:29 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:15:38 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:17:41 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:19:44 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:21:47 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:23:48 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:26:14 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:28:16 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:30:17 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:32:19 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:34:21 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:36:23 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:38:26 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:40:27 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:41:12 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
-11-20 17:43:19 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:45:21 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:47:23 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:49:26 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:51:27 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:53:30 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:55:33 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:57:39 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 17:59:42 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:01:44 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:03:46 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:06:11 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:08:12 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:10:13 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:12:14 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:14:15 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:16:17 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:18:20 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:20:23 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:22:25 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:24:26 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:25:59 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
-11-20 18:26:08 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
-11-20 18:28:10 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:30:13 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:32:15 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:34:16 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:36:18 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:38:21 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:40:22 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:42:23 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:44:25 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:46:28 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:48:30 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:51:08 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:53:10 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:55:11 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:57:13 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 18:59:15 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:01:19 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:03:21 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:05:25 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:05:49 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
-11-20 19:08:08 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:10:10 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:12:13 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:14:14 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:16:15 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:18:19 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:20:26 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:22:27 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:24:30 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:26:31 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:28:34 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:31:12 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:33:13 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:35:16 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:37:18 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:39:19 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:41:20 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:43:21 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:45:33 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:47:46 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:49:47 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-20 19:51:48 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
---- napcat-restart.log 尾部20行 ---
-33ab57694fe0b0f081fe59aeea960e22d29d0fb066c3f0a0ebf792c4d1e1d24f
-2b2b9fe158c0f866aefa9890d6eb705f097c09eeba869a67fe49fe51f997ff97
-64f4e26c7e1b9c843774f9a48ed44a21c90b0ec267da3a58c97e683815676b4c
-968c0e467a93460ec7556ac31426223a6f97b7689b491248c8c0bcc637f03f6f
-adcead224c705e58b8988fb4608e94c736820df7b73514ffcacf9729533b8bb6
-e05440034ef248b7cdf6093dff6ad72480c8de94de78c1ef3813797bf182cc71
-b5f68a17624e1b99a0880d3fafc4a765feabf736efd4daebd6ececd828d670de
-814651b100a0c41df416bb6ce757eb4aafc7e8854a44d137bccf0fd1a68ff582
-6071005766679080331f0882d8db13428e0727c360ee90ec6ac3e0053b08ffd4
-f5c5709574aadcf26d9f3266001a87c9872f755f7a4def0c9152607d2744af7c
-75c8e002ace097b5f1802b8e9d0ef49b16461379374f50476803ba9d7f961481
-83816bd00eb40d1ce95a9c1090c80d20b407447c68343471ab8e0fbbdd1b35cf
-0a813932de9a6deb6cf415227ab7b37985e6b86d712a7d43059e29b282695496
-622f8b2323047f82f7a3a2ac631bf6a99a0c7c6bc9d16d4b4f47f52b69d8cd3b
-42a451023f3ac1b690ac0dfda90e6f8101ff04c9d2d42d5e1762b1fd5fa9db16
-86e752b7f00716b39458d155da65a7e81c88eefade4ac03ea907bf4ac3a35317
-9edd00cfacf9f019c6541d62b61a288cae37e9d84e9e46a46e4b4114095d68b0
-9d304bfaac7d78e10250306a65eb3787a05e451181112638e80f58630052135a
-54bedd5b205cf7cb6c0578c26df6b970c87f459fe435851798f359f0741217a5
-e7c3a21299c97aed01ff3dc36918dfe89ed13cc505f7670c07e09c88026c57ef
+--- napcat-restart.log 全量掉线/离线关键行 ---
+134:11-20 12:48:08 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+143:11-20 12:48:24 [[32minfo[39m] 等待网络连接...
+145:11-20 12:48:25 [[32minfo[39m] 网络已连接
+292:11-20 12:50:28 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+437:11-20 12:52:30 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+587:11-20 12:54:32 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+737:11-20 12:56:35 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+885:11-20 12:58:37 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+1035:11-20 13:00:40 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+1179:11-20 13:02:50 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+1277:11-20 13:04:36 [[32minfo[39m] 等待网络连接...
+1282:11-20 13:04:37 [[32minfo[39m] 网络已连接
+1325:11-20 13:04:52 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+1460:11-20 13:06:39 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+1503:11-20 13:06:55 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+1565:11-20 13:07:57 [[32minfo[39m] 等待网络连接...
+1572:11-20 13:07:58 [[32minfo[39m] 网络已连接
+1644:11-20 13:08:58 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+1717:11-20 13:10:13 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+1795:11-20 13:11:00 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+1893:11-20 13:12:15 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+1949:11-20 13:13:01 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+2048:11-20 13:14:22 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+2113:11-20 13:15:02 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+2221:11-20 13:16:23 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+2288:11-20 13:17:09 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+2361:11-20 13:18:25 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+2429:11-20 13:19:22 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+2431:11-20 13:19:24 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+2523:11-20 13:20:26 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+2610:11-20 13:21:27 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+2698:11-20 13:22:30 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+2783:11-20 13:23:29 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+2874:b4291711-20 13:24:36 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+2955:11-20 13:25:32 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+3051:11-20 13:26:39 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+3136:11-20 13:27:35 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+3236:11-20 13:28:43 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+3316:11-20 13:29:37 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+3404:11-20 13:30:48 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+3484:11-20 13:31:40 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+3587:11-20 13:33:34 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+3589:11-20 13:33:34 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+3590:11-20 13:33:34 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+3591:11-20 13:33:34 [[32minfo[39m] 等待网络连接...
+3593:11-20 13:33:34 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+3595:11-20 13:33:34 [[32minfo[39m] 网络已连接
+3630:11-20 13:33:48 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+3763:11-20 13:35:36 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+3804:11-20 13:35:50 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+3931:11-20 13:37:52 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+3972:11-20 13:38:04 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+4104:11-20 13:39:53 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+4145:11-20 13:40:06 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+4281:11-20 13:41:56 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+4333:11-20 13:42:24 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+4431:11-20 13:44:05 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+4433:11-20 13:44:10 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+4522:11-20 13:45:15 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+4626:11-20 13:46:32 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+4723:11-20 13:48:29 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+4725:11-20 13:48:29 [[32minfo[39m] 等待网络连接...
+4726:11-20 13:48:29 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+4753:11-20 13:48:29 [[32minfo[39m] 网络已连接
+4785:11-20 13:48:37 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+4855:11-20 13:50:08 [[32minfo[39m] 等待网络连接...
+4863:11-20 13:50:09 [[32minfo[39m] 网络已连接
+4922:11-20 13:50:39 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+5044:11-20 13:52:41 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+5097:11-20 13:53:27 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+5100:11-20 13:53:27 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+5165:11-20 13:55:08 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+5214:11-20 13:55:28 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+5340:11-20 13:57:52 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+5341:11-20 13:58:15 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+5402:11-20 13:58:26 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+5470:11-20 14:00:32 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+5499:11-20 14:00:32 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+5621:11-20 14:03:44 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+5622:11-20 14:03:51 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+5654:11-20 14:03:52 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+5735:11-20 14:06:03 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+5811:11-20 14:11:11 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+5812:11-20 14:11:11 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+5813:11-20 14:11:11 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+5814:11-20 14:11:11 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+5815:11-20 14:11:11 [[32minfo[39m] 等待网络连接...
+5817:11-20 14:11:11 [[32minfo[39m] 网络已连接
+5891:6511-20 14:13:50 [[32minfo[39m] 等待网络连接...
+5892:11-20 14:13:50 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+5920:11-20 14:13:51 [[32minfo[39m] 网络已连接
+5956:11-20 14:14:21 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+5958:11-20 14:14:21 [[32minfo[39m] 等待网络连接...
+5960:11-20 14:14:22 [[32minfo[39m] 网络已连接
+6015:11-20 14:15:56 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+6017:11-20 14:15:56 [[32minfo[39m] 等待网络连接...
+6020:11-20 14:15:56 [[32minfo[39m] 网络已连接
+6122:11-20 14:19:16 [[32minfo[39m] 等待网络连接...
+6124:11-20 14:19:17 [[32minfo[39m] 网络已连接
+6161:11-20 14:20:27 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+6163:11-20 14:20:44 [[32minfo[39m] 等待网络连接...
+6164:11-20 14:20:55 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+6166:11-20 14:20:58 [[32minfo[39m] 等待网络连接...
+6167:11-20 14:21:00 [[32minfo[39m] 网络已连接
+6177:0e1d181f11-20 14:21:25 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+6179:11-20 14:21:25 [[32minfo[39m] 等待网络连接...
+6204:11-20 14:21:26 [[32minfo[39m] 网络已连接
+6235:11-20 14:21:26 [[32minfo[39m] 网络已连接
+6293:11-20 14:24:19 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+6294:11-20 14:24:19 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+6296:11-20 14:24:19 [[32minfo[39m] 等待网络连接...
+6298:11-20 14:24:20 [[32minfo[39m] 网络已连接
+6329:11-20 14:25:53 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+6659:11-20 14:35:41 [[32minfo[39m] 等待网络连接...
+6660:11-20 14:35:41 [[32minfo[39m] 网络已连接
+6752:11-20 14:37:44 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+6841:11-20 14:39:47 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+6926:11-20 14:41:51 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+7015:11-20 14:43:53 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+7101:11-20 14:46:07 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+7104:11-20 14:46:13 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+7194:11-20 14:48:21 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+7283:11-20 14:50:23 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+7367:11-20 14:52:26 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+7455:11-20 14:54:27 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+7536:11-20 14:56:30 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+7625:11-20 14:58:34 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+7713:11-20 15:00:35 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+7797:11-20 15:02:36 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+7885:11-20 15:04:37 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+7965:11-20 15:06:38 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+8054:11-20 15:08:41 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+8143:11-20 15:10:46 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+8224:11-20 15:12:48 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+8313:11-20 15:14:51 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+8393:11-20 15:16:53 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+8481:11-20 15:18:54 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+8576:11-20 15:21:22 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+8664:11-20 15:23:23 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+8752:11-20 15:25:24 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+8832:11-20 15:27:25 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+8921:11-20 15:29:27 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+9004:11-20 15:31:32 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+9092:11-20 15:33:33 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+9181:11-20 15:35:35 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+9264:11-20 15:37:36 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+9353:11-20 15:39:39 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+9432:11-20 15:41:40 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+9521:11-20 15:43:42 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+9610:11-20 15:45:59 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+9700:11-20 15:48:13 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+9788:11-20 15:50:14 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+9870:11-20 15:52:16 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+9958:11-20 15:54:17 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+10039:11-20 15:56:19 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+10127:11-20 15:58:20 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+10215:11-20 16:00:21 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+10255:11-20 16:01:16 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+10257:11-20 16:01:22 [[32minfo[39m] 等待网络连接...
+10263:11-20 16:01:23 [[32minfo[39m] 网络已连接
+10352:11-20 16:03:24 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+10441:11-20 16:05:26 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+10525:11-20 16:07:28 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+10613:11-20 16:09:29 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+10694:11-20 16:11:30 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+10782:11-20 16:13:33 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+10870:11-20 16:15:37 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+10952:11-20 16:17:41 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11041:11-20 16:19:44 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11125:11-20 16:21:46 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11214:11-20 16:23:48 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11298:11-20 16:26:04 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+11301:11-20 16:26:12 [[32minfo[39m] 等待网络连接...
+11306:11-20 16:26:13 [[32minfo[39m] 网络已连接
+11308:11-20 16:26:13 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11397:11-20 16:28:16 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11486:11-20 16:30:18 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11570:11-20 16:32:20 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11659:11-20 16:34:22 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11740:11-20 16:36:25 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11742:11-20 16:36:26 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11832:11-20 16:38:28 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11921:11-20 16:40:31 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+12004:11-20 16:42:34 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+12092:11-20 16:44:35 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+12176:11-20 16:46:36 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+12264:11-20 16:48:37 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+12353:11-20 16:50:40 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+12434:11-20 16:52:42 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+12523:11-20 16:54:44 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+12603:11-20 16:56:46 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+12692:11-20 16:58:49 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+12788:11-20 17:01:19 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+12876:11-20 17:03:20 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+12964:11-20 17:05:21 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+13043:11-20 17:07:22 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+13132:11-20 17:09:24 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+13214:11-20 17:11:27 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+13302:11-20 17:13:29 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+13391:11-20 17:15:38 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
 =====完=====
