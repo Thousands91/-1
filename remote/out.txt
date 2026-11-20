@@ -1,96 +1,237 @@
-<<<task_287457.txt>>>
-===== 任务287457 11-20 19:53:04 =====
+<<<task_287458.txt>>>
+===== 任务287458 11-20 19:53:46 =====
 --- 命令 ---
-echo "===== 查掉线真因:NapCat/服务端侧证据(只读) ====="
-echo "--- 日志文件清单 ---"
-ls -lat /root/*.log 2>/dev/null | head -25
-echo "--- NapCat日志:离线/断连/踢线原因关键行 ---"
-grep -iE "离线|下线|掉线|踢|ErrType|ErrCode|WebSocket|disconnect|closed|close:|登录失效|登录状态|会话失效|token|DeviceLock|被挤|另登|login" /root/napcat.log 2>/dev/null | tail -60
-echo "--- NapCat日志尾部30行 ---"
-tail -30 /root/napcat.log 2>/dev/null
+echo "===== 掉线真因取证2:验尸日志+restart日志 ====="
+echo "--- offline_forensics.log 全文(掉线验尸,21KB) ---"
+cat /root/offline_forensics.log 2>/dev/null | tail -120
+echo "--- napcat-restart.log 登出/踢/错误关键行(全历史grep) ---"
+grep -iE "离线|下线|掉线|踢|ErrType|ErrCode|kick|disconnect|登录失效|会话失效|token.*expire|被挤|另登|offline|force.*logout|logout|无法登录|二维码失效|登录过期" /root/napcat-restart.log 2>/dev/null | tail -80
+echo "--- napcat-restart.log 尾部20行 ---"
+tail -20 /root/napcat-restart.log 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-===== 查掉线真因:NapCat/服务端侧证据(只读) =====
---- 日志文件清单 ---
--rw-r--r-- 1 root root 1437563 Nov 20 19:53 /root/napcat-restart.log
--rw-r--r-- 1 root root 2334241 Nov 20 19:52 /root/remote_ctl.log
--rw-r--r-- 1 root root   95070 Nov 20 19:52 /root/netmon.log
--rw-r--r-- 1 root root  281471 Nov 20 19:52 /root/health.log
--rw-r--r-- 1 root root  176540 Nov 20 19:52 /root/tick.log
--rw-r--r-- 1 root root   50760 Nov 20 19:48 /root/login_state.log
--rw-r--r-- 1 root root    4685 Nov 20 19:46 /root/ip.log
--rw-r--r-- 1 root root   16157 Nov 20 19:37 /root/autoheal.log
--rw-r--r-- 1 root root      36 Nov 20 14:17 /root/v6fix29.log
--rw-r--r-- 1 root root    1733 Nov 20 13:55 /root/offline_watch2.log
--rw-r--r-- 1 root root      28 Nov 20 13:55 /root/cleanup_1120.log
--rw-r--r-- 1 root root   43819 Nov 20 12:01 /root/napcat.log
--rw-r--r-- 1 root root    3585 Nov 20 12:01 /root/link_probe.log
--rw-r--r-- 1 root root   21559 Nov 20 12:00 /root/offline_forensics.log
--rw-r--r-- 1 root root    3377 Nov 19 15:58 /root/music_sign_v4.log
--rw-r--r-- 1 root root    5285 Nov 18 09:23 /root/music_sign.log
--rw-r--r-- 1 root root     835 Nov 12 13:06 /root/azar_login_run.log
--rw-r--r-- 1 root root      11 Nov 12 00:50 /root/remote_boot.log
--rw-r--r-- 1 root root      52 Nov 12 00:06 /root/asar_sync_boot.log
---- NapCat日志:离线/断连/踢线原因关键行 ---
-11-20 02:24:42 [[32minfo[39m] [NapCat] [WebUi] WebUi Token: 560aad98b99d
-11-20 02:24:42 [[32minfo[39m] [NapCat] [WebUi] WebUi User Panel Url: http://127.0.0.1:6099/webui?token=560aad98b99d
-11-20 02:24:42 [[32minfo[39m] [NapCat] [WebUi] WebUi User Panel Url: http://[::]:6099/webui?token=560aad98b99d
-11-20 02:25:10 [[32minfo[39m] [Core] [Login] 二维码已被扫描，等待确认...
-[I] <MMKV.cpp:260::mmkvWithID> prepare to load nt_mmkv_united_config_no_login_v3 (id nt_mmkv_united_config_no_login_v3) from rootPath /root/.config/QQ/global/nt_data/mmkv
-[I] <MemoryFile.cpp:98::open> open fd[0x68], /root/.config/QQ/global/nt_data/mmkv/nt_mmkv_united_config_no_login_v3
-[I] <MemoryFile.cpp:98::open> open fd[0x69], /root/.config/QQ/global/nt_data/mmkv/nt_mmkv_united_config_no_login_v3.crc
-[I] <MMKV_IO.cpp:213::loadMetaInfoAndCheck> meta file [nt_mmkv_united_config_no_login_v3] has flag [0]
-[I] <MMKV_IO.cpp:87::loadFromFile> loading [nt_mmkv_united_config_no_login_v3] with 19966 actual size, file size 32768, InterProcess 1, meta info version:4
-[I] <MMKV_IO.cpp:92::loadFromFile> loading [nt_mmkv_united_config_no_login_v3] with crc 262559925 sequence 69 version 4
-[I] <MMKV_IO.cpp:136::loadFromFile> loaded [nt_mmkv_united_config_no_login_v3] with 393 key-values
-WebSocket反向服务: ws://127.0.0.1:8080/onebot/v11/ws, : 已启动
-[I] <MMKV_IO.cpp:516::writeActualSize> [nt_mmkv_united_config_no_login_v3] increase sequence to 70, crc 47275141, actualSize 15972
-11-20 03:09:31 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接意外关闭
-11-20 03:09:31 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
-11-20 03:09:36 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接错误 Error: connect ECONNREFUSED 127.0.0.1:8080
-11-20 03:09:36 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
-11-20 03:09:41 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接错误 Error: connect ECONNREFUSED 127.0.0.1:8080
-11-20 03:09:41 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
-11-20 03:09:46 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接错误 Error: connect ECONNREFUSED 127.0.0.1:8080
-11-20 03:09:46 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
-11-20 12:00:40 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-11-20 12:00:55 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接意外关闭
-11-20 12:00:55 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
-11-20 12:01:01 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接错误 Error: connect ECONNREFUSED 127.0.0.1:8080
-11-20 12:01:01 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
-11-20 12:01:06 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接错误 Error: connect ECONNREFUSED 127.0.0.1:8080
-11-20 12:01:06 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
-    at async o_e.websocketHandle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:36621:17)
-    at async o_e.websocketHandle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:36621:17)
---- NapCat日志尾部30行 ---
-    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
-11-20 12:01:01 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
-11-20 12:01:06 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接错误 Error: connect ECONNREFUSED 127.0.0.1:8080
-    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
-11-20 12:01:06 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
-11-20 12:01:09 [[33mwarn[39m] 阿萨尔 | 似乎是旧版客户端，尝试仅通过序号获取引用消息 1211825
-11-20 12:01:26 [[31merror[39m] 阿萨尔 | 发生错误 Error: 消息不存在或已被撤回: PromiseTimer: Operation timed out
-    at file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:78607:75
-    at async o_e._handle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:78603:154)
-    at async o_e.websocketHandle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:36621:17)
-    at async pO.handleMessage (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:67875:15)
-11-20 12:01:28 [[31merror[39m] 阿萨尔 | 发生错误 Error: 消息不存在或已被撤回: PromiseTimer: Operation timed out
-    at file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:78607:75
-    at async o_e._handle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:78603:154)
-    at async o_e.websocketHandle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:36621:17)
-    at async pO.handleMessage (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:67875:15)
-11-20 12:01:30 [[32minfo[39m] 阿萨尔 | 发送 -> 群聊 [简简单单第一附属精神病院(562796842)] [阿萨尔(3427943187)] [图片]
-11-20 12:01:33 [[31merror[39m] 阿萨尔 | 发生错误 Error: Timeout: NTEvent serviceAndMethod:NodeIKernelMsgService/sendMsg ListenerName:NodeIKernelMsgListener/onMsgInfoListUpdate EventRet:
-{}
+===== 掉线真因取证2:验尸日志+restart日志 =====
+--- offline_forensics.log 全文(掉线验尸,21KB) ---
+11-19 22:44:30 ping=FAILms batt=
+-- 即时网络 --
+2 packets transmitted, 0 received, 100% packet loss, time 1010ms
 
-    at f (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:30561:9)
-    at Timeout._onTimeout (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:30571:36)
-    at listOnTimeout (node:internal/timers:605:17)
-    at process.processTimers (node:internal/timers:541:7)
-11-20 12:01:38 [[33mwarn[39m] 阿萨尔 | 似乎是旧版客户端，尝试仅通过序号获取引用消息 95653
-[27093:1120/120146.843040:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
-[27093:1120/120146.911370:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[27093:1120/120146.934054:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[27093:1120/120146.950012:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-[27093:1120/120146.950681:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+
+---- ⑤ 系统状态 ----
+ 22:46:45 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
+               total        used        free      shared  buff/cache   available
+Mem:            5571        2824         256          11        2490        2497
+/dev/block/by-name/userdata  111G  101G  9.7G  92% /
+电量: 
+QQ进程数: 5
+
+---- ⑥ 连接探针(WS层权威信号,lifecycle/heartbeat) ----
+[11-19 22:18:03.543] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-19 22:18:04.700] LIFECYCLE sub_type=connect self_id=3427943187
+[11-19 22:18:28.161] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-19 22:24:26.180] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-19 22:24:26.289] LIFECYCLE sub_type=connect self_id=3427943187
+[11-19 22:24:28.265] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-19 22:45:13.122] HEARTBEAT 状态跳变 online=False good=True 自启动累计心跳=42 self_id=3427943187
+[11-19 22:46:35.046] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+
+---- ⑦ 环境指纹与配置(定位'为什么被踢'的关键变量) ----
+出口IP: 2026-11-19 21:55:09 14.19.177.57
+QQ版本: 9.9.22
+NapCat版本: 3.2.34
+反检测配置: "o3HookMode": 1 "bypass" "hook": false "window": false "module": false "process": false "container": false "js": false 
+WS心跳间隔: "heartInterval": 30000
+登录方式: qrcode
+登录态台账尾: 2026-11-19 22:32:33 状态变化: 初始 -> [在线] 2026-11-19 22:37:34 [在线] 2026-11-19 22:42:35 [在线] 
+
+---- ⑧ 日志尾部 ----
+11-19 22:45:11 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+3ef45bdba0efecd1623c86c0f7f2c9ec3f7e4915237ed18706af4ba79c0d209d
+[28562][140534090096]LongTask(55): duration=3547ms, container=Browser
+11-19 22:46:14 [[33mwarn[39m] 阿萨尔 | [Core] [Login] 账号已离线，正在重启 Worker 以重新创建 QQ 登录服务 {"result":true,"message":"进程重启请求已发送"}
+11-19 22:46:30 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 反向WebSocket (ws://127.0.0.1:8080/onebot/v11/ws) 连接意外关闭
+11-19 22:46:30 [[31merror[39m] 阿萨尔 | [OneBot] [WebSocket Client] 在 5 秒后尝试重新连接
+11-19 22:46:49 [[33mwarn[39m] [NapCat] [Process] Worker进程未在 5 秒内退出，尝试发送强制关闭信号
+11-19 22:46:55 [[33mwarn[39m] [NapCat] [Process] 进程 28630 仍在运行，尝试强制杀掉
+[28562][140559098827]LongTask(57): duration=4284ms, container=Browser
+11-19 22:46:55 [[33mwarn[39m] [NapCat] [Process] Worker进程仍未退出，尝试 kill
+===== 取证结束 =====
+===== 掉线取证 v2.0 2026-11-20 12:00:49 CST =====
+【判定类型】静默离线(SelfOffline/status20)-服务端作废会话无原因码
+【触发原文】11-20 12:00:40 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+
+---- ① 自动判定(秒级时间轴) ----
+静默离线(最新): (无时间戳)
+GPU崩溃(最新): 11-19 06:50:35
+结论: 日志缺可解析时间戳,无法定先后(见原始行)
+
+---- ② 完整时间轴(离线/被踢/GPU,按时间排序) ----
+(无时间戳) | 静默离线(status20) | 11-20 12:00:40 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.027503:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.034023:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.039420:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.044684:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-19 06:50:35 | GPU崩溃 | [17993:1119/065035.044774:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+
+---- ③ 被踢原因字段(KickedOffLine原文) ----
+(本次无KickedOffLine → 静默离线,腾讯未下发原因码)
+
+---- ④ 网络心跳(事发前后) ----
+11-20 03:26:28 ping=FAILms batt=
+11-20 03:27:30 ping=FAILms batt=
+11-20 03:28:32 ping=FAILms batt=
+11-20 03:29:34 ping=FAILms batt=
+11-20 03:30:37 ping=FAILms batt=
+11-20 03:31:39 ping=FAILms batt=
+11-20 03:32:41 ping=FAILms batt=
+11-20 03:33:44 ping=FAILms batt=
+11-20 03:34:46 ping=FAILms batt=
+11-20 03:35:48 ping=FAILms batt=
+11-20 03:36:51 ping=FAILms batt=
+11-20 12:00:37 ping=FAILms batt=
+-- 即时网络 --
+2 packets transmitted, 2 received, 0% packet loss, time 1000ms
+rtt min/avg/max/mdev = 10.724/11.601/12.478/0.877 ms
+
+---- ⑤ 系统状态 ----
+ 12:00:51 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
+               total        used        free      shared  buff/cache   available
+Mem:            5571        3719          83          15        1768        1535
+/dev/block/by-name/userdata  111G  101G  9.7G  92% /
+电量: 
+QQ进程数: 5
+
+---- ⑥ 连接探针(WS层权威信号,lifecycle/heartbeat) ----
+[11-19 22:24:28.265] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-19 22:45:13.122] HEARTBEAT 状态跳变 online=False good=True 自启动累计心跳=42 self_id=3427943187
+[11-19 22:46:35.046] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-20 02:25:25.890] LIFECYCLE sub_type=connect self_id=3427943187
+[11-20 02:25:55.439] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-20 03:09:47.941] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-20 03:09:51.537] LIFECYCLE sub_type=connect self_id=3427943187
+[11-20 03:09:56.088] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+
+---- ⑦ 环境指纹与配置(定位'为什么被踢'的关键变量) ----
+出口IP: 2026-11-20 03:29:01 14.19.177.57
+QQ版本: 9.9.22
+NapCat版本: 3.2.34
+反检测配置: "o3HookMode": 1 "bypass" "hook": false "window": false "module": false "process": false "container": false "js": false 
+WS心跳间隔: "heartInterval": 30000
+登录方式: qrcode
+登录态台账尾: 2026-11-20 03:28:00 [在线] 2026-11-20 03:33:02 [在线] 2026-11-20 12:00:42 状态变化: [在线] -> [未登录] 
+
+---- ⑧ 日志尾部 ----
+11-20 12:00:51 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [麻᳐辣兔斯基᳐੭ﾞ(987897043)] 神经
+11-20 12:00:51 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] [回复消息 未找到消息记录 (MsgId = 0)] @●᳐‖▜▜▙᳐੭ﾞ (1179127036)  ？荔枝米酒
+11-20 12:00:51 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] [回复消息 未找到消息记录 (MsgId = 0)] @●᳐‖▜▜▙᳐੭ﾞ (1179127036)  多少钱
+11-20 12:00:51 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [修᳐勾᳐੭ﾞ(3549246127)] 现在酒其实也不贵
+11-20 12:00:51 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [达不刘先生(1145612502)] @麻᳐辣兔斯基᳐੭ﾞ (987897043)   你喜欢吗
+11-20 12:00:51 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [达不刘先生(1145612502)] [图片]
+11-20 12:00:51 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [亖᳐卐冇卌⭐᳐੭ﾞ(1561950850)] @阿萨尔 (3427943187)  抽签
+11-20 12:00:51 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [麻᳐辣兔斯基᳐੭ﾞ(987897043)] 喜欢什么
+11-20 12:00:51 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [简简单单第一附属精神(562796842)] [麻᳐辣兔斯基᳐੭ﾞ(987897043)] 怎么没有宾语
+11-20 12:00:51 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 在吗？
+===== 取证结束 =====
+--- napcat-restart.log 登出/踢/错误关键行(全历史grep) ---
+11-20 17:13:29 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:15:38 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:17:41 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:19:44 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:21:47 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:23:48 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:26:14 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:28:16 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:30:17 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:32:19 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:34:21 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:36:23 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:38:26 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:40:27 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:41:12 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+11-20 17:43:19 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:45:21 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:47:23 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:49:26 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:51:27 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:53:30 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:55:33 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:57:39 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 17:59:42 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:01:44 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:03:46 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:06:11 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:08:12 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:10:13 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:12:14 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:14:15 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:16:17 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:18:20 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:20:23 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:22:25 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:24:26 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:25:59 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+11-20 18:26:08 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+11-20 18:28:10 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:30:13 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:32:15 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:34:16 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:36:18 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:38:21 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:40:22 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:42:23 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:44:25 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:46:28 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:48:30 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:51:08 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:53:10 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:55:11 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:57:13 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 18:59:15 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:01:19 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:03:21 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:05:25 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:05:49 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 1
+11-20 19:08:08 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:10:10 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:12:13 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:14:14 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:16:15 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:18:19 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:20:26 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:22:27 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:24:30 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:26:31 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:28:34 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:31:12 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:33:13 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:35:16 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:37:18 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:39:19 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:41:20 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:43:21 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:45:33 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:47:46 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:49:47 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-20 19:51:48 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+--- napcat-restart.log 尾部20行 ---
+33ab57694fe0b0f081fe59aeea960e22d29d0fb066c3f0a0ebf792c4d1e1d24f
+2b2b9fe158c0f866aefa9890d6eb705f097c09eeba869a67fe49fe51f997ff97
+64f4e26c7e1b9c843774f9a48ed44a21c90b0ec267da3a58c97e683815676b4c
+968c0e467a93460ec7556ac31426223a6f97b7689b491248c8c0bcc637f03f6f
+adcead224c705e58b8988fb4608e94c736820df7b73514ffcacf9729533b8bb6
+e05440034ef248b7cdf6093dff6ad72480c8de94de78c1ef3813797bf182cc71
+b5f68a17624e1b99a0880d3fafc4a765feabf736efd4daebd6ececd828d670de
+814651b100a0c41df416bb6ce757eb4aafc7e8854a44d137bccf0fd1a68ff582
+6071005766679080331f0882d8db13428e0727c360ee90ec6ac3e0053b08ffd4
+f5c5709574aadcf26d9f3266001a87c9872f755f7a4def0c9152607d2744af7c
+75c8e002ace097b5f1802b8e9d0ef49b16461379374f50476803ba9d7f961481
+83816bd00eb40d1ce95a9c1090c80d20b407447c68343471ab8e0fbbdd1b35cf
+0a813932de9a6deb6cf415227ab7b37985e6b86d712a7d43059e29b282695496
+622f8b2323047f82f7a3a2ac631bf6a99a0c7c6bc9d16d4b4f47f52b69d8cd3b
+42a451023f3ac1b690ac0dfda90e6f8101ff04c9d2d42d5e1762b1fd5fa9db16
+86e752b7f00716b39458d155da65a7e81c88eefade4ac03ea907bf4ac3a35317
+9edd00cfacf9f019c6541d62b61a288cae37e9d84e9e46a46e4b4114095d68b0
+9d304bfaac7d78e10250306a65eb3787a05e451181112638e80f58630052135a
+54bedd5b205cf7cb6c0578c26df6b970c87f459fe435851798f359f0741217a5
+e7c3a21299c97aed01ff3dc36918dfe89ed13cc505f7670c07e09c88026c57ef
 =====完=====
