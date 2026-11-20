@@ -1,2 +1,40 @@
+<<<task_287433.txt>>>
+===== 任务287433 11-20 12:05:25 =====
+--- 命令 ---
+echo "===== 部署看护v1.2.2 287433 ====="
+echo "[0]doze豁免现状检查:"
+dumpsys deviceidle 2>/dev/null | head -2 || echo "  proot内无权限,需adb"
+echo "[1]下载+校验:"
+curl -sL -H "Cache-Control: no-cache" -o /tmp/ah4.sh "https://raw.githubusercontent.com/Thousands91/-1/main/deploy/azar_autoheal.sh?ts=$(date +%s)&v=122"
+M=$(md5sum /tmp/ah4.sh | cut -d' ' -f1); echo "  md5: $M"
+if [ "$M" != "3d7ca5c4100189f01448aafcc08d1e86" ]; then echo "  md5不符,中止"; echo "=====完====="; exit 0; fi
+bash -n /tmp/ah4.sh && echo "  语法OK"
+echo "[2]备份+安装+重启看护:"
+cp /root/azar_autoheal.sh /tmp/azar_autoheal_bak_v121.sh
+cp /tmp/ah4.sh /root/azar_autoheal.sh
+LP=$(cat /root/.autoheal.lock/pid 2>/dev/null)
+kill "$LP" 2>/dev/null; sleep 2
+rm -rf /root/.autoheal.lock
+setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null &
+sleep 3
+echo "  新进程: $(pgrep -f azar_autoheal | head -1)"
+echo "[3]启动行(应v1.2.2)+当前登录态:"
+tail -2 /root/autoheal.log
+bash /root/logincheck.sh 2>&1 | grep -E "^\[" | head -1
+echo "=====完====="
+--- 输出 ---
+===== 部署看护v1.2.2 287433 =====
+[0]doze豁免现状检查:
+Permission Denial: can't dump DeviceIdleController from from pid=26490, uid=10643 due to missing android.permission.DUMP permission
+[1]下载+校验:
+  md5: 3d7ca5c4100189f01448aafcc08d1e86
+  语法OK
+[2]备份+安装+重启看护:
+  新进程: 24740
+[3]启动行(应v1.2.2)+当前登录态:
+[11-20 12:03:13] 告警:已推送GitHub
+[11-20 12:05:29] ===== autoheal v1.2 启动 2026-11-20 12:05:29 =====
+[未登录] 当前没有有效会话
+=====完=====
 <<<ALERT.txt>>>
-2026-11-20 12:03:05 阿萨尔掉线([未登录])! 本次在线577分/距最后发送94秒/距最后收信134秒;已自愈,5分钟不恢复需本人扫码
+2026-11-20 12:05:33 阿萨尔掉线([未登录])! 本次在线?分/距最后发送243秒/距最后收信282秒;已自愈,5分钟不恢复需本人扫码
