@@ -1,5 +1,5 @@
-287436
-echo "===== 287436 11-19全天冻结时间线取证 ====="
+287437
+echo "===== 287437 11-19全天冻结时间线取证 ====="
 echo "--- A. autoheal 落盘路径 ---"
 grep -nE "TICK|tick\.log|>>" /root/azar_autoheal.sh | grep -v "^\s*#" | head -15
 echo "--- B. 状态快照 ---"
