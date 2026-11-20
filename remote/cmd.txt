@@ -1,11 +1,14 @@
-287439
-echo "===== 287439 清理验收(只读) ====="
-echo "--- 实例清单 ---"
+287440
+echo "===== 287440 清多余autoheal(只读验收同任务) ====="
+echo "--- 当前实例 ---"
 ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch" | grep -v grep
-echo "--- 清理日志 ---"
-cat /root/cleanup_1120.log 2>/dev/null || echo "(无清理日志=手术未执行)"
-echo "--- 水位 ---"
-cat /root/.remote_last 2>/dev/null; echo
-echo "--- 循环日志尾 ---"
-tail -8 /root/remote_ctl.log
+PIDS=$(pgrep -f 'bash /root/azar_autoheal.[s]h' | sort -n)
+KEEP=$(echo "$PIDS" | head -1)
+echo "autoheal PIDs: $PIDS | 保留: $KEEP"
+for p in $PIDS; do
+  if [ "$p" != "$KEEP" ]; then kill "$p" 2>/dev/null && echo "已杀多余autoheal: $p"; fi
+done
+sleep 2
+echo "--- 清理后实例 ---"
+ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch" | grep -v grep
 echo "=====完====="
