@@ -1,22 +1,4 @@
-287451
-echo "===== 扫码时刻 vs 会话存活时长统计(只读) ====="
-awk '
-function tosec(s,  a){ split(s,a," "); split(a[2],t,":"); return t[1]*3600+t[2]*60+t[3] }
-{
-  line=$0
-  # 抓状态变化行
-  if (line ~ /状态变化:/) {
-    ts=$1" "$2
-    hour=substr($2,1,2)+0
-    if (line ~ /-> \[在线\]/) {
-      # 新登录:若上一段在线未结算,先结算
-      if (on==1) { dur=tsec(ts)-on_ts; print on_date" "on_time" -> 掉线 "ts" 存活"int(dur/60)"分" }
-      on=1; on_ts=tsec(ts); on_date=$1; on_time=$2; on_hour=hour
-    } else if (line ~ /-> \[未登录\]/ || line ~ /-> \[未知\]/) {
-      if (on==1) { dur=tsec(ts)-on_ts; print on_date" "on_time" -> 掉线 "ts" 存活"int(dur/60)"分 [登录小时"on_hour"]"; on=0 }
-    }
-  }
-}
-END { if (on==1) print on_date" "on_time" -> 至今(仍在线) [登录小时"on_hour"]" }
-' /root/login_state.log 2>/dev/null
+287452
+echo "===== 所有状态变化行原文 ====="
+grep '状态变化:' /root/login_state.log 2>/dev/null
 echo "=====完====="
