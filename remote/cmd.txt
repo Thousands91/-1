@@ -1,11 +1,9 @@
-287456
-echo "===== 零成本保活招体检:termux常驻通知 ====="
-echo "--- 1.termux-notification 命令是否存在 ---"
-command -v termux-notification || echo "(无 termux-notification)"
-echo "--- 2.termux-api 包是否安装(termux层) ---"
-ls /data/data/com.termux/files/usr/bin/termux-notification 2>/dev/null || echo "(termux层无)"
-echo "--- 3.当前Termux通知里有没有ongoing ---"
-dumpsys notification 2>/dev/null | grep -iE 'termux|ongoing' | head -5 || echo "(proot不可读,略)"
-echo "--- 4.termux-api app是否装(Android层) ---"
-pm list packages 2>/dev/null | grep -i termux || echo "(pm不可读,略)"
+287457
+echo "===== 查掉线真因:NapCat/服务端侧证据(只读) ====="
+echo "--- 日志文件清单 ---"
+ls -lat /root/*.log 2>/dev/null | head -25
+echo "--- NapCat日志:离线/断连/踢线原因关键行 ---"
+grep -iE "离线|下线|掉线|踢|ErrType|ErrCode|WebSocket|disconnect|closed|close:|登录失效|登录状态|会话失效|token|DeviceLock|被挤|另登|login" /root/napcat.log 2>/dev/null | tail -60
+echo "--- NapCat日志尾部30行 ---"
+tail -30 /root/napcat.log 2>/dev/null
 echo "=====完====="
