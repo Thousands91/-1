@@ -1,9 +1,9 @@
-287458
-echo "===== 掉线真因取证2:验尸日志+restart日志 ====="
-echo "--- offline_forensics.log 全文(掉线验尸,21KB) ---"
-cat /root/offline_forensics.log 2>/dev/null | tail -120
-echo "--- napcat-restart.log 登出/踢/错误关键行(全历史grep) ---"
-grep -iE "离线|下线|掉线|踢|ErrType|ErrCode|kick|disconnect|登录失效|会话失效|token.*expire|被挤|另登|offline|force.*logout|logout|无法登录|二维码失效|登录过期" /root/napcat-restart.log 2>/dev/null | tail -80
-echo "--- napcat-restart.log 尾部20行 ---"
-tail -20 /root/napcat-restart.log 2>/dev/null
+287459
+echo "===== 全量掉线段取证:网断/冻结/踢线逐段比对 ====="
+echo "--- 文件规模 ---"
+wc -lc /root/offline_forensics.log /root/napcat-restart.log 2>/dev/null
+echo "--- offline_forensics.log 全文 ---"
+cat /root/offline_forensics.log 2>/dev/null
+echo "--- napcat-restart.log 全量掉线/离线关键行 ---"
+grep -inE "离线|下线|掉线|踢|ErrType|ErrCode|kick|disconnect|登录失效|会话失效|token.*expire|被挤|另登|offline|force.*logout|logout|无法登录|二维码失效|登录过期|ping.*FAIL|网络|net|重启|restart" /root/napcat-restart.log 2>/dev/null | head -200
 echo "=====完====="
