@@ -1,11 +1,11 @@
-287442
-echo "===== auto实战首单:只读验收 ====="
-echo "--- 实例 ---"
-ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch|opt/QQ/[q]q" | grep -v grep
-echo "--- 水位 ---"
-cat /root/.remote_last 2>/dev/null; echo
-echo "--- 清理日志 ---"
-cat /root/cleanup_1120.log 2>/dev/null || echo "(无)"
-echo "--- 循环日志尾 ---"
-tail -4 /root/remote_ctl.log
+287443
+echo "===== 查autoheal重复拉起源头(只读) ====="
+echo "--- autoheal进程启动时间/父进程 ---"
+for p in $(pgrep -f 'bash /root/azar_autoheal.[s]h'); do ps -o pid,ppid,lstart,args -p $p | tail -1; done
+echo "--- crontab ---"
+crontab -l 2>/dev/null | grep -vE '^#|^$' | head -20 || echo "(无crontab)"
+echo "--- v6/offline_watch里的自拉逻辑 ---"
+grep -nE 'autoheal|azar_autoheal' /root/remote_ctl_v6.sh /root/offline_watch.sh 2>/dev/null | head -20
+echo "--- 谁在起autoheal(近1小时日志) ---"
+grep -E 'autoheal|自愈|拉起' /root/remote_ctl.log 2>/dev/null | tail -15
 echo "=====完====="
