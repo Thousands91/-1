@@ -1,1 +1,51 @@
-diag_probe
+<<<task_287449.txt>>>
+===== 任务287449 11-20 14:33:20 =====
+--- 命令 ---
+echo "===== rc.sh diag 回传静默四查 $(date '+%F %T') ====="
+echo "---[1]循环日志尾(循环死活+失败原文)---"
+tail -15 /root/remote_ctl.log
+echo "---[2]小包PUT手测(一锤定音通道好坏)---"
+TOK=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
+curl -s -o /dev/null -w "api.github.com HTTP:%{http_code} 耗时:%{time_total}s\n" --max-time 15 https://api.github.com
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" https://api.github.com/repos/Thousands91/-1/contents/remote/out.txt | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+curl -s -o /dev/null -w "PUT out.txt HTTP:%{http_code} 耗时:%{time_total}s\n" --max-time 30 -X PUT -H "Authorization: token $TOK" https://api.github.com/repos/Thousands91/-1/contents/remote/out.txt -d "{\"message\":\"diag probe\",\"content\":\"ZGlhZ19wcm9iZQ==\",\"sha\":\"$SHA\",\"branch\":\"main\"}"
+echo "---[3]git push手测(non-fast-forward=仓库不同步)---"
+cd /root/asar-sync && git push origin main 2>&1 | tail -3
+echo "---[4]水位(任务被谁消费)---"
+cat /root/.remote_last 2>/dev/null; echo
+echo "---[判据]tick.log心跳(60s连续=CPU没冻)---"
+tail -3 /root/tick.log 2>/dev/null
+echo "=====四查完毕,拿到结果前不许说冻结====="
+--- 输出 ---
+===== rc.sh diag 回传静默四查 2026-11-20 14:33:20 =====
+---[1]循环日志尾(循环死活+失败原文)---
+[11-20 14:21] report:git push失败,回退API
+[11-20 14:21] report:API回传成功
+[11-20 14:27] report:git push失败,回退API
+[11-20 14:27] report:API回传成功
+===== 任务287448 11-20 14:30:38 =====
+--- 命令 ---
+echo x
+pgrep -f "bash /root/azar_autoheal.[s]h" >/dev/null || echo no
+--- 输出 ---
+x
+[11-20 14:30] report:git push失败,回退API
+[11-20 14:30] report:API回传成功
+[11-20 14:32] 心跳:循环正常(v6.6-git,LAST=287448)
+[11-20 14:32] 日志保全:/root/napcat-restart.log超2万行,已裁剪保留尾部
+[11-20 14:32] 日志保全:/root/remote_ctl.log超2万行,已裁剪保留尾部
+---[2]小包PUT手测(一锤定音通道好坏)---
+api.github.com HTTP:200 耗时:5.785339s
+PUT out.txt HTTP:200 耗时:1.685981s
+---[3]git push手测(non-fast-forward=仓库不同步)---
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+---[4]水位(任务被谁消费)---
+287449
+
+---[判据]tick.log心跳(60s连续=CPU没冻)---
+2026-11-20 14:31:10
+2026-11-20 14:32:11
+2026-11-20 14:33:11
+=====四查完毕,拿到结果前不许说冻结=====
