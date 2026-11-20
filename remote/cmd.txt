@@ -1,13 +1,13 @@
-287454
-echo "===== 11-20 掉线真相取证:状态采样vs实际消息 ====="
-echo "--- login_state.log 11-20 全天采样(看采样何时停) ---"
-grep '2026-11-20' /root/login_state.log 2>/dev/null | tail -60
-echo "--- autoheal.log 11-20 告警(含距最后收信秒数) ---"
-grep '11-20' /root/autoheal.log 2>/dev/null | grep -E '掉线|在线|收信|发送' | tail -30
-echo "--- bot消息日志最后活动(找实际收消息时刻) ---"
-for f in /root/qq-bot-project/bot/*.log /root/*.log; do
-  [ -f "$f" ] || continue
-  m=$(grep -hE '11-20 (1[01]|12):' "$f" 2>/dev/null | tail -3)
-  [ -n "$m" ] && { echo "[$f]"; echo "$m"; }
-done
+287455
+echo "===== 延长在线:保活开关现状体检(只读) ====="
+echo "--- 1.保活锚 sleep infinity(坑65最强开关) ---"
+pgrep -af 'sleep [i]nfinity' || echo "(无保活锚!)"
+echo "--- 2.休眠时保持网络连接(wifi_sleep_policy:2=休眠不断网) ---"
+settings get global wifi_sleep_policy 2>/dev/null || echo "(proot不可读)"
+echo "--- 3.充电时保持唤醒(stay_on_while_plugged_in) ---"
+settings get global stay_on_while_plugged_in 2>/dev/null || echo "(proot不可读)"
+echo "--- 4.wake-lock持锁 ---"
+dumpsys power 2>/dev/null | grep -iE 'wake.*lock|Partial|termux' | head -10 || echo "(proot不可读)"
+echo "--- 5.当前四件套进程 ---"
+ps -eo pid,args | grep -E 'tick.sh|netmon|health_probe|remote_ctl_v6|azar_autoheal' | grep -v grep
 echo "=====完====="
