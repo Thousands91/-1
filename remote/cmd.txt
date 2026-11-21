@@ -1,13 +1,14 @@
-287510
-echo "===== 取证:20:32引用识别 ====="
-for L in /root/bot/bot/bot.log /root/bot_restart_1535.log; do
-  echo "######## 日志:$L ########"
-  [ -f "$L" ] || { echo "(不存在)"; continue; }
-  echo "--- 20:25~20:35 所有消息(raw_message看CQ:reply) ---"
-  grep -E "20:(2[5-9]|3[0-5]):.*message\.(group|private)" "$L" 2>/dev/null | tail -25
-  echo "--- 引用/get_msg/取引用相关(全日志尾) ---"
-  grep -nE "get_msg|取引用|引用了一条消息|对方引用|CQ:reply|quote" "$L" 2>/dev/null | tail -20
-  echo "--- 20:32 bot回复'书架震'原文与触发 ---"
-  grep -nE "20:3[0-5].*(书架|震出|核对·调试|ask=|ans=)" "$L" 2>/dev/null | tail -20
-done
+287511
+L=/root/bot_restart_1535.log
+echo "===== 新日志20:30~20:34 引用识别 ====="
+echo "--- 文件大小时间 ---"
+ls -la "$L"
+echo "--- 20:30~20:34 消息原文 ---"
+grep -E "11-21 20:3[0-4]:" "$L" | grep -E "message\.group|message\.private" | tail -15
+echo "--- 引用/get_msg ---"
+grep -nE "get_msg|取引用|引用了一条消息|对方引用|CQ:reply" "$L" | tail -15
+echo "--- 核对·调试 ask / ans(20:30~20:34) ---"
+grep -nE "20:3[0-4]:.*(核对·调试|ask=|ans=)" "$L" | tail -15
+echo "--- 书架震回复原文(全日志) ---"
+grep -nF "书架都震出花" "$L" | tail -5
 echo "=====完====="
