@@ -1,14 +1,34 @@
-287505
-F=/root/bot/bot/plugins/weather.py
-echo "===== 验收:weather.py落盘 ====="
-echo "--- md5(应1b9a270d65406d1e620498f9a8862aa2) ---"
-md5sum "$F"
-echo "--- 语法 ---"
-python3 -m py_compile "$F" && echo 语法OK || echo 语法FAIL
-echo "--- 关键行 ---"
-grep -nE "^WTTR |WTTR_CODE|WTTR_DIR|def get_wttr|text = await get_wttr|text = await get_open_meteo|def get_qweather" "$F"
-echo "--- 行数 ---"
-wc -l "$F"
-echo "--- 备份文件 ---"
-ls -la "$F".bak_weather_* 2>/dev/null | tail -2
+287506
+echo "===== 部署前窗口确认+挂延迟重启 ====="
+echo "--- 最近60秒消息 ---"
+grep -E "11-21 15:(3[4-9]):.*message\.(group|private)" /root/bot/bot/bot.log 2>/dev/null | tail -5 || echo "(无互动)"
+echo "--- 当前bot PID ---"
+ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}'
+if [ ! -f /root/.botrestart_armed ]; then
+  touch /root/.botrestart_armed
+  cat > /root/.botrestart.sh <<'SH'
+#!/bin/bash
+sleep 8
+OLDPID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
+echo "旧PID:$OLDPID"
+[ -n "$OLDPID" ] && kill "$OLDPID"
+sleep 3
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot_restart_1535.log 2>&1 < /dev/null &
+sleep 12
+{
+  echo "=== $(date '+%m-%d %H:%M:%S') 重启后 ==="
+  echo "新PID: $(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}')"
+  echo "--- 插件加载 ---"
+  grep -E "Succeeded to load plugin|Failed to load plugin" /root/bot_restart_1535.log 2>/dev/null | tail -13
+  echo "--- WS连接 ---"
+  grep -iE "Bot .* connected|WebSocket" /root/bot_restart_1535.log 2>/dev/null | tail -3
+  echo "--- 失败数 ---"
+  grep -c "Failed to load plugin" /root/bot_restart_1535.log 2>/dev/null
+} > /root/botrestart_weather_verify.log 2>&1
+rm -f /root/.botrestart_armed
+SH
+  chmod +x /root/.botrestart.sh
+  setsid nohup bash /root/.botrestart.sh >/dev/null 2>&1 </dev/null &
+  echo "延迟重启已挂(8s kill + 12s验证)"
+fi
 echo "=====完====="
