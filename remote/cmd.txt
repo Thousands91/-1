@@ -1,40 +1,6 @@
-287571
-echo "===== 坑161 A+C部署:重启bot(只重启bot不动NapCat/登录态) ====="
+287572
+echo "===== 坑161 A+C 重启后验收 ====="
+cat /root/ac161restart_verify.log 2>/dev/null || echo "验证日志还没写完"
 echo "--- 当前bot PID ---"
 ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}'
-echo "--- 当前登录态(扫码恢复后应[在线]) ---"
-tail -2 /root/login_state.log 2>/dev/null
-if [ ! -f /root/.ac161restart_armed ]; then
-  touch /root/.ac161restart_armed
-  cat > /root/.ac161restart.sh <<'SH'
-#!/bin/bash
-sleep 8
-OLDPID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
-echo "旧PID:$OLDPID"
-[ -n "$OLDPID" ] && kill "$OLDPID"
-sleep 3
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot_restart_ac161.log 2>&1 < /dev/null &
-sleep 12
-{
-  echo "=== $(date '+%m-%d %H:%M:%S') 重启后 ==="
-  echo "新PID: $(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}')"
-  echo "--- 插件加载成功数/失败数 ---"
-  grep -c "Succeeded to load plugin" /root/bot_restart_ac161.log 2>/dev/null
-  grep -c "Failed to load plugin" /root/bot_restart_ac161.log 2>/dev/null
-  echo "--- WS连接 ---"
-  grep -iE "Bot .* connected|WebSocket Connection closed" /root/bot_restart_ac161.log 2>/dev/null | tail -3
-  echo "--- 登录态(重启不应影响) ---"
-  tail -2 /root/login_state.log 2>/dev/null
-  echo "--- 坑161 A+C标记(设备实际文件: A=2,C=1) ---"
-  grep -F -c '坑161-A' /root/bot/bot/plugins/ai_chat.py
-  grep -F -c '坑161-C' /root/bot/bot/plugins/ai_chat.py
-  echo "--- 启动日志尾 ---"
-  tail -5 /root/bot_restart_ac161.log 2>/dev/null
-} > /root/ac161restart_verify.log 2>&1
-rm -f /root/.ac161restart_armed
-SH
-  chmod +x /root/.ac161restart.sh
-  setsid nohup bash /root/.ac161restart.sh >/dev/null 2>&1 </dev/null &
-  echo "延迟重启已挂(8s kill + 12s验证)"
-fi
 echo "=====完====="
