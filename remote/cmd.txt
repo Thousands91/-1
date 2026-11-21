@@ -1,11 +1,22 @@
-287470
-echo "===== 确认最终卡片 ====="
+287471
+echo "===== 确认卡片(重试,打印原始返回) ====="
 python3 - <<'PYEOF'
 import json,urllib.request
-req=urllib.request.Request("http://127.0.0.1:10800/",data=json.dumps({"type":"163","id":"284799"}).encode(),headers={"Content-Type":"application/json"})
-d=json.loads(urllib.request.urlopen(req,timeout=20).read())
-c=json.loads(d["message"]); m=(c.get("meta") or {}).get("music") or {}
-print("jumpUrl:",m.get("jumpUrl"))
-print("musicUrl:",m.get("musicUrl"))
+for i in range(3):
+    try:
+        req=urllib.request.Request("http://127.0.0.1:10800/",data=json.dumps({"type":"163","id":"284799"}).encode(),headers={"Content-Type":"application/json"})
+        raw=urllib.request.urlopen(req,timeout=20).read().decode(errors='replace')
+        d=json.loads(raw)
+        if "message" in d:
+            c=json.loads(d["message"]); m=(c.get("meta") or {}).get("music") or {}
+            print("第%d次 OK jumpUrl:%s"%(i+1,m.get("jumpUrl")))
+            print("     musicUrl:",m.get("musicUrl"))
+            break
+        else:
+            print("第%d次 无message(上游抖动):%s"%(i+1,raw[:120]))
+    except Exception as e:
+        print("第%d次 异常:%s"%(i+1,e))
 PYEOF
+echo "--- 代理日志尾 ---"
+tail -8 /root/music_sign.log 2>/dev/null
 echo "=====完====="
