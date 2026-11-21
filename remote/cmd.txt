@@ -1,8 +1,7 @@
-287530
-echo "===== 14:31引用那条完整链 ====="
+287531
+echo "===== 14:31:16 WARNING完整内容 ====="
 L=/root/bot/bot/bot.log
-echo "--- 31360~31378 ---"
-sed -n '31360,31378p' "$L"
-echo "--- 14:31:16 消息原文(reply id) ---"
-grep -nE "14:31:1[0-9].*message" "$L" | head -5
+sed -n '31378,31392p' "$L"
+echo "--- 所有ai_chat WARNING(11-21) ---"
+grep -nE "11-21.*\[WARNING\] ai_chat" "$L" | head -20
 echo "=====完====="
