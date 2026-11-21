@@ -1,16 +1,15 @@
-287575
-echo "===== rc.sh diag 回传静默四查 $(date '+%F %T') ====="
-echo "---[1]循环日志尾(循环死活+失败原文)---"
-tail -15 /root/remote_ctl.log
-echo "---[2]小包PUT手测(一锤定音通道好坏)---"
-TOK=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
-curl -s -o /dev/null -w "api.github.com HTTP:%{http_code} 耗时:%{time_total}s\n" --max-time 15 https://api.github.com
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" https://api.github.com/repos/Thousands91/-1/contents/remote/out.txt | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
-curl -s -o /dev/null -w "PUT out.txt HTTP:%{http_code} 耗时:%{time_total}s\n" --max-time 30 -X PUT -H "Authorization: token $TOK" https://api.github.com/repos/Thousands91/-1/contents/remote/out.txt -d "{\"message\":\"diag probe\",\"content\":\"ZGlhZ19wcm9iZQ==\",\"sha\":\"$SHA\",\"branch\":\"main\"}"
-echo "---[3]git push手测(non-fast-forward=仓库不同步)---"
-cd /root/asar-sync && git push origin main 2>&1 | tail -3
-echo "---[4]水位(任务被谁消费)---"
-cat /root/.remote_last 2>/dev/null; echo
-echo "---[判据]tick.log心跳(60s连续=CPU没冻)---"
-tail -3 /root/tick.log 2>/dev/null
-echo "=====四查完毕,拿到结果前不许说冻结====="
+287576
+echo "===== 收不到回复 只读诊断 $(date '+%F %T') ====="
+echo "---[1] bot进程(在不在)---"
+ps -eo pid,etime,args | grep '[m]ain.py' || echo "无bot进程!"
+echo "---[2] NapCat登录态(最近状态变更)---"
+grep -iE '账号状态变更|login_state|未登录|在线|离线|KickedOffLine|offline' /root/remote_ctl.log | tail -12
+echo "---[3] link_probe 最近心跳(WS真实收发)---"
+grep -iE 'HEARTBEAT|LIFECYCLE|online=' /root/remote_ctl.log | tail -8
+echo "---[4] 最近收消息ask / 发消息(判断真没收到还是没回)---"
+grep -iE '\[核对|ask=|sendMsg|发送失败|replies|回复' /root/remote_ctl.log | tail -15
+echo "---[5] tick心跳完整尾(60s连续=CPU没冻)---"
+tail -6 /root/tick.log 2>/dev/null
+echo "---[6] bot自身日志尾(异常/报错)---"
+tail -25 /root/bot/bot.log 2>/dev/null || tail -25 /root/bot.log 2>/dev/null
+echo "=====诊断完毕(只读,未重启未碰NapCat)====="
