@@ -1,21 +1,35 @@
-287559
-echo "===== 探测复读/答非所问:设备记忆+签名+日志 ====="
-echo "--- 设备 memory 目录 ---"
-ls -la /root/bot/bot/data/memory/ 2>/dev/null
-echo "--- 各记忆文件条数与尾部(找钱袋子/布缇娜/羊皮纸) ---"
-for f in /root/bot/bot/data/memory/*.json; do
-  echo "### $f"
-  grep -o '钱袋子\|布缇娜\|羊皮纸\|与书为伴\|熟客\|书架\|没钱' "$f" 2>/dev/null | sort | uniq -c
-  tail -c 500 "$f" 2>/dev/null
-  echo
-done
-echo "--- reply_sigs.json ---"
-cat /root/bot/bot/data/reply_sigs.json 2>/dev/null | head -c 1500
-echo
-echo "--- 找bot运行日志文件 ---"
-ls -lat /root/*.log /root/bot/*.log /root/bot/bot/*.log 2>/dev/null | head -15
-echo "--- 日志里最近的[核对·调试]/[防复读]/钱袋子 ---"
-for L in /root/bot_restart_v160b.log /root/bot/nohup.log /root/bot/bot/nohup.log; do
-  [ -f "$L" ] && { echo "### $L"; grep -E '核对·调试|防复读|钱袋子|布缇娜|羊皮纸' "$L" 2>/dev/null | tail -20; }
-done
-echo "=====完====="
+287560
+python3 - <<'PY'
+import json, re, difflib, glob
+KW = ["钱袋子","羊皮纸","与书为伴","熟客","布缇娜","书架","记性","穷","没钱"]
+# 1) 该私聊用户记忆里,bot自己答的(r字段)含套话的条数
+f="/root/bot/bot/data/memory/1561950850.json"
+try:
+    d=json.load(open(f,encoding="utf-8"))
+    print("记忆总条数:", len(d))
+    hit_r=sum(1 for e in d if any(k in str(e.get("r","")) for k in KW))
+    hit_m=sum(1 for e in d if any(k in str(e.get("m","")) for k in KW))
+    print("记忆r字段(它自己答的)含套话条数:", hit_r)
+    print("记忆m字段(用户说的)含套话条数:", hit_m)
+    for e in d[-5:]:
+        r=str(e.get("r","")); m=str(e.get("m",""))
+        print("  m含套话=%d r含套话=%d"%(any(k in m for k in KW), any(k in r for k in KW)))
+except Exception as ex:
+    print("记忆读取失败:", type(ex).__name__)
+# 2) reply_sigs 该用户签名雷同度
+try:
+    sig=json.load(open("/root/bot/bot/data/reply_sigs.json",encoding="utf-8"))
+    arr=sig.get("0_1561950850",[])
+    print("签名条数:", len(arr))
+    pairs=0; head=0
+    for i in range(len(arr)):
+        for j in range(i+1,len(arr)):
+            a,b=arr[i],arr[j]
+            if a[:10]==b[:10]: head+=1
+            if difflib.SequenceMatcher(None,a,b).ratio()>=0.72: pairs+=1
+    print("签名对中前10字相同的对数:", head)
+    print("签名对中相似度>=0.72的对数:", pairs)
+except Exception as ex:
+    print("签名读取失败:", type(ex).__name__)
+print("=====完=====")
+PY
