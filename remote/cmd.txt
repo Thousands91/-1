@@ -1,11 +1,33 @@
-287568
-echo "===== 找bot的运行python ====="
-ps aux | grep -E 'main.py|nonebot|python' | grep -v grep | head -10
-echo "--- venv候选 ---"
-ls -d /root/bot/venv /root/bot/.venv /root/venv 2>/dev/null
-echo "--- 哪个python有nonebot ---"
-for p in python3 /root/bot/venv/bin/python /root/bot/.venv/bin/python; do
-  [ -x "$p" ] || command -v "$p" >/dev/null 2>&1 || continue
-  echo -n "$p: "; "$p" -c "import nonebot; print('有nonebot')" 2>/dev/null || echo "无"
-done
+287569
+cd /root/bot
+/root/bot/venv/bin/python - <<'PY'
+# 设备端端到端:用bot真实venv跑设备自己的 ai_chat.py,验证 A+C 真实代码行为
+import nonebot; nonebot.init()
+import sys, difflib
+sys.path.insert(0, "/root/bot")
+import plugins.ai_chat as m
+
+src=open("/root/bot/bot/plugins/ai_chat.py",encoding="utf-8").read()
+print("[0] 坑161-A标记:",src.count("坑161-A")," 坑161-C标记:",src.count("坑161-C")," 旧0.72残留:",src.count(">= 0.72"))
+assert src.count("坑161-A")==2 and src.count("坑161-C")==1 and src.count(">= 0.72")==0
+
+MEM=[{"t":1795280000,"m":"你怎么知道我没钱","r":"您这钱袋子比那最珍贵的羊皮纸还要薄"},
+     {"t":1795280001,"m":"你和布缇娜熟吗","r":"布缇娜那里我是熟客，与书为伴"}]
+m._load_memory=lambda uid: MEM
+blk=m._memory_block(1561950850)
+print("[A-1] 记忆块套话词频: 钱袋子=%d 熟客=%d 与书为伴=%d"%(blk.count("钱袋子"),blk.count("熟客"),blk.count("与书为伴")))
+assert blk.count("钱袋子")==0 and blk.count("熟客")==0 and blk.count("与书为伴")==0
+
+a=m._norm_text("钱袋子比羊皮纸还薄，与书为伴了")
+b=m._norm_text("布缇娜那里我是熟客，可您这钱袋子比那最珍贵的羊皮纸还要薄，今晚怕是只能与书为伴了")
+old_hit=(a[:10]==b[:10]) or difflib.SequenceMatcher(None,a,b).ratio()>=0.72
+new_hit=m._sig_sim(a,b)
+print("[C-1] 旧判定=%s(相似度%.3f) 新判定=%s"%(old_hit,difflib.SequenceMatcher(None,a,b).ratio(),new_hit))
+assert new_hit and not old_hit
+
+for x,y in [("您这钱袋子比羊皮纸薄","今天天气不错出去走走"),("布缇娜我是熟客","昨天那本书我看完了")]:
+    assert not m._sig_sim(m._norm_text(x),m._norm_text(y)), "误伤:"+x
+print("[C-2] 正常回复不误伤 ✅")
+print("===== 设备端 A+C 端到端 全部通过 =====")
+PY
 echo "=====完====="
