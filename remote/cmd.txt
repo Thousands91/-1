@@ -1,12 +1,66 @@
-287544
-echo "===== 探测设备song_request.py原文(坑160 VIP试听片段) ====="
-md5sum /root/bot/bot/plugins/song_request.py
-echo "--- fetch_audio_any 886-896 ---"
-sed -n '886,896p' /root/bot/bot/plugins/song_request.py
-echo "--- VIP分支 483-487 ---"
-sed -n '483,487p' /root/bot/bot/plugins/song_request.py
-echo "--- 锚点1计数(原fetch_audio_any,应为1) ---"
-grep -F -c 'return await fetch_audio(s["id"])' /root/bot/bot/plugins/song_request.py
-echo "--- 锚点2计数(原VIP finish,应为1) ---"
-grep -F -c '这首是「{s['"'"'artists'"'"']}」的原曲，两边平台都要 VIP，柜上拿不来整首的音频' /root/bot/bot/plugins/song_request.py
+287545
+echo "===== 坑160修复:VIP短试听片段如实标注 ====="
+cd /root/bot/bot/plugins
+cp song_request.py song_request.py.bak_vip160_$(date +%m%d%H%M)
+python3 - <<'PYEOF'
+p="song_request.py"
+s=open(p,encoding="utf-8").read()
+old1='''async def fetch_audio_any(s: dict):
+    """按条目 src 分发取音频 → (bytes, 秒, err)。"""
+    src = s.get("src", "netease")
+    if src == "kuwo":
+        return await fetch_audio_kuwo(s["id"])
+    if src == "qq":
+        return await fetch_audio_qq(s["id"])
+    if src in ("kugou", "migu"):
+        # 坑124：这两家只发官方卡（跳转链接），不取音频；id 里存的是歌名
+        return None, 0, "官方卡平台"
+    return await fetch_audio(s["id"])'''
+new1='''async def fetch_audio_any(s: dict):
+    """按条目 src 分发取音频 → (bytes, 秒, err)。"""
+    src = s.get("src", "netease")
+    if src == "kuwo":
+        r = await fetch_audio_kuwo(s["id"])
+    elif src == "qq":
+        r = await fetch_audio_qq(s["id"])
+    elif src in ("kugou", "migu"):
+        # 坑124：这两家只发官方卡（跳转链接），不取音频；id 里存的是歌名
+        return None, 0, "官方卡平台"
+    else:
+        r = await fetch_audio(s["id"])
+    # 坑160（2026-11-21 用户拍板方案1）：VIP 歌第三方源只给 30~45s 试听残片，
+    # 语音条和卡片播放键(musicUrl)同源都只播这段。残片不能当"取音频成功"
+    # 静默发出——否则用户以为整首放不出来。判"试听片段"交下游发官方卡+如实告知。
+    a, sec, err = r
+    if a and s.get("fee") == 1 and sec and sec < 60:
+        return None, sec, "试听片段"
+    return r'''
+assert s.count(old1)==1, "锚点1计数!=1,拒绝替换 count=%d"%s.count(old1)
+s=s.replace(old1,new1,1)
+old2='''        if s.get("src", "netease") == "netease" and s.get("fee") == 1:
+            if await try_official_card(pick_cmd, s):
+                await pick_cmd.finish(
+                    f"这首是「{s['artists']}」的原曲，两边平台都要 VIP，柜上拿不来整首的音频"
+                    f"——点上面这张卡片去网易云听（有会员就能听整首）。")'''
+new2='''        if s.get("src", "netease") == "netease" and s.get("fee") == 1:
+            if await try_official_card(pick_cmd, s):
+                if err == "试听片段":
+                    await pick_cmd.finish(
+                        f"「{s['name']}」这首要 VIP——柜上只取到 {sec} 秒试听片段，"
+                        f"没法给你整首（卡片播放键也只能播这段）。"
+                        f"点上面这张卡片去网易云，有会员就能听完整版。")
+                await pick_cmd.finish(
+                    f"这首是「{s['artists']}」的原曲，两边平台都要 VIP，柜上拿不来整首的音频"
+                    f"——点上面这张卡片去网易云听（有会员就能听整首）。")'''
+assert s.count(old2)==1, "锚点2计数!=1,拒绝替换 count=%d"%s.count(old2)
+s=s.replace(old2,new2,1)
+open(p,"w",encoding="utf-8").write(s)
+print("两处替换成功")
+PYEOF
+echo "--- 语法检查 ---"
+python3 -m py_compile song_request.py && echo "语法OK" || echo "语法FAIL-不重启"
+echo "--- 新逻辑确认(试听片段出现2处) ---"
+grep -F -c '试听片段' song_request.py
+echo "--- md5 ---"
+md5sum song_request.py
 echo "=====完====="
