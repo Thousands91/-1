@@ -1,26 +1,8 @@
-287528
-echo "===== 诊断:_vlm_caption对这张图到底返回什么 ====="
-cd /root/bot/bot
-OPENAI_API_KEY=sandbox-test-key /root/bot/venv/bin/python - <<'PYEOF'
-import nonebot, asyncio, httpx, hashlib, time
-nonebot.init()
-from nonebot.adapters.onebot.v11 import Adapter
-nonebot.get_driver().register_adapter(Adapter)
-import plugins.ai_chat as ac
-URL="https://httpbin.org/image/jpeg"
-async def main():
-    async with httpx.AsyncClient(timeout=10,follow_redirects=True) as cli:
-        r=await cli.get(URL,headers={"User-Agent":"Mozilla/5.0"})
-    print("HTTP:",r.status_code,"size:",len(r.content),"md5:",hashlib.md5(r.content).hexdigest()[:8])
-    t=time.time()
-    c=await ac._vlm_caption(r.content)
-    print("_vlm_caption直接返回:",repr(c),"耗时:%.1fs"%(time.time()-t))
-    # 再走一次完整wait
-    ac._IMG_CAP_LOADED=False; ac._load_img_caps()
-    k=hashlib.md5(r.content).hexdigest()
-    ac._IMG_CAPS.pop(k,None)
-    r2=await ac._image_sticker_name(URL,wait=True)
-    print("_image_sticker_name(wait=True)返回:",repr(r2))
-asyncio.run(main())
-PYEOF
+287529
+echo "===== 下午文字引用回复不相关——取证 ====="
+L=/root/bot/bot/bot.log
+echo "--- 14:25~14:40 所有ai_chat触发(核对·调试 ask/ans) ---"
+grep -nE "14:(2[5-9]|3[0-9]|40):.*(核对·调试|ask=|ans=|引用|get_msg)" "$L" 2>/dev/null | head -40
+echo "--- get_msg取引用失败次数(全日志) ---"
+grep -cF "get_msg 取引用失败" "$L" 2>/dev/null
 echo "=====完====="
