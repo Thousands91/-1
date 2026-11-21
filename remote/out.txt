@@ -1,28 +1,16 @@
-<<<task_287513.txt>>>
-===== 任务287513 11-21 20:44:03 =====
+<<<task_287514.txt>>>
+===== 任务287514 11-21 20:47:37 =====
 --- 命令 ---
-echo "===== 图片识别缓存现状 ====="
-F=/root/bot/bot/data/image_captions.json
-ls -la "$F" 2>/dev/null
-echo "--- 缓存条数 ---"
-python3 -c "
-import json
-d=json.load(open('$F'))
-print('总数:',len(d))
-for k,v in list(d.items())[-8:]:
-    print(k[:8],'=',v)
-" 2>/dev/null || echo "(无缓存文件)"
-echo "--- 炸鸡配红酒在不在缓存 ---"
-grep -F "炸鸡配红酒" "$F" 2>/dev/null || echo "(不在)"
+F=/root/bot/bot/plugins/ai_chat.py
+echo "===== 设备ai_chat.py现状 ====="
+md5sum "$F"
+grep -n "async def _image_sticker_name\|_image_sticker_name(_qu" "$F"
+wc -l "$F"
 echo "=====完====="
 --- 输出 ---
-===== 图片识别缓存现状 =====
--rw-r--r-- 1 root root 177 Nov 21 20:32 /root/bot/bot/data/image_captions.json
---- 缓存条数 ---
-总数: 3
-cb198a9f = 点赞表情配整挺好文字
-fdc5ce98 = 思考的猫
-3815ddf3 = 炸鸡配红酒
---- 炸鸡配红酒在不在缓存 ---
-{"cb198a9fc6c2ea10fc28f90b2de82c9f": "点赞表情配整挺好文字", "fdc5ce98d581fa21bee37192471f7c66": "思考的猫", "3815ddf30162474922933946ce1b7acf": "炸鸡配红酒"}
+===== 设备ai_chat.py现状 =====
+508ee60985eeeeba6b451d3ae5b92b8f  /root/bot/bot/plugins/ai_chat.py
+394:async def _image_sticker_name(url: str) -> str:
+1503:                                _qn = await _image_sticker_name(_qu)
+2397 /root/bot/bot/plugins/ai_chat.py
 =====完=====
