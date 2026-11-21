@@ -1,9 +1,14 @@
-287551
-echo "===== 复查登录态是否自愈(坑160) ====="
-echo "--- login_state 尾5 ---"
-tail -5 /root/login_state.log 2>/dev/null
-echo "--- link_probe 尾8 ---"
-tail -8 /root/link_probe.log 2>/dev/null
-echo "--- 当前时刻 ---"
-date '+%F %T'
+287552
+echo "===== 22:29掉线验尸取证(全文对齐) ====="
+echo "--- 验尸日志路径候选 ---"
+ls -la /root/offline_forensics.log /root/*forensic* 2>/dev/null
+echo "--- 验尸日志最后一段(从最后一个=====分段标记起) ---"
+tail -120 /root/offline_forensics.log 2>/dev/null
+echo "--- 设备uptime/启动时刻 ---"
+uptime
+cat /proc/uptime 2>/dev/null
+echo "--- tick.log尾(看冻结断档) ---"
+tail -12 /root/tick.log 2>/dev/null
+echo "--- login_state 22:20后 ---"
+grep "11-21 22:2\|11-21 22:3" /root/login_state.log 2>/dev/null | tail -20
 echo "=====完====="
