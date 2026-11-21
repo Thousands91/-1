@@ -1,13 +1,13 @@
-287472
-echo "===== 确认卡片(正确解析:返回体即卡JSON) ====="
-python3 - <<'PYEOF'
-import json,urllib.request
-req=urllib.request.Request("http://127.0.0.1:10800/",data=json.dumps({"type":"163","id":"284799"}).encode(),headers={"Content-Type":"application/json"})
-c=json.loads(urllib.request.urlopen(req,timeout=20).read().decode(errors='replace'))
-m=(c.get("meta") or {}).get("music") or {}
-print("tag:",m.get("tag"))
-print("jumpUrl:",m.get("jumpUrl"))
-print("musicUrl:",m.get("musicUrl"))
-print("token:",bool((c.get("config") or {}).get("token")))
-PYEOF
+287473
+echo "===== 取证:恢复自建页前现状 ====="
+echo "--- 当前music_sign.py关键行(232-250) ---"
+sed -n '232,250p' /root/music_sign.py
+echo "--- md5 ---"
+md5sum /root/music_sign*.py 2>/dev/null
+echo "--- 备份文件 ---"
+ls -la /root/music_sign* 2>/dev/null
+echo "--- PLAYER_PAGE/player_url 定义是否还在 ---"
+grep -nE "PLAYER_PAGE|def player_url|github.io|music_player" /root/music_sign.py | head -10
+echo "--- 当前代理进程 ---"
+ps -eo pid,args | grep '[m]usic_sign.py'
 echo "=====完====="
