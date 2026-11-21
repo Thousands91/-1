@@ -1,47 +1,103 @@
-<<<task_287561.txt>>>
-===== 任务287561 11-22 01:32:27 =====
+<<<task_287562.txt>>>
+===== 任务287562 11-22 01:35:41 =====
 --- 命令 ---
-echo "===== 探测设备 ai_chat.py 当前状态(坑161 A+C 部署前) ====="
-F=/root/bot/bot/plugins/ai_chat.py
-md5sum $F
-echo "--- 锚点1: _remember 写r 旧写法(应为1) ---"
-grep -F -c '        item["r"] = reply.strip()[:80]' $F
-echo "--- 锚点1原文 ---"
-grep -n -B2 -A1 'item\["r"\] = reply.strip' $F
-echo "--- 锚点2: _memory_block 拼r 旧写法(应为1) ---"
-grep -F -c 'lines.append(f"- {day}，他问：「{m}」，你当时答：「{r}」" if r else f"- {day}，他问：「{m}」")' $F
-echo "--- 锚点2原文 ---"
-grep -n '你当时答' $F
-echo "--- 锚点3: _sig_sim 旧0.72(应为1) ---"
-grep -F -c 'return difflib.SequenceMatcher(None, a, b).ratio() >= 0.72' $F
-echo "--- 锚点3原文 ---"
-grep -n -B5 'SequenceMatcher(None, a, b).ratio() >= 0.72' $F
-echo "--- 语法 ---"
-python3 -c "import ast; ast.parse(open('$F',encoding='utf-8').read()); print('OK')"
+python3 - <<'PY'
+F="/root/bot/bot/plugins/ai_chat.py"
+s=open(F,encoding="utf-8").read()
+
+# ===== 坑161-A1: _remember 不再存r(连if reply:一起删,避免留空if) =====
+old1='''    item = {"t": int(_time.time()), "m": text[:120]}
+    if reply:
+        item["r"] = reply.strip()[:80]
+    entries.append(item)'''
+new1='''    item = {"t": int(_time.time()), "m": text[:120]}
+    entries.append(item)'''
+assert s.count(old1)==1, "old1 count=%d"%s.count(old1)
+s=s.replace(old1,new1)
+
+# ===== 坑161-A2: _memory_block 不再拼r =====
+old2='''        m = e.get("m", "")
+        r = e.get("r", "")
+        # 坑91根治：每条记忆带具体日期——时间锚点让模型无从把旧内容当成"现在"。
+        # 抽象声明（"这些是旧话题"）压不住模型的接戏冲动，具体日期压得住。
+        try:
+            day = _time.strftime("%m月%d日", _time.localtime(e.get("t", 0)))
+        except Exception:
+            day = "早前"
+        lines.append(f"- {day}，他问：「{m}」，你当时答：「{r}」" if r else f"- {day}，他问：「{m}」")'''
+new2='''        m = e.get("m", "")
+        # 坑161-A（2026-11-22 用户拍板 A+C）：不再把 bot 自己答过的 r 字段拼进
+        # prompt——那是自我复读的燃料。历史档案里残留的旧 r 也一并屏蔽（读取端
+        # 掐断，无需清数据、重启即生效）；只喂用户原话 m。
+        try:
+            day = _time.strftime("%m月%d日", _time.localtime(e.get("t", 0)))
+        except Exception:
+            day = "早前"
+        lines.append(f"- {day}，他问：「{m}」")'''
+assert s.count(old2)==1, "old2 count=%d"%s.count(old2)
+s=s.replace(old2,new2)
+
+# ===== 坑161-C: _sig_sim 加内容词重合判定+阈值0.65 =====
+old3='''def _sig_sim(a: str, b: str) -> bool:
+    """签名相似判定：前10字相同=直接判雷同；整体相似度≥0.72=判雷同。"""
+    if not a or not b:
+        return False
+    if a[:10] == b[:10]:
+        return True
+    import difflib
+    return difflib.SequenceMatcher(None, a, b).ratio() >= 0.72'''
+new3='''# 坑161-C（2026-11-22 用户拍板 A+C）：套话每轮换开头（"您这钱袋子…"/"布缇娜那里我是熟客…"）
+# 躲过"前10字相同"和0.72字面相似度。加一道"内容词(中文2-gram)重合"判定：
+# 剔除含虚词的片段后，共有片段≥3 且占较短一方≥0.55 → 判雷同，换皮也认得出。
+_ZH_FUNC_CHARS = frozenset(
+    "的了我是你您他她它在和与也不个这那有很就都还啊吧呢嘛呀哦嗯把被给让从到为且则若虽但于之所其乎者也"
+)
+
+
+def _content_grams(s: str) -> set:
+    """内容片段：相邻两个汉字且都不含虚词——保留比喻/实词骨架，滤掉句式虚词。"""
+    out = set()
+    for i in range(len(s) - 1):
+        g = s[i:i + 2]
+        if ("\\u4e00" <= g[0] <= "\\u9fff" and "\\u4e00" <= g[1] <= "\\u9fff"
+                and g[0] not in _ZH_FUNC_CHARS and g[1] not in _ZH_FUNC_CHARS):
+            out.add(g)
+    return out
+
+
+def _sig_sim(a: str, b: str) -> bool:
+    """签名相似：前10字相同 / 内容词重合≥0.55 / 整体相似度≥0.65 → 雷同。"""
+    if not a or not b:
+        return False
+    if a[:10] == b[:10]:
+        return True
+    ga, gb = _content_grams(a), _content_grams(b)
+    if ga and gb:
+        inter = ga & gb
+        if len(inter) >= 3 and len(inter) / min(len(ga), len(gb)) >= 0.55:
+            return True
+    import difflib
+    return difflib.SequenceMatcher(None, a, b).ratio() >= 0.65'''
+assert s.count(old3)==1, "old3 count=%d"%s.count(old3)
+s=s.replace(old3,new3)
+
+import ast; ast.parse(s)
+open(F+".bak_ac161","w",encoding="utf-8").write(open(F,encoding="utf-8").read())
+open(F,"w",encoding="utf-8").write(s)
+import hashlib
+print("改后md5:", hashlib.md5(open(F,'rb').read()).hexdigest())
+print("坑161-A标记:", s.count("坑161-A"))
+print("坑161-C标记:", s.count("坑161-C"))
+print("旧0.72残留:", s.count(">= 0.72"))
+print("新0.65:", s.count(">= 0.65"))
+print("语法OK")
+PY
 echo "=====完====="
 --- 输出 ---
-===== 探测设备 ai_chat.py 当前状态(坑161 A+C 部署前) =====
-f7894e8b90743c58fb5fbac9c87b7e57  /root/bot/bot/plugins/ai_chat.py
---- 锚点1: _remember 写r 旧写法(应为1) ---
-1
---- 锚点1原文 ---
-965-    item = {"t": int(_time.time()), "m": text[:120]}
-966-    if reply:
-967:        item["r"] = reply.strip()[:80]
-968-    entries.append(item)
---- 锚点2: _memory_block 拼r 旧写法(应为1) ---
-1
---- 锚点2原文 ---
-986:        lines.append(f"- {day}，他问：「{m}」，你当时答：「{r}」" if r else f"- {day}，他问：「{m}」")
---- 锚点3: _sig_sim 旧0.72(应为1) ---
-1
---- 锚点3原文 ---
-1147-    if not a or not b:
-1148-        return False
-1149-    if a[:10] == b[:10]:
-1150-        return True
-1151-    import difflib
-1152:    return difflib.SequenceMatcher(None, a, b).ratio() >= 0.72
---- 语法 ---
-OK
+改后md5: eb05a44d988da85f62244fb088a27be7
+坑161-A标记: 1
+坑161-C标记: 1
+旧0.72残留: 0
+新0.65: 1
+语法OK
 =====完=====
