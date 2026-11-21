@@ -1,34 +1,90 @@
-<<<task_287558.txt>>>
-===== 任务287558 11-22 01:02:04 =====
+<<<task_287559.txt>>>
+===== 任务287559 11-22 01:08:30 =====
 --- 命令 ---
-echo "===== 确认重启后WS真实连接(link_probe心跳) ====="
-echo "--- link_probe.log 尾10 ---"
-tail -10 /root/link_probe.log 2>/dev/null
-echo "--- bot_restart_v160b.log 里连接相关 ---"
-grep -iE "connected|heartbeat|lifecycle|WebSocket" /root/bot_restart_v160b.log 2>/dev/null | tail -8
-echo "--- 当前时刻 ---"
-date '+%F %T'
+echo "===== 探测复读/答非所问:设备记忆+签名+日志 ====="
+echo "--- 设备 memory 目录 ---"
+ls -la /root/bot/bot/data/memory/ 2>/dev/null
+echo "--- 各记忆文件条数与尾部(找钱袋子/布缇娜/羊皮纸) ---"
+for f in /root/bot/bot/data/memory/*.json; do
+  echo "### $f"
+  grep -o '钱袋子\|布缇娜\|羊皮纸\|与书为伴\|熟客\|书架\|没钱' "$f" 2>/dev/null | sort | uniq -c
+  tail -c 500 "$f" 2>/dev/null
+  echo
+done
+echo "--- reply_sigs.json ---"
+cat /root/bot/bot/data/reply_sigs.json 2>/dev/null | head -c 1500
+echo
+echo "--- 找bot运行日志文件 ---"
+ls -lat /root/*.log /root/bot/*.log /root/bot/bot/*.log 2>/dev/null | head -15
+echo "--- 日志里最近的[核对·调试]/[防复读]/钱袋子 ---"
+for L in /root/bot_restart_v160b.log /root/bot/nohup.log /root/bot/bot/nohup.log; do
+  [ -f "$L" ] && { echo "### $L"; grep -E '核对·调试|防复读|钱袋子|布缇娜|羊皮纸' "$L" 2>/dev/null | tail -20; }
+done
 echo "=====完====="
 --- 输出 ---
-===== 确认重启后WS真实连接(link_probe心跳) =====
---- link_probe.log 尾10 ---
-[11-21 21:39:55.387] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
-[11-21 22:07:05.546] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
-[11-21 22:07:10.022] LIFECYCLE sub_type=connect self_id=3427943187
-[11-21 22:07:26.716] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
-[11-21 22:34:03.235] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
-[11-22 00:46:20.226] LIFECYCLE sub_type=connect self_id=3427943187
-[11-22 00:46:49.891] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
-[11-22 00:59:29.787] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
-[11-22 00:59:34.574] LIFECYCLE sub_type=connect self_id=3427943187
-[11-22 00:59:50.005] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
---- bot_restart_v160b.log 里连接相关 ---
-11-22 00:59:29 [INFO] link_probe | [连接探针] 已启动，监听 lifecycle + heartbeat
-11-22 00:59:34 [INFO] uvicorn | 127.0.0.1:47854 - "WebSocket /onebot/v11/ws" [accepted]
-11-22 00:59:34 [INFO] websockets | connection open
-11-22 00:59:34 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
-11-22 00:59:34 [WARNING] link_probe | [连接探针] [11-22 00:59:34.574] LIFECYCLE sub_type=connect self_id=3427943187
-11-22 00:59:50 [WARNING] link_probe | [连接探针] [11-22 00:59:50.005] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
---- 当前时刻 ---
-2026-11-22 01:02:04
+===== 探测复读/答非所问:设备记忆+签名+日志 =====
+--- 设备 memory 目录 ---
+total 0
+drwxr-xr-x 2 root root  3488 Nov 21 22:24 .
+drwxr-xr-x 4 root root  3488 Nov 22 00:53 ..
+-rw-r--r-- 1 root root    85 Nov 12 14:22 1062461846.json
+-rw-r--r-- 1 root root   160 Nov 19 20:24 1179127036.json
+-rw-r--r-- 1 root root 19076 Nov 22 00:53 1561950850.json
+-rw-r--r-- 1 root root 19254 Nov 12 14:22 1561950850.json.bak_1108手术前
+-rw-r--r-- 1 root root 13481 Nov 12 14:00 1561950850.json.bak_1112手术前
+-rw-r--r-- 1 root root   133 Nov 12 14:22 22222.json
+-rw-r--r-- 1 root root  3846 Nov 12 14:22 2419770062.json
+-rw-r--r-- 1 root root   133 Nov 12 14:22 2423816346.json
+-rw-r--r-- 1 root root   400 Nov 21 22:24 3273077048.json
+-rw-r--r-- 1 root root   227 Nov 21 22:24 3327068725.json
+-rw-r--r-- 1 root root   190 Nov 19 20:39 3611220879.json
+-rw-r--r-- 1 root root   298 Nov 12 14:22 649203747.json
+--- 各记忆文件条数与尾部(找钱袋子/布缇娜/羊皮纸) ---
+### /root/bot/bot/data/memory/1062461846.json
+[{"t": 1793607342, "m": "你活着吗（）", "r": "我活着，您有何指教？"}]
+### /root/bot/bot/data/memory/1179127036.json
+[{"t": 1795091053, "m": "hhhhhhhhhhh", "r": "@阿萨尔 @贰᳐拾壹᳐੭ﾞ 您要是想从我这儿讨一句话，得先告诉我，您想听哪一句。"}]
+### /root/bot/bot/data/memory/1561950850.json
+      2 与书为伴
+      3 书架
+      8 布缇娜
+      1 没钱
+      3 熟客
+      3 羊皮纸
+      4 钱袋子
+子，比那最珍贵的羊皮纸还要薄。"}, {"t": 1795279968, "m": "你怎么知道我没钱", "r": "您这钱袋子，比那最珍贵的羊皮纸还要薄。我虽与布缇娜熟，但今晚怕是只能在这书店里，与书为伴了。"}, {"t": 1795280022, "m": "那你知道我也和布缇娜很熟吗？", "r": "布缇娜那里，我是熟客，可您这钱袋子，比那最珍贵的羊皮纸还要薄。我虽与布缇娜熟，但今晚怕是只能在这书店里，与书为伴了。"}]
+### /root/bot/bot/data/memory/22222.json
+[{"t": 1793295289, "m": "你好，你是谁？", "r": "您好，我是阿萨尔，城里的书店老板，人称“垂钓者”。"}]
+### /root/bot/bot/data/memory/2419770062.json
+�乐趣无穷。期待下次再有这样的机会，共同探索更多的谜题与知识。📖✨🐦"}, {"t": 1793781908, "m": "咕！那就这么说定啦～知识的海洋上，一艘是书店船，一艘是小鸟船，结伴航行不孤单🐦⛵\n\n鸠先去窗边待着啦，随时回来找你们玩～诶嘿！", "r": "愿知识的海洋上，书店之船与小鸟之舟相映成趣，共同航行，照亮彼此的航程。期待与您再次相聚，共享智慧的盛宴。📖✨🐦⛵"}]
+### /root/bot/bot/data/memory/2423816346.json
+[{"t": 1793536812, "m": "给我转五十", "r": "五十？哦，这个，书店里一本书是一枚金币，您是要买书吗？"}]
+### /root/bot/bot/data/memory/3273077048.json
+[{"t": 1795083540, "m": "这是谁的", "r": "[动作:捧起一本泛黄的线装书，指尖轻轻摩挲着封皮上模糊的字迹][动作:伸出手指，指向封底][动作:书页间夹着一片干枯的玫瑰花瓣]。"}, {"t": 1795271040, "m": "问你了吗", "r": "[动作:微微欠身] 您这句\"客气了\"是回应谁？我这店里的规矩，客人的每一句话都值得记下来。"}]
+### /root/bot/bot/data/memory/3327068725.json
+[{"t": 1795271071, "m": "顾客就是上帝", "r": "@3427943187 是回应您。我这店里的规矩，客人的每一句话都值得记下来，尤其是\"顾客就是上帝\"这样的话——这比书里写的更鲜活。"}]
+### /root/bot/bot/data/memory/3611220879.json
+[{"t": 1795091993, "m": "？？？？", "r": "这话您说得有趣，好比是先问我要哪一页的书，再让我给您讲故事。您是想听关于书的，还是关于这城的？"}]
+### /root/bot/bot/data/memory/649203747.json
+[{"t": 1793779844, "m": "图片里只有恐龙", "r": "哦，那是一幅描绘恐龙的图画。恐龙，那是一种生活在远古时代的生物，它们的形象在诸多书籍和故事中都有所记载。若有人想要了解关于恐龙的更多知识，不妨来“垂钓者”书店看"}]
+--- reply_sigs.json ---
+{"0_1561950850": ["不先生这书卖出去就没了人要是没了那才是真亏本", "合上书身体微微后仰靠在椅背上先生书是无价的可人呐有时候比书还难伺候", "端起茶杯吹了吹浮叶先生这欢愉之馆的门槛可没这么低得等那风月事凑成了一本正经的书我才有心思去瞧一眼", "轻轻甩开手顺势拿起一本书挡在脸前只露出一双眼睛先生您这摇法是在给这书店招财还是在招灾", "放下书轻轻拍了拍对方的手先生这胳膊摇得比市场上的小贩还勤快您是急着去欢愉之馆还是急着把这书店的地板摇塌了", "轻轻摇头嘴角带着一丝笑意先生您这是在逗我呢我这书店的招牌可经不起您这样摇晃您要是真想请我去那可得先凑齐那本《难解之意》", "放下手中的书目光从书页上抬起平静地看着对方我在这先生", "去是可以去的只要您手里的钱比那本《难解之意》还要厚", "布缇娜那里我是熟客但您这钱袋子比我的书架还空今晚怕是只能看看书了", "布缇娜那里我是熟客可您这钱袋子比那最珍贵的羊皮纸还要薄", "您这钱袋子比那最珍贵的羊皮纸还要薄我虽与布缇娜熟但今晚怕是只能在这书店里与书为伴了", "布缇娜那里我是熟客可您这钱袋子比那最珍贵的羊皮纸还要薄我虽与布缇娜熟但今晚怕是只能在这书店里与书为伴了"], "562796842_3273077048": ["[动作微微欠身]您这句客�
+--- 找bot运行日志文件 ---
+-rw-r--r-- 1 root root    7040 Nov 22 01:08 /root/bot_restart_v160b.log
+-rw-r--r-- 1 root root  364954 Nov 22 01:08 /root/health.log
+-rw-r--r-- 1 root root  146548 Nov 22 01:08 /root/netmon.log
+-rw-r--r-- 1 root root  209120 Nov 22 01:07 /root/tick.log
+-rw-r--r-- 1 root root   61281 Nov 22 01:05 /root/login_state.log
+-rw-r--r-- 1 root root 2058429 Nov 22 01:02 /root/remote_ctl.log
+-rw-r--r-- 1 root root    5535 Nov 22 00:59 /root/link_probe.log
+-rw-r--r-- 1 root root     699 Nov 22 00:59 /root/v160brestart_verify.log
+-rw-r--r-- 1 root root   35050 Nov 22 00:59 /root/napcat.log
+-rw-r--r-- 1 root root   25233 Nov 22 00:59 /root/bot_restart_v160.log
+-rw-r--r-- 1 root root 1420150 Nov 22 00:52 /root/napcat-restart.log
+-rw-r--r-- 1 root root   21668 Nov 22 00:47 /root/autoheal.log
+-rw-r--r-- 1 root root    5576 Nov 22 00:20 /root/ip.log
+-rw-r--r-- 1 root root     608 Nov 21 22:34 /root/v160restart_verify.log
+-rw-r--r-- 1 root root   41206 Nov 21 22:33 /root/bot_restart_q159.log
+--- 日志里最近的[核对·调试]/[防复读]/钱袋子 ---
+### /root/bot_restart_v160b.log
 =====完=====
