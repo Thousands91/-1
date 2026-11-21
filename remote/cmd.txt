@@ -1,4 +1,4 @@
-287466
-echo "===== music_sign.py 150行到结尾 ====="
-sed -n '150,400p' /root/music_sign.py
+287467
+echo "===== 官方卡分支jump决定(220-270行) ====="
+sed -n '218,275p' /root/music_sign.py
 echo "=====完====="
