@@ -1,29 +1,18 @@
-<<<task_287522.txt>>>
-===== 任务287522 11-21 21:03:32 =====
+<<<task_287523.txt>>>
+===== 任务287523 11-21 21:16:04 =====
 --- 命令 ---
-echo "===== 端到端:引用图片同步识图(清缓存模拟首次) ====="
-cd /root/bot/bot
-OPENAI_API_KEY=sandbox-test-key /root/bot/venv/bin/python -c "
-import nonebot, asyncio, hashlib
-nonebot.init()
-from nonebot.adapters.onebot.v11 import Adapter
-nonebot.get_driver().register_adapter(Adapter)
-import plugins.ai_chat as ac
-URL='https://gchat.qpic.cn/gchatpic_new/0/0-0-3815DDF30162474922933946CE1B7ACF.jpg'
-async def main():
-    ac._IMG_CAP_LOADED=False
-    ac._load_img_caps()
-    # 取缓存前的真名做对照
-    print('缓存现状: 有这张图=', any('3815' in k for k in ac._IMG_CAPS))
-    print('wait=True 引用路径返回:', await ac._image_sticker_name(URL, wait=True))
-asyncio.run(main())
-" 2>&1 | grep -v "nonebot |"
-echo "--- 修复后日志里有无新识图(证明同步路径跑通) ---"
-grep -F "图片表情识别" /root/bot_restart_2055.log 2>/dev/null | tail -3
+echo "===== 取证1:NapCat HTTP API端口(拿完整图URL) ====="
+echo "--- 监听端口 ---"
+ss -tlnp 2>/dev/null | grep -E "python|node|3000|5700|8080|6099|OneBot" | head -20
+echo "--- NapCat配置里的http/ws端口 ---"
+grep -rniE "\"port\"|http|ws" /root/NapCat/config/*.json /root/napcat/config/*.json 2>/dev/null | grep -iE "port|host" | head -20
+echo "--- bot连的ws地址 ---"
+grep -rniE "ws://|onebot/v11|port.*6099|host.*127" /root/bot/bot/.env* 2>/dev/null | head -10
 echo "=====完====="
 --- 输出 ---
-===== 端到端:引用图片同步识图(清缓存模拟首次) =====
-缓存现状: 有这张图= True
-wait=True 引用路径返回: 表情包
---- 修复后日志里有无新识图(证明同步路径跑通) ---
+===== 取证1:NapCat HTTP API端口(拿完整图URL) =====
+--- 监听端口 ---
+--- NapCat配置里的http/ws端口 ---
+--- bot连的ws地址 ---
+/root/bot/bot/.env.example:6:ONEBOT_WS_URL=ws://127.0.0.1:8080/onebot/v11/ws
 =====完=====
