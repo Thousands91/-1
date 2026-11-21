@@ -1,13 +1,14 @@
-287461
-echo "===== 回线补验:QQ真实实例+autoheal幽灵 ====="
-echo "--- QQ进程(正确模式,不限-q参数) ---"
-ps -eo pid,args | grep -E "opt/QQ/[q]q" | grep -v grep | grep -v "type=" | head -10
-echo "QQ主进程数: $(pgrep -f 'opt/QQ/[q]q' | wc -l) (含子进程)"
-echo "--- autoheal两实例启动时刻 ---"
-for p in $(pgrep -f 'bash /root/azar_autoheal.[s]h'); do ps -o pid,lstart,args -p $p | tail -1; done
-echo "--- 等25秒后autoheal是否自清 ---"
-sleep 25
-for p in $(pgrep -f 'bash /root/azar_autoheal.[s]h'); do ps -o pid,lstart -p $p | tail -1; done
-echo "--- WS连接探针尾 ---"
-tail -5 /root/connect_probe.log 2>/dev/null || tail -5 /root/link_probe.log 2>/dev/null || echo "(无探针日志)"
+287462
+echo "===== 卡片落地页取证:jumpUrl指向哪 ====="
+echo "--- 签名代理进程/文件版本 ---"
+ps -eo pid,args | grep -E "music_sign|sign_proxy|oiapi" | grep -v grep
+ls -la /root/music_sign*.py 2>/dev/null
+echo "--- 签名代理md5 ---"
+md5sum /root/music_sign*.py 2>/dev/null
+echo "--- PLAYER_PAGE/player_url配置(自建页痕迹) ---"
+grep -nE "PLAYER_PAGE|player_url|github.io|music_player|jumpUrl|jump" /root/music_sign*.py 2>/dev/null | head -20
+echo "--- 现场发卡日志(最近163卡jumpUrl) ---"
+grep -E "发卡|jumpUrl|自建页|PLAYER" /root/napcat-restart.log 2>/dev/null | tail -15
+echo "--- 自建页HTML在不在 ---"
+ls -la /root/music_player.html 2>/dev/null || echo "(设备无本地HTML,走Pages)"
 echo "=====完====="
