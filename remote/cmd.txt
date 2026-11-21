@@ -1,35 +1,19 @@
-287560
-python3 - <<'PY'
-import json, re, difflib, glob
-KW = ["钱袋子","羊皮纸","与书为伴","熟客","布缇娜","书架","记性","穷","没钱"]
-# 1) 该私聊用户记忆里,bot自己答的(r字段)含套话的条数
-f="/root/bot/bot/data/memory/1561950850.json"
-try:
-    d=json.load(open(f,encoding="utf-8"))
-    print("记忆总条数:", len(d))
-    hit_r=sum(1 for e in d if any(k in str(e.get("r","")) for k in KW))
-    hit_m=sum(1 for e in d if any(k in str(e.get("m","")) for k in KW))
-    print("记忆r字段(它自己答的)含套话条数:", hit_r)
-    print("记忆m字段(用户说的)含套话条数:", hit_m)
-    for e in d[-5:]:
-        r=str(e.get("r","")); m=str(e.get("m",""))
-        print("  m含套话=%d r含套话=%d"%(any(k in m for k in KW), any(k in r for k in KW)))
-except Exception as ex:
-    print("记忆读取失败:", type(ex).__name__)
-# 2) reply_sigs 该用户签名雷同度
-try:
-    sig=json.load(open("/root/bot/bot/data/reply_sigs.json",encoding="utf-8"))
-    arr=sig.get("0_1561950850",[])
-    print("签名条数:", len(arr))
-    pairs=0; head=0
-    for i in range(len(arr)):
-        for j in range(i+1,len(arr)):
-            a,b=arr[i],arr[j]
-            if a[:10]==b[:10]: head+=1
-            if difflib.SequenceMatcher(None,a,b).ratio()>=0.72: pairs+=1
-    print("签名对中前10字相同的对数:", head)
-    print("签名对中相似度>=0.72的对数:", pairs)
-except Exception as ex:
-    print("签名读取失败:", type(ex).__name__)
-print("=====完=====")
-PY
+287561
+echo "===== 探测设备 ai_chat.py 当前状态(坑161 A+C 部署前) ====="
+F=/root/bot/bot/plugins/ai_chat.py
+md5sum $F
+echo "--- 锚点1: _remember 写r 旧写法(应为1) ---"
+grep -F -c '        item["r"] = reply.strip()[:80]' $F
+echo "--- 锚点1原文 ---"
+grep -n -B2 -A1 'item\["r"\] = reply.strip' $F
+echo "--- 锚点2: _memory_block 拼r 旧写法(应为1) ---"
+grep -F -c 'lines.append(f"- {day}，他问：「{m}」，你当时答：「{r}」" if r else f"- {day}，他问：「{m}」")' $F
+echo "--- 锚点2原文 ---"
+grep -n '你当时答' $F
+echo "--- 锚点3: _sig_sim 旧0.72(应为1) ---"
+grep -F -c 'return difflib.SequenceMatcher(None, a, b).ratio() >= 0.72' $F
+echo "--- 锚点3原文 ---"
+grep -n -B5 'SequenceMatcher(None, a, b).ratio() >= 0.72' $F
+echo "--- 语法 ---"
+python3 -c "import ast; ast.parse(open('$F',encoding='utf-8').read()); print('OK')"
+echo "=====完====="
