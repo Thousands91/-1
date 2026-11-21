@@ -1,6 +1,7 @@
-287542
-echo "===== 验收:坑159重启后 ====="
-cat /root/q159restart_verify.log 2>/dev/null || echo "(无日志=重启未完成)"
-echo "--- 当前bot PID ---"
-ps -eo pid,args | grep '[m]ain.py'
+287543
+echo "===== 验收:坑159重启后WS真实连接 ====="
+echo "--- 连接相关(全量grep) ---"
+grep -iE "connected|WebSocket|ONEBOT|Bot 3427943187" /root/bot_restart_q159.log 2>/dev/null | tail -8
+echo "--- 日志尾(看有无异常) ---"
+tail -5 /root/bot_restart_q159.log 2>/dev/null
 echo "=====完====="
