@@ -1,12 +1,7 @@
-287517
-F=/root/bot/bot/plugins/ai_chat.py
-echo "===== 验收:引用图片识别落盘 ====="
-echo "--- 语法 ---"
-python3 -m py_compile "$F" && echo 语法OK || echo 语法FAIL
-echo "--- 关键行 ---"
-grep -nE "async def _image_sticker_name|_image_sticker_name\(_qu, wait=True\)|async def _do_caption|if wait:" "$F"
-echo "--- 确认旧调用已消失(应只剩定义+新调用) ---"
-grep -c "_image_sticker_name(_qu)" "$F"
-echo "--- 备份 ---"
-ls -la "$F".bak_quote_* 2>/dev/null | tail -2
+287518
+echo "===== 部署窗口检查 ====="
+echo "--- 最近90秒消息 ---"
+grep -E "11-21 20:(5[2-3]):.*message\.(group|private)" /root/bot_restart_1535.log 2>/dev/null | tail -8
+echo "--- 当前时间 ---"
+date '+%H:%M:%S'
 echo "=====完====="
