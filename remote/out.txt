@@ -1,20 +1,305 @@
-<<<task_287463.txt>>>
-===== 任务287463 11-21 12:51:59 =====
+<<<task_287464.txt>>>
+===== 任务287464 11-21 12:59:14 =====
 --- 命令 ---
-echo "===== 最近发卡字段实锤 ====="
-echo "--- bot日志里最近发卡记录(全平台) ---"
-for f in /root/bot.log /root/napcat.log /root/napcat-restart.log /root/bot_*.log; do
-  [ -f "$f" ] && grep -hE "\[发卡\]|jumpUrl|自建页|163官方卡|player_url|发卡" "$f" 2>/dev/null | tail -20
-done
-echo "--- 现场直接打一张小霞的卡(调签名代理看返回的jumpUrl) ---"
-TOK=$(curl -s -X POST http://127.0.0.1:8081/sign -d 'id= nonsense' 2>/dev/null | head -c 100)
-curl -s --max-time 10 "http://127.0.0.1:8081/" 2>/dev/null | head -c 200 || echo "(代理端口探测无响应,端口可能非8081)"
-echo "--- 签名代理监听端口 ---"
-ss -tlnp 2>/dev/null | grep -E "python3|7608|LISTEN" | head -15
+echo "===== 拉取music_sign.py完整源码 ====="
+cat /root/music_sign.py
 echo "=====完====="
 --- 输出 ---
-===== 最近发卡字段实锤 =====
---- bot日志里最近发卡记录(全平台) ---
---- 现场直接打一张小霞的卡(调签名代理看返回的jumpUrl) ---
---- 签名代理监听端口 ---
+===== 拉取music_sign.py完整源码 =====
+#!/usr/bin/env python3
+"""自托管音乐签名代理 v9（坑133：163卡片落地页改自建干净播放页,彻底去蓝条）
+
+v8（坑131：163卡片落地页用/m/song旧模板去底部蓝条）
+
+v7（坑130：musicUrl填网页致播放键播不了歌，改填真mp3直链）
+
+v6（坑129：jumpUrl指向oiapi.net放不了歌，加jump参数修）
+
+v5（2026-11-18 坑123：接入OIAPI全平台签名源）。
+
+重大升级（坑123翻案）：旧v3的4个上游（106.55.0.102/思思/qqbotark/llob）
+没一个支持 kuwo/kugou/migu/qq 官方卡契约——思思"异常拦截"、106只认custom、
+其余无响应。这就是酷我/酷狗/咪咕卡做不出的真正原因（签名源不对，不是技术不行）。
+
+v4 新增 OIAPI（https://oiapi.net/api/QQMusicJSONArk）作为首选上游：
+- format 支持 qq/163/kugou/kuwo/migu/mihoyo/bilibili... 全平台
+- 实测五个平台全部返回带 token 真卡，tag 分别是
+  酷我音乐/网易云音乐/酷狗音乐/咪咕音乐/QQ音乐
+- 返回体是 {"code":1,"message":"<卡JSON字符串>"}，需解出 message
+
+官方卡契约处理：NapCat 传来 {type:"kuwo",id:"128405"}，代理拼出平台URL，
+GET OIAPI format=kuwo&url=<拼好的url>，取出 message(卡JSON) 直接返回给 NapCat。
+custom 契约（有 url/image/title）继续走 OIAPI format=custom 或旧上游兜底。
+"""
+import json
+import random
+import threading
+import time
+import urllib.parse
+import urllib.request
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+PORT = 10800
+UIN = 3427943187
+UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+      "Content-Type": "application/json"}
+
+# OIAPI 全平台签名源（坑123新接入，首选）
+OIAPI = "https://oiapi.net/api/QQMusicJSONArk"
+
+# 旧上游（保留兜底，仅 custom 用）
+UPSTREAMS = [
+    "http://106.55.0.102:10087/",
+    "https://ss.xingzhige.com/music_card/card",
+    "https://qqbotark.569879.xyz/",
+    "https://llob.linyuchen.net/sign/music",
+]
+
+# 官方卡平台 → (OIAPI format, URL模板)
+OFFICIAL = {
+    "163":   ("163",   "https://music.163.com/song?id={id}"),
+    "qq":    ("qq",    "https://y.qq.com/n/ryqq/songDetail/{id}"),
+    "kuwo":  ("kuwo",  "https://www.kuwo.cn/play_detail/{id}"),
+    "kugou": ("kugou", "https://www.kugou.com/song/#hash={id}"),
+    "migu":  ("migu",  "https://music.migu.cn/v3/music/song/{id}"),
+}
+
+# 坑133: 自建干净播放页(托管在GitHub Pages,彻底去蓝条/去网易云引导)
+PLAYER_PAGE = "https://thousands91.github.io/-1/music_player.html"
+
+
+def player_url(song, singer, cover, sid):
+    """拼自建播放页URL:带歌名/歌手/封面/id。
+    坑133: 不传完整mp3直链(带&,会被OIAPI解码后当分隔符切断),
+    只传纯id,播放页用id现场拼meting音频。"""
+    q = urllib.parse.urlencode({
+        "title": song or "音乐", "singer": singer or "",
+        "cover": cover or "", "id": str(sid or ""),
+    })
+    return PLAYER_PAGE + "?" + q
+
+
+_cooldown = {}
+_lock = threading.Lock()
+_cache = {}
+
+
+def _log(msg):
+    with _lock:
+        print(time.strftime("%m-%d %H:%M:%S ") + msg, flush=True)
+
+
+def _http_get(url, timeout=12):
+    req = urllib.request.Request(url, headers=UA)
+    return urllib.request.urlopen(req, timeout=timeout).read()
+
+
+def oiapi_card(fmt, url, song="", singer="", cover="", jump=""):
+    """调 OIAPI 出卡，返回卡 JSON 字符串（已解出 message），失败返回 None。"""
+    params = {"format": fmt, "url": url}
+    # 坑129: OIAPI默认把 jumpUrl 写死成 http://oiapi.net/ (点卡片跳到API目录页,放不了歌)。
+    # 官方文档支持 jump 参数指定点击跳转链接;这里把平台歌曲链接作 jump 传入,token原样有效。
+    # 坑129+130: jumpUrl 用传入的 jump(歌曲页); musicUrl 用 url(真mp3直链)。
+    # 二者分离: 点卡片→跳歌曲页; 点封面播放键→播mp3。
+    jump_target = jump or url
+    if jump_target:
+        params["jump"] = jump_target
+    if song:
+        params["song"] = song
+    if singer:
+        params["singer"] = singer
+    if cover:
+        params["cover"] = cover
+    full = OIAPI + "?" + urllib.parse.urlencode(params)
+    try:
+        body = _http_get(full)
+        d = json.loads(body)
+        msg = d.get("message")
+        # 成功：code=1, message 是卡 JSON 字符串
+        if d.get("code") == 1 and isinstance(msg, str):
+            card = json.loads(msg)
+            if (card.get("config") or {}).get("token"):
+                _log(f"OIAPI出真卡 format={fmt} tag={card.get('meta',{}).get('music',{}).get('tag')} ({len(msg)}字节)")
+                return msg  # NapCat 要的是卡 JSON 字符串
+        _log(f"OIAPI无真卡 format={fmt} code={d.get('code')} msg={str(msg)[:60]}")
+    except Exception as e:
+        _log(f"OIAPI失败 format={fmt}: {type(e).__name__} {e}")
+    return None
+
+
+def audio_url(t, sid):
+    """坑130: 官方卡的 musicUrl 被OIAPI填成歌曲网页URL,播放键点下去QQ拿网页当音频播→放不了歌。
+    旧版能播是因为签名源把 musicUrl 填成真mp3直链。这里按平台拼出音频直链,
+    作为 url 参数传给OIAPI → OIAPI签发时把它写进 musicUrl 并一并签token(实测token覆盖)。
+    数据源沿用点歌插件同款公益源:
+      163  → meting netease (实测返回302到网易云CDN的mp3,481KB/首,可用)
+      qq   → meting tencent
+      kuwo → antiserver 直链
+      kugou/migu → 无稳定直链,返回"" (这些平台维持原样=跳网页,不倒退)
+    """
+    if t == "163":
+        return "https://api.injahow.cn/meting/?type=url&server=netease&id=" + str(sid)
+    if t == "qq":
+        return "https://api.injahow.cn/meting/?type=url&server=tencent&id=" + str(sid)
+    if t == "kuwo":
+        return ("http://antiserver.kuwo.cn/anti.s?type=convert_url"
+                "&format=mp3&response=url&rid=" + str(sid))
+    return ""
+
+
+def netease_meta(sid):
+    """旧路径兜底用：从网易云补齐歌讯。"""
+    if sid in _cache:
+        return _cache[sid]
+    url = "https://music.163.com/api/song/detail/?id=%s&ids=%%5B%s%%5D" % (sid, sid)
+    d = json.load(urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=4))
+    s = (d.get("songs") or [{}])[0]
+    r = (s.get("name", ""),
+         "/".join(a.get("name", "") for a in s.get("artists") or []),
+         (s.get("album") or {}).get("picUrl", ""))
+    _cache[sid] = r
+    return r
+
+
+def get_signed_card_legacy(payload):
+    """旧4上游兜底（仅 custom，返回 dict 卡）。"""
+    now = time.time()
+    for base in UPSTREAMS:
+        if _cooldown.get(base, 0) > now:
+            continue
+        try:
+            body = urllib.request.urlopen(
+                urllib.request.Request(base, data=json.dumps(payload).encode(), headers=UA),
+                timeout=8).read()
+            card = json.loads(body)
+            if isinstance(card, dict) and (card.get("config") or {}).get("token"):
+                _log("旧上游出真卡: %s (%d bytes)" % (base, len(body)))
+                return card
+        except Exception as e:
+            _log("旧上游失败: %s -> %s" % (base, e))
+        with _lock:
+            _cooldown[base] = time.time() + 300
+    return None
+
+
+class H(BaseHTTPRequestHandler):
+    protocol_version = "HTTP/1.1"
+
+    def _read_body(self):
+        te = (self.headers.get("Transfer-Encoding") or "").lower()
+        if "chunked" in te:
+            body = b""
+            while True:
+                line = self.rfile.readline(65536).strip()
+                if b";" in line:
+                    line = line.split(b";")[0]
+                try:
+                    size = int(line, 16)
+                except ValueError:
+                    break
+                if size == 0:
+                    self.rfile.readline(65536)
+                    break
+                body += self.rfile.read(size)
+                self.rfile.read(2)
+            return body
+        n = int(self.headers.get("Content-Length") or 0)
+        return self.rfile.read(n) if n else b""
+
+    def do_POST(self):
+        raw = self._read_body()
+        try:
+            d = json.loads(raw or b"{}")
+        except Exception:
+            d = {}
+            _log("请求体解析失败: %r" % raw[:200])
+        t = d.get("type", "?")
+        card_str = None  # NapCat 要的卡 JSON 字符串
+        try:
+            if t in OFFICIAL and d.get("id") is not None:
+                # 官方卡契约：kuwo/kugou/migu/qq/163 → OIAPI
+                fmt, tpl = OFFICIAL[t]
+                sid = str(d["id"])
+                url = tpl.format(id=sid)
+                # 坑124方案：酷狗/咪咕没有自己的搜索接口，点歌侧把"歌名"塞进 id。
+                # NapCat 官方卡契约只保证传 id、不一定传 title——没有 title 时
+                # 就把 id 当歌名喂 OIAPI（实测 format=kugou/migu + song=歌名 能出
+                # 正确 title 的真卡）。163/qq 有真实 id，保持原样不动。
+                song = d.get("title", "")
+                singer = d.get("singer", "")
+                cover = ""
+                # 坑128: NapCat官方卡常只传id不传title -> OIAPI无歌名出占位符卡。
+                # 163/qq 用 netease_meta 按id反查真歌名/歌手/封面; kugou/migu 沿用id当歌名。
+                if not song and t in ("163", "qq"):
+                    try:
+                        ns, na, np = netease_meta(sid)
+                        if ns: song, singer, cover = ns, (singer or na), (cover or np)
+                    except Exception as e:
+                        _log("netease_meta反查失败: %s" % e)
+                if not song and t in ("kugou", "migu", "kuwo"):
+                    song = sid
+                # 坑130: url(歌曲页)给jump用于点卡片跳转; audio_url(真mp3)给OIAPI的url参数
+                # → 签发进 musicUrl,让封面播放键能直接播。拿不到直链的平台维持用page(行为不变)。
+                au = audio_url(t, sid)
+                # 坑131: 163点卡片落地页用 /m/song 旧模板(无"和好友一起听歌"蓝条);
+                # 原 /song 会302到 y.music.163.com 新模板,底部注入蓝条。只改jump,播放(au)不变。
+                jump_url = url
+                if t == "163" and au:
+                    # 坑133: 163有mp3直链时,点卡片跳自建干净播放页(带真实歌曲信息,无蓝条/无引导)。
+                    # 封面缺失时补查一次(落地页要显示封面)。
+                    if not cover:
+                        try:
+                            _n, _a, cover = netease_meta(sid)
+                            if not singer: singer = _a
+                            if not song: song = _n
+                        except Exception:
+                            pass
+                    jump_url = player_url(song, singer, cover, sid)
+                elif t == "163":
+                    jump_url = "https://music.163.com/m/song?id=" + sid
+                card_str = oiapi_card(fmt, (au or url), jump=jump_url, song=song, singer=singer, cover=cover)
+                # 坑128: OIAPI熔断(503 UPSTREAM_CIRCUIT_OPEN)时切思思源兜底,官方卡不再全灭
+                if card_str is None:
+                    _log("OIAPI不可用,官方卡切旧上游兜底 type=%s" % t)
+                    payload = {"type": t, "id": sid, "title": song, "singer": singer,
+                               "url": url, "image": cover, "audio": ""}
+                    legacy = get_signed_card_legacy(payload)
+                    if legacy:
+                        card_str = json.dumps(legacy, ensure_ascii=False)
+            elif t == "custom" and (d.get("url") or d.get("title")):
+                # custom 卡：优先 OIAPI custom，失败退旧上游
+                card_str = oiapi_card("custom", d.get("url", ""),
+                                      song=d.get("title", ""), singer=d.get("singer", ""),
+                                      cover=d.get("image", ""))
+                if not card_str:
+                    payload = {"type": "custom", "singer": d.get("singer") or d.get("content") or "",
+                               "title": d.get("title", ""), "url": d.get("url", ""),
+                               "audio": d.get("audio", ""), "image": d.get("image", "")}
+                    card = get_signed_card_legacy(payload)
+                    card_str = json.dumps(card, ensure_ascii=False) if card else None
+            elif t == "163":
+                # 163 无 id 的极端情况
+                card_str = oiapi_card("163", "https://music.163.com/song?id=" + str(d.get("id", "")))
+        except Exception as e:
+            _log("build异常: %s" % e)
+
+        if card_str is None:
+            body = json.dumps({"error": "no live signer", "ok": False}).encode()
+            self.send_response(400)
+        else:
+            # 关键：NapCat 期望的是卡 JSON 字符串本身（不是包了一层的对象）
+            body = card_str.encode()
+            self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+        _log("处理完毕 type=%s -> %d bytes %s" % (t, len(body), "真卡" if card_str else "(全灭,走兜底)"))
+
+    def log_message(self, *a):
+        pass
+
+
+_log("music_sign v9 启动 127.0.0.1:%d (OIAPI全平台+旧源兜底)" % PORT)
+ThreadingHTTPServer(("127.0.0.1", PORT), H).serve_forever()
 =====完=====
