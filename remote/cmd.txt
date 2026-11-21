@@ -1,9 +1,12 @@
-287492
-echo "===== 验收3:新进程WS重连+收消息 ====="
-echo "--- bot_restart日志WS连接 ---"
-grep -iE "WebSocket|connected|connected to|OneBot V11|connected" /root/bot_restart_1121.log 2>/dev/null | tail -6
-echo "--- 新日志尾(是否在处理meta_event心跳) ---"
-tail -6 /root/bot_restart_1121.log 2>/dev/null
-echo "--- 文件更新时间与大小 ---"
-ls -la /root/bot_restart_1121.log
+287493
+echo "===== 取证:命令误触发历史(近3天) ====="
+L=/root/bot/bot/bot.log
+echo "--- fortune相关触发(抽签/翻书/运势/折卡) ---"
+grep -E "11-(19|20|21).*plugins.fortune" "$L" 2>/dev/null | wc -l
+echo "--- games riddle触发 ---"
+grep -E "11-(19|20|21).*plugins.games.*lineno=197" "$L" 2>/dev/null | wc -l
+echo "--- 这些matcher被触发时对应的用户原话(翻书/说书/听歌开头) ---"
+grep -E "11-(19|20|21).*message\.private.*'(翻书|说书|听歌|来首歌)" "$L" 2>/dev/null | tail -10
+echo "--- chess走被拦截但没棋局的总次数(修复前迹象) ---"
+grep -E "11-(19|20|21).*plugins.chess_game.*lineno=2(17|24)" "$L" 2>/dev/null | wc -l
 echo "=====完====="
