@@ -1,9 +1,9 @@
-287482
-echo "===== 铁证:get_msg成功+引用原文+bot回答 ====="
-echo "--- 31366~31390完整处理链 ---"
-sed -n '31366,31390p' /root/bot/bot/bot.log 2>/dev/null
-echo "--- get_msg失败WARNING总数(全日志) ---"
-grep -cF "get_msg 取引用失败" /root/bot/bot/bot.log 2>/dev/null
-echo "--- 被引用消息id=184272779 是不是bot自己14:28那条(搜发送) ---"
-grep -nE "11-21 14:2[7-9].*(逗我|站着说话|这回轮|上次我)" /root/bot/bot/bot.log 2>/dev/null | tail -5
+287483
+echo "===== 取证:14:44~14:48 没回复原因 ====="
+echo "--- 该时段所有消息+处理链 ---"
+grep -nE "11-21 14:(4[4-8]):" /root/bot/bot/bot.log 2>/dev/null | tail -80
+echo "--- 搜'走嘛走嘛'原文(全日志) ---"
+grep -nF "走嘛走嘛" /root/bot/bot/bot.log 2>/dev/null | tail -15
+echo "--- 模型降级/失败/限流 ---"
+grep -nE "11-21 14:(4[4-8]):.*(降级|失败|RateLimit|Error|异常|超时)" /root/bot/bot/bot.log 2>/dev/null | tail -20
 echo "=====完====="
