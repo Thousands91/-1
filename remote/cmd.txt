@@ -1,13 +1,46 @@
-287473
-echo "===== 取证:恢复自建页前现状 ====="
-echo "--- 当前music_sign.py关键行(232-250) ---"
-sed -n '232,250p' /root/music_sign.py
-echo "--- md5 ---"
-md5sum /root/music_sign*.py 2>/dev/null
-echo "--- 备份文件 ---"
-ls -la /root/music_sign* 2>/dev/null
-echo "--- PLAYER_PAGE/player_url 定义是否还在 ---"
-grep -nE "PLAYER_PAGE|def player_url|github.io|music_player" /root/music_sign.py | head -10
-echo "--- 当前代理进程 ---"
-ps -eo pid,args | grep '[m]usic_sign.py'
+287474
+echo "===== 恢复自建干净播放页:去掉and False(坑133方案) ====="
+echo "--- 改前关键行 ---"
+grep -n 'and False and au' /root/music_sign.py
+cp /root/music_sign.py /root/music_sign.py.bak_official_$(date +%m%d%H%M)
+# 反向操作:恢复坑133自建页分支,让163有直链时跳自建干净播放页(无蓝条)
+sed -i 's/if t == "163" and False and au:/if t == "163" and au:/' /root/music_sign.py
+echo "--- 改后关键行 ---"
+grep -n 'if t == "163" and au:' /root/music_sign.py
+echo "--- 语法检查 ---"
+python3 -m py_compile /root/music_sign.py && echo "语法OK" || echo "语法FAIL-不重启"
+echo "--- md5(应精确回到54fae249=v10定稿,交叉验证只动了这一行) ---"
+md5sum /root/music_sign.py
+# 延迟重启代理+打真卡验证(本任务命令行含music_sign.py,同进程pkill会自杀,故延迟)
+if [ ! -f /root/.playerrestore_armed ]; then
+  touch /root/.playerrestore_armed
+  cat > /root/.playerrestore.sh <<'EOS'
+#!/bin/bash
+sleep 20
+pkill -f '[m]usic_sign.py' 2>/dev/null
+sleep 2
+cd /root && setsid nohup python3 /root/music_sign.py >> /root/music_sign.log 2>&1 < /dev/null &
+sleep 4
+{
+  echo "=== $(date '+%m-%d %H:%M:%S') 重启后进程 ==="
+  ps -eo pid,args | grep '[m]usic_sign.py'
+  echo "=== 打真卡验证(正确解析:代理返回体即卡JSON,无message外层) ==="
+  python3 - <<'PYEOF'
+import json,urllib.request
+body=json.dumps({"type":"163","id":"284799"}).encode()
+req=urllib.request.Request("http://127.0.0.1:10800/",data=body,headers={"Content-Type":"application/json"})
+card=json.loads(urllib.request.urlopen(req,timeout=25).read().decode(errors='replace'))
+m=(card.get("meta") or {}).get("music") or {}
+print("tag:",m.get("tag"))
+print("jumpUrl:",m.get("jumpUrl"))
+print("musicUrl:",m.get("musicUrl"))
+print("token:",bool((card.get("config") or {}).get("token")))
+PYEOF
+} > /root/playerrestore_verify.log 2>&1
+rm -f /root/.playerrestore_armed
+EOS
+  chmod +x /root/.playerrestore.sh
+  setsid nohup bash /root/.playerrestore.sh >/dev/null 2>&1 </dev/null &
+  echo "延迟手术已挂载(20秒后重启代理+打真卡验证)"
+fi
 echo "=====完====="
