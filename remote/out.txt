@@ -1,44 +1,24 @@
-<<<task_287531.txt>>>
-===== 任务287531 11-21 21:30:54 =====
+<<<task_287532.txt>>>
+===== 任务287532 11-21 21:33:13 =====
 --- 命令 ---
-echo "===== 14:31:16 WARNING完整内容 ====="
 L=/root/bot/bot/bot.log
-sed -n '31378,31392p' "$L"
-echo "--- 所有ai_chat WARNING(11-21) ---"
-grep -nE "11-21.*\[WARNING\] ai_chat" "$L" | head -20
+echo "===== 31374-31380 ====="
+sed -n '31374,31380p' "$L"
+echo "===== get_msg失败全部(11-21) ====="
+grep -nF "get_msg 取引用失败" "$L" | grep "11-21" | head -10
+echo "===== ai_chat WARNING总数(11-21) ====="
+grep -cE "11-21.*\[WARNING\] ai_chat" "$L"
 echo "=====完====="
 --- 输出 ---
-===== 14:31:16 WARNING完整内容 =====
+===== 31374-31380 =====
+11-21 14:31:16 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-21 14:31:18 [INFO] ai_chat | [核对·调试] ask='你刚才说的话' lead=False contra=False agree=False dodge=False ans='（放下手中的书，眉头微皱）先生，您这记性怕是比不上我的书架。上次说好什么'
+11-21 14:31:18 [INFO] ai_chat | [防复读] 与近期回复雷同，重答：'（放下手中的书，眉头微皱）先生，您这记性怕是比不'
+11-21 14:31:18 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
 11-21 14:31:20 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795242680, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
 11-21 14:31:22 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795242682, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
 11-21 14:31:26 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1374) running complete
-11-21 14:31:40 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795242700, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
-11-21 14:31:41 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795242701, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-21 14:31:41 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795242701, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-21 14:31:41 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1224619198 from 1561950850 '。。'
-11-21 14:31:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=101)
-11-21 14:31:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=197)
-11-21 14:31:41 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=101) running complete
-11-21 14:31:41 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=197) running complete
-11-21 14:31:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-21 14:31:41 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-21 14:31:41 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1374)
-11-21 14:31:42 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
---- 所有ai_chat WARNING(11-21) ---
-31256:11-21 14:26:12 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-31264:11-21 14:26:20 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-31281:11-21 14:27:11 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-31356:11-21 14:30:20 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-31374:11-21 14:31:16 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-31377:11-21 14:31:18 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-31392:11-21 14:31:42 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-31397:11-21 14:31:50 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-31408:11-21 14:31:53 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-31447:11-21 14:33:22 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
-31448:11-21 14:33:30 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-31542:11-21 14:38:03 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-31544:11-21 14:38:11 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-31578:11-21 14:40:34 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-31647:11-21 14:48:43 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
-31650:11-21 14:48:52 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+===== get_msg失败全部(11-21) =====
+===== ai_chat WARNING总数(11-21) =====
+16
 =====完=====
