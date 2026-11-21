@@ -1,41 +1,46 @@
-<<<task_287507.txt>>>
-===== 任务287507 11-21 15:39:25 =====
+<<<task_287508.txt>>>
+===== 任务287508 11-21 15:41:11 =====
 --- 命令 ---
-echo "===== 验收:bot重启后天气插件 ====="
-echo "--- 重启验证日志 ---"
-cat /root/botrestart_weather_verify.log 2>/dev/null || echo "(无=未执行)"
-echo "--- 当前bot PID ---"
-ps -eo pid,args | grep '[m]ain.py'
-echo "--- 登录态最新 ---"
-tail -2 /root/login_state.log 2>/dev/null
-echo "--- weather插件在不在加载列表 ---"
-grep -i "weather" /root/bot_restart_1535.log 2>/dev/null | grep -iE "load|plugin" | tail -3
+echo "===== 端到端:设备新代码打真实天气 ====="
+cd /root/bot/bot
+OPENAI_API_KEY=sandbox-test-key /root/bot/venv/bin/python -c "
+import nonebot, asyncio
+nonebot.init()
+from nonebot.adapters.onebot.v11 import Adapter
+nonebot.get_driver().register_adapter(Adapter)
+from plugins.weather import get_wttr, get_open_meteo
+async def main():
+    print('=== 主源get_wttr(广州) ===')
+    a = await get_wttr('广州')
+    print(a if a else '(主源失败→会兜底)')
+    print('=== 兜底get_open_meteo(广州) 可用性 ===')
+    b = await get_open_meteo('广州')
+    print(('OK '+b.splitlines()[0]) if b and '翻不开' not in b else ('兜底也失败: '+str(b)[:60]))
+asyncio.run(main())
+" 2>&1 | grep -v "nonebot |"
+echo "--- WS连接确认(新日志) ---"
+grep -iE "connected|WebSocket|Bot .*connected" /root/bot_restart_1535.log 2>/dev/null | tail -3
 echo "=====完====="
 --- 输出 ---
-===== 验收:bot重启后天气插件 =====
---- 重启验证日志 ---
-=== 11-21 15:37:47 重启后 ===
-新PID: 1317
---- 插件加载 ---
-11-21 15:37:44 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
-11-21 15:37:45 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
-11-21 15:37:45 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
-11-21 15:37:46 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
-11-21 15:37:46 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
-11-21 15:37:46 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
-11-21 15:37:46 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
-11-21 15:37:46 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
-11-21 15:37:47 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
-11-21 15:37:47 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-11-21 15:37:47 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
---- WS连接 ---
---- 失败数 ---
-0
---- 当前bot PID ---
- 1317 /root/bot/venv/bin/python main.py
---- 登录态最新 ---
-2026-11-21 15:32:26 [在线]
-2026-11-21 15:37:27 [在线]
---- weather插件在不在加载列表 ---
-11-21 15:37:46 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
+===== 端到端:设备新代码打真实天气 =====
+=== 主源get_wttr(广州) ===
+🕯️ 广州此刻的天
+─────────────
+气温　20°C（体感 18°C）
+天气　多云
+风向　东北偏北 7 km/h
+湿度　38%
+
+往后三日
+今日　晴间多云　12～20°C　雨 21%
+11月22日　烟霾　15～20°C　雨 15%
+11月23日　小雨　17～22°C　雨 73%
+
+出门的话，记得看一眼再走。
+=== 兜底get_open_meteo(广州) 可用性 ===
+OK 🕯️ 广州（广东）此刻的天
+--- WS连接确认(新日志) ---
+11-21 15:37:52 [INFO] uvicorn | 127.0.0.1:60364 - "WebSocket /onebot/v11/ws" [accepted]
+11-21 15:37:52 [INFO] websockets | connection open
+11-21 15:37:52 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
 =====完=====
