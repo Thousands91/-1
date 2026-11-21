@@ -1,9 +1,8 @@
-287580
-echo "===== WS修复验收 $(date '+%T') ====="
-cat /root/wsfix_verify.log 2>/dev/null || echo "(验收日志还没写完)"
-echo "--- link_probe最新心跳(重启后应有新的connect) ---"
-tail -6 /root/link_probe.log 2>/dev/null
-echo "--- 当前登录态 ---"; tail -2 /root/login_state.log 2>/dev/null
-echo "--- remote_ctl实时消息活动(最近20行含ask/接收) ---"
-tail -40 /root/remote_ctl.log 2>/dev/null | grep -E 'ask=|接收 <-|LIFECYCLE|connected|发生错误' | tail -10
+287581
+echo "===== WS修复完整验收 $(date '+%T') ====="
+cat /root/wsfix_verify.log 2>/dev/null || echo "(还没写完)"
+echo "--- HEARTBEAT最新(应有good=True) ---"
+grep 'HEARTBEAT' /root/link_probe.log 2>/dev/null | tail -3
+echo "--- bot进程 ---"; ps -eo pid,etime,args | grep '[m]ain.py'
+echo "--- 登录态 ---"; tail -2 /root/login_state.log 2>/dev/null
 echo "=====完====="
