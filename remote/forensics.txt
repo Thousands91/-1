@@ -1,6 +1,6 @@
-===== 掉线取证 v2.0 2026-11-21 20:36:47 CST =====
+===== 掉线取证 v2.0 2026-11-21 22:28:30 CST =====
 【判定类型】静默离线(SelfOffline/status20)-服务端作废会话无原因码
-【触发原文】11-21 20:36:29 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+【触发原文】11-21 22:28:17 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
 
 ---- ① 自动判定(秒级时间轴) ----
 静默离线(最新): (无时间戳)
@@ -9,6 +9,7 @@ GPU崩溃(最新): 11-21 12:40:11
 
 ---- ② 完整时间轴(离线/被踢/GPU,按时间排序) ----
 (无时间戳) | 静默离线(status20) | 11-21 20:36:29 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+(无时间戳) | 静默离线(status20) | 11-21 22:28:17 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
 11-21 12:40:11 | GPU崩溃 | [22212:1121/124011.971719:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
 11-21 12:40:11 | GPU崩溃 | [22212:1121/124011.976879:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
 11-21 12:40:11 | GPU崩溃 | [22212:1121/124011.980425:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
@@ -19,58 +20,58 @@ GPU崩溃(最新): 11-21 12:40:11
 (本次无KickedOffLine → 静默离线,腾讯未下发原因码)
 
 ---- ④ 网络心跳(事发前后) ----
-11-21 20:23:28 ping=FAILms batt=
-11-21 20:24:30 ping=FAILms batt=
-11-21 20:25:33 ping=FAILms batt=
-11-21 20:26:35 ping=FAILms batt=
-11-21 20:27:37 ping=FAILms batt=
-11-21 20:28:40 ping=FAILms batt=
-11-21 20:29:42 ping=FAILms batt=
-11-21 20:30:45 ping=FAILms batt=
-11-21 20:31:47 ping=FAILms batt=
-11-21 20:32:53 ping=FAILms batt=
-11-21 20:33:58 ping=FAILms batt=
-11-21 20:35:28 ping=FAILms batt=
+11-21 22:16:16 ping=FAILms batt=
+11-21 22:17:19 ping=FAILms batt=
+11-21 22:18:21 ping=FAILms batt=
+11-21 22:19:23 ping=FAILms batt=
+11-21 22:20:26 ping=FAILms batt=
+11-21 22:21:28 ping=FAILms batt=
+11-21 22:22:30 ping=FAILms batt=
+11-21 22:23:33 ping=FAILms batt=
+11-21 22:24:44 ping=FAILms batt=
+11-21 22:25:49 ping=FAILms batt=
+11-21 22:26:54 ping=FAILms batt=
+11-21 22:28:17 ping=FAILms batt=
 -- 即时网络 --
-2 packets transmitted, 0 received, 100% packet loss, time 1008ms
+2 packets transmitted, 0 received, 100% packet loss, time 1027ms
 
 
 ---- ⑤ 系统状态 ----
- 20:36:51 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
+ 22:28:35 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
                total        used        free      shared  buff/cache   available
-Mem:            5571        3149          50          24        2371        2159
+Mem:            5571        3194         253          23        2123        2115
 /dev/block/by-name/userdata  111G  102G  9.1G  92% /
 电量: 
 QQ进程数: 5
 
 ---- ⑥ 连接探针(WS层权威信号,lifecycle/heartbeat) ----
-[11-20 12:01:37.684] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
-[11-21 12:41:05.381] LIFECYCLE sub_type=connect self_id=3427943187
-[11-21 15:00:45.857] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
-[11-21 15:00:48.965] LIFECYCLE sub_type=connect self_id=3427943187
-[11-21 15:01:15.386] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
-[11-21 15:37:48.074] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
-[11-21 15:37:52.236] LIFECYCLE sub_type=connect self_id=3427943187
-[11-21 15:38:15.948] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-21 20:57:59.127] LIFECYCLE sub_type=connect self_id=3427943187
+[11-21 20:58:24.871] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-21 21:39:48.602] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-21 21:39:49.859] LIFECYCLE sub_type=connect self_id=3427943187
+[11-21 21:39:55.387] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-21 22:07:05.546] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-21 22:07:10.022] LIFECYCLE sub_type=connect self_id=3427943187
+[11-21 22:07:26.716] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
 
 ---- ⑦ 环境指纹与配置(定位'为什么被踢'的关键变量) ----
-出口IP: 2026-11-21 20:19:40 14.19.177.57
+出口IP: 2026-11-21 22:19:54 14.19.177.57
 QQ版本: 9.9.22
 NapCat版本: 3.2.34
 反检测配置: "o3HookMode": 1 "bypass" "hook": false "window": false "module": false "process": false "container": false "js": false 
 WS心跳间隔: "heartInterval": 30000
 登录方式: qrcode
-登录态台账尾: 2026-11-21 20:23:44 [在线] 2026-11-21 20:28:46 [在线] 2026-11-21 20:33:50 [在线] 
+登录态台账尾: 2026-11-21 22:14:40 [在线] 2026-11-21 22:19:41 [在线] 2026-11-21 22:24:45 [在线] 
 
 ---- ⑧ 日志尾部 ----
-11-21 20:35:55 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [快乐的基友在一起🌱(1109952783)] [砚舟(3823767995)] [回复消息 未找到消息记录 (MsgId = 0)] 因为我想把我小号弄进来 @长太息以笑希希，乐希希之多艰 (553414459)  
-11-21 20:35:56 [[33mwarn[39m] 阿萨尔 | 似乎是旧版客户端，尝试仅通过序号获取引用消息 96069
-11-21 20:36:27 [[31merror[39m] 阿萨尔 | 发生错误 Error: 消息不存在或已被撤回: PromiseTimer: Operation timed out
-    at file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:78607:75
-    at async o_e._handle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:78603:154)
-    at async o_e.websocketHandle (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:36621:17)
-    at async pO.handleMessage (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:67875:15)
-11-21 20:36:29 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-a61460d89938f4b0ad0ff4bda27ca3f965a3829494868ca75a3c3800704e1813
-11-21 20:36:48 [[32minfo[39m] 阿萨尔 | 接收 <- 群聊 [相亲相爱一家人(590454333)] [小笨冉蛋(1617095026)] [图片]
+c711432511a7a703227d238e517c8c783db33b7f12193f43a55a67ecab57855a
+11-21 22:27:47 [[31merror[39m] 阿萨尔 | 发生错误 Error: Timeout: NTEvent serviceAndMethod:NodeIKernelMsgService/sendMsg ListenerName:NodeIKernelMsgListener/onMsgInfoListUpdate EventRet:
+{}
+
+    at f (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:30561:9)
+    at Timeout._onTimeout (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:30571:36)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+11-21 22:28:17 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+0817bbffd2719259b8d2a5ce8b66711b469e9ac5b105f6a6eef0a4227e93d721
 ===== 取证结束 =====
