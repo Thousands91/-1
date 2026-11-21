@@ -1,13 +1,8 @@
-287553
-echo "===== 只读确认:扫码后登录态+WS心跳+bot进程 ====="
-echo "--- 当前时刻 ---"
-date '+%F %T'
-echo "--- login_state.log 尾8 ---"
-tail -8 /root/login_state.log 2>/dev/null
-echo "--- link_probe.log 尾10 ---"
-tail -10 /root/link_probe.log 2>/dev/null
-echo "--- azar_login_run.log 尾6 ---"
-tail -6 /root/azar_login_run.log 2>/dev/null
-echo "--- bot 主进程 ---"
-ps -ef | grep -E 'bot.py|nonebot|python.*bot' | grep -v grep | head -5
+287554
+echo "===== 探测设备 song_request.py 当前状态(坑160订正前) ====="
+F=/root/bot/bot/plugins/song_request.py
+echo "--- md5 ---"; md5sum "$F" 2>/dev/null
+echo "--- 锚点1(旧判失败,应为1) ---"; grep -F -c 'return None, sec, "试听片段"' "$F" 2>/dev/null
+echo "--- 锚点2(旧deliver无标注,probe行,应为1) ---"; grep -F -c 'probe(sec, len(audio), "ok", "")' "$F" 2>/dev/null
+echo "--- 新标注(应为0) ---"; grep -F -c '是 {sec} 秒的试听片段' "$F" 2>/dev/null
 echo "=====完====="
