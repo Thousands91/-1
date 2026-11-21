@@ -1,2 +1,48 @@
-<<<ALERT.txt>>>
-2026-11-22 00:47:05 阿萨尔已恢复在线
+<<<task_287553.txt>>>
+===== 任务287553 11-22 00:50:52 =====
+--- 命令 ---
+echo "===== 只读确认:扫码后登录态+WS心跳+bot进程 ====="
+echo "--- 当前时刻 ---"
+date '+%F %T'
+echo "--- login_state.log 尾8 ---"
+tail -8 /root/login_state.log 2>/dev/null
+echo "--- link_probe.log 尾10 ---"
+tail -10 /root/link_probe.log 2>/dev/null
+echo "--- azar_login_run.log 尾6 ---"
+tail -6 /root/azar_login_run.log 2>/dev/null
+echo "--- bot 主进程 ---"
+ps -ef | grep -E 'bot.py|nonebot|python.*bot' | grep -v grep | head -5
+echo "=====完====="
+--- 输出 ---
+===== 只读确认:扫码后登录态+WS心跳+bot进程 =====
+--- 当前时刻 ---
+2026-11-22 00:50:52
+--- login_state.log 尾8 ---
+2026-11-22 00:15:02 [未登录]
+2026-11-22 00:20:03 [未登录]
+2026-11-22 00:25:03 [未登录]
+2026-11-22 00:30:04 [未登录]
+2026-11-22 00:35:05 [未登录]
+2026-11-22 00:40:06 [未登录]
+2026-11-22 00:45:07 [未登录]
+2026-11-22 00:50:08 状态变化: [未登录] -> [在线]
+--- link_probe.log 尾10 ---
+[11-21 20:58:24.871] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-21 21:39:48.602] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-21 21:39:49.859] LIFECYCLE sub_type=connect self_id=3427943187
+[11-21 21:39:55.387] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-21 22:07:05.546] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-21 22:07:10.022] LIFECYCLE sub_type=connect self_id=3427943187
+[11-21 22:07:26.716] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-21 22:34:03.235] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-22 00:46:20.226] LIFECYCLE sub_type=connect self_id=3427943187
+[11-22 00:46:49.891] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+--- azar_login_run.log 尾6 ---
+#   用另一台手机的QQ扫一扫 -> 确认登录                       #
+############################################################
+
+==> 第 5 步：盯着登录结果
+[12:57:58] 二维码刷新了，已复制新的到相册，请重新扫码
+!! 10 分钟没等到登录成功。重新运行本脚本再试一轮。
+--- bot 主进程 ---
+=====完=====
