@@ -1,36 +1,24 @@
-<<<task_287519.txt>>>
-===== 任务287519 11-21 20:57:29 =====
+<<<task_287520.txt>>>
+===== 任务287520 11-21 20:59:48 =====
 --- 命令 ---
-echo "===== 重启bot(引用图片修复生效) ====="
-if [ ! -f /root/.botrestart_armed ]; then
-  touch /root/.botrestart_armed
-  cat > /root/.botrestart.sh <<'SH'
-#!/bin/bash
-sleep 8
-OLDPID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
-echo "旧PID:$OLDPID"
-[ -n "$OLDPID" ] && kill "$OLDPID"
-sleep 3
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot_restart_2055.log 2>&1 < /dev/null &
-sleep 12
-{
-  echo "=== $(date '+%m-%d %H:%M:%S') 重启后 ==="
-  echo "新PID: $(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}')"
-  echo "--- 插件加载数/失败数 ---"
-  echo "成功: $(grep -c 'Succeeded to load plugin' /root/bot_restart_2055.log 2>/dev/null) 失败: $(grep -c 'Failed to load plugin' /root/bot_restart_2055.log 2>/dev/null)"
-  echo "--- ai_chat在列 ---"
-  grep -i 'load plugin "ai_chat"' /root/bot_restart_2055.log 2>/dev/null | tail -1
-  echo "--- WS连接 ---"
-  grep -iE "Bot .*connected" /root/bot_restart_2055.log 2>/dev/null | tail -1
-} > /root/botrestart_quote_verify.log 2>&1
-rm -f /root/.botrestart_armed
-SH
-  chmod +x /root/.botrestart.sh
-  setsid nohup bash /root/.botrestart.sh >/dev/null 2>&1 </dev/null &
-  echo "延迟重启已挂"
-fi
+echo "===== 验收:bot重启后状态 ====="
+cat /root/botrestart_quote_verify.log 2>/dev/null || echo "(无=未执行)"
+echo "--- 当前bot PID ---"
+ps -eo pid,args | grep '[m]ain.py'
+echo "--- 登录态 ---"
+tail -2 /root/login_state.log 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-===== 重启bot(引用图片修复生效) =====
-延迟重启已挂
+===== 验收:bot重启后状态 =====
+=== 11-21 20:57:53 重启后 ===
+新PID: 22640
+--- 插件加载数/失败数 ---
+成功: 0 失败: 0
+--- ai_chat在列 ---
+--- WS连接 ---
+--- 当前bot PID ---
+22640 /root/bot/venv/bin/python main.py
+--- 登录态 ---
+2026-11-21 20:53:57 [在线]
+2026-11-21 20:58:58 [在线]
 =====完=====
