@@ -1,4 +1,4 @@
-287465
-echo "===== music_sign.py 80行以后 ====="
-sed -n '80,300p' /root/music_sign.py
+287466
+echo "===== music_sign.py 150行到结尾 ====="
+sed -n '150,400p' /root/music_sign.py
 echo "=====完====="
