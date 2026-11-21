@@ -1,16 +1,11 @@
-287546
-echo "===== 确认坑160替换是否落地 ====="
-cd /root/bot/bot/plugins
-echo "--- md5 ---"
-md5sum song_request.py
-echo "--- 试听片段出现次数(应>=2) ---"
-grep -F -c '试听片段' song_request.py
-echo "--- 新判据(应为1) ---"
-grep -F -c 's.get("fee") == 1 and sec and sec < 60' song_request.py
-echo "--- 精准话术(应为1) ---"
-grep -F -c '秒试听片段，' song_request.py
-echo "--- 语法 ---"
-python3 -m py_compile song_request.py && echo "语法OK" || echo "语法FAIL"
-echo "--- 备份文件 ---"
-ls -1 song_request.py.bak_vip160_* 2>/dev/null | tail -3
+287547
+echo "===== 重启前:确认QQ登录态与WS在线(坑160) ====="
+echo "--- 登录态台账尾 ---"
+tail -6 /root/bot_login_status.log 2>/dev/null || find /root -maxdepth 2 -iname "*login*status*" -o -iname "*login*.log" 2>/dev/null | head
+echo "--- 最近10分钟账号状态变更(日志) ---"
+grep -E "账号状态变更|掉线|上线|已连接|WebSocket" /root/Napcat/*.log /root/Napcat/**/*.log 2>/dev/null | tail -10
+echo "--- link_probe心跳文件尾 ---"
+find /root -maxdepth 2 -iname "*link*probe*" 2>/dev/null | head -3 | while read f; do echo "[$f]"; tail -5 "$f"; done
+echo "--- QQ进程数 ---"
+pgrep -fc "QQ|napcat" 2>/dev/null
 echo "=====完====="
