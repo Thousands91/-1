@@ -1,8 +1,11 @@
-287486
-echo "===== 定位设备chess_game.py ====="
-find /root -name "chess_game.py" 2>/dev/null
-echo "--- 关键行(move_cmd/gid_of) ---"
-for f in $(find /root -name "chess_game.py" 2>/dev/null); do
-  echo "文件:$f"; grep -nE "move_cmd = on_command|def gid_of|resign_cmd = on_command|end_cmd = on_command" "$f"; md5sum "$f"
-done
+287487
+echo "===== 部署前检查 ====="
+echo "--- bot进程PID ---"
+ps -eo pid,args | grep '[m]ain.py' | head -3
+echo "--- 最近1分钟有无消息互动(游戏局/对话) ---"
+grep -E "11-21 14:(5[1-9]):.*message\.private" /root/bot/bot/bot.log 2>/dev/null | tail -8
+echo "--- 登录态 ---"
+cat /root/login_state.log 2>/dev/null | tail -3
+echo "--- 当前时间 ---"
+date '+%m-%d %H:%M:%S'
 echo "=====完====="
