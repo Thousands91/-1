@@ -1,6 +1,9 @@
-287550
-echo "===== 验收:坑160重启后状态 ====="
-cat /root/v160restart_verify.log 2>/dev/null || echo "验证日志还没生成"
-echo "--- link_probe心跳尾(WS真实在线信号) ---"
-tail -6 /root/link_probe.log 2>/dev/null
+287551
+echo "===== 复查登录态是否自愈(坑160) ====="
+echo "--- login_state 尾5 ---"
+tail -5 /root/login_state.log 2>/dev/null
+echo "--- link_probe 尾8 ---"
+tail -8 /root/link_probe.log 2>/dev/null
+echo "--- 当前时刻 ---"
+date '+%F %T'
 echo "=====完====="
