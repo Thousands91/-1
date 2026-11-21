@@ -1,9 +1,9 @@
-287476
-echo "===== 取证:bot是否识别引用文字 ====="
-echo "--- 最近日志里get_msg取引用记录 ---"
-grep -hE "get_msg|取引用|引用了一条消息|引用.*失败" /root/bot.log /root/napcat.log /root/bot_*.log 2>/dev/null | tail -20
-echo "--- 14:28~14:32时段日志(触发+引用) ---"
-grep -hE "14:(2[8-9]|3[0-2])" /root/bot.log /root/bot_*.log 2>/dev/null | grep -iE "引用|quote|get_msg|消息|question|提问" | tail -20
-echo "--- 最新日志尾(看刚这次对话) ---"
-tail -30 /root/bot.log 2>/dev/null
+287477
+echo "===== 定位bot日志 ====="
+echo "--- 所有可能的日志文件 ---"
+find /root -maxdepth 3 -type f \( -name "*.log" -o -name "bot*.txt" \) 2>/dev/null | head -40
+echo "--- bot进程 ---"
+ps -eo pid,args | grep -iE "bot|nonebot|go-cqhttp|napcat" | grep -v grep | head -15
+echo "--- 含引用的日志(全盘找) ---"
+grep -rlE "对方引用了一条消息|get_msg 取引用失败" /root --include="*.log" 2>/dev/null | head -10
 echo "=====完====="
