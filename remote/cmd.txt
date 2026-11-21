@@ -1,10 +1,10 @@
-287569
+287570
 cd /root/bot
 /root/bot/venv/bin/python - <<'PY'
 # 设备端端到端:用bot真实venv跑设备自己的 ai_chat.py,验证 A+C 真实代码行为
 import nonebot; nonebot.init()
 import sys, difflib
-sys.path.insert(0, "/root/bot")
+sys.path.insert(0, "/root/bot/bot")
 import plugins.ai_chat as m
 
 src=open("/root/bot/bot/plugins/ai_chat.py",encoding="utf-8").read()
