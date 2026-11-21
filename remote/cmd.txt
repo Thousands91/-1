@@ -1,9 +1,9 @@
-287491
-echo "===== 验收2:chess_game加载+WS重连 ====="
-echo "--- 新进程启动日志里所有插件加载 ---"
-grep -E "Succeeded to load plugin|Failed to load plugin" /root/bot_restart_1121.log 2>/dev/null
-echo "--- chess_game是否在列 ---"
-grep -c 'chess_game' /root/bot_restart_1121.log 2>/dev/null
-echo "--- 主bot.log最新(WS重连) ---"
-tail -8 /root/bot/bot/bot.log 2>/dev/null
+287492
+echo "===== 验收3:新进程WS重连+收消息 ====="
+echo "--- bot_restart日志WS连接 ---"
+grep -iE "WebSocket|connected|connected to|OneBot V11|connected" /root/bot_restart_1121.log 2>/dev/null | tail -6
+echo "--- 新日志尾(是否在处理meta_event心跳) ---"
+tail -6 /root/bot_restart_1121.log 2>/dev/null
+echo "--- 文件更新时间与大小 ---"
+ls -la /root/bot_restart_1121.log
 echo "=====完====="
