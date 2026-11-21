@@ -1,9 +1,21 @@
-287558
-echo "===== 确认重启后WS真实连接(link_probe心跳) ====="
-echo "--- link_probe.log 尾10 ---"
-tail -10 /root/link_probe.log 2>/dev/null
-echo "--- bot_restart_v160b.log 里连接相关 ---"
-grep -iE "connected|heartbeat|lifecycle|WebSocket" /root/bot_restart_v160b.log 2>/dev/null | tail -8
-echo "--- 当前时刻 ---"
-date '+%F %T'
+287559
+echo "===== 探测复读/答非所问:设备记忆+签名+日志 ====="
+echo "--- 设备 memory 目录 ---"
+ls -la /root/bot/bot/data/memory/ 2>/dev/null
+echo "--- 各记忆文件条数与尾部(找钱袋子/布缇娜/羊皮纸) ---"
+for f in /root/bot/bot/data/memory/*.json; do
+  echo "### $f"
+  grep -o '钱袋子\|布缇娜\|羊皮纸\|与书为伴\|熟客\|书架\|没钱' "$f" 2>/dev/null | sort | uniq -c
+  tail -c 500 "$f" 2>/dev/null
+  echo
+done
+echo "--- reply_sigs.json ---"
+cat /root/bot/bot/data/reply_sigs.json 2>/dev/null | head -c 1500
+echo
+echo "--- 找bot运行日志文件 ---"
+ls -lat /root/*.log /root/bot/*.log /root/bot/bot/*.log 2>/dev/null | head -15
+echo "--- 日志里最近的[核对·调试]/[防复读]/钱袋子 ---"
+for L in /root/bot_restart_v160b.log /root/bot/nohup.log /root/bot/bot/nohup.log; do
+  [ -f "$L" ] && { echo "### $L"; grep -E '核对·调试|防复读|钱袋子|布缇娜|羊皮纸' "$L" 2>/dev/null | tail -20; }
+done
 echo "=====完====="
