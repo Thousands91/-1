@@ -1,12 +1,12 @@
-<<<task_287569.txt>>>
-===== 任务287569 11-22 01:50:04 =====
+<<<task_287570.txt>>>
+===== 任务287570 11-22 01:52:01 =====
 --- 命令 ---
 cd /root/bot
 /root/bot/venv/bin/python - <<'PY'
 # 设备端端到端:用bot真实venv跑设备自己的 ai_chat.py,验证 A+C 真实代码行为
 import nonebot; nonebot.init()
 import sys, difflib
-sys.path.insert(0, "/root/bot")
+sys.path.insert(0, "/root/bot/bot")
 import plugins.ai_chat as m
 
 src=open("/root/bot/bot/plugins/ai_chat.py",encoding="utf-8").read()
@@ -34,9 +34,11 @@ print("===== 设备端 A+C 端到端 全部通过 =====")
 PY
 echo "=====完====="
 --- 输出 ---
-11-22 01:50:07 [SUCCESS] nonebot | NoneBot is initializing...
-11-22 01:50:07 [INFO] nonebot | Current Env: prod
-Traceback (most recent call last):
-  File "<stdin>", line 5, in <module>
-ModuleNotFoundError: No module named 'plugins'
+11-22 01:52:04 [SUCCESS] nonebot | NoneBot is initializing...
+11-22 01:52:04 [INFO] nonebot | Current Env: prod
+[0] 坑161-A标记: 2  坑161-C标记: 1  旧0.72残留: 0
+[A-1] 记忆块套话词频: 钱袋子=0 熟客=0 与书为伴=0
+[C-1] 旧判定=False(相似度0.538) 新判定=True
+[C-2] 正常回复不误伤 ✅
+===== 设备端 A+C 端到端 全部通过 =====
 =====完=====
