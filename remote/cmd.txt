@@ -1,15 +1,7 @@
-287513
-echo "===== 图片识别缓存现状 ====="
-F=/root/bot/bot/data/image_captions.json
-ls -la "$F" 2>/dev/null
-echo "--- 缓存条数 ---"
-python3 -c "
-import json
-d=json.load(open('$F'))
-print('总数:',len(d))
-for k,v in list(d.items())[-8:]:
-    print(k[:8],'=',v)
-" 2>/dev/null || echo "(无缓存文件)"
-echo "--- 炸鸡配红酒在不在缓存 ---"
-grep -F "炸鸡配红酒" "$F" 2>/dev/null || echo "(不在)"
+287514
+F=/root/bot/bot/plugins/ai_chat.py
+echo "===== 设备ai_chat.py现状 ====="
+md5sum "$F"
+grep -n "async def _image_sticker_name\|_image_sticker_name(_qu" "$F"
+wc -l "$F"
 echo "=====完====="
