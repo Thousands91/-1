@@ -1,39 +1,6 @@
-287549
-echo "===== 坑160部署:重启bot(只重启bot不碰NapCat) ====="
-echo "--- 当前bot PID ---"
-ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}'
-echo "--- 当前登录态 ---"
-tail -2 /root/login_state.log 2>/dev/null
-if [ ! -f /root/.v160restart_armed ]; then
-  touch /root/.v160restart_armed
-  cat > /root/.v160restart.sh <<'SH'
-#!/bin/bash
-sleep 8
-OLDPID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
-echo "旧PID:$OLDPID"
-[ -n "$OLDPID" ] && kill "$OLDPID"
-sleep 3
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot_restart_v160.log 2>&1 < /dev/null &
-sleep 12
-{
-  echo "=== $(date '+%m-%d %H:%M:%S') 重启后 ==="
-  echo "新PID: $(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}')"
-  echo "--- 插件加载成功数/失败数 ---"
-  grep -c "Succeeded to load plugin" /root/bot_restart_v160.log 2>/dev/null
-  grep -c "Failed to load plugin" /root/bot_restart_v160.log 2>/dev/null
-  echo "--- WS连接 ---"
-  grep -iE "Bot .* connected|WebSocket Connection closed" /root/bot_restart_v160.log 2>/dev/null | tail -3
-  echo "--- 登录态 ---"
-  tail -2 /root/login_state.log 2>/dev/null
-  echo "--- 坑160新判据确认(设备实际文件,应=1) ---"
-  grep -F -c 's.get("fee") == 1 and sec and sec < 60' /root/bot/bot/plugins/song_request.py
-  echo "--- 启动日志尾 ---"
-  tail -4 /root/bot_restart_v160.log 2>/dev/null
-} > /root/v160restart_verify.log 2>&1
-rm -f /root/.v160restart_armed
-SH
-  chmod +x /root/.v160restart.sh
-  setsid nohup bash /root/.v160restart.sh >/dev/null 2>&1 </dev/null &
-  echo "延迟重启已挂(8s kill + 12s验证)"
-fi
+287550
+echo "===== 验收:坑160重启后状态 ====="
+cat /root/v160restart_verify.log 2>/dev/null || echo "验证日志还没生成"
+echo "--- link_probe心跳尾(WS真实在线信号) ---"
+tail -6 /root/link_probe.log 2>/dev/null
 echo "=====完====="
