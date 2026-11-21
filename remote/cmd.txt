@@ -1,13 +1,13 @@
-287501
+287502
 python3 - <<'PYEOF'
 import urllib.request, urllib.parse, json
 UA={"User-Agent":"curl/8.0"}
 d=json.loads(urllib.request.urlopen(urllib.request.Request("https://wttr.in/"+urllib.parse.quote("广州")+"?format=j1",headers=UA),timeout=12).read())
-print("天数",len(d['weather']))
-for i,day in enumerate(d['weather'][:3]):
-    h=day['hourly'][0]
-    codes=set(x.get('weatherCode') for x in day['hourly'])
-    rains=[x.get('chanceofrain') for x in day['hourly']]
-    print(f"第{i+1}天 date={day.get('date')} min={day.get('mintempC')} max={day.get('maxtempC')} codes={codes} 降雨概率={rains}")
+seen={}
+for day in d['weather']:
+    for x in day['hourly']:
+        seen[x.get('weatherCode')]=x.get('weatherDesc',[{}])[0].get('value')
+for k,v in sorted(seen.items(),key=lambda x:int(x[0])):
+    print(f"码{k} = {v}")
 PYEOF
 echo "=====完====="
