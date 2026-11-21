@@ -1,9 +1,15 @@
-287459
-echo "===== 全量掉线段取证:网断/冻结/踢线逐段比对 ====="
-echo "--- 文件规模 ---"
-wc -lc /root/offline_forensics.log /root/napcat-restart.log 2>/dev/null
-echo "--- offline_forensics.log 全文 ---"
-cat /root/offline_forensics.log 2>/dev/null
-echo "--- napcat-restart.log 全量掉线/离线关键行 ---"
-grep -inE "离线|下线|掉线|踢|ErrType|ErrCode|kick|disconnect|登录失效|会话失效|token.*expire|被挤|另登|offline|force.*logout|logout|无法登录|二维码失效|登录过期|ping.*FAIL|网络|net|重启|restart" /root/napcat-restart.log 2>/dev/null | head -200
+287460
+echo "===== 回线验收:登录态+实例+链路 ====="
+echo "--- 登录态台账尾 ---"
+tail -6 /root/login_state.log 2>/dev/null
+echo "--- 实例清单(遥控/autoheal/watch/NapCat主进程) ---"
+ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch|opt/QQ/[q]q -q" | grep -v grep
+echo "--- QQ主进程计数 ---"
+pgrep -f 'opt/QQ/[q]q -q 3427943187' | wc -l
+echo "--- BOT端口 ---"
+curl -s -o /dev/null -w "8080 HTTP:%{http_code}\n" --max-time 5 http://127.0.0.1:8080 2>/dev/null || echo "8080无响应"
+echo "--- tick心跳尾(应连续) ---"
+tail -3 /root/tick.log 2>/dev/null
+echo "--- 水位 ---"
+cat /root/.remote_last 2>/dev/null; echo
 echo "=====完====="
