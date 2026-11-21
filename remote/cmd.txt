@@ -1,11 +1,31 @@
-287487
-echo "===== 部署前检查 ====="
-echo "--- bot进程PID ---"
-ps -eo pid,args | grep '[m]ain.py' | head -3
-echo "--- 最近1分钟有无消息互动(游戏局/对话) ---"
-grep -E "11-21 14:(5[1-9]):.*message\.private" /root/bot/bot/bot.log 2>/dev/null | tail -8
-echo "--- 登录态 ---"
-cat /root/login_state.log 2>/dev/null | tail -3
-echo "--- 当前时间 ---"
-date '+%m-%d %H:%M:%S'
+287488
+echo "===== 部署:修走字截胡(chess_game加_in_game rule) ====="
+F=/root/bot/bot/plugins/chess_game.py
+cp "$F" "$F.bak_0412_$(date +%H%M)"
+python3 - <<'PYEOF'
+from pathlib import Path
+p = Path("/root/bot/bot/plugins/chess_game.py")
+s = p.read_text(encoding="utf-8")
+# 断言原始md5对应的两处锚点都在,防匹配失败静默
+old_insert = "def gid_of(event: MessageEvent) -> int:\n    return getattr(event, \"group_id\", 0) or event.user_id\n"
+new_insert = old_insert + "\n\n# 坑（11-21）：「走」是 on_command 命令词，私聊 to_me 恒真，日常说\"走嘛走嘛\"\n# 会被走子 matcher（priority=20, block=True）截胡后静默 return，ai_chat 永远收不到。\n# 加 rule：只有当前会话确实有棋局时才让这三个命令触发；没棋局就让事件漏给 ai_chat。\nasync def _in_game(event: MessageEvent) -> bool:\n    return gid_of(event) in GAMES\n"
+assert s.count(old_insert) == 1, f"锚点1数量异常:{s.count(old_insert)}"
+s = s.replace(old_insert, new_insert, 1)
+pairs = [
+    ('on_command("走", rule=to_me(), priority=20, block=True)', 'on_command("走", rule=to_me() & Rule(_in_game), priority=20, block=True)'),
+    ('on_command("认输", rule=to_me(), priority=20, block=True)', 'on_command("认输", rule=to_me() & Rule(_in_game), priority=20, block=True)'),
+    ('on_command("结束棋局", aliases={"不下了"}, rule=to_me(), priority=20, block=True)', 'on_command("结束棋局", aliases={"不下了"}, rule=to_me() & Rule(_in_game), priority=20, block=True)'),
+]
+for old, new in pairs:
+    assert s.count(old) == 1, f"锚点异常:{old[:20]} count={s.count(old)}"
+    s = s.replace(old, new, 1)
+p.write_text(s, encoding="utf-8")
+print("3处替换完成+2类锚点断言全过")
+PYEOF
+echo "--- 语法检查 ---"
+python3 -m py_compile "$F" && echo "语法OK" || echo "语法FAIL"
+echo "--- md5(应为6bc51da6) ---"
+md5sum "$F"
+echo "--- 改后关键行 ---"
+grep -nE "_in_game|move_cmd = on_command|def gid_of" "$F"
 echo "=====完====="
