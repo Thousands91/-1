@@ -1,7 +1,12 @@
-287543
-echo "===== 验收:坑159重启后WS真实连接 ====="
-echo "--- 连接相关(全量grep) ---"
-grep -iE "connected|WebSocket|ONEBOT|Bot 3427943187" /root/bot_restart_q159.log 2>/dev/null | tail -8
-echo "--- 日志尾(看有无异常) ---"
-tail -5 /root/bot_restart_q159.log 2>/dev/null
+287544
+echo "===== 探测设备song_request.py原文(坑160 VIP试听片段) ====="
+md5sum /root/bot/bot/plugins/song_request.py
+echo "--- fetch_audio_any 886-896 ---"
+sed -n '886,896p' /root/bot/bot/plugins/song_request.py
+echo "--- VIP分支 483-487 ---"
+sed -n '483,487p' /root/bot/bot/plugins/song_request.py
+echo "--- 锚点1计数(原fetch_audio_any,应为1) ---"
+grep -F -c 'return await fetch_audio(s["id"])' /root/bot/bot/plugins/song_request.py
+echo "--- 锚点2计数(原VIP finish,应为1) ---"
+grep -F -c '这首是「{s['"'"'artists'"'"']}」的原曲，两边平台都要 VIP，柜上拿不来整首的音频' /root/bot/bot/plugins/song_request.py
 echo "=====完====="
