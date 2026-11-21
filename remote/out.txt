@@ -1,135 +1,28 @@
-<<<task_287516.txt>>>
-===== 任务287516 11-21 20:51:24 =====
+<<<task_287517.txt>>>
+===== 任务287517 11-21 20:53:35 =====
 --- 命令 ---
-echo "===== 部署:引用图片同步识图(坑155) ====="
 F=/root/bot/bot/plugins/ai_chat.py
-cp "$F" "$F.bak_quote_$(date +%H%M)"
-python3 - <<'PYEOF'
-from pathlib import Path
-p = Path("/root/bot/bot/plugins/ai_chat.py")
-s = p.read_text(encoding="utf-8")
-
-# 改动1: _image_sticker_name 加 wait 参数 + 同步识图分支
-old1 = '''async def _image_sticker_name(url: str) -> str:
-    """image 段 → 识别名。缓存命中出真名；未命中出占位并踢后台识别。"""
-    try:
-        import httpx  # nonebot 自带依赖
-        async with httpx.AsyncClient(timeout=6, follow_redirects=True) as cli:
-            r = await cli.get(url, headers={"User-Agent": "Mozilla/5.0"})
-        if r.status_code != 200 or not (100 < len(r.content) <= 5 * 1024 * 1024):
-            return "表情包"
-        key = _hashlib.md5(r.content).hexdigest()
-        if not _IMG_CAP_LOADED:
-            _load_img_caps()
-        cap = _IMG_CAPS.get(key)
-        if cap:
-            return cap
-        if key not in _IMG_CAP_KICKED:
-            _IMG_CAP_KICKED.add(key)
-
-            async def _bf(data: bytes = r.content) -> None:
-                try:
-                    c = await _vlm_caption(data)
-                    if c:
-                        _IMG_CAPS[key] = c
-                        _IMG_CAP_FILE.write_text(
-                            _json.dumps(_IMG_CAPS, ensure_ascii=False), encoding="utf-8")
-                        logger.info(f"[图片表情识别] {key[:8]} → {c}")
-                except Exception:
-                    pass  # 失败不卡死；该图下次出现自动再试
-                finally:
-                    _IMG_CAP_KICKED.discard(key)
-
-            asyncio.get_running_loop().create_task(_bf())
-        return "表情包"
-    except Exception:
-        return "表情包"
-'''
-new1 = '''async def _image_sticker_name(url: str, wait: bool = False) -> str:
-    """image 段 → 识别名。缓存命中出真名；未命中出占位并踢后台识别。
-    坑155（2026-11-21）：引用消息走这里时 wait=True——缓存未命中就同步等一次
-    识图拿到真名，否则引用里的图只会是「表情包」占位、模型看不到图的内容。
-    普通消息仍 wait=False 异步，绝不拖慢回复。
-    """
-    try:
-        import httpx  # nonebot 自带依赖
-        async with httpx.AsyncClient(timeout=6, follow_redirects=True) as cli:
-            r = await cli.get(url, headers={"User-Agent": "Mozilla/5.0"})
-        if r.status_code != 200 or not (100 < len(r.content) <= 5 * 1024 * 1024):
-            return "表情包"
-        key = _hashlib.md5(r.content).hexdigest()
-        if not _IMG_CAP_LOADED:
-            _load_img_caps()
-        cap = _IMG_CAPS.get(key)
-        if cap:
-            return cap
-
-        async def _do_caption() -> str:
-            c = await _vlm_caption(r.content)
-            if c:
-                _IMG_CAPS[key] = c
-                _IMG_CAP_FILE.write_text(
-                    _json.dumps(_IMG_CAPS, ensure_ascii=False), encoding="utf-8")
-                logger.info(f"[图片表情识别] {key[:8]} → {c}")
-            return c or "表情包"
-
-        if wait:
-            # 引用场景：同步等识图结果，拿到真名再拼进引用文本
-            return await _do_caption()
-        if key not in _IMG_CAP_KICKED:
-            _IMG_CAP_KICKED.add(key)
-
-            async def _bf() -> None:
-                try:
-                    await _do_caption()
-                except Exception:
-                    pass  # 失败不卡死；该图下次出现自动再试
-                finally:
-                    _IMG_CAP_KICKED.discard(key)
-
-            asyncio.get_running_loop().create_task(_bf())
-        return "表情包"
-    except Exception:
-        return "表情包"
-'''
-assert s.count(old1) == 1, f"锚点1数量异常:{s.count(old1)}"
-s = s.replace(old1, new1, 1)
-
-# 改动2: 引用图片分支传 wait=True
-old2 = '''                        if _qu.startswith("http"):
-                            try:
-                                _qn = await _image_sticker_name(_qu)
-                            except Exception:
-                                _qn = "表情包"
-                            _qparts.append(f"[表情包:{_qn}]")'''
-new2 = '''                        if _qu.startswith("http"):
-                            try:
-                                # 引用图片同步等识图（坑155），否则首次引用拿到占位符
-                                _qn = await _image_sticker_name(_qu, wait=True)
-                            except Exception:
-                                _qn = "表情包"
-                            _qparts.append(f"[表情包:{_qn}]")'''
-assert s.count(old2) == 1, f"锚点2数量异常:{s.count(old2)}"
-s = s.replace(old2, new2, 1)
-
-p.write_text(s, encoding="utf-8")
-print("2处替换完成+锚点断言全过")
-PYEOF
-echo "--- 语法检查 ---"
+echo "===== 验收:引用图片识别落盘 ====="
+echo "--- 语法 ---"
 python3 -m py_compile "$F" && echo 语法OK || echo 语法FAIL
-echo "--- md5 ---"
-md5sum "$F"
 echo "--- 关键行 ---"
-grep -nE "async def _image_sticker_name|_image_sticker_name\(_qu, wait=True\)" "$F"
+grep -nE "async def _image_sticker_name|_image_sticker_name\(_qu, wait=True\)|async def _do_caption|if wait:" "$F"
+echo "--- 确认旧调用已消失(应只剩定义+新调用) ---"
+grep -c "_image_sticker_name(_qu)" "$F"
+echo "--- 备份 ---"
+ls -la "$F".bak_quote_* 2>/dev/null | tail -2
 echo "=====完====="
 --- 输出 ---
-===== 部署:引用图片同步识图(坑155) =====
-2处替换完成+锚点断言全过
---- 语法检查 ---
+===== 验收:引用图片识别落盘 =====
+--- 语法 ---
 语法OK
---- md5 ---
-072cd56e391769142c635dd5b83a9420  /root/bot/bot/plugins/ai_chat.py
 --- 关键行 ---
 394:async def _image_sticker_name(url: str, wait: bool = False) -> str:
+413:        async def _do_caption() -> str:
+422:        if wait:
 1516:                                _qn = await _image_sticker_name(_qu, wait=True)
+--- 确认旧调用已消失(应只剩定义+新调用) ---
+0
+--- 备份 ---
+-rw-r--r-- 1 root root 120973 Nov 21 20:51 /root/bot/bot/plugins/ai_chat.py.bak_quote_2051
 =====完=====
