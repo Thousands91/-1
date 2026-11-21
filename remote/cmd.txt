@@ -1,10 +1,21 @@
-287521
-echo "===== 验收2:确认ai_chat加载+WS ====="
-echo "--- bot_restart_2055.log 大小尾 ---"
-ls -la /root/bot_restart_2055.log 2>/dev/null
-grep -iE "Succeeded to load|Failed to load|Bot .*connected|ai_chat" /root/bot_restart_2055.log 2>/dev/null | tail -8
-echo "--- 主bot.log最新(新进程是否也写这里) ---"
-tail -6 /root/bot/bot/bot.log 2>/dev/null
-echo "--- 全部日志文件按时间 ---"
-ls -lat /root/bot_restart*.log /root/bot/bot/bot.log 2>/dev/null | head -6
+287522
+echo "===== 端到端:引用图片同步识图(清缓存模拟首次) ====="
+cd /root/bot/bot
+OPENAI_API_KEY=sandbox-test-key /root/bot/venv/bin/python -c "
+import nonebot, asyncio, hashlib
+nonebot.init()
+from nonebot.adapters.onebot.v11 import Adapter
+nonebot.get_driver().register_adapter(Adapter)
+import plugins.ai_chat as ac
+URL='https://gchat.qpic.cn/gchatpic_new/0/0-0-3815DDF30162474922933946CE1B7ACF.jpg'
+async def main():
+    ac._IMG_CAP_LOADED=False
+    ac._load_img_caps()
+    # 取缓存前的真名做对照
+    print('缓存现状: 有这张图=', any('3815' in k for k in ac._IMG_CAPS))
+    print('wait=True 引用路径返回:', await ac._image_sticker_name(URL, wait=True))
+asyncio.run(main())
+" 2>&1 | grep -v "nonebot |"
+echo "--- 修复后日志里有无新识图(证明同步路径跑通) ---"
+grep -F "图片表情识别" /root/bot_restart_2055.log 2>/dev/null | tail -3
 echo "=====完====="
