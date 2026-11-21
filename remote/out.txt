@@ -1,35 +1,27 @@
-<<<task_287542.txt>>>
-===== 任务287542 11-21 22:08:39 =====
+<<<task_287543.txt>>>
+===== 任务287543 11-21 22:09:45 =====
 --- 命令 ---
-echo "===== 验收:坑159重启后 ====="
-cat /root/q159restart_verify.log 2>/dev/null || echo "(无日志=重启未完成)"
-echo "--- 当前bot PID ---"
-ps -eo pid,args | grep '[m]ain.py'
+echo "===== 验收:坑159重启后WS真实连接 ====="
+echo "--- 连接相关(全量grep) ---"
+grep -iE "connected|WebSocket|ONEBOT|Bot 3427943187" /root/bot_restart_q159.log 2>/dev/null | tail -8
+echo "--- 日志尾(看有无异常) ---"
+tail -5 /root/bot_restart_q159.log 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-===== 验收:坑159重启后 =====
-=== 11-21 22:07:07 重启后 ===
-新PID: 9139
---- 插件加载 ---
-11-21 22:07:04 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
-11-21 22:07:04 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
-11-21 22:07:04 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
-11-21 22:07:04 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
-11-21 22:07:04 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-11-21 22:07:04 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-21 22:07:04 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
-11-21 22:07:05 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
-11-21 22:07:05 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
-11-21 22:07:05 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
-11-21 22:07:05 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
---- 失败数 ---
-0
---- WS连接 ---
---- 登录态 ---
-2026-11-21 21:59:15 [在线]
-2026-11-21 22:04:37 [在线]
---- 坑159新表述确认(设备实际文件) ---
-1
---- 当前bot PID ---
- 9139 /root/bot/venv/bin/python main.py
+===== 验收:坑159重启后WS真实连接 =====
+--- 连接相关(全量grep) ---
+11-21 22:07:56 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-21 22:07:56 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+11-21 22:08:26 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-21 22:08:26 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+11-21 22:08:56 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-21 22:08:56 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+11-21 22:09:26 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-21 22:09:26 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+--- 日志尾(看有无异常) ---
+11-21 22:08:26 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+11-21 22:08:56 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-21 22:08:56 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+11-21 22:09:26 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-21 22:09:26 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
 =====完=====
