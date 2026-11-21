@@ -1,19 +1,39 @@
-<<<task_287470.txt>>>
-===== 任务287470 11-21 13:10:01 =====
+<<<task_287471.txt>>>
+===== 任务287471 11-21 13:10:36 =====
 --- 命令 ---
-echo "===== 确认最终卡片 ====="
+echo "===== 确认卡片(重试,打印原始返回) ====="
 python3 - <<'PYEOF'
 import json,urllib.request
-req=urllib.request.Request("http://127.0.0.1:10800/",data=json.dumps({"type":"163","id":"284799"}).encode(),headers={"Content-Type":"application/json"})
-d=json.loads(urllib.request.urlopen(req,timeout=20).read())
-c=json.loads(d["message"]); m=(c.get("meta") or {}).get("music") or {}
-print("jumpUrl:",m.get("jumpUrl"))
-print("musicUrl:",m.get("musicUrl"))
+for i in range(3):
+    try:
+        req=urllib.request.Request("http://127.0.0.1:10800/",data=json.dumps({"type":"163","id":"284799"}).encode(),headers={"Content-Type":"application/json"})
+        raw=urllib.request.urlopen(req,timeout=20).read().decode(errors='replace')
+        d=json.loads(raw)
+        if "message" in d:
+            c=json.loads(d["message"]); m=(c.get("meta") or {}).get("music") or {}
+            print("第%d次 OK jumpUrl:%s"%(i+1,m.get("jumpUrl")))
+            print("     musicUrl:",m.get("musicUrl"))
+            break
+        else:
+            print("第%d次 无message(上游抖动):%s"%(i+1,raw[:120]))
+    except Exception as e:
+        print("第%d次 异常:%s"%(i+1,e))
 PYEOF
+echo "--- 代理日志尾 ---"
+tail -8 /root/music_sign.log 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-===== 确认最终卡片 =====
-Traceback (most recent call last):
-  File "<stdin>", line 4, in <module>
-KeyError: 'message'
+===== 确认卡片(重试,打印原始返回) =====
+第1次 无message(上游抖动):{"app":"com.tencent.music.lua","bizsrc":"qqconnect.sdkshare_music","config":{"ctime":1795237571,"forward":1,"token":"77b
+第2次 无message(上游抖动):{"app":"com.tencent.music.lua","bizsrc":"qqconnect.sdkshare_music","config":{"ctime":1795237571,"forward":1,"token":"77b
+第3次 无message(上游抖动):{"app":"com.tencent.music.lua","bizsrc":"qqconnect.sdkshare_music","config":{"ctime":1795237571,"forward":1,"token":"77b
+--- 代理日志尾 ---
+11-21 13:10:02 OIAPI出真卡 format=163 tag=网易云音乐 (693字节)
+11-21 13:10:02 处理完毕 type=163 -> 723 bytes 真卡
+11-21 13:10:38 OIAPI出真卡 format=163 tag=网易云音乐 (693字节)
+11-21 13:10:38 处理完毕 type=163 -> 723 bytes 真卡
+11-21 13:10:38 OIAPI出真卡 format=163 tag=网易云音乐 (693字节)
+11-21 13:10:38 处理完毕 type=163 -> 723 bytes 真卡
+11-21 13:10:39 OIAPI出真卡 format=163 tag=网易云音乐 (693字节)
+11-21 13:10:39 处理完毕 type=163 -> 723 bytes 真卡
 =====完=====
