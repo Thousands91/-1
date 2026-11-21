@@ -1,63 +1,50 @@
-<<<task_287555.txt>>>
-===== 任务287555 11-22 00:57:39 =====
+<<<task_287556.txt>>>
+===== 任务287556 11-22 00:59:05 =====
 --- 命令 ---
-python3 - <<'PY'
-import io
-F="/root/bot/bot/plugins/song_request.py"
-s=open(F,encoding="utf-8").read()
-
-old1='''    # 坑160（2026-11-21 用户拍板方案1）：VIP 歌第三方源只给 30~45s 试听残片，
-    # 语音条和卡片播放键(musicUrl)同源都只播这段。残片不能当"取音频成功"
-    # 静默发出——否则用户以为整首放不出来。判"试听片段"交下游发官方卡+如实告知。
-    a, sec, err = r
-    if a and s.get("fee") == 1 and sec and sec < 60:
-        return None, sec, "试听片段"
-    return r'''
-new1='''    # 坑160订正（2026-11-22 用户澄清）：VIP 歌第三方源只给 30~45s 试听片段，
-    # 用户要的是「卡片 + 音频都照发，只是标注这是试听」——不是砍掉音频。
-    # 所以这里照常返回音频(a 非空)，只在 err 上打"试听片段"标记，
-    # 由下游 deliver 发完卡+语音后追加一句试听说明。
-    a, sec, err = r
-    if a and s.get("fee") == 1 and sec and sec < 60 and not err:
-        return a, sec, "试听片段"
-    return r'''
-assert s.count(old1)==1, "old1 count=%d"%s.count(old1)
-s=s.replace(old1,new1)
-
-old2='''            _t = 60 + len(audio) // (200 * 1024)
-            await matcher.send(MessageSegment.record(audio), _timeout=_t)
-            probe(sec, len(audio), "ok", "")
-            if card_note:
-                await matcher.send(card_note)
-            return'''
-new2='''            _t = 60 + len(audio) // (200 * 1024)
-            await matcher.send(MessageSegment.record(audio), _timeout=_t)
-            probe(sec, len(audio), "ok", "")
-            # 坑160订正（11-22 用户澄清）：VIP 试听片段照发，但要如实标注
-            # "这是试听"——用户要卡片+音频都收到，只是别误当完整曲。
-            if s.get("fee") == 1 and sec and sec < 60:
-                await matcher.send(
-                    f"这条是 {sec} 秒的试听片段（这首要 VIP，只拿到试听）——"
-                    "不是完整曲，点上面的卡片去网易云、有会员能听整首。")
-            elif card_note:
-                await matcher.send(card_note)
-            return'''
-assert s.count(old2)==1, "old2 count=%d"%s.count(old2)
-s=s.replace(old2,new2)
-
-import ast; ast.parse(s)
-open(F+".bak_vip160b","w",encoding="utf-8").write(open(F,encoding="utf-8").read())
-open(F,"w",encoding="utf-8").write(s)
-import hashlib
-print("改后md5:", hashlib.md5(open(F,'rb').read()).hexdigest())
-print("新标注计数:", s.count("是 {sec} 秒的试听片段"))
-print("旧判失败残留:", s.count('return None, sec, "试听片段"'))
-print("语法OK")
-PY
+echo "===== 坑160订正部署:重启bot(只重启bot不动NapCat/登录态) ====="
+echo "--- 当前bot PID ---"
+ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}'
+echo "--- 当前登录态(扫码恢复后应[在线]) ---"
+tail -2 /root/login_state.log 2>/dev/null
+if [ ! -f /root/.v160brestart_armed ]; then
+  touch /root/.v160brestart_armed
+  cat > /root/.v160brestart.sh <<'SH'
+#!/bin/bash
+sleep 8
+OLDPID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
+echo "旧PID:$OLDPID"
+[ -n "$OLDPID" ] && kill "$OLDPID"
+sleep 3
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot_restart_v160b.log 2>&1 < /dev/null &
+sleep 12
+{
+  echo "=== $(date '+%m-%d %H:%M:%S') 重启后 ==="
+  echo "新PID: $(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}')"
+  echo "--- 插件加载成功数/失败数 ---"
+  grep -c "Succeeded to load plugin" /root/bot_restart_v160b.log 2>/dev/null
+  grep -c "Failed to load plugin" /root/bot_restart_v160b.log 2>/dev/null
+  echo "--- WS连接 ---"
+  grep -iE "Bot .* connected|WebSocket Connection closed" /root/bot_restart_v160b.log 2>/dev/null | tail -3
+  echo "--- 登录态(重启不应影响) ---"
+  tail -2 /root/login_state.log 2>/dev/null
+  echo "--- 坑160订正新标注(设备实际文件,应=1) ---"
+  grep -F -c '是 {sec} 秒的试听片段' /root/bot/bot/plugins/song_request.py
+  echo "--- 启动日志尾 ---"
+  tail -5 /root/bot_restart_v160b.log 2>/dev/null
+} > /root/v160brestart_verify.log 2>&1
+rm -f /root/.v160brestart_armed
+SH
+  chmod +x /root/.v160brestart.sh
+  setsid nohup bash /root/.v160brestart.sh >/dev/null 2>&1 </dev/null &
+  echo "延迟重启已挂(8s kill + 12s验证)"
+fi
 echo "=====完====="
 --- 输出 ---
-改后md5: 127613dd5afd9e02d5c5592151a1507c
-新标注计数: 1
-旧判失败残留: 0
-语法OK
+===== 坑160订正部署:重启bot(只重启bot不动NapCat/登录态) =====
+--- 当前bot PID ---
+19640
+--- 当前登录态(扫码恢复后应[在线]) ---
+2026-11-22 00:50:08 状态变化: [未登录] -> [在线]
+2026-11-22 00:55:09 [在线]
+延迟重启已挂(8s kill + 12s验证)
 =====完=====
