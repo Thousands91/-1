@@ -1,15 +1,13 @@
-287460
-echo "===== 回线验收:登录态+实例+链路 ====="
-echo "--- 登录态台账尾 ---"
-tail -6 /root/login_state.log 2>/dev/null
-echo "--- 实例清单(遥控/autoheal/watch/NapCat主进程) ---"
-ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch|opt/QQ/[q]q -q" | grep -v grep
-echo "--- QQ主进程计数 ---"
-pgrep -f 'opt/QQ/[q]q -q 3427943187' | wc -l
-echo "--- BOT端口 ---"
-curl -s -o /dev/null -w "8080 HTTP:%{http_code}\n" --max-time 5 http://127.0.0.1:8080 2>/dev/null || echo "8080无响应"
-echo "--- tick心跳尾(应连续) ---"
-tail -3 /root/tick.log 2>/dev/null
-echo "--- 水位 ---"
-cat /root/.remote_last 2>/dev/null; echo
+287461
+echo "===== 回线补验:QQ真实实例+autoheal幽灵 ====="
+echo "--- QQ进程(正确模式,不限-q参数) ---"
+ps -eo pid,args | grep -E "opt/QQ/[q]q" | grep -v grep | grep -v "type=" | head -10
+echo "QQ主进程数: $(pgrep -f 'opt/QQ/[q]q' | wc -l) (含子进程)"
+echo "--- autoheal两实例启动时刻 ---"
+for p in $(pgrep -f 'bash /root/azar_autoheal.[s]h'); do ps -o pid,lstart,args -p $p | tail -1; done
+echo "--- 等25秒后autoheal是否自清 ---"
+sleep 25
+for p in $(pgrep -f 'bash /root/azar_autoheal.[s]h'); do ps -o pid,lstart -p $p | tail -1; done
+echo "--- WS连接探针尾 ---"
+tail -5 /root/connect_probe.log 2>/dev/null || tail -5 /root/link_probe.log 2>/dev/null || echo "(无探针日志)"
 echo "=====完====="
