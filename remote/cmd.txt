@@ -1,10 +1,21 @@
-287565
-echo "===== 探测设备 _content_grams 那行的确切内容(python repr) ====="
-F=/root/bot/bot/plugins/ai_chat.py
+287566
 python3 - <<'PY'
 F="/root/bot/bot/plugins/ai_chat.py"
-for line in open(F,encoding="utf-8"):
-    if "0x4e00" in line or "u4e00" in line or "ord(g[0])" in line:
-        print(repr(line))
+lines=open(F,encoding="utf-8").read().split("\n")
+hits=[i for i,l in enumerate(lines) if "u4e00" in l and "g[0]" in l and "if (" in l]
+print("命中行索引:", hits, "数量:", len(hits))
+assert len(hits)==1, "命中数!=1,中止"
+i=hits[0]
+print("旧行:", repr(lines[i]))
+# 用ord十六进制替换,整行不含任何反斜杠字面量
+lines[i]='        if (0x4e00 <= ord(g[0]) <= 0x9fff and 0x4e00 <= ord(g[1]) <= 0x9fff'
+s="\n".join(lines)
+import ast; ast.parse(s)
+open(F,"w",encoding="utf-8").write(s)
+import hashlib
+print("改后md5:", hashlib.md5(open(F,'rb').read()).hexdigest())
+print("剩余u4e00字面:", sum("u4e00" in l for l in lines))
+print("ord版行:", repr(lines[i]))
+print("语法OK")
 PY
 echo "=====完====="
