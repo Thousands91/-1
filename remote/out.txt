@@ -1,44 +1,35 @@
-<<<task_287541.txt>>>
-===== 任务287541 11-21 22:06:43 =====
+<<<task_287542.txt>>>
+===== 任务287542 11-21 22:08:39 =====
 --- 命令 ---
-echo "===== 坑159部署:重启bot(只重启bot不碰NapCat) ====="
+echo "===== 验收:坑159重启后 ====="
+cat /root/q159restart_verify.log 2>/dev/null || echo "(无日志=重启未完成)"
 echo "--- 当前bot PID ---"
-ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}'
-if [ ! -f /root/.q159restart_armed ]; then
-  touch /root/.q159restart_armed
-  cat > /root/.q159restart.sh <<'SH'
-#!/bin/bash
-sleep 8
-OLDPID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
-echo "旧PID:$OLDPID"
-[ -n "$OLDPID" ] && kill "$OLDPID"
-sleep 3
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot_restart_q159.log 2>&1 < /dev/null &
-sleep 12
-{
-  echo "=== $(date '+%m-%d %H:%M:%S') 重启后 ==="
-  echo "新PID: $(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}')"
-  echo "--- 插件加载 ---"
-  grep -E "Succeeded to load plugin|Failed to load plugin" /root/bot_restart_q159.log 2>/dev/null | tail -13
-  echo "--- 失败数 ---"
-  grep -c "Failed to load plugin" /root/bot_restart_q159.log 2>/dev/null
-  echo "--- WS连接 ---"
-  grep -iE "Bot .* connected" /root/bot_restart_q159.log 2>/dev/null | tail -2
-  echo "--- 登录态 ---"
-  tail -2 /root/login_state.log 2>/dev/null
-  echo "--- 坑159新表述确认(设备实际文件) ---"
-  grep -F -c '（引用一张图片，画面：{_qn}）' /root/bot/bot/plugins/ai_chat.py
-} > /root/q159restart_verify.log 2>&1
-rm -f /root/.q159restart_armed
-SH
-  chmod +x /root/.q159restart.sh
-  setsid nohup bash /root/.q159restart.sh >/dev/null 2>&1 </dev/null &
-  echo "延迟重启已挂(8s kill + 12s验证)"
-fi
+ps -eo pid,args | grep '[m]ain.py'
 echo "=====完====="
 --- 输出 ---
-===== 坑159部署:重启bot(只重启bot不碰NapCat) =====
+===== 验收:坑159重启后 =====
+=== 11-21 22:07:07 重启后 ===
+新PID: 9139
+--- 插件加载 ---
+11-21 22:07:04 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
+11-21 22:07:04 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+11-21 22:07:04 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
+11-21 22:07:04 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
+11-21 22:07:04 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+11-21 22:07:04 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-21 22:07:04 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
+11-21 22:07:05 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+11-21 22:07:05 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
+11-21 22:07:05 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+11-21 22:07:05 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
+--- 失败数 ---
+0
+--- WS连接 ---
+--- 登录态 ---
+2026-11-21 21:59:15 [在线]
+2026-11-21 22:04:37 [在线]
+--- 坑159新表述确认(设备实际文件) ---
+1
 --- 当前bot PID ---
-2108
-延迟重启已挂(8s kill + 12s验证)
+ 9139 /root/bot/venv/bin/python main.py
 =====完=====
