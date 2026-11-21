@@ -1,71 +1,60 @@
-<<<task_287473.txt>>>
-===== 任务287473 11-21 14:25:11 =====
+<<<task_287474.txt>>>
+===== 任务287474 11-21 14:26:49 =====
 --- 命令 ---
-echo "===== 取证:恢复自建页前现状 ====="
-echo "--- 当前music_sign.py关键行(232-250) ---"
-sed -n '232,250p' /root/music_sign.py
-echo "--- md5 ---"
-md5sum /root/music_sign*.py 2>/dev/null
-echo "--- 备份文件 ---"
-ls -la /root/music_sign* 2>/dev/null
-echo "--- PLAYER_PAGE/player_url 定义是否还在 ---"
-grep -nE "PLAYER_PAGE|def player_url|github.io|music_player" /root/music_sign.py | head -10
-echo "--- 当前代理进程 ---"
-ps -eo pid,args | grep '[m]usic_sign.py'
+echo "===== 恢复自建干净播放页:去掉and False(坑133方案) ====="
+echo "--- 改前关键行 ---"
+grep -n 'and False and au' /root/music_sign.py
+cp /root/music_sign.py /root/music_sign.py.bak_official_$(date +%m%d%H%M)
+# 反向操作:恢复坑133自建页分支,让163有直链时跳自建干净播放页(无蓝条)
+sed -i 's/if t == "163" and False and au:/if t == "163" and au:/' /root/music_sign.py
+echo "--- 改后关键行 ---"
+grep -n 'if t == "163" and au:' /root/music_sign.py
+echo "--- 语法检查 ---"
+python3 -m py_compile /root/music_sign.py && echo "语法OK" || echo "语法FAIL-不重启"
+echo "--- md5(应精确回到54fae249=v10定稿,交叉验证只动了这一行) ---"
+md5sum /root/music_sign.py
+# 延迟重启代理+打真卡验证(本任务命令行含music_sign.py,同进程pkill会自杀,故延迟)
+if [ ! -f /root/.playerrestore_armed ]; then
+  touch /root/.playerrestore_armed
+  cat > /root/.playerrestore.sh <<'EOS'
+#!/bin/bash
+sleep 20
+pkill -f '[m]usic_sign.py' 2>/dev/null
+sleep 2
+cd /root && setsid nohup python3 /root/music_sign.py >> /root/music_sign.log 2>&1 < /dev/null &
+sleep 4
+{
+  echo "=== $(date '+%m-%d %H:%M:%S') 重启后进程 ==="
+  ps -eo pid,args | grep '[m]usic_sign.py'
+  echo "=== 打真卡验证(正确解析:代理返回体即卡JSON,无message外层) ==="
+  python3 - <<'PYEOF'
+import json,urllib.request
+body=json.dumps({"type":"163","id":"284799"}).encode()
+req=urllib.request.Request("http://127.0.0.1:10800/",data=body,headers={"Content-Type":"application/json"})
+card=json.loads(urllib.request.urlopen(req,timeout=25).read().decode(errors='replace'))
+m=(card.get("meta") or {}).get("music") or {}
+print("tag:",m.get("tag"))
+print("jumpUrl:",m.get("jumpUrl"))
+print("musicUrl:",m.get("musicUrl"))
+print("token:",bool((card.get("config") or {}).get("token")))
+PYEOF
+} > /root/playerrestore_verify.log 2>&1
+rm -f /root/.playerrestore_armed
+EOS
+  chmod +x /root/.playerrestore.sh
+  setsid nohup bash /root/.playerrestore.sh >/dev/null 2>&1 </dev/null &
+  echo "延迟手术已挂载(20秒后重启代理+打真卡验证)"
+fi
 echo "=====完====="
 --- 输出 ---
-===== 取证:恢复自建页前现状 =====
---- 当前music_sign.py关键行(232-250) ---
-                    song = sid
-                # 坑130: url(歌曲页)给jump用于点卡片跳转; audio_url(真mp3)给OIAPI的url参数
-                # → 签发进 musicUrl,让封面播放键能直接播。拿不到直链的平台维持用page(行为不变)。
-                au = audio_url(t, sid)
-                # 坑131: 163点卡片落地页用 /m/song 旧模板(无"和好友一起听歌"蓝条);
-                # 原 /song 会302到 y.music.163.com 新模板,底部注入蓝条。只改jump,播放(au)不变。
-                jump_url = url
-                if t == "163" and False and au:
-                    # 坑133: 163有mp3直链时,点卡片跳自建干净播放页(带真实歌曲信息,无蓝条/无引导)。
-                    # 封面缺失时补查一次(落地页要显示封面)。
-                    if not cover:
-                        try:
-                            _n, _a, cover = netease_meta(sid)
-                            if not singer: singer = _a
-                            if not song: song = _n
-                        except Exception:
-                            pass
-                    jump_url = player_url(song, singer, cover, sid)
-                elif t == "163":
---- md5 ---
-db736a0679203cd73c0ef1b5b125b70d  /root/music_sign.py
-54fae249e8d98a90ff0694628063f4b4  /root/music_sign_v10.py
-1ff5b7a65125d374c2ba3a86908104b2  /root/music_sign_v4.py
-d3746ec5185ee1d190741576b6090d26  /root/music_sign_v5.py
-ff1abf55291490b26cdb5a0eebe2c221  /root/music_sign_v6.py
-7a43ef449e8f0d581ac06500659d1623  /root/music_sign_v7.py
-fe38d7d583aa872d3adbdb2c85ccb8ee  /root/music_sign_v8.py
---- 备份文件 ---
--rw-r--r-- 1 root root  6277 Nov 21 13:18 /root/music_sign.log
--rw-r--r-- 1 root root 13544 Nov 21 13:05 /root/music_sign.py
--rw-r--r-- 1 root root  5387 Nov 14 19:29 /root/music_sign.py.bak.ups
--rw-r--r-- 1 root root 13534 Nov 21 13:05 /root/music_sign.py.bak_jump_11211305
--rw-r--r-- 1 root root  8133 Nov 18 09:49 /root/music_sign.py.bak_pre_kugou
--rw-r--r-- 1 root root  5479 Nov 18 09:10 /root/music_sign.py.bak_v3
--rw-r--r-- 1 root root 13534 Nov 19 02:26 /root/music_sign_v10.py
--rw-r--r-- 1 root root  8667 Nov 19 01:02 /root/music_sign_v4.bak
--rw-r--r-- 1 root root  3507 Nov 21 12:48 /root/music_sign_v4.log
--rw-r--r-- 1 root root  8754 Nov 19 01:00 /root/music_sign_v4.py
--rw-r--r-- 1 root root  9836 Nov 19 01:14 /root/music_sign_v5.bak
--rw-r--r-- 1 root root  9836 Nov 19 01:02 /root/music_sign_v5.py
--rw-r--r-- 1 root root 10205 Nov 19 01:46 /root/music_sign_v6.bak
--rw-r--r-- 1 root root 10205 Nov 19 01:14 /root/music_sign_v6.py
--rw-r--r-- 1 root root 11821 Nov 19 01:57 /root/music_sign_v7.bak
--rw-r--r-- 1 root root 11821 Nov 19 01:46 /root/music_sign_v7.py
--rw-r--r-- 1 root root 12251 Nov 19 02:26 /root/music_sign_v8.bak
--rw-r--r-- 1 root root 12251 Nov 19 01:57 /root/music_sign_v8.py
---- PLAYER_PAGE/player_url 定义是否还在 ---
-60:PLAYER_PAGE = "https://thousands91.github.io/-1/music_player.html"
-63:def player_url(song, singer, cover, sid):
-71:    return PLAYER_PAGE + "?" + q
---- 当前代理进程 ---
-24717 python3 /root/music_sign.py
+===== 恢复自建干净播放页:去掉and False(坑133方案) =====
+--- 改前关键行 ---
+239:                if t == "163" and False and au:
+--- 改后关键行 ---
+239:                if t == "163" and au:
+--- 语法检查 ---
+语法OK
+--- md5(应精确回到54fae249=v10定稿,交叉验证只动了这一行) ---
+54fae249e8d98a90ff0694628063f4b4  /root/music_sign.py
+延迟手术已挂载(20秒后重启代理+打真卡验证)
 =====完=====
