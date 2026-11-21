@@ -1,36 +1,16 @@
-<<<task_287564.txt>>>
-===== 任务287564 11-22 01:39:32 =====
+<<<task_287565.txt>>>
+===== 任务287565 11-22 01:42:51 =====
 --- 命令 ---
+echo "===== 探测设备 _content_grams 那行的确切内容(python repr) ====="
+F=/root/bot/bot/plugins/ai_chat.py
 python3 - <<'PY'
 F="/root/bot/bot/plugins/ai_chat.py"
-s=open(F,encoding="utf-8").read()
-old='''    """随手记一条：太短、像命令/寒暄的、和上一条重复的都不记。
-
-    同时把这次自己答的那一句记进 r 字段。下一轮拼记忆时，"他问过什么"和
-    "你答过什么"成对出现，模型才不会以为某个旧问题是还没回答的。
-    """'''
-new='''    """随手记一条：太短、像命令/寒暄的、和上一条重复的都不记。
-
-    坑161-A（2026-11-22 用户拍板 A+C）：只记用户原话，不再把 bot 自己的回答
-    存进 r 字段。原来"你答过什么"和"他问过什么"成对进记忆，结果 bot 现编的
-    套话（钱袋子/羊皮纸/与书为伴）被反复喂回自己——实测该用户 93 条里 7 条 r
-    含套话、最近 4 条全是，7B 小模型压不住惯性原样复读。掐断供料：只留 m。
-    reply 参数保留是为了不动调用处（调用处仍传 answer，这里忽略）。
-    """'''
-assert s.count(old)==1, "docstring old count=%d"%s.count(old)
-s=s.replace(old,new)
-import ast; ast.parse(s)
-open(F,"w",encoding="utf-8").write(s)
-import hashlib
-print("改后md5:", hashlib.md5(open(F,'rb').read()).hexdigest())
-print("坑161-A标记总数(应为2):", s.count("坑161-A"))
-print("旧docstring残留:", s.count("同时把这次自己答的那一句记进 r 字段"))
-print("语法OK")
+for line in open(F,encoding="utf-8"):
+    if "0x4e00" in line or "u4e00" in line or "ord(g[0])" in line:
+        print(repr(line))
 PY
 echo "=====完====="
 --- 输出 ---
-改后md5: 65f449e3eecfc626b79d97b333d75e7e
-坑161-A标记总数(应为2): 2
-旧docstring残留: 0
-语法OK
+===== 探测设备 _content_grams 那行的确切内容(python repr) =====
+'        if ("\\u4e00" <= g[0] <= "\\u9fff" and "\\u4e00" <= g[1] <= "\\u9fff"\n'
 =====完=====
