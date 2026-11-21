@@ -1,67 +1,61 @@
-<<<task_287467.txt>>>
-===== 任务287467 11-21 13:02:20 =====
+<<<task_287468.txt>>>
+===== 任务287468 11-21 13:05:35 =====
 --- 命令 ---
-echo "===== 官方卡分支jump决定(220-270行) ====="
-sed -n '218,275p' /root/music_sign.py
+echo "===== 改回官方黑胶页:163卡jumpUrl统一跳/m/song ====="
+echo "--- 改前关键行 ---"
+grep -n 'if t == "163" and au:' /root/music_sign.py
+cp /root/music_sign.py /root/music_sign.py.bak_jump_$(date +%m%d%H%M)
+# 一行改动:禁用自建页分支,让163统一落到 elif 的 /m/song 官方旧模板
+sed -i 's/if t == "163" and au:/if t == "163" and False and au:/' /root/music_sign.py
+echo "--- 改后关键行 ---"
+grep -n 'and False and au' /root/music_sign.py
+echo "--- 语法检查 ---"
+python3 -m py_compile /root/music_sign.py && echo "语法OK" || echo "语法FAIL-不重启"
+echo "--- md5 ---"
+md5sum /root/music_sign.py
+# 延迟重启代理+打真卡验证(本任务命令行含music_sign.py,同进程pkill会自杀,故延迟)
+if [ ! -f /root/.jumpfix_armed ]; then
+  touch /root/.jumpfix_armed
+  cat > /root/.jumpfix.sh <<'EOS'
+#!/bin/bash
+sleep 20
+pkill -f '[m]usic_sign.py' 2>/dev/null
+sleep 2
+cd /root && setsid nohup python3 /root/music_sign.py >> /root/music_sign.log 2>&1 < /dev/null &
+sleep 4
+{
+  echo "=== $(date '+%m-%d %H:%M:%S') 重启后进程 ==="
+  ps -eo pid,args | grep '[m]usic_sign.py'
+  echo "=== 打真卡验证jumpUrl ==="
+  python3 - <<'PYEOF'
+import json,urllib.request
+body=json.dumps({"type":"163","id":"284799"}).encode()
+req=urllib.request.Request("http://127.0.0.1:10800/",data=body,headers={"Content-Type":"application/json"})
+r=urllib.request.urlopen(req,timeout=25).read()
+d=json.loads(r)
+card=json.loads(d["message"]) if isinstance(d.get("message"),str) else d
+m=(card.get("meta") or {}).get("music") or {}
+print("tag:",m.get("tag"))
+print("jumpUrl:",m.get("jumpUrl"))
+print("token:",bool((card.get("config") or {}).get("token")))
+PYEOF
+} > /root/jumpfix_verify.log 2>&1
+rm -f /root/.jumpfix_armed
+EOS
+  chmod +x /root/.jumpfix.sh
+  setsid nohup bash /root/.jumpfix.sh >/dev/null 2>&1 </dev/null &
+  echo "延迟手术已挂载(20秒后重启代理+打真卡验证)"
+fi
 echo "=====完====="
 --- 输出 ---
-===== 官方卡分支jump决定(220-270行) =====
-                # 就把 id 当歌名喂 OIAPI（实测 format=kugou/migu + song=歌名 能出
-                # 正确 title 的真卡）。163/qq 有真实 id，保持原样不动。
-                song = d.get("title", "")
-                singer = d.get("singer", "")
-                cover = ""
-                # 坑128: NapCat官方卡常只传id不传title -> OIAPI无歌名出占位符卡。
-                # 163/qq 用 netease_meta 按id反查真歌名/歌手/封面; kugou/migu 沿用id当歌名。
-                if not song and t in ("163", "qq"):
-                    try:
-                        ns, na, np = netease_meta(sid)
-                        if ns: song, singer, cover = ns, (singer or na), (cover or np)
-                    except Exception as e:
-                        _log("netease_meta反查失败: %s" % e)
-                if not song and t in ("kugou", "migu", "kuwo"):
-                    song = sid
-                # 坑130: url(歌曲页)给jump用于点卡片跳转; audio_url(真mp3)给OIAPI的url参数
-                # → 签发进 musicUrl,让封面播放键能直接播。拿不到直链的平台维持用page(行为不变)。
-                au = audio_url(t, sid)
-                # 坑131: 163点卡片落地页用 /m/song 旧模板(无"和好友一起听歌"蓝条);
-                # 原 /song 会302到 y.music.163.com 新模板,底部注入蓝条。只改jump,播放(au)不变。
-                jump_url = url
-                if t == "163" and au:
-                    # 坑133: 163有mp3直链时,点卡片跳自建干净播放页(带真实歌曲信息,无蓝条/无引导)。
-                    # 封面缺失时补查一次(落地页要显示封面)。
-                    if not cover:
-                        try:
-                            _n, _a, cover = netease_meta(sid)
-                            if not singer: singer = _a
-                            if not song: song = _n
-                        except Exception:
-                            pass
-                    jump_url = player_url(song, singer, cover, sid)
-                elif t == "163":
-                    jump_url = "https://music.163.com/m/song?id=" + sid
-                card_str = oiapi_card(fmt, (au or url), jump=jump_url, song=song, singer=singer, cover=cover)
-                # 坑128: OIAPI熔断(503 UPSTREAM_CIRCUIT_OPEN)时切思思源兜底,官方卡不再全灭
-                if card_str is None:
-                    _log("OIAPI不可用,官方卡切旧上游兜底 type=%s" % t)
-                    payload = {"type": t, "id": sid, "title": song, "singer": singer,
-                               "url": url, "image": cover, "audio": ""}
-                    legacy = get_signed_card_legacy(payload)
-                    if legacy:
-                        card_str = json.dumps(legacy, ensure_ascii=False)
-            elif t == "custom" and (d.get("url") or d.get("title")):
-                # custom 卡：优先 OIAPI custom，失败退旧上游
-                card_str = oiapi_card("custom", d.get("url", ""),
-                                      song=d.get("title", ""), singer=d.get("singer", ""),
-                                      cover=d.get("image", ""))
-                if not card_str:
-                    payload = {"type": "custom", "singer": d.get("singer") or d.get("content") or "",
-                               "title": d.get("title", ""), "url": d.get("url", ""),
-                               "audio": d.get("audio", ""), "image": d.get("image", "")}
-                    card = get_signed_card_legacy(payload)
-                    card_str = json.dumps(card, ensure_ascii=False) if card else None
-            elif t == "163":
-                # 163 无 id 的极端情况
-                card_str = oiapi_card("163", "https://music.163.com/song?id=" + str(d.get("id", "")))
-        except Exception as e:
+===== 改回官方黑胶页:163卡jumpUrl统一跳/m/song =====
+--- 改前关键行 ---
+239:                if t == "163" and au:
+--- 改后关键行 ---
+239:                if t == "163" and False and au:
+--- 语法检查 ---
+语法OK
+--- md5 ---
+db736a0679203cd73c0ef1b5b125b70d  /root/music_sign.py
+延迟手术已挂载(20秒后重启代理+打真卡验证)
 =====完=====
