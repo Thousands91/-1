@@ -1,28 +1,17 @@
-<<<task_287475.txt>>>
-===== 任务287475 11-21 14:28:13 =====
+<<<task_287476.txt>>>
+===== 任务287476 11-21 14:34:04 =====
 --- 命令 ---
-echo "===== 验收:自建播放页恢复 ====="
-echo "--- 延迟手术验证日志 ---"
-cat /root/playerrestore_verify.log 2>/dev/null || echo "(无=手术未执行)"
-echo "--- 当前代理进程 ---"
-ps -eo pid,args | grep '[m]usic_sign.py'
-echo "--- 关键行+md5 ---"
-grep -n 'if t == "163" and au:' /root/music_sign.py
-md5sum /root/music_sign.py
+echo "===== 取证:bot是否识别引用文字 ====="
+echo "--- 最近日志里get_msg取引用记录 ---"
+grep -hE "get_msg|取引用|引用了一条消息|引用.*失败" /root/bot.log /root/napcat.log /root/bot_*.log 2>/dev/null | tail -20
+echo "--- 14:28~14:32时段日志(触发+引用) ---"
+grep -hE "14:(2[8-9]|3[0-2])" /root/bot.log /root/bot_*.log 2>/dev/null | grep -iE "引用|quote|get_msg|消息|question|提问" | tail -20
+echo "--- 最新日志尾(看刚这次对话) ---"
+tail -30 /root/bot.log 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-===== 验收:自建播放页恢复 =====
---- 延迟手术验证日志 ---
-=== 11-21 14:27:16 重启后进程 ===
-14676 python3 /root/music_sign.py
-=== 打真卡验证(正确解析:代理返回体即卡JSON,无message外层) ===
-tag: 网易云音乐
-jumpUrl: https://thousands91.github.io/-1/music_player.html?title=叹息瓶&singer=齐豫&cover=https://p1.music.126.net/zUmKUF8i5YNgCNndhNRfUA==/109951166004150278.jpg&id=284799
-musicUrl: https://api.injahow.cn/meting/?type=url&server=netease&id=284799
-token: True
---- 当前代理进程 ---
-14676 python3 /root/music_sign.py
---- 关键行+md5 ---
-239:                if t == "163" and au:
-54fae249e8d98a90ff0694628063f4b4  /root/music_sign.py
+===== 取证:bot是否识别引用文字 =====
+--- 最近日志里get_msg取引用记录 ---
+--- 14:28~14:32时段日志(触发+引用) ---
+--- 最新日志尾(看刚这次对话) ---
 =====完=====
