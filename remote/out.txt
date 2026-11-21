@@ -1,24 +1,20 @@
-<<<task_287532.txt>>>
-===== 任务287532 11-21 21:33:13 =====
+<<<task_287533.txt>>>
+===== 任务287533 11-21 21:35:19 =====
 --- 命令 ---
-L=/root/bot/bot/bot.log
-echo "===== 31374-31380 ====="
-sed -n '31374,31380p' "$L"
-echo "===== get_msg失败全部(11-21) ====="
-grep -nF "get_msg 取引用失败" "$L" | grep "11-21" | head -10
-echo "===== ai_chat WARNING总数(11-21) ====="
-grep -cE "11-21.*\[WARNING\] ai_chat" "$L"
+F=/root/bot/bot/plugins/ai_chat.py
+echo "===== 设备坑156锚点确认 ====="
+md5sum "$F"
+grep -n "text = f\"（对方引用了一条消息" "$F"
+sed -n '1537,1541p' "$F"
 echo "=====完====="
 --- 输出 ---
-===== 31374-31380 =====
-11-21 14:31:16 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-21 14:31:18 [INFO] ai_chat | [核对·调试] ask='你刚才说的话' lead=False contra=False agree=False dodge=False ans='（放下手中的书，眉头微皱）先生，您这记性怕是比不上我的书架。上次说好什么'
-11-21 14:31:18 [INFO] ai_chat | [防复读] 与近期回复雷同，重答：'（放下手中的书，眉头微皱）先生，您这记性怕是比不'
-11-21 14:31:18 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-21 14:31:20 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795242680, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
-11-21 14:31:22 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795242682, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-11-21 14:31:26 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1374) running complete
-===== get_msg失败全部(11-21) =====
-===== ai_chat WARNING总数(11-21) =====
-16
+===== 设备坑156锚点确认 =====
+072cd56e391769142c635dd5b83a9420  /root/bot/bot/plugins/ai_chat.py
+1538:        text = f"（对方引用了一条消息{who}：「{quoted[:200]}」，然后对我说：）{base}"
+1542:        text = f"（对方引用了一条消息，但那条不是文字，取不到内容）{base}，看我怎么说。"
+        who = f"（这条消息来自QQ号 {quoted_sender}）" if quoted_sender else ""
+        text = f"（对方引用了一条消息{who}：「{quoted[:200]}」，然后对我说：）{base}"
+    elif has_reply:
+        # 引用的是图片等非文字内容，取不到原文也要让模型知道有引用这回事
+        base = text or "（没另写字）"
 =====完=====
