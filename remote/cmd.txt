@@ -1,60 +1,38 @@
-287499
-echo "===== wttr.in 稳定性+字段结构实测 ====="
+287500
+echo "===== wttr.in 字段结构(精简) ====="
 python3 - <<'PYEOF'
 import urllib.request, urllib.parse, json, time
 UA={"User-Agent":"curl/8.0","Accept":"application/json"}
-def fetch(url,timeout=12):
+d=json.loads(urllib.request.urlopen(urllib.request.Request("https://wttr.in/"+urllib.parse.quote("广州")+"?format=j1&lang=zh",headers=UA),timeout=12).read())
+ca=d['current_condition'][0]
+print("[当前] keys:",list(ca.keys()))
+for k in ['temp_C','FeelsLikeC','humidity','windspeedKmph','winddir16Point','weatherCode','weatherDesc','lang_zh']:
+    print(f"   {k} = {ca.get(k)}")
+w=d['weather'][0]
+print("[日] keys:",list(w.keys()))
+for k in ['date','mintempC','maxtempC','avgtempC']:
+    print(f"   {k} = {w.get(k)}")
+h=w['hourly'][0]
+print("[时] keys:",list(h.keys()))
+for k in ['weatherCode','weatherDesc','lang_zh','chanceofrain']:
+    print(f"   {k} = {h.get(k)}")
+print("[未来天数]",len(d.get('weather',[])))
+# 全部3天的日期/温度/是否有lang_zh
+for i,day in enumerate(d.get('weather',[])[:3]):
+    hh=day['hourly'][0]
+    print(f"   第{i+1}天 date={day.get('date')} min={day.get('mintempC')} max={day.get('maxtempC')} code={hh.get('weatherCode')} lang_zh={hh.get('lang_zh')} rain={hh.get('chanceofrain')}")
+PYEOF
+echo "--- Open-Meteo forecast 3次对比 ---"
+python3 - <<'PYEOF'
+import urllib.request, time
+UA={"User-Agent":"curl/8.0"}
+u="https://api.open-meteo.com/v1/forecast?latitude=23.1&longitude=113.3&current=temperature_2m"
+for i in range(3):
     t=time.time()
-    req=urllib.request.Request(url,headers=UA)
-    raw=urllib.request.urlopen(req,timeout=timeout).read()
-    return json.loads(raw), time.time()-t
-
-# 1) 广州连续10次
-url="https://wttr.in/"+urllib.parse.quote("广州")+"?format=j1&lang=zh"
-ok=0; times=[]
-for i in range(10):
     try:
-        _,dt=fetch(url); ok+=1; times.append(f"{dt:.1f}s")
+        urllib.request.urlopen(urllib.request.Request(u,headers=UA),timeout=10).read()
+        print(f"   #{i+1} OK {time.time()-t:.1f}s")
     except Exception as e:
-        times.append(f"{type(e).__name__}")
-print(f"[稳定] wttr.in 广州 10次: {ok}/10  [{', '.join(times)}]")
-
-# 2) 中文多城市支持
-for city in ["北京","上海","广州","深圳"]:
-    try:
-        d,dt=fetch("https://wttr.in/"+urllib.parse.quote(city)+"?format=j1&lang=zh")
-        ca=d['current_condition'][0]
-        print(f"[城市] {city}: OK {dt:.1f}s temp={ca.get('temp_C')}C desc={ca.get('weatherDesc',[{}])[0].get('value')}")
-    except Exception as e:
-        print(f"[城市] {city}: FAIL {type(e).__name__}")
-
-# 3) 字段结构(权威,供写解析)
-try:
-    d,_=fetch(url)
-    ca=d['current_condition'][0]
-    print("[结构] current_condition keys:",list(ca.keys()))
-    for k in ['temp_C','FeelsLikeC','humidity','windspeedKmph','winddir16Point','weatherCode','weatherDesc','lang_zh']:
-        print(f"   {k} = {ca.get(k)}")
-    w=d['weather'][0]
-    print("[结构] weather[0] keys:",list(w.keys()))
-    for k in ['date','mintempC','maxtempC','avgtempC']:
-        print(f"   {k} = {w.get(k)}")
-    h=w['hourly'][0]
-    print("[结构] hourly[0] keys:",list(h.keys()))
-    for k in ['weatherCode','weatherDesc','lang_zh','chanceofrain']:
-        print(f"   {k} = {h.get(k)}")
-    print("[结构] 未来天数:",len(d.get('weather',[])))
-except Exception as e:
-    print("[结构] FAIL",type(e).__name__,e)
-
-# 4) Open-Meteo forecast 5次对比
-ok2=0; times2=[]
-u2="https://api.open-meteo.com/v1/forecast?latitude=23.1&longitude=113.3&current=temperature_2m"
-for i in range(5):
-    try:
-        _,dt=fetch(u2); ok2+=1; times2.append(f"{dt:.1f}s")
-    except Exception as e:
-        times2.append(f"{type(e).__name__}")
-print(f"[对比] Open-Meteo forecast 5次: {ok2}/5  [{', '.join(times2)}]")
+        print(f"   #{i+1} FAIL {type(e).__name__} {time.time()-t:.1f}s")
 PYEOF
 echo "=====完====="
