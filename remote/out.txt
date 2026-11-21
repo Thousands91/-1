@@ -1,38 +1,43 @@
-<<<task_287505.txt>>>
-===== 任务287505 11-21 15:35:32 =====
+<<<task_287506.txt>>>
+===== 任务287506 11-21 15:37:23 =====
 --- 命令 ---
-F=/root/bot/bot/plugins/weather.py
-echo "===== 验收:weather.py落盘 ====="
-echo "--- md5(应1b9a270d65406d1e620498f9a8862aa2) ---"
-md5sum "$F"
-echo "--- 语法 ---"
-python3 -m py_compile "$F" && echo 语法OK || echo 语法FAIL
-echo "--- 关键行 ---"
-grep -nE "^WTTR |WTTR_CODE|WTTR_DIR|def get_wttr|text = await get_wttr|text = await get_open_meteo|def get_qweather" "$F"
-echo "--- 行数 ---"
-wc -l "$F"
-echo "--- 备份文件 ---"
-ls -la "$F".bak_weather_* 2>/dev/null | tail -2
+echo "===== 部署前窗口确认+挂延迟重启 ====="
+echo "--- 最近60秒消息 ---"
+grep -E "11-21 15:(3[4-9]):.*message\.(group|private)" /root/bot/bot/bot.log 2>/dev/null | tail -5 || echo "(无互动)"
+echo "--- 当前bot PID ---"
+ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}'
+if [ ! -f /root/.botrestart_armed ]; then
+  touch /root/.botrestart_armed
+  cat > /root/.botrestart.sh <<'SH'
+#!/bin/bash
+sleep 8
+OLDPID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
+echo "旧PID:$OLDPID"
+[ -n "$OLDPID" ] && kill "$OLDPID"
+sleep 3
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot_restart_1535.log 2>&1 < /dev/null &
+sleep 12
+{
+  echo "=== $(date '+%m-%d %H:%M:%S') 重启后 ==="
+  echo "新PID: $(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}')"
+  echo "--- 插件加载 ---"
+  grep -E "Succeeded to load plugin|Failed to load plugin" /root/bot_restart_1535.log 2>/dev/null | tail -13
+  echo "--- WS连接 ---"
+  grep -iE "Bot .* connected|WebSocket" /root/bot_restart_1535.log 2>/dev/null | tail -3
+  echo "--- 失败数 ---"
+  grep -c "Failed to load plugin" /root/bot_restart_1535.log 2>/dev/null
+} > /root/botrestart_weather_verify.log 2>&1
+rm -f /root/.botrestart_armed
+SH
+  chmod +x /root/.botrestart.sh
+  setsid nohup bash /root/.botrestart.sh >/dev/null 2>&1 </dev/null &
+  echo "延迟重启已挂(8s kill + 12s验证)"
+fi
 echo "=====完====="
 --- 输出 ---
-===== 验收:weather.py落盘 =====
---- md5(应1b9a270d65406d1e620498f9a8862aa2) ---
-1b9a270d65406d1e620498f9a8862aa2  /root/bot/bot/plugins/weather.py
---- 语法 ---
-语法OK
---- 关键行 ---
-30:WTTR = "https://wttr.in/"
-49:WTTR_CODE = {
-63:WTTR_DIR = {
-91:    text = await get_wttr(city)
-93:        text = await get_open_meteo(city)
-97:async def get_wttr(city: str) -> str:
-111:        desc = WTTR_CODE.get(int(ca.get("weatherCode") or 0), "说不清")
-112:        wdir = WTTR_DIR.get(ca.get("winddir16Point", ""), ca.get("winddir16Point", ""))
-133:                w = WTTR_CODE.get(int(mid.get("weatherCode") or 0), "")
-222:async def get_qweather(city: str) -> str:
---- 行数 ---
-258 /root/bot/bot/plugins/weather.py
---- 备份文件 ---
--rw-r--r-- 1 root root 7047 Nov 21 15:34 /root/bot/bot/plugins/weather.py.bak_weather_1534
+===== 部署前窗口确认+挂延迟重启 =====
+--- 最近60秒消息 ---
+--- 当前bot PID ---
+23407
+延迟重启已挂(8s kill + 12s验证)
 =====完=====
