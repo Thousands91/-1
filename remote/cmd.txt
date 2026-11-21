@@ -1,27 +1,28 @@
-287534
-echo "===== 部署:引用内容强提示(坑156) ====="
-F=/root/bot/bot/plugins/ai_chat.py
-cp "$F" "$F.bak_quote156_$(date +%H%M)"
-python3 - <<'PYEOF'
-from pathlib import Path
-p = Path("/root/bot/bot/plugins/ai_chat.py")
-s = p.read_text(encoding="utf-8")
-old = '''        text = f"（对方引用了一条消息{who}：「{quoted[:200]}」，然后对我说：）{base}"'''
-new = '''        # 坑156（2026-11-21）：小模型拿到引用前缀却只扫一眼，爱拿历史里的
-        # 「记性/书架」老梗套话、回避引用内容本身。把"必须针对引用内容回应"
-        # 写在引用前缀里、紧贴引用，并明确禁止复读老梗搪塞。
-        text = (f"（对方引用了一条消息{who}：「{quoted[:200]}」，然后对我说：）{base}"
-                "\\n【要紧：他引用的那句是本轮对话的重点，先接住那句的具体内容再回，"
-                "别拿历史里的老梗（记性/书架之类）套话搪塞，也别回避不认。】")'''
-assert s.count(old) == 1, f"锚点数量异常:{s.count(old)}"
-s = s.replace(old, new, 1)
-p.write_text(s, encoding="utf-8")
-print("坑156替换完成+断言通过")
-PYEOF
-echo "--- 语法 ---"
-python3 -m py_compile "$F" && echo 语法OK || echo 语法FAIL
-echo "--- md5(应440e24e7) ---"
-md5sum "$F"
-echo "--- 关键行 ---"
-grep -n "要紧：他引用的那句" "$F"
+287535
+echo "===== 重启bot(坑156引用强提示生效) ====="
+echo "--- 窗口:最近60秒消息 ---"
+grep -E "11-21 21:(3[6-8]):.*message\.(group|private)" /root/bot_restart_2055.log 2>/dev/null | tail -5 || echo "(无互动)"
+if [ ! -f /root/.botrestart_armed ]; then
+  touch /root/.botrestart_armed
+  cat > /root/.botrestart.sh <<'SH'
+#!/bin/bash
+sleep 8
+OLDPID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
+[ -n "$OLDPID" ] && kill "$OLDPID"
+sleep 3
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot_restart_2138.log 2>&1 < /dev/null &
+sleep 14
+{
+  echo "=== $(date '+%m-%d %H:%M:%S') 重启后 ==="
+  echo "新PID: $(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}')"
+  echo "成功: $(grep -c 'Succeeded to load plugin' /root/bot_restart_2138.log 2>/dev/null) 失败: $(grep -c 'Failed to load plugin' /root/bot_restart_2138.log 2>/dev/null)"
+  grep -i 'load plugin "ai_chat"' /root/bot_restart_2138.log 2>/dev/null | tail -1
+  grep -iE "Bot .*connected" /root/bot_restart_2138.log 2>/dev/null | tail -1
+} > /root/botrestart_156_verify.log 2>&1
+rm -f /root/.botrestart_armed
+SH
+  chmod +x /root/.botrestart.sh
+  setsid nohup bash /root/.botrestart.sh >/dev/null 2>&1 </dev/null &
+  echo "延迟重启已挂"
+fi
 echo "=====完====="
