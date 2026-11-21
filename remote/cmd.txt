@@ -1,7 +1,30 @@
-287518
-echo "===== 部署窗口检查 ====="
-echo "--- 最近90秒消息 ---"
-grep -E "11-21 20:(5[2-3]):.*message\.(group|private)" /root/bot_restart_1535.log 2>/dev/null | tail -8
-echo "--- 当前时间 ---"
-date '+%H:%M:%S'
+287519
+echo "===== 重启bot(引用图片修复生效) ====="
+if [ ! -f /root/.botrestart_armed ]; then
+  touch /root/.botrestart_armed
+  cat > /root/.botrestart.sh <<'SH'
+#!/bin/bash
+sleep 8
+OLDPID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
+echo "旧PID:$OLDPID"
+[ -n "$OLDPID" ] && kill "$OLDPID"
+sleep 3
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot_restart_2055.log 2>&1 < /dev/null &
+sleep 12
+{
+  echo "=== $(date '+%m-%d %H:%M:%S') 重启后 ==="
+  echo "新PID: $(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}')"
+  echo "--- 插件加载数/失败数 ---"
+  echo "成功: $(grep -c 'Succeeded to load plugin' /root/bot_restart_2055.log 2>/dev/null) 失败: $(grep -c 'Failed to load plugin' /root/bot_restart_2055.log 2>/dev/null)"
+  echo "--- ai_chat在列 ---"
+  grep -i 'load plugin "ai_chat"' /root/bot_restart_2055.log 2>/dev/null | tail -1
+  echo "--- WS连接 ---"
+  grep -iE "Bot .*connected" /root/bot_restart_2055.log 2>/dev/null | tail -1
+} > /root/botrestart_quote_verify.log 2>&1
+rm -f /root/.botrestart_armed
+SH
+  chmod +x /root/.botrestart.sh
+  setsid nohup bash /root/.botrestart.sh >/dev/null 2>&1 </dev/null &
+  echo "延迟重启已挂"
+fi
 echo "=====完====="
