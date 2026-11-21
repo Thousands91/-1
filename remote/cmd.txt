@@ -1,7 +1,7 @@
-287514
+287515
 F=/root/bot/bot/plugins/ai_chat.py
-echo "===== 设备ai_chat.py现状 ====="
-md5sum "$F"
-grep -n "async def _image_sticker_name\|_image_sticker_name(_qu" "$F"
-wc -l "$F"
+echo "===== 设备函数原文(394-428) ====="
+sed -n '394,428p' "$F"
+echo "===== 设备调用点原文(1498-1508) ====="
+sed -n '1498,1508p' "$F"
 echo "=====完====="
