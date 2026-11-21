@@ -1,21 +1,16 @@
-287508
-echo "===== 端到端:设备新代码打真实天气 ====="
-cd /root/bot/bot
-OPENAI_API_KEY=sandbox-test-key /root/bot/venv/bin/python -c "
-import nonebot, asyncio
-nonebot.init()
-from nonebot.adapters.onebot.v11 import Adapter
-nonebot.get_driver().register_adapter(Adapter)
-from plugins.weather import get_wttr, get_open_meteo
-async def main():
-    print('=== 主源get_wttr(广州) ===')
-    a = await get_wttr('广州')
-    print(a if a else '(主源失败→会兜底)')
-    print('=== 兜底get_open_meteo(广州) 可用性 ===')
-    b = await get_open_meteo('广州')
-    print(('OK '+b.splitlines()[0]) if b and '翻不开' not in b else ('兜底也失败: '+str(b)[:60]))
-asyncio.run(main())
-" 2>&1 | grep -v "nonebot |"
-echo "--- WS连接确认(新日志) ---"
-grep -iE "connected|WebSocket|Bot .*connected" /root/bot_restart_1535.log 2>/dev/null | tail -3
+287509
+echo "===== 取证:和风天气key现状 ====="
+echo "--- 设备.env里QWEATHER相关(含注释/空值) ---"
+for f in /root/bot/bot/.env /root/bot/.env /root/bot/bot/.env.prod /root/bot/bot/.env.dev; do
+  [ -f "$f" ] && { echo "[$f]"; grep -inE "QWEATHER|和风|weather" "$f" || echo "  (无QWEATHER项)"; }
+done
+echo "--- 设备全局搜key残留 ---"
+grep -rniE "QWEATHER_KEY|QWEATHER_API_HOST" /root/bot --include="*.py" --include=".env*" 2>/dev/null | head -15
+echo "--- 当前天气插件读到的KEY/HOST(脱敏:只显示有无) ---"
+cd /root/bot/bot && /root/bot/venv/bin/python -c "
+import os
+k=os.getenv('QWEATHER_KEY',''); h=os.getenv('QWEATHER_API_HOST','')
+print('KEY有值:',bool(k),'长度:',len(k))
+print('HOST有值:',bool(h),'值:',h)
+" 2>/dev/null
 echo "=====完====="
