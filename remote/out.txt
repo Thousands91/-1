@@ -1,41 +1,50 @@
-<<<task_287548.txt>>>
-===== 任务287548 11-21 22:33:01 =====
+<<<task_287549.txt>>>
+===== 任务287549 11-21 22:33:47 =====
 --- 命令 ---
-echo "===== 读正确登录态文件 ====="
-echo "--- /root/login_state.log 尾15行 ---"
-tail -15 /root/login_state.log 2>/dev/null
-echo "--- /root/azar_login_run.log 尾8行 ---"
-tail -8 /root/azar_login_run.log 2>/dev/null
-echo "--- 当前时刻 ---"
-date '+%F %T'
+echo "===== 坑160部署:重启bot(只重启bot不碰NapCat) ====="
+echo "--- 当前bot PID ---"
+ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}'
+echo "--- 当前登录态 ---"
+tail -2 /root/login_state.log 2>/dev/null
+if [ ! -f /root/.v160restart_armed ]; then
+  touch /root/.v160restart_armed
+  cat > /root/.v160restart.sh <<'SH'
+#!/bin/bash
+sleep 8
+OLDPID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
+echo "旧PID:$OLDPID"
+[ -n "$OLDPID" ] && kill "$OLDPID"
+sleep 3
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot_restart_v160.log 2>&1 < /dev/null &
+sleep 12
+{
+  echo "=== $(date '+%m-%d %H:%M:%S') 重启后 ==="
+  echo "新PID: $(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}')"
+  echo "--- 插件加载成功数/失败数 ---"
+  grep -c "Succeeded to load plugin" /root/bot_restart_v160.log 2>/dev/null
+  grep -c "Failed to load plugin" /root/bot_restart_v160.log 2>/dev/null
+  echo "--- WS连接 ---"
+  grep -iE "Bot .* connected|WebSocket Connection closed" /root/bot_restart_v160.log 2>/dev/null | tail -3
+  echo "--- 登录态 ---"
+  tail -2 /root/login_state.log 2>/dev/null
+  echo "--- 坑160新判据确认(设备实际文件,应=1) ---"
+  grep -F -c 's.get("fee") == 1 and sec and sec < 60' /root/bot/bot/plugins/song_request.py
+  echo "--- 启动日志尾 ---"
+  tail -4 /root/bot_restart_v160.log 2>/dev/null
+} > /root/v160restart_verify.log 2>&1
+rm -f /root/.v160restart_armed
+SH
+  chmod +x /root/.v160restart.sh
+  setsid nohup bash /root/.v160restart.sh >/dev/null 2>&1 </dev/null &
+  echo "延迟重启已挂(8s kill + 12s验证)"
+fi
 echo "=====完====="
 --- 输出 ---
-===== 读正确登录态文件 =====
---- /root/login_state.log 尾15行 ---
-2026-11-21 21:19:03 [在线]
-2026-11-21 21:24:04 [在线]
-2026-11-21 21:29:05 [在线]
-2026-11-21 21:34:07 [在线]
-2026-11-21 21:39:08 [在线]
-2026-11-21 21:44:09 [在线]
-2026-11-21 21:49:12 [在线]
-2026-11-21 21:54:14 [在线]
-2026-11-21 21:59:15 [在线]
-2026-11-21 22:04:37 [在线]
-2026-11-21 22:09:39 [在线]
-2026-11-21 22:14:40 [在线]
-2026-11-21 22:19:41 [在线]
+===== 坑160部署:重启bot(只重启bot不碰NapCat) =====
+--- 当前bot PID ---
+9139
+--- 当前登录态 ---
 2026-11-21 22:24:45 [在线]
 2026-11-21 22:29:46 状态变化: [在线] -> [未登录]
---- /root/azar_login_run.log 尾8行 ---
-#   现在抓紧时间（剩约 107 秒）：                        #
-#   打开X10相册 -> DCIM/Camera -> asar_qr.png 全屏显示       #
-#   用另一台手机的QQ扫一扫 -> 确认登录                       #
-############################################################
-
-==> 第 5 步：盯着登录结果
-[12:57:58] 二维码刷新了，已复制新的到相册，请重新扫码
-!! 10 分钟没等到登录成功。重新运行本脚本再试一轮。
---- 当前时刻 ---
-2026-11-21 22:33:01
+延迟重启已挂(8s kill + 12s验证)
 =====完=====
