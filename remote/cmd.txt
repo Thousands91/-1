@@ -1,8 +1,9 @@
-287557
-echo "===== 读坑160订正重启后验证日志 ====="
-cat /root/v160brestart_verify.log 2>/dev/null || echo "验证日志未生成"
+287558
+echo "===== 确认重启后WS真实连接(link_probe心跳) ====="
+echo "--- link_probe.log 尾10 ---"
+tail -10 /root/link_probe.log 2>/dev/null
+echo "--- bot_restart_v160b.log 里连接相关 ---"
+grep -iE "connected|heartbeat|lifecycle|WebSocket" /root/bot_restart_v160b.log 2>/dev/null | tail -8
 echo "--- 当前时刻 ---"
 date '+%F %T'
-echo "--- 当前bot PID ---"
-ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}'
 echo "=====完====="
