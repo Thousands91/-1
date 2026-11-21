@@ -1,9 +1,8 @@
-287538
-echo "===== 验收:卡片换回官方黑胶页 ====="
-echo "--- 延迟手术产出(打真卡验证) ---"
-cat /root/officialback_verify.log 2>/dev/null || echo "(无验证日志=手术未执行)"
-echo "--- 当前代理进程(应单实例) ---"
-ps -eo pid,args | grep '[m]usic_sign.py'
-echo "--- 代理启动日志尾 ---"
-tail -3 /root/music_sign.log 2>/dev/null
+287539
+echo "===== 探测设备引用图片分支原文(坑159) ====="
+md5sum /root/bot/bot/plugins/ai_chat.py
+echo "--- 引用图片分支 1513-1524 ---"
+sed -n '1513,1524p' /root/bot/bot/plugins/ai_chat.py
+echo "--- 旧写法出现次数(应为1) ---"
+grep -F -c '_qparts.append(f"[表情包:{_qn}]")' /root/bot/bot/plugins/ai_chat.py
 echo "=====完====="
