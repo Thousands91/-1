@@ -1,44 +1,51 @@
-<<<task_287570.txt>>>
-===== 任务287570 11-22 01:52:01 =====
+<<<task_287571.txt>>>
+===== 任务287571 11-22 01:53:55 =====
 --- 命令 ---
-cd /root/bot
-/root/bot/venv/bin/python - <<'PY'
-# 设备端端到端:用bot真实venv跑设备自己的 ai_chat.py,验证 A+C 真实代码行为
-import nonebot; nonebot.init()
-import sys, difflib
-sys.path.insert(0, "/root/bot/bot")
-import plugins.ai_chat as m
-
-src=open("/root/bot/bot/plugins/ai_chat.py",encoding="utf-8").read()
-print("[0] 坑161-A标记:",src.count("坑161-A")," 坑161-C标记:",src.count("坑161-C")," 旧0.72残留:",src.count(">= 0.72"))
-assert src.count("坑161-A")==2 and src.count("坑161-C")==1 and src.count(">= 0.72")==0
-
-MEM=[{"t":1795280000,"m":"你怎么知道我没钱","r":"您这钱袋子比那最珍贵的羊皮纸还要薄"},
-     {"t":1795280001,"m":"你和布缇娜熟吗","r":"布缇娜那里我是熟客，与书为伴"}]
-m._load_memory=lambda uid: MEM
-blk=m._memory_block(1561950850)
-print("[A-1] 记忆块套话词频: 钱袋子=%d 熟客=%d 与书为伴=%d"%(blk.count("钱袋子"),blk.count("熟客"),blk.count("与书为伴")))
-assert blk.count("钱袋子")==0 and blk.count("熟客")==0 and blk.count("与书为伴")==0
-
-a=m._norm_text("钱袋子比羊皮纸还薄，与书为伴了")
-b=m._norm_text("布缇娜那里我是熟客，可您这钱袋子比那最珍贵的羊皮纸还要薄，今晚怕是只能与书为伴了")
-old_hit=(a[:10]==b[:10]) or difflib.SequenceMatcher(None,a,b).ratio()>=0.72
-new_hit=m._sig_sim(a,b)
-print("[C-1] 旧判定=%s(相似度%.3f) 新判定=%s"%(old_hit,difflib.SequenceMatcher(None,a,b).ratio(),new_hit))
-assert new_hit and not old_hit
-
-for x,y in [("您这钱袋子比羊皮纸薄","今天天气不错出去走走"),("布缇娜我是熟客","昨天那本书我看完了")]:
-    assert not m._sig_sim(m._norm_text(x),m._norm_text(y)), "误伤:"+x
-print("[C-2] 正常回复不误伤 ✅")
-print("===== 设备端 A+C 端到端 全部通过 =====")
-PY
+echo "===== 坑161 A+C部署:重启bot(只重启bot不动NapCat/登录态) ====="
+echo "--- 当前bot PID ---"
+ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}'
+echo "--- 当前登录态(扫码恢复后应[在线]) ---"
+tail -2 /root/login_state.log 2>/dev/null
+if [ ! -f /root/.ac161restart_armed ]; then
+  touch /root/.ac161restart_armed
+  cat > /root/.ac161restart.sh <<'SH'
+#!/bin/bash
+sleep 8
+OLDPID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
+echo "旧PID:$OLDPID"
+[ -n "$OLDPID" ] && kill "$OLDPID"
+sleep 3
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot_restart_ac161.log 2>&1 < /dev/null &
+sleep 12
+{
+  echo "=== $(date '+%m-%d %H:%M:%S') 重启后 ==="
+  echo "新PID: $(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}')"
+  echo "--- 插件加载成功数/失败数 ---"
+  grep -c "Succeeded to load plugin" /root/bot_restart_ac161.log 2>/dev/null
+  grep -c "Failed to load plugin" /root/bot_restart_ac161.log 2>/dev/null
+  echo "--- WS连接 ---"
+  grep -iE "Bot .* connected|WebSocket Connection closed" /root/bot_restart_ac161.log 2>/dev/null | tail -3
+  echo "--- 登录态(重启不应影响) ---"
+  tail -2 /root/login_state.log 2>/dev/null
+  echo "--- 坑161 A+C标记(设备实际文件: A=2,C=1) ---"
+  grep -F -c '坑161-A' /root/bot/bot/plugins/ai_chat.py
+  grep -F -c '坑161-C' /root/bot/bot/plugins/ai_chat.py
+  echo "--- 启动日志尾 ---"
+  tail -5 /root/bot_restart_ac161.log 2>/dev/null
+} > /root/ac161restart_verify.log 2>&1
+rm -f /root/.ac161restart_armed
+SH
+  chmod +x /root/.ac161restart.sh
+  setsid nohup bash /root/.ac161restart.sh >/dev/null 2>&1 </dev/null &
+  echo "延迟重启已挂(8s kill + 12s验证)"
+fi
 echo "=====完====="
 --- 输出 ---
-11-22 01:52:04 [SUCCESS] nonebot | NoneBot is initializing...
-11-22 01:52:04 [INFO] nonebot | Current Env: prod
-[0] 坑161-A标记: 2  坑161-C标记: 1  旧0.72残留: 0
-[A-1] 记忆块套话词频: 钱袋子=0 熟客=0 与书为伴=0
-[C-1] 旧判定=False(相似度0.538) 新判定=True
-[C-2] 正常回复不误伤 ✅
-===== 设备端 A+C 端到端 全部通过 =====
+===== 坑161 A+C部署:重启bot(只重启bot不动NapCat/登录态) =====
+--- 当前bot PID ---
+10434
+--- 当前登录态(扫码恢复后应[在线]) ---
+2026-11-22 01:45:22 [在线]
+2026-11-22 01:50:23 [在线]
+延迟重启已挂(8s kill + 12s验证)
 =====完=====
