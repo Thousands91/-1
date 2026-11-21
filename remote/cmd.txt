@@ -1,60 +1,30 @@
-287584
-echo "===== 坑162修复下发 $(date '+%T') ====="
-F=/root/bot/bot/plugins/ai_chat.py
-cp "$F" /root/bot/bot/plugins/bak_162_0235
-/root/bot/venv/bin/python - <<'PY'
-import io
-F="/root/bot/bot/plugins/ai_chat.py"
-s=open(F,encoding="utf-8").read()
-
-# ---- C1: 国际象棋段加防棋步乱入铁律 ----
-old1=('    "\\n\\n"\n'
-'    "## 国际象棋（这个群里有棋盘，常有人问，照实答）\\n"\n'
-'    "店里摆着一副能下的棋。开法：第一位玩家 @我 说「国际象棋」占白方，"\n')
-new1=('    "\\n\\n"\n'
-'    "## 国际象棋（这个群里有棋盘，常有人问，照实答）\\n"\n'
-'    "**铁律：只有对方明确要说「下棋」「走 e4」（走+具体着法）或回答棋局相关问题时，"\n'
-'    "才按下面讲棋。日常说话里的「走吧」「我们走」「你去不去」「去欢愉之馆」「去哪」"\n'
-'    "全是普通闲话，跟下棋毫无关系——绝不能冒出 e4、e5、Nf3、e2e4 这类着法，"\n'
-'    "也绝不能写【去 e4】【走 e5】这种奇怪标记。对方根本没提棋，你提棋就是答非所问。**\\n"\n'
-'    "店里摆着一副能下的棋。开法：第一位玩家 @我 说「国际象棋」占白方，"\n')
-assert s.count(old1)==1, "C1锚点数="+str(s.count(old1))
-s=s.replace(old1,new1)
-
-# ---- C3: 立场一致铁律(插在认账行后) ----
-old3='    "自己说过的话要认账：刚说过什么，下一条引用它时不能翻脸不认。\\n"\n'
-new3=(old3+
-'    "**立场一致铁律**：上一轮你已经答应、确认、点头过的事（比如「那去吧」「行」「可以去」），"\n'
-'    "这一轮绝不能翻脸说成相反的话（「不是去的地方」「不去」「不能去」）。"\n'
-'    "除非对方这轮给了新情况、或你有正当理由改口并说清楚为什么，否则就顺着前面答应的说。"\n'
-'    "自己前后打架比答错更糟——宁可含糊，也别自相矛盾。\\n"\n')
-assert s.count(old3)==1, "C3锚点数="+str(s.count(old3))
-s=s.replace(old3,new3)
-
-# ---- C2: scrub加剥棋步标记 ----
-old2=('    _scrubbed = _re.sub(r"\\[(?:表情|表情包|动作)[^\\]]*\\]", "", answer).strip()\n'
-'    if _scrubbed:\n'
-'        answer = _scrubbed\n'
-'    elif _re.search(r"\\[(?:表情|表情包|动作)", answer or ""):\n')
-new2=('    # 坑162（2026-11-22）：模型在闲聊里自创【去 e4】【走 e5】这种方括号棋步标记往外吐\n'
-'    # （根子是提示词那段国际象棋着法）。发送前一并剥掉——只剥方括号包裹的，\n'
-'    # 正常口头说"走 e4"的说明不受影响；真下棋走 chess_game 插件画图，不经过这里。\n'
-'    _CHESS_TAG = r"【\\s*(?:去|走)\\s*[a-hA-H0-9KQRBNPkqrbnpOo\\-=]{1,6}\\s*】"\n'
-'    _scrubbed = _re.sub(r"\\[(?:表情|表情包|动作)[^\\]]*\\]|" + _CHESS_TAG, "", answer).strip()\n'
-'    if _scrubbed:\n'
-'        answer = _scrubbed\n'
-'    elif _re.search(r"\\[(?:表情|表情包|动作)|【\\s*(?:去|走)", answer or ""):\n')
-assert s.count(old2)==1, "C2锚点数="+str(s.count(old2))
-s=s.replace(old2,new2)
-
-open(F,"w",encoding="utf-8").write(s)
-print("三处替换完成")
-# 语法校验
-import ast
-ast.parse(s)
-print("语法OK")
-PY
-echo "--- 验收标记 ---"
-echo "防棋步:$(grep -F -c '铁律：只有对方明确要说' $F) _CHESS_TAG:$(grep -F -c '_CHESS_TAG' $F) 立场一致:$(grep -F -c '立场一致铁律' $F)"
-echo "md5: $(md5sum $F | cut -d' ' -f1)"
+287585
+echo "===== 坑162部署:重启bot(只重启不动NapCat/登录态) ====="
+echo "--- 重启前PID ---"; ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}'
+if [ ! -f /root/.r162_armed ]; then
+  touch /root/.r162_armed
+  cat > /root/.r162.sh <<'SH'
+#!/bin/bash
+sleep 8
+OLDPID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
+echo "旧PID:$OLDPID"
+[ -n "$OLDPID" ] && kill "$OLDPID"
+sleep 3
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot_restart_162.log 2>&1 < /dev/null &
+sleep 14
+{
+  echo "=== $(date '+%m-%d %H:%M:%S') 坑162重启后 ==="
+  echo "新PID: $(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}')"
+  echo "插件成功/失败: $(grep -c 'Succeeded to load plugin' /root/bot_restart_162.log 2>/dev/null) / $(grep -c 'Failed to load plugin' /root/bot_restart_162.log 2>/dev/null)"
+  grep -iE 'Bot .* connected|connection open' /root/bot_restart_162.log 2>/dev/null | tail -3
+  echo "登录态:"; tail -2 /root/login_state.log 2>/dev/null
+  echo "坑162标记: 防棋步=$(grep -F -c '铁律：只有对方明确要说' /root/bot/bot/plugins/ai_chat.py) 立场=$(grep -F -c '立场一致铁律' /root/bot/bot/plugins/ai_chat.py)"
+  echo "启动日志尾:"; tail -4 /root/bot_restart_162.log 2>/dev/null
+} > /root/r162_verify.log 2>&1
+rm -f /root/.r162_armed
+SH
+  chmod +x /root/.r162.sh
+  setsid nohup bash /root/.r162.sh >/dev/null 2>&1 </dev/null &
+  echo "延迟重启已挂(8s kill + 14s验证)"
+fi
 echo "=====完====="
