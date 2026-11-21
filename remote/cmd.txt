@@ -1,28 +1,11 @@
-287489
-echo "===== 重启bot(只动main.py,不动NapCat) ====="
-if [ ! -f /root/.botrestart_armed ]; then
-  touch /root/.botrestart_armed
-  cat > /root/.botrestart.sh <<'SH'
-#!/bin/bash
-sleep 8
-OLDPID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
-echo "旧PID:$OLDPID"
-[ -n "$OLDPID" ] && kill "$OLDPID"
-sleep 3
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot_restart_1121.log 2>&1 < /dev/null &
-sleep 12
-{
-  echo "=== $(date '+%m-%d %H:%M:%S') 重启后 ==="
-  echo "新PID: $(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}')"
-  echo "--- 插件加载(chess_game/ai_chat) ---"
-  grep -E "chess_game|ai_chat|插件|Plugin" /root/bot_restart_1121.log 2>/dev/null | tail -8
-  echo "--- 启动日志尾 ---"
-  tail -12 /root/bot_restart_1121.log 2>/dev/null
-} > /root/botrestart_verify.log 2>&1
-rm -f /root/.botrestart_armed
-SH
-  chmod +x /root/.botrestart.sh
-  setsid nohup bash /root/.botrestart.sh >/dev/null 2>&1 </dev/null &
-  echo "延迟重启已挂(8秒后kill旧+12秒后验证)"
-fi
+287490
+echo "===== 验收:bot重启结果 ====="
+echo "--- 重启验证日志 ---"
+cat /root/botrestart_verify.log 2>/dev/null || echo "(无=未执行)"
+echo "--- 当前bot PID ---"
+ps -eo pid,args | grep '[m]ain.py'
+echo "--- 登录态(最新) ---"
+tail -3 /root/login_state.log 2>/dev/null
+echo "--- 主bot.log最新是否恢复处理消息 ---"
+tail -5 /root/bot/bot/bot.log 2>/dev/null
 echo "=====完====="
