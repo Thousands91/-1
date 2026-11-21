@@ -1,13 +1,23 @@
-287494
-echo "===== 最终状态确认 ====="
-echo "--- chess_game md5(应6bc51da6) ---"
-md5sum /root/bot/bot/plugins/chess_game.py
-echo "--- _in_game rule在列 ---"
-grep -nE "_in_game|move_cmd = on_command" /root/bot/bot/plugins/chess_game.py
-echo "--- bot进程(单实例) ---"
-ps -eo pid,args | grep '[m]ain.py'
-echo "--- 登录态最新 ---"
-tail -2 /root/login_state.log
-echo "--- 重启后有无新的走字被拦截(15:00后) ---"
-grep -E "15:(0[0-9]|1[0-9]):.*plugins.chess_game.*lineno=224" /root/bot/bot/bot.log /root/bot_restart_1121.log 2>/dev/null | tail -5 || echo "(无新拦截)"
+287495
+echo "===== 取证:天气TimeoutError原因 ====="
+L=/root/bot/bot/bot.log
+echo "--- 天气触发日志(14:20~14:30) ---"
+grep -E "11-21 14:2[0-9].*(weather|天气|Timeout|翻不开)" "$L" /root/bot_restart_1121.log 2>/dev/null | tail -20
+echo "--- 所有天气handler触发(近2天) ---"
+grep -E "11-(20|21).*plugins.weather" "$L" 2>/dev/null | tail -10
+echo "--- 现场直连Open-Meteo测试(GEO+FORECAST各测一次,看通不通/耗时) ---"
+python3 - <<'PYEOF'
+import urllib.request, json, time
+for name,url in [("GEO","https://geocoding-api.open-meteo.com/v1/search?name=%E5%8C%97%E4%BA%AC&count=1&language=zh"),
+                 ("FORECAST","https://api.open-meteo.com/v1/forecast?latitude=39.9&longitude=116.4&current=temperature_2m&timezone=auto")]:
+    t=time.time()
+    try:
+        req=urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0"})
+        d=urllib.request.urlopen(req,timeout=15).read()
+        print(f"{name}: OK {len(d)}bytes 耗时{time.time()-t:.1f}s")
+    except Exception as e:
+        print(f"{name}: FAIL {type(e).__name__} {e} 耗时{time.time()-t:.1f}s")
+PYEOF
+echo "--- 和风配置有没有 ---"
+grep -E "QWEATHER_KEY|QWEATHER_API_HOST" /root/bot/bot/.env /root/bot/.env 2>/dev/null || echo "(无和风配置,仅Open-Meteo单源)"
 echo "=====完====="
