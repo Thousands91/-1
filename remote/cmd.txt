@@ -1,13 +1,9 @@
-287502
-python3 - <<'PYEOF'
-import urllib.request, urllib.parse, json
-UA={"User-Agent":"curl/8.0"}
-d=json.loads(urllib.request.urlopen(urllib.request.Request("https://wttr.in/"+urllib.parse.quote("广州")+"?format=j1",headers=UA),timeout=12).read())
-seen={}
-for day in d['weather']:
-    for x in day['hourly']:
-        seen[x.get('weatherCode')]=x.get('weatherDesc',[{}])[0].get('value')
-for k,v in sorted(seen.items(),key=lambda x:int(x[0])):
-    print(f"码{k} = {v}")
-PYEOF
+287503
+F=/root/bot/bot/plugins/weather.py
+echo "===== 设备weather.py现状 ====="
+md5sum "$F"
+echo "--- 关键行 ---"
+grep -nE "^WTTR|^GEO|^FORECAST|def get_wttr|def get_open_meteo|text = await get_open_meteo|text = await get_wttr|def get_qweather" "$F"
+echo "--- 行数 ---"
+wc -l "$F"
 echo "=====完====="
