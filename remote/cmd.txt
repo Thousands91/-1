@@ -1,9 +1,11 @@
-287469
-echo "===== 验收:官方黑胶页改动 ====="
-echo "--- 验证日志(延迟手术产出) ---"
-cat /root/jumpfix_verify.log 2>/dev/null || echo "(无验证日志=手术未执行)"
-echo "--- 当前代理进程 ---"
-ps -eo pid,args | grep '[m]usic_sign.py'
-echo "--- 关键行最终态 ---"
-sed -n '238,246p' /root/music_sign.py
+287470
+echo "===== 确认最终卡片 ====="
+python3 - <<'PYEOF'
+import json,urllib.request
+req=urllib.request.Request("http://127.0.0.1:10800/",data=json.dumps({"type":"163","id":"284799"}).encode(),headers={"Content-Type":"application/json"})
+d=json.loads(urllib.request.urlopen(req,timeout=20).read())
+c=json.loads(d["message"]); m=(c.get("meta") or {}).get("music") or {}
+print("jumpUrl:",m.get("jumpUrl"))
+print("musicUrl:",m.get("musicUrl"))
+PYEOF
 echo "=====完====="
