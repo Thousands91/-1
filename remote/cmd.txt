@@ -1,9 +1,9 @@
-287477
-echo "===== 定位bot日志 ====="
-echo "--- 所有可能的日志文件 ---"
-find /root -maxdepth 3 -type f \( -name "*.log" -o -name "bot*.txt" \) 2>/dev/null | head -40
-echo "--- bot进程 ---"
-ps -eo pid,args | grep -iE "bot|nonebot|go-cqhttp|napcat" | grep -v grep | head -15
-echo "--- 含引用的日志(全盘找) ---"
-grep -rlE "对方引用了一条消息|get_msg 取引用失败" /root --include="*.log" 2>/dev/null | head -10
+287478
+echo "===== 取证:引用识别(bot.log) ====="
+echo "--- get_msg/引用相关(全日志尾) ---"
+grep -nE "get_msg|取引用|引用了一条消息|引用.*失败" /root/bot/bot/bot.log 2>/dev/null | tail -25
+echo "--- 14:28~14:33 时段原文 ---"
+grep -nE "14:(2[8-9]|3[0-3]):" /root/bot/bot/bot.log 2>/dev/null | tail -60
+echo "--- bot.log 最后40行 ---"
+tail -40 /root/bot/bot/bot.log 2>/dev/null
 echo "=====完====="
