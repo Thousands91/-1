@@ -1,12 +1,4 @@
-287463
-echo "===== 最近发卡字段实锤 ====="
-echo "--- bot日志里最近发卡记录(全平台) ---"
-for f in /root/bot.log /root/napcat.log /root/napcat-restart.log /root/bot_*.log; do
-  [ -f "$f" ] && grep -hE "\[发卡\]|jumpUrl|自建页|163官方卡|player_url|发卡" "$f" 2>/dev/null | tail -20
-done
-echo "--- 现场直接打一张小霞的卡(调签名代理看返回的jumpUrl) ---"
-TOK=$(curl -s -X POST http://127.0.0.1:8081/sign -d 'id= nonsense' 2>/dev/null | head -c 100)
-curl -s --max-time 10 "http://127.0.0.1:8081/" 2>/dev/null | head -c 200 || echo "(代理端口探测无响应,端口可能非8081)"
-echo "--- 签名代理监听端口 ---"
-ss -tlnp 2>/dev/null | grep -E "python3|7608|LISTEN" | head -15
+287464
+echo "===== 拉取music_sign.py完整源码 ====="
+cat /root/music_sign.py
 echo "=====完====="
