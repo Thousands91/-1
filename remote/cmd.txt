@@ -1,8 +1,8 @@
-287529
-echo "===== 下午文字引用回复不相关——取证 ====="
+287530
+echo "===== 14:31引用那条完整链 ====="
 L=/root/bot/bot/bot.log
-echo "--- 14:25~14:40 所有ai_chat触发(核对·调试 ask/ans) ---"
-grep -nE "14:(2[5-9]|3[0-9]|40):.*(核对·调试|ask=|ans=|引用|get_msg)" "$L" 2>/dev/null | head -40
-echo "--- get_msg取引用失败次数(全日志) ---"
-grep -cF "get_msg 取引用失败" "$L" 2>/dev/null
+echo "--- 31360~31378 ---"
+sed -n '31360,31378p' "$L"
+echo "--- 14:31:16 消息原文(reply id) ---"
+grep -nE "14:31:1[0-9].*message" "$L" | head -5
 echo "=====完====="
