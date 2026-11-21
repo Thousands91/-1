@@ -1,11 +1,9 @@
-287490
-echo "===== 验收:bot重启结果 ====="
-echo "--- 重启验证日志 ---"
-cat /root/botrestart_verify.log 2>/dev/null || echo "(无=未执行)"
-echo "--- 当前bot PID ---"
-ps -eo pid,args | grep '[m]ain.py'
-echo "--- 登录态(最新) ---"
-tail -3 /root/login_state.log 2>/dev/null
-echo "--- 主bot.log最新是否恢复处理消息 ---"
-tail -5 /root/bot/bot/bot.log 2>/dev/null
+287491
+echo "===== 验收2:chess_game加载+WS重连 ====="
+echo "--- 新进程启动日志里所有插件加载 ---"
+grep -E "Succeeded to load plugin|Failed to load plugin" /root/bot_restart_1121.log 2>/dev/null
+echo "--- chess_game是否在列 ---"
+grep -c 'chess_game' /root/bot_restart_1121.log 2>/dev/null
+echo "--- 主bot.log最新(WS重连) ---"
+tail -8 /root/bot/bot/bot.log 2>/dev/null
 echo "=====完====="
