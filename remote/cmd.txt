@@ -1,15 +1,9 @@
-287576
-echo "===== 收不到回复 只读诊断 $(date '+%F %T') ====="
-echo "---[1] bot进程(在不在)---"
-ps -eo pid,etime,args | grep '[m]ain.py' || echo "无bot进程!"
-echo "---[2] NapCat登录态(最近状态变更)---"
-grep -iE '账号状态变更|login_state|未登录|在线|离线|KickedOffLine|offline' /root/remote_ctl.log | tail -12
-echo "---[3] link_probe 最近心跳(WS真实收发)---"
-grep -iE 'HEARTBEAT|LIFECYCLE|online=' /root/remote_ctl.log | tail -8
-echo "---[4] 最近收消息ask / 发消息(判断真没收到还是没回)---"
-grep -iE '\[核对|ask=|sendMsg|发送失败|replies|回复' /root/remote_ctl.log | tail -15
-echo "---[5] tick心跳完整尾(60s连续=CPU没冻)---"
-tail -6 /root/tick.log 2>/dev/null
-echo "---[6] bot自身日志尾(异常/报错)---"
-tail -25 /root/bot/bot.log 2>/dev/null || tail -25 /root/bot.log 2>/dev/null
-echo "=====诊断完毕(只读,未重启未碰NapCat)====="
+287577
+echo "===== 精准诊断 $(date '+%F %T') ====="
+echo "---[1]设备当前时间---"; date '+%F %T'
+echo "---[2]login_state.log 最后8行(带时间,看是否停在01:50)---"; tail -8 /root/login_state.log
+echo "---[3]link_probe.log 最后15行(真正WS心跳)---"; tail -15 /root/link_probe.log 2>/dev/null || echo "无link_probe.log"
+echo "---[4]所有log文件按时间排(找bot/NapCat真实日志)---"; ls -lat /root/*.log /root/bot/*.log 2>/dev/null | head -20
+echo "---[5]NapCat进程---"; ps -eo pid,etime,args | grep -iE '[n]apcat|[qq]|node' | head -10
+echo "---[6]最近5分钟是否有消息进来(bot日志真实路径)---"; for f in /root/bot/log/*.log /root/bot/bot.log /root/bot.log; do [ -f "$f" ] && echo "== $f ==" && tail -12 "$f"; done
+echo "=====精准诊断完毕(只读)====="
