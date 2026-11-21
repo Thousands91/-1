@@ -1,65 +1,67 @@
-<<<task_287483.txt>>>
-===== 任务287483 11-21 14:48:53 =====
+<<<task_287484.txt>>>
+===== 任务287484 11-21 14:49:23 =====
 --- 命令 ---
-echo "===== 取证:14:44~14:48 没回复原因 ====="
-echo "--- 该时段所有消息+处理链 ---"
-grep -nE "11-21 14:(4[4-8]):" /root/bot/bot/bot.log 2>/dev/null | tail -80
-echo "--- 搜'走嘛走嘛'原文(全日志) ---"
-grep -nF "走嘛走嘛" /root/bot/bot/bot.log 2>/dev/null | tail -15
-echo "--- 模型降级/失败/限流 ---"
-grep -nE "11-21 14:(4[4-8]):.*(降级|失败|RateLimit|Error|异常|超时)" /root/bot/bot/bot.log 2>/dev/null | tail -20
+echo "===== 14:47后完整日志 ====="
+echo "--- 31620行到文件末尾 ---"
+sed -n '31620,$p' /root/bot/bot/bot.log 2>/dev/null | head -80
+echo "--- 总行数 ---"
+wc -l /root/bot/bot/bot.log
+echo "--- 搜走嘛走嘛(不限时段) ---"
+grep -nF "走嘛走嘛" /root/bot/bot/bot.log 2>/dev/null | tail -10
+echo "--- 最近一条message.private ---"
+grep -nE "message\.private\.friend" /root/bot/bot/bot.log 2>/dev/null | tail -8
 echo "=====完====="
 --- 输出 ---
-===== 取证:14:44~14:48 没回复原因 =====
---- 该时段所有消息+处理链 ---
-31608:11-21 14:44:15 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-31609:11-21 14:44:15 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-31610:11-21 14:44:45 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-31611:11-21 14:44:45 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-31612:11-21 14:45:15 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-31613:11-21 14:45:15 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-31614:11-21 14:45:45 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-31615:11-21 14:45:45 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-31616:11-21 14:46:15 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-31617:11-21 14:46:15 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-31618:11-21 14:46:45 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-31619:11-21 14:46:45 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-31620:11-21 14:47:08 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243628, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
-31621:11-21 14:47:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243630, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-31622:11-21 14:47:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243630, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-31623:11-21 14:47:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2032545390 from 1561950850 '走嘛走嘛（把阿萨尔推出书店）'
-31624:11-21 14:47:10 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.chess_game, lineno=217)
-31625:11-21 14:47:10 [INFO] nonebot | Matcher(type='message', module=plugins.chess_game, lineno=217) running complete
-31626:11-21 14:47:12 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243632, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-31627:11-21 14:47:13 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243633, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
-31628:11-21 14:47:15 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-31629:11-21 14:47:15 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-31630:11-21 14:47:45 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-31631:11-21 14:47:45 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-31632:11-21 14:48:15 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-31633:11-21 14:48:15 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-31634:11-21 14:48:33 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243713, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
-31635:11-21 14:48:34 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243714, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-31636:11-21 14:48:34 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243714, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-31637:11-21 14:48:34 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 741452561 from 1561950850 '？'
-31638:11-21 14:48:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=101)
-31639:11-21 14:48:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=197)
-31640:11-21 14:48:34 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=101) running complete
-31641:11-21 14:48:34 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=197) running complete
-31642:11-21 14:48:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-31643:11-21 14:48:34 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-31644:11-21 14:48:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1374)
-31645:11-21 14:48:36 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243716, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
-31646:11-21 14:48:38 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243718, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
-31647:11-21 14:48:43 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
-31648:11-21 14:48:45 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-31649:11-21 14:48:45 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-31650:11-21 14:48:52 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
---- 搜'走嘛走嘛'原文(全日志) ---
+===== 14:47后完整日志 =====
+--- 31620行到文件末尾 ---
+11-21 14:47:08 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243628, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+11-21 14:47:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243630, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-21 14:47:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243630, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-21 14:47:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2032545390 from 1561950850 '走嘛走嘛（把阿萨尔推出书店）'
+11-21 14:47:10 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.chess_game, lineno=217)
+11-21 14:47:10 [INFO] nonebot | Matcher(type='message', module=plugins.chess_game, lineno=217) running complete
+11-21 14:47:12 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243632, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-21 14:47:13 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243633, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+11-21 14:47:15 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-21 14:47:15 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+11-21 14:47:45 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-21 14:47:45 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+11-21 14:48:15 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-21 14:48:15 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+11-21 14:48:33 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243713, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 1}
+11-21 14:48:34 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243714, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-21 14:48:34 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243714, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-21 14:48:34 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 741452561 from 1561950850 '？'
+11-21 14:48:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=101)
+11-21 14:48:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.games, lineno=197)
+11-21 14:48:34 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=101) running complete
+11-21 14:48:34 [INFO] nonebot | Matcher(type='message', module=plugins.games, lineno=197) running complete
+11-21 14:48:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
+11-21 14:48:34 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
+11-21 14:48:34 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1374)
+11-21 14:48:36 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243716, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '', 'event_type': 2}
+11-21 14:48:38 [SUCCESS] nonebot | OneBot V11 3427943187 | [notice.notify.input_status]: {'time': 1795243718, 'self_id': 3427943187, 'post_type': 'notice', 'notice_type': 'notify', 'sub_type': 'input_status', 'user_id': 1561950850, 'group_id': 0, 'status_text': '对方正在输入...', 'event_type': 2}
+11-21 14:48:43 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
+11-21 14:48:45 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-21 14:48:45 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+11-21 14:48:52 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+11-21 14:48:59 [INFO] ai_chat | [核对·调试] ask='？' lead=False contra=False agree=False dodge=False ans='（轻轻摇头，嘴角带着一丝笑意）先生，您这是在逗我呢。我这书店的招牌，可经'
+11-21 14:49:00 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1374) running complete
+11-21 14:49:15 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-21 14:49:15 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+--- 总行数 ---
+31654 /root/bot/bot/bot.log
+--- 搜走嘛走嘛(不限时段) ---
 31558:11-21 14:39:24 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2031831358 from 1561950850 '走嘛走嘛（把阿萨尔推出书店）'
 31592:11-21 14:42:16 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1400047172 from 1561950850 '走嘛走嘛（把阿萨尔推出书店）'
 31623:11-21 14:47:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2032545390 from 1561950850 '走嘛走嘛（把阿萨尔推出书店）'
---- 模型降级/失败/限流 ---
-31647:11-21 14:48:43 [WARNING] ai_chat | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
-31650:11-21 14:48:52 [WARNING] ai_chat | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
+--- 最近一条message.private ---
+31495:11-21 14:35:46 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 534343693 from 1561950850 '什么意思'
+31512:11-21 14:36:30 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1541554844 from 1561950850 '所以你去不去欢愉之馆'
+31534:11-21 14:38:02 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2039669511 from 1561950850 '（摇晃阿萨尔的手臂）去嘛去嘛'
+31558:11-21 14:39:24 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2031831358 from 1561950850 '走嘛走嘛（把阿萨尔推出书店）'
+31569:11-21 14:40:28 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 482836129 from 1561950850 '？'
+31592:11-21 14:42:16 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 1400047172 from 1561950850 '走嘛走嘛（把阿萨尔推出书店）'
+31623:11-21 14:47:10 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 2032545390 from 1561950850 '走嘛走嘛（把阿萨尔推出书店）'
+31637:11-21 14:48:34 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.private.friend]: Message 741452561 from 1561950850 '？'
 =====完=====
