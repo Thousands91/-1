@@ -1,8 +1,10 @@
-287520
-echo "===== 验收:bot重启后状态 ====="
-cat /root/botrestart_quote_verify.log 2>/dev/null || echo "(无=未执行)"
-echo "--- 当前bot PID ---"
-ps -eo pid,args | grep '[m]ain.py'
-echo "--- 登录态 ---"
-tail -2 /root/login_state.log 2>/dev/null
+287521
+echo "===== 验收2:确认ai_chat加载+WS ====="
+echo "--- bot_restart_2055.log 大小尾 ---"
+ls -la /root/bot_restart_2055.log 2>/dev/null
+grep -iE "Succeeded to load|Failed to load|Bot .*connected|ai_chat" /root/bot_restart_2055.log 2>/dev/null | tail -8
+echo "--- 主bot.log最新(新进程是否也写这里) ---"
+tail -6 /root/bot/bot/bot.log 2>/dev/null
+echo "--- 全部日志文件按时间 ---"
+ls -lat /root/bot_restart*.log /root/bot/bot/bot.log 2>/dev/null | head -6
 echo "=====完====="
