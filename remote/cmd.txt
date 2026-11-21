@@ -1,8 +1,17 @@
-287581
-echo "===== WS修复完整验收 $(date '+%T') ====="
-cat /root/wsfix_verify.log 2>/dev/null || echo "(还没写完)"
-echo "--- HEARTBEAT最新(应有good=True) ---"
-grep 'HEARTBEAT' /root/link_probe.log 2>/dev/null | tail -3
-echo "--- bot进程 ---"; ps -eo pid,etime,args | grep '[m]ain.py'
-echo "--- 登录态 ---"; tail -2 /root/login_state.log 2>/dev/null
+287582
+echo "===== 对话问题取证 $(date '+%T') ====="
+echo "---[1]所有可能含对话的日志(按时间)---"
+ls -lat /root/bot*.log /root/bot/log/*.log /root/remote_ctl.log 2>/dev/null | head -15
+echo "---[2]全部日志里搜关键词上下文---"
+for f in /root/bot_restart_ac161.log /root/bot_restart_wsfix.log /root/bot/bot.log /root/remote_ctl.log; do
+  [ -f "$f" ] || continue
+  echo "===== $f ====="
+  grep -nE '欢愉之馆|重钧者|什么鬼东西|国际象棋|e4|e5|布缇娜|去 e|\[去|【去' "$f" 2>/dev/null | tail -40
+done
+echo "---[3]最近所有ask/ans对(看它收到什么回什么)---"
+for f in /root/bot_restart_ac161.log /root/bot_restart_wsfix.log; do
+  [ -f "$f" ] || continue
+  echo "===== $f ====="
+  grep -nE '\[核对·调试\]|\[防复读\]' "$f" 2>/dev/null | tail -30
+done
 echo "=====完====="
