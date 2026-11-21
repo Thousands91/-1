@@ -1,14 +1,15 @@
-287512
-L=/root/bot_restart_1535.log
-echo "===== 引用图片取证 ====="
-echo "--- 1780830792 这条被引用的消息原文 ---"
-grep -nF "1780830792" "$L" | tail -8
-echo "--- 20:32:16之后 ai_chat处理链(20:32:16~20:33) ---"
-grep -nE "20:32:(1[6-9]|2[0-9]|3[0-9])|20:33:" "$L" | grep -iE "ai_chat|核对|ask|ans|引用|get_msg|quote|MATCH|handle|finish|发送|send" | tail -25
-echo "--- 所有get_msg取引用记录(全日志,看针对图片报什么) ---"
-grep -nE "get_msg|取引用" "$L" | tail -20
-echo "--- 书架震回复行号上下文 ---"
-N=$(grep -nF "书架都震出花" "$L" | tail -1 | cut -d: -f1)
-echo "回复行号:$N"
-[ -n "$N" ] && sed -n "$((N-6)),$((N+2))p" "$L"
+287513
+echo "===== 图片识别缓存现状 ====="
+F=/root/bot/bot/data/image_captions.json
+ls -la "$F" 2>/dev/null
+echo "--- 缓存条数 ---"
+python3 -c "
+import json
+d=json.load(open('$F'))
+print('总数:',len(d))
+for k,v in list(d.items())[-8:]:
+    print(k[:8],'=',v)
+" 2>/dev/null || echo "(无缓存文件)"
+echo "--- 炸鸡配红酒在不在缓存 ---"
+grep -F "炸鸡配红酒" "$F" 2>/dev/null || echo "(不在)"
 echo "=====完====="
