@@ -1,81 +1,11 @@
-<<<task_287465.txt>>>
-===== 任务287465 11-21 12:59:47 =====
+<<<task_287466.txt>>>
+===== 任务287466 11-21 13:01:31 =====
 --- 命令 ---
-echo "===== music_sign.py 80行以后 ====="
-sed -n '80,300p' /root/music_sign.py
+echo "===== music_sign.py 150行到结尾 ====="
+sed -n '150,400p' /root/music_sign.py
 echo "=====完====="
 --- 输出 ---
-===== music_sign.py 80行以后 =====
-    with _lock:
-        print(time.strftime("%m-%d %H:%M:%S ") + msg, flush=True)
-
-
-def _http_get(url, timeout=12):
-    req = urllib.request.Request(url, headers=UA)
-    return urllib.request.urlopen(req, timeout=timeout).read()
-
-
-def oiapi_card(fmt, url, song="", singer="", cover="", jump=""):
-    """调 OIAPI 出卡，返回卡 JSON 字符串（已解出 message），失败返回 None。"""
-    params = {"format": fmt, "url": url}
-    # 坑129: OIAPI默认把 jumpUrl 写死成 http://oiapi.net/ (点卡片跳到API目录页,放不了歌)。
-    # 官方文档支持 jump 参数指定点击跳转链接;这里把平台歌曲链接作 jump 传入,token原样有效。
-    # 坑129+130: jumpUrl 用传入的 jump(歌曲页); musicUrl 用 url(真mp3直链)。
-    # 二者分离: 点卡片→跳歌曲页; 点封面播放键→播mp3。
-    jump_target = jump or url
-    if jump_target:
-        params["jump"] = jump_target
-    if song:
-        params["song"] = song
-    if singer:
-        params["singer"] = singer
-    if cover:
-        params["cover"] = cover
-    full = OIAPI + "?" + urllib.parse.urlencode(params)
-    try:
-        body = _http_get(full)
-        d = json.loads(body)
-        msg = d.get("message")
-        # 成功：code=1, message 是卡 JSON 字符串
-        if d.get("code") == 1 and isinstance(msg, str):
-            card = json.loads(msg)
-            if (card.get("config") or {}).get("token"):
-                _log(f"OIAPI出真卡 format={fmt} tag={card.get('meta',{}).get('music',{}).get('tag')} ({len(msg)}字节)")
-                return msg  # NapCat 要的是卡 JSON 字符串
-        _log(f"OIAPI无真卡 format={fmt} code={d.get('code')} msg={str(msg)[:60]}")
-    except Exception as e:
-        _log(f"OIAPI失败 format={fmt}: {type(e).__name__} {e}")
-    return None
-
-
-def audio_url(t, sid):
-    """坑130: 官方卡的 musicUrl 被OIAPI填成歌曲网页URL,播放键点下去QQ拿网页当音频播→放不了歌。
-    旧版能播是因为签名源把 musicUrl 填成真mp3直链。这里按平台拼出音频直链,
-    作为 url 参数传给OIAPI → OIAPI签发时把它写进 musicUrl 并一并签token(实测token覆盖)。
-    数据源沿用点歌插件同款公益源:
-      163  → meting netease (实测返回302到网易云CDN的mp3,481KB/首,可用)
-      qq   → meting tencent
-      kuwo → antiserver 直链
-      kugou/migu → 无稳定直链,返回"" (这些平台维持原样=跳网页,不倒退)
-    """
-    if t == "163":
-        return "https://api.injahow.cn/meting/?type=url&server=netease&id=" + str(sid)
-    if t == "qq":
-        return "https://api.injahow.cn/meting/?type=url&server=tencent&id=" + str(sid)
-    if t == "kuwo":
-        return ("http://antiserver.kuwo.cn/anti.s?type=convert_url"
-                "&format=mp3&response=url&rid=" + str(sid))
-    return ""
-
-
-def netease_meta(sid):
-    """旧路径兜底用：从网易云补齐歌讯。"""
-    if sid in _cache:
-        return _cache[sid]
-    url = "https://music.163.com/api/song/detail/?id=%s&ids=%%5B%s%%5D" % (sid, sid)
-    d = json.load(urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=4))
-    s = (d.get("songs") or [{}])[0]
-    r = (s.get("name", ""),
+===== music_sign.py 150行到结尾 =====
          "/".join(a.get("name", "") for a in s.get("artists") or []),
          (s.get("album") or {}).get("picUrl", ""))
     _cache[sid] = r
