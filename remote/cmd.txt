@@ -1,6 +1,12 @@
-287572
-echo "===== 坑161 A+C 重启后验收 ====="
-cat /root/ac161restart_verify.log 2>/dev/null || echo "验证日志还没写完"
-echo "--- 当前bot PID ---"
-ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}'
+287573
+echo "===== 坑161 验收补充:插件全量+WS心跳 ====="
+echo "--- 本次启动日志 全部插件加载行 ---"
+grep -E "Succeeded to load plugin|Failed to load plugin" /root/bot_restart_ac161.log 2>/dev/null | sed 's/.*plugin //' | head -20
+echo "成功数: $(grep -c 'Succeeded to load plugin' /root/bot_restart_ac161.log 2>/dev/null)  失败数: $(grep -c 'Failed to load plugin' /root/bot_restart_ac161.log 2>/dev/null)"
+echo "--- 当前bot PID(多重确认) ---"
+ps -eo pid,args | grep '[m]ain.py'
+echo "--- link_probe 最新心跳(证明WS真实收发) ---"
+grep -iE 'HEARTBEAT|connected|online=' /root/link_probe.log 2>/dev/null | tail -4
+echo "--- 其它日志里的WS连接 ---"
+grep -iE 'Bot .* connected|WebSocket Connection closed' /root/bot_restart_ac161.log 2>/dev/null | tail -3
 echo "=====完====="
