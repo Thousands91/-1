@@ -1,16 +1,59 @@
-<<<task_287514.txt>>>
-===== 任务287514 11-21 20:47:37 =====
+<<<task_287515.txt>>>
+===== 任务287515 11-21 20:49:28 =====
 --- 命令 ---
 F=/root/bot/bot/plugins/ai_chat.py
-echo "===== 设备ai_chat.py现状 ====="
-md5sum "$F"
-grep -n "async def _image_sticker_name\|_image_sticker_name(_qu" "$F"
-wc -l "$F"
+echo "===== 设备函数原文(394-428) ====="
+sed -n '394,428p' "$F"
+echo "===== 设备调用点原文(1498-1508) ====="
+sed -n '1498,1508p' "$F"
 echo "=====完====="
 --- 输出 ---
-===== 设备ai_chat.py现状 =====
-508ee60985eeeeba6b451d3ae5b92b8f  /root/bot/bot/plugins/ai_chat.py
-394:async def _image_sticker_name(url: str) -> str:
-1503:                                _qn = await _image_sticker_name(_qu)
-2397 /root/bot/bot/plugins/ai_chat.py
+===== 设备函数原文(394-428) =====
+async def _image_sticker_name(url: str) -> str:
+    """image 段 → 识别名。缓存命中出真名；未命中出占位并踢后台识别。"""
+    try:
+        import httpx  # nonebot 自带依赖
+        async with httpx.AsyncClient(timeout=6, follow_redirects=True) as cli:
+            r = await cli.get(url, headers={"User-Agent": "Mozilla/5.0"})
+        if r.status_code != 200 or not (100 < len(r.content) <= 5 * 1024 * 1024):
+            return "表情包"
+        key = _hashlib.md5(r.content).hexdigest()
+        if not _IMG_CAP_LOADED:
+            _load_img_caps()
+        cap = _IMG_CAPS.get(key)
+        if cap:
+            return cap
+        if key not in _IMG_CAP_KICKED:
+            _IMG_CAP_KICKED.add(key)
+
+            async def _bf(data: bytes = r.content) -> None:
+                try:
+                    c = await _vlm_caption(data)
+                    if c:
+                        _IMG_CAPS[key] = c
+                        _IMG_CAP_FILE.write_text(
+                            _json.dumps(_IMG_CAPS, ensure_ascii=False), encoding="utf-8")
+                        logger.info(f"[图片表情识别] {key[:8]} → {c}")
+                except Exception:
+                    pass  # 失败不卡死；该图下次出现自动再试
+                finally:
+                    _IMG_CAP_KICKED.discard(key)
+
+            asyncio.get_running_loop().create_task(_bf())
+        return "表情包"
+    except Exception:
+        return "表情包"
+
+===== 设备调用点原文(1498-1508) =====
+                        _qparts.append(f"[语音:{_vt}]" if _vt else "[语音:没听清]")
+                    elif s.get("type") == "image":
+                        _qu = str((s.get("data") or {}).get("url") or "")
+                        if _qu.startswith("http"):
+                            try:
+                                _qn = await _image_sticker_name(_qu)
+                            except Exception:
+                                _qn = "表情包"
+                            _qparts.append(f"[表情包:{_qn}]")
+                        else:
+                            _qparts.append("[表情包]")
 =====完=====
