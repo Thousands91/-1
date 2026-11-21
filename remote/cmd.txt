@@ -1,9 +1,11 @@
-287483
-echo "===== 取证:14:44~14:48 没回复原因 ====="
-echo "--- 该时段所有消息+处理链 ---"
-grep -nE "11-21 14:(4[4-8]):" /root/bot/bot/bot.log 2>/dev/null | tail -80
-echo "--- 搜'走嘛走嘛'原文(全日志) ---"
-grep -nF "走嘛走嘛" /root/bot/bot/bot.log 2>/dev/null | tail -15
-echo "--- 模型降级/失败/限流 ---"
-grep -nE "11-21 14:(4[4-8]):.*(降级|失败|RateLimit|Error|异常|超时)" /root/bot/bot/bot.log 2>/dev/null | tail -20
+287484
+echo "===== 14:47后完整日志 ====="
+echo "--- 31620行到文件末尾 ---"
+sed -n '31620,$p' /root/bot/bot/bot.log 2>/dev/null | head -80
+echo "--- 总行数 ---"
+wc -l /root/bot/bot/bot.log
+echo "--- 搜走嘛走嘛(不限时段) ---"
+grep -nF "走嘛走嘛" /root/bot/bot/bot.log 2>/dev/null | tail -10
+echo "--- 最近一条message.private ---"
+grep -nE "message\.private\.friend" /root/bot/bot/bot.log 2>/dev/null | tail -8
 echo "=====完====="
