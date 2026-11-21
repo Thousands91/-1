@@ -1,17 +1,14 @@
-287582
-echo "===== 对话问题取证 $(date '+%T') ====="
-echo "---[1]所有可能含对话的日志(按时间)---"
-ls -lat /root/bot*.log /root/bot/log/*.log /root/remote_ctl.log 2>/dev/null | head -15
-echo "---[2]全部日志里搜关键词上下文---"
-for f in /root/bot_restart_ac161.log /root/bot_restart_wsfix.log /root/bot/bot.log /root/remote_ctl.log; do
-  [ -f "$f" ] || continue
-  echo "===== $f ====="
-  grep -nE '欢愉之馆|重钧者|什么鬼东西|国际象棋|e4|e5|布缇娜|去 e|\[去|【去' "$f" 2>/dev/null | tail -40
-done
-echo "---[3]最近所有ask/ans对(看它收到什么回什么)---"
-for f in /root/bot_restart_ac161.log /root/bot_restart_wsfix.log; do
-  [ -f "$f" ] || continue
-  echo "===== $f ====="
-  grep -nE '\[核对·调试\]|\[防复读\]' "$f" 2>/dev/null | tail -30
-done
+287583
+echo "===== 坑162下发前探测 $(date '+%T') ====="
+F=/root/bot/bot/plugins/ai_chat.py
+echo "md5: $(md5sum $F | cut -d' ' -f1)"
+echo "--- C1锚点(原国际象棋段首行) count ---"
+grep -F -c '## 国际象棋（这个群里有棋盘，常有人问，照实答）' $F
+echo "--- C2锚点(scrub原行) count ---"
+grep -F -c '_scrubbed = _re.sub(r"\[(?:表情|表情包|动作)[^\]]*\]", "", answer).strip()' $F
+echo "--- C3锚点(认账行) count ---"
+grep -F -c '自己说过的话要认账：刚说过什么，下一条引用它时不能翻脸不认。' $F
+echo "--- 现状:新标记应全为0 ---"
+echo "防棋步:$(grep -F -c '铁律：只有对方明确要说' $F) _CHESS_TAG:$(grep -F -c '_CHESS_TAG' $F) 立场一致:$(grep -F -c '立场一致铁律' $F)"
+echo "--- 备份现状 ---"; ls -la /root/bot/bot/plugins/bak_162* 2>/dev/null || echo "无"
 echo "=====完====="
