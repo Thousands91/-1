@@ -1,39 +1,8 @@
-287556
-echo "===== 坑160订正部署:重启bot(只重启bot不动NapCat/登录态) ====="
+287557
+echo "===== 读坑160订正重启后验证日志 ====="
+cat /root/v160brestart_verify.log 2>/dev/null || echo "验证日志未生成"
+echo "--- 当前时刻 ---"
+date '+%F %T'
 echo "--- 当前bot PID ---"
 ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}'
-echo "--- 当前登录态(扫码恢复后应[在线]) ---"
-tail -2 /root/login_state.log 2>/dev/null
-if [ ! -f /root/.v160brestart_armed ]; then
-  touch /root/.v160brestart_armed
-  cat > /root/.v160brestart.sh <<'SH'
-#!/bin/bash
-sleep 8
-OLDPID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
-echo "旧PID:$OLDPID"
-[ -n "$OLDPID" ] && kill "$OLDPID"
-sleep 3
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot_restart_v160b.log 2>&1 < /dev/null &
-sleep 12
-{
-  echo "=== $(date '+%m-%d %H:%M:%S') 重启后 ==="
-  echo "新PID: $(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}')"
-  echo "--- 插件加载成功数/失败数 ---"
-  grep -c "Succeeded to load plugin" /root/bot_restart_v160b.log 2>/dev/null
-  grep -c "Failed to load plugin" /root/bot_restart_v160b.log 2>/dev/null
-  echo "--- WS连接 ---"
-  grep -iE "Bot .* connected|WebSocket Connection closed" /root/bot_restart_v160b.log 2>/dev/null | tail -3
-  echo "--- 登录态(重启不应影响) ---"
-  tail -2 /root/login_state.log 2>/dev/null
-  echo "--- 坑160订正新标注(设备实际文件,应=1) ---"
-  grep -F -c '是 {sec} 秒的试听片段' /root/bot/bot/plugins/song_request.py
-  echo "--- 启动日志尾 ---"
-  tail -5 /root/bot_restart_v160b.log 2>/dev/null
-} > /root/v160brestart_verify.log 2>&1
-rm -f /root/.v160brestart_armed
-SH
-  chmod +x /root/.v160brestart.sh
-  setsid nohup bash /root/.v160brestart.sh >/dev/null 2>&1 </dev/null &
-  echo "延迟重启已挂(8s kill + 12s验证)"
-fi
 echo "=====完====="
