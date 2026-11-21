@@ -1,27 +1,65 @@
-<<<task_287536.txt>>>
-===== 任务287536 11-21 21:41:42 =====
+<<<task_287537.txt>>>
+===== 任务287537 11-21 21:53:46 =====
 --- 命令 ---
-echo "===== 验收:坑156重启 ====="
-cat /root/botrestart_156_verify.log 2>/dev/null || echo "(无=未执行)"
-echo "--- 当前PID ---"
-ps -eo pid,args | grep '[m]ain.py'
-echo "--- 登录态 ---"
-tail -2 /root/login_state.log 2>/dev/null
-echo "--- 关键行确认 ---"
-grep -c "要紧：他引用的那句" /root/bot/bot/plugins/ai_chat.py
+echo "===== 卡片跳转换回官方黑胶页/m/song(用户要第四张那种,弃自建github.io) ====="
+echo "--- 改前md5+关键行 ---"
+md5sum /root/music_sign.py
+grep -n 'if t == "163" and au:\|if t == "163" and False and au:' /root/music_sign.py
+cp /root/music_sign.py /root/music_sign.py.bak_selfplayer_$(date +%m%d%H%M)
+# 禁用自建页分支,让163有直链时也走elif的/m/song官方旧模板(无浅蓝条、无github.io拦截)
+sed -i 's/if t == "163" and au:/if t == "163" and False and au:/' /root/music_sign.py
+echo "--- 改后关键行 ---"
+grep -n 'if t == "163" and False and au:' /root/music_sign.py
+echo "--- 语法检查 ---"
+python3 -m py_compile /root/music_sign.py && echo "语法OK" || echo "语法FAIL-不重启"
+echo "--- 改后md5(应精确db736a06=官方/m/song版) ---"
+md5sum /root/music_sign.py
+# 延迟重启代理+打真卡验证(命令行含music_sign.py,同进程pkill会自杀,故延迟20秒)
+if [ ! -f /root/.officialback_armed ]; then
+  touch /root/.officialback_armed
+  cat > /root/.officialback.sh <<'EOS'
+#!/bin/bash
+sleep 20
+pkill -f '[m]usic_sign.py' 2>/dev/null
+sleep 2
+cd /root && setsid nohup python3 /root/music_sign.py >> /root/music_sign.log 2>&1 < /dev/null &
+sleep 4
+{
+  echo "=== $(date '+%m-%d %H:%M:%S') 重启后代理进程 ==="
+  ps -eo pid,args | grep '[m]usic_sign.py'
+  echo "=== 打真卡验证(返回体即卡JSON,无message外层) ==="
+  python3 - <<'PYEOF'
+import json,urllib.request
+body=json.dumps({"type":"163","id":"284799"}).encode()
+req=urllib.request.Request("http://127.0.0.1:10800/",data=body,headers={"Content-Type":"application/json"})
+card=json.loads(urllib.request.urlopen(req,timeout=25).read().decode(errors='replace'))
+m=(card.get("meta") or {}).get("music") or {}
+j=m.get("jumpUrl")
+print("tag:",m.get("tag"))
+print("jumpUrl:",j)
+print("  是否官方页:", bool(j and "music.163.com/m/song" in j))
+print("  是否还带github.io:", bool(j and "github.io" in j))
+print("musicUrl:",m.get("musicUrl"))
+print("token:",bool((card.get("config") or {}).get("token")))
+PYEOF
+} > /root/officialback_verify.log 2>&1
+rm -f /root/.officialback_armed
+EOS
+  chmod +x /root/.officialback.sh
+  setsid nohup bash /root/.officialback.sh >/dev/null 2>&1 </dev/null &
+  echo "延迟手术已挂载(20秒后重启代理+打真卡验证)"
+fi
 echo "=====完====="
 --- 输出 ---
-===== 验收:坑156重启 =====
-=== 11-21 21:39:51 重启后 ===
-新PID: 2108
-成功: 11 失败: 0
-11-21 21:39:47 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
-11-21 21:39:49 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
---- 当前PID ---
- 2108 /root/bot/venv/bin/python main.py
---- 登录态 ---
-2026-11-21 21:34:07 [在线]
-2026-11-21 21:39:08 [在线]
---- 关键行确认 ---
-1
+===== 卡片跳转换回官方黑胶页/m/song(用户要第四张那种,弃自建github.io) =====
+--- 改前md5+关键行 ---
+54fae249e8d98a90ff0694628063f4b4  /root/music_sign.py
+239:                if t == "163" and au:
+--- 改后关键行 ---
+239:                if t == "163" and False and au:
+--- 语法检查 ---
+语法OK
+--- 改后md5(应精确db736a06=官方/m/song版) ---
+db736a0679203cd73c0ef1b5b125b70d  /root/music_sign.py
+延迟手术已挂载(20秒后重启代理+打真卡验证)
 =====完=====
