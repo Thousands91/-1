@@ -1,21 +1,25 @@
-<<<task_287486.txt>>>
-===== 任务287486 11-21 14:53:41 =====
+<<<task_287487.txt>>>
+===== 任务287487 11-21 14:55:48 =====
 --- 命令 ---
-echo "===== 定位设备chess_game.py ====="
-find /root -name "chess_game.py" 2>/dev/null
-echo "--- 关键行(move_cmd/gid_of) ---"
-for f in $(find /root -name "chess_game.py" 2>/dev/null); do
-  echo "文件:$f"; grep -nE "move_cmd = on_command|def gid_of|resign_cmd = on_command|end_cmd = on_command" "$f"; md5sum "$f"
-done
+echo "===== 部署前检查 ====="
+echo "--- bot进程PID ---"
+ps -eo pid,args | grep '[m]ain.py' | head -3
+echo "--- 最近1分钟有无消息互动(游戏局/对话) ---"
+grep -E "11-21 14:(5[1-9]):.*message\.private" /root/bot/bot/bot.log 2>/dev/null | tail -8
+echo "--- 登录态 ---"
+cat /root/login_state.log 2>/dev/null | tail -3
+echo "--- 当前时间 ---"
+date '+%m-%d %H:%M:%S'
 echo "=====完====="
 --- 输出 ---
-===== 定位设备chess_game.py =====
-/root/bot/bot/plugins/chess_game.py
---- 关键行(move_cmd/gid_of) ---
-文件:/root/bot/bot/plugins/chess_game.py
-112:def gid_of(event: MessageEvent) -> int:
-217:move_cmd = on_command("走", rule=to_me(), priority=20, block=True)
-218:resign_cmd = on_command("认输", rule=to_me(), priority=20, block=True)
-219:end_cmd = on_command("结束棋局", aliases={"不下了"}, rule=to_me(), priority=20, block=True)
-4e5d51512130aea3470b5b09ba00ca8c  /root/bot/bot/plugins/chess_game.py
+===== 部署前检查 =====
+--- bot进程PID ---
+24029 /root/bot/venv/bin/python main.py
+--- 最近1分钟有无消息互动(游戏局/对话) ---
+--- 登录态 ---
+2026-11-21 14:42:14 [在线]
+2026-11-21 14:47:15 [在线]
+2026-11-21 14:52:16 [在线]
+--- 当前时间 ---
+11-21 14:55:48
 =====完=====
