@@ -1,24 +1,37 @@
-<<<task_287520.txt>>>
-===== 任务287520 11-21 20:59:48 =====
+<<<task_287521.txt>>>
+===== 任务287521 11-21 21:01:44 =====
 --- 命令 ---
-echo "===== 验收:bot重启后状态 ====="
-cat /root/botrestart_quote_verify.log 2>/dev/null || echo "(无=未执行)"
-echo "--- 当前bot PID ---"
-ps -eo pid,args | grep '[m]ain.py'
-echo "--- 登录态 ---"
-tail -2 /root/login_state.log 2>/dev/null
+echo "===== 验收2:确认ai_chat加载+WS ====="
+echo "--- bot_restart_2055.log 大小尾 ---"
+ls -la /root/bot_restart_2055.log 2>/dev/null
+grep -iE "Succeeded to load|Failed to load|Bot .*connected|ai_chat" /root/bot_restart_2055.log 2>/dev/null | tail -8
+echo "--- 主bot.log最新(新进程是否也写这里) ---"
+tail -6 /root/bot/bot/bot.log 2>/dev/null
+echo "--- 全部日志文件按时间 ---"
+ls -lat /root/bot_restart*.log /root/bot/bot/bot.log 2>/dev/null | head -6
 echo "=====完====="
 --- 输出 ---
-===== 验收:bot重启后状态 =====
-=== 11-21 20:57:53 重启后 ===
-新PID: 22640
---- 插件加载数/失败数 ---
-成功: 0 失败: 0
---- ai_chat在列 ---
---- WS连接 ---
---- 当前bot PID ---
-22640 /root/bot/venv/bin/python main.py
---- 登录态 ---
-2026-11-21 20:53:57 [在线]
-2026-11-21 20:58:58 [在线]
+===== 验收2:确认ai_chat加载+WS =====
+--- bot_restart_2055.log 大小尾 ---
+-rw-r--r-- 1 root root 4444 Nov 21 21:01 /root/bot_restart_2055.log
+11-21 20:57:54 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
+11-21 20:57:55 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+11-21 20:57:55 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-21 20:57:55 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+11-21 20:57:55 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+11-21 20:57:55 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
+11-21 20:57:55 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+11-21 20:57:59 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+--- 主bot.log最新(新进程是否也写这里) ---
+11-21 15:00:15 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+11-21 15:00:28 [INFO] uvicorn | Shutting down
+11-21 15:00:28 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+11-21 15:00:28 [INFO] uvicorn | Waiting for application shutdown.
+11-21 15:00:28 [INFO] uvicorn | Application shutdown complete.
+11-21 15:00:28 [INFO] uvicorn | Finished server process [24029]
+--- 全部日志文件按时间 ---
+-rw-r--r-- 1 root root    4444 Nov 21 21:01 /root/bot_restart_2055.log
+-rw-r--r-- 1 root root  659809 Nov 21 20:57 /root/bot_restart_1535.log
+-rw-r--r-- 1 root root   33587 Nov 21 15:37 /root/bot_restart_1121.log
+-rw-r--r-- 1 root root 4183339 Nov 21 15:00 /root/bot/bot/bot.log
 =====完=====
