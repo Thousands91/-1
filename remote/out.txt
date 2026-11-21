@@ -1,39 +1,37 @@
-<<<task_287573.txt>>>
-===== 任务287573 11-22 01:57:37 =====
+<<<task_287574.txt>>>
+===== 任务287574 11-22 01:59:27 =====
 --- 命令 ---
-echo "===== 坑161 验收补充:插件全量+WS心跳 ====="
-echo "--- 本次启动日志 全部插件加载行 ---"
-grep -E "Succeeded to load plugin|Failed to load plugin" /root/bot_restart_ac161.log 2>/dev/null | sed 's/.*plugin //' | head -20
-echo "成功数: $(grep -c 'Succeeded to load plugin' /root/bot_restart_ac161.log 2>/dev/null)  失败数: $(grep -c 'Failed to load plugin' /root/bot_restart_ac161.log 2>/dev/null)"
-echo "--- 当前bot PID(多重确认) ---"
-ps -eo pid,args | grep '[m]ain.py'
-echo "--- link_probe 最新心跳(证明WS真实收发) ---"
-grep -iE 'HEARTBEAT|connected|online=' /root/link_probe.log 2>/dev/null | tail -4
-echo "--- 其它日志里的WS连接 ---"
-grep -iE 'Bot .* connected|WebSocket Connection closed' /root/bot_restart_ac161.log 2>/dev/null | tail -3
+echo "===== 重启后新心跳确认 ====="
+echo "当前时间: $(date '+%H:%M:%S')"
+echo "--- link_probe.log 尾部20行 ---"
+tail -20 /root/link_probe.log 2>/dev/null
+echo "--- HEARTBEAT行数(重启后01:54起) ---"
+grep -c 'HEARTBEAT' /root/link_probe.log 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-===== 坑161 验收补充:插件全量+WS心跳 =====
---- 本次启动日志 全部插件加载行 ---
-"games" from "plugins.games"
-"song_request" from "plugins.song_request"
-"book_find" from "plugins.book_find"
-"weather" from "plugins.weather"
-"keyword_reply" from "plugins.keyword_reply"
-"news" from "plugins.news"
-"image_search_multisource" from "plugins.image_search_multisource"
-"fortune" from "plugins.fortune"
-"ai_chat" from "plugins.ai_chat"
-"chess_game" from "plugins.chess_game"
-"link_probe" from "plugins.link_probe"
-成功数: 11  失败数: 0
---- 当前bot PID(多重确认) ---
-24834 /root/bot/venv/bin/python main.py
---- link_probe 最新心跳(证明WS真实收发) ---
+===== 重启后新心跳确认 =====
+当前时间: 01:59:27
+--- link_probe.log 尾部20行 ---
+[11-21 15:37:52.236] LIFECYCLE sub_type=connect self_id=3427943187
+[11-21 15:38:15.948] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-21 20:57:56.357] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-21 20:57:59.127] LIFECYCLE sub_type=connect self_id=3427943187
+[11-21 20:58:24.871] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-21 21:39:48.602] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-21 21:39:49.859] LIFECYCLE sub_type=connect self_id=3427943187
+[11-21 21:39:55.387] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-21 22:07:05.546] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-21 22:07:10.022] LIFECYCLE sub_type=connect self_id=3427943187
+[11-21 22:07:26.716] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-21 22:34:03.235] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-22 00:46:20.226] LIFECYCLE sub_type=connect self_id=3427943187
+[11-22 00:46:49.891] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
 [11-22 00:59:29.787] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-22 00:59:34.574] LIFECYCLE sub_type=connect self_id=3427943187
 [11-22 00:59:50.005] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
 [11-22 01:54:20.815] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-22 01:54:24.498] LIFECYCLE sub_type=connect self_id=3427943187
 [11-22 01:54:51.765] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
---- 其它日志里的WS连接 ---
-11-22 01:54:24 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
+--- HEARTBEAT行数(重启后01:54起) ---
+22
 =====完=====
