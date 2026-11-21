@@ -1,9 +1,13 @@
-287478
-echo "===== 取证:引用识别(bot.log) ====="
-echo "--- get_msg/引用相关(全日志尾) ---"
-grep -nE "get_msg|取引用|引用了一条消息|引用.*失败" /root/bot/bot/bot.log 2>/dev/null | tail -25
-echo "--- 14:28~14:33 时段原文 ---"
-grep -nE "14:(2[8-9]|3[0-3]):" /root/bot/bot/bot.log 2>/dev/null | tail -60
-echo "--- bot.log 最后40行 ---"
-tail -40 /root/bot/bot/bot.log 2>/dev/null
+287479
+echo "===== 取证:11-21引用识别 ====="
+echo "--- 11-21 全天含'引用'的日志 ---"
+grep -nE "11-21.*(引用|get_msg|quote)" /root/bot/bot/bot.log 2>/dev/null | tail -15
+echo "--- 11-21 14:25之后所有ai_chat触发(核对·调试) ---"
+grep -nE "11-21 14:(2[5-9]|3[0-9])" /root/bot/bot/bot.log 2>/dev/null | tail -15
+echo "--- bot.log 真实最后15行(带行号) ---"
+tail -15 /root/bot/bot/bot.log 2>/dev/null
+echo "--- asar-sync的bot.log也查(可能是活跃日志) ---"
+grep -nE "引用|get_msg|14:(2[5-9]|3[0-9])" /root/asar-sync/logs/bot.log 2>/dev/null | tail -15
+echo "--- 两日志大小时间 ---"
+ls -la /root/bot/bot/bot.log /root/asar-sync/logs/bot.log 2>/dev/null
 echo "=====完====="
