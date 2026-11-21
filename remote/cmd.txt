@@ -1,11 +1,6 @@
-287484
-echo "===== 14:47后完整日志 ====="
-echo "--- 31620行到文件末尾 ---"
-sed -n '31620,$p' /root/bot/bot/bot.log 2>/dev/null | head -80
-echo "--- 总行数 ---"
-wc -l /root/bot/bot/bot.log
-echo "--- 搜走嘛走嘛(不限时段) ---"
-grep -nF "走嘛走嘛" /root/bot/bot/bot.log 2>/dev/null | tail -10
-echo "--- 最近一条message.private ---"
-grep -nE "message\.private\.friend" /root/bot/bot/bot.log 2>/dev/null | tail -8
+287485
+echo "===== 14:38~14:47 全消息与回复链 ====="
+grep -nE "11-21 14:(3[89]|4[0-7]):.*(message\.private|chess_game|ai_chat|核对·调试|发送|send|finished|走)" /root/bot/bot/bot.log 2>/dev/null | grep -vE "link_probe|input_status" | tail -60
+echo "--- '胳膊摇得'那条回复的日志时间 ---"
+grep -nF "胳膊摇得" /root/bot/bot/bot.log 2>/dev/null | tail -3
 echo "=====完====="
