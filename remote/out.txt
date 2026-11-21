@@ -1,27 +1,40 @@
-<<<task_287543.txt>>>
-===== 任务287543 11-21 22:09:45 =====
+<<<task_287544.txt>>>
+===== 任务287544 11-21 22:26:23 =====
 --- 命令 ---
-echo "===== 验收:坑159重启后WS真实连接 ====="
-echo "--- 连接相关(全量grep) ---"
-grep -iE "connected|WebSocket|ONEBOT|Bot 3427943187" /root/bot_restart_q159.log 2>/dev/null | tail -8
-echo "--- 日志尾(看有无异常) ---"
-tail -5 /root/bot_restart_q159.log 2>/dev/null
+echo "===== 探测设备song_request.py原文(坑160 VIP试听片段) ====="
+md5sum /root/bot/bot/plugins/song_request.py
+echo "--- fetch_audio_any 886-896 ---"
+sed -n '886,896p' /root/bot/bot/plugins/song_request.py
+echo "--- VIP分支 483-487 ---"
+sed -n '483,487p' /root/bot/bot/plugins/song_request.py
+echo "--- 锚点1计数(原fetch_audio_any,应为1) ---"
+grep -F -c 'return await fetch_audio(s["id"])' /root/bot/bot/plugins/song_request.py
+echo "--- 锚点2计数(原VIP finish,应为1) ---"
+grep -F -c '这首是「{s['"'"'artists'"'"']}」的原曲，两边平台都要 VIP，柜上拿不来整首的音频' /root/bot/bot/plugins/song_request.py
 echo "=====完====="
 --- 输出 ---
-===== 验收:坑159重启后WS真实连接 =====
---- 连接相关(全量grep) ---
-11-21 22:07:56 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-21 22:07:56 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-21 22:08:26 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-21 22:08:26 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-21 22:08:56 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-21 22:08:56 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-21 22:09:26 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-21 22:09:26 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
---- 日志尾(看有无异常) ---
-11-21 22:08:26 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-21 22:08:56 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-21 22:08:56 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-21 22:09:26 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-21 22:09:26 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+===== 探测设备song_request.py原文(坑160 VIP试听片段) =====
+9a5c7617f5ad331f6c2cdc38e5b88726  /root/bot/bot/plugins/song_request.py
+--- fetch_audio_any 886-896 ---
+async def fetch_audio_any(s: dict):
+    """按条目 src 分发取音频 → (bytes, 秒, err)。"""
+    src = s.get("src", "netease")
+    if src == "kuwo":
+        return await fetch_audio_kuwo(s["id"])
+    if src == "qq":
+        return await fetch_audio_qq(s["id"])
+    if src in ("kugou", "migu"):
+        # 坑124：这两家只发官方卡（跳转链接），不取音频；id 里存的是歌名
+        return None, 0, "官方卡平台"
+    return await fetch_audio(s["id"])
+--- VIP分支 483-487 ---
+        if s.get("src", "netease") == "netease" and s.get("fee") == 1:
+            if await try_official_card(pick_cmd, s):
+                await pick_cmd.finish(
+                    f"这首是「{s['artists']}」的原曲，两边平台都要 VIP，柜上拿不来整首的音频"
+                    f"——点上面这张卡片去网易云听（有会员就能听整首）。")
+--- 锚点1计数(原fetch_audio_any,应为1) ---
+1
+--- 锚点2计数(原VIP finish,应为1) ---
+1
 =====完=====
