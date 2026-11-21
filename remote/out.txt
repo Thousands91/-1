@@ -1,43 +1,32 @@
-<<<task_287460.txt>>>
-===== 任务287460 11-21 12:44:01 =====
+<<<task_287461.txt>>>
+===== 任务287461 11-21 12:45:10 =====
 --- 命令 ---
-echo "===== 回线验收:登录态+实例+链路 ====="
-echo "--- 登录态台账尾 ---"
-tail -6 /root/login_state.log 2>/dev/null
-echo "--- 实例清单(遥控/autoheal/watch/NapCat主进程) ---"
-ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch|opt/QQ/[q]q -q" | grep -v grep
-echo "--- QQ主进程计数 ---"
-pgrep -f 'opt/QQ/[q]q -q 3427943187' | wc -l
-echo "--- BOT端口 ---"
-curl -s -o /dev/null -w "8080 HTTP:%{http_code}\n" --max-time 5 http://127.0.0.1:8080 2>/dev/null || echo "8080无响应"
-echo "--- tick心跳尾(应连续) ---"
-tail -3 /root/tick.log 2>/dev/null
-echo "--- 水位 ---"
-cat /root/.remote_last 2>/dev/null; echo
+echo "===== 回线补验:QQ真实实例+autoheal幽灵 ====="
+echo "--- QQ进程(正确模式,不限-q参数) ---"
+ps -eo pid,args | grep -E "opt/QQ/[q]q" | grep -v grep | grep -v "type=" | head -10
+echo "QQ主进程数: $(pgrep -f 'opt/QQ/[q]q' | wc -l) (含子进程)"
+echo "--- autoheal两实例启动时刻 ---"
+for p in $(pgrep -f 'bash /root/azar_autoheal.[s]h'); do ps -o pid,lstart,args -p $p | tail -1; done
+echo "--- 等25秒后autoheal是否自清 ---"
+sleep 25
+for p in $(pgrep -f 'bash /root/azar_autoheal.[s]h'); do ps -o pid,lstart -p $p | tail -1; done
+echo "--- WS连接探针尾 ---"
+tail -5 /root/connect_probe.log 2>/dev/null || tail -5 /root/link_probe.log 2>/dev/null || echo "(无探针日志)"
 echo "=====完====="
 --- 输出 ---
-===== 回线验收:登录态+实例+链路 =====
---- 登录态台账尾 ---
-2026-11-21 12:16:23 [未登录]
-2026-11-21 12:21:26 [未登录]
-2026-11-21 12:26:27 [未登录]
-2026-11-21 12:31:29 [未登录]
-2026-11-21 12:36:31 [未登录]
-2026-11-21 12:41:31 状态变化: [未登录] -> [在线]
---- 实例清单(遥控/autoheal/watch/NapCat主进程) ---
-17138 bash /root/azar_autoheal.sh
-17145 bash /root/offline_watch.sh
-18485 bash /root/azar_autoheal.sh
-24484 bash /root/remote_ctl_v6.sh
---- QQ主进程计数 ---
-0
---- BOT端口 ---
-8080 HTTP:404
---- tick心跳尾(应连续) ---
-2026-11-21 12:41:48
-2026-11-21 12:42:49
-2026-11-21 12:43:49
---- 水位 ---
-287460
-
+===== 回线补验:QQ真实实例+autoheal幽灵 =====
+--- QQ进程(正确模式,不限-q参数) ---
+16154 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+16180 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+QQ主进程数: 5 (含子进程)
+--- autoheal两实例启动时刻 ---
+17138 Fri Mar 31 12:36:09 2023 bash /root/azar_autoheal.sh
+--- 等25秒后autoheal是否自清 ---
+17138 Fri Mar 31 12:36:09 2023
+--- WS连接探针尾 ---
+[11-20 03:09:56.088] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-20 12:01:06.619] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-20 12:01:11.670] LIFECYCLE sub_type=connect self_id=3427943187
+[11-20 12:01:37.684] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-21 12:41:05.381] LIFECYCLE sub_type=connect self_id=3427943187
 =====完=====
