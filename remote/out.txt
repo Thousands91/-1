@@ -1,35 +1,34 @@
-<<<task_287490.txt>>>
-===== 任务287490 11-21 15:02:03 =====
+<<<task_287491.txt>>>
+===== 任务287491 11-21 15:03:39 =====
 --- 命令 ---
-echo "===== 验收:bot重启结果 ====="
-echo "--- 重启验证日志 ---"
-cat /root/botrestart_verify.log 2>/dev/null || echo "(无=未执行)"
-echo "--- 当前bot PID ---"
-ps -eo pid,args | grep '[m]ain.py'
-echo "--- 登录态(最新) ---"
-tail -3 /root/login_state.log 2>/dev/null
-echo "--- 主bot.log最新是否恢复处理消息 ---"
-tail -5 /root/bot/bot/bot.log 2>/dev/null
+echo "===== 验收2:chess_game加载+WS重连 ====="
+echo "--- 新进程启动日志里所有插件加载 ---"
+grep -E "Succeeded to load plugin|Failed to load plugin" /root/bot_restart_1121.log 2>/dev/null
+echo "--- chess_game是否在列 ---"
+grep -c 'chess_game' /root/bot_restart_1121.log 2>/dev/null
+echo "--- 主bot.log最新(WS重连) ---"
+tail -8 /root/bot/bot/bot.log 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-===== 验收:bot重启结果 =====
---- 重启验证日志 ---
-=== 11-21 15:00:43 重启后 ===
-新PID: 23407
---- 插件加载(chess_game/ai_chat) ---
---- 启动日志尾 ---
-11-21 15:00:35 [SUCCESS] nonebot | NoneBot is initializing...
-11-21 15:00:35 [INFO] nonebot | Current Env: prod
+===== 验收2:chess_game加载+WS重连 =====
+--- 新进程启动日志里所有插件加载 ---
 11-21 15:00:43 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
 11-21 15:00:43 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
 11-21 15:00:44 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
---- 当前bot PID ---
-23407 /root/bot/venv/bin/python main.py
---- 登录态(最新) ---
-2026-11-21 14:47:15 [在线]
-2026-11-21 14:52:16 [在线]
-2026-11-21 14:57:17 [在线]
---- 主bot.log最新是否恢复处理消息 ---
+11-21 15:00:44 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+11-21 15:00:44 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+11-21 15:00:45 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
+11-21 15:00:45 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
+11-21 15:00:45 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
+11-21 15:00:45 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
+11-21 15:00:45 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+11-21 15:00:45 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
+--- chess_game是否在列 ---
+1
+--- 主bot.log最新(WS重连) ---
+11-21 14:59:45 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+11-21 15:00:15 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-21 15:00:15 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
 11-21 15:00:28 [INFO] uvicorn | Shutting down
 11-21 15:00:28 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
 11-21 15:00:28 [INFO] uvicorn | Waiting for application shutdown.
