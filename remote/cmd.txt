@@ -1,11 +1,21 @@
-287507
-echo "===== 验收:bot重启后天气插件 ====="
-echo "--- 重启验证日志 ---"
-cat /root/botrestart_weather_verify.log 2>/dev/null || echo "(无=未执行)"
-echo "--- 当前bot PID ---"
-ps -eo pid,args | grep '[m]ain.py'
-echo "--- 登录态最新 ---"
-tail -2 /root/login_state.log 2>/dev/null
-echo "--- weather插件在不在加载列表 ---"
-grep -i "weather" /root/bot_restart_1535.log 2>/dev/null | grep -iE "load|plugin" | tail -3
+287508
+echo "===== 端到端:设备新代码打真实天气 ====="
+cd /root/bot/bot
+OPENAI_API_KEY=sandbox-test-key /root/bot/venv/bin/python -c "
+import nonebot, asyncio
+nonebot.init()
+from nonebot.adapters.onebot.v11 import Adapter
+nonebot.get_driver().register_adapter(Adapter)
+from plugins.weather import get_wttr, get_open_meteo
+async def main():
+    print('=== 主源get_wttr(广州) ===')
+    a = await get_wttr('广州')
+    print(a if a else '(主源失败→会兜底)')
+    print('=== 兜底get_open_meteo(广州) 可用性 ===')
+    b = await get_open_meteo('广州')
+    print(('OK '+b.splitlines()[0]) if b and '翻不开' not in b else ('兜底也失败: '+str(b)[:60]))
+asyncio.run(main())
+" 2>&1 | grep -v "nonebot |"
+echo "--- WS连接确认(新日志) ---"
+grep -iE "connected|WebSocket|Bot .*connected" /root/bot_restart_1535.log 2>/dev/null | tail -3
 echo "=====完====="
