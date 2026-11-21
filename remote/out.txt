@@ -1,33 +1,81 @@
-<<<task_287586.txt>>>
-===== 任务287586 11-22 02:37:15 =====
---- 命令 ---
-echo "===== 坑162验收 $(date '+%T') ====="
-cat /root/r162_verify.log 2>/dev/null || echo "(验收日志还没写完)"
-echo "--- link_probe最新心跳 ---"
-grep -E 'LIFECYCLE|HEARTBEAT' /root/link_probe.log 2>/dev/null | tail -3
-echo "--- 当前登录态 ---"; tail -2 /root/login_state.log 2>/dev/null
-echo "=====完====="
---- 输出 ---
-===== 坑162验收 02:37:15 =====
-=== 11-22 02:37:09 坑162重启后 ===
-新PID: 8160
-插件成功/失败: 11 / 0
-11-22 02:37:07 [INFO] websockets | connection open
-11-22 02:37:07 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
-登录态:
-2026-11-22 02:29:42 [在线]
-2026-11-22 02:34:43 [在线]
-坑162标记: 防棋步=1 立场=1
-启动日志尾:
-11-22 02:37:07 [INFO] nonebot | OneBot V11 | Bot 3427943187 connected
-11-22 02:37:07 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-22 02:37:07 [WARNING] link_probe | [连接探针] [11-22 02:37:07.260] LIFECYCLE sub_type=connect self_id=3427943187
-11-22 02:37:07 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
---- link_probe最新心跳 ---
+<<<ALERT.txt>>>
+2026-11-22 03:10:55 阿萨尔掉线([未登录])! 本次在线57分/距最后发送3078秒/距最后收信3081秒;已自愈,5分钟不恢复需本人扫码
+<<<FORENSICS.txt>>>
+===== 掉线取证 v2.0 2026-11-22 03:10:31 CST =====
+【判定类型】真被踢(KickedOffLine)-腾讯下发原因见③
+【触发原文】11-22 03:10:24 [[31merror[39m] 阿萨尔 | [KickedOffLine] [下线通知] 你的账号当前登录已失效，请重新登录。
+
+---- ① 自动判定(秒级时间轴) ----
+静默离线(最新): (无时间戳)
+GPU崩溃(最新): 11-22 00:44:19
+结论: 日志缺可解析时间戳,无法定先后(见原始行)
+
+---- ② 完整时间轴(离线/被踢/GPU,按时间排序) ----
+(无时间戳) | 被踢事件 | 11-22 03:10:24 [[31merror[39m] 阿萨尔 | [KickedOffLine] [下线通知] 你的账号当前登录已失效，请重新登录。
+(无时间戳) | 静默离线(status20) | 11-22 02:11:41 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+(无时间戳) | 静默离线(status20) | 11-22 03:10:25 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+11-22 00:44:19 | GPU崩溃 | [14560:1122/004419.116910:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-22 00:44:19 | GPU崩溃 | [14560:1122/004419.124499:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-22 00:44:19 | GPU崩溃 | [14560:1122/004419.127702:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-22 00:44:19 | GPU崩溃 | [14560:1122/004419.130618:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-22 00:44:19 | GPU崩溃 | [14560:1122/004419.132338:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+
+---- ③ 被踢原因字段(KickedOffLine原文) ----
+11-22 03:10:24 [[31merror[39m] 阿萨尔 | [KickedOffLine] [下线通知] 你的账号当前登录已失效，请重新登录。
+
+---- ④ 网络心跳(事发前后) ----
+11-22 02:58:21 ping=FAILms batt=
+11-22 02:59:23 ping=FAILms batt=
+11-22 03:00:25 ping=FAILms batt=
+11-22 03:01:28 ping=FAILms batt=
+11-22 03:02:30 ping=FAILms batt=
+11-22 03:03:32 ping=FAILms batt=
+11-22 03:04:34 ping=FAILms batt=
+11-22 03:05:37 ping=FAILms batt=
+11-22 03:06:39 ping=FAILms batt=
+11-22 03:07:41 ping=FAILms batt=
+11-22 03:08:44 ping=FAILms batt=
+11-22 03:09:46 ping=FAILms batt=
+-- 即时网络 --
+2 packets transmitted, 0 received, 100% packet loss, time 1000ms
+
+
+---- ⑤ 系统状态 ----
+ 03:10:34 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
+               total        used        free      shared  buff/cache   available
+Mem:            5571        3007         122          16        2441        2242
+/dev/block/by-name/userdata  111G  101G  9.2G  92% /
+电量: 
+QQ进程数: 5
+
+---- ⑥ 连接探针(WS层权威信号,lifecycle/heartbeat) ----
+[11-22 01:54:24.498] LIFECYCLE sub_type=connect self_id=3427943187
+[11-22 01:54:51.765] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-22 02:17:22.846] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-22 02:17:25.345] LIFECYCLE sub_type=connect self_id=3427943187
 [11-22 02:17:41.255] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-22 02:37:05.820] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
 [11-22 02:37:07.260] LIFECYCLE sub_type=connect self_id=3427943187
 [11-22 02:37:11.434] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
---- 当前登录态 ---
-2026-11-22 02:29:42 [在线]
-2026-11-22 02:34:43 [在线]
-=====完=====
+
+---- ⑦ 环境指纹与配置(定位'为什么被踢'的关键变量) ----
+出口IP: 2026-11-22 02:29:22 14.19.177.57
+QQ版本: 9.9.22
+NapCat版本: 3.2.34
+反检测配置: "o3HookMode": 1 "bypass" "hook": false "window": false "module": false "process": false "container": false "js": false 
+WS心跳间隔: "heartInterval": 30000
+登录方式: qrcode
+登录态台账尾: 2026-11-22 02:59:48 [在线] 2026-11-22 03:04:49 [在线] 2026-11-22 03:09:50 [在线] 
+
+---- ⑧ 日志尾部 ----
+11-22 02:55:29 [[32minfo[39m] 阿萨尔 | [ServerTime] 时间同步完成，偏差 1946ms
+11-22 03:10:24 [[31merror[39m] 阿萨尔 | [KickedOffLine] [下线通知] 你的账号当前登录已失效，请重新登录。
+2794b6b91603e73ddc1b0036eebac613a060dfd898476a2808d79705c3a20a45
+11-22 03:10:25 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+11-22 03:10:28 [[33mwarn[39m] 阿萨尔 | [Core] [Login] 账号已离线，正在重启 Worker 以重新创建 QQ 登录服务 {"result":true,"message":"进程重启请求已发送"}
+11-22 03:10:28 [[33mwarn[39m] [NapCat] [Process] 进程 5401 仍在运行，尝试强制杀掉
+11-22 03:10:32 [[32minfo[39m] [NapCat] [Process] 已清理残留进程: PID 5392 (GPU)
+11-22 03:10:32 [[32minfo[39m] [NapCat] [Process] 已清理残留进程: PID 5402 (Utility)
+[5314:1122/031032.575262:ERROR:content/browser/gpu/gpu_process_host.cc:1003] GPU process exited unexpectedly: exit_code=15
+[5314:1122/031032.619456:ERROR:content/browser/network_service_instance_impl.cc:610] Network service crashed or was terminated, restarting service.
+===== 取证结束 =====
