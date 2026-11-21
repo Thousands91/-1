@@ -1,13 +1,9 @@
-287481
-echo "===== 取证:get_msg取引用为何失败 ====="
-echo "--- 14:31前后 get_msg/取引用失败日志 ---"
-grep -nE "14:3[01].*(get_msg|取引用失败|引用)" /root/bot/bot/bot.log 2>/dev/null | tail -15
-echo "--- 31360~31380行原文(这条消息处理全过程) ---"
-sed -n '31360,31380p' /root/bot/bot/bot.log 2>/dev/null
-echo "--- 现场直接调get_msg取id=184272779看看返回什么 ---"
-python3 - <<'PYEOF'
-import asyncio,json
-# 从nonebot环境外无法直接调bot.call_api,改为看日志里有没有该id
-PYEOF
-grep -nF "184272779" /root/bot/bot/bot.log 2>/dev/null | head -10
+287482
+echo "===== 铁证:get_msg成功+引用原文+bot回答 ====="
+echo "--- 31366~31390完整处理链 ---"
+sed -n '31366,31390p' /root/bot/bot/bot.log 2>/dev/null
+echo "--- get_msg失败WARNING总数(全日志) ---"
+grep -cF "get_msg 取引用失败" /root/bot/bot/bot.log 2>/dev/null
+echo "--- 被引用消息id=184272779 是不是bot自己14:28那条(搜发送) ---"
+grep -nE "11-21 14:2[7-9].*(逗我|站着说话|这回轮|上次我)" /root/bot/bot/bot.log 2>/dev/null | tail -5
 echo "=====完====="
