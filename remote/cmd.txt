@@ -1,9 +1,13 @@
-287577
-echo "===== 精准诊断 $(date '+%F %T') ====="
-echo "---[1]设备当前时间---"; date '+%F %T'
-echo "---[2]login_state.log 最后8行(带时间,看是否停在01:50)---"; tail -8 /root/login_state.log
-echo "---[3]link_probe.log 最后15行(真正WS心跳)---"; tail -15 /root/link_probe.log 2>/dev/null || echo "无link_probe.log"
-echo "---[4]所有log文件按时间排(找bot/NapCat真实日志)---"; ls -lat /root/*.log /root/bot/*.log 2>/dev/null | head -20
-echo "---[5]NapCat进程---"; ps -eo pid,etime,args | grep -iE '[n]apcat|[qq]|node' | head -10
-echo "---[6]最近5分钟是否有消息进来(bot日志真实路径)---"; for f in /root/bot/log/*.log /root/bot/bot.log /root/bot.log; do [ -f "$f" ] && echo "== $f ==" && tail -12 "$f"; done
-echo "=====精准诊断完毕(只读)====="
+287578
+BEFORE=$(wc -l < /root/remote_ctl.log 2>/dev/null || echo 0)
+echo "=== 实时回环探针开始 $(date '+%T') 起始行=$BEFORE ==="
+echo "(用户此刻发一条消息)"
+sleep 55
+AFTER=$(wc -l < /root/remote_ctl.log 2>/dev/null || echo 0)
+echo "=== 55秒后 $(date '+%T') 结束行=$AFTER 新增=$((AFTER-BEFORE))行 ==="
+echo "--- 这期间的消息/心跳/错误行 ---"
+tail -n +$((BEFORE+1)) /root/remote_ctl.log 2>/dev/null | grep -E '接收 <-|ask=|核对·调试|HEARTBEAT|LIFECYCLE|sendMsg|发生错误|connected' | tail -25
+echo "--- 上面若空=消息没进bot ---"
+echo "--- 当前登录态 ---"; tail -2 /root/login_state.log
+echo "--- tick尾 ---"; tail -3 /root/tick.log
+echo "=====探针完毕====="
