@@ -1,33 +1,29 @@
-<<<task_287546.txt>>>
-===== 任务287546 11-21 22:30:08 =====
+<<<task_287547.txt>>>
+===== 任务287547 11-21 22:31:28 =====
 --- 命令 ---
-echo "===== 确认坑160替换是否落地 ====="
-cd /root/bot/bot/plugins
-echo "--- md5 ---"
-md5sum song_request.py
-echo "--- 试听片段出现次数(应>=2) ---"
-grep -F -c '试听片段' song_request.py
-echo "--- 新判据(应为1) ---"
-grep -F -c 's.get("fee") == 1 and sec and sec < 60' song_request.py
-echo "--- 精准话术(应为1) ---"
-grep -F -c '秒试听片段，' song_request.py
-echo "--- 语法 ---"
-python3 -m py_compile song_request.py && echo "语法OK" || echo "语法FAIL"
-echo "--- 备份文件 ---"
-ls -1 song_request.py.bak_vip160_* 2>/dev/null | tail -3
+echo "===== 重启前:确认QQ登录态与WS在线(坑160) ====="
+echo "--- 登录态台账尾 ---"
+tail -6 /root/bot_login_status.log 2>/dev/null || find /root -maxdepth 2 -iname "*login*status*" -o -iname "*login*.log" 2>/dev/null | head
+echo "--- 最近10分钟账号状态变更(日志) ---"
+grep -E "账号状态变更|掉线|上线|已连接|WebSocket" /root/Napcat/*.log /root/Napcat/**/*.log 2>/dev/null | tail -10
+echo "--- link_probe心跳文件尾 ---"
+find /root -maxdepth 2 -iname "*link*probe*" 2>/dev/null | head -3 | while read f; do echo "[$f]"; tail -5 "$f"; done
+echo "--- QQ进程数 ---"
+pgrep -fc "QQ|napcat" 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-===== 确认坑160替换是否落地 =====
---- md5 ---
-8afaab3c1c693c28deb778e4aaf0a0cc  song_request.py
---- 试听片段出现次数(应>=2) ---
-5
---- 新判据(应为1) ---
-1
---- 精准话术(应为1) ---
-1
---- 语法 ---
-语法OK
---- 备份文件 ---
-song_request.py.bak_vip160_11212227
+===== 重启前:确认QQ登录态与WS在线(坑160) =====
+--- 登录态台账尾 ---
+/root/azar_login_run.log
+/root/login_state.log
+--- 最近10分钟账号状态变更(日志) ---
+--- link_probe心跳文件尾 ---
+[/root/link_probe.log]
+[11-21 21:39:49.859] LIFECYCLE sub_type=connect self_id=3427943187
+[11-21 21:39:55.387] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-21 22:07:05.546] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-21 22:07:10.022] LIFECYCLE sub_type=connect self_id=3427943187
+[11-21 22:07:26.716] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+--- QQ进程数 ---
+7
 =====完=====
