@@ -1,30 +1,29 @@
-<<<task_287538.txt>>>
-===== 任务287538 11-21 21:55:41 =====
+<<<task_287539.txt>>>
+===== 任务287539 11-21 22:04:13 =====
 --- 命令 ---
-echo "===== 验收:卡片换回官方黑胶页 ====="
-echo "--- 延迟手术产出(打真卡验证) ---"
-cat /root/officialback_verify.log 2>/dev/null || echo "(无验证日志=手术未执行)"
-echo "--- 当前代理进程(应单实例) ---"
-ps -eo pid,args | grep '[m]usic_sign.py'
-echo "--- 代理启动日志尾 ---"
-tail -3 /root/music_sign.log 2>/dev/null
+echo "===== 探测设备引用图片分支原文(坑159) ====="
+md5sum /root/bot/bot/plugins/ai_chat.py
+echo "--- 引用图片分支 1513-1524 ---"
+sed -n '1513,1524p' /root/bot/bot/plugins/ai_chat.py
+echo "--- 旧写法出现次数(应为1) ---"
+grep -F -c '_qparts.append(f"[表情包:{_qn}]")' /root/bot/bot/plugins/ai_chat.py
 echo "=====完====="
 --- 输出 ---
-===== 验收:卡片换回官方黑胶页 =====
---- 延迟手术产出(打真卡验证) ---
-=== 11-21 21:54:14 重启后代理进程 ===
- 6110 python3 /root/music_sign.py
-=== 打真卡验证(返回体即卡JSON,无message外层) ===
-tag: 网易云音乐
-jumpUrl: https://music.163.com/m/song?id=284799
-  是否官方页: True
-  是否还带github.io: False
-musicUrl: https://api.injahow.cn/meting/?type=url&server=netease&id=284799
-token: True
---- 当前代理进程(应单实例) ---
- 6110 python3 /root/music_sign.py
---- 代理启动日志尾 ---
-11-21 21:54:11 music_sign v9 启动 127.0.0.1:10800 (OIAPI全平台+旧源兜底)
-11-21 21:54:25 OIAPI出真卡 format=163 tag=网易云音乐 (693字节)
-11-21 21:54:25 处理完毕 type=163 -> 723 bytes 真卡
+===== 探测设备引用图片分支原文(坑159) =====
+2277949f700854117ae647ad9f1e68d0  /root/bot/bot/plugins/ai_chat.py
+--- 引用图片分支 1513-1524 ---
+                        if _qu.startswith("http"):
+                            try:
+                                # 引用图片同步等识图（坑155），否则首次引用拿到占位符
+                                _qn = await _image_sticker_name(_qu, wait=True)
+                            except Exception:
+                                _qn = "表情包"
+                            _qparts.append(f"[表情包:{_qn}]")
+                        else:
+                            _qparts.append("[表情包]")
+                    elif s.get("type") == "mface":
+                        _qs = str((s.get("data") or {}).get("summary") or "").strip()
+                        _qparts.append(f"[表情包:{_qs}]" if _qs else "[表情包]")
+--- 旧写法出现次数(应为1) ---
+1
 =====完=====
