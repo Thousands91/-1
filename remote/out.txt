@@ -1,45 +1,44 @@
-<<<task_287540.txt>>>
-===== 任务287540 11-21 22:05:29 =====
+<<<task_287541.txt>>>
+===== 任务287541 11-21 22:06:43 =====
 --- 命令 ---
-echo "===== 坑159修复:引用图片不再被当动作 ====="
-cd /root/bot/bot/plugins
-cp ai_chat.py ai_chat.py.bak_quote159_$(date +%m%d%H%M)
-python3 - <<'PYEOF'
-p="ai_chat.py"
-s=open(p,encoding="utf-8").read()
-old='''                            _qparts.append(f"[表情包:{_qn}]")
-                        else:
-                            _qparts.append("[表情包]")'''
-new='''                            # 坑159：引用的图片是"被引用的画面内容"，不是用户当面做的动作。
-                            # 绝不能用 [表情包:] 标记——会被下方表情强提示的 re.sub 统一改成
-                            # [动作:xxx]，让模型误读成"对方做了个叫'炸鸡配红酒'的动作"，
-                            # 答非所问。改用自然语言表述画面，让模型针对图片内容回应。
-                            _qparts.append(f"（引用一张图片，画面：{_qn}）")
-                        else:
-                            _qparts.append("（引用一张图片）")'''
-assert s.count(old)==1, "锚点计数!=1,拒绝替换 count=%d"%s.count(old)
-s=s.replace(old,new,1)
-open(p,"w",encoding="utf-8").write(s)
-print("替换成功")
-PYEOF
-echo "--- 语法检查 ---"
-python3 -m py_compile ai_chat.py && echo "语法OK" || echo "语法FAIL-不重启"
-echo "--- 新表述确认 ---"
-grep -F -c '（引用一张图片，画面：{_qn}）' ai_chat.py
-echo "--- 旧写法残留(应为0) ---"
-grep -F -c '_qparts.append(f"[表情包:{_qn}]")' ai_chat.py
-echo "--- md5 ---"
-md5sum ai_chat.py
+echo "===== 坑159部署:重启bot(只重启bot不碰NapCat) ====="
+echo "--- 当前bot PID ---"
+ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}'
+if [ ! -f /root/.q159restart_armed ]; then
+  touch /root/.q159restart_armed
+  cat > /root/.q159restart.sh <<'SH'
+#!/bin/bash
+sleep 8
+OLDPID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
+echo "旧PID:$OLDPID"
+[ -n "$OLDPID" ] && kill "$OLDPID"
+sleep 3
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot_restart_q159.log 2>&1 < /dev/null &
+sleep 12
+{
+  echo "=== $(date '+%m-%d %H:%M:%S') 重启后 ==="
+  echo "新PID: $(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}')"
+  echo "--- 插件加载 ---"
+  grep -E "Succeeded to load plugin|Failed to load plugin" /root/bot_restart_q159.log 2>/dev/null | tail -13
+  echo "--- 失败数 ---"
+  grep -c "Failed to load plugin" /root/bot_restart_q159.log 2>/dev/null
+  echo "--- WS连接 ---"
+  grep -iE "Bot .* connected" /root/bot_restart_q159.log 2>/dev/null | tail -2
+  echo "--- 登录态 ---"
+  tail -2 /root/login_state.log 2>/dev/null
+  echo "--- 坑159新表述确认(设备实际文件) ---"
+  grep -F -c '（引用一张图片，画面：{_qn}）' /root/bot/bot/plugins/ai_chat.py
+} > /root/q159restart_verify.log 2>&1
+rm -f /root/.q159restart_armed
+SH
+  chmod +x /root/.q159restart.sh
+  setsid nohup bash /root/.q159restart.sh >/dev/null 2>&1 </dev/null &
+  echo "延迟重启已挂(8s kill + 12s验证)"
+fi
 echo "=====完====="
 --- 输出 ---
-===== 坑159修复:引用图片不再被当动作 =====
-替换成功
---- 语法检查 ---
-语法OK
---- 新表述确认 ---
-1
---- 旧写法残留(应为0) ---
-0
---- md5 ---
-f7894e8b90743c58fb5fbac9c87b7e57  ai_chat.py
+===== 坑159部署:重启bot(只重启bot不碰NapCat) =====
+--- 当前bot PID ---
+2108
+延迟重启已挂(8s kill + 12s验证)
 =====完=====
