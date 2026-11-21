@@ -1,16 +1,13 @@
-287509
-echo "===== 取证:和风天气key现状 ====="
-echo "--- 设备.env里QWEATHER相关(含注释/空值) ---"
-for f in /root/bot/bot/.env /root/bot/.env /root/bot/bot/.env.prod /root/bot/bot/.env.dev; do
-  [ -f "$f" ] && { echo "[$f]"; grep -inE "QWEATHER|和风|weather" "$f" || echo "  (无QWEATHER项)"; }
+287510
+echo "===== 取证:20:32引用识别 ====="
+for L in /root/bot/bot/bot.log /root/bot_restart_1535.log; do
+  echo "######## 日志:$L ########"
+  [ -f "$L" ] || { echo "(不存在)"; continue; }
+  echo "--- 20:25~20:35 所有消息(raw_message看CQ:reply) ---"
+  grep -E "20:(2[5-9]|3[0-5]):.*message\.(group|private)" "$L" 2>/dev/null | tail -25
+  echo "--- 引用/get_msg/取引用相关(全日志尾) ---"
+  grep -nE "get_msg|取引用|引用了一条消息|对方引用|CQ:reply|quote" "$L" 2>/dev/null | tail -20
+  echo "--- 20:32 bot回复'书架震'原文与触发 ---"
+  grep -nE "20:3[0-5].*(书架|震出|核对·调试|ask=|ans=)" "$L" 2>/dev/null | tail -20
 done
-echo "--- 设备全局搜key残留 ---"
-grep -rniE "QWEATHER_KEY|QWEATHER_API_HOST" /root/bot --include="*.py" --include=".env*" 2>/dev/null | head -15
-echo "--- 当前天气插件读到的KEY/HOST(脱敏:只显示有无) ---"
-cd /root/bot/bot && /root/bot/venv/bin/python -c "
-import os
-k=os.getenv('QWEATHER_KEY',''); h=os.getenv('QWEATHER_API_HOST','')
-print('KEY有值:',bool(k),'长度:',len(k))
-print('HOST有值:',bool(h),'值:',h)
-" 2>/dev/null
 echo "=====完====="
