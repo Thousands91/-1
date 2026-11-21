@@ -1,24 +1,23 @@
-<<<task_287502.txt>>>
-===== 任务287502 11-21 15:30:33 =====
+<<<task_287503.txt>>>
+===== 任务287503 11-21 15:32:20 =====
 --- 命令 ---
-python3 - <<'PYEOF'
-import urllib.request, urllib.parse, json
-UA={"User-Agent":"curl/8.0"}
-d=json.loads(urllib.request.urlopen(urllib.request.Request("https://wttr.in/"+urllib.parse.quote("广州")+"?format=j1",headers=UA),timeout=12).read())
-seen={}
-for day in d['weather']:
-    for x in day['hourly']:
-        seen[x.get('weatherCode')]=x.get('weatherDesc',[{}])[0].get('value')
-for k,v in sorted(seen.items(),key=lambda x:int(x[0])):
-    print(f"码{k} = {v}")
-PYEOF
+F=/root/bot/bot/plugins/weather.py
+echo "===== 设备weather.py现状 ====="
+md5sum "$F"
+echo "--- 关键行 ---"
+grep -nE "^WTTR|^GEO|^FORECAST|def get_wttr|def get_open_meteo|text = await get_open_meteo|text = await get_wttr|def get_qweather" "$F"
+echo "--- 行数 ---"
+wc -l "$F"
 echo "=====完====="
 --- 输出 ---
-码116 = Partly Cloudy 
-码119 = Cloudy 
-码122 = Overcast 
-码149 = Smoky haze
-码176 = Patchy rain nearby
-码266 = Light drizzle
-码296 = Light rain
+===== 设备weather.py现状 =====
+0b78a02b1f6dc1c353224e94fc6e1e6a  /root/bot/bot/plugins/weather.py
+--- 关键行 ---
+25:GEO = "https://geocoding-api.open-meteo.com/v1/search"
+26:FORECAST = "https://api.open-meteo.com/v1/forecast"
+62:    text = await get_open_meteo(city)
+66:async def get_open_meteo(city: str) -> str:
+138:async def get_qweather(city: str) -> str:
+--- 行数 ---
+174 /root/bot/bot/plugins/weather.py
 =====完=====
