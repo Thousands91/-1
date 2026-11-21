@@ -1,34 +1,11 @@
-287506
-echo "===== 部署前窗口确认+挂延迟重启 ====="
-echo "--- 最近60秒消息 ---"
-grep -E "11-21 15:(3[4-9]):.*message\.(group|private)" /root/bot/bot/bot.log 2>/dev/null | tail -5 || echo "(无互动)"
+287507
+echo "===== 验收:bot重启后天气插件 ====="
+echo "--- 重启验证日志 ---"
+cat /root/botrestart_weather_verify.log 2>/dev/null || echo "(无=未执行)"
 echo "--- 当前bot PID ---"
-ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}'
-if [ ! -f /root/.botrestart_armed ]; then
-  touch /root/.botrestart_armed
-  cat > /root/.botrestart.sh <<'SH'
-#!/bin/bash
-sleep 8
-OLDPID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
-echo "旧PID:$OLDPID"
-[ -n "$OLDPID" ] && kill "$OLDPID"
-sleep 3
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot_restart_1535.log 2>&1 < /dev/null &
-sleep 12
-{
-  echo "=== $(date '+%m-%d %H:%M:%S') 重启后 ==="
-  echo "新PID: $(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}')"
-  echo "--- 插件加载 ---"
-  grep -E "Succeeded to load plugin|Failed to load plugin" /root/bot_restart_1535.log 2>/dev/null | tail -13
-  echo "--- WS连接 ---"
-  grep -iE "Bot .* connected|WebSocket" /root/bot_restart_1535.log 2>/dev/null | tail -3
-  echo "--- 失败数 ---"
-  grep -c "Failed to load plugin" /root/bot_restart_1535.log 2>/dev/null
-} > /root/botrestart_weather_verify.log 2>&1
-rm -f /root/.botrestart_armed
-SH
-  chmod +x /root/.botrestart.sh
-  setsid nohup bash /root/.botrestart.sh >/dev/null 2>&1 </dev/null &
-  echo "延迟重启已挂(8s kill + 12s验证)"
-fi
+ps -eo pid,args | grep '[m]ain.py'
+echo "--- 登录态最新 ---"
+tail -2 /root/login_state.log 2>/dev/null
+echo "--- weather插件在不在加载列表 ---"
+grep -i "weather" /root/bot_restart_1535.log 2>/dev/null | grep -iE "load|plugin" | tail -3
 echo "=====完====="
