@@ -1,13 +1,34 @@
-287578
-BEFORE=$(wc -l < /root/remote_ctl.log 2>/dev/null || echo 0)
-echo "=== 实时回环探针开始 $(date '+%T') 起始行=$BEFORE ==="
-echo "(用户此刻发一条消息)"
-sleep 55
-AFTER=$(wc -l < /root/remote_ctl.log 2>/dev/null || echo 0)
-echo "=== 55秒后 $(date '+%T') 结束行=$AFTER 新增=$((AFTER-BEFORE))行 ==="
-echo "--- 这期间的消息/心跳/错误行 ---"
-tail -n +$((BEFORE+1)) /root/remote_ctl.log 2>/dev/null | grep -E '接收 <-|ask=|核对·调试|HEARTBEAT|LIFECYCLE|sendMsg|发生错误|connected' | tail -25
-echo "--- 上面若空=消息没进bot ---"
-echo "--- 当前登录态 ---"; tail -2 /root/login_state.log
-echo "--- tick尾 ---"; tail -3 /root/tick.log
-echo "=====探针完毕====="
+287579
+echo "===== 修复WS失联:只重启bot重连(不动NapCat/登录态) ====="
+echo "--- 重启前:bot PID / 登录态 ---"
+ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}'
+tail -1 /root/login_state.log 2>/dev/null
+if [ ! -f /root/.wsfix_armed ]; then
+  touch /root/.wsfix_armed
+  cat > /root/.wsfix.sh <<'SH'
+#!/bin/bash
+sleep 8
+OLDPID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
+echo "旧PID:$OLDPID"
+[ -n "$OLDPID" ] && kill "$OLDPID"
+sleep 3
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot_restart_wsfix.log 2>&1 < /dev/null &
+sleep 14
+{
+  echo "=== $(date '+%m-%d %H:%M:%S') 重启后 ==="
+  echo "新PID: $(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}')"
+  echo "插件成功/失败: $(grep -c 'Succeeded to load plugin' /root/bot_restart_wsfix.log 2>/dev/null) / $(grep -c 'Failed to load plugin' /root/bot_restart_wsfix.log 2>/dev/null)"
+  echo "--- WS连接行 ---"
+  grep -iE 'Bot .* connected|WebSocket Connection closed|connected' /root/bot_restart_wsfix.log 2>/dev/null | tail -5
+  echo "--- 登录态(重启不应影响) ---"
+  tail -2 /root/login_state.log 2>/dev/null
+  echo "--- 启动日志尾 ---"
+  tail -8 /root/bot_restart_wsfix.log 2>/dev/null
+} > /root/wsfix_verify.log 2>&1
+rm -f /root/.wsfix_armed
+SH
+  chmod +x /root/.wsfix.sh
+  setsid nohup bash /root/.wsfix.sh >/dev/null 2>&1 </dev/null &
+  echo "延迟重启已挂(8s后kill+14s验证),回传先落地"
+fi
+echo "=====完====="
