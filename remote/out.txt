@@ -1,2 +1,43 @@
-<<<ALERT.txt>>>
-2026-11-21 12:41:36 阿萨尔已恢复在线
+<<<task_287460.txt>>>
+===== 任务287460 11-21 12:44:01 =====
+--- 命令 ---
+echo "===== 回线验收:登录态+实例+链路 ====="
+echo "--- 登录态台账尾 ---"
+tail -6 /root/login_state.log 2>/dev/null
+echo "--- 实例清单(遥控/autoheal/watch/NapCat主进程) ---"
+ps -eo pid,args | grep -E "remote_ctl|azar_autoheal|offline_watch|opt/QQ/[q]q -q" | grep -v grep
+echo "--- QQ主进程计数 ---"
+pgrep -f 'opt/QQ/[q]q -q 3427943187' | wc -l
+echo "--- BOT端口 ---"
+curl -s -o /dev/null -w "8080 HTTP:%{http_code}\n" --max-time 5 http://127.0.0.1:8080 2>/dev/null || echo "8080无响应"
+echo "--- tick心跳尾(应连续) ---"
+tail -3 /root/tick.log 2>/dev/null
+echo "--- 水位 ---"
+cat /root/.remote_last 2>/dev/null; echo
+echo "=====完====="
+--- 输出 ---
+===== 回线验收:登录态+实例+链路 =====
+--- 登录态台账尾 ---
+2026-11-21 12:16:23 [未登录]
+2026-11-21 12:21:26 [未登录]
+2026-11-21 12:26:27 [未登录]
+2026-11-21 12:31:29 [未登录]
+2026-11-21 12:36:31 [未登录]
+2026-11-21 12:41:31 状态变化: [未登录] -> [在线]
+--- 实例清单(遥控/autoheal/watch/NapCat主进程) ---
+17138 bash /root/azar_autoheal.sh
+17145 bash /root/offline_watch.sh
+18485 bash /root/azar_autoheal.sh
+24484 bash /root/remote_ctl_v6.sh
+--- QQ主进程计数 ---
+0
+--- BOT端口 ---
+8080 HTTP:404
+--- tick心跳尾(应连续) ---
+2026-11-21 12:41:48
+2026-11-21 12:42:49
+2026-11-21 12:43:49
+--- 水位 ---
+287460
+
+=====完=====
