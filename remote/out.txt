@@ -1,78 +1,80 @@
-<<<task_287545.txt>>>
-===== 任务287545 11-21 22:27:22 =====
---- 命令 ---
-echo "===== 坑160修复:VIP短试听片段如实标注 ====="
-cd /root/bot/bot/plugins
-cp song_request.py song_request.py.bak_vip160_$(date +%m%d%H%M)
-python3 - <<'PYEOF'
-p="song_request.py"
-s=open(p,encoding="utf-8").read()
-old1='''async def fetch_audio_any(s: dict):
-    """按条目 src 分发取音频 → (bytes, 秒, err)。"""
-    src = s.get("src", "netease")
-    if src == "kuwo":
-        return await fetch_audio_kuwo(s["id"])
-    if src == "qq":
-        return await fetch_audio_qq(s["id"])
-    if src in ("kugou", "migu"):
-        # 坑124：这两家只发官方卡（跳转链接），不取音频；id 里存的是歌名
-        return None, 0, "官方卡平台"
-    return await fetch_audio(s["id"])'''
-new1='''async def fetch_audio_any(s: dict):
-    """按条目 src 分发取音频 → (bytes, 秒, err)。"""
-    src = s.get("src", "netease")
-    if src == "kuwo":
-        r = await fetch_audio_kuwo(s["id"])
-    elif src == "qq":
-        r = await fetch_audio_qq(s["id"])
-    elif src in ("kugou", "migu"):
-        # 坑124：这两家只发官方卡（跳转链接），不取音频；id 里存的是歌名
-        return None, 0, "官方卡平台"
-    else:
-        r = await fetch_audio(s["id"])
-    # 坑160（2026-11-21 用户拍板方案1）：VIP 歌第三方源只给 30~45s 试听残片，
-    # 语音条和卡片播放键(musicUrl)同源都只播这段。残片不能当"取音频成功"
-    # 静默发出——否则用户以为整首放不出来。判"试听片段"交下游发官方卡+如实告知。
-    a, sec, err = r
-    if a and s.get("fee") == 1 and sec and sec < 60:
-        return None, sec, "试听片段"
-    return r'''
-assert s.count(old1)==1, "锚点1计数!=1,拒绝替换 count=%d"%s.count(old1)
-s=s.replace(old1,new1,1)
-old2='''        if s.get("src", "netease") == "netease" and s.get("fee") == 1:
-            if await try_official_card(pick_cmd, s):
-                await pick_cmd.finish(
-                    f"这首是「{s['artists']}」的原曲，两边平台都要 VIP，柜上拿不来整首的音频"
-                    f"——点上面这张卡片去网易云听（有会员就能听整首）。")'''
-new2='''        if s.get("src", "netease") == "netease" and s.get("fee") == 1:
-            if await try_official_card(pick_cmd, s):
-                if err == "试听片段":
-                    await pick_cmd.finish(
-                        f"「{s['name']}」这首要 VIP——柜上只取到 {sec} 秒试听片段，"
-                        f"没法给你整首（卡片播放键也只能播这段）。"
-                        f"点上面这张卡片去网易云，有会员就能听完整版。")
-                await pick_cmd.finish(
-                    f"这首是「{s['artists']}」的原曲，两边平台都要 VIP，柜上拿不来整首的音频"
-                    f"——点上面这张卡片去网易云听（有会员就能听整首）。")'''
-assert s.count(old2)==1, "锚点2计数!=1,拒绝替换 count=%d"%s.count(old2)
-s=s.replace(old2,new2,1)
-open(p,"w",encoding="utf-8").write(s)
-print("两处替换成功")
-PYEOF
-echo "--- 语法检查 ---"
-python3 -m py_compile song_request.py && echo "语法OK" || echo "语法FAIL-不重启"
-echo "--- 新逻辑确认(试听片段出现2处) ---"
-grep -F -c '试听片段' song_request.py
-echo "--- md5 ---"
-md5sum song_request.py
-echo "=====完====="
---- 输出 ---
-===== 坑160修复:VIP短试听片段如实标注 =====
-两处替换成功
---- 语法检查 ---
-语法OK
---- 新逻辑确认(试听片段出现2处) ---
-5
---- md5 ---
-8afaab3c1c693c28deb778e4aaf0a0cc  song_request.py
-=====完=====
+<<<FORENSICS.txt>>>
+===== 掉线取证 v2.0 2026-11-21 22:28:30 CST =====
+【判定类型】静默离线(SelfOffline/status20)-服务端作废会话无原因码
+【触发原文】11-21 22:28:17 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+
+---- ① 自动判定(秒级时间轴) ----
+静默离线(最新): (无时间戳)
+GPU崩溃(最新): 11-21 12:40:11
+结论: 日志缺可解析时间戳,无法定先后(见原始行)
+
+---- ② 完整时间轴(离线/被踢/GPU,按时间排序) ----
+(无时间戳) | 静默离线(status20) | 11-21 20:36:29 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+(无时间戳) | 静默离线(status20) | 11-21 22:28:17 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+11-21 12:40:11 | GPU崩溃 | [22212:1121/124011.971719:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-21 12:40:11 | GPU崩溃 | [22212:1121/124011.976879:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-21 12:40:11 | GPU崩溃 | [22212:1121/124011.980425:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-21 12:40:11 | GPU崩溃 | [22212:1121/124011.983462:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-21 12:40:11 | GPU崩溃 | [22212:1121/124011.983513:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+
+---- ③ 被踢原因字段(KickedOffLine原文) ----
+(本次无KickedOffLine → 静默离线,腾讯未下发原因码)
+
+---- ④ 网络心跳(事发前后) ----
+11-21 22:16:16 ping=FAILms batt=
+11-21 22:17:19 ping=FAILms batt=
+11-21 22:18:21 ping=FAILms batt=
+11-21 22:19:23 ping=FAILms batt=
+11-21 22:20:26 ping=FAILms batt=
+11-21 22:21:28 ping=FAILms batt=
+11-21 22:22:30 ping=FAILms batt=
+11-21 22:23:33 ping=FAILms batt=
+11-21 22:24:44 ping=FAILms batt=
+11-21 22:25:49 ping=FAILms batt=
+11-21 22:26:54 ping=FAILms batt=
+11-21 22:28:17 ping=FAILms batt=
+-- 即时网络 --
+2 packets transmitted, 0 received, 100% packet loss, time 1027ms
+
+
+---- ⑤ 系统状态 ----
+ 22:28:35 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
+               total        used        free      shared  buff/cache   available
+Mem:            5571        3194         253          23        2123        2115
+/dev/block/by-name/userdata  111G  102G  9.1G  92% /
+电量: 
+QQ进程数: 5
+
+---- ⑥ 连接探针(WS层权威信号,lifecycle/heartbeat) ----
+[11-21 20:57:59.127] LIFECYCLE sub_type=connect self_id=3427943187
+[11-21 20:58:24.871] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-21 21:39:48.602] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-21 21:39:49.859] LIFECYCLE sub_type=connect self_id=3427943187
+[11-21 21:39:55.387] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-21 22:07:05.546] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-21 22:07:10.022] LIFECYCLE sub_type=connect self_id=3427943187
+[11-21 22:07:26.716] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+
+---- ⑦ 环境指纹与配置(定位'为什么被踢'的关键变量) ----
+出口IP: 2026-11-21 22:19:54 14.19.177.57
+QQ版本: 9.9.22
+NapCat版本: 3.2.34
+反检测配置: "o3HookMode": 1 "bypass" "hook": false "window": false "module": false "process": false "container": false "js": false 
+WS心跳间隔: "heartInterval": 30000
+登录方式: qrcode
+登录态台账尾: 2026-11-21 22:14:40 [在线] 2026-11-21 22:19:41 [在线] 2026-11-21 22:24:45 [在线] 
+
+---- ⑧ 日志尾部 ----
+c711432511a7a703227d238e517c8c783db33b7f12193f43a55a67ecab57855a
+11-21 22:27:47 [[31merror[39m] 阿萨尔 | 发生错误 Error: Timeout: NTEvent serviceAndMethod:NodeIKernelMsgService/sendMsg ListenerName:NodeIKernelMsgListener/onMsgInfoListUpdate EventRet:
+{}
+
+    at f (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:30561:9)
+    at Timeout._onTimeout (file:///root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs:30571:36)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+11-21 22:28:17 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+0817bbffd2719259b8d2a5ce8b66711b469e9ac5b105f6a6eef0a4227e93d721
+===== 取证结束 =====
+<<<ALERT.txt>>>
+2026-11-21 22:28:20 阿萨尔掉线([未登录])! 本次在线110分/距最后发送43秒/距最后收信100秒;已自愈,5分钟不恢复需本人扫码
