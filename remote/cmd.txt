@@ -1,4 +1,4 @@
-287464
-echo "===== 拉取music_sign.py完整源码 ====="
-cat /root/music_sign.py
+287465
+echo "===== music_sign.py 80行以后 ====="
+sed -n '80,300p' /root/music_sign.py
 echo "=====完====="
