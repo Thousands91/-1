@@ -1,18 +1,42 @@
-<<<task_287523.txt>>>
-===== 任务287523 11-21 21:16:04 =====
+<<<task_287524.txt>>>
+===== 任务287524 11-21 21:17:31 =====
 --- 命令 ---
-echo "===== 取证1:NapCat HTTP API端口(拿完整图URL) ====="
-echo "--- 监听端口 ---"
-ss -tlnp 2>/dev/null | grep -E "python|node|3000|5700|8080|6099|OneBot" | head -20
-echo "--- NapCat配置里的http/ws端口 ---"
-grep -rniE "\"port\"|http|ws" /root/NapCat/config/*.json /root/napcat/config/*.json 2>/dev/null | grep -iE "port|host" | head -20
-echo "--- bot连的ws地址 ---"
-grep -rniE "ws://|onebot/v11|port.*6099|host.*127" /root/bot/bot/.env* 2>/dev/null | head -10
+echo "===== 通过WS调get_msg拿完整图片URL ====="
+cd /root/bot/bot
+/root/bot/venv/bin/python - <<'PYEOF'
+import asyncio, json
+try:
+    import websockets
+except ImportError:
+    print("no websockets lib"); raise SystemExit
+async def main():
+    uri="ws://127.0.0.1:8080/onebot/v11/ws"
+    try:
+        async with websockets.connect(uri, timeout=10) as ws:
+            await ws.send(json.dumps({"action":"get_msg","params":{"message_id":1780830792},"echo":"g1"}))
+            # 收几条,找echo=g1
+            for _ in range(10):
+                try:
+                    raw=await asyncio.wait_for(ws.recv(),timeout=8)
+                except asyncio.TimeoutError:
+                    break
+                d=json.loads(raw)
+                if d.get("echo")=="g1":
+                    data=d.get("data") or {}
+                    msg=data.get("message") or []
+                    print("消息段数:",len(msg) if isinstance(msg,list) else "非list")
+                    if isinstance(msg,list):
+                        for seg in msg:
+                            if isinstance(seg,dict) and seg.get("type")=="image":
+                                u=(seg.get("data") or {}).get("url","")
+                                print("IMAGE_URL_FULL:",u)
+                    break
+    except Exception as e:
+        print("WS失败:",type(e).__name__,str(e)[:100])
+asyncio.run(main())
+PYEOF
 echo "=====完====="
 --- 输出 ---
-===== 取证1:NapCat HTTP API端口(拿完整图URL) =====
---- 监听端口 ---
---- NapCat配置里的http/ws端口 ---
---- bot连的ws地址 ---
-/root/bot/bot/.env.example:6:ONEBOT_WS_URL=ws://127.0.0.1:8080/onebot/v11/ws
+===== 通过WS调get_msg拿完整图片URL =====
+WS失败: TypeError BaseEventLoop.create_connection() got an unexpected keyword argument 'timeout'
 =====完=====
