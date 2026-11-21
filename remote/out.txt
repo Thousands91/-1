@@ -1,28 +1,16 @@
-<<<task_287517.txt>>>
-===== 任务287517 11-21 20:53:35 =====
+<<<task_287518.txt>>>
+===== 任务287518 11-21 20:55:21 =====
 --- 命令 ---
-F=/root/bot/bot/plugins/ai_chat.py
-echo "===== 验收:引用图片识别落盘 ====="
-echo "--- 语法 ---"
-python3 -m py_compile "$F" && echo 语法OK || echo 语法FAIL
-echo "--- 关键行 ---"
-grep -nE "async def _image_sticker_name|_image_sticker_name\(_qu, wait=True\)|async def _do_caption|if wait:" "$F"
-echo "--- 确认旧调用已消失(应只剩定义+新调用) ---"
-grep -c "_image_sticker_name(_qu)" "$F"
-echo "--- 备份 ---"
-ls -la "$F".bak_quote_* 2>/dev/null | tail -2
+echo "===== 部署窗口检查 ====="
+echo "--- 最近90秒消息 ---"
+grep -E "11-21 20:(5[2-3]):.*message\.(group|private)" /root/bot_restart_1535.log 2>/dev/null | tail -8
+echo "--- 当前时间 ---"
+date '+%H:%M:%S'
 echo "=====完====="
 --- 输出 ---
-===== 验收:引用图片识别落盘 =====
---- 语法 ---
-语法OK
---- 关键行 ---
-394:async def _image_sticker_name(url: str, wait: bool = False) -> str:
-413:        async def _do_caption() -> str:
-422:        if wait:
-1516:                                _qn = await _image_sticker_name(_qu, wait=True)
---- 确认旧调用已消失(应只剩定义+新调用) ---
-0
---- 备份 ---
--rw-r--r-- 1 root root 120973 Nov 21 20:51 /root/bot/bot/plugins/ai_chat.py.bak_quote_2051
+===== 部署窗口检查 =====
+--- 最近90秒消息 ---
+11-21 20:52:11 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 739739082 from 462681975@[群:590454333] '[reply:id=567104969][at:qq=1445169274] 哎哟我去 本人知道吗'
+--- 当前时间 ---
+20:55:21
 =====完=====
