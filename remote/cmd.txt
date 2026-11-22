@@ -1,30 +1,42 @@
-287621
+287622
 python3 - <<'PY'
-from datetime import datetime
-ts=[]
-for ln in open('/root/tick.log',errors='replace'):
-    ln=ln.strip()
-    try: ts.append(datetime.strptime(ln[:19],'%Y-%m-%d %H:%M:%S'))
-    except: pass
-gaps=[]
-for i in range(1,len(ts)):
-    d=(ts[i]-ts[i-1]).total_seconds()
-    if d>300: gaps.append((ts[i-1],ts[i],d))
-drops=[]
-for ln in open('/root/login_state.log',errors='replace'):
-    if '状态变化: [在线] -> [未登录]' in ln:
-        try: drops.append(datetime.strptime(ln[:19],'%Y-%m-%d %H:%M:%S'))
-        except: pass
-print('[DROP] 全部13次, 每次掉线前6h最大tick断档:')
-for dp in drops:
-    pre=[d for a,b,d in gaps if 0 < (dp-b).total_seconds() <= 6*3600]
-    mx=max(pre) if pre else 0
-    seg='白天' if 6<=dp.hour<18 else '夜间'
-    print(f'{dp.strftime("%m-%d %H:%M:%S")} {seg} 前6h断档={int(mx)}s({mx/60:.0f}m)')
-# 今天这次详查
-print('[TODAY] 11-22 00:00之后 tick 全部断档:')
-for a,b,d in gaps:
-    if b.day==22 and b.month==11:
-        print(f'  {a} -> {b} {int(d)}s({d/60:.0f}m)')
+import re
+from collections import Counter, OrderedDict
+F='/root/offline_forensics.log'
+lines=open(F,errors='replace').read().splitlines()
+print('[FILE] offline_forensics.log 总行数', len(lines))
+print('[FILE] 首行:', lines[0][:120] if lines else '空')
+print('[FILE] 末行:', lines[-1][:120] if lines else '空')
+
+# 1) 所有 KickedOffLine 原文行(去重)
+kicks=[]
+for ln in lines:
+    if 'KickedOffLine' in ln or '下线通知' in ln or '登录已失效' in ln:
+        k=ln.strip()
+        if k not in kicks: kicks.append(k)
+print('[KICK] 去重后 KickedOffLine/下线通知 行数', len(kicks))
+for k in kicks[:40]:
+    print('  ', k[:150])
+
+# 2) 按日期分布(取行内 MM-DD HH:MM:SS)
+by=Counter()
+for ln in lines:
+    if 'KickedOffLine' in ln:
+        m=re.search(r'(\d{2}-\d{2}) (\d{2}:\d{2}:\d{2})',ln)
+        if m: by[m.group(1)]+=1
+print('[KICK] 按日期出现次数:', dict(sorted(by.items())))
+
+# 3) 所有 [error]/[warn] 行按模板归类(去掉时间戳和QQ名)
+tpl=Counter()
+for ln in lines:
+    if '[error]' in ln or '[warn]' in ln or '[ERROR]' in ln or '[WARN]' in ln:
+        t=re.sub(r'^\s*\d{2}-\d{2} \d{2}:\d{2}:\d{2}\s*','',ln)
+        t=re.sub(r'阿萨尔','<QQ>',t)
+        t=re.sub(r'\d{4,}','<N>',t)
+        t=t.strip()[:110]
+        tpl[t]+=1
+print('[TPL] 取证日志 error/warn 模板种类', len(tpl))
+for t,n in tpl.most_common(25):
+    print(f'  x{n}  {t}')
 PY
 echo "=====完====="
