@@ -1,7 +1,6 @@
-287620
+287621
 python3 - <<'PY'
 from datetime import datetime
-# 1) tick.log 断档分析
 ts=[]
 for ln in open('/root/tick.log',errors='replace'):
     ln=ln.strip()
@@ -11,25 +10,21 @@ gaps=[]
 for i in range(1,len(ts)):
     d=(ts[i]-ts[i-1]).total_seconds()
     if d>300: gaps.append((ts[i-1],ts[i],d))
-print('[TICK] 心跳总数',len(ts),'范围',ts[0],'->',ts[-1])
-print('[TICK] 断档>300s 共',len(gaps),'段; 其中白天起',sum(1 for a,b,d in gaps if 6<=a.hour<18),'夜间起',sum(1 for a,b,d in gaps if not 6<=a.hour<18))
-print('[TICK] 最近12段断档:')
-for a,b,d in gaps[-12:]:
-    seg='白天' if 6<=a.hour<18 else '夜间'
-    print(f'  {a} -> {b}  {int(d)}秒({d/60:.0f}分) 起于{seg}')
-
-# 2) 每次掉线前6小时内的最大tick断档
 drops=[]
 for ln in open('/root/login_state.log',errors='replace'):
     if '状态变化: [在线] -> [未登录]' in ln:
         try: drops.append(datetime.strptime(ln[:19],'%Y-%m-%d %H:%M:%S'))
         except: pass
-print('[DROP] 掉线次数',len(drops))
-print('[DROP] 每次掉线前6h内最大tick断档:')
+print('[DROP] 全部13次, 每次掉线前6h最大tick断档:')
 for dp in drops:
     pre=[d for a,b,d in gaps if 0 < (dp-b).total_seconds() <= 6*3600]
     mx=max(pre) if pre else 0
     seg='白天' if 6<=dp.hour<18 else '夜间'
-    print(f'  {dp} {seg} 前6h最大断档={int(mx)}秒({mx/60:.0f}分)')
+    print(f'{dp.strftime("%m-%d %H:%M:%S")} {seg} 前6h断档={int(mx)}s({mx/60:.0f}m)')
+# 今天这次详查
+print('[TODAY] 11-22 00:00之后 tick 全部断档:')
+for a,b,d in gaps:
+    if b.day==22 and b.month==11:
+        print(f'  {a} -> {b} {int(d)}s({d/60:.0f}m)')
 PY
 echo "=====完====="
