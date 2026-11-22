@@ -1,58 +1,62 @@
-<<<task_287622.txt>>>
-===== 任务287622 11-22 12:26:27 =====
+<<<task_287623.txt>>>
+===== 任务287623 11-22 12:28:50 =====
 --- 命令 ---
-python3 - <<'PY'
-import re
-from collections import Counter, OrderedDict
-F='/root/offline_forensics.log'
-lines=open(F,errors='replace').read().splitlines()
-print('[FILE] offline_forensics.log 总行数', len(lines))
-print('[FILE] 首行:', lines[0][:120] if lines else '空')
-print('[FILE] 末行:', lines[-1][:120] if lines else '空')
-
-# 1) 所有 KickedOffLine 原文行(去重)
-kicks=[]
-for ln in lines:
-    if 'KickedOffLine' in ln or '下线通知' in ln or '登录已失效' in ln:
-        k=ln.strip()
-        if k not in kicks: kicks.append(k)
-print('[KICK] 去重后 KickedOffLine/下线通知 行数', len(kicks))
-for k in kicks[:40]:
-    print('  ', k[:150])
-
-# 2) 按日期分布(取行内 MM-DD HH:MM:SS)
-by=Counter()
-for ln in lines:
-    if 'KickedOffLine' in ln:
-        m=re.search(r'(\d{2}-\d{2}) (\d{2}:\d{2}:\d{2})',ln)
-        if m: by[m.group(1)]+=1
-print('[KICK] 按日期出现次数:', dict(sorted(by.items())))
-
-# 3) 所有 [error]/[warn] 行按模板归类(去掉时间戳和QQ名)
-tpl=Counter()
-for ln in lines:
-    if '[error]' in ln or '[warn]' in ln or '[ERROR]' in ln or '[WARN]' in ln:
-        t=re.sub(r'^\s*\d{2}-\d{2} \d{2}:\d{2}:\d{2}\s*','',ln)
-        t=re.sub(r'阿萨尔','<QQ>',t)
-        t=re.sub(r'\d{4,}','<N>',t)
-        t=t.strip()[:110]
-        tpl[t]+=1
-print('[TPL] 取证日志 error/warn 模板种类', len(tpl))
-for t,n in tpl.most_common(25):
-    print(f'  x{n}  {t}')
-PY
+echo "===== [1] NapCat 相关日志文件(名称/大小/时间) ====="
+ls -la /root/*.log /root/napcat*/**/*.log /root/Napcat/**/*.log 2>/dev/null | grep -iE 'napcat|qq|offline|forensic' | head -60
+echo "===== [2] 所有 .bak 备份 ====="
+find /root -maxdepth 4 -type f \( -name '*.bak*' -o -name '*bak_*' \) 2>/dev/null | head -60
+echo "===== [3] 各日志中 KickedOffLine 计数 ====="
+for f in $(find /root -maxdepth 4 -type f \( -name '*.log' -o -name '*.bak*' \) 2>/dev/null | grep -iE 'napcat|offline|qq' | head -40); do
+  c=$(grep -c 'KickedOffLine' "$f" 2>/dev/null)
+  [ "${c:-0}" -gt 0 ] && echo "$c  $f"
+done
 echo "=====完====="
 --- 输出 ---
-[FILE] offline_forensics.log 总行数 654
-[FILE] 首行: ===== 掉线取证 v2.0 2026-11-19 12:41:46 CST =====
-[FILE] 末行: ===== 取证结束 =====
-[KICK] 去重后 KickedOffLine/下线通知 行数 6
-   ---- ③ 被踢原因字段(KickedOffLine原文) ----
-   (本次无KickedOffLine → 静默离线,腾讯未下发原因码)
-   【判定类型】真被踢(KickedOffLine)-腾讯下发原因见③
-   【触发原文】11-22 03:10:24 [[31merror[39m] 阿萨尔 | [KickedOffLine] [下线通知] 你的账号当前登录已失效，请重新登录。
-   (无时间戳) | 被踢事件 | 11-22 03:10:24 [[31merror[39m] 阿萨尔 | [KickedOffLine] [下线通知] 你的账号当前登录已失效，请重新登录。
-   11-22 03:10:24 [[31merror[39m] 阿萨尔 | [KickedOffLine] [下线通知] 你的账号当前登录已失效，请重新登录。
-[KICK] 按日期出现次数: {'11-22': 4}
-[TPL] 取证日志 error/warn 模板种类 0
+===== [1] NapCat 相关日志文件(名称/大小/时间) =====
+-rw-r--r-- 1 root root 1467957 Nov 22 12:28 /root/napcat-restart.log
+-rw-r--r-- 1 root root  675277 Nov 22 06:34 /root/napcat.log
+-rw-r--r-- 1 root root   40638 Nov 22 03:10 /root/offline_forensics.log
+-rw-r--r-- 1 root root    2394 Nov 22 03:10 /root/offline_watch2.log
+===== [2] 所有 .bak 备份 =====
+/root/bot/bot/plugins/song_request.py.bak.trace
+/root/bot/bot/plugins/song_request.py.bak_287361
+/root/bot/bot/plugins/song_request.py.bak_287370
+/root/bot/bot/plugins/games.py.bak_287385
+/root/bot/bot/plugins/ai_chat.py.bak_287391
+/root/bot/bot/plugins/games.py.bak_287391
+/root/bot/bot/plugins/song_request.py.bak_287396
+/root/bot/bot/plugins/chess_game.py.bak_0412_1458
+/root/bot/bot/plugins/weather.py.bak_weather_1534
+/root/bot/bot/plugins/ai_chat.py.bak_quote_2051
+/root/bot/bot/plugins/ai_chat.py.bak_quote156_2137
+/root/bot/bot/plugins/ai_chat.py.bak_quote159_11212205
+/root/bot/bot/plugins/song_request.py.bak_vip160_11212227
+/root/bot/bot/plugins/song_request.py.bak_vip160b
+/root/bot/bot/plugins/ai_chat.py.bak_ac161
+/root/bot/bot/plugins/bak_162_0235
+/root/bot/bot/plugins/bak_163_0919
+/root/bot/bot/plugins/bak_163_v2
+/root/bot/bot/plugins/bak_163b
+/root/music_sign.py.bak.ups
+/root/health_probe_v1.bak
+/root/health_probe_v2.bak
+/root/health_probe_v3.bak
+/root/remote_ctl_v6.sh.bak_11171855
+/root/music_sign.py.bak_v3
+/root/music_sign.py.bak_pre_kugou
+/root/bot.log.20261118.bak
+/root/music_sign_v4.bak
+/root/music_sign_v5.bak
+/root/music_sign_v6.bak
+/root/music_sign_v7.bak
+/root/music_sign_v8.bak
+/root/offline_watch_v1.bak
+/root/remote_ctl_v6.sh.bak_fix29_11201416
+/root/music_sign.py.bak_jump_11211305
+/root/music_sign.py.bak_official_11211426
+/root/music_sign.py.bak_selfplayer_11212153
+===== [3] 各日志中 KickedOffLine 计数 =====
+1  /root/napcat.log
+1  /root/offline_watch2.log
+22  /root/offline_forensics.log
 =====完=====
