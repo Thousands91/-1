@@ -1,2 +1,37 @@
-<<<ALERT.txt>>>
-2026-11-22 12:59:26 阿萨尔已恢复在线
+<<<task_287637.txt>>>
+===== 任务287637 11-22 13:00:22 =====
+--- 命令 ---
+cat > /tmp/v31_logA <<'X'
+11-22 13:00:20 [warn] 阿萨尔 | 账号存在风险,功能限制
+11-22 13:00:22 [error] 阿萨尔 | 身份验证信息已失效
+11-22 13:00:24 [error] 阿萨尔 | [KickedOffLine] [下线通知] 你的账号当前登录已失效，请重新登录。
+11-22 13:00:25 [info] 阿萨尔 | 账号状态变更为离线
+X
+: > /tmp/v31_logB; : > /tmp/v31_net
+OW_SELFTEST=1 OW_OUT=/tmp/v31_out.log OW_DRY_RUN=1 OW_PBOX=/tmp/v31_pbox \
+  OW_LOG_A=/tmp/v31_logA OW_LOG_B=/tmp/v31_logB OW_NET=/tmp/v31_net \
+  OW_RUNLOG=/tmp/v31_run.log OW_LOCK=/tmp/v31_lock bash /root/offline_watch.sh
+sleep 1
+echo "[1] ③b段:"
+sed -n '/③b/,/---- ③ /p' /tmp/v31_out.log 2>/dev/null | head -8
+echo "[2] 断言:"
+printf '版本v3.1='; grep -c '取证 v3.1' /tmp/v31_out.log
+printf '扩展段存在='; grep -c '③b 扩展提示扫描' /tmp/v31_out.log
+printf '抓到功能限制='; grep -c '功能限制' /tmp/v31_out.log
+printf 'EVIDENCE唯一='; grep -c '^\[EVIDENCE' /tmp/v31_out.log
+echo "=====完====="
+--- 输出 ---
+[1] ③b段:
+---- ③b 扩展提示扫描(本次窗口±120s,账号/登录/风控类全部留痕) ----
+11-22 13:00:20 | 11-22 13:00:20 [warn] 阿萨尔 | 账号存在风险,功能限制
+11-22 13:00:22 | 11-22 13:00:22 [error] 阿萨尔 | 身份验证信息已失效
+11-22 13:00:24 | 11-22 13:00:24 [error] 阿萨尔 | [KickedOffLine] [下线通知] 你的账号当前登录已失效，请重新登录。
+11-22 13:00:25 | 11-22 13:00:25 [info] 阿萨尔 | 账号状态变更为离线
+
+---- ③ 被踢原因字段(本次窗口±60s的KickedOffLine原文) ----
+[2] 断言:
+版本v3.1=1
+扩展段存在=1
+抓到功能限制=2
+EVIDENCE唯一=1
+=====完=====
