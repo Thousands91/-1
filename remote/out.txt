@@ -1,66 +1,69 @@
-<<<task_287600.txt>>>
-===== 任务287600 11-22 09:47:34 =====
+<<<task_287601.txt>>>
+===== 任务287601 11-22 09:51:16 =====
 --- 命令 ---
-echo "===== 真实模型误触发批量测试 $(date '+%T') ====="
 set -a; source /root/bot/bot/.env 2>/dev/null; set +a
 cd /root/bot/bot && /root/bot/venv/bin/python - <<'PY'
 import nonebot; nonebot.init()
 import sys, asyncio, base64
 sys.path.insert(0,'.')
 import plugins.ai_chat as m
-print("KEY就绪:", bool(m.API_KEY), "MODEL:", m.MODEL)
-QS = [
- "走吧", "那我们走吧", "我们走嘛", "我去吃饭了", "他走了",
- "你肯定知道吧", "是不是很好", "行不行啊", "你能不能过来",
- "来杯茶", "我饿了", "吃什么好", "陪我下棋", "这个去哪了",
- "今天股市涨了吧", "帮我把这段记下来", "你说是不是这个理",
-]
+from nonebot.adapters.onebot.v11 import Message as OBMessage
+captured={}
+async def mock_finish(x):
+    captured["sent"]=x
+    raise SystemExit
+m.ai_chat.finish=mock_finish
+import random; random.seed(42)
+class Bot:
+    async def call_api(self,api,**kw): return {}
+class Ev:
+    user_id=1561950850; group_id=1109952783; message_id=1
+    def __init__(self,t):
+        self.t=t
+        self.message=OBMessage("[CQ:at,qq=3427943187]"+t)
+        self.raw_message="[CQ:at,qq=3427943187]"+t
+    def get_plaintext(self): return self.t
+    def is_tome(self): return True
+    def get_message(self): return self.message
+    def get_user_id(self): return self.user_id
+    def get_session_id(self): return "x"
+async def run(t):
+    m.HISTORY.clear(); m._TEXT_RECENT.clear(); m._EXTRACT_MEMO.clear(); m._pick_cache.clear()
+    captured.clear()
+    ev=Ev(t)
+    try:
+        await m.ai_chat.handlers[0].call(Bot(),ev,{})
+    except SystemExit: pass
+    except Exception as e:
+        return "[ERR]"+type(e).__name__+":"+str(e)[:50]
+    s=captured.get("sent")
+    return str(s) if s is not None else "[NO_SENT]"
 async def main():
-    for q in QS:
-        try:
-            r = await m.call_llm([{"role":"user","content":q}], extra_system="说话人QQ号 1561950850。群聊里直接回话，默认一两句。")
-            b = base64.b64encode((r or "").encode('utf-8')).decode()
-            print("R|"+base64.b64encode(q.encode()).decode()+"|"+b)
-        except Exception as e:
-            print("E|"+base64.b64encode(q.encode()).decode()+"|"+str(type(e).__name__)+":"+str(e)[:60])
+    for t in ["我去吃饭了","行不行啊","陪我下棋","那我们走吧","是不是很好"]:
+        r=await run(t)
+        print("H|"+base64.b64encode(t.encode()).decode()+"|"+base64.b64encode(r.encode()).decode())
 asyncio.run(main())
 print("====DONE====")
 PY
 echo "=====完====="
 --- 输出 ---
-===== 真实模型误触发批量测试 09:47:34 =====
-11-22 09:47:36 [SUCCESS] nonebot | NoneBot is initializing...
-11-22 09:47:36 [INFO] nonebot | Current Env: prod
-KEY就绪: True MODEL: glm-4.7-flash
-11-22 09:47:45 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-R|6LWw5ZCn|5Y675ZOq5YS/77yf
-11-22 09:47:48 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-R|6YKj5oiR5Lus6LWw5ZCn|5Y675ZOq6YeM77yf8J+Tlg==
-11-22 09:47:49 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-R|5oiR5Lus6LWw5Zib|6LWw5ZOq6YeM77yf5oiR6L+Z5Z6C6ZKT6ICF5Y+v5LiN5Yqo5Zyw5pa544CC
-11-22 09:47:50 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-R|5oiR5Y675ZCD6aWt5LqG|57qi54On6IKJ5ZCn77yM5rK56YeN77yM6YWN5LiA56KX55m96aWt5q2j5aW944CC
-11-22 09:47:51 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-22 09:47:59 [WARNING] plugins | [模型降级] glm-4.5-flash 调用失败(APITimeoutError)，尝试下一个
-R|5LuW6LWw5LqG|5oKo6YKj5pyL5Y+L5Y675ZOq5YS/5LqG77yf5Yir5piv5Ye65LqG5Z+O5ZCn77yf
-R|5L2g6IKv5a6a55+l6YGT5ZCn|6L+Z6K+d6KaB5piv6K6p5ZOI5q+U5Y2c5ZCs5Y6777yM5LuW5YeG5b6X6K+06L+Z5piv55S76aW85YWF6aWl4oCU4oCU5L2G6L+Z6aW85oiR5pGK5b6X77yM6aaZ552A5ZGi44CC
-11-22 09:48:14 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-R|5piv5LiN5piv5b6I5aW9|6L+Z5b6X55yL5piv5LuA5LmI44CC5Lmm5piv5aW95Lmm77yM6L+Z6K+d5oKo6K+05b6X5a+544CC
-R|6KGM5LiN6KGM5ZWK|6L+Z5b6X55yL5oKo5omL6YeM55qE6IuP5Li55Y2h77yM6KaB5piv6YKj5byg55+z5aS05Y2h55qE5YiG6YeP6YeN77yM6YKj5L6/5piv5a6a5bGA44CC
-R|5L2g6IO95LiN6IO96L+H5p2l|5b2T54S25Y+v5Lul77yM5oiR6L+Z5bCx6L+H5Y6744CC
-11-22 09:48:20 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-R|5p2l5p2v6Iy2|54Ot6Iy25ZCn77yM5bCx6YKj56eN5pyA5L6/5a6c55qE44CC
-R|5oiR6aW/5LqG|57qi54On6IKJ5ZCn77yM5rK56YeN77yM6YWN5LiA56KX55m96aWt5q2j5aW944CC
-R|5ZCD5LuA5LmI5aW9|57qi54On6IKJ5ZCn77yM5rK56YeN77yM6YWN5LiA56KX55m96aWt5q2j5aW944CC
-11-22 09:48:25 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-R|6Zmq5oiR5LiL5qOL|QDE1NjE5NTA4NTAg5Zu96ZmF6LGh5qOL
-11-22 09:48:26 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-R|6L+Z5Liq5Y675ZOq5LqG|Iui/meS4qiLmgqjmmK/mjIflk6rmoLfvvJ/miJHnmoTotKfmnrbkuIrvvIzmr4/np43kuabpg73or6XlnKjljp/kvY3jgILmgqjopoHmmK/or7TkuKrkuablkI3vvIzmiJHog73lnKjkuInmraXkuYvlhoXmiorlroPmib7lh7rmnaXjgII=
-11-22 09:48:29 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-R|5LuK5aSp6IKh5biC5rao5LqG5ZCn|5rKh55WZ5oSP44CC5oiR6L+Z6ZO65a2Q6YeM77yM5Y+q6K6w5b6X5Lmm5rao5Lu344CC
-11-22 09:48:30 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-R|5biu5oiR5oqK6L+Z5q616K6w5LiL5p2l|5oKo6KaB6K6w5LuA5LmI77yf
-11-22 09:48:31 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-R|5L2g6K+05piv5LiN5piv6L+Z5Liq55CG|5oKo6L+Z6K+d77yM5YCS5YOP5piv5oqK5a2m6Zeu6KOF6L+b5LqG5LiA5Liq5Y+j6KKL6YeM44CC
+11-22 09:51:18 [SUCCESS] nonebot | NoneBot is initializing...
+11-22 09:51:18 [INFO] nonebot | Current Env: prod
+11-22 09:51:27 [INFO] plugins | [核对·调试] ask='[@3427943187]我去吃饭了' lead=False contra=False agree=False dodge=False ans='您若是饿了，那得先把肚子填饱，书里的道理才能装得进去。'
+H|5oiR5Y675ZCD6aWt5LqG|5oKo6Iul5piv6aW/5LqG77yM6YKj5b6X5YWI5oqK6IKa5a2Q5aGr6aWx77yM5Lmm6YeM55qE6YGT55CG5omN6IO96KOF5b6X6L+b5Y6744CC
+11-22 09:51:28 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-22 09:51:28 [INFO] plugins | [核对·调试] ask='[@3427943187]行不行啊' lead=False contra=False agree=False dodge=False ans='行。'
+H|6KGM5LiN6KGM5ZWK|6KGM44CC
+11-22 09:51:29 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-22 09:51:29 [INFO] plugins | [核对·调试] ask='[@3427943187]陪我下棋' lead=False contra=False agree=False dodge=False ans='国际象棋'
+H|6Zmq5oiR5LiL5qOL|5Zu96ZmF6LGh5qOL
+11-22 09:51:30 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-22 09:51:31 [INFO] plugins | [核对·调试] ask='[@3427943187]那我们走吧' lead=True contra=False agree=False dodge=False ans='布缇娜那不卖书，学问不浅，藏龙卧虎，不妨同往。'
+H|6YKj5oiR5Lus6LWw5ZCn|5biD57yH5aic6YKj5LiN5Y2W5Lmm77yM5a2m6Zeu5LiN5rWF77yM6JeP6b6Z5Y2n6JmO77yM5LiN5aao5ZCM5b6A44CC
+11-22 09:51:35 [INFO] plugins | [联网] 走搜狗抓到 3 条
+11-22 09:51:35 [INFO] plugins | [联网] 「[@3427943187]是不是很好」检索到线索，重答一次
+11-22 09:51:35 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-22 09:51:36 [INFO] plugins | [核对·调试] ask='[@3427943187]是不是很好' lead=False contra=False agree=False dodge=False ans='[@3427943187] 是不是很好？📖'
+H|5piv5LiN5piv5b6I5aW9|JiM5MTtbQ1E6YXQscXE9MzQyNzk0MzE4N10mIzkzOyDmmK/kuI3mmK/lvojlpb3vvJ/wn5OW
 ====DONE====
 =====完=====
