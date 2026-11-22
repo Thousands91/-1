@@ -1,18 +1,17 @@
-287662
-echo "===== [0] 改前基线 ====="
-echo -n "wifi_sleep_policy="; settings get global wifi_sleep_policy 2>/dev/null
-echo -n "termux白名单计数="; dumpsys deviceidle whitelist 2>/dev/null | grep -c 'com.termux'
-echo "===== [1] WiFi休眠时保持连接 (0=NEVER休眠不断网) ====="
-settings put global wifi_sleep_policy 0 2>/dev/null
-echo "改后wifi_sleep_policy=$(settings get global wifi_sleep_policy 2>/dev/null)"
-echo "===== [2] Termux 加入电池优化白名单(iAware/Doze豁免) ====="
-dumpsys deviceidle whitelist +com.termux 2>&1 | head -2
-echo "改后termux白名单计数=$(dumpsys deviceidle whitelist 2>/dev/null | grep -c 'com.termux')"
-echo "===== [3] 申请唤醒锁(防CPU休眠) ====="
-WL=/data/data/com.termux/files/usr/bin/termux-wake-lock
-if [ -x "$WL" ]; then "$WL" && echo "wakelock申请OK" || echo "wakelock申请失败"; else echo "termux-wake-lock路径不存在"; fi
-echo "===== [4] 保活锚进程是否活着 ====="
-ps -ef | grep -E '[a]sar_keepalive|[a]zar_autoheal' | head -5
-echo "===== [5] 当前登录态(应仍[未登录]) ====="
-bash /root/logincheck.sh 2>/dev/null | grep -E '\[在线\]|\[未登录\]|\[掉线\]' | head -1
+287663
+echo "===== [1] settings命令是否可用 ====="
+command -v settings || echo "settings不在PATH"
+settings get global wifi_sleep_policy 2>&1 | head -2
+echo "===== [2] 内核wake_lock节点 ====="
+cat /sys/power/wake_lock 2>/dev/null || echo "无/sys/power/wake_lock节点"
+echo "--- wakeup_count ---"; cat /sys/power/wakeup_count 2>/dev/null || echo "无节点"
+echo "===== [3] termux唤醒锁状态(看进程持锁) ====="
+ls -la /data/data/com.termux/files/usr/bin/termux-wake-lock 2>/dev/null
+echo "===== [4] doze状态 ====="
+dumpsys deviceidle 2>/dev/null | grep -iE 'mDeepPowerSaveMode|mLightPowerSaveMode|mScreenOff|mCharging|enabled=' | head -8 || echo "dumpsys deviceidle无权限"
+echo "===== [5] guard为何没跑(检查启动配置) ====="
+grep -rn 'azar_guard' /root/start_all.sh /root/setup.sh /root/*.sh 2>/dev/null | head -10
+echo "(空=没有任何脚本拉起guard)"
+echo "===== [6] autoheal的wakelock续持行(确认它每轮续持) ====="
+grep -n 'wake-lock\|wakelock\|termux-wake' /root/azar_autoheal.sh 2>/dev/null | head -10
 echo "=====完====="
