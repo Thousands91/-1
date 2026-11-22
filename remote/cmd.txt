@@ -1,20 +1,14 @@
-287629
-PAT='bash /root/offline_watch.[s]h'
-echo "===== [0] 重启前PID ====="
-pgrep -f "$PAT" | head -3
-OLD=$(pgrep -f "$PAT" | head -3)
-for p in $OLD; do kill "$p" 2>/dev/null; done
+287630
+# 用独立OUT跑自检,不污染正式取证日志
+OW_SELFTEST=1 OW_OUT=/tmp/v3_selftest.log OW_DRY_RUN=1 OW_PBOX=/tmp/v3_pbox \
+  OW_RUNLOG=/tmp/v3_selftest_run.log OW_LOCK=/tmp/v3_selftest.lock \
+  bash /root/offline_watch.sh
 sleep 2
-rm -rf /root/.offline_watch_v2.lock /root/.offline_watch_v3.lock 2>/dev/null
-setsid nohup bash /root/offline_watch.sh >> /root/offline_watch2.log 2>&1 < /dev/null &
-sleep 3
-echo "===== [1] 重启后PID ====="
-pgrep -f "$PAT" | head -3
-echo "===== [2] 进程cmdline ====="
-NP=$(pgrep -f "$PAT" | head -1)
-[ -n "$NP" ] && tr '\0' ' ' < /proc/$NP/cmdline && echo
-echo "===== [3] 启动日志尾(v3基线行) ====="
-tail -3 /root/offline_watch3.log 2>/dev/null || echo "(v3日志未生成)"
-echo "===== [4] 登录态未受影响 ====="
-bash /root/logincheck.sh 2>/dev/null | grep -E '\[在线\]|\[未登录\]|\[掉线\]' | head -1
+echo "===== [1] 自检产出块 ====="
+cat /tmp/v3_selftest.log 2>/dev/null | head -20
+echo "===== [2] 格式断言 ====="
+printf 'EVIDENCE锚点(应1): '; grep -c '^\[EVIDENCE' /tmp/v3_selftest.log 2>/dev/null
+printf '判定类型(应1): '; grep -c '【判定类型】' /tmp/v3_selftest.log 2>/dev/null
+printf '旧混淆模板(应0): '; grep -c '本次无KickedOffLine → 静默离线' /tmp/v3_selftest.log 2>/dev/null
+printf 'id唯一(头尾一致): '; H=$(grep '^===== 掉线取证' /tmp/v3_selftest.log | head -1); T=$(grep '取证结束 id=' /tmp/v3_selftest.log | head -1); echo "$H || $T"
 echo "=====完====="
