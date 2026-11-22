@@ -1,34 +1,44 @@
-<<<task_287629.txt>>>
-===== 任务287629 11-22 12:41:40 =====
+<<<task_287630.txt>>>
+===== 任务287630 11-22 12:43:29 =====
 --- 命令 ---
-PAT='bash /root/offline_watch.[s]h'
-echo "===== [0] 重启前PID ====="
-pgrep -f "$PAT" | head -3
-OLD=$(pgrep -f "$PAT" | head -3)
-for p in $OLD; do kill "$p" 2>/dev/null; done
+# 用独立OUT跑自检,不污染正式取证日志
+OW_SELFTEST=1 OW_OUT=/tmp/v3_selftest.log OW_DRY_RUN=1 OW_PBOX=/tmp/v3_pbox \
+  OW_RUNLOG=/tmp/v3_selftest_run.log OW_LOCK=/tmp/v3_selftest.lock \
+  bash /root/offline_watch.sh
 sleep 2
-rm -rf /root/.offline_watch_v2.lock /root/.offline_watch_v3.lock 2>/dev/null
-setsid nohup bash /root/offline_watch.sh >> /root/offline_watch2.log 2>&1 < /dev/null &
-sleep 3
-echo "===== [1] 重启后PID ====="
-pgrep -f "$PAT" | head -3
-echo "===== [2] 进程cmdline ====="
-NP=$(pgrep -f "$PAT" | head -1)
-[ -n "$NP" ] && tr '\0' ' ' < /proc/$NP/cmdline && echo
-echo "===== [3] 启动日志尾(v3基线行) ====="
-tail -3 /root/offline_watch3.log 2>/dev/null || echo "(v3日志未生成)"
-echo "===== [4] 登录态未受影响 ====="
-bash /root/logincheck.sh 2>/dev/null | grep -E '\[在线\]|\[未登录\]|\[掉线\]' | head -1
+echo "===== [1] 自检产出块 ====="
+cat /tmp/v3_selftest.log 2>/dev/null | head -20
+echo "===== [2] 格式断言 ====="
+printf 'EVIDENCE锚点(应1): '; grep -c '^\[EVIDENCE' /tmp/v3_selftest.log 2>/dev/null
+printf '判定类型(应1): '; grep -c '【判定类型】' /tmp/v3_selftest.log 2>/dev/null
+printf '旧混淆模板(应0): '; grep -c '本次无KickedOffLine → 静默离线' /tmp/v3_selftest.log 2>/dev/null
+printf 'id唯一(头尾一致): '; H=$(grep '^===== 掉线取证' /tmp/v3_selftest.log | head -1); T=$(grep '取证结束 id=' /tmp/v3_selftest.log | head -1); echo "$H || $T"
 echo "=====完====="
 --- 输出 ---
-===== [0] 重启前PID =====
-17145
-===== [1] 重启后PID =====
-30107
-===== [2] 进程cmdline =====
-bash /root/offline_watch.sh 
-===== [3] 启动日志尾(v3基线行) =====
-[11-22 12:41:43] ===== 取证器v3.0启动 基线:静默=2 被踢=1 日志A=/root/napcat.log 日志B=/root/napcat-restart.log =====
-===== [4] 登录态未受影响 =====
-[未登录] 当前没有有效会话
+===== [1] 自检产出块 =====
+===== 掉线取证 v3.0 id=20261122_124329_CST =====
+[EVIDENCE id=20261122_124329_CST kind=自检-模拟静默离线(SelfOffline) verdict=自检-模拟静默离线(SelfOffline)]
+【判定类型】自检-模拟静默离线(SelfOffline)
+【触发原文】[SELFTEST] 账号状态变更为离线 1122/124329.000000
+【采集时刻】2026-11-22 12:43:30 CST
+
+---- ① 自动判定(秒级时间轴) ----
+静默离线(最新): 11-22 03:10:25
+GPU崩溃(最新): 11-22 06:34:02
+结论: 静默离线(11-22 03:10:25) 早于 GPU崩溃(11-22 06:34:02) → GPU是连带结果,不是诱因
+
+---- ② 完整时间轴(离线/被踢/GPU,按时间排序) ----
+11-22 00:44:19 | GPU崩溃 | [14560:1122/004419.132338:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+11-22 02:11:41 | 静默离线(status20) | 11-22 02:11:41 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+11-22 03:10:24 | 被踢事件 | 11-22 03:10:24 [[31merror[39m] 阿萨尔 | [KickedOffLine] [下线通知] 你的账号当前登录已失效，请重新登录。
+11-22 03:10:25 | 静默离线(status20) | 11-22 03:10:25 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+11-22 06:34:02 | GPU崩溃 | [5314:1122/063402.465425:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-22 06:34:02 | GPU崩溃 | [5314:1122/063402.470928:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-22 06:34:02 | GPU崩溃 | [5314:1122/063402.475919:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+11-22 06:34:02 | GPU崩溃 | [5314:1122/063402.476048:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+===== [2] 格式断言 =====
+EVIDENCE锚点(应1): 1
+判定类型(应1): 1
+旧混淆模板(应0): 0
+id唯一(头尾一致): ===== 掉线取证 v3.0 id=20261122_124329_CST ===== || ===== 取证结束 id=20261122_124329_CST =====
 =====完=====
