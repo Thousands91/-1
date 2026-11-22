@@ -1,10 +1,10 @@
-287660
-echo "===== [1] azar_guard.sh 全文(45行后) ====="
-sed -n '45,120p' /root/azar_guard.sh 2>/dev/null
-echo "===== [2] guard_status 最近20行 ====="
-tail -20 /root/guard_status.txt 2>/dev/null
-echo "===== [3] 被踢标记是否存在 ====="
-ls -la /root/.guard_kicked 2>/dev/null && echo "标记内容:" && cat /root/.guard_kicked 2>/dev/null || echo "无被踢标记"
-echo "===== [4] azar_login.sh 全文 ====="
-cat /root/azar_login.sh 2>/dev/null | head -80
+287661
+echo "===== [1] azar_autoheal.sh 全文 ====="
+cat /root/azar_autoheal.sh 2>/dev/null | head -130
+echo "===== [2] autoheal 台账/日志 最近25行 ====="
+for f in /root/autoheal.log /root/guard_status.txt /root/azar_heal.log; do echo "--- $f ---"; tail -25 "$f" 2>/dev/null; done
+echo "===== [3] 所有守护类进程(精确) ====="
+ps -ef | grep -iE '[a]zar_guard|[a]zar_autoheal|[l]ogin_watch|[a]sar_keepalive|[r]emote_ctl' | head -20
+echo "===== [4] wake lock 是否持有(换种查法) ====="
+dumpsys power 2>/dev/null | grep -iE 'wake lock|wakelock|mWakefulness|partial' | head -20
 echo "=====完====="
