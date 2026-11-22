@@ -1,10 +1,10 @@
-287673
-HEALPAT='bash /root/azar_session_heal.[s]h'
-echo "[1] md5(期望 e08c7ff6d253dae05edfb223b5eecaa0):"; md5sum /root/azar_session_heal.sh
-echo "[2] 语法:"; bash -n /root/azar_session_heal.sh && echo OK
-echo "[3] flock标记:"; grep -c 'flock -n' /root/azar_session_heal.sh
-echo "[4] 进程数(期望1):"; pgrep -f "$HEALPAT" | wc -l
-pgrep -f "$HEALPAT" | head -3
-echo "[5] 启动日志尾:"; tail -3 /root/session_heal.log 2>/dev/null
-echo "[6] 登录态:"; bash /root/logincheck.sh 2>/dev/null | grep -E '\[在线\]|\[未登录\]|\[掉线\]' | head -1
+287674
+echo "===== 脚本第105-118行 ====="
+sed -n '105,118p' /root/azar_session_heal.sh
+echo "===== RUNDIR与hour现状 ====="
+ls -la /root/.session_heal/ 2>/dev/null || echo "目录不存在"
+echo "===== 两个进程状态 ====="
+for p in $(pgrep -f 'bash /root/azar_session_heal.[s]h'); do echo "PID $p:"; cat /proc/$p/status 2>/dev/null | grep -E 'State|PPid'; tr '\0' ' ' </proc/$p/cmdline; echo; done
+echo "===== flock文件 ====="
+ls -la /root/.session_heal.lock* 2>/dev/null
 echo "=====完====="
