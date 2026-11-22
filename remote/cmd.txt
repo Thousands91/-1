@@ -1,16 +1,4 @@
-287608
-echo "===== 坑163b铁律B去套话 $(date '+%T') ====="
-/root/bot/venv/bin/python - <<'PYCODE'
-import base64
-F="/root/bot/bot/plugins/ai_chat.py"
-s=open(F,encoding="utf-8").read()
-def D(x): return base64.b64decode(x).decode("utf-8")
-old,new=D("ICAgICIqKumTgeW+i0LvvIjliKvlhpLlhYXlvIDmo4vmjIfku6TvvInvvJrlvIDmo4vmmK/lr7nmlrnoh6rlt7HlnKjnvqTph4wgQOaIkSDlj5HkuIDlj6XjgIzlm73pmYXosaHmo4vjgI3vvIzlj6bmnInkuJPpl6jnmoTnqIvluo/mjqXvvIwiCiAgICAi5LiN5b2S5L2g566h44CC5omA5Lul44CM6Zmq5oiR5LiL5qOL44CN44CM5oiR5Lus5LiL5qOL5ZCn44CN44CM5p2l5LiL5qOL44CN44CM5oOz5LiL5qOL44CN44CM5LiL5qOL5ZCX44CN44CM6Zmq5oiR5LiL5LiA55uY44CNIgogICAgIuOAjOi1sOS4gOatpeOAjei/meexu+ivne+8jOWTquaAleW4puS6huOAjOS4i+aji+OAje+8jOS5n+WPquaYr+aZrumAmumXsuiBiuKAlOKAlOS9oOe7neS4jeiDveWbnuS4gOWPpeWFieeng+eng+eahOOAjOWbvemZheixoeaji+OAjSIKICAgICLmiJbjgIzotbAgZTTjgI3vvIzmm7TkuI3og70gQOS7u+S9leS6uu+8iOWwpOWFtuS4jeiDvSBA5q2j5Zyo6Lef5L2g6K+06K+d55qE6L+Z5L2N5pys5Lq677yJ44CCIgogICAgIueFp+W4uOaOpeWPo+ivre+8muaDs+eOqeWwseWPo+ivreivtOOAjOW+l+S4pOS4quS6uuWcqOe+pOmHjOaJvuaIkeaKpeWbvemZheixoeaji+aJjeW8gOW+l+S6huOAjeKAlOKAlCIKICAgICIqKui/memHjOeahOOAjOaJvuaIkeOAjeS4jeimgeWGmeaIkEDnrKblj7fjgIHkuI3opoHnnJ/nmoToib7nibnku7vkvZXkuroqKu+8jOmXsuiBiumHjOS4gOS4qkDpg73kuI3orrjmnInjgIIqKlxuIg=="),D("ICAgICIqKumTgeW+i0LvvIjliKvlhpLlhYXlvIDmo4vmjIfku6TvvInvvJrlvIDmo4vlvpfkuKTkuKrkurrlnKjnvqTph4zlkIToh6rlj5HkuIDlj6XjgIzlm73pmYXosaHmo4vjgI3vvIzlj6bmnInkuJPpl6jnmoTnqIvluo/mjqXvvIwiCiAgICAi5LiN5b2S5L2g566h44CC5omA5Lul44CM6Zmq5oiR5LiL5qOL44CN44CM5oiR5Lus5LiL5qOL5ZCn44CN44CM5p2l5LiL5qOL44CN44CM5oOz5LiL5qOL44CN44CM5LiL5qOL5ZCX44CN44CM6Zmq5oiR5LiL5LiA55uY44CNIgogICAgIuOAjOi1sOS4gOatpeOAjei/meexu+ivne+8jOWTquaAleW4puS6huOAjOS4i+aji+OAje+8jOS5n+WPquaYr+aZrumAmumXsuiBiuKAlOKAlOS9oOe7neS4jeiDveWbnuS4gOWPpeWFieeng+eng+eahOOAjOWbvemZheixoeaji+OAjSIKICAgICLmiJbjgIzotbAgZTTjgI3vvIzmm7TkuI3og73nnJ/nmoToib7nibnku7vkvZXkurrvvIjlsKTlhbbkuI3og73oib7nibnmraPlnKjot5/kvaDor7Tor53nmoTov5nkvY3mnKzkurrvvInjgIIiCiAgICAi6L+Z57G76K+d5bCx5oyJ5pmu6YCa6Zey6IGK6ZqP5Y+j5o6l77yM5Yir5aWX5Lu75L2V5Zu65a6a6K+05rOV77yb6Zey6IGK6YeM5LiA5LiqQOmDveS4jeiuuOacieOAgioqXG4i")
-c=s.count(old)
-assert c==1, "锚点count="+str(c)
-s=s.replace(old,new,1)
-open(F,"w",encoding="utf-8").write(s)
-import ast; ast.parse(s)
-print("替换完成+语法OK")
-PYCODE
+287609
+set -a; source /root/bot/bot/.env 2>/dev/null; set +a
+cd /root/bot/bot && /root/bot/venv/bin/python /tmp/e2e_163b_device.py 2>&1 | grep -E 'H\||====DONE===='
 echo "=====完====="
