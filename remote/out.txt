@@ -1,33 +1,19 @@
-<<<task_287687.txt>>>
-===== 任务287687 11-23 03:36:05 =====
+<<<task_287688.txt>>>
+===== 任务287688 11-23 03:41:14 =====
 --- 命令 ---
-echo "===== 状态核查v2 $(date '+%F %T') ====="
-echo "---进程---"
-pgrep -af 'remote_ctl.[s]h' | head -2 || echo "遥控:无"
-pgrep -af 'main.[p]y' | grep -c 'python main.py' | xargs echo "bot进程数:"
-pgrep -af 'xvfb-run|/QQ/[q]q' | head -2 | cut -c1-70 || echo "QQ:无"
-echo "---登录态最近3条---"
-tail -3 /root/login_state.log 2>/dev/null
-echo "---bot日志尾---"
-tail -30 /root/bot.log 2>/dev/null | grep -E "Succeeded|Failed|connected|Login|login|二维码|等待扫码|Error" | tail -10
-echo "---二维码时间---"
-ls -la --time-style=+%H:%M:%S /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null || echo "无二维码"
-echo "=====核查v2完====="
+echo "=====极简核查 $(date '+%H:%M:%S') ====="
+echo "[登录态]"; tail -3 /root/login_state.log 2>/dev/null
+echo "[bot日志关键行]"; grep -E "Succeeded|Failed|connected|等待扫码|Login successful|Error" /root/bot.log 2>/dev/null | tail -8
+echo "[二维码]"; stat -c '%y %s字节' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null || echo 无
+echo "[进程计数] 遥控=$(pgrep -fc 'remote_ctl.[s]h') bot=$(pgrep -fc 'venv/bin/python main.[p]y') qq=$(pgrep -fc '/QQ/[q]q')"
+echo "=====完====="
 --- 输出 ---
-===== 状态核查v2 2026-11-23 03:36:05 =====
----进程---
-22621 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/storage --bind=/storage/emulated/0:/sdcard --bind=/storage/emulated/0:/mnt/sdcard --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/system/product --bind=/system --bind=/vendor --bind=/data/data/com.termux/files/usr /bin/bash -c bash -c 'cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & exec sleep infinity'
-22626 bash -c cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & exec sleep infinity
-bot进程数: 5
-22621 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2
-22626 bash -c cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat
----登录态最近3条---
+=====极简核查 03:41:14 =====
+[登录态]
 2026-11-22 14:33:23 [未登录]
 2026-11-22 14:38:28 [未登录]
 2026-11-22 14:43:30 [未登录]
----bot日志尾---
-11-23 03:31:01 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
-11-23 03:31:01 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+[bot日志关键行]
 11-23 03:31:01 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
 11-23 03:31:01 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
 11-23 03:31:01 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
@@ -36,6 +22,7 @@ bot进程数: 5
 11-23 03:31:01 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
 11-23 03:31:01 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
 11-23 03:31:01 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
----二维码时间---
--rw-r--r-- 1 root root 598 03:35:06 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-=====核查v2完=====
+[二维码]
+2026-11-23 03:41:13.250000000 +0800 598字节
+[进程计数] 遥控=4 bot=4 qq=8
+=====完=====
