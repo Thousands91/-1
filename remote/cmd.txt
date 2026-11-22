@@ -1,7 +1,8 @@
-287688
-echo "=====极简核查 $(date '+%H:%M:%S') ====="
-echo "[登录态]"; tail -3 /root/login_state.log 2>/dev/null
-echo "[bot日志关键行]"; grep -E "Succeeded|Failed|connected|等待扫码|Login successful|Error" /root/bot.log 2>/dev/null | tail -8
-echo "[二维码]"; stat -c '%y %s字节' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null || echo 无
-echo "[进程计数] 遥控=$(pgrep -fc 'remote_ctl.[s]h') bot=$(pgrep -fc 'venv/bin/python main.[p]y') qq=$(pgrep -fc '/QQ/[q]q')"
-echo "=====完====="
+287689
+echo "=====二维码取回 $(date '+%H:%M:%S') ====="
+echo "---相册副本是否存在---"
+ls -la /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null || echo "相册无副本"
+echo "---二维码base64(供沙箱取图)---"
+base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null | head -c 4000
+echo ""
+echo "=====取回完====="
