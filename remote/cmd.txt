@@ -1,11 +1,15 @@
-287685
-echo "===== 通道探针 $(date '+%F %T') ====="
-echo "[1]遥控循环:"
-pgrep -af 'remote_ctl_v6.[s]h' || echo "  遥控循环未在运行"
-echo "[2]登录态:"
-tail -2 /root/login_state.log 2>/dev/null || echo "  无登录态日志"
-echo "[3]bot进程:"
-pgrep -af 'main.[p]y' | head -5 || echo "  bot未运行"
-echo "[4]github连通:"
-curl -s -o /dev/null -w "  api.github.com HTTP:%{http_code} %{time_total}s\n" --max-time 12 https://api.github.com
-echo "===== 探针完 ====="
+287686
+echo "===== 复活后状态核查 $(date '+%F %T') ====="
+echo "---[1]四件套进程(精确名,方括号防自匹配)---"
+pgrep -af 'remote_ctl.[s]h' | head -3 || echo "遥控:无"
+pgrep -af 'main.[p]y' | grep -o 'python main.py' | head -2 || echo "bot:无"
+pgrep -af '/QQ/[q]q' | head -1 | cut -c1-80 || echo "QQ:无"
+echo "---[2]登录态(最近3条)---"
+tail -3 /root/login_state.log 2>/dev/null
+echo "---[3]bot日志尾(插件加载/connected)---"
+tail -20 /root/bot.log 2>/dev/null | grep -E "Succeeded|Failed|connected|Error|Traceback|加载" | tail -12
+echo "---[4]qq二维码是否新生成---"
+ls -la --time-style=+%H:%M:%S /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null || echo "无二维码文件"
+echo "---[5]水箱/缴械现值(幻影杀手)---"
+adb shell device_config get activity_manager max_phantom_processes 2>/dev/null || echo "adb暂不可查"
+echo "=====核查完====="
