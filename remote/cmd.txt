@@ -1,16 +1,18 @@
-287618
-echo "===== [1] 当前时刻 ====="
-date '+%F %T'
-echo "===== [2] 权威登录态 ====="
-bash /root/logincheck.sh 2>/dev/null | head -5
-echo "===== [3] login_state 最近状态变化 ====="
-grep '状态变化' /root/login_state.log 2>/dev/null | tail -6
-echo "===== [4] bot 进程 ====="
-ps -ef | grep '[m]ain.py' | head -3
-echo "===== [5] WS 心跳最后2条 ====="
-tail -2 /root/link_probe.log 2>/dev/null
-echo "===== [6] 新修复标记在设备 ai_chat.py 计数 ====="
-for k in _chess_leak _CHESS_TAG _pick_fallback_line _answer_evades_yesno 立场一致铁律 坑161; do
-  printf '%s = ' "$k"; grep -c "$k" /root/bot/bot/plugins/ai_chat.py 2>/dev/null
+287619
+echo "===== [A] 全量掉线时刻(在线->未登录)带昼夜标记 ====="
+grep '状态变化: \[在线\] -> \[未登录\]' /root/login_state.log 2>/dev/null | while read d t rest; do
+  hh=$(echo "$t" | cut -d: -f1)
+  if [ "$hh" -ge 6 ] && [ "$hh" -lt 18 ]; then seg=白天; else seg=夜间; fi
+  echo "$d $t $seg"
+done | tail -40
+echo "===== [B] tick.log 头部3行(看格式) ====="
+head -3 /root/tick.log 2>/dev/null
+echo "===== [C] tick.log 尾部3行 ====="
+tail -3 /root/tick.log 2>/dev/null
+echo "===== [D] 关键日志存在性/行数 ====="
+for f in /root/tick.log /root/login_state.log /root/autoheal.log /root/link_probe.log /root/offline_forensics.log; do
+  printf '%s : ' "$f"; [ -f "$f" ] && wc -l < "$f" || echo MISSING
 done
+echo "===== [E] offline_forensics 最近事件时间 ====="
+grep -iE '离线|offline|账号状态' /root/offline_forensics.log 2>/dev/null | tail -6
 echo "=====完====="
