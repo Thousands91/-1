@@ -1,4 +1,6 @@
-287613
-set -a; source /root/bot/bot/.env 2>/dev/null; set +a
-cd /root/bot/bot && /root/bot/venv/bin/python /tmp/e2e_163b_device.py 2>&1 | grep -E 'H\||====DONE===='
+287614
+echo "===== 登录态检查 $(date '+%T') ====="
+tail -4 /root/login_state.log
+echo "--- NapCat最近登录事件 ---"
+tail -6 /root/napcat-restart.log 2>/dev/null | grep -iE 'Login|扫码|二维码|online|登录' | tail -4
 echo "=====完====="
