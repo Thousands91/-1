@@ -1,38 +1,28 @@
-<<<task_287679.txt>>>
-===== 任务287679 11-22 14:47:39 =====
+<<<task_287685.txt>>>
+===== 任务287685 11-23 03:30:58 =====
 --- 命令 ---
-echo "===== 真实heal进程(排除任务自匹配:只看cmdline精确等于bash+脚本路径的) ====="
-N=0
-for d in /proc/[0-9]*; do
-  p=${d#/proc/}
-  cl=$(tr '\0' ' ' < "$d/cmdline" 2>/dev/null)
-  case "$cl" in
-    "bash /root/azar_session_heal.sh "*) echo "  PID=$p CMD=[$cl]"; N=$((N+1)) ;;
-  esac
-done
-echo "  真实进程数=$N (期望1)"
-echo "===== PID文件 ====="; cat /root/.session_heal.lock.pid 2>/dev/null
-echo "===== RUNDIR的hour(报错是否还在持续?看修改时间) ====="; ls -la --time-style=+%H:%M:%S /root/.session_heal/ 2>/dev/null
-echo "===== 最近1分钟日志是否还在报错 ====="; tail -1 /root/session_heal.log 2>/dev/null; stat -c '日志修改:%y' /root/session_heal.log 2>/dev/null
-echo "=====完====="
+echo "===== 通道探针 $(date '+%F %T') ====="
+echo "[1]遥控循环:"
+pgrep -af 'remote_ctl_v6.[s]h' || echo "  遥控循环未在运行"
+echo "[2]登录态:"
+tail -2 /root/login_state.log 2>/dev/null || echo "  无登录态日志"
+echo "[3]bot进程:"
+pgrep -af 'main.[p]y' | head -5 || echo "  bot未运行"
+echo "[4]github连通:"
+curl -s -o /dev/null -w "  api.github.com HTTP:%{http_code} %{time_total}s\n" --max-time 12 https://api.github.com
+echo "===== 探针完 ====="
 --- 输出 ---
-===== 真实heal进程(排除任务自匹配:只看cmdline精确等于bash+脚本路径的) =====
-  PID=17050 CMD=[bash /root/azar_session_heal.sh ]
-  PID=17089 CMD=[bash /root/azar_session_heal.sh ]
-  PID=18972 CMD=[bash /root/azar_session_heal.sh ]
-bash: line 5: /proc/19456/cmdline: No such file or directory
-bash: line 5: /proc/19461/cmdline: No such file or directory
-  真实进程数=3 (期望1)
-===== PID文件 =====
-17050
-===== RUNDIR的hour(报错是否还在持续?看修改时间) =====
-total 0
-drwxr-xr-x  2 root root 3488 14:38:31 .
-drwx------ 17 root root 8192 14:44:25 ..
--rw-r--r--  1 root root    2 14:44:45 fail_cnt
--rw-r--r--  1 root root    5 14:44:43 hour
--rw-r--r--  1 root root   11 14:44:43 last_restart
-===== 最近1分钟日志是否还在报错 =====
-/root/azar_session_heal.sh: line 117: /root/.session_heal/hour: No such file or directory
-日志修改:2026-11-22 14:38:31.420000000 +0800
-=====完=====
+===== 通道探针 2026-11-23 03:30:58 =====
+[1]遥控循环:
+  遥控循环未在运行
+[2]登录态:
+2026-11-22 14:38:28 [未登录]
+2026-11-22 14:43:30 [未登录]
+[3]bot进程:
+22621 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/storage --bind=/storage/emulated/0:/sdcard --bind=/storage/emulated/0:/mnt/sdcard --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/system/product --bind=/system --bind=/vendor --bind=/data/data/com.termux/files/usr /bin/bash -c bash -c 'cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & exec sleep infinity'
+22626 bash -c cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & exec sleep infinity
+22627 bash -c cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & exec sleep infinity
+22630 /root/bot/venv/bin/python main.py
+[4]github连通:
+  api.github.com HTTP:200 0.593811s
+===== 探针完 =====
