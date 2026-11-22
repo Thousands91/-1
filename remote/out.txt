@@ -1,48 +1,46 @@
-<<<task_287617.txt>>>
-===== 任务287617 11-22 11:57:56 =====
+<<<task_287618.txt>>>
+===== 任务287618 11-22 12:16:44 =====
 --- 命令 ---
-echo "===== [1] login_state.log 11-22 全部状态变化 ====="
-grep '2026-11-22' /root/login_state.log 2>/dev/null | grep '状态变化'
-echo "===== [2] login_state.log 最后8行(带时间) ====="
-tail -8 /root/login_state.log 2>/dev/null
-echo "===== [3] napcat 账号状态变更为离线 (11-22) ====="
-grep -h '账号状态变更为离线' /root/napcat*.log /root/napcat/logs/*.log 2>/dev/null | grep '11-22' | tail -10
-echo "===== [4] NapCat Login Error 最早/最新(11-22) ====="
-grep -hiE 'Login Error|ErrType: ?1' /root/napcat*.log /root/napcat/logs/*.log 2>/dev/null | grep '11-22' | head -3
-echo "--- 最新3条 ---"
-grep -hiE 'Login Error|ErrType: ?1' /root/napcat*.log /root/napcat/logs/*.log 2>/dev/null | grep '11-22' | tail -3
-echo "===== [5] 当前时刻/登录态 ====="
+echo "===== [1] 当前时刻 ====="
 date '+%F %T'
-bash /root/logincheck.sh 2>/dev/null | head -4
+echo "===== [2] 权威登录态 ====="
+bash /root/logincheck.sh 2>/dev/null | head -5
+echo "===== [3] login_state 最近状态变化 ====="
+grep '状态变化' /root/login_state.log 2>/dev/null | tail -6
+echo "===== [4] bot 进程 ====="
+ps -ef | grep '[m]ain.py' | head -3
+echo "===== [5] WS 心跳最后2条 ====="
+tail -2 /root/link_probe.log 2>/dev/null
+echo "===== [6] 新修复标记在设备 ai_chat.py 计数 ====="
+for k in _chess_leak _CHESS_TAG _pick_fallback_line _answer_evades_yesno 立场一致铁律 坑161; do
+  printf '%s = ' "$k"; grep -c "$k" /root/bot/bot/plugins/ai_chat.py 2>/dev/null
+done
 echo "=====完====="
 --- 输出 ---
-===== [1] login_state.log 11-22 全部状态变化 =====
-2026-11-22 00:50:08 状态变化: [未登录] -> [在线]
-2026-11-22 03:14:51 状态变化: [在线] -> [未登录]
-===== [2] login_state.log 最后8行(带时间) =====
-2026-11-22 11:21:12 [未登录]
-2026-11-22 11:26:13 [未登录]
-2026-11-22 11:31:14 [未登录]
-2026-11-22 11:36:14 [未登录]
-2026-11-22 11:41:15 [未登录]
-2026-11-22 11:46:16 [未登录]
-2026-11-22 11:51:17 [未登录]
-2026-11-22 11:56:18 [未登录]
-===== [3] napcat 账号状态变更为离线 (11-22) =====
-11-22 02:11:41 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-11-22 03:10:25 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-===== [4] NapCat Login Error 最早/最新(11-22) =====
-11-22 00:00:44 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-22 00:02:45 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-22 00:04:47 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
---- 最新3条 ---
-11-22 06:19:39 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-22 06:21:39 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-11-22 06:23:41 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
-===== [5] 当前时刻/登录态 =====
-2026-11-22 11:57:56
+===== [1] 当前时刻 =====
+2026-11-22 12:16:44
+===== [2] 权威登录态 =====
 === 登录状态（权威判定）===
 [未登录] 当前没有有效会话
 阶段: waiting_qrcode
 最近错误: 无
+===== [3] login_state 最近状态变化 =====
+2026-11-21 10:00:06 状态变化: [未登录] -> 未知
+2026-11-21 10:05:42 状态变化: 初始 -> [未登录]
+2026-11-21 12:41:31 状态变化: [未登录] -> [在线]
+2026-11-21 22:29:46 状态变化: [在线] -> [未登录]
+2026-11-22 00:50:08 状态变化: [未登录] -> [在线]
+2026-11-22 03:14:51 状态变化: [在线] -> [未登录]
+===== [4] bot 进程 =====
+aid_u0_+ 13099 13097  0  2023 ?        00:00:38 /root/bot/venv/bin/python main.py
+===== [5] WS 心跳最后2条 =====
+[11-22 10:20:30.993] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+[11-22 10:20:32.730] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
+===== [6] 新修复标记在设备 ai_chat.py 计数 =====
+_chess_leak = 2
+_CHESS_TAG = 2
+_pick_fallback_line = 3
+_answer_evades_yesno = 5
+立场一致铁律 = 1
+坑161 = 3
 =====完=====
