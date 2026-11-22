@@ -1,39 +1,23 @@
-<<<task_287588.txt>>>
-===== 任务287588 11-22 09:16:03 =====
+<<<task_287589.txt>>>
+===== 任务287589 11-22 09:19:20 =====
 --- 命令 ---
-echo "===== 整段对话取证 $(date '+%T') ====="
-/root/bot/venv/bin/python - <<'PY'
-import base64
-f='/root/remote_ctl.log'
-lines = open(f, encoding='utf-8', errors='replace').read().splitlines()
-# 02:17~02:21 的核对调试行,全部base64
-for i, l in enumerate(lines):
-    if '[核对·调试]' in l and ('02:1' in l or '02:2' in l):
-        b = base64.b64encode(l.encode('utf-8')).decode()
-        print('D|L'+str(i+1)+'|'+b)
-print('====DONE====')
-PY
+echo "===== 坑163下发前探测 $(date '+%T') ====="
+F=/root/bot/bot/plugins/ai_chat.py
+echo "md5: $(md5sum $F | cut -d' ' -f1)"
+echo "--- 插入锚点1(立场铁律末行)count ---"; grep -F -c '自己前后打架比答错更糟——宁可含糊，也别自相矛盾。' $F
+echo "--- 插入锚点2(yesman函数尾)count ---"; grep -F -c 'return topic == "舍馆" and not any(w in a for w in quote_words)' $F
+echo "--- 插入锚点3(主流程)count ---"; grep -F -c '        if answer is None:' $F
+echo "--- 新标记应全0 ---"; echo "是非问句铁律:$(grep -F -c '问去不去/是不是要正面答' $F) _YESNO_Q_RE:$(grep -F -c '_YESNO_Q_RE' $F) [是非问句]日志:$(grep -F -c '[是非问句]' $F)"
 echo "=====完====="
 --- 输出 ---
-===== 整段对话取证 09:16:03 =====
-D|L19629|MTQ3OjExLTIyIDAyOjE1OjE3IFtJTkZPXSBhaV9jaGF0IHwgW+aguOWvucK36LCD6K+VXSBhc2s9J+aIkeS7rOWOu+asouaEieS5i+mmhuWRgCcgbGVhZD1GYWxzZSBjb250cmE9RmFsc2UgYWdyZWU9RmFsc2UgZG9kZ2U9RmFsc2UgYW5zPSfluIPnvIflqJzpgqPph4zlgJLmmK/mnInlh6DmnKzmlrDliLDnmoTkuabvvIzopoHkuI3opoHlhYjljrvnnqfnnqfvvJ8n
-D|L19631|MTY0OjExLTIyIDAyOjE1OjQ4IFtJTkZPXSBhaV9jaGF0IHwgW+aguOWvucK36LCD6K+VXSBhc2s9J+W4g+e8h+WonOmCo+WPr+S4jeWNluS5picgbGVhZD1GYWxzZSBjb250cmE9RmFsc2UgYWdyZWU9RmFsc2UgZG9kZ2U9RmFsc2UgYW5zPSfluIPnvIflqJzpgqPph4znoa7lrp7kuI3ljZbkuabvvIzkvYblj6/ku6XogYrogYrmlrDliLDnmoTmlYXkuovjgIIn
-D|L19632|MTgwOjExLTIyIDAyOjE2OjA1IFtJTkZPXSBhaV9jaGF0IHwgW+aguOWvucK36LCD6K+VXSBhc2s9J+mCo+S9oOWOu+S4jeWOu+WYmycgbGVhZD1GYWxzZSBjb250cmE9RmFsc2UgYWdyZWU9RmFsc2UgZG9kZ2U9RmFsc2UgYW5zPSfljrvmrKLmhInkuYvppoblj6/ku6XvvIzkvYblvpflhYjorrDkuIvmnaXov5notp/op4Hpl7vjgIIn
-D|L19633|MTk3OjExLTIyIDAyOjE2OjIwIFtJTkZPXSBhaV9jaGF0IHwgW+aguOWvucK36LCD6K+VXSBhc2s9J+ihjCcgbGVhZD1GYWxzZSBjb250cmE9RmFsc2UgYWdyZWU9RmFsc2UgZG9kZ2U9RmFsc2UgYW5zPSdb5Yqo5L2cOui9u+i9u+aRh+WktF1cblxu5qyi5oSJ5LmL6aaG5LiN5piv5Y6755qE5Zyw5pa544CCJw==
-D|L19634|MjE0OjExLTIyIDAyOjE2OjUxIFtJTkZPXSBhaV9jaGF0IHwgW+aguOWvucK36LCD6K+VXSBhc2s9J++8nycgbGVhZD1GYWxzZSBjb250cmE9RmFsc2UgYWdyZWU9RmFsc2UgZG9kZ2U9RmFsc2UgYW5zPSfmrKLmhInkuYvppobkuI3mmK/ljrvnmoTlnLDmlrnjgIIn
-D|L19637|MjMzOjExLTIyIDAyOjE3OjEzIFtJTkZPXSBhaV9jaGF0IHwgW+aguOWvucK36LCD6K+VXSBhc2s9J+S7gOS5iOmsvOS4nOilv+WViu+8jOWIsOW6leWOu+S4jeWOu+asouaEieS5i+mmhicgbGVhZD1GYWxzZSBjb250cmE9RmFsc2UgYWdyZWU9RmFsc2UgZG9kZ2U9RmFsc2UgYW5zPSfluIPnvIflqJzpgqPph4znoa7lrp7kuI3ljZbkuabvvIzkvYblj6/ku6XogYrogYrmlrDliLDnmoTmlYXkuovjgIIn
-D|L19641|NTQ6MTEtMjIgMDI6MTg6NDIgW0lORk9dIGFpX2NoYXQgfCBb5qC45a+5wrfosIPor5VdIGFzaz0n5LuA5LmI6ay85Lic6KW/5ZWK77yM5Yiw5bqV5Y675LiN5Y675qyi5oSJ5LmL6aaGJyBsZWFkPUZhbHNlIGNvbnRyYT1GYWxzZSBhZ3JlZT1GYWxzZSBkb2RnZT1GYWxzZSBhbnM9J+OAkOi1sCBlNOOAkVxu6L+Z5Y675aSE77yM5a2m6Zeu5LiN5rWF44CC5oKo6Iul5piv5oOz6ZW/6KeB6K+G77yM5LiN5aao5ZCM5b6A44CCJw==
-D|L19642|NzM6MTEtMjIgMDI6MTk6MTggW0lORk9dIGFpX2NoYXQgfCBb5qC45a+5wrfosIPor5VdIGFzaz0n77yfJyBsZWFkPUZhbHNlIGNvbnRyYT1GYWxzZSBhZ3JlZT1GYWxzZSBkb2RnZT1GYWxzZSBhbnM9J+OAkOi1sCBlNeOAkVxu6L+Z5qyi5oSJ5LmL6aaG77yM56Gu5piv6JeP6b6Z5Y2n6JmO44CC5oKo6Iul5piv5pyJ5oSP77yM5oiR6Ieq5b2T6Zmq5ZCM44CCJw==
-D|L19644|ODg6MTEtMjIgMDI6MTk6MzcgW0lORk9dIGFpX2NoYXQgfCBb5qC45a+5wrfosIPor5VdIGFzaz0n6LCB546p5Zu96ZmF6LGh5qOL5LqG77yfJyBsZWFkPUZhbHNlIGNvbnRyYT1GYWxzZSBhZ3JlZT1GYWxzZSBkb2RnZT1GYWxzZSBhbnM9J+WbvemZheixoeaji+aYr+WfjumHjOeahOS4gOenjea2iOmBo++8jOeZveaWueWFiOihjO+8jOm7keaWueW6lOWSjOOAgic=
-D|L19688|MTMwOjExLTIyIDAyOjE1OjA1IFtJTkZPXSBhaV9jaGF0IHwgW+aguOWvucK36LCD6K+VXSBhc2s9J+mCo+aIkeS7rOi1sOWQpycgbGVhZD1UcnVlIGNvbnRyYT1GYWxzZSBhZ3JlZT1GYWxzZSBkb2RnZT1GYWxzZSBhbnM9J+WegumSk+iAheS7iuaXpeiQpeS4muOAgic=
-D|L19689|MTQ3OjExLTIyIDAyOjE1OjE3IFtJTkZPXSBhaV9jaGF0IHwgW+aguOWvucK36LCD6K+VXSBhc2s9J+aIkeS7rOWOu+asouaEieS5i+mmhuWRgCcgbGVhZD1GYWxzZSBjb250cmE9RmFsc2UgYWdyZWU9RmFsc2UgZG9kZ2U9RmFsc2UgYW5zPSfluIPnvIflqJzpgqPph4zlgJLmmK/mnInlh6DmnKzmlrDliLDnmoTkuabvvIzopoHkuI3opoHlhYjljrvnnqfnnqfvvJ8n
-D|L19690|MTY0OjExLTIyIDAyOjE1OjQ4IFtJTkZPXSBhaV9jaGF0IHwgW+aguOWvucK36LCD6K+VXSBhc2s9J+W4g+e8h+WonOmCo+WPr+S4jeWNluS5picgbGVhZD1GYWxzZSBjb250cmE9RmFsc2UgYWdyZWU9RmFsc2UgZG9kZ2U9RmFsc2UgYW5zPSfluIPnvIflqJzpgqPph4znoa7lrp7kuI3ljZbkuabvvIzkvYblj6/ku6XogYrogYrmlrDliLDnmoTmlYXkuovjgIIn
-D|L19691|MTgwOjExLTIyIDAyOjE2OjA1IFtJTkZPXSBhaV9jaGF0IHwgW+aguOWvucK36LCD6K+VXSBhc2s9J+mCo+S9oOWOu+S4jeWOu+WYmycgbGVhZD1GYWxzZSBjb250cmE9RmFsc2UgYWdyZWU9RmFsc2UgZG9kZ2U9RmFsc2UgYW5zPSfljrvmrKLmhInkuYvppoblj6/ku6XvvIzkvYblvpflhYjorrDkuIvmnaXov5notp/op4Hpl7vjgIIn
-D|L19692|MTk3OjExLTIyIDAyOjE2OjIwIFtJTkZPXSBhaV9jaGF0IHwgW+aguOWvucK36LCD6K+VXSBhc2s9J+ihjCcgbGVhZD1GYWxzZSBjb250cmE9RmFsc2UgYWdyZWU9RmFsc2UgZG9kZ2U9RmFsc2UgYW5zPSdb5Yqo5L2cOui9u+i9u+aRh+WktF1cblxu5qyi5oSJ5LmL6aaG5LiN5piv5Y6755qE5Zyw5pa544CCJw==
-D|L19693|MjE0OjExLTIyIDAyOjE2OjUxIFtJTkZPXSBhaV9jaGF0IHwgW+aguOWvucK36LCD6K+VXSBhc2s9J++8nycgbGVhZD1GYWxzZSBjb250cmE9RmFsc2UgYWdyZWU9RmFsc2UgZG9kZ2U9RmFsc2UgYW5zPSfmrKLmhInkuYvppobkuI3mmK/ljrvnmoTlnLDmlrnjgIIn
-D|L19695|MjMzOjExLTIyIDAyOjE3OjEzIFtJTkZPXSBhaV9jaGF0IHwgW+aguOWvucK36LCD6K+VXSBhc2s9J+S7gOS5iOmsvOS4nOilv+WViu+8jOWIsOW6leWOu+S4jeWOu+asouaEieS5i+mmhicgbGVhZD1GYWxzZSBjb250cmE9RmFsc2UgYWdyZWU9RmFsc2UgZG9kZ2U9RmFsc2UgYW5zPSfluIPnvIflqJzpgqPph4znoa7lrp7kuI3ljZbkuabvvIzkvYblj6/ku6XogYrogYrmlrDliLDnmoTmlYXkuovjgIIn
-D|L19698|NTQ6MTEtMjIgMDI6MTg6NDIgW0lORk9dIGFpX2NoYXQgfCBb5qC45a+5wrfosIPor5VdIGFzaz0n5LuA5LmI6ay85Lic6KW/5ZWK77yM5Yiw5bqV5Y675LiN5Y675qyi5oSJ5LmL6aaGJyBsZWFkPUZhbHNlIGNvbnRyYT1GYWxzZSBhZ3JlZT1GYWxzZSBkb2RnZT1GYWxzZSBhbnM9J+OAkOi1sCBlNOOAkVxu6L+Z5Y675aSE77yM5a2m6Zeu5LiN5rWF44CC5oKo6Iul5piv5oOz6ZW/6KeB6K+G77yM5LiN5aao5ZCM5b6A44CCJw==
-D|L19699|NzM6MTEtMjIgMDI6MTk6MTggW0lORk9dIGFpX2NoYXQgfCBb5qC45a+5wrfosIPor5VdIGFzaz0n77yfJyBsZWFkPUZhbHNlIGNvbnRyYT1GYWxzZSBhZ3JlZT1GYWxzZSBkb2RnZT1GYWxzZSBhbnM9J+OAkOi1sCBlNeOAkVxu6L+Z5qyi5oSJ5LmL6aaG77yM56Gu5piv6JeP6b6Z5Y2n6JmO44CC5oKo6Iul5piv5pyJ5oSP77yM5oiR6Ieq5b2T6Zmq5ZCM44CCJw==
-D|L19700|ODg6MTEtMjIgMDI6MTk6MzcgW0lORk9dIGFpX2NoYXQgfCBb5qC45a+5wrfosIPor5VdIGFzaz0n6LCB546p5Zu96ZmF6LGh5qOL5LqG77yfJyBsZWFkPUZhbHNlIGNvbnRyYT1GYWxzZSBhZ3JlZT1GYWxzZSBkb2RnZT1GYWxzZSBhbnM9J+WbvemZheixoeaji+aYr+WfjumHjOeahOS4gOenjea2iOmBo++8jOeZveaWueWFiOihjO+8jOm7keaWueW6lOWSjOOAgic=
-====DONE====
+===== 坑163下发前探测 09:19:21 =====
+md5: 6f6224029e25a5e52a45f5955932a5cb
+--- 插入锚点1(立场铁律末行)count ---
+1
+--- 插入锚点2(yesman函数尾)count ---
+1
+--- 插入锚点3(主流程)count ---
+1
+--- 新标记应全0 ---
+是非问句铁律:0 _YESNO_Q_RE:0 [是非问句]日志:0
 =====完=====
