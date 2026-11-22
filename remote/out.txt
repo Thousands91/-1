@@ -1,27 +1,17 @@
-<<<task_287625.txt>>>
-===== 任务287625 11-22 12:34:27 =====
+<<<task_287626.txt>>>
+===== 任务287626 11-22 12:36:06 =====
 --- 命令 ---
-echo "===== [1] 取证器进程 ====="
-ps -ef | grep '[o]ffline_watch' | head -5
-echo "===== [2] 设备上v2/v3文件 ====="
-ls -la /root/offline_watch*.sh 2>/dev/null
-echo "===== [3] v2 md5 ====="
-md5sum /root/offline_watch_v2.sh 2>/dev/null
-echo "===== [4] 看护是否管着取证器(找watchdog/supervisor配置) ====="
-grep -rl 'offline_watch' /root/*.sh /root/*.service 2>/dev/null | head -10
+echo "===== [1] start_all.sh 里取证器启动行 ====="
+grep -n 'offline_watch' /root/start_all.sh /root/setup.sh /root/remote_ctl_v6.sh 2>/dev/null | head -20
+echo "===== [2] 当前进程完整cmdline ====="
+tr '\0' ' ' < /proc/17145/cmdline 2>/dev/null; echo
 echo "=====完====="
 --- 输出 ---
-===== [1] 取证器进程 =====
-aid_u0_+ 17145     1  0  2023 ?        00:01:15 bash /root/offline_watch.sh
-===== [2] 设备上v2/v3文件 =====
--rwxr-xr-x 1 root root 8870 Nov 19 13:15 /root/offline_watch.sh
--rwxr-xr-x 1 root root 8870 Nov 19 13:15 /root/offline_watch_v2.sh
-===== [3] v2 md5 =====
-dda2a6e53e8d3d308c2a2eef7ed38214  /root/offline_watch_v2.sh
-===== [4] 看护是否管着取证器(找watchdog/supervisor配置) =====
-/root/offline_watch.sh
-/root/offline_watch_v2.sh
-/root/remote_ctl_v6.sh
-/root/setup.sh
-/root/start_all.sh
+===== [1] start_all.sh 里取证器启动行 =====
+/root/start_all.sh:8:pgrep -f 'bash /root/offline_watch.sh' >/dev/null || ( setsid nohup bash /root/offline_watch.sh >> /root/offline_watch2.log 2>&1 < /dev/null & )
+/root/setup.sh:61:# 优先继承现手机的战斗脚本包（remote_ctl/logincheck/netmon/offline_watch/asar_sync）
+/root/setup.sh:86:echo "看护件:  $(ls /root/logincheck.sh /root/netmon.sh /root/offline_watch.sh 2>/dev/null | wc -l)/3"
+/root/remote_ctl_v6.sh:30:pgrep -f 'bash /root/offline_watch.sh' >/dev/null || ( setsid nohup bash /root/offline_watch.sh >> /root/offline_watch2.log 2>&1 < /dev/null & )
+===== [2] 当前进程完整cmdline =====
+bash /root/offline_watch.sh 
 =====完=====
