@@ -1,26 +1,6 @@
-287615
-echo "===== 坑163b部署:只重启bot ====="
-if [ ! -f /root/.r163b_armed ]; then
-  touch /root/.r163b_armed
-  cat > /root/.r163b.sh <<'SH'
-#!/bin/bash
-sleep 8
-OLDPID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
-[ -n "$OLDPID" ] && kill "$OLDPID"
-sleep 3
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot_restart_163b.log 2>&1 < /dev/null &
-sleep 14
-{
-  echo "=== $(date '+%m-%d %H:%M:%S') 坑163b重启后 ==="
-  echo "新PID: $(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}')"
-  echo "插件成功/失败: $(grep -c 'Succeeded to load plugin' /root/bot_restart_163b.log 2>/dev/null) / $(grep -c 'Failed to load plugin' /root/bot_restart_163b.log 2>/dev/null)"
-  echo "163b标记: 铁律A=$(grep -F -c '铁律A（别被日常词带偏）' /root/bot/bot/plugins/ai_chat.py) leak=$(grep -F -c '_chess_leak' /root/bot/bot/plugins/ai_chat.py) @兜底=$(grep -F -c '_self_id = getattr' /root/bot/bot/plugins/ai_chat.py)"
-  echo "登录态:"; tail -1 /root/login_state.log 2>/dev/null
-} > /root/r163b_verify.log 2>&1
-rm -f /root/.r163b_armed
-SH
-  chmod +x /root/.r163b.sh
-  setsid nohup bash /root/.r163b.sh >/dev/null 2>&1 </dev/null &
-  echo "延迟重启已挂(8s kill+14s验证)"
-fi
+287616
+echo "===== 坑163b重启验收 $(date '+%T') ====="
+cat /root/r163b_verify.log 2>/dev/null || echo "(还没写完)"
+echo "--- 启动日志连接行 ---"
+grep -iE 'Bot .* connected|connection open|Failed to load' /root/bot_restart_163b.log 2>/dev/null | tail -4
 echo "=====完====="
