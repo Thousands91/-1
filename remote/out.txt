@@ -1,33 +1,17 @@
-<<<task_287648.txt>>>
-===== 任务287648 11-22 13:23:34 =====
+<<<task_287649.txt>>>
+===== 任务287649 11-22 13:25:14 =====
 --- 命令 ---
-# 等所有分段任务落地
-sleep 8
-echo "[1] 分段文件字节:"; wc -c /root/.persona_new.b64 2>/dev/null
-TS=$(date '+%m%d%H%M')
-cp /root/bot/bot/persona/__init__.py /root/bot/bot/persona/__init__.py.bak_persona_$TS
-echo "[2] 旧版已备份: __init__.py.bak_persona_$TS"
-base64 -d /root/.persona_new.b64 > /root/.persona_new.py 2>/dev/null
-echo "[3] 解码后md5(期望 e8232cbd879c92304ca729fbbc33160c):"
-md5sum /root/.persona_new.py 2>/dev/null
-echo "[4] 语法检查:"
-python3 -c "import py_compile; py_compile.compile('/root/.persona_new.py',doraise=True); print('SYNTAX_OK')" 2>&1 | tail -2
-echo "[5] 新锚点计数(应>0):"
-printf '四十二本='; grep -c '四十二本' /root/.persona_new.py
-printf '百科链='; grep -c '百科全书这条线' /root/.persona_new.py
-printf '后日谈='; grep -c '第一千一百四十二条' /root/.persona_new.py
+echo "[1] 正式文件md5(应仍为旧版 59a9da03c81195a0439bb97cd7216e3d):"
+md5sum /root/bot/bot/persona/__init__.py
+echo "[2] 正式文件老写法:"
+printf '四十来本='; grep -c '四十来本' /root/bot/bot/persona/__init__.py
+echo "[3] 备份列表:"; ls -la /root/bot/bot/persona/*.bak* 2>/dev/null | tail -3
 echo "=====完====="
 --- 输出 ---
-[1] 分段文件字节:
-14364 /root/.persona_new.b64
-[2] 旧版已备份: __init__.py.bak_persona_11221323
-[3] 解码后md5(期望 e8232cbd879c92304ca729fbbc33160c):
-62c67e495329cb750ad08af891c670ca  /root/.persona_new.py
-[4] 语法检查:
-SyntaxError: invalid character '。' (U+3002)
-
-[5] 新锚点计数(应>0):
-四十二本=0
-百科链=1
-后日谈=1
+[1] 正式文件md5(应仍为旧版 59a9da03c81195a0439bb97cd7216e3d):
+59a9da03c81195a0439bb97cd7216e3d  /root/bot/bot/persona/__init__.py
+[2] 正式文件老写法:
+四十来本=1
+[3] 备份列表:
+-rw-r--r-- 1 root root 31424 Nov 22 13:23 /root/bot/bot/persona/__init__.py.bak_persona_11221323
 =====完=====
