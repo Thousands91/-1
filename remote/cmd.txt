@@ -1,8 +1,16 @@
-287652
-echo "[1] 登录态:"
+287653
+PAT='[m]ain.py'
+OLD=$(pgrep -f "$PAT" | head -1)
+echo "[0] 旧bot PID: $OLD"
+# 延迟重启: 先留时间给回传落地
+sleep 5
+for p in $(pgrep -f "$PAT" | head -3); do kill "$p" 2>/dev/null; done
+sleep 2
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot_run.log 2>&1 < /dev/null &
+sleep 12
+echo "[1] 新bot PID:"; pgrep -f "$PAT" | head -2
+echo "[2] 插件加载(最后15行找SUCCESS/失败):"
+tail -40 /root/bot/bot/bot_run.log 2>/dev/null | grep -E 'SUCCESS|加载|Loaded|失败|ERROR|Traceback|Bot.*connected' | tail -8
+echo "[3] 登录态(应仍[未登录],重启不动NapCat):"
 bash /root/logincheck.sh 2>/dev/null | grep -E '\[在线\]|\[未登录\]|\[掉线\]' | head -1
-echo "[2] 状态变化尾:"; grep '状态变化' /root/login_state.log 2>/dev/null | tail -3
-echo "[3] bot进程:"; ps -ef | grep '[m]ain.py' | head -2
-echo "[4] 新persona是否已被当前进程加载(老进程内存里还是旧版,需重启):"
-echo "  当前文件md5:"; md5sum /root/bot/bot/persona/__init__.py | cut -d' ' -f1
 echo "=====完====="
