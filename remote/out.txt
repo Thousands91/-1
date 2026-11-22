@@ -1,46 +1,57 @@
-<<<task_287618.txt>>>
-===== 任务287618 11-22 12:16:44 =====
+<<<task_287619.txt>>>
+===== 任务287619 11-22 12:20:15 =====
 --- 命令 ---
-echo "===== [1] 当前时刻 ====="
-date '+%F %T'
-echo "===== [2] 权威登录态 ====="
-bash /root/logincheck.sh 2>/dev/null | head -5
-echo "===== [3] login_state 最近状态变化 ====="
-grep '状态变化' /root/login_state.log 2>/dev/null | tail -6
-echo "===== [4] bot 进程 ====="
-ps -ef | grep '[m]ain.py' | head -3
-echo "===== [5] WS 心跳最后2条 ====="
-tail -2 /root/link_probe.log 2>/dev/null
-echo "===== [6] 新修复标记在设备 ai_chat.py 计数 ====="
-for k in _chess_leak _CHESS_TAG _pick_fallback_line _answer_evades_yesno 立场一致铁律 坑161; do
-  printf '%s = ' "$k"; grep -c "$k" /root/bot/bot/plugins/ai_chat.py 2>/dev/null
+echo "===== [A] 全量掉线时刻(在线->未登录)带昼夜标记 ====="
+grep '状态变化: \[在线\] -> \[未登录\]' /root/login_state.log 2>/dev/null | while read d t rest; do
+  hh=$(echo "$t" | cut -d: -f1)
+  if [ "$hh" -ge 6 ] && [ "$hh" -lt 18 ]; then seg=白天; else seg=夜间; fi
+  echo "$d $t $seg"
+done | tail -40
+echo "===== [B] tick.log 头部3行(看格式) ====="
+head -3 /root/tick.log 2>/dev/null
+echo "===== [C] tick.log 尾部3行 ====="
+tail -3 /root/tick.log 2>/dev/null
+echo "===== [D] 关键日志存在性/行数 ====="
+for f in /root/tick.log /root/login_state.log /root/autoheal.log /root/link_probe.log /root/offline_forensics.log; do
+  printf '%s : ' "$f"; [ -f "$f" ] && wc -l < "$f" || echo MISSING
 done
+echo "===== [E] offline_forensics 最近事件时间 ====="
+grep -iE '离线|offline|账号状态' /root/offline_forensics.log 2>/dev/null | tail -6
 echo "=====完====="
 --- 输出 ---
-===== [1] 当前时刻 =====
-2026-11-22 12:16:44
-===== [2] 权威登录态 =====
-=== 登录状态（权威判定）===
-[未登录] 当前没有有效会话
-阶段: waiting_qrcode
-最近错误: 无
-===== [3] login_state 最近状态变化 =====
-2026-11-21 10:00:06 状态变化: [未登录] -> 未知
-2026-11-21 10:05:42 状态变化: 初始 -> [未登录]
-2026-11-21 12:41:31 状态变化: [未登录] -> [在线]
-2026-11-21 22:29:46 状态变化: [在线] -> [未登录]
-2026-11-22 00:50:08 状态变化: [未登录] -> [在线]
-2026-11-22 03:14:51 状态变化: [在线] -> [未登录]
-===== [4] bot 进程 =====
-aid_u0_+ 13099 13097  0  2023 ?        00:00:38 /root/bot/venv/bin/python main.py
-===== [5] WS 心跳最后2条 =====
-[11-22 10:20:30.993] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
-[11-22 10:20:32.730] 连接探针启动 (NoneBot已连上WS,等待lifecycle/heartbeat事件)
-===== [6] 新修复标记在设备 ai_chat.py 计数 =====
-_chess_leak = 2
-_CHESS_TAG = 2
-_pick_fallback_line = 3
-_answer_evades_yesno = 5
-立场一致铁律 = 1
-坑161 = 3
+===== [A] 全量掉线时刻(在线->未登录)带昼夜标记 =====
+2026-11-14 06:42:47 白天
+2026-11-14 14:48:57 白天
+2026-11-14 16:59:16 白天
+2026-11-16 07:05:13 白天
+2026-11-17 15:38:01 白天
+2026-11-18 08:45:35 白天
+2026-11-18 22:38:39 夜间
+2026-11-19 02:17:20 夜间
+2026-11-19 14:39:28 白天
+2026-11-19 22:47:36 夜间
+2026-11-20 12:00:42 白天
+2026-11-21 22:29:46 夜间
+2026-11-22 03:14:51 夜间
+===== [B] tick.log 头部3行(看格式) =====
+2026-11-13 02:16:52
+2026-11-13 02:17:52
+2026-11-13 02:18:52
+===== [C] tick.log 尾部3行 =====
+2026-11-22 12:17:39
+2026-11-22 12:18:39
+2026-11-22 12:19:39
+===== [D] 关键日志存在性/行数 =====
+/root/tick.log : 11118
+/root/login_state.log : 2127
+/root/autoheal.log : 313
+/root/link_probe.log : 74
+/root/offline_forensics.log : 654
+===== [E] offline_forensics 最近事件时间 =====
+(无时间戳) | 静默离线(status20) | 11-22 03:10:25 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+---- ③ 被踢原因字段(KickedOffLine原文) ----
+11-22 03:10:24 [[31merror[39m] 阿萨尔 | [KickedOffLine] [下线通知] 你的账号当前登录已失效，请重新登录。
+11-22 03:10:24 [[31merror[39m] 阿萨尔 | [KickedOffLine] [下线通知] 你的账号当前登录已失效，请重新登录。
+11-22 03:10:25 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+11-22 03:10:28 [[33mwarn[39m] 阿萨尔 | [Core] [Login] 账号已离线，正在重启 Worker 以重新创建 QQ 登录服务 {"result":true,"message":"进程重启请求已发送"}
 =====完=====
