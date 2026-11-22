@@ -1,32 +1,20 @@
-<<<task_287667.txt>>>
-===== 任务287667 11-22 14:21:32 =====
+<<<task_287668.txt>>>
+===== 任务287668 11-22 14:23:10 =====
 --- 命令 ---
-echo "===== 自检1: 在线→清零 ====="
-mkdir -p /tmp/heal_t1; echo 3 > /tmp/heal_t1/fail_cnt
-OW_STATE=/tmp/heal_t1/state OW_LOCK=/tmp/heal_t1/lock OW_RUNDIR=/tmp/heal_t1 \
-OW_LOGINCHECK="echo '[在线] 已登录'" OW_DRY_RUN=1 OW_ONCE=1 OW_WAIT=1 bash /root/azar_session_heal.sh >/dev/null 2>&1
-echo "  fail_cnt=$(cat /tmp/heal_t1/fail_cnt) (期望0)"
-
-echo "===== 自检2: 静默离线→触发(DRY) ====="
-mkdir -p /tmp/heal_t2; : > /tmp/heal_t2/logA; : > /tmp/heal_t2/logB
-OW_LOG_A=/tmp/heal_t2/logA OW_LOG_B=/tmp/heal_t2/logB OW_STATE=/tmp/heal_t2/state OW_LOCK=/tmp/heal_t2/lock OW_RUNDIR=/tmp/heal_t2 \
-OW_LOGINCHECK="echo '[未登录]'" OW_DRY_RUN=1 OW_ONCE=1 OW_WAIT=1 bash /root/azar_session_heal.sh >/dev/null 2>&1
-grep -aE '静默离线|DRY' /tmp/heal_t2/state | tail -2 | sed 's/^/  /'
-
-echo "===== 自检3: 被踢→跳过 ====="
-mkdir -p /tmp/heal_t3; : > /tmp/heal_t3/logA
-echo "$(date '+%m-%d %H:%M:%S') [error] [KickedOffLine] 你的账号当前登录已失效" > /tmp/heal_t3/logA
-: > /tmp/heal_t3/logB
-OW_LOG_A=/tmp/heal_t3/logA OW_LOG_B=/tmp/heal_t3/logB OW_STATE=/tmp/heal_t3/state OW_LOCK=/tmp/heal_t3/lock OW_RUNDIR=/tmp/heal_t3 \
-OW_LOGINCHECK="echo '[未登录]'" OW_DRY_RUN=1 OW_ONCE=1 OW_WAIT=1 bash /root/azar_session_heal.sh >/dev/null 2>&1
-echo "  静默恢复触发数=$(grep -ac '静默离线' /tmp/heal_t3/state 2>/dev/null) (期望0)  kicked标记=$([ -f /tmp/heal_t3/kicked_flag ]&&echo 有||echo 无)"
+echo "===== start_all.sh 全文 ====="
+cat -A /root/start_all.sh 2>/dev/null | head -10
+echo "===== 当前heal进程(应还没跑) ====="
+ps -ef | grep '[s]ession_heal' | head -3
 echo "=====完====="
 --- 输出 ---
-===== 自检1: 在线→清零 =====
-  fail_cnt=0 (期望0)
-===== 自检2: 静默离线→触发(DRY) =====
-  [11-22 14:21:32] 静默离线(unlogin)，第1次尝试-q快速登录恢复
-  [11-22 14:21:33] DRY_RUN: 模拟重启QQ(-q快速登录)
-===== 自检3: 被踢→跳过 =====
-  静默恢复触发数=0 (期望0)  kicked标记=有
+===== start_all.sh 全文 =====
+#!/bin/bash$
+termux-wake-lock$
+nohup proot-distro login ubuntu -- bash -c 'cd /root && nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & nohup bash /root/azar_guard.sh >> /root/azar_guard.log 2>&1 & cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 & cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>python main.py > /root/bot.log 2>&11' > /dev/null 2>&1 &$
+echo ==M-fM-^\M-^MM-eM-^JM-!M-eM-7M-2M-eM-^EM-(M-iM-^CM-(M-fM-^KM-^IM-hM-5M-7==$
+echo M-dM-;M-%M-eM-^PM-^NM-fM-^IM-^KM-fM-^\M-:M-iM-^GM-^MM-eM-^PM-/M-eM-^PM-^N: M-fM-^IM-^SM-eM-<M-^@TermuxM-hM->M-^SM-eM-^EM-% bash start_all.sh M-eM-^MM-3M-eM-^OM-/$
+setsid nohup /root/bot/venv/bin/python /root/music_sign.py > /root/music_sign.log 2>&1 < /dev/null &$
+pgrep -f 'bash /root/azar_autoheal.sh' >/dev/null || ( setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null & )$
+pgrep -f 'bash /root/offline_watch.sh' >/dev/null || ( setsid nohup bash /root/offline_watch.sh >> /root/offline_watch2.log 2>&1 < /dev/null & )$
+===== 当前heal进程(应还没跑) =====
 =====完=====
