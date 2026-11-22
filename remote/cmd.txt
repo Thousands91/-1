@@ -1,21 +1,8 @@
-287651
-base64 -d /root/.persona_new.b64 > /root/.persona_new.py 2>/dev/null
-echo "[1] 解码md5(期望 e8232cbd879c92304ca729fbbc33160c):"
-md5sum /root/.persona_new.py
-echo "[2] 语法:"
-python3 -c "import py_compile; py_compile.compile('/root/.persona_new.py',doraise=True); print('SYNTAX_OK')" 2>&1 | tail -1
-echo "[3] 锚点:"
-printf '四十二本='; grep -c '四十二本' /root/.persona_new.py
-printf '赠书='; grep -c '怪诞的书' /root/.persona_new.py
-printf '百科链='; grep -c '百科全书这条线' /root/.persona_new.py
-printf '后日谈='; grep -c '第一千一百四十二条' /root/.persona_new.py
-printf '老写法残留='; grep -c '四十来本' /root/.persona_new.py
-MD5=$(md5sum /root/.persona_new.py | cut -d' ' -f1)
-if [ "$MD5" = "e8232cbd879c92304ca729fbbc33160c" ]; then
-  cp /root/.persona_new.py /root/bot/bot/persona/__init__.py
-  echo "[4] 部署完成, 新md5:"
-  md5sum /root/bot/bot/persona/__init__.py
-else
-  echo "[4] MD5不符, 未部署, 保留旧版"
-fi
+287652
+echo "[1] 登录态:"
+bash /root/logincheck.sh 2>/dev/null | grep -E '\[在线\]|\[未登录\]|\[掉线\]' | head -1
+echo "[2] 状态变化尾:"; grep '状态变化' /root/login_state.log 2>/dev/null | tail -3
+echo "[3] bot进程:"; ps -ef | grep '[m]ain.py' | head -2
+echo "[4] 新persona是否已被当前进程加载(老进程内存里还是旧版,需重启):"
+echo "  当前文件md5:"; md5sum /root/bot/bot/persona/__init__.py | cut -d' ' -f1
 echo "=====完====="
