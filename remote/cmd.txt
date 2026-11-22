@@ -1,16 +1,11 @@
-287638
-echo "===== [1] 当前时刻 ====="
-date '+%F %T'
-echo "===== [2] 权威登录态 ====="
-bash /root/logincheck.sh 2>/dev/null | head -5
-echo "===== [3] 最近状态变化 ====="
-grep '状态变化' /root/login_state.log 2>/dev/null | tail -4
-echo "===== [4] bot进程 ====="
-ps -ef | grep '[m]ain.py' | head -2
-echo "===== [5] WS心跳/连接探针最后3条 ====="
-tail -3 /root/link_probe.log 2>/dev/null
-echo "===== [6] 最近收到的消息(bot日志尾) ====="
-tail -5 /root/bot/bot/bot.log 2>/dev/null
-echo "===== [7] 新修复标记 ====="
-for k in _chess_leak _CHESS_TAG 立场一致铁律 坑161; do printf '%s=' "$k"; grep -c "$k" /root/bot/bot/plugins/ai_chat.py 2>/dev/null; done
+287639
+echo "===== [1] 设备persona文件 ====="
+ls -la /root/bot/bot/persona/__init__.py 2>/dev/null
+md5sum /root/bot/bot/persona/__init__.py 2>/dev/null
+echo "===== [2] 设备上是否有新锚点(改前应为0) ====="
+printf '四十二本='; grep -c '四十二本' /root/bot/bot/persona/__init__.py 2>/dev/null
+printf '怪诞的书='; grep -c '怪诞的书' /root/bot/bot/persona/__init__.py 2>/dev/null
+printf 'NOT老写法四十来本='; grep -c '四十来本' /root/bot/bot/persona/__init__.py 2>/dev/null
+echo "===== [3] ai_chat.py 是否内嵌了persona(应是从文件import) ====="
+grep -n 'from persona import\|AZAR_PERSONA =' /root/bot/bot/plugins/ai_chat.py 2>/dev/null | head -5
 echo "=====完====="
