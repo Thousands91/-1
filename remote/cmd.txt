@@ -1,27 +1,12 @@
-287680
-echo "===== 清理前(精确proc扫描) ====="
-for d in /proc/[0-9]*; do
-  cl=$(tr '\0' ' ' < "$d/cmdline" 2>/dev/null)
-  case "$cl" in "bash /root/azar_session_heal.sh "*) echo "  kill ${d#/proc/}: $cl"; kill -9 "${d#/proc/}" 2>/dev/null ;; esac
-done
-sleep 3
-echo "===== 清理后(精确proc扫描) ====="
+287681
 N=0
 for d in /proc/[0-9]*; do
   cl=$(tr '\0' ' ' < "$d/cmdline" 2>/dev/null)
-  case "$cl" in "bash /root/azar_session_heal.sh "*) echo "  残留 ${d#/proc/}"; N=$((N+1)) ;; esac
+  case "$cl" in "bash /root/azar_session_heal.sh "*) N=$((N+1)); echo "HEALPID=${d#/proc/}" ;; esac
 done
-echo "  残留数=$N (期望0)"
-rm -rf /root/.session_heal.lock* /root/.session_heal /root/session_heal.log 2>/dev/null
-echo "===== 只启动一个 ====="
-setsid nohup bash /root/azar_session_heal.sh >> /root/session_heal.log 2>&1 < /dev/null &
-sleep 4
-N=0
-for d in /proc/[0-9]*; do
-  cl=$(tr '\0' ' ' < "$d/cmdline" 2>/dev/null)
-  case "$cl" in "bash /root/azar_session_heal.sh "*) echo "  运行中 ${d#/proc/}"; N=$((N+1)) ;; esac
-done
-echo "  启动后进程数=$N (期望1)"
-echo "  PID文件=$(cat /root/.session_heal.lock.pid 2>/dev/null)"
-echo "  日志尾=$(tail -1 /root/session_heal.log 2>/dev/null)"
+echo "COUNT=$N"
+echo "PIDFILE=$(cat /root/.session_heal.lock.pid 2>/dev/null)"
+echo "RUNDIR=$(ls /root/.session_heal/ 2>/dev/null | tr '\n' ',')"
+echo "LOGTAIL=$(tail -1 /root/session_heal.log 2>/dev/null)"
+echo "LOGIN=$(bash /root/logincheck.sh 2>/dev/null | grep -oE '\[(在线|未登录|掉线)\]' | head -1)"
 echo "=====完====="
