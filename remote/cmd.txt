@@ -1,20 +1,8 @@
-287658
-echo "===== [1] 权限/设备环境 ====="
-id | head -1
-echo "机型:"; getprop ro.product.model 2>/dev/null; echo "Android:"; getprop ro.build.version.release 2>/dev/null
-echo "===== [2] 现有保活相关脚本/进程 ====="
-ls -la /root/*.sh 2>/dev/null | grep -iE 'guard|wake|keep|alive|autoheal|link|login|qnap' | head -30
-echo "--- 相关进程 ---"
-ps -ef | grep -iE '[a]zar_guard|[w]ake|[k]eepalive|[a]utoheal|[l]ink_probe' | head -20
-echo "===== [3] WakeLock 持有情况 ====="
-dumpsys power 2>/dev/null | grep -iE 'PARTIAL_WAKE_LOCK|wakefulness|Display Power|mHolding' | head -15
-echo "===== [4] WiFi休眠策略(值含义:1=始终连接 2=仅插电 0=从不) ====="
-settings get global wifi_sleep_policy 2>/dev/null
-echo "===== [5] 电池优化白名单(看是否有qq/napcat/termux) ====="
-dumpsys deviceidle whitelist 2>/dev/null | grep -iE 'qq|napcat|termux|bot' | head -15
-echo "(空=没加白名单)"
-echo "===== [6] NapCat运行方式/手机QQ进程 ====="
-ps -ef | grep -iE '[n]apcat|[N]apCat|[q]q|[m]obileqq' | head -15
-echo "===== [7] 快速登录相关文件 ====="
-ls -la /root/ 2>/dev/null | grep -iE 'quick|login|relogin|token|session' | head -20
+287659
+echo "===== [1] asar_keepalive.sh (Termux正在跑) ====="
+cat /data/data/com.termux/files/home/asar_keepalive.sh 2>/dev/null | head -90
+echo "===== [2] azar_guard.sh ====="
+cat /root/azar_guard.sh 2>/dev/null | head -90
+echo "===== [3] login_watch.sh ====="
+cat /root/login_watch.sh 2>/dev/null | head -40
 echo "=====完====="
