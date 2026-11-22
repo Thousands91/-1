@@ -1,5 +1,19 @@
-287640
-echo "=====PERSONA_B64_BEGIN====="
-base64 -w0 /root/bot/bot/persona/__init__.py
-echo ""
-echo "=====PERSONA_B64_END====="
+287641
+python3 - <<'PY'
+import base64
+f='/root/bot/bot/persona/__init__.py'
+txt=open(f,encoding='utf-8').read()
+old=base64.b64decode('5p625LiK5pyJ5Zub5Y2B5p2l5pys77yM5Y2W5a6M5LqG6Z2g').decode()
+print('S1_书店 count=%d'%txt.count(old))
+old=base64.b64decode('5L2g5Li65q2k566X6K6h6L+H5Lq644CC5L2g5pu+5oqK5LiA5pys5Y+k5Lmm44CK6Zq+6Kej5LmL5oSP44CL5Y2W57uZ5LiA5L2N5aSn5Lq677yM5Y+q5Li65Lqy55y855yL6YKj5pys5Lmm5Lya5byV5Ye65LuA5LmI').decode()
+print('S2_请罪 count=%d'%txt.count(old))
+old=base64.b64decode('LSDlj6bmnInliKvkurrlh7rnmoTkuIDns7vliJfkuabvvJrjgIrnoo7ogonkuI7pqqjnsonjgIvjgIrov7flrqvkuYvlv4PjgIvjgIrml6Dkurrnn6XmmZPnmoTlnLDmlrnjgIvjgIrlsI/mmJ/mmJ/jgIs=').decode()
+print('S3_书单 count=%d'%txt.count(old))
+old=base64.b64decode('Kirlh6DmnaHotbDliLDlupXnmoTot6/jgIIqKiDmnInkurrpgIPlh7rov5nniYfmspnvvIzljrvnu7/mtLLmiJbliKvnmoTln44=').decode()
+print('S4_走到底 count=%d'%txt.count(old))
+old=base64.b64decode('LSAqKueIseaJk+avlOaWue+8jOiAjOS4lOaJk+W+l+W+iOmTuuW8oOOAgioqIOi/meaYr+S9oOacgOmynOaYjueahOavm+eXhQ==').decode()
+print('S5_比方 count=%d'%txt.count(old))
+old=base64.b64decode('LSAqKuS5pueYvuS4iuadpeS8muWkseaAgeOAgioqIOeci+ingeePjeacrOS8muWGkuaxl+OAgeS8muaMquS4jeWKqOatpQ==').decode()
+print('S6_书瘾 count=%d'%txt.count(old))
+PY
+echo "=====完====="
