@@ -1,42 +1,11 @@
-287622
-python3 - <<'PY'
-import re
-from collections import Counter, OrderedDict
-F='/root/offline_forensics.log'
-lines=open(F,errors='replace').read().splitlines()
-print('[FILE] offline_forensics.log 总行数', len(lines))
-print('[FILE] 首行:', lines[0][:120] if lines else '空')
-print('[FILE] 末行:', lines[-1][:120] if lines else '空')
-
-# 1) 所有 KickedOffLine 原文行(去重)
-kicks=[]
-for ln in lines:
-    if 'KickedOffLine' in ln or '下线通知' in ln or '登录已失效' in ln:
-        k=ln.strip()
-        if k not in kicks: kicks.append(k)
-print('[KICK] 去重后 KickedOffLine/下线通知 行数', len(kicks))
-for k in kicks[:40]:
-    print('  ', k[:150])
-
-# 2) 按日期分布(取行内 MM-DD HH:MM:SS)
-by=Counter()
-for ln in lines:
-    if 'KickedOffLine' in ln:
-        m=re.search(r'(\d{2}-\d{2}) (\d{2}:\d{2}:\d{2})',ln)
-        if m: by[m.group(1)]+=1
-print('[KICK] 按日期出现次数:', dict(sorted(by.items())))
-
-# 3) 所有 [error]/[warn] 行按模板归类(去掉时间戳和QQ名)
-tpl=Counter()
-for ln in lines:
-    if '[error]' in ln or '[warn]' in ln or '[ERROR]' in ln or '[WARN]' in ln:
-        t=re.sub(r'^\s*\d{2}-\d{2} \d{2}:\d{2}:\d{2}\s*','',ln)
-        t=re.sub(r'阿萨尔','<QQ>',t)
-        t=re.sub(r'\d{4,}','<N>',t)
-        t=t.strip()[:110]
-        tpl[t]+=1
-print('[TPL] 取证日志 error/warn 模板种类', len(tpl))
-for t,n in tpl.most_common(25):
-    print(f'  x{n}  {t}')
-PY
+287623
+echo "===== [1] NapCat 相关日志文件(名称/大小/时间) ====="
+ls -la /root/*.log /root/napcat*/**/*.log /root/Napcat/**/*.log 2>/dev/null | grep -iE 'napcat|qq|offline|forensic' | head -60
+echo "===== [2] 所有 .bak 备份 ====="
+find /root -maxdepth 4 -type f \( -name '*.bak*' -o -name '*bak_*' \) 2>/dev/null | head -60
+echo "===== [3] 各日志中 KickedOffLine 计数 ====="
+for f in $(find /root -maxdepth 4 -type f \( -name '*.log' -o -name '*.bak*' \) 2>/dev/null | grep -iE 'napcat|offline|qq' | head -40); do
+  c=$(grep -c 'KickedOffLine' "$f" 2>/dev/null)
+  [ "${c:-0}" -gt 0 ] && echo "$c  $f"
+done
 echo "=====完====="
