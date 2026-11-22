@@ -1,16 +1,6 @@
-287597
-echo "===== 掉线原因诊断 $(date '+%F %T') ====="
-echo "---[1]login_state完整尾(看你从几点未登录的)---"
-tail -12 /root/login_state.log
-echo "---[2]NapCat登录相关日志(被踢/过期/扫码/离线)---"
-for f in /root/napcat-restart.log /root/remote_ctl.log; do
-  [ -f "$f" ] || continue
-  echo "== $f =="
-  grep -iE 'Kicked|离线|下线|掉线|登录态|login|二维码|QRCode|expired|过期|token|ws close|disconnect|未登录|在线' "$f" 2>/dev/null | tail -20
-done
-echo "---[3]NapCat进程在不在---"
-ps -eo pid,etime,args | grep -iE '[n]apcat|[q]q-node|[g]o-cqhttp|node' | head -10
-echo "---[4]bot进程在不在---"
-ps -eo pid,etime,args | grep '[m]ain.py'
-echo "---[5]设备当前时间---"; date '+%F %T'
+287598
+echo "===== 探测call_llm接口 $(date '+%T') ====="
+grep -nE '^async def call_llm|^API_KEY|^BASE_URL|^MODEL|API_KEY =|BASE_URL =|MODEL =' /root/bot/bot/plugins/ai_chat.py | head -15
+echo "--- 能否独立import(不改状态) ---"
+cd /root/bot/bot && /root/bot/venv/bin/python -c "import nonebot;nonebot.init();import sys;sys.path.insert(0,'.');import plugins.ai_chat as m;print('call_llm可调用, key长度:',len(m.API_KEY or ''),'BASE:',m.BASE_URL)" 2>&1 | tail -5
 echo "=====完====="
