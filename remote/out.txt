@@ -1,40 +1,45 @@
-<<<task_287663.txt>>>
-===== 任务287663 11-22 14:13:23 =====
+<<<task_287664.txt>>>
+===== 任务287664 11-22 14:14:30 =====
 --- 命令 ---
-echo "===== [1] settings命令是否可用 ====="
-command -v settings || echo "settings不在PATH"
-settings get global wifi_sleep_policy 2>&1 | head -2
-echo "===== [2] 内核wake_lock节点 ====="
-cat /sys/power/wake_lock 2>/dev/null || echo "无/sys/power/wake_lock节点"
-echo "--- wakeup_count ---"; cat /sys/power/wakeup_count 2>/dev/null || echo "无节点"
-echo "===== [3] termux唤醒锁状态(看进程持锁) ====="
-ls -la /data/data/com.termux/files/usr/bin/termux-wake-lock 2>/dev/null
-echo "===== [4] doze状态 ====="
-dumpsys deviceidle 2>/dev/null | grep -iE 'mDeepPowerSaveMode|mLightPowerSaveMode|mScreenOff|mCharging|enabled=' | head -8 || echo "dumpsys deviceidle无权限"
-echo "===== [5] guard为何没跑(检查启动配置) ====="
-grep -rn 'azar_guard' /root/start_all.sh /root/setup.sh /root/*.sh 2>/dev/null | head -10
-echo "(空=没有任何脚本拉起guard)"
-echo "===== [6] autoheal的wakelock续持行(确认它每轮续持) ====="
-grep -n 'wake-lock\|wakelock\|termux-wake' /root/azar_autoheal.sh 2>/dev/null | head -10
+echo "===== [1] NapCat启动脚本里的-q快速登录参数 ====="
+grep -rn -- '-q \|quick\|快速登录\|quicklogin' /root/*.sh /root/Napcat/*.sh /root/Napcat/opt/QQ/*.sh 2>/dev/null | grep -v '^Binary' | head -15
+echo "(空=当前没用-q快速登录)"
+echo "===== [2] NapCat HTTP/WS探活口配置 ====="
+grep -rn '3011\|3000\|3001\|webui\|token' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/*.json 2>/dev/null | head -20
+echo "--- 配置文件列表 ---"
+find /root/Napcat -maxdepth 6 -name 'config.json' -o -name 'napcat.json' 2>/dev/null | head -10
+echo "===== [3] 当前NapCat进程完整命令 ====="
+for p in $(pgrep -f 'opt/QQ/qq' | head -2); do echo "PID $p:"; tr '\0' ' ' < /proc/$p/cmdline; echo; done
+echo "===== [4] ophoresis: 登录态数据目录(快速登录依赖它) ====="
+ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/data/ 2>/dev/null | head -10
 echo "=====完====="
 --- 输出 ---
-===== [1] settings命令是否可用 =====
-/system/bin/settings
-Security exception: Permission Denial: getCurrentUser() from pid=7101, uid=10643 requires android.permission.INTERACT_ACROSS_USERS
-
-===== [2] 内核wake_lock节点 =====
-无/sys/power/wake_lock节点
---- wakeup_count ---
-无节点
-===== [3] termux唤醒锁状态(看进程持锁) =====
--rwx------ 1 root root 398 Aug 28  2025 /data/data/com.termux/files/usr/bin/termux-wake-lock
-===== [4] doze状态 =====
-===== [5] guard为何没跑(检查启动配置) =====
-/root/start_all.sh:3:nohup proot-distro login ubuntu -- bash -c 'cd /root && nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & nohup bash /root/azar_guard.sh >> /root/azar_guard.log 2>&1 & cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 & cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>python main.py > /root/bot.log 2>&11' > /dev/null 2>&1 &
-/root/start_all.sh:3:nohup proot-distro login ubuntu -- bash -c 'cd /root && nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & nohup bash /root/azar_guard.sh >> /root/azar_guard.log 2>&1 & cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 & cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>python main.py > /root/bot.log 2>&11' > /dev/null 2>&1 &
-(空=没有任何脚本拉起guard)
-===== [6] autoheal的wakelock续持行(确认它每轮续持) =====
-13:#       ② 每轮循环续持 termux-wake-lock——息屏不深睡、worker 回传不再断（用户不用一直亮屏）。
-63:  # ⓪ 息屏保活：续持 termux-wake-lock（每60秒刷一次；proot内可直调；失败静默不影响主职）
-64:  _WL=/data/data/com.termux/files/usr/bin/termux-wake-lock
+===== [1] NapCat启动脚本里的-q快速登录参数 =====
+/root/azar_autoheal.sh:23:  if [ -n "$LP" ] && kill -0 "$LP" 2>/dev/null && tr -d '\0' < "/proc/$LP/cmdline" 2>/dev/null | grep -q autoheal; then
+/root/azar_autoheal.sh:51:      "$ALERT_URL" 2>/dev/null | grep -q '"content"'; then
+/root/azar_autoheal.sh:76:    say "QQ进程不在,拉起(-q快速登录)"
+/root/azar_autoheal.sh:78:    ( cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 < /dev/null & )
+/root/napcat.sh:271:    if ! rpm -q dnf-plugins-core >/dev/null 2>&1; then
+/root/napcat.sh:276:    if dnf repolist all | grep -q '^appstream\s'; then
+/root/napcat.sh:277:        if dnf repolist disabled | grep -q '^appstream\s'; then
+/root/napcat.sh:405:    unzip -q -o -d ./NapCat "$default_file"
+/root/napcat.sh:856:    log "  带账号启动: ${CYAN}screen -dmS napcat xvfb-run -a ${quoted_executable} --no-sandbox -q QQ号码${NC}"
+/root/offline_watch.sh:16:  if [ -n "$LP" ] && kill -0 "$LP" 2>/dev/null && tr -d '\0' < "/proc/$LP/cmdline" 2>/dev/null | grep -q offline_watch; then exit 0; fi
+/root/offline_watch.sh:52:      grep -q '\[KickedOffLine\]' <<<"$l" || continue
+/root/offline_watch.sh:97:      "$FOR_URL" 2>/dev/null | grep -q '"content"'; then
+/root/offline_watch_v2.sh:14:  if [ -n "$LP" ] && kill -0 "$LP" 2>/dev/null && tr -d '\0' < "/proc/$LP/cmdline" 2>/dev/null | grep -q offline_watch; then exit 0; fi
+/root/offline_watch_v2.sh:50:      "$FOR_URL" 2>/dev/null | grep -q '"content"'; then
+/root/offline_watch_v2.sh:115:    echo "登录方式: $(grep -oE '\-q[ ]*[0-9]+|quick|二维码|qrcode' /root/napcat-restart.log 2>/dev/null | tail -1)"
+(空=当前没用-q快速登录)
+===== [2] NapCat HTTP/WS探活口配置 =====
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json:13:        "token": "",
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json:15:        "heartInterval": 30000,
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json:4:    "token": "560aad98b99d",
+--- 配置文件列表 ---
+===== [3] 当前NapCat进程完整命令 =====
+PID 10178:
+/bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 
+PID 10197:
+/root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 
+===== [4] ophoresis: 登录态数据目录(快速登录依赖它) =====
 =====完=====
