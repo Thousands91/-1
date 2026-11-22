@@ -1,29 +1,48 @@
-<<<task_287673.txt>>>
-===== 任务287673 11-22 14:31:27 =====
+<<<task_287674.txt>>>
+===== 任务287674 11-22 14:32:06 =====
 --- 命令 ---
-HEALPAT='bash /root/azar_session_heal.[s]h'
-echo "[1] md5(期望 e08c7ff6d253dae05edfb223b5eecaa0):"; md5sum /root/azar_session_heal.sh
-echo "[2] 语法:"; bash -n /root/azar_session_heal.sh && echo OK
-echo "[3] flock标记:"; grep -c 'flock -n' /root/azar_session_heal.sh
-echo "[4] 进程数(期望1):"; pgrep -f "$HEALPAT" | wc -l
-pgrep -f "$HEALPAT" | head -3
-echo "[5] 启动日志尾:"; tail -3 /root/session_heal.log 2>/dev/null
-echo "[6] 登录态:"; bash /root/logincheck.sh 2>/dev/null | grep -E '\[在线\]|\[未登录\]|\[掉线\]' | head -1
+echo "===== 脚本第105-118行 ====="
+sed -n '105,118p' /root/azar_session_heal.sh
+echo "===== RUNDIR与hour现状 ====="
+ls -la /root/.session_heal/ 2>/dev/null || echo "目录不存在"
+echo "===== 两个进程状态 ====="
+for p in $(pgrep -f 'bash /root/azar_session_heal.[s]h'); do echo "PID $p:"; cat /proc/$p/status 2>/dev/null | grep -E 'State|PPid'; tr '\0' ' ' </proc/$p/cmdline; echo; done
+echo "===== flock文件 ====="
+ls -la /root/.session_heal.lock* 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-[1] md5(期望 e08c7ff6d253dae05edfb223b5eecaa0):
-e08c7ff6d253dae05edfb223b5eecaa0  /root/azar_session_heal.sh
-[2] 语法:
-OK
-[3] flock标记:
-1
-[4] 进程数(期望1):
-2
-13338
-13439
-[5] 启动日志尾:
-/root/azar_session_heal.sh: line 112: /root/.session_heal/hour: No such file or directory
-/root/azar_session_heal.sh: line 113: /root/.session_heal/hour: No such file or directory
-[6] 登录态:
-[未登录] 当前没有有效会话
+===== 脚本第105-118行 =====
+  now=$(date +%s)
+  # 熔断标记：连续3次失败后停手
+  [ -f "$NEEDMAN" ] && return 1
+  # 距上次重启至少5分钟
+  LR=$(cat "$LAST" 2>/dev/null || echo 0)
+  [ $((now-LR)) -lt 300 ] && return 1
+  # 每小时最多3次
+  H=$(date +%H)
+  read C H2 < "$HR" 2>/dev/null || { C=0; H2=$H; }
+  [ "$H" != "$H2" ] && { C=0; H2=$H; }
+  [ "$C" -ge 3 ] && return 1
+  echo "$((C+1)) $H2" > "$HR"
+  echo "$now" > "$LAST"
+  return 0
+===== RUNDIR与hour现状 =====
+total 0
+drwxr-xr-x  2 root root 3488 Nov 22 14:30 .
+drwx------ 17 root root 8192 Nov 22 14:32 ..
+-rw-r--r--  1 root root    2 Nov 22 14:30 fail_cnt
+-rw-r--r--  1 root root    5 Nov 22 14:30 hour
+-rw-r--r--  1 root root   11 Nov 22 14:30 last_restart
+===== 两个进程状态 =====
+PID 13338:
+State:	S (sleeping)
+PPid:	1
+bash /root/azar_session_heal.sh 
+PID 13439:
+State:	S (sleeping)
+PPid:	1
+bash /root/azar_session_heal.sh 
+===== flock文件 =====
+-rw-r--r-- 1 root root 0 Nov 22 14:29 /root/.session_heal.lock.flock
+-rw-r--r-- 1 root root 6 Nov 22 14:29 /root/.session_heal.lock.flock.pid
 =====完=====
