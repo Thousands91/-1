@@ -1,23 +1,23 @@
-<<<task_287598.txt>>>
-===== 任务287598 11-22 09:46:20 =====
+<<<task_287599.txt>>>
+===== 任务287599 11-22 09:46:53 =====
 --- 命令 ---
-echo "===== 探测call_llm接口 $(date '+%T') ====="
-grep -nE '^async def call_llm|^API_KEY|^BASE_URL|^MODEL|API_KEY =|BASE_URL =|MODEL =' /root/bot/bot/plugins/ai_chat.py | head -15
-echo "--- 能否独立import(不改状态) ---"
-cd /root/bot/bot && /root/bot/venv/bin/python -c "import nonebot;nonebot.init();import sys;sys.path.insert(0,'.');import plugins.ai_chat as m;print('call_llm可调用, key长度:',len(m.API_KEY or ''),'BASE:',m.BASE_URL)" 2>&1 | tail -5
+echo "===== 探测密钥来源 $(date '+%T') ====="
+PID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
+echo "bot PID=$PID"
+echo "--- 进程环境里有没有OPENAI(只看变量名和有否,不打印值) ---"
+tr '\0' '\n' < /proc/$PID/environ 2>/dev/null | grep -oE '^[A-Z_]*(OPENAI|API|MODEL|KEY)[A-Z_]*=' | sort -u
+echo "--- 有没有env文件 ---"
+for f in /root/bot/.env /root/bot/bot/.env /root/.env /root/bot/venv/.env; do [ -f "$f" ] && echo "$f: $(grep -c OPENAI $f) 行OPENAI"; done
+echo "--- 启动脚本里怎么注入的 ---"
+grep -rnE 'OPENAI_API_KEY|export OPENAI|source .*env|set -a' /root/*.sh /root/bot/*.sh /root/.wsfix.sh 2>/dev/null | head -10
 echo "=====完====="
 --- 输出 ---
-===== 探测call_llm接口 09:46:20 =====
-55:API_KEY = os.getenv("OPENAI_API_KEY", "")
-56:BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.siliconflow.cn/v1")
-57:MODEL = os.getenv("OPENAI_MODEL", "Qwen/Qwen2.5-7B-Instruct")
-282:_VLM_MODEL = os.getenv("VISION_MODEL", "glm-4v-flash")
-451:SF_ASR_MODEL = os.getenv("SILICONFLOW_ASR_MODEL", "FunAudioLLM/SenseVoiceSmall")
-452:ZHIPU_ASR_MODEL = os.getenv("ZHIPU_ASR_MODEL", "glm-asr-2512")
-456:_XFYUN_API_KEY = os.getenv("XFYUN_API_KEY", "")
-2468:async def call_llm(messages: List[dict], extra_system: str = "") -> str:
---- 能否独立import(不改状态) ---
-11-22 09:46:22 [SUCCESS] nonebot | NoneBot is initializing...
-11-22 09:46:22 [INFO] nonebot | Current Env: prod
-call_llm可调用, key长度: 0 BASE: https://api.siliconflow.cn/v1
+===== 探测密钥来源 09:46:53 =====
+bot PID=23544
+--- 进程环境里有没有OPENAI(只看变量名和有否,不打印值) ---
+--- 有没有env文件 ---
+/root/bot/bot/.env: 3 行OPENAI
+--- 启动脚本里怎么注入的 ---
+/root/check.sh:37:grep -qE '^OPENAI_API_KEY=.+' /root/bot/bot/.env && echo "   ✅ 有" || echo "   ✗ 缺"
+/root/setup.sh:46:OPENAI_API_KEY=1ce5306c565b43a2958fad031004e4d9.ETXDC9mjwhzVXVbu
 =====完=====
