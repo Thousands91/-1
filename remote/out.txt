@@ -1,57 +1,39 @@
-<<<task_287700.txt>>>
-===== 任务287700 11-23 04:43:45 =====
+<<<task_287701.txt>>>
+===== 任务287701 11-23 04:48:59 =====
 --- 命令 ---
-echo "===== 重启大脑 $(date '+%F %T') ====="
-cd /root/bot/bot
-# 精确抓 python main.py 本体PID（方括号防自匹配，锚定venv/bin/python开头排除proot/bash）
-BP=$(ps -eo pid,args | grep "[m]ain.py" | grep "venv/bin/python" | awk '{print $1}')
-echo "旧大脑PID=[$BP]"
-if [ -z "$BP" ]; then echo "【异常】没抓到bot PID,不kill,退出"; exit 1; fi
-OLDPID="$BP"
-# 只kill bot本体,不碰遥控循环/NapCat/proot
-kill "$OLDPID" 2>&1 && echo "已kill旧PID=$OLDPID"
-sleep 3
-# 确认旧进程已退
-if kill -0 "$OLDPID" 2>/dev/null; then echo "旧进程仍在,发TERM后再等"; kill -9 "$OLDPID" 2>/dev/null; sleep 2; fi
-# 重新拉起(setsid脱离会话,>>追加日志)
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot.log 2>&1 < /dev/null &
-sleep 14
-NEWPID=$(ps -eo pid,args | grep "[m]ain.py" | grep "venv/bin/python" | awk '{print $1}')
-echo "新大脑PID=[$NEWPID]"
-if [ -n "$NEWPID" ] && [ "$NEWPID" != "$OLDPID" ]; then echo "【成功】大脑已重启 $OLDPID -> $NEWPID"; else echo "【警告】新PID异常,查日志"; fi
-echo "---启动日志尾(插件加载/connected)---"
-tail -40 /root/bot/bot.log 2>/dev/null | grep -E "Succeeded|Failed|connected|Error|Traceback|加载|doudizhu|关键词" | tail -18
-echo "---进程数(应=1)---"
-ps -eo pid,args | grep "[m]ain.py" | grep "venv/bin/python" | wc -l
-echo "=====重启完====="
+echo "===== 精确进程核查 $(date '+%F %T') ====="
+echo "---逐个查/proc: comm=python且cmdline含main.py的才是真bot---"
+for p in /proc/[0-9]*; do
+  pid=${p##*/}
+  comm=$(cat "$p/comm" 2>/dev/null)
+  case "$comm" in
+    python*|python3*)
+      cmd=$(tr '\0' ' ' < "$p/cmdline" 2>/dev/null | cut -c1-90)
+      echo "真python进程 PID=$pid comm=$comm cmd=$cmd"
+      ;;
+  esac
+done
+echo "---其中main.py进程数---"
+CNT=0
+for p in /proc/[0-9]*; do
+  comm=$(cat "$p/comm" 2>/dev/null)
+  case "$comm" in python*) grep -qa 'main.py' "$p/cmdline" 2>/dev/null && CNT=$((CNT+1));; esac
+done
+echo "main.py真进程数=$CNT"
+echo "---遥控循环(方括号防自匹配)---"
+pgrep -af 'remote_ctl.[s]h' | grep -v 'proot' | head -2 | cut -c1-70
+echo "---登录态---"
+tail -1 /root/login_state.log 2>/dev/null
+echo "=====核查完====="
 --- 输出 ---
-===== 重启大脑 2026-11-23 04:43:45 =====
-旧大脑PID=[22621
-22626
-22627
-22630]
-bash: line 9: kill: 22621
-22626
-22627
-22630: arguments must be process or job IDs
-新大脑PID=[22621
-22626
-22627
-22630]
-【警告】新PID异常,查日志
----启动日志尾(插件加载/connected)---
-11-23 04:43:56 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
-11-23 04:43:58 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-23 04:43:58 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
-11-23 04:43:59 [SUCCESS] nonebot | Succeeded to load plugin "doudizhu" from "plugins.doudizhu"
-11-23 04:43:59 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-11-23 04:43:59 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
-11-23 04:43:59 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
-11-23 04:43:59 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
-11-23 04:43:59 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
-11-23 04:43:59 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
-11-23 04:43:59 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
-11-23 04:43:59 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
----进程数(应=1)---
-4
-=====重启完=====
+===== 精确进程核查 2026-11-23 04:48:59 =====
+---逐个查/proc: comm=python且cmdline含main.py的才是真bot---
+真python进程 PID=22630 comm=python cmd=/root/bot/venv/bin/python main.py 
+---其中main.py进程数---
+main.py真进程数=1
+---遥控循环(方括号防自匹配)---
+22626 bash -c cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat
+22627 bash -c cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat
+---登录态---
+2026-11-22 14:43:30 [未登录]
+=====核查完=====
