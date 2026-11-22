@@ -1,75 +1,28 @@
-<<<task_287603.txt>>>
-===== 任务287603 11-22 09:52:50 =====
+<<<task_287604.txt>>>
+===== 任务287604 11-22 09:56:54 =====
 --- 命令 ---
-set -a; source /root/bot/bot/.env 2>/dev/null; set +a
-cd /root/bot/bot && /root/bot/venv/bin/python - <<'PY'
-import nonebot; nonebot.init()
-import sys, asyncio, base64
-sys.path.insert(0,'.')
-import plugins.ai_chat as m
-from nonebot.adapters.onebot.v11 import Message as OBMessage
-captured={}
-async def mock_finish(x):
-    captured["sent"]=x; raise SystemExit
-m.ai_chat.finish=mock_finish
-class Bot:
-    async def call_api(self,api,**kw): return {}
-class Ev:
-    user_id=1561950850; group_id=1109952783; message_id=1
-    def __init__(self,t):
-        self.t=t; self.raw="[CQ:at,qq=3427943187]"+t; self.message=OBMessage(self.raw)
-    def get_plaintext(self): return self.t
-    def is_tome(self): return True
-    def get_message(self): return self.message
-    def get_user_id(self): return self.user_id
-    def get_session_id(self): return "x"
-    @property
-    def raw_message(self): return self.raw
-async def run(t):
-    m.HISTORY.clear(); m._TEXT_RECENT.clear(); m._EXTRACT_MEMO.clear(); m._pick_cache.clear(); captured.clear()
-    try: await m.ai_chat.handlers[0].call(Bot(),Ev(t),{})
-    except SystemExit: pass
-    except Exception as e: return "[ERR]"+type(e).__name__+":"+str(e)[:40]
-    s=captured.get("sent"); return str(s) if s is not None else "[NO_SENT]"
-async def main():
-    for t in ["陪我下棋","我们下棋吧","来下棋","想下棋","下棋吗","陪我下一盘","教我下棋","国际象棋怎么玩","走一步","走吧"]:
-        r=await run(t)
-        print("H|"+base64.b64encode(t.encode()).decode()+"|"+base64.b64encode(r.encode()).decode())
-asyncio.run(main())
-print("====DONE====")
-PY
+echo "===== 坑163b下发 $(date '+%T') ====="
+F=/root/bot/bot/plugins/ai_chat.py
+cp "$F" /root/bot/bot/plugins/bak_163b
+/root/bot/venv/bin/python - <<'PYCODE'
+import base64
+F="/root/bot/bot/plugins/ai_chat.py"
+s=open(F,encoding="utf-8").read()
+def D(x): return base64.b64decode(x).decode("utf-8")
+pairs=[("ICAgICIjIyDlm73pmYXosaHmo4vvvIjov5nkuKrnvqTph4zmnInmo4vnm5jvvIzluLjmnInkurrpl67vvIznhaflrp7nrZTvvIlcbiIKICAgICIqKumTgeW+i++8muWPquacieWvueaWueaYjuehruimgeivtOOAjOS4i+aji+OAjeOAjOi1sCBlNOOAje+8iOi1sCvlhbfkvZPnnYDms5XvvInmiJblm57nrZTmo4vlsYDnm7jlhbPpl67popjml7bvvIwiCiAgICAi5omN5oyJ5LiL6Z2i6K6y5qOL44CC5pel5bi46K+06K+d6YeM55qE44CM6LWw5ZCn44CN44CM5oiR5Lus6LWw44CN44CM5L2g5Y675LiN5Y6744CN44CM5Y675qyi5oSJ5LmL6aaG44CN44CM5Y675ZOq44CNIgogICAgIuWFqOaYr+aZrumAmumXsuivne+8jOi3n+S4i+aji+avq+aXoOWFs+ezu+KAlOKAlOe7neS4jeiDveWGkuWHuiBlNOOAgWU144CBTmYz44CBZTJlNCDov5nnsbvnnYDms5XvvIwiCiAgICAi5Lmf57ud5LiN6IO95YaZ44CQ5Y67IGU044CR44CQ6LWwIGU144CR6L+Z56eN5aWH5oCq5qCH6K6w44CC5a+55pa55qC55pys5rKh5o+Q5qOL77yM5L2g5o+Q5qOL5bCx5piv562U6Z2e5omA6Zeu44CCKipcbiIK","ICAgICIjIyDlm73pmYXosaHmo4vvvIjov5nkuKrnvqTph4zmnInmo4vnm5jvvIzluLjmnInkurrpl67vvIznhaflrp7nrZTvvIlcbiIKICAgICIqKumTgeW+i0HvvIjliKvooqvml6XluLjor43luKblgY/vvInvvJrjgIzotbDlkKfjgI3jgIzmiJHku6zotbDjgI3jgIzkvaDljrvkuI3ljrvjgI3jgIzljrvmrKLmhInkuYvppobjgI3jgIzljrvlk6rjgI0iCiAgICAi5YWo5piv5pmu6YCa6Zey6K+d77yM6Lef5LiL5qOL5q+r5peg5YWz57O74oCU4oCU57ud5LiN6IO95YaS5Ye6IGU044CBZTXjgIFOZjPjgIFlMmU0IOi/meexu+edgOazle+8jCIKICAgICLkuZ/nu53kuI3og73lhpnjgJDljrsgZTTjgJHjgJDotbAgZTXjgJHov5nnp43lpYfmgKrmoIforrDjgILlr7nmlrnmoLnmnKzmsqHmj5Dmo4vvvIzkvaDmj5Dmo4vlsLHmmK/nrZTpnZ7miYDpl67jgIIqKlxuIgogICAgIioq6ZOB5b6LQu+8iOWIq+WGkuWFheW8gOaji+aMh+S7pO+8ie+8muW8gOaji+aYr+WvueaWueiHquW3seWcqOe+pOmHjCBA5oiRIOWPkeS4gOWPpeOAjOWbvemZheixoeaji+OAje+8jOWPpuacieS4k+mXqOeahOeoi+W6j+aOpe+8jCIKICAgICLkuI3lvZLkvaDnrqHjgILmiYDku6XjgIzpmarmiJHkuIvmo4vjgI3jgIzmiJHku6zkuIvmo4vlkKfjgI3jgIzmnaXkuIvmo4vjgI3jgIzmg7PkuIvmo4vjgI3jgIzkuIvmo4vlkJfjgI3jgIzpmarmiJHkuIvkuIDnm5jjgI0iCiAgICAi44CM6LWw5LiA5q2l44CN6L+Z57G76K+d77yM5ZOq5oCV5bim5LqG44CM5LiL5qOL44CN77yM5Lmf5Y+q5piv5pmu6YCa6Zey6IGK4oCU4oCU5L2g57ud5LiN6IO95Zue5LiA5Y+l5YWJ56eD56eD55qE44CM5Zu96ZmF6LGh5qOL44CNIgogICAgIuaIluOAjOi1sCBlNOOAje+8jOabtOS4jeiDvSBA5Lu75L2V5Lq677yI5bCk5YW25LiN6IO9IEDmraPlnKjot5/kvaDor7Tor53nmoTov5nkvY3mnKzkurrvvInjgIIiCiAgICAi54Wn5bi45o6l5Y+j6K+t77ya5oOz546p5bCx6K+044CM5b6X5Lik5L2NIEDmiJEg5oql5Zu96ZmF6LGh5qOL5omN5byA5b6X5LqG44CN5LmL57G777yM5Yir5ZCQ5oyH5Luk44CB5Yir6Im+54m544CCKipcbiIKICAgICIqKumTgeW+i0PvvIjlj6rmnInnnJ/pl67op4TliJnmiY3orrLvvInvvJrlj6rmnInlvZPlr7nmlrnmmI7noa7pl67op4TliJnvvIjjgIzpqazmgI7kuYjotbDjgI3jgIzlm73pmYXosaHmo4vmgI7kuYjnjqnjgI0iCiAgICAi44CM546L6L2m5piT5L2N5piv5LuA5LmI44CN77yJ5pe277yM5omN55So5LiL6Z2i5aSn55m96K+d6K6y6K6y77yb5Yir5oqK5pW05q615YCS5Ye65p2l77yM5oyJ5LuW6Zeu55qE562U44CCKipcbiIK"),("ICAgICMg5oqK5qih5Z6L5Zue5aSN6YeM55qEIEDmlbDlrZcg6L2s5oiQ55yf5q2j55qE6Im+54m55q61","ICAgICMg5Z2RMTYzYu+8iDIwMjYtMTEtMjLvvInvvJrmma7pgJrpl7LogYoi6Zmq5oiR5LiL5qOLL+adpeS4i+ajiy/otbDkuIDmraUi6KKr5qih5Z6L5ZCQ5oiQ5YWJ56eD56eD55qECiAgICAjIOW8gOaji+aMh+S7pOOAjOWbvemZheixoeaji+OAjeOAjOi1sCBlNOOAjeKAlOKAlOmCo+aYr+aMh+S7pOS4jeaYr+WbnuWkje+8jOecn+W8gOaji+i1sCBjaGVzc19nYW1lIOaPkuS7tu+8jAogICAgIyDku47ov5nmnaHpk77ot6/lh7rljrvnmoToo7jmjIfku6Tlv4XmmK/or6/op6blj5HvvIzlj5Hlh7rljrvnlKjmiLflj6rkvJrojqvlkI3lhbblppnjgILlj5HpgIHliY3mi6bkuIvmjaLmraPluLjor53jgIIKICAgICMg5Yml5o6JQOautS/moIfngrkvZW1vamnlkI7vvIzmlbTmnaHlsLHmmK/kuKrnn63mo4vmjIfku6Qg4oaSIOWFnOW6leOAggogICAgX2JhcmUgPSBfcmUuc3ViKHIiQFxzKlxkezUsMTF9IiwgIiIsIGFuc3dlciBvciAiIikKICAgIF9iYXJlID0gX3JlLnN1YihyIltcc++8jOOAgu+8ge+8n+OAgSwuIT9+4oCm4oCUwrfwn5OW4pyo8J+Mn10iLCAiIiwgX2JhcmUpCiAgICBpZiBfYmFyZSBhbmQgX3JlLmZ1bGxtYXRjaCgKICAgICAgICAgICAgciLlm73pmYXosaHmo4t86LWwKD86ZVsxLThdfFthLWhdWzEtOF18W0tRUkJOUGtxcmJucF1bYS1oXT9bMS04XT98Ty1PKD86LU8pP3xlWzEtOF1bZUVdWzEtOF0pIiwKICAgICAgICAgICAgX2JhcmUsIF9yZS5JR05PUkVDQVNFKToKICAgICAgICBsb2dnZXIuaW5mbyhmIlvor6/op6blj5HlhZzlupVdIOijuOaji+aMh+S7pOaLpuS4i++8mnthbnN3ZXJbOjI0XSFyfSIpCiAgICAgICAgYW5zd2VyID0gX3BpY2tfZmFsbGJhY2tfbGluZSgpCiAgICAjIOaKiuaooeWei+WbnuWkjemHjOeahCBA5pWw5a2XIOi9rOaIkOecn+ato+eahOiJvueJueautQ==")]
+for i,(o,n) in enumerate(pairs,1):
+    old,new=D(o),D(n)
+    c=s.count(old)
+    assert c==1, "锚点"+str(i)+" count="+str(c)
+    s=s.replace(old,new,1)
+open(F,"w",encoding="utf-8").write(s)
+import ast; ast.parse(s)
+print("替换完成+语法OK")
+PYCODE
+echo "铁律A:$(grep -F -c '铁律A（别被日常词带偏）' $F) 铁律B:$(grep -F -c '铁律B（别冒充开棋指令）' $F) 兜底:$(grep -F -c '坑163b' $F)"
 echo "=====完====="
 --- 输出 ---
-11-22 09:52:53 [SUCCESS] nonebot | NoneBot is initializing...
-11-22 09:52:53 [INFO] nonebot | Current Env: prod
-11-22 09:53:01 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-22 09:53:01 [INFO] plugins | [核对·调试] ask='[@3427943187]陪我下棋' lead=False contra=False agree=False dodge=False ans='国际象棋。'
-H|6Zmq5oiR5LiL5qOL|5Zu96ZmF6LGh5qOL44CC
-11-22 09:53:10 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
-11-22 09:53:11 [INFO] plugins | [核对·调试] ask='[@3427943187]我们下棋吧' lead=True contra=False agree=False dodge=False ans='国际象棋'
-H|5oiR5Lus5LiL5qOL5ZCn|5Zu96ZmF6LGh5qOL
-11-22 09:53:16 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-22 09:53:17 [INFO] plugins | [核对·调试] ask='[@3427943187]来下棋' lead=False contra=False agree=False dodge=False ans='国际象棋'
-H|5p2l5LiL5qOL|5Zu96ZmF6LGh5qOL
-11-22 09:53:18 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-22 09:53:21 [INFO] plugins | [核对·调试] ask='[@3427943187]想下棋' lead=False contra=False agree=False dodge=False ans='@3427943187 我在这，先生。您想下哪一盘？'
-H|5oOz5LiL5qOL|W0NROmF0LHFxPTM0Mjc5NDMxODddIOaIkeWcqOi/me+8jOWFiOeUn+OAguaCqOaDs+S4i+WTquS4gOebmO+8nw==
-11-22 09:53:21 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-22 09:53:22 [INFO] plugins | [核对·调试] ask='[@3427943187]下棋吗' lead=False contra=False agree=False dodge=False ans='@3427943187 国际象棋'
-H|5LiL5qOL5ZCX|W0NROmF0LHFxPTM0Mjc5NDMxODddIOWbvemZheixoeajiw==
-11-22 09:53:23 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-22 09:53:24 [INFO] plugins | [核对·调试] ask='[@3427943187]陪我下一盘' lead=False contra=False agree=False dodge=False ans='@3427943187 国际象棋'
-H|6Zmq5oiR5LiL5LiA55uY|W0NROmF0LHFxPTM0Mjc5NDMxODddIOWbvemZheixoeajiw==
-11-22 09:53:25 [INFO] plugins | [核对·调试] ask='[@3427943187]教我下棋' lead=False contra=False agree=False dodge=False ans='白方先走，您请。'
-H|5pWZ5oiR5LiL5qOL|55m95pa55YWI6LWw77yM5oKo6K+344CC
-11-22 09:53:25 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-22 09:53:28 [INFO] plugins | [核对·调试] ask='[@3427943187]国际象棋怎么玩' lead=False contra=False agree=False dodge=False ans='棋子走法：王走一步，横竖斜都行；车横竖直走；象斜线走；后横竖斜都走，最厉'
-H|5Zu96ZmF6LGh5qOL5oCO5LmI546p|5qOL5a2Q6LWw5rOV77ya546L6LWw5LiA5q2l77yM5qiq56uW5pac6YO96KGM77yb6L2m5qiq56uW55u06LWw77yb6LGh5pac57q/6LWw77yb5ZCO5qiq56uW5pac6YO96LWw77yM5pyA5Y6J5a6z77yb6ams6LWwIuaXpSLlrZfvvIzog73ot7PlrZDvvJvlhbXlj6rog73lkJHliY3vvIznrKzkuIDmraXlj6/otbDkuKTmoLzvvIzlkIPlrZDmlpzlkIPvvJvliLDlupXnur/ljYflj5jjgILnjovovabmmJPkvY3mmK/njovlkozovabkuIDmraXmjaLkvY3jgII=
-11-22 09:53:29 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-22 09:53:30 [INFO] plugins | [核对·调试] ask='[@3427943187]走一步' lead=False contra=False agree=False dodge=False ans='@3427943187 走 e4'
-H|6LWw5LiA5q2l|W0NROmF0LHFxPTM0Mjc5NDMxODddIOi1sCBlNA==
-11-22 09:53:30 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-22 09:53:31 [INFO] plugins | [核对·调试] ask='[@3427943187]走吧' lead=True contra=False agree=False dodge=False ans='走吧，您先请。'
-H|6LWw5ZCn|6LWw5ZCn77yM5oKo5YWI6K+344CC
-====DONE====
+===== 坑163b下发 09:56:54 =====
+替换完成+语法OK
+铁律A:1 铁律B:1 兜底:1
 =====完=====
