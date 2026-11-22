@@ -1,16 +1,13 @@
-287675
+287676
 HEALPAT='bash /root/azar_session_heal.[s]h'
-echo "[0] 清理前:"; pgrep -f "$HEALPAT" | head -5
-# 全部杀干净
-for p in $(pgrep -f "$HEALPAT"); do kill -9 "$p" 2>/dev/null; done
-sleep 2
-rm -rf /root/.session_heal.lock* /root/.session_heal 2>/dev/null
-echo "[1] 清理后剩余:"; pgrep -f "$HEALPAT" | wc -l
-# 只起一个
-setsid nohup bash /root/azar_session_heal.sh >> /root/session_heal.log 2>&1 < /dev/null &
-sleep 4
-echo "[2] 启动后进程数(期望1):"; pgrep -f "$HEALPAT" | wc -l
-pgrep -f "$HEALPAT" | head -3
-echo "[3] 新日志尾(应无报错,有启动行):"; tail -3 /root/session_heal.log 2>/dev/null
-echo "[4] RUNDIR文件:"; ls /root/.session_heal/ 2>/dev/null
+echo "===== 两进程启动时间/父PID ====="
+for p in $(pgrep -f "$HEALPAT"); do
+  echo "PID $p PPid=$(awk '{print $4}' /proc/$p/stat 2>/dev/null) 启动=$(( $(date +%s) - $(stat -c %Y /proc/$p 2>/dev/null) ))秒前"
+done
+echo "===== 谁持flock锁(fuser) ====="
+fuser /root/.session_heal.lock.flock 2>&1 | tr ' ' '\n' | grep -E '^[0-9]+$' | while read p; do echo "  持锁PID=$p cmd=$(tr '\0' ' ' </proc/$p/cmdline 2>/dev/null)"; done
+echo "===== 完整新日志(最后8行带时间) ====="
+tail -8 /root/session_heal.log 2>/dev/null
+echo "===== 是否有别的watchdog在拉heal ====="
+grep -rln 'session_heal' /root/*.sh /etc/cron* /var/spool/cron 2>/dev/null | head -10
 echo "=====完====="
