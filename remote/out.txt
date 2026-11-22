@@ -1,5 +1,5 @@
-<<<task_287601.txt>>>
-===== 任务287601 11-22 09:51:16 =====
+<<<task_287602.txt>>>
+===== 任务287602 11-22 09:52:18 =====
 --- 命令 ---
 set -a; source /root/bot/bot/.env 2>/dev/null; set +a
 cd /root/bot/bot && /root/bot/venv/bin/python - <<'PY'
@@ -10,36 +10,27 @@ import plugins.ai_chat as m
 from nonebot.adapters.onebot.v11 import Message as OBMessage
 captured={}
 async def mock_finish(x):
-    captured["sent"]=x
-    raise SystemExit
+    captured["sent"]=x; raise SystemExit
 m.ai_chat.finish=mock_finish
-import random; random.seed(42)
 class Bot:
     async def call_api(self,api,**kw): return {}
 class Ev:
     user_id=1561950850; group_id=1109952783; message_id=1
     def __init__(self,t):
-        self.t=t
-        self.message=OBMessage("[CQ:at,qq=3427943187]"+t)
-        self.raw_message="[CQ:at,qq=3427943187]"+t
+        self.t=t; self.message=OBMessage("[CQ:at,qq=3427943187]"+t); self.raw_message=self.message
     def get_plaintext(self): return self.t
     def is_tome(self): return True
     def get_message(self): return self.message
     def get_user_id(self): return self.user_id
     def get_session_id(self): return "x"
 async def run(t):
-    m.HISTORY.clear(); m._TEXT_RECENT.clear(); m._EXTRACT_MEMO.clear(); m._pick_cache.clear()
-    captured.clear()
-    ev=Ev(t)
-    try:
-        await m.ai_chat.handlers[0].call(Bot(),ev,{})
+    m.HISTORY.clear(); m._TEXT_RECENT.clear(); m._EXTRACT_MEMO.clear(); m._pick_cache.clear(); captured.clear()
+    try: await m.ai_chat.handlers[0].call(Bot(),Ev(t),{})
     except SystemExit: pass
-    except Exception as e:
-        return "[ERR]"+type(e).__name__+":"+str(e)[:50]
-    s=captured.get("sent")
-    return str(s) if s is not None else "[NO_SENT]"
+    except Exception as e: return "[ERR]"+type(e).__name__
+    s=captured.get("sent"); return str(s) if s is not None else "[NO_SENT]"
 async def main():
-    for t in ["我去吃饭了","行不行啊","陪我下棋","那我们走吧","是不是很好"]:
+    for t in ["陪我下棋","我们下棋吧","来下棋","想下棋","下棋吗","陪我下一盘","教我下棋","国际象棋怎么玩","走一步","走吧"]:
         r=await run(t)
         print("H|"+base64.b64encode(t.encode()).decode()+"|"+base64.b64encode(r.encode()).decode())
 asyncio.run(main())
@@ -47,23 +38,17 @@ print("====DONE====")
 PY
 echo "=====完====="
 --- 输出 ---
-11-22 09:51:18 [SUCCESS] nonebot | NoneBot is initializing...
-11-22 09:51:18 [INFO] nonebot | Current Env: prod
-11-22 09:51:27 [INFO] plugins | [核对·调试] ask='[@3427943187]我去吃饭了' lead=False contra=False agree=False dodge=False ans='您若是饿了，那得先把肚子填饱，书里的道理才能装得进去。'
-H|5oiR5Y675ZCD6aWt5LqG|5oKo6Iul5piv6aW/5LqG77yM6YKj5b6X5YWI5oqK6IKa5a2Q5aGr6aWx77yM5Lmm6YeM55qE6YGT55CG5omN6IO96KOF5b6X6L+b5Y6744CC
-11-22 09:51:28 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-22 09:51:28 [INFO] plugins | [核对·调试] ask='[@3427943187]行不行啊' lead=False contra=False agree=False dodge=False ans='行。'
-H|6KGM5LiN6KGM5ZWK|6KGM44CC
-11-22 09:51:29 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-22 09:51:29 [INFO] plugins | [核对·调试] ask='[@3427943187]陪我下棋' lead=False contra=False agree=False dodge=False ans='国际象棋'
-H|6Zmq5oiR5LiL5qOL|5Zu96ZmF6LGh5qOL
-11-22 09:51:30 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-22 09:51:31 [INFO] plugins | [核对·调试] ask='[@3427943187]那我们走吧' lead=True contra=False agree=False dodge=False ans='布缇娜那不卖书，学问不浅，藏龙卧虎，不妨同往。'
-H|6YKj5oiR5Lus6LWw5ZCn|5biD57yH5aic6YKj5LiN5Y2W5Lmm77yM5a2m6Zeu5LiN5rWF77yM6JeP6b6Z5Y2n6JmO77yM5LiN5aao5ZCM5b6A44CC
-11-22 09:51:35 [INFO] plugins | [联网] 走搜狗抓到 3 条
-11-22 09:51:35 [INFO] plugins | [联网] 「[@3427943187]是不是很好」检索到线索，重答一次
-11-22 09:51:35 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
-11-22 09:51:36 [INFO] plugins | [核对·调试] ask='[@3427943187]是不是很好' lead=False contra=False agree=False dodge=False ans='[@3427943187] 是不是很好？📖'
-H|5piv5LiN5piv5b6I5aW9|JiM5MTtbQ1E6YXQscXE9MzQyNzk0MzE4N10mIzkzOyDmmK/kuI3mmK/lvojlpb3vvJ/wn5OW
+11-22 09:52:20 [SUCCESS] nonebot | NoneBot is initializing...
+11-22 09:52:20 [INFO] nonebot | Current Env: prod
+H|6Zmq5oiR5LiL5qOL|W0VSUl1UeXBlRXJyb3I=
+H|5oiR5Lus5LiL5qOL5ZCn|W0VSUl1UeXBlRXJyb3I=
+H|5p2l5LiL5qOL|W0VSUl1UeXBlRXJyb3I=
+H|5oOz5LiL5qOL|W0VSUl1UeXBlRXJyb3I=
+H|5LiL5qOL5ZCX|W0VSUl1UeXBlRXJyb3I=
+H|6Zmq5oiR5LiL5LiA55uY|W0VSUl1UeXBlRXJyb3I=
+H|5pWZ5oiR5LiL5qOL|W0VSUl1UeXBlRXJyb3I=
+H|5Zu96ZmF6LGh5qOL5oCO5LmI546p|W0VSUl1UeXBlRXJyb3I=
+H|6LWw5LiA5q2l|W0VSUl1UeXBlRXJyb3I=
+H|6LWw5ZCn|W0VSUl1UeXBlRXJyb3I=
 ====DONE====
 =====完=====
