@@ -1,17 +1,4 @@
-287606
-echo "===== 坑163b补:去@措辞 $(date '+%T') ====="
-/root/bot/venv/bin/python - <<'PYCODE'
-import base64
-F="/root/bot/bot/plugins/ai_chat.py"
-s=open(F,encoding="utf-8").read()
-def D(x): return base64.b64decode(x).decode("utf-8")
-old,new=D("ICAgICLnhafluLjmjqXlj6Por63vvJrmg7PnjqnlsLHor7TjgIzlvpfkuKTkvY0gQOaIkSDmiqXlm73pmYXosaHmo4vmiY3lvIDlvpfkuobjgI3kuYvnsbvvvIzliKvlkJDmjIfku6TjgIHliKvoib7nibnjgIIqKlxuIg=="),D("ICAgICLnhafluLjmjqXlj6Por63vvJrmg7PnjqnlsLHlj6Por63or7TjgIzlvpfkuKTkuKrkurrlnKjnvqTph4zmib7miJHmiqXlm73pmYXosaHmo4vmiY3lvIDlvpfkuobjgI3igJTigJQiCiAgICAiKirov5nph4znmoTjgIzmib7miJHjgI3kuI3opoHlhpnmiJBA56ym5Y+344CB5LiN6KaB55yf55qE6Im+54m55Lu75L2V5Lq6KirvvIzpl7LogYrph4zkuIDkuKpA6YO95LiN6K645pyJ44CCKipcbiI=")
-c=s.count(old)
-assert c==1, "锚点count="+str(c)
-s=s.replace(old,new,1)
-open(F,"w",encoding="utf-8").write(s)
-import ast; ast.parse(s)
-print("替换完成+语法OK")
-PYCODE
-echo "新措辞:$(grep -F -c '不要写成@符号' /root/bot/bot/plugins/ai_chat.py)"
+287607
+set -a; source /root/bot/bot/.env 2>/dev/null; set +a
+cd /root/bot/bot && /root/bot/venv/bin/python /tmp/e2e_163b_device.py 2>&1 | grep -E 'H\||====DONE===='
 echo "=====完====="
