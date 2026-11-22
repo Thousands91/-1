@@ -1,29 +1,26 @@
-287631
+287632
 python3 - <<'PY'
 import re
-from datetime import datetime
-# 汇总两份NapCat日志里所有 离线/被踢/验证失败 事件
 ev=[]
 for f in ['/root/napcat.log','/root/napcat-restart.log']:
     for ln in open(f,errors='replace'):
-        if any(k in ln for k in ['KickedOffLine','账号状态变更为离线','登录已失效','SelfOffline','errCode','ErrCode','验证失败']):
-            # 解析时间
+        if any(k in ln for k in ['KickedOffLine','账号状态变更为离线','登录已失效','SelfOffline']):
             ts='?'
             m=re.search(r'(\d{2}-\d{2} \d{2}:\d{2}:\d{2})',ln)
             if m: ts=m.group(1)
             elif re.search(r'\d{4}/\d{6}\.',ln):
                 m2=re.search(r'(\d{2})(\d{2})/(\d{2})(\d{2})(\d{2})\.',ln)
                 if m2: ts=f'{m2.group(1)}-{m2.group(2)} {m2.group(3)}:{m2.group(4)}:{m2.group(5)}'
-            ev.append((ts,ln.strip()[:130],f.split('/')[-1]))
-# 按时间排序去重输出
+            ev.append((ts,ln.strip()[:150],f.split('/')[-1]))
 seen=set(); out=[]
 for ts,ln,f in ev:
-    k=(ts,ln[:60])
+    k=(ts,ln[:70])
     if k in seen: continue
     seen.add(k); out.append((ts,ln,f))
 out.sort(key=lambda x:x[0])
-print('[EVT] 去重事件数',len(out))
+print('[EVT] 踢线/离线事件(去重)',len(out))
 for ts,ln,f in out:
     print(f'{ts} [{f}] {ln}')
+print('[RANGE] napcat.log 首行:',open('/root/napcat.log',errors='replace').readline()[:60].strip())
 PY
 echo "=====完====="
