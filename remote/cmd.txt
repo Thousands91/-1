@@ -1,11 +1,5 @@
-287639
-echo "===== [1] 设备persona文件 ====="
-ls -la /root/bot/bot/persona/__init__.py 2>/dev/null
-md5sum /root/bot/bot/persona/__init__.py 2>/dev/null
-echo "===== [2] 设备上是否有新锚点(改前应为0) ====="
-printf '四十二本='; grep -c '四十二本' /root/bot/bot/persona/__init__.py 2>/dev/null
-printf '怪诞的书='; grep -c '怪诞的书' /root/bot/bot/persona/__init__.py 2>/dev/null
-printf 'NOT老写法四十来本='; grep -c '四十来本' /root/bot/bot/persona/__init__.py 2>/dev/null
-echo "===== [3] ai_chat.py 是否内嵌了persona(应是从文件import) ====="
-grep -n 'from persona import\|AZAR_PERSONA =' /root/bot/bot/plugins/ai_chat.py 2>/dev/null | head -5
-echo "=====完====="
+287640
+echo "=====PERSONA_B64_BEGIN====="
+base64 -w0 /root/bot/bot/persona/__init__.py
+echo ""
+echo "=====PERSONA_B64_END====="
