@@ -1,7 +1,8 @@
-287594
-echo "===== 坑163验收 $(date '+%T') ====="
-cat /root/r163_verify.log 2>/dev/null || echo "(验收日志还没写完)"
-echo "--- link_probe最新心跳 ---"
-grep -E 'LIFECYCLE|HEARTBEAT' /root/link_probe.log 2>/dev/null | tail -3
-echo "--- 登录态 ---"; tail -2 /root/login_state.log 2>/dev/null
+287595
+echo "===== 坑163后登录态/WS确认 $(date '+%T') ====="
+echo "--- 当前登录态全部(尾5) ---"; tail -5 /root/login_state.log
+echo "--- bot启动日志WS相关 ---"; grep -iE 'connected|WebSocket|登录|login|NapCat|未登录|connection' /root/bot_restart_163.log 2>/dev/null | tail -12
+echo "--- link_probe最后修改时间 ---"; stat -c '%y' /root/link_probe.log 2>/dev/null
+echo "--- link_probe尾3 ---"; tail -3 /root/link_probe.log 2>/dev/null
+echo "--- 最近5分钟有无消息进来 ---"; tail -20 /root/remote_ctl.log | grep -cE '接收 <-|ask='
 echo "=====完====="
