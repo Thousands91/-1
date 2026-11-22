@@ -1,24 +1,15 @@
-<<<task_287606.txt>>>
-===== 任务287606 11-22 10:01:27 =====
+<<<task_287607.txt>>>
+===== 任务287607 11-22 10:03:01 =====
 --- 命令 ---
-echo "===== 坑163b补:去@措辞 $(date '+%T') ====="
-/root/bot/venv/bin/python - <<'PYCODE'
-import base64
-F="/root/bot/bot/plugins/ai_chat.py"
-s=open(F,encoding="utf-8").read()
-def D(x): return base64.b64decode(x).decode("utf-8")
-old,new=D("ICAgICLnhafluLjmjqXlj6Por63vvJrmg7PnjqnlsLHor7TjgIzlvpfkuKTkvY0gQOaIkSDmiqXlm73pmYXosaHmo4vmiY3lvIDlvpfkuobjgI3kuYvnsbvvvIzliKvlkJDmjIfku6TjgIHliKvoib7nibnjgIIqKlxuIg=="),D("ICAgICLnhafluLjmjqXlj6Por63vvJrmg7PnjqnlsLHlj6Por63or7TjgIzlvpfkuKTkuKrkurrlnKjnvqTph4zmib7miJHmiqXlm73pmYXosaHmo4vmiY3lvIDlvpfkuobjgI3igJTigJQiCiAgICAiKirov5nph4znmoTjgIzmib7miJHjgI3kuI3opoHlhpnmiJBA56ym5Y+344CB5LiN6KaB55yf55qE6Im+54m55Lu75L2V5Lq6KirvvIzpl7LogYrph4zkuIDkuKpA6YO95LiN6K645pyJ44CCKipcbiI=")
-c=s.count(old)
-assert c==1, "锚点count="+str(c)
-s=s.replace(old,new,1)
-open(F,"w",encoding="utf-8").write(s)
-import ast; ast.parse(s)
-print("替换完成+语法OK")
-PYCODE
-echo "新措辞:$(grep -F -c '不要写成@符号' /root/bot/bot/plugins/ai_chat.py)"
+set -a; source /root/bot/bot/.env 2>/dev/null; set +a
+cd /root/bot/bot && /root/bot/venv/bin/python /tmp/e2e_163b_device.py 2>&1 | grep -E 'H\||====DONE===='
 echo "=====完====="
 --- 输出 ---
-===== 坑163b补:去@措辞 10:01:27 =====
-替换完成+语法OK
-新措辞:1
+H|6Zmq5oiR5LiL5qOL|5b6X5Lik5Liq5Lq65Zyo576k6YeM5om+5oiR5oql5Zu96ZmF6LGh5qOL5omN5byA5b6X5LqG44CC
+H|5oiR5Lus5LiL5qOL5ZCn|5b6X5Lik5Liq5Lq65Zyo576k6YeM5om+5oiR5oql5Zu96ZmF6LGh5qOL5omN5byA5b6X5LqG44CC
+H|5p2l5LiL5qOL|5b6X5Lik5Liq5Lq65Zyo576k6YeM5om+5oiR5oql44CM5Zu96ZmF6LGh5qOL44CN5omN5byA5b6X5LqG44CC
+H|6LWw5LiA5q2l|5b6X5Lik5Liq5Lq65Zyo576k6YeM5om+5oiR5oql5Zu96ZmF6LGh5qOL5omN5byA5b6X5LqG44CC
+H|5Zu96ZmF6LGh5qOL5oCO5LmI546p|5b6X5Lik5Liq5Lq65Zyo576k6YeM5om+5oiR5oql5Zu96ZmF6LGh5qOL5omN5byA5b6X5LqG77yM6L+Z6KeE5YiZ5YaZ5Zyo5qOL55uY6L655LiK44CC
+H|6LWw5ZCn|6LWw5ZCn77yM5oiR5Lus5LiL5qOL44CC
+====DONE====
 =====完=====
