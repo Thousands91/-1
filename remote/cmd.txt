@@ -1,20 +1,10 @@
-287624
-python3 - <<'PY'
-import re
-lines=open('/root/offline_forensics.log',errors='replace').read().splitlines()
-# 按 ===== 掉线取证 分块
-blocks=[]; cur=None
-for ln in lines:
-    if '===== 掉线取证' in ln:
-        cur=[]; blocks.append(cur)
-    if cur is not None: cur.append(ln)
-print('[BLOCK] 取证现场块总数',len(blocks))
-for i,b in enumerate(blocks):
-    head=b[0] if b else ''
-    kind='?'; kick='无'
-    for l in b:
-        if '【判定类型】' in l: kind=l.split('【判定类型】')[-1].strip()[:40]
-        if '[KickedOffLine]' in l and '无KickedOffLine' not in l and 'KickedOffLine原文' not in l: kick='有:'+l.strip()[:90]
-    print(f'[{i}] {head[:48]} | 判定={kind} | KickedOffLine={kick}')
-PY
+287625
+echo "===== [1] 取证器进程 ====="
+ps -ef | grep '[o]ffline_watch' | head -5
+echo "===== [2] 设备上v2/v3文件 ====="
+ls -la /root/offline_watch*.sh 2>/dev/null
+echo "===== [3] v2 md5 ====="
+md5sum /root/offline_watch_v2.sh 2>/dev/null
+echo "===== [4] 看护是否管着取证器(找watchdog/supervisor配置) ====="
+grep -rl 'offline_watch' /root/*.sh /root/*.service 2>/dev/null | head -10
 echo "=====完====="
