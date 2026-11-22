@@ -1,93 +1,58 @@
-<<<task_287657.txt>>>
-===== 任务287657 11-22 14:03:14 =====
+<<<task_287658.txt>>>
+===== 任务287658 11-22 14:05:51 =====
 --- 命令 ---
-echo "===== [A] tick 13:12~13:18 逐条(每分钟) ====="
-grep '^2026-11-22 13:1[2-8]:' /root/tick.log 2>/dev/null
-echo "===== [B] NapCat 13:13~13:18 全部事件(含ErrCode,看是否踢线) ====="
-grep -hE '^11-22 13:1[3-8]:' /root/napcat.log /root/napcat-restart.log 2>/dev/null | head -25
-echo "===== [C] 13:17取证块 判定+扩展段 ====="
-python3 - <<'PY'
-lines=open('/root/offline_forensics.log',errors='replace').read().splitlines()
-blocks=[]; cur=None
-for ln in lines:
-    if '===== 掉线取证' in ln: cur=[]; blocks.append(cur)
-    if cur is not None: cur.append(ln)
-b=blocks[-1] if blocks else []
-for l in b:
-    if any(k in l for k in ['EVIDENCE','判定类型','③b','③ ','KickedOffLine','账号状态','登录已失效','功能限制','身份验证','冻结','GPU','心跳','13:1']):
-        print(l[:160])
-PY
-echo "===== [D] 现在登录态 ====="
-date '+%F %T'; bash /root/logincheck.sh 2>/dev/null | grep -E '\[在线\]|\[未登录\]|\[掉线\]' | head -1
+echo "===== [1] 权限/设备环境 ====="
+id | head -1
+echo "机型:"; getprop ro.product.model 2>/dev/null; echo "Android:"; getprop ro.build.version.release 2>/dev/null
+echo "===== [2] 现有保活相关脚本/进程 ====="
+ls -la /root/*.sh 2>/dev/null | grep -iE 'guard|wake|keep|alive|autoheal|link|login|qnap' | head -30
+echo "--- 相关进程 ---"
+ps -ef | grep -iE '[a]zar_guard|[w]ake|[k]eepalive|[a]utoheal|[l]ink_probe' | head -20
+echo "===== [3] WakeLock 持有情况 ====="
+dumpsys power 2>/dev/null | grep -iE 'PARTIAL_WAKE_LOCK|wakefulness|Display Power|mHolding' | head -15
+echo "===== [4] WiFi休眠策略(值含义:1=始终连接 2=仅插电 0=从不) ====="
+settings get global wifi_sleep_policy 2>/dev/null
+echo "===== [5] 电池优化白名单(看是否有qq/napcat/termux) ====="
+dumpsys deviceidle whitelist 2>/dev/null | grep -iE 'qq|napcat|termux|bot' | head -15
+echo "(空=没加白名单)"
+echo "===== [6] NapCat运行方式/手机QQ进程 ====="
+ps -ef | grep -iE '[n]apcat|[N]apCat|[q]q|[m]obileqq' | head -15
+echo "===== [7] 快速登录相关文件 ====="
+ls -la /root/ 2>/dev/null | grep -iE 'quick|login|relogin|token|session' | head -20
 echo "=====完====="
 --- 输出 ---
-===== [A] tick 13:12~13:18 逐条(每分钟) =====
-2026-11-22 13:12:44
-2026-11-22 13:13:44
-2026-11-22 13:14:47
-2026-11-22 13:17:45
-2026-11-22 13:18:46
-===== [B] NapCat 13:13~13:18 全部事件(含ErrCode,看是否踢线) =====
-11-22 13:13:49 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
-11-22 13:13:51 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-22 13:13:52 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 你不去玩欢愉之女吗？
-11-22 13:13:52 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-22 13:13:53 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-22 13:13:54 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
-11-22 13:13:57 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 我不去玩欢愉之女，我只是去搜集消息。您若真去玩，那便是另一回事了。
-11-22 13:14:15 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
-11-22 13:14:20 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
-11-22 13:14:23 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-22 13:14:24 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-22 13:14:25 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 都去了欢愉之馆怎么能不玩欢愉之女呢
-11-22 13:14:43 [[32minfo[39m] 阿萨尔 | 发送 -> 私聊 (1561950850) 欢愉之馆里有欢愉之女，也有消息。我去，是为了后者。
-11-22 13:15:00 [[31merror[39m] 阿萨尔 | 发生错误 Error: Timeout: NTEvent serviceAndMethod:NodeIKernelMsgService/sendMsg ListenerName:NodeIKernelMsgListener/onMsgInfoListUpdate EventRet:
-11-22 13:16:49 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-11-22 13:16:57 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 你要去玩一玩欢愉之女，说不定欢愉之女会说出特别的消息
-11-22 13:16:58 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) ？
-11-22 13:17:49 [[33mwarn[39m] 阿萨尔 | [Core] [Login] 账号已离线，正在重启 Worker 以重新创建 QQ 登录服务 {"result":true,"message":"进程重启请求已发送"}
-11-22 13:17:49 [[33mwarn[39m] [NapCat] [Process] 进程 10240 仍在运行，尝试强制杀掉
-11-22 13:17:53 [[32minfo[39m] [NapCat] [Process] 已清理残留进程: PID 10231 (GPU)
-11-22 13:17:53 [[32minfo[39m] [NapCat] [Process] 已清理残留进程: PID 10241 (Utility)
-11-22 13:17:55 [[32minfo[39m] [PacketHandler] 加载成功
-11-22 13:17:55 [[32minfo[39m] [Napi2NativeLoader] 加载成功
-11-22 13:17:55 [[32minfo[39m] [FFmpeg] 检查 Native Addon 可用性...
-11-22 13:17:55 [[32minfo[39m] [FFmpeg] ✓ 使用 Native Addon 适配器
-===== [C] 13:17取证块 判定+扩展段 =====
-[EVIDENCE id=20261122_131706_CST kind=静默离线(SelfOffline/status20)-窗口内未见踢线原文 verdict=静默离线(SelfOffline/status20)-窗口内未见踢线原文]
-【判定类型】静默离线(SelfOffline/status20)-窗口内未见踢线原文
-【触发原文】11-22 13:16:49 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-【采集时刻】2026-11-22 13:17:14 CST
-静默离线(最新): 11-22 13:16:49
-GPU崩溃(最新): 11-22 12:57:07
-结论: GPU崩溃(11-22 12:57:07) 早于 静默离线(11-22 13:16:49) → GPU可能是诱因,重点排查内存/GPU
----- ② 完整时间轴(离线/被踢/GPU,按时间排序) ----
-11-22 12:57:07 | GPU崩溃 | [24708:1122/125707.223862:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-11-22 12:57:07 | GPU崩溃 | [24708:1122/125707.227557:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-11-22 12:57:07 | GPU崩溃 | [24708:1122/125707.230323:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-11-22 12:57:07 | GPU崩溃 | [24708:1122/125707.233621:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
-11-22 12:57:07 | GPU崩溃 | [24708:1122/125707.235390:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
-11-22 13:16:49 | 静默离线(status20) | 11-22 13:16:49 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
----- ③b 扩展提示扫描(本次窗口±120s,账号/登录/风控类全部留痕) ----
-11-22 13:16:49 | 11-22 13:16:49 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
----- ③ 被踢原因字段(本次窗口±60s的KickedOffLine原文) ----
-(本次窗口内未见KickedOffLine原文——注意:这只说明抓取时点日志里没有,不等于腾讯没踢;证据等级=未采到)
----- ④ 网络心跳(事发前后) ----
-11-22 13:10:31 ping=17.8ms batt=
-11-22 13:11:31 ping=20.0ms batt=
-11-22 13:12:31 ping=FAILms batt=
-11-22 13:13:33 ping=FAILms batt=
-11-22 13:14:36 ping=FAILms batt=
-11-22 13:16:00 ping=FAILms batt=
- 13:17:33 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
-[11-22 02:37:11.434] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
-[11-22 12:59:29.609] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
-[11-22 13:17:14.351] HEARTBEAT 状态跳变 online=False good=True 自启动累计心跳=35 self_id=3427943187
-登录态台账尾: 2026-11-22 13:01:31 状态变化: [未登录] -> [在线] 2026-11-22 13:06:31 [在线] 2026-11-22 13:11:32 [在线] 
-11-22 13:16:49 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-11-22 13:16:57 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 你要去玩一玩欢愉之女，说不定欢愉之女会说出特别的消息
-11-22 13:16:58 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) ？
-===== [D] 现在登录态 =====
-2026-11-22 14:03:14
-[未登录] 当前没有有效会话
+===== [1] 权限/设备环境 =====
+uid=0(root) gid=0(root) groups=0(root),3003(aid_inet),9997(aid_everybody),20643(aid_u0_a643_cache),50643(aid_all_a643)
+机型:
+TEL-AN00a
+Android:
+10
+===== [2] 现有保活相关脚本/进程 =====
+-rwxr-xr-x 1 root root  7226 Nov 20 12:05 /root/azar_autoheal.sh
+-rwxr-xr-x 1 root root  3471 Nov 19 00:50 /root/azar_guard.sh
+-rwxr-xr-x 1 root root  3460 Nov  3 20:24 /root/azar_login.sh
+-rwxr-xr-x 1 root root   462 Nov 13 11:41 /root/login_watch.sh
+-rwxr-xr-x 1 root root  1036 Nov  1 01:23 /root/logincheck.sh
+--- 相关进程 ---
+aid_u0_+ 17138     1  0  2023 ?        00:00:23 bash /root/azar_autoheal.sh
+aid_u0_+ 27977 26021  0  2023 pts/1    00:00:00 bash /data/data/com.termux/files/home/asar_keepalive.sh
+===== [3] WakeLock 持有情况 =====
+===== [4] WiFi休眠策略(值含义:1=始终连接 2=仅插电 0=从不) =====
+===== [5] 电池优化白名单(看是否有qq/napcat/termux) =====
+(空=没加白名单)
+===== [6] NapCat运行方式/手机QQ进程 =====
+aid_u0_+  3777  3744  0  2023 ?        00:00:00 grep -iE [n]apcat|[N]apCat|[q]q|[m]obileqq
+aid_u0_+ 10178 10172  0  2023 ?        00:00:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+aid_u0_+ 10197 10178  0  2023 ?        00:01:02 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
+aid_u0_+ 10199 10197  0  2023 ?        00:00:00 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+aid_u0_+ 10200 10197  0  2023 ?        00:00:00 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
+aid_u0_+ 17780 10197  0  2023 ?        00:16:14 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --no-sandbox --disable-dev-shm-usage --enable-crash-reporter=ed95f686-be11-4e04-b899-7fe984b06b7b,no_channel --user-data-dir=/root/.config/QQ --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,14948092369491454982,15184374026698565505,262144 --enable-features=PdfUseShowSaveFilePicker --disable-features=LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708990997080739
+aid_u0_+ 17781 10199  0  2023 ?        00:00:00 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+aid_u0_+ 17784 10197  0  2023 ?        00:00:00 /proc/self/exe --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --no-sandbox --disable-dev-shm-usage --enable-crash-reporter=ed95f686-be11-4e04-b899-7fe984b06b7b,no_channel --user-data-dir=/root/.config/QQ --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,14948092369491454982,15184374026698565505,262144 --enable-features=PdfUseShowSaveFilePicker --disable-features=LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708992871164437
+===== [7] 快速登录相关文件 =====
+-rwxr-xr-x  1 root root    3460 Nov  3 20:24 azar_login.sh
+-rw-r--r--  1 root root     835 Nov 12 13:06 azar_login_run.log
+-rw-r--r--  1 root root   66180 Nov 22 14:02 login_state.log
+-rwxr-xr-x  1 root root     462 Nov 13 11:41 login_watch.sh
+-rwxr-xr-x  1 root root    1036 Nov  1 01:23 logincheck.sh
 =====完=====
