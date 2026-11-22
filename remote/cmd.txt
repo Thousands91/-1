@@ -1,16 +1,16 @@
-287596
-echo "===== rc.sh diag 回传静默四查 $(date '+%F %T') ====="
-echo "---[1]循环日志尾(循环死活+失败原文)---"
-tail -15 /root/remote_ctl.log
-echo "---[2]小包PUT手测(一锤定音通道好坏)---"
-TOK=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
-curl -s -o /dev/null -w "api.github.com HTTP:%{http_code} 耗时:%{time_total}s\n" --max-time 15 https://api.github.com
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" https://api.github.com/repos/Thousands91/-1/contents/remote/out.txt | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
-curl -s -o /dev/null -w "PUT out.txt HTTP:%{http_code} 耗时:%{time_total}s\n" --max-time 30 -X PUT -H "Authorization: token $TOK" https://api.github.com/repos/Thousands91/-1/contents/remote/out.txt -d "{\"message\":\"diag probe\",\"content\":\"ZGlhZ19wcm9iZQ==\",\"sha\":\"$SHA\",\"branch\":\"main\"}"
-echo "---[3]git push手测(non-fast-forward=仓库不同步)---"
-cd /root/asar-sync && git push origin main 2>&1 | tail -3
-echo "---[4]水位(任务被谁消费)---"
-cat /root/.remote_last 2>/dev/null; echo
-echo "---[判据]tick.log心跳(60s连续=CPU没冻)---"
-tail -3 /root/tick.log 2>/dev/null
-echo "=====四查完毕,拿到结果前不许说冻结====="
+287597
+echo "===== 掉线原因诊断 $(date '+%F %T') ====="
+echo "---[1]login_state完整尾(看你从几点未登录的)---"
+tail -12 /root/login_state.log
+echo "---[2]NapCat登录相关日志(被踢/过期/扫码/离线)---"
+for f in /root/napcat-restart.log /root/remote_ctl.log; do
+  [ -f "$f" ] || continue
+  echo "== $f =="
+  grep -iE 'Kicked|离线|下线|掉线|登录态|login|二维码|QRCode|expired|过期|token|ws close|disconnect|未登录|在线' "$f" 2>/dev/null | tail -20
+done
+echo "---[3]NapCat进程在不在---"
+ps -eo pid,etime,args | grep -iE '[n]apcat|[q]q-node|[g]o-cqhttp|node' | head -10
+echo "---[4]bot进程在不在---"
+ps -eo pid,etime,args | grep '[m]ain.py'
+echo "---[5]设备当前时间---"; date '+%F %T'
+echo "=====完====="
