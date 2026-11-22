@@ -1,62 +1,34 @@
-<<<task_287623.txt>>>
-===== 任务287623 11-22 12:28:50 =====
+<<<task_287624.txt>>>
+===== 任务287624 11-22 12:30:20 =====
 --- 命令 ---
-echo "===== [1] NapCat 相关日志文件(名称/大小/时间) ====="
-ls -la /root/*.log /root/napcat*/**/*.log /root/Napcat/**/*.log 2>/dev/null | grep -iE 'napcat|qq|offline|forensic' | head -60
-echo "===== [2] 所有 .bak 备份 ====="
-find /root -maxdepth 4 -type f \( -name '*.bak*' -o -name '*bak_*' \) 2>/dev/null | head -60
-echo "===== [3] 各日志中 KickedOffLine 计数 ====="
-for f in $(find /root -maxdepth 4 -type f \( -name '*.log' -o -name '*.bak*' \) 2>/dev/null | grep -iE 'napcat|offline|qq' | head -40); do
-  c=$(grep -c 'KickedOffLine' "$f" 2>/dev/null)
-  [ "${c:-0}" -gt 0 ] && echo "$c  $f"
-done
+python3 - <<'PY'
+import re
+lines=open('/root/offline_forensics.log',errors='replace').read().splitlines()
+# 按 ===== 掉线取证 分块
+blocks=[]; cur=None
+for ln in lines:
+    if '===== 掉线取证' in ln:
+        cur=[]; blocks.append(cur)
+    if cur is not None: cur.append(ln)
+print('[BLOCK] 取证现场块总数',len(blocks))
+for i,b in enumerate(blocks):
+    head=b[0] if b else ''
+    kind='?'; kick='无'
+    for l in b:
+        if '【判定类型】' in l: kind=l.split('【判定类型】')[-1].strip()[:40]
+        if '[KickedOffLine]' in l and '无KickedOffLine' not in l and 'KickedOffLine原文' not in l: kick='有:'+l.strip()[:90]
+    print(f'[{i}] {head[:48]} | 判定={kind} | KickedOffLine={kick}')
+PY
 echo "=====完====="
 --- 输出 ---
-===== [1] NapCat 相关日志文件(名称/大小/时间) =====
--rw-r--r-- 1 root root 1467957 Nov 22 12:28 /root/napcat-restart.log
--rw-r--r-- 1 root root  675277 Nov 22 06:34 /root/napcat.log
--rw-r--r-- 1 root root   40638 Nov 22 03:10 /root/offline_forensics.log
--rw-r--r-- 1 root root    2394 Nov 22 03:10 /root/offline_watch2.log
-===== [2] 所有 .bak 备份 =====
-/root/bot/bot/plugins/song_request.py.bak.trace
-/root/bot/bot/plugins/song_request.py.bak_287361
-/root/bot/bot/plugins/song_request.py.bak_287370
-/root/bot/bot/plugins/games.py.bak_287385
-/root/bot/bot/plugins/ai_chat.py.bak_287391
-/root/bot/bot/plugins/games.py.bak_287391
-/root/bot/bot/plugins/song_request.py.bak_287396
-/root/bot/bot/plugins/chess_game.py.bak_0412_1458
-/root/bot/bot/plugins/weather.py.bak_weather_1534
-/root/bot/bot/plugins/ai_chat.py.bak_quote_2051
-/root/bot/bot/plugins/ai_chat.py.bak_quote156_2137
-/root/bot/bot/plugins/ai_chat.py.bak_quote159_11212205
-/root/bot/bot/plugins/song_request.py.bak_vip160_11212227
-/root/bot/bot/plugins/song_request.py.bak_vip160b
-/root/bot/bot/plugins/ai_chat.py.bak_ac161
-/root/bot/bot/plugins/bak_162_0235
-/root/bot/bot/plugins/bak_163_0919
-/root/bot/bot/plugins/bak_163_v2
-/root/bot/bot/plugins/bak_163b
-/root/music_sign.py.bak.ups
-/root/health_probe_v1.bak
-/root/health_probe_v2.bak
-/root/health_probe_v3.bak
-/root/remote_ctl_v6.sh.bak_11171855
-/root/music_sign.py.bak_v3
-/root/music_sign.py.bak_pre_kugou
-/root/bot.log.20261118.bak
-/root/music_sign_v4.bak
-/root/music_sign_v5.bak
-/root/music_sign_v6.bak
-/root/music_sign_v7.bak
-/root/music_sign_v8.bak
-/root/offline_watch_v1.bak
-/root/remote_ctl_v6.sh.bak_fix29_11201416
-/root/music_sign.py.bak_jump_11211305
-/root/music_sign.py.bak_official_11211426
-/root/music_sign.py.bak_selfplayer_11212153
-===== [3] 各日志中 KickedOffLine 计数 =====
-1  /root/napcat.log
-1  /root/offline_watch2.log
-22  /root/offline_forensics.log
+[BLOCK] 取证现场块总数 9
+[0] ===== 掉线取证 v2.0 2026-11-19 12:41:46 CST ===== | 判定=自检-模拟静默离线(SelfOffline) | KickedOffLine=无
+[1] ===== 掉线取证 v2.0 2026-11-19 13:08:56 CST ===== | 判定=自检-模拟静默离线(SelfOffline) | KickedOffLine=无
+[2] ===== 掉线取证 v2.0 2026-11-19 14:39:02 CST ===== | 判定=静默离线(SelfOffline/status20)-服务端作废会话无原因码 | KickedOffLine=无
+[3] ===== 掉线取证 v2.0 2026-11-19 22:45:57 CST ===== | 判定=静默离线(SelfOffline/status20)-服务端作废会话无原因码 | KickedOffLine=无
+[4] ===== 掉线取证 v2.0 2026-11-20 12:00:49 CST ===== | 判定=静默离线(SelfOffline/status20)-服务端作废会话无原因码 | KickedOffLine=无
+[5] ===== 掉线取证 v2.0 2026-11-21 20:36:47 CST ===== | 判定=静默离线(SelfOffline/status20)-服务端作废会话无原因码 | KickedOffLine=无
+[6] ===== 掉线取证 v2.0 2026-11-21 22:28:30 CST ===== | 判定=静默离线(SelfOffline/status20)-服务端作废会话无原因码 | KickedOffLine=无
+[7] ===== 掉线取证 v2.0 2026-11-22 02:11:51 CST ===== | 判定=静默离线(SelfOffline/status20)-服务端作废会话无原因码 | KickedOffLine=无
+[8] ===== 掉线取证 v2.0 2026-11-22 03:10:31 CST ===== | 判定=真被踢(KickedOffLine)-腾讯下发原因见③ | KickedOffLine=有:11-22 03:10:24 [[31merror[39m] 阿萨尔 | [KickedOffLine] [下线通知] 你的账号当前登录已失效，请重新登录。
 =====完=====
