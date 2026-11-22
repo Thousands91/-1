@@ -1,27 +1,25 @@
-<<<task_287635.txt>>>
-===== 任务287635 11-22 12:56:56 =====
+<<<task_287636.txt>>>
+===== 任务287636 11-22 12:58:24 =====
 --- 命令 ---
-echo "[1] md5(期望 a1a14c7fcd09e37a96e2dc33e931e438):"
-md5sum /root/offline_watch.sh 2>/dev/null
-echo "[2] 语法:"; bash -n /root/offline_watch.sh && echo SYNTAX_OK
-echo "[3] 标记:"
-printf '扩展段='; grep -c '③b 扩展提示扫描' /root/offline_watch.sh
-printf 'EXT_KEYS='; grep -c 'EXT_KEYS=' /root/offline_watch.sh
-printf 'v3.1='; grep -c 'v3.1' /root/offline_watch.sh
-echo "[4] 备份:"; ls -la /root/offline_watch.sh.bak_v31pre_* 2>/dev/null | tail -1
-echo "[5] 当前进程(旧PID应为30107):"; ps -ef | grep '[o]ffline_watch.[s]h' | head -2
+PAT='bash /root/offline_watch.[s]h'
+OLD=$(pgrep -f "$PAT" | head -3)
+echo "[0] 重启前PID: $OLD"
+for p in $OLD; do kill "$p" 2>/dev/null; done
+sleep 2
+rm -rf /root/.offline_watch_v2.lock /root/.offline_watch_v3.lock 2>/dev/null
+setsid nohup bash /root/offline_watch.sh >> /root/offline_watch2.log 2>&1 < /dev/null &
+sleep 3
+echo "[1] 重启后PID:"; pgrep -f "$PAT" | head -3
+echo "[2] 启动日志尾(v3.1基线):"; tail -2 /root/offline_watch3.log 2>/dev/null
+echo "[3] 登录态:"; bash /root/logincheck.sh 2>/dev/null | grep -E '\[在线\]|\[未登录\]|\[掉线\]' | head -1
 echo "=====完====="
 --- 输出 ---
-[1] md5(期望 a1a14c7fcd09e37a96e2dc33e931e438):
-a1a14c7fcd09e37a96e2dc33e931e438  /root/offline_watch.sh
-[2] 语法:
-SYNTAX_OK
-[3] 标记:
-扩展段=1
-EXT_KEYS=1
-v3.1=5
-[4] 备份:
--rwxr-xr-x 1 root root 9796 Nov 22 12:55 /root/offline_watch.sh.bak_v31pre_11221255
-[5] 当前进程(旧PID应为30107):
-aid_u0_+ 30107     1  0  2023 ?        00:00:00 bash /root/offline_watch.sh
+[0] 重启前PID: 30107
+[1] 重启后PID:
+10445
+[2] 启动日志尾(v3.1基线):
+[11-22 12:41:43] ===== 取证器v3.0启动 基线:静默=2 被踢=1 日志A=/root/napcat.log 日志B=/root/napcat-restart.log =====
+[11-22 12:58:26] ===== 取证器v3.1启动 基线:静默=0 被踢=0 日志A=/root/napcat.log 日志B=/root/napcat-restart.log =====
+[3] 登录态:
+[未登录] 当前没有有效会话
 =====完=====
