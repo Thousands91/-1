@@ -1,34 +1,27 @@
-<<<task_287624.txt>>>
-===== 任务287624 11-22 12:30:20 =====
+<<<task_287625.txt>>>
+===== 任务287625 11-22 12:34:27 =====
 --- 命令 ---
-python3 - <<'PY'
-import re
-lines=open('/root/offline_forensics.log',errors='replace').read().splitlines()
-# 按 ===== 掉线取证 分块
-blocks=[]; cur=None
-for ln in lines:
-    if '===== 掉线取证' in ln:
-        cur=[]; blocks.append(cur)
-    if cur is not None: cur.append(ln)
-print('[BLOCK] 取证现场块总数',len(blocks))
-for i,b in enumerate(blocks):
-    head=b[0] if b else ''
-    kind='?'; kick='无'
-    for l in b:
-        if '【判定类型】' in l: kind=l.split('【判定类型】')[-1].strip()[:40]
-        if '[KickedOffLine]' in l and '无KickedOffLine' not in l and 'KickedOffLine原文' not in l: kick='有:'+l.strip()[:90]
-    print(f'[{i}] {head[:48]} | 判定={kind} | KickedOffLine={kick}')
-PY
+echo "===== [1] 取证器进程 ====="
+ps -ef | grep '[o]ffline_watch' | head -5
+echo "===== [2] 设备上v2/v3文件 ====="
+ls -la /root/offline_watch*.sh 2>/dev/null
+echo "===== [3] v2 md5 ====="
+md5sum /root/offline_watch_v2.sh 2>/dev/null
+echo "===== [4] 看护是否管着取证器(找watchdog/supervisor配置) ====="
+grep -rl 'offline_watch' /root/*.sh /root/*.service 2>/dev/null | head -10
 echo "=====完====="
 --- 输出 ---
-[BLOCK] 取证现场块总数 9
-[0] ===== 掉线取证 v2.0 2026-11-19 12:41:46 CST ===== | 判定=自检-模拟静默离线(SelfOffline) | KickedOffLine=无
-[1] ===== 掉线取证 v2.0 2026-11-19 13:08:56 CST ===== | 判定=自检-模拟静默离线(SelfOffline) | KickedOffLine=无
-[2] ===== 掉线取证 v2.0 2026-11-19 14:39:02 CST ===== | 判定=静默离线(SelfOffline/status20)-服务端作废会话无原因码 | KickedOffLine=无
-[3] ===== 掉线取证 v2.0 2026-11-19 22:45:57 CST ===== | 判定=静默离线(SelfOffline/status20)-服务端作废会话无原因码 | KickedOffLine=无
-[4] ===== 掉线取证 v2.0 2026-11-20 12:00:49 CST ===== | 判定=静默离线(SelfOffline/status20)-服务端作废会话无原因码 | KickedOffLine=无
-[5] ===== 掉线取证 v2.0 2026-11-21 20:36:47 CST ===== | 判定=静默离线(SelfOffline/status20)-服务端作废会话无原因码 | KickedOffLine=无
-[6] ===== 掉线取证 v2.0 2026-11-21 22:28:30 CST ===== | 判定=静默离线(SelfOffline/status20)-服务端作废会话无原因码 | KickedOffLine=无
-[7] ===== 掉线取证 v2.0 2026-11-22 02:11:51 CST ===== | 判定=静默离线(SelfOffline/status20)-服务端作废会话无原因码 | KickedOffLine=无
-[8] ===== 掉线取证 v2.0 2026-11-22 03:10:31 CST ===== | 判定=真被踢(KickedOffLine)-腾讯下发原因见③ | KickedOffLine=有:11-22 03:10:24 [[31merror[39m] 阿萨尔 | [KickedOffLine] [下线通知] 你的账号当前登录已失效，请重新登录。
+===== [1] 取证器进程 =====
+aid_u0_+ 17145     1  0  2023 ?        00:01:15 bash /root/offline_watch.sh
+===== [2] 设备上v2/v3文件 =====
+-rwxr-xr-x 1 root root 8870 Nov 19 13:15 /root/offline_watch.sh
+-rwxr-xr-x 1 root root 8870 Nov 19 13:15 /root/offline_watch_v2.sh
+===== [3] v2 md5 =====
+dda2a6e53e8d3d308c2a2eef7ed38214  /root/offline_watch_v2.sh
+===== [4] 看护是否管着取证器(找watchdog/supervisor配置) =====
+/root/offline_watch.sh
+/root/offline_watch_v2.sh
+/root/remote_ctl_v6.sh
+/root/setup.sh
+/root/start_all.sh
 =====完=====
