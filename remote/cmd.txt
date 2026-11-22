@@ -1,7 +1,7 @@
-287690
-echo "===== 设备文件md5核查 $(date '+%F %T') ====="
-cd /root/bot/bot
-md5sum doudizhu_engine.py plugins/doudizhu.py plugins/image_search_multisource.py plugins/keyword_reply.py plugins/ai_chat.py plugins/fortune.py 2>&1
-echo "---os/bot目录确认---"
-ls -la /root/bot/bot/main.py /root/bot/venv/bin/python 2>&1
-echo "=====完====="
+287691
+echo "=====通道探测 $(date '+%F %T') ====="
+echo "[心跳tick]"; tail -3 /root/tick.log 2>/dev/null || echo "无tick"
+echo "[遥控循环]"; pgrep -af 'remote_ctl.[s]h' | head -2 || echo "无遥控循环"
+echo "[bot]"; pgrep -af 'venv/bin/python main.[p]y' | head -1 | cut -c1-60 || echo "无bot"
+echo "[QQ]"; pgrep -fc '/QQ/[q]q' || echo 0
+echo "=====探测完====="
