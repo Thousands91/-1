@@ -1,8 +1,10 @@
-287659
-echo "===== [1] asar_keepalive.sh (Termux正在跑) ====="
-cat /data/data/com.termux/files/home/asar_keepalive.sh 2>/dev/null | head -90
-echo "===== [2] azar_guard.sh ====="
-cat /root/azar_guard.sh 2>/dev/null | head -90
-echo "===== [3] login_watch.sh ====="
-cat /root/login_watch.sh 2>/dev/null | head -40
+287660
+echo "===== [1] azar_guard.sh 全文(45行后) ====="
+sed -n '45,120p' /root/azar_guard.sh 2>/dev/null
+echo "===== [2] guard_status 最近20行 ====="
+tail -20 /root/guard_status.txt 2>/dev/null
+echo "===== [3] 被踢标记是否存在 ====="
+ls -la /root/.guard_kicked 2>/dev/null && echo "标记内容:" && cat /root/.guard_kicked 2>/dev/null || echo "无被踢标记"
+echo "===== [4] azar_login.sh 全文 ====="
+cat /root/azar_login.sh 2>/dev/null | head -80
 echo "=====完====="
