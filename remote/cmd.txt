@@ -1,12 +1,3 @@
-287681
-N=0
-for d in /proc/[0-9]*; do
-  cl=$(tr '\0' ' ' < "$d/cmdline" 2>/dev/null)
-  case "$cl" in "bash /root/azar_session_heal.sh "*) N=$((N+1)); echo "HEALPID=${d#/proc/}" ;; esac
-done
-echo "COUNT=$N"
-echo "PIDFILE=$(cat /root/.session_heal.lock.pid 2>/dev/null)"
-echo "RUNDIR=$(ls /root/.session_heal/ 2>/dev/null | tr '\n' ',')"
-echo "LOGTAIL=$(tail -1 /root/session_heal.log 2>/dev/null)"
-echo "LOGIN=$(bash /root/logincheck.sh 2>/dev/null | grep -oE '\[(在线|未登录|掉线)\]' | head -1)"
+287682
+echo PING_OK_$(date +%H%M%S)
 echo "=====完====="
