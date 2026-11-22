@@ -1,28 +1,17 @@
-<<<task_287688.txt>>>
-===== 任务287688 11-23 03:41:14 =====
+<<<task_287689.txt>>>
+===== 任务287689 11-23 03:46:45 =====
 --- 命令 ---
-echo "=====极简核查 $(date '+%H:%M:%S') ====="
-echo "[登录态]"; tail -3 /root/login_state.log 2>/dev/null
-echo "[bot日志关键行]"; grep -E "Succeeded|Failed|connected|等待扫码|Login successful|Error" /root/bot.log 2>/dev/null | tail -8
-echo "[二维码]"; stat -c '%y %s字节' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null || echo 无
-echo "[进程计数] 遥控=$(pgrep -fc 'remote_ctl.[s]h') bot=$(pgrep -fc 'venv/bin/python main.[p]y') qq=$(pgrep -fc '/QQ/[q]q')"
-echo "=====完====="
+echo "=====二维码取回 $(date '+%H:%M:%S') ====="
+echo "---相册副本是否存在---"
+ls -la /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null || echo "相册无副本"
+echo "---二维码base64(供沙箱取图)---"
+base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null | head -c 4000
+echo ""
+echo "=====取回完====="
 --- 输出 ---
-=====极简核查 03:41:14 =====
-[登录态]
-2026-11-22 14:33:23 [未登录]
-2026-11-22 14:38:28 [未登录]
-2026-11-22 14:43:30 [未登录]
-[bot日志关键行]
-11-23 03:31:01 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
-11-23 03:31:01 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-23 03:31:01 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-11-23 03:31:01 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
-11-23 03:31:01 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
-11-23 03:31:01 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
-11-23 03:31:01 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
-11-23 03:31:01 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
-[二维码]
-2026-11-23 03:41:13.250000000 +0800 598字节
-[进程计数] 遥控=4 bot=4 qq=8
-=====完=====
+=====二维码取回 03:46:45 =====
+---相册副本是否存在---
+-rw-rw---- 1 root aid_everybody 598 Nov 22 12:58 /sdcard/DCIM/Camera/asar_qr.png
+---二维码base64(供沙箱取图)---
+iVBORw0KGgoAAAANSUhEUgAAAJMAAACTAQAAAACinha4AAAACXBIWXMAAAsTAAALEwEAmpwYAAACCklEQVRIid2WTY6kMAyFjbLIjlwgUq6RXa4EF+DnAnCl7HKNSFyA7LKI8DyabnVLvcGa1UyEquArCdl+9nMR/z70X7OTaKxEWu0pm0idhBVuk24z3lPtnPAoYdEOnvfKJVmTaBSyMak1NQp5lLPJH3ulybdZyriNUS3kLrLdd26v2F2/ZD+vHzV9w3BKaoN2a1LlW8tX7PKZvNs5TwHvzqOMuU2ri9zKdggyBrmmkClYXKbSLGEnuSXkLlnyfAXbSRi+idwZHDOUV6uE4WmNjqva8Lv+nI+3TJNB7QmtqkpyRcIKo3IH7npNXVK7iEW0mLp0G/yx1ieWtwx5QGpTUXi3x0e310xbExWSOANa1a0SVj6muYut9xlDxhJ26jZ5KAYzyISgJIwrbz4PnuaKlnn65S07CXm4DdPJzbA1EobJKEwjnAwNq5+ZfstQ+F4jHBrCgftZxo5Fq9PDDHIfjl3EdCad4UCGVYlfWr5jV+BNYz7aEGjwQkbwg2ODl1QFHXYJ48QbqSWg2fn+lLBSsd/sWHmFYddDxGAhe2oIp0S1+cdL3jIYtmF4mMNoEtlZwnBQ/t7fTTqyWyXsY5+jZdSp4UN2ljDst0HniSAaCiBk2KvBTnDBCFMhI2SD5oVojvBdx0KGwsM+t3DXoIgY8rhXHMZaQfNdwhA78kD4K8NRlIj9zf+6f4/9ARclD/BaTBz2AAAAAElFTkSuQmCC
+=====取回完=====
