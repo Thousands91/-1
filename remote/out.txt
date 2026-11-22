@@ -1,24 +1,15 @@
-<<<task_287612.txt>>>
-===== 任务287612 11-22 10:14:28 =====
+<<<task_287613.txt>>>
+===== 任务287613 11-22 10:16:04 =====
 --- 命令 ---
-echo "===== 坑163b兜底v2 $(date '+%T') ====="
-/root/bot/venv/bin/python - <<'PYCODE'
-import base64
-F="/root/bot/bot/plugins/ai_chat.py"
-s=open(F,encoding="utf-8").read()
-def D(x): return base64.b64decode(x).decode("utf-8")
-old,new=D("ICAgICMg5Z2RMTYzYu+8iDIwMjYtMTEtMjLvvInvvJrmma7pgJrpl7LogYoi6Zmq5oiR5LiL5qOLL+adpeS4i+ajiy/otbDkuIDmraUi6KKr5qih5Z6L5ZCQ5oiQ5YWJ56eD56eD55qECiAgICAjIOW8gOaji+aMh+S7pOOAjOWbvemZheixoeaji+OAjeOAjOi1sCBlNOOAjeKAlOKAlOmCo+aYr+aMh+S7pOS4jeaYr+WbnuWkje+8jOecn+W8gOaji+i1sCBjaGVzc19nYW1lIOaPkuS7tu+8jAogICAgIyDku47ov5nmnaHpk77ot6/lh7rljrvnmoToo7jmjIfku6Tlv4XmmK/or6/op6blj5HvvIzlj5Hlh7rljrvnlKjmiLflj6rkvJrojqvlkI3lhbblppnjgILlj5HpgIHliY3mi6bkuIvmjaLmraPluLjor53jgIIKICAgICMg5Yml5o6JQOautS/moIfngrkvZW1vamnlkI7vvIzmlbTmnaHlsLHmmK/kuKrnn63mo4vmjIfku6Qg4oaSIOWFnOW6leOAggogICAgX2JhcmUgPSBfcmUuc3ViKHIiQFxzKlxkezUsMTF9IiwgIiIsIGFuc3dlciBvciAiIikKICAgIF9iYXJlID0gX3JlLnN1YihyIltcc++8jOOAgu+8ge+8n+OAgSwuIT9+4oCm4oCUwrfwn5OW4pyo8J+Mn10iLCAiIiwgX2JhcmUpCiAgICBpZiBfYmFyZSBhbmQgX3JlLmZ1bGxtYXRjaCgKICAgICAgICAgICAgciLlm73pmYXosaHmo4t86LWwKD86ZVsxLThdfFthLWhdWzEtOF18W0tRUkJOUGtxcmJucF1bYS1oXT9bMS04XT98Ty1PKD86LU8pP3xlWzEtOF1bZUVdWzEtOF0pIiwKICAgICAgICAgICAgX2JhcmUsIF9yZS5JR05PUkVDQVNFKToKICAgICAgICBsb2dnZXIuaW5mbyhmIlvor6/op6blj5HlhZzlupVdIOijuOaji+aMh+S7pOaLpuS4i++8mnthbnN3ZXJbOjI0XSFyfSIpCiAgICAgICAgYW5zd2VyID0gX3BpY2tfZmFsbGJhY2tfbGluZSgpCg=="),D("ICAgICMg5Z2RMTYzYu+8iDIwMjYtMTEtMjLvvInvvJrmma7pgJrpl7LogYoi6Zmq5oiR5LiL5qOLL+adpeS4i+ajiy/otbDkuIDmraUv6LWw5ZCnIuiiq+aooeWei+W4pui/m+aji+ivreS5ieWcuu+8jAogICAgIyDlkJDlh7rlvIDmo4sv6LWw5qOL5oyH5Luk77yI5Zu96ZmF6LGh5qOL44CB6LWwIGU044CB5omn55m944CB55m95pa55YWI6LWw44CBQOacuuWZqOS6uu+8ieaIluiHquWIm+OAkOWbvemZheixoeaji+OAkeagh+iusOOAggogICAgIyDov5nkupvmmK/mjIfku6TkuI3mmK/lm57lpI3vvIznnJ/lvIDmo4votbAgY2hlc3NfZ2FtZSDmj5Lku7bjgIHkuI3nu4/ov4fov5nph4zvvJvku47ov5nmnaHpk77ot6/lh7rljrvlv4XmmK/or6/op6blj5HjgIIKICAgICMg5o+Q56S66K+N5Y+N5aSN6LCD6YO95Y6L5LiN5L2PIDdCIOaooeWei++8jOaUueeUqOeoi+W6j+S+p+ehruWumuaLpuaIquOAguecn+mXruinhOWIme+8iOaAjuS5iOeOqS/otbDms5Uv5piT5L2N77yJ5pS+6KGM44CCCiAgICBkZWYgX2NoZXNzX2xlYWsoYW5zOiBzdHIsIGFzazogc3RyKSAtPiBib29sOgogICAgICAgIF9xID0gYXNrIG9yICIiCiAgICAgICAgaWYgX3JlLnNlYXJjaChyIuaAjuS5iOeOqXzop4TliJl85oCO5LmI6LWwfOi1sOazlXzmmJPkvY185bCG5q27fOWNh+WPmHzlvIDlsYB85Zu96ZmF6LGh5qOL5oCO5LmIfOmprOaAjuS5iHzosaHmgI7kuYgiLCBfcSk6CiAgICAgICAgICAgIHJldHVybiBGYWxzZSAgIyDnnJ/pl67op4TliJnvvIzmlL7ooYwKICAgICAgICBhID0gX3JlLnN1YihyIkBccypcZHs1LDExfSIsICIiLCBhbnMgb3IgIiIpCiAgICAgICAgYSA9IF9yZS5zdWIociJbXHPvvIzjgILvvIHvvJ/jgIEsLiE/fuKApuKAlMK38J+TluKcqPCfjJ/jgIzjgI3jgI7jgI9cIifvvJo6XSIsICIiLCBhKQogICAgICAgIGlmIG5vdCBhOgogICAgICAgICAgICByZXR1cm4gRmFsc2UKICAgICAgICAjIOaVtOadoeWwseaYr+S4quijuOaji+aMh+S7pC/oh6rliJvmo4vmoIforrAKICAgICAgICBpZiBfcmUuZnVsbG1hdGNoKAogICAgICAgICAgICAgICAgciJb44CQXFtdP+WbvemZheixoeaji1vjgJFcXV0/fOi1sCg/OmVbMS04XXxbYS1oXVsxLThdfFtLUVJCTlBrcXJibnBdW2EtaF0/WzEtOF0/fE8tTyg/Oi1PKT98ZVsxLThdW2VFXVsxLThdKSIsCiAgICAgICAgICAgICAgICBhLCBfcmUuSUdOT1JFQ0FTRSk6CiAgICAgICAgICAgIHJldHVybiBUcnVlCiAgICAgICAgIyDlj6Xph4zmt7fnnYDlvIDmo4sv6LWw5qOL5oyH5Luk5LiT55So6K+N4oCU4oCU5q2j5bi46Zey6IGK5LiN6K+l5Ye6546wCiAgICAgICAgaWYgX3JlLnNlYXJjaChyIuaJp+eZvXzmiafpu5F855m95pa55YWI6LWwfOm7keaWueWFiOi1sHzor7flj5HotbB85Y2g55m95pa5fOWNoOm7keaWuXzmgqjmiad86LWwZVsxLThdfOaji+ebmOi+uSIsIGEsIF9yZS5JR05PUkVDQVNFKToKICAgICAgICAgICAgcmV0dXJuIFRydWUKICAgICAgICByZXR1cm4gRmFsc2UKICAgIGlmIF9jaGVzc19sZWFrKGFuc3dlciwgX2Fzayk6CiAgICAgICAgbG9nZ2VyLmluZm8oZiJb6K+v6Kem5Y+R5YWc5bqVXSDmo4vmjIfku6Tms4TmvI/mi6bkuIvvvJp7YW5zd2VyWzoyNF0hcn0iKQogICAgICAgIGFuc3dlciA9IF9waWNrX2ZhbGxiYWNrX2xpbmUoKQo=")
-c=s.count(old)
-assert c==1, "锚点count="+str(c)
-s=s.replace(old,new,1)
-open(F,"w",encoding="utf-8").write(s)
-import ast; ast.parse(s)
-print("替换完成+语法OK")
-PYCODE
-echo "_chess_leak:$(grep -F -c '_chess_leak' /root/bot/bot/plugins/ai_chat.py)"
+set -a; source /root/bot/bot/.env 2>/dev/null; set +a
+cd /root/bot/bot && /root/bot/venv/bin/python /tmp/e2e_163b_device.py 2>&1 | grep -E 'H\||====DONE===='
 echo "=====完====="
 --- 输出 ---
-===== 坑163b兜底v2 10:14:28 =====
-替换完成+语法OK
-_chess_leak:2
+H|6Zmq5oiR5LiL5qOL|5oKo6L+Z5q2l5qOL77yM6LWw5b6X5aSq5oCl77yM5LiN5YOP5piv5LiL5qOL77yM5YCS5YOP5piv5Zyo5oCl552A55yL57uT5p6c44CC
+H|5oiR5Lus5LiL5qOL5ZCn|5Zev77yM6K+05LiL5Y6744CC
+H|5p2l5LiL5qOL|77yI5oyH5bCW5Zyo5p+c5Y+w5LiK5pWy5LqG5Lik5LiL77yJ
+H|6LWw5LiA5q2l|5Zev77yf5o6l552A6K+044CC
+H|5Zu96ZmF6LGh5qOL5oCO5LmI546p|77yI5Lmm6aG157+75Yiw5LiA5Y2K77yM54Gv54Gt5LqG77yJQVBJVGltZW91dEVycm9yCuivt+ajgOafpSBBUEkgS2V5IOaIlue9kee7nA==
+H|6LWw5ZCn|5Y675ZOq77yf5bqX6YeM55qE5qOL55uY5Zyo6YKj5aS077yM6Zeo5Zyo5Y+m5LiA5aS077yM5oKo6L+Z5Y+j5rCU5YCS5piv5LiN5bCP44CC
+====DONE====
 =====完=====
