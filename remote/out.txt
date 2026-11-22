@@ -1,34 +1,34 @@
-<<<task_287698.txt>>>
-===== 任务287698 11-23 04:33:12 =====
+<<<task_287699.txt>>>
+===== 任务287699 11-23 04:38:28 =====
 --- 命令 ---
-echo "===== 部署后统一验证 $(date '+%F %T') ====="
-cd /root/bot/bot
-echo "---6文件md5---"
-md5sum doudizhu_engine.py plugins/doudizhu.py plugins/image_search_multisource.py plugins/keyword_reply.py plugins/ai_chat.py plugins/fortune.py 2>&1
-echo "---语法编译---"
-/root/bot/venv/bin/python -m py_compile doudizhu_engine.py plugins/doudizhu.py plugins/image_search_multisource.py plugins/keyword_reply.py plugins/ai_chat.py plugins/fortune.py 2>&1 && echo "全部语法OK" || echo "语法有问题"
-echo "---备份文件在位---"
-ls -1 plugins/*.bak_1123 2>/dev/null | head -10
-echo "---当前bot进程---"
-pgrep -af 'venv/bin/python main.[p]y' | head -2 | cut -c1-70
-echo "=====验证完====="
+echo "===== 重启前PID核查 $(date '+%F %T') ====="
+echo "---main.py进程(精确)---"
+ps -eo pid,ppid,etime,args | grep -E 'venv/bin/python main\.py|python main\.py' | grep -v grep
+echo "---bot工作目录(确认日志位置)---"
+for p in $(pgrep -f 'venv/bin/python main\.py|python main\.py'); do echo "PID=$p cwd=$(readlink /proc/$p/cwd 2>/dev/null)"; done
+echo "---bot日志最后5行---"
+tail -5 /root/bot/bot/bot.log 2>/dev/null || tail -5 /root/bot.log 2>/dev/null
+echo "---登录态---"
+tail -1 /root/login_state.log 2>/dev/null
+echo "=====核查完====="
 --- 输出 ---
-===== 部署后统一验证 2026-11-23 04:33:12 =====
----6文件md5---
-3a2b7c2912e9103f5b92217c633009e4  doudizhu_engine.py
-bf112fbcbf356cbb89a0a15f24e88cae  plugins/doudizhu.py
-8a708131346d57b41f186a2bf0332b64  plugins/image_search_multisource.py
-8a6c579373cf1f0f9e0c4d5768ff7b2c  plugins/keyword_reply.py
-1e55a0df0801ead47e30c7fcb3ca2b55  plugins/ai_chat.py
-c86405ec79a7dad9163cbe3474cf9288  plugins/fortune.py
----语法编译---
-全部语法OK
----备份文件在位---
-plugins/ai_chat.py.bak_1123
-plugins/fortune.py.bak_1123
-plugins/image_search_multisource.py.bak_1123
-plugins/keyword_reply.py.bak_1123
----当前bot进程---
-22621 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2
-22626 bash -c cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat
-=====验证完=====
+===== 重启前PID核查 2026-11-23 04:38:28 =====
+---main.py进程(精确)---
+22621     1       00:00 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/storage --bind=/storage/emulated/0:/sdcard --bind=/storage/emulated/0:/mnt/sdcard --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/system/product --bind=/system --bind=/vendor --bind=/data/data/com.termux/files/usr /bin/bash -c bash -c 'cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & exec sleep infinity'
+22626 22625       00:00 bash -c cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & exec sleep infinity
+22627 22625       00:00 bash -c cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & exec sleep infinity
+22630 22627       00:00 /root/bot/venv/bin/python main.py
+---bot工作目录(确认日志位置)---
+PID=22621 cwd=/
+PID=22626 cwd=/root/Napcat
+PID=22627 cwd=/root/bot/bot
+PID=22630 cwd=/root/bot/bot
+---bot日志最后5行---
+11-22 10:20:32 [INFO] __main__ | ==================================================
+11-22 10:20:32 [INFO] uvicorn | Application startup complete.
+11-22 10:20:32 [ERROR] uvicorn | [Errno 98] error while attempting to bind on address ('0.0.0.0', 8080): address already in use
+11-22 10:20:32 [INFO] uvicorn | Waiting for application shutdown.
+11-22 10:20:32 [INFO] uvicorn | Application shutdown complete.
+---登录态---
+2026-11-22 14:43:30 [未登录]
+=====核查完=====
