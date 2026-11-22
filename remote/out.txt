@@ -1,20 +1,32 @@
-<<<task_287668.txt>>>
-===== 任务287668 11-22 14:23:10 =====
+<<<task_287669.txt>>>
+===== 任务287669 11-22 14:24:45 =====
 --- 命令 ---
-echo "===== start_all.sh 全文 ====="
-cat -A /root/start_all.sh 2>/dev/null | head -10
-echo "===== 当前heal进程(应还没跑) ====="
+HEALPAT='bash /root/azar_session_heal.[s]h'
+# 1) 加入开机自启(方括号隔离,仿autoheal行)
+if ! grep -q 'azar_session_heal.sh' /root/start_all.sh; then
+  echo "pgrep -f 'bash /root/azar_session_heal.[s]h' >/dev/null || ( setsid nohup bash /root/azar_session_heal.sh >> /root/session_heal.log 2>&1 < /dev/null & )" >> /root/start_all.sh
+  echo "[1] 已加入start_all.sh自启"
+else
+  echo "[1] start_all.sh已有该行,跳过"
+fi
+echo "[2] 自启行:"; grep -n 'session_heal' /root/start_all.sh
+# 2) 立即启动
+pgrep -f "$HEALPAT" >/dev/null || ( setsid nohup bash /root/azar_session_heal.sh >> /root/session_heal.log 2>&1 < /dev/null & )
+sleep 3
+echo "[3] 启动后进程:"
 ps -ef | grep '[s]ession_heal' | head -3
+echo "[4] 启动日志:"; tail -3 /root/session_heal.log 2>/dev/null
+echo "[5] 登录态:"; bash /root/logincheck.sh 2>/dev/null | grep -E '\[在线\]|\[未登录\]|\[掉线\]' | head -1
 echo "=====完====="
 --- 输出 ---
-===== start_all.sh 全文 =====
-#!/bin/bash$
-termux-wake-lock$
-nohup proot-distro login ubuntu -- bash -c 'cd /root && nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & nohup bash /root/azar_guard.sh >> /root/azar_guard.log 2>&1 & cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 & cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>python main.py > /root/bot.log 2>&11' > /dev/null 2>&1 &$
-echo ==M-fM-^\M-^MM-eM-^JM-!M-eM-7M-2M-eM-^EM-(M-iM-^CM-(M-fM-^KM-^IM-hM-5M-7==$
-echo M-dM-;M-%M-eM-^PM-^NM-fM-^IM-^KM-fM-^\M-:M-iM-^GM-^MM-eM-^PM-/M-eM-^PM-^N: M-fM-^IM-^SM-eM-<M-^@TermuxM-hM->M-^SM-eM-^EM-% bash start_all.sh M-eM-^MM-3M-eM-^OM-/$
-setsid nohup /root/bot/venv/bin/python /root/music_sign.py > /root/music_sign.log 2>&1 < /dev/null &$
-pgrep -f 'bash /root/azar_autoheal.sh' >/dev/null || ( setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal.log 2>&1 < /dev/null & )$
-pgrep -f 'bash /root/offline_watch.sh' >/dev/null || ( setsid nohup bash /root/offline_watch.sh >> /root/offline_watch2.log 2>&1 < /dev/null & )$
-===== 当前heal进程(应还没跑) =====
+[1] 已加入start_all.sh自启
+[2] 自启行:
+9:pgrep -f 'bash /root/azar_session_heal.[s]h' >/dev/null || ( setsid nohup bash /root/azar_session_heal.sh >> /root/session_heal.log 2>&1 < /dev/null & )
+[3] 启动后进程:
+aid_u0_+ 11103     1  0  2023 ?        00:00:00 bash /root/azar_session_heal.sh
+aid_u0_+ 11139     1  0  2023 ?        00:00:00 bash /root/azar_session_heal.sh
+[4] 启动日志:
+/root/azar_session_heal.sh: line 112: /root/.session_heal/hour: No such file or directory
+[5] 登录态:
+[未登录] 当前没有有效会话
 =====完=====
