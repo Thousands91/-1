@@ -1,34 +1,42 @@
-<<<task_287676.txt>>>
-===== 任务287676 11-22 14:36:31 =====
+<<<task_287677.txt>>>
+===== 任务287677 11-22 14:38:28 =====
 --- 命令 ---
 HEALPAT='bash /root/azar_session_heal.[s]h'
-echo "===== 两进程启动时间/父PID ====="
-for p in $(pgrep -f "$HEALPAT"); do
-  echo "PID $p PPid=$(awk '{print $4}' /proc/$p/stat 2>/dev/null) 启动=$(( $(date +%s) - $(stat -c %Y /proc/$p 2>/dev/null) ))秒前"
-done
-echo "===== 谁持flock锁(fuser) ====="
-fuser /root/.session_heal.lock.flock 2>&1 | tr ' ' '\n' | grep -E '^[0-9]+$' | while read p; do echo "  持锁PID=$p cmd=$(tr '\0' ' ' </proc/$p/cmdline 2>/dev/null)"; done
-echo "===== 完整新日志(最后8行带时间) ====="
-tail -8 /root/session_heal.log 2>/dev/null
-echo "===== 是否有别的watchdog在拉heal ====="
-grep -rln 'session_heal' /root/*.sh /etc/cron* /var/spool/cron 2>/dev/null | head -10
+echo "[0] 清理前进程:"; pgrep -f "$HEALPAT" | head -5
+for p in $(pgrep -f "$HEALPAT"); do kill -9 "$p" 2>/dev/null; done
+sleep 2
+rm -rf /root/.session_heal.lock* /root/.session_heal /root/.session_heal.log 2>/dev/null
+echo "[1] 清理后:"; pgrep -f "$HEALPAT" | wc -l
+echo "IyEvYmluL2Jhc2gKIyBhemFyX3Nlc3Npb25faGVhbC5zaCB2MS4wIOKAlCDkvJror53otoXml7Yo6Z2Z6buY56a757q/KeiHquWKqOaBouWkje+8jOS/neWuiOeGlOaWre+8iDIwMjYtMTEtMjLvvIkKIyDog4zmma/vvJrov5vnqIvmtLvnnYDkvYZRUeWNj+iuruWxguS8muivnei2heaXtijotKblj7fnirbmgIHlj5jmm7TkuLrnprvnur/jgIHml6BLaWNrZWRPZmZMaW5lKT0gIuiEkeatu+S6oSLvvIwKIyAgICAgICDljp9hemFyX2d1YXJkLnNo5Y+q5ZyoUVHov5vnqIvmtojlpLHml7bmiY3mi4notbfvvIwvc2Rr6KaG55uW5LiN5Yiw6L+Z57G777yM5pWF6KGl5pys6ISa5pys44CCCiMg5Y+q5YGa5LiA5Lu25Y+X5Lil5qC857qm5p2f55qE5LqL77ya6Z2Z6buY56a757q/5pe255SoIC1xIOW/q+mAn+eZu+W9lemHjeWQr1FR77yM5oGi5aSN5Lya6K+d44CCCiMKIyDjgJDlronlhajpk4HlvosgLyDnu53kuI3og73ov53lj43jgJEKIyAgMS4g5Ye6546wIEtpY2tlZE9mZkxpbmXvvIjooqvmnI3liqHnq6/ouKLvvIk9IOeZu+W9leaAgeS9nOW6n++8jOiHquWKqOmHjeWQr+aXoOaViOS4lOS8muinpuWPkemjjuaOpyDihpIg5LiA5b6L6Lez6L+H77yM5Y+q5ZGK6K2m44CCCiMgIDIuIOWksei0peeGlOaWre+8mui/nue7rTPmrKHph43lkK/ku43kuIrnur/lpLHotKUg4oaSIOWBnOaJi+WGmeagh+iusO+8jOetieS6uuW3peaJq+egge+8m+e7neS4jeaXoOmZkOmHjeivleOAggojICAzLiDoioLmtYHvvJrkuKTmrKHph43lkK/oh7PlsJHpl7TpmpQ15YiG6ZKf77yb5q+P5bCP5pe25pyA5aSaM+asoeOAggojICA0LiDkuIDml6bliKTliLAgW+WcqOe6v10g4oaSIOeri+WNs+a4hembtuWksei0peiuoeaVsOS4juagh+iusOOAggojICA1LiDlj6rph43lkK8gUVEvTmFwQ2F0IOi/m+eoi++8jOe7neS4jeeisCBib3QgLyDlj5bor4HlmaggLyDnmbvlvZXmgIHmlbDmja7jgIIKIwojIOWPr+azqOWFpeeOr+Wig+WPmOmHj+S+v+S6juaymeeuseiHqua1i++8mgojICAgT1dfTE9HX0EgLyBPV19MT0dfQiAgIOaXpeW/l+i3r+W+hAojICAgT1dfTE9HSU5DSEVDSyAgICAgICAgIOeZu+W9leaAgeWIpOWumuWRveS7pO+8iOi+k+WHuuWQqyBb5Zyo57q/XS9b5o6J57q/XS9b5pyq55m75b2VXe+8iQojICAgT1dfU1RBUlRRUSAgICAgICAgICAgIOmHjeWQr1FR55qE5ZG95LukCiMgICBPV19TVEFURSAvIE9XX0xPQ0sgLyBPV19SVU5ESVIgICDnirbmgIHmlofku7Yv6ZSBL+iuoeaVsOebruW9lQojICAgT1dfRFJZX1JVTj0xICAgICAgICAgIOiHqua1i+aooeW8j++8muS4jeecn+mHjeWQrwojICAgT1dfT05DRT0xICAgICAgICAgICAgIOWPqui3keS4gOi9rgoKU1RBTVAoKSB7IGRhdGUgJyslbS0lZCAlSDolTTolUyc7IH0KCiMgUlVORElSIOW/hemhu+WcqOWNleS+i+mUgeS5i+WJjeW7uuWlvSjpgb/lhY3lubblj5Hml7bnm67lvZXooqvliKDlr7zoh7Tlhpnmlofku7blpLHotKUpClJVTkRJUj0iJHtPV19SVU5ESVI6LS9yb290Ly5zZXNzaW9uX2hlYWx9Igpta2RpciAtcCAiJFJVTkRJUiIgMj4vZGV2L251bGwKCkxPR19BPSIke09XX0xPR19BOi0vcm9vdC9uYXBjYXQubG9nfSIKTE9HX0I9IiR7T1dfTE9HX0I6LS9yb290L25hcGNhdC1yZXN0YXJ0LmxvZ30iClNUQVRFPSIke09XX1NUQVRFOi0vcm9vdC9zZXNzaW9uX2hlYWxfc3RhdGUudHh0fSIKTE9DSz0iJHtPV19MT0NLOi0vcm9vdC8uc2Vzc2lvbl9oZWFsLmxvY2t9IgpEUlk9IiR7T1dfRFJZX1JVTjotMH0iCk9OQ0U9IiR7T1dfT05DRTotMH0iCgpta2RpciAtcCAiJFJVTkRJUiIgMj4vZGV2L251bGwKQ05UPSIkUlVORElSL2ZhaWxfY250IgpIUj0iJFJVTkRJUi9ob3VyIgpMQVNUPSIkUlVORElSL2xhc3RfcmVzdGFydCIKS0lDS0VEPSIkUlVORElSL2tpY2tlZF9mbGFnIgpORUVETUFOPSIkUlVORElSL25lZWRfbWFudWFsIgoKc2F5KCkgeyBlY2hvICJbJChTVEFNUCldICQqIiA+PiAiJFNUQVRFIjsgfQoKIyAtLS0tIOWNleS+i+mUgShQSUTmlofku7YgKyBraWxsIC0wLOS4jeS+nei1lmZsb2NrLOmAgumFjXByb2905paH5Lu257O757ufKSAtLS0tCiMg5a6e5rWLIHByb290L2Z1c2Ug5LiKIGZsb2NrIOaOkuS7luivreS5ieS4jeWPr+mdoCjkuKTov5vnqIvpg73og73miZPlvIDlkIzkuIDplIHmlofku7YpLAojIOaVheaUueeUqCBQSUQg5paH5Lu25a2Y5rS75qOA5rWLOuWQr+WKqOaXtuiLpeW3suacieWtmOa0u+eahOacrOiEmuacrOWunuS+iyznq4vljbPpgIDlh7rjgIIKTVlMT0NLPSIkTE9DSy5waWQiCmlmIFsgLWYgIiRNWUxPQ0siIF07IHRoZW4KICBPTFBJRD0kKHRyIC1kICcgJyA8ICIkTVlMT0NLIiAyPi9kZXYvbnVsbCkKICBpZiBbIC1uICIkT0xQSUQiIF0gJiYgWyAiJE9MUElEIiAhPSAiJCQiIF0gJiYga2lsbCAtMCAiJE9MUElEIiAyPi9kZXYvbnVsbCBcCiAgICAgJiYgdHIgLWQgJ1wwJyA8ICIvcHJvYy8kT0xQSUQvY21kbGluZSIgMj4vZGV2L251bGwgfCBncmVwIC1xICdzZXNzaW9uX2hlYWwnOyB0aGVuCiAgICBleGl0IDAKICBmaQpmaQplY2hvICQkID4gIiRNWUxPQ0siCnRyYXAgJ3JtIC1mICIkTVlMT0NLIiAyPi9kZXYvbnVsbCcgRVhJVAoKIyAtLS0tIOeZu+W9leaAgeWIpOWumu+8mui/lOWbniBvbmxpbmUgfCBvZmZsaW5lIHwgdW5sb2dpbiAtLS0tCmxvZ2luX3N0YXRlKCkgewogIGxvY2FsIG91dAogIGlmIFsgLW4gIiRPV19MT0dJTkNIRUNLIiBdOyB0aGVuCiAgICBvdXQ9JChldmFsICIkT1dfTE9HSU5DSEVDSyIgMj4vZGV2L251bGwpCiAgZWxzZQogICAgb3V0PSQoYmFzaCAvcm9vdC9sb2dpbmNoZWNrLnNoIDI+L2Rldi9udWxsKQogIGZpCiAgY2FzZSAiJG91dCIgaW4KICAgIConW+WcqOe6v10nKikgICBlY2hvIG9ubGluZSA7OwogICAgKidb5o6J57q/XScqKSAgIGVjaG8gb2ZmbGluZSA7OwogICAgKidb5pyq55m75b2VXScqKSBlY2hvIHVubG9naW4gOzsKICAgICopICAgICAgICAgICAgZWNobyB1bmtub3duIDs7CiAgZXNhYwp9CgojIC0tLS0g5pyA6L+RTuWIhumSn+WGheaYr+WQpuaciSBLaWNrZWRPZmZMaW5l77yI6KKr6Lii5Y6f5paH77yJLS0tLQojIOeUqOaXpeW/l+ihjOWGheaXtumXtOaIs+WIpOaWre+8jOmBv+WFjeWOhuWPsuaui+eVmeivr+S8pApoYXNfa2lja19yZWNlbnQoKSB7CiAgbG9jYWwgd2luPSIke09XX0tJQ0tXSU46LTkwMH0iIG5vdyB0cyBhZ2UgZm91bmQ9MCBmIGxuIHlyCiAgbm93PSQoZGF0ZSArJXMpOyB5cj0kKGRhdGUgKyVZKQogIGZvciBmIGluICIkTE9HX0EiICIkTE9HX0IiOyBkbwogICAgWyAtZiAiJGYiIF0gfHwgY29udGludWUKICAgICMg5Y+W5pyA5ZCOMjAw6KGM6YeM5ZCrS2lja2VkT2ZmTGluZeeahAogICAgd2hpbGUgSUZTPSByZWFkIC1yIGxuOyBkbwogICAgICBjYXNlICIkbG4iIGluICpLaWNrZWRPZmZMaW5lKikgOzsgKikgY29udGludWUgOzsgZXNhYwogICAgICB0cz0kKGVjaG8gIiRsbiIgfCBncmVwIC1vRSAnWzAtOV17Mn0tWzAtOV17Mn0gWzAtOV17Mn06WzAtOV17Mn06WzAtOV17Mn0nIHwgaGVhZCAtMSkKICAgICAgWyAteiAiJHRzIiBdICYmIHsgZm91bmQ9MTsgYnJlYWs7IH0KICAgICAgYWdlPSQoZGF0ZSAtZCAiJHlyLSR0cyIgKyVzIDI+L2Rldi9udWxsIHx8IGVjaG8gMCkKICAgICAgaWYgWyAkKChub3ctYWdlKSkgLWxlICIkd2luIiBdOyB0aGVuIGZvdW5kPTE7IGJyZWFrOyBmaQogICAgZG9uZSA8IDwodGFpbCAtMjAwICIkZiIgMj4vZGV2L251bGwpCiAgICBbICIkZm91bmQiID0gMSBdICYmIGJyZWFrCiAgZG9uZQogIGVjaG8gIiRmb3VuZCIKfQoKIyAtLS0tIOmHjeWQr1FR77yI5b+r6YCf55m75b2V77yJLS0tLQpzdGFydF9xcSgpIHsKICBpZiBbICIkRFJZIiA9IDEgXTsgdGhlbgogICAgc2F5ICJEUllfUlVOOiDmqKHmi5/ph43lkK9RUSgtceW/q+mAn+eZu+W9lSkiCiAgICByZXR1cm4gMAogIGZpCiAgaWYgWyAtbiAiJE9XX1NUQVJUUVEiIF07IHRoZW4KICAgIGV2YWwgIiRPV19TVEFSVFFRIiA+PiAiJFNUQVRFIiAyPiYxCiAgZWxzZQogICAgKCBjZCAvcm9vdC9OYXBjYXQgJiYgc2V0c2lkIG5vaHVwIHh2ZmItcnVuIC1hIC9yb290L05hcGNhdC9vcHQvUVEvcXEgLXEgMzQyNzk0MzE4NyAtLW5vLXNhbmRib3ggLS1kaXNhYmxlLWdwdSAtLWRpc2FibGUtc29mdHdhcmUtcmFzdGVyaXplciAtLWRpc2FibGUtZGV2LXNobS11c2FnZSAtLWpzLWZsYWdzPS0tbWF4LW9sZC1zcGFjZS1zaXplPTUxMiA+PiAvcm9vdC9uYXBjYXQtcmVzdGFydC5sb2cgMj4mMSA8IC9kZXYvbnVsbCAmICkKICBmaQp9CgpjYW5fcmVzdGFydCgpIHsKICBsb2NhbCBub3cgTFIgSCBDSCBIMiBDIFJDCiAgbm93PSQoZGF0ZSArJXMpCiAgIyDnhpTmlq3moIforrDvvJrov57nu60z5qyh5aSx6LSl5ZCO5YGc5omLCiAgWyAtZiAiJE5FRURNQU4iIF0gJiYgcmV0dXJuIDEKICAjIOi3neS4iuasoemHjeWQr+iHs+WwkTXliIbpkp8KICBMUj0kKGNhdCAiJExBU1QiIDI+L2Rldi9udWxsIHx8IGVjaG8gMCkKICBbICQoKG5vdy1MUikpIC1sdCAzMDAgXSAmJiByZXR1cm4gMQogICMg5q+P5bCP5pe25pyA5aSaM+asoQogIEg9JChkYXRlICslSCkKICByZWFkIEMgSDIgPCAiJEhSIiAyPi9kZXYvbnVsbCB8fCB7IEM9MDsgSDI9JEg7IH0KICBbICIkSCIgIT0gIiRIMiIgXSAmJiB7IEM9MDsgSDI9JEg7IH0KICBbICIkQyIgLWdlIDMgXSAmJiByZXR1cm4gMQogIGVjaG8gIiQoKEMrMSkpICRIMiIgPiAiJEhSIgogIGVjaG8gIiRub3ciID4gIiRMQVNUIgogIHJldHVybiAwCn0KCnJlc2V0X29rKCkgewogIGVjaG8gMCA+ICIkQ05UIjsgcm0gLWYgIiRLSUNLRUQiICIkTkVFRE1BTiIKfQoKc2F5ICLkvJror53mgaLlpI3lmah2MS4w5ZCv5YqoIgoKd2hpbGUgdHJ1ZTsgZG8KICBTVD0kKGxvZ2luX3N0YXRlKQoKICBpZiBbICIkU1QiID0gb25saW5lIF07IHRoZW4KICAgICMg5Zyo57q/77ya5riF6Zu25LiA5YiHCiAgICBpZiBbIC1zICIkQ05UIiBdICYmIFsgIiQoY2F0ICIkQ05UIikiICE9IDAgXSB8fCBbIC1mICIkTkVFRE1BTiIgXTsgdGhlbgogICAgICBzYXkgIuajgOa1i+WIsOWcqOe6v++8jOa4hembtuWksei0peiuoeaVsOS4juagh+iusCIKICAgIGZpCiAgICByZXNldF9vawogIGVsc2UKICAgICMg5LiN5Zyo57q/77ya5YWI55yL5piv5ZCm6KKr6LiiCiAgICBLSUNLPSQoaGFzX2tpY2tfcmVjZW50KQogICAgaWYgWyAiJEtJQ0siID0gMSBdOyB0aGVuCiAgICAgIGlmIFsgISAtZiAiJEtJQ0tFRCIgXTsgdGhlbgogICAgICAgIGVjaG8gIiQoZGF0ZSArJXMpIiA+ICIkS0lDS0VEIgogICAgICAgIHNheSAi56qX5Y+j5YaF5Y+R546wS2lja2VkT2ZmTGluZSjooqvmnI3liqHnq6/ouKIp4oaS6Lez6L+H6Ieq5Yqo5oGi5aSN77yM5Y+q5ZGK6K2m562J5Lq65omr56CBIgogICAgICBmaQogICAgZWxpZiBbIC1mICIkS0lDS0VEIiBdOyB0aGVuCiAgICAgICMg5pu+6KKr6Lii5LiU5bCa5pyq5oGi5aSN5Zyo57q/77ya5Y2z5L2/56qX5Y+j6L+H5Y675Lmf5oyB57ut6Lez6L+H77yM57ud5LiNLXHph43or5Uo6Ziy6aOO5o6nKQogICAgICA6ICAjIOmdmem7mOetieW+heS6uuW3peaJq+eggeaIlueZu+W9leaAgeiHqueEtuaBouWkjQogICAgZWxzZQogICAgICAjIOaXoOiiq+i4oj3pnZnpu5jnprvnur/vvIzlj6/lsJ3or5XmgaLlpI0KICAgICAgaWYgY2FuX3Jlc3RhcnQ7IHRoZW4KICAgICAgICBDPSQoY2F0ICIkQ05UIiAyPi9kZXYvbnVsbCB8fCBlY2hvIDApCiAgICAgICAgc2F5ICLpnZnpu5jnprvnur8oJFNUKe+8jOesrCQoKEMrMSkp5qyh5bCd6K+VLXHlv6vpgJ/nmbvlvZXmgaLlpI0iCiAgICAgICAgc3RhcnRfcXEKICAgICAgICBDPSQoKEMrMSkpOyBlY2hvICIkQyIgPiAiJENOVCIKICAgICAgICAjIOetieS4gOS8muWEv+eci+aYr+WQpuaBouWkjQogICAgICAgIHNsZWVwICIke09XX1dBSVQ6LTIwfSIKICAgICAgICBTVDI9JChsb2dpbl9zdGF0ZSkKICAgICAgICBpZiBbICIkU1QyIiA9IG9ubGluZSBdOyB0aGVuCiAgICAgICAgICBzYXkgIuaBouWkjeaIkOWKn++8jOa4hembtiIKICAgICAgICAgIHJlc2V0X29rCiAgICAgICAgZWxpZiBbICIkQyIgLWdlIDMgXTsgdGhlbgogICAgICAgICAgZWNobyAiJChkYXRlICslcykiID4gIiRORUVETUFOIgogICAgICAgICAgc2F5ICLov57nu60z5qyh5oGi5aSN5aSx6LSl4oaS54aU5pat5YGc5omL77yM5YaZbmVlZF9tYW51YWzmoIforrDvvIznrYnkurrlt6XmiavnoIEiCiAgICAgICAgZWxzZQogICAgICAgICAgc2F5ICLmnKzmrKHmnKrmgaLlpI0o57Sv6K6h5aSx6LSlJEPmrKEp77yM562J5b6F5LiL5qyh56qX5Y+jIgogICAgICAgIGZpCiAgICAgIGZpCiAgICBmaQogIGZpCgogIFsgIiRPTkNFIiA9IDEgXSAmJiBicmVhawogIHNsZWVwIDYwCmRvbmUKZWNobyAiPT09PT3lrow9PT09PSIK" | base64 -d > /root/azar_session_heal.sh
+chmod +x /root/azar_session_heal.sh
+echo "[2] md5(期望 405cba7c51cbfe6ec0d2b17ed9d265f3):"; md5sum /root/azar_session_heal.sh
+bash -n /root/azar_session_heal.sh && echo "[3] 语法OK"
+echo "[4] PID锁标记:"; grep -c 'MYLOCK' /root/azar_session_heal.sh
+# 只起一个
+setsid nohup bash /root/azar_session_heal.sh >> /root/session_heal.log 2>&1 < /dev/null &
+sleep 4
+echo "[5] 进程数(期望1):"; pgrep -f "$HEALPAT" | wc -l
+echo "[6] PID文件:"; cat /root/.session_heal.lock.pid 2>/dev/null
+echo "[7] 日志尾:"; tail -2 /root/session_heal.log 2>/dev/null
+echo "[8] 登录态:"; bash /root/logincheck.sh 2>/dev/null | grep -E '\[在线\]|\[未登录\]|\[掉线\]' | head -1
 echo "=====完====="
 --- 输出 ---
-===== 两进程启动时间/父PID =====
-PID 15323 PPid=1 启动=162秒前
-PID 15360 PPid=1 启动=162秒前
-===== 谁持flock锁(fuser) =====
-  持锁PID=15323 cmd=bash /root/azar_session_heal.sh 
-  持锁PID=15360 cmd=bash /root/azar_session_heal.sh 
-  持锁PID=15361 cmd=/bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 
-  持锁PID=15372 cmd=Xvfb :156 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.3ic7P3/Xauthority 
-  持锁PID=15375 cmd=/root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 
-  持锁PID=15972 cmd=sleep 60 
-===== 完整新日志(最后8行带时间) =====
-/root/azar_session_heal.sh: line 112: /root/.session_heal/hour: No such file or directory
+[0] 清理前进程:
+15323
+15360
+[1] 清理后:
+0
+[2] md5(期望 405cba7c51cbfe6ec0d2b17ed9d265f3):
+405cba7c51cbfe6ec0d2b17ed9d265f3  /root/azar_session_heal.sh
+[3] 语法OK
+[4] PID锁标记:
+5
+[5] 进程数(期望1):
+2
+[6] PID文件:
+17050
+[7] 日志尾:
 /root/azar_session_heal.sh: line 113: /root/.session_heal/hour: No such file or directory
-/root/azar_session_heal.sh: line 113: /root/.session_heal/hour: No such file or directory
-===== 是否有别的watchdog在拉heal =====
-/root/azar_session_heal.sh
-/root/start_all.sh
+/root/azar_session_heal.sh: line 117: /root/.session_heal/hour: No such file or directory
+[8] 登录态:
 =====完=====
