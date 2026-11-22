@@ -1,34 +1,57 @@
-<<<task_287699.txt>>>
-===== 任务287699 11-23 04:38:28 =====
+<<<task_287700.txt>>>
+===== 任务287700 11-23 04:43:45 =====
 --- 命令 ---
-echo "===== 重启前PID核查 $(date '+%F %T') ====="
-echo "---main.py进程(精确)---"
-ps -eo pid,ppid,etime,args | grep -E 'venv/bin/python main\.py|python main\.py' | grep -v grep
-echo "---bot工作目录(确认日志位置)---"
-for p in $(pgrep -f 'venv/bin/python main\.py|python main\.py'); do echo "PID=$p cwd=$(readlink /proc/$p/cwd 2>/dev/null)"; done
-echo "---bot日志最后5行---"
-tail -5 /root/bot/bot/bot.log 2>/dev/null || tail -5 /root/bot.log 2>/dev/null
-echo "---登录态---"
-tail -1 /root/login_state.log 2>/dev/null
-echo "=====核查完====="
+echo "===== 重启大脑 $(date '+%F %T') ====="
+cd /root/bot/bot
+# 精确抓 python main.py 本体PID（方括号防自匹配，锚定venv/bin/python开头排除proot/bash）
+BP=$(ps -eo pid,args | grep "[m]ain.py" | grep "venv/bin/python" | awk '{print $1}')
+echo "旧大脑PID=[$BP]"
+if [ -z "$BP" ]; then echo "【异常】没抓到bot PID,不kill,退出"; exit 1; fi
+OLDPID="$BP"
+# 只kill bot本体,不碰遥控循环/NapCat/proot
+kill "$OLDPID" 2>&1 && echo "已kill旧PID=$OLDPID"
+sleep 3
+# 确认旧进程已退
+if kill -0 "$OLDPID" 2>/dev/null; then echo "旧进程仍在,发TERM后再等"; kill -9 "$OLDPID" 2>/dev/null; sleep 2; fi
+# 重新拉起(setsid脱离会话,>>追加日志)
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot.log 2>&1 < /dev/null &
+sleep 14
+NEWPID=$(ps -eo pid,args | grep "[m]ain.py" | grep "venv/bin/python" | awk '{print $1}')
+echo "新大脑PID=[$NEWPID]"
+if [ -n "$NEWPID" ] && [ "$NEWPID" != "$OLDPID" ]; then echo "【成功】大脑已重启 $OLDPID -> $NEWPID"; else echo "【警告】新PID异常,查日志"; fi
+echo "---启动日志尾(插件加载/connected)---"
+tail -40 /root/bot/bot.log 2>/dev/null | grep -E "Succeeded|Failed|connected|Error|Traceback|加载|doudizhu|关键词" | tail -18
+echo "---进程数(应=1)---"
+ps -eo pid,args | grep "[m]ain.py" | grep "venv/bin/python" | wc -l
+echo "=====重启完====="
 --- 输出 ---
-===== 重启前PID核查 2026-11-23 04:38:28 =====
----main.py进程(精确)---
-22621     1       00:00 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/storage --bind=/storage/emulated/0:/sdcard --bind=/storage/emulated/0:/mnt/sdcard --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/system/product --bind=/system --bind=/vendor --bind=/data/data/com.termux/files/usr /bin/bash -c bash -c 'cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & exec sleep infinity'
-22626 22625       00:00 bash -c cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & exec sleep infinity
-22627 22625       00:00 bash -c cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & exec sleep infinity
-22630 22627       00:00 /root/bot/venv/bin/python main.py
----bot工作目录(确认日志位置)---
-PID=22621 cwd=/
-PID=22626 cwd=/root/Napcat
-PID=22627 cwd=/root/bot/bot
-PID=22630 cwd=/root/bot/bot
----bot日志最后5行---
-11-22 10:20:32 [INFO] __main__ | ==================================================
-11-22 10:20:32 [INFO] uvicorn | Application startup complete.
-11-22 10:20:32 [ERROR] uvicorn | [Errno 98] error while attempting to bind on address ('0.0.0.0', 8080): address already in use
-11-22 10:20:32 [INFO] uvicorn | Waiting for application shutdown.
-11-22 10:20:32 [INFO] uvicorn | Application shutdown complete.
----登录态---
-2026-11-22 14:43:30 [未登录]
-=====核查完=====
+===== 重启大脑 2026-11-23 04:43:45 =====
+旧大脑PID=[22621
+22626
+22627
+22630]
+bash: line 9: kill: 22621
+22626
+22627
+22630: arguments must be process or job IDs
+新大脑PID=[22621
+22626
+22627
+22630]
+【警告】新PID异常,查日志
+---启动日志尾(插件加载/connected)---
+11-23 04:43:56 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
+11-23 04:43:58 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-23 04:43:58 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+11-23 04:43:59 [SUCCESS] nonebot | Succeeded to load plugin "doudizhu" from "plugins.doudizhu"
+11-23 04:43:59 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+11-23 04:43:59 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
+11-23 04:43:59 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
+11-23 04:43:59 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
+11-23 04:43:59 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+11-23 04:43:59 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+11-23 04:43:59 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
+11-23 04:43:59 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
+---进程数(应=1)---
+4
+=====重启完=====
