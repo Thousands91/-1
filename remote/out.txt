@@ -1,37 +1,34 @@
-<<<task_287675.txt>>>
-===== 任务287675 11-22 14:33:44 =====
+<<<task_287676.txt>>>
+===== 任务287676 11-22 14:36:31 =====
 --- 命令 ---
 HEALPAT='bash /root/azar_session_heal.[s]h'
-echo "[0] 清理前:"; pgrep -f "$HEALPAT" | head -5
-# 全部杀干净
-for p in $(pgrep -f "$HEALPAT"); do kill -9 "$p" 2>/dev/null; done
-sleep 2
-rm -rf /root/.session_heal.lock* /root/.session_heal 2>/dev/null
-echo "[1] 清理后剩余:"; pgrep -f "$HEALPAT" | wc -l
-# 只起一个
-setsid nohup bash /root/azar_session_heal.sh >> /root/session_heal.log 2>&1 < /dev/null &
-sleep 4
-echo "[2] 启动后进程数(期望1):"; pgrep -f "$HEALPAT" | wc -l
-pgrep -f "$HEALPAT" | head -3
-echo "[3] 新日志尾(应无报错,有启动行):"; tail -3 /root/session_heal.log 2>/dev/null
-echo "[4] RUNDIR文件:"; ls /root/.session_heal/ 2>/dev/null
+echo "===== 两进程启动时间/父PID ====="
+for p in $(pgrep -f "$HEALPAT"); do
+  echo "PID $p PPid=$(awk '{print $4}' /proc/$p/stat 2>/dev/null) 启动=$(( $(date +%s) - $(stat -c %Y /proc/$p 2>/dev/null) ))秒前"
+done
+echo "===== 谁持flock锁(fuser) ====="
+fuser /root/.session_heal.lock.flock 2>&1 | tr ' ' '\n' | grep -E '^[0-9]+$' | while read p; do echo "  持锁PID=$p cmd=$(tr '\0' ' ' </proc/$p/cmdline 2>/dev/null)"; done
+echo "===== 完整新日志(最后8行带时间) ====="
+tail -8 /root/session_heal.log 2>/dev/null
+echo "===== 是否有别的watchdog在拉heal ====="
+grep -rln 'session_heal' /root/*.sh /etc/cron* /var/spool/cron 2>/dev/null | head -10
 echo "=====完====="
 --- 输出 ---
-[0] 清理前:
-13338
-13439
-[1] 清理后剩余:
-0
-[2] 启动后进程数(期望1):
-2
-15323
-15360
-[3] 新日志尾(应无报错,有启动行):
+===== 两进程启动时间/父PID =====
+PID 15323 PPid=1 启动=162秒前
+PID 15360 PPid=1 启动=162秒前
+===== 谁持flock锁(fuser) =====
+  持锁PID=15323 cmd=bash /root/azar_session_heal.sh 
+  持锁PID=15360 cmd=bash /root/azar_session_heal.sh 
+  持锁PID=15361 cmd=/bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 
+  持锁PID=15372 cmd=Xvfb :156 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.3ic7P3/Xauthority 
+  持锁PID=15375 cmd=/root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 
+  持锁PID=15972 cmd=sleep 60 
+===== 完整新日志(最后8行带时间) =====
 /root/azar_session_heal.sh: line 112: /root/.session_heal/hour: No such file or directory
 /root/azar_session_heal.sh: line 113: /root/.session_heal/hour: No such file or directory
 /root/azar_session_heal.sh: line 113: /root/.session_heal/hour: No such file or directory
-[4] RUNDIR文件:
-fail_cnt
-hour
-last_restart
+===== 是否有别的watchdog在拉heal =====
+/root/azar_session_heal.sh
+/root/start_all.sh
 =====完=====
