@@ -1,20 +1,20 @@
-287657
-echo "===== [A] tick 13:12~13:18 逐条(每分钟) ====="
-grep '^2026-11-22 13:1[2-8]:' /root/tick.log 2>/dev/null
-echo "===== [B] NapCat 13:13~13:18 全部事件(含ErrCode,看是否踢线) ====="
-grep -hE '^11-22 13:1[3-8]:' /root/napcat.log /root/napcat-restart.log 2>/dev/null | head -25
-echo "===== [C] 13:17取证块 判定+扩展段 ====="
-python3 - <<'PY'
-lines=open('/root/offline_forensics.log',errors='replace').read().splitlines()
-blocks=[]; cur=None
-for ln in lines:
-    if '===== 掉线取证' in ln: cur=[]; blocks.append(cur)
-    if cur is not None: cur.append(ln)
-b=blocks[-1] if blocks else []
-for l in b:
-    if any(k in l for k in ['EVIDENCE','判定类型','③b','③ ','KickedOffLine','账号状态','登录已失效','功能限制','身份验证','冻结','GPU','心跳','13:1']):
-        print(l[:160])
-PY
-echo "===== [D] 现在登录态 ====="
-date '+%F %T'; bash /root/logincheck.sh 2>/dev/null | grep -E '\[在线\]|\[未登录\]|\[掉线\]' | head -1
+287658
+echo "===== [1] 权限/设备环境 ====="
+id | head -1
+echo "机型:"; getprop ro.product.model 2>/dev/null; echo "Android:"; getprop ro.build.version.release 2>/dev/null
+echo "===== [2] 现有保活相关脚本/进程 ====="
+ls -la /root/*.sh 2>/dev/null | grep -iE 'guard|wake|keep|alive|autoheal|link|login|qnap' | head -30
+echo "--- 相关进程 ---"
+ps -ef | grep -iE '[a]zar_guard|[w]ake|[k]eepalive|[a]utoheal|[l]ink_probe' | head -20
+echo "===== [3] WakeLock 持有情况 ====="
+dumpsys power 2>/dev/null | grep -iE 'PARTIAL_WAKE_LOCK|wakefulness|Display Power|mHolding' | head -15
+echo "===== [4] WiFi休眠策略(值含义:1=始终连接 2=仅插电 0=从不) ====="
+settings get global wifi_sleep_policy 2>/dev/null
+echo "===== [5] 电池优化白名单(看是否有qq/napcat/termux) ====="
+dumpsys deviceidle whitelist 2>/dev/null | grep -iE 'qq|napcat|termux|bot' | head -15
+echo "(空=没加白名单)"
+echo "===== [6] NapCat运行方式/手机QQ进程 ====="
+ps -ef | grep -iE '[n]apcat|[N]apCat|[q]q|[m]obileqq' | head -15
+echo "===== [7] 快速登录相关文件 ====="
+ls -la /root/ 2>/dev/null | grep -iE 'quick|login|relogin|token|session' | head -20
 echo "=====完====="
