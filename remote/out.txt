@@ -1,45 +1,41 @@
-<<<task_287664.txt>>>
-===== 任务287664 11-22 14:14:30 =====
+<<<task_287665.txt>>>
+===== 任务287665 11-22 14:15:56 =====
 --- 命令 ---
-echo "===== [1] NapCat启动脚本里的-q快速登录参数 ====="
-grep -rn -- '-q \|quick\|快速登录\|quicklogin' /root/*.sh /root/Napcat/*.sh /root/Napcat/opt/QQ/*.sh 2>/dev/null | grep -v '^Binary' | head -15
-echo "(空=当前没用-q快速登录)"
-echo "===== [2] NapCat HTTP/WS探活口配置 ====="
-grep -rn '3011\|3000\|3001\|webui\|token' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/*.json 2>/dev/null | head -20
-echo "--- 配置文件列表 ---"
-find /root/Napcat -maxdepth 6 -name 'config.json' -o -name 'napcat.json' 2>/dev/null | head -10
-echo "===== [3] 当前NapCat进程完整命令 ====="
-for p in $(pgrep -f 'opt/QQ/qq' | head -2); do echo "PID $p:"; tr '\0' ' ' < /proc/$p/cmdline; echo; done
-echo "===== [4] ophoresis: 登录态数据目录(快速登录依赖它) ====="
-ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/data/ 2>/dev/null | head -10
+echo "===== [1] logincheck.sh 全文(判登录态的权威脚本) ====="
+cat /root/logincheck.sh 2>/dev/null
+echo "===== [2] 判'被踢'的日志样本(最近KickedOffLine) ====="
+grep -h 'KickedOffLine' /root/napcat.log /root/napcat-restart.log 2>/dev/null | tail -3
+echo "===== [3] 账号状态变更日志样本 ====="
+grep -h '账号状态变更为离线\|账号状态变更为在线' /root/napcat.log /root/napcat-restart.log 2>/dev/null | tail -5
+echo "===== [4] 当前napcat.log最后修改时间与行数 ====="
+stat -c '%y %s' /root/napcat.log 2>/dev/null; wc -l /root/napcat.log 2>/dev/null
+echo "===== [5] 已登录QQ号确认 ====="
+grep -oE '\-q [0-9]{5,12}' /root/azar_autoheal.sh 2>/dev/null | head -1
 echo "=====完====="
 --- 输出 ---
-===== [1] NapCat启动脚本里的-q快速登录参数 =====
-/root/azar_autoheal.sh:23:  if [ -n "$LP" ] && kill -0 "$LP" 2>/dev/null && tr -d '\0' < "/proc/$LP/cmdline" 2>/dev/null | grep -q autoheal; then
-/root/azar_autoheal.sh:51:      "$ALERT_URL" 2>/dev/null | grep -q '"content"'; then
-/root/azar_autoheal.sh:76:    say "QQ进程不在,拉起(-q快速登录)"
-/root/azar_autoheal.sh:78:    ( cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 < /dev/null & )
-/root/napcat.sh:271:    if ! rpm -q dnf-plugins-core >/dev/null 2>&1; then
-/root/napcat.sh:276:    if dnf repolist all | grep -q '^appstream\s'; then
-/root/napcat.sh:277:        if dnf repolist disabled | grep -q '^appstream\s'; then
-/root/napcat.sh:405:    unzip -q -o -d ./NapCat "$default_file"
-/root/napcat.sh:856:    log "  带账号启动: ${CYAN}screen -dmS napcat xvfb-run -a ${quoted_executable} --no-sandbox -q QQ号码${NC}"
-/root/offline_watch.sh:16:  if [ -n "$LP" ] && kill -0 "$LP" 2>/dev/null && tr -d '\0' < "/proc/$LP/cmdline" 2>/dev/null | grep -q offline_watch; then exit 0; fi
-/root/offline_watch.sh:52:      grep -q '\[KickedOffLine\]' <<<"$l" || continue
-/root/offline_watch.sh:97:      "$FOR_URL" 2>/dev/null | grep -q '"content"'; then
-/root/offline_watch_v2.sh:14:  if [ -n "$LP" ] && kill -0 "$LP" 2>/dev/null && tr -d '\0' < "/proc/$LP/cmdline" 2>/dev/null | grep -q offline_watch; then exit 0; fi
-/root/offline_watch_v2.sh:50:      "$FOR_URL" 2>/dev/null | grep -q '"content"'; then
-/root/offline_watch_v2.sh:115:    echo "登录方式: $(grep -oE '\-q[ ]*[0-9]+|quick|二维码|qrcode' /root/napcat-restart.log 2>/dev/null | tail -1)"
-(空=当前没用-q快速登录)
-===== [2] NapCat HTTP/WS探活口配置 =====
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json:13:        "token": "",
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/onebot11_3427943187.json:15:        "heartInterval": 30000,
-/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json:4:    "token": "560aad98b99d",
---- 配置文件列表 ---
-===== [3] 当前NapCat进程完整命令 =====
-PID 10178:
-/bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 
-PID 10197:
-/root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 
-===== [4] ophoresis: 登录态数据目录(快速登录依赖它) =====
+===== [1] logincheck.sh 全文(判登录态的权威脚本) =====
+#!/bin/bash
+CFG=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json
+PY=/root/bot/venv/bin/python3
+[ -x "$PY" ] || PY=python3
+TOKEN=$(grep -o '"token": "[^"]*"' "$CFG" | head -1 | sed 's/.*: "//;s/"//')
+H=$($PY -c "import hashlib;print(hashlib.sha256(('$TOKEN'+'.napcat').encode()).hexdigest())")
+C=$(curl -s --max-time 5 -X POST http://127.0.0.1:6099/api/auth/login -H "Content-Type: application/json" -d "{\"hash\":\"$H\"}" | $PY -c "import sys,json;print(json.load(sys.stdin)['data']['Credential'])" 2>/dev/null)
+curl -s --max-time 5 -X POST http://127.0.0.1:6099/api/QQLogin/CheckLoginStatus -H "Authorization: Bearer $C" | $PY -c "
+import sys,json
+d=json.load(sys.stdin)['data']
+print('=== 登录状态（权威判定）===')
+print('[在线] 已登录，一切正常' if d['isLogin'] else ('[掉线] 登录过但已断开，需要重启NapCat' if d['isOffline'] else '[未登录] 当前没有有效会话'))
+print('阶段:', d.get('loginPhase'))
+e=d.get('loginError')
+print('最近错误:', e if e else '无')
+"
+===== [2] 判'被踢'的日志样本(最近KickedOffLine) =====
+===== [3] 账号状态变更日志样本 =====
+11-22 13:16:49 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+===== [4] 当前napcat.log最后修改时间与行数 =====
+2026-11-22 14:15:55.260000000 +0800 217625
+2870 /root/napcat.log
+===== [5] 已登录QQ号确认 =====
+-q 3427943187
 =====完=====
