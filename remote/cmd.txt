@@ -1,8 +1,7 @@
-287689
-echo "=====二维码取回 $(date '+%H:%M:%S') ====="
-echo "---相册副本是否存在---"
-ls -la /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null || echo "相册无副本"
-echo "---二维码base64(供沙箱取图)---"
-base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null | head -c 4000
-echo ""
-echo "=====取回完====="
+287690
+echo "===== 设备文件md5核查 $(date '+%F %T') ====="
+cd /root/bot/bot
+md5sum doudizhu_engine.py plugins/doudizhu.py plugins/image_search_multisource.py plugins/keyword_reply.py plugins/ai_chat.py plugins/fortune.py 2>&1
+echo "---os/bot目录确认---"
+ls -la /root/bot/bot/main.py /root/bot/venv/bin/python 2>&1
+echo "=====完====="
