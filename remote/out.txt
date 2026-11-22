@@ -1,23 +1,34 @@
-<<<task_287652.txt>>>
-===== 任务287652 11-22 13:30:44 =====
+<<<task_287653.txt>>>
+===== 任务287653 11-22 13:32:23 =====
 --- 命令 ---
-echo "[1] 登录态:"
+PAT='[m]ain.py'
+OLD=$(pgrep -f "$PAT" | head -1)
+echo "[0] 旧bot PID: $OLD"
+# 延迟重启: 先留时间给回传落地
+sleep 5
+for p in $(pgrep -f "$PAT" | head -3); do kill "$p" 2>/dev/null; done
+sleep 2
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot_run.log 2>&1 < /dev/null &
+sleep 12
+echo "[1] 新bot PID:"; pgrep -f "$PAT" | head -2
+echo "[2] 插件加载(最后15行找SUCCESS/失败):"
+tail -40 /root/bot/bot/bot_run.log 2>/dev/null | grep -E 'SUCCESS|加载|Loaded|失败|ERROR|Traceback|Bot.*connected' | tail -8
+echo "[3] 登录态(应仍[未登录],重启不动NapCat):"
 bash /root/logincheck.sh 2>/dev/null | grep -E '\[在线\]|\[未登录\]|\[掉线\]' | head -1
-echo "[2] 状态变化尾:"; grep '状态变化' /root/login_state.log 2>/dev/null | tail -3
-echo "[3] bot进程:"; ps -ef | grep '[m]ain.py' | head -2
-echo "[4] 新persona是否已被当前进程加载(老进程内存里还是旧版,需重启):"
-echo "  当前文件md5:"; md5sum /root/bot/bot/persona/__init__.py | cut -d' ' -f1
 echo "=====完====="
 --- 输出 ---
-[1] 登录态:
+[0] 旧bot PID: 13099
+[1] 新bot PID:
+23503
+[2] 插件加载(最后15行找SUCCESS/失败):
+11-22 13:32:39 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+11-22 13:32:39 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+11-22 13:32:39 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
+11-22 13:32:40 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+11-22 13:32:40 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-22 13:32:40 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
+11-22 13:32:40 [SUCCESS] nonebot | Running NoneBot...
+11-22 13:32:40 [SUCCESS] nonebot | Loaded adapters: OneBot V11
+[3] 登录态(应仍[未登录],重启不动NapCat):
 [未登录] 当前没有有效会话
-[2] 状态变化尾:
-2026-11-22 03:14:51 状态变化: [在线] -> [未登录]
-2026-11-22 13:01:31 状态变化: [未登录] -> [在线]
-2026-11-22 13:17:06 状态变化: [在线] -> [未登录]
-[3] bot进程:
-aid_u0_+ 13099 13097  0  2023 ?        00:01:12 /root/bot/venv/bin/python main.py
-[4] 新persona是否已被当前进程加载(老进程内存里还是旧版,需重启):
-  当前文件md5:
-e8232cbd879c92304ca729fbbc33160c
 =====完=====
