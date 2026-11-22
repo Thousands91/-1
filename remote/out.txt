@@ -1,25 +1,2 @@
-<<<task_287636.txt>>>
-===== 任务287636 11-22 12:58:24 =====
---- 命令 ---
-PAT='bash /root/offline_watch.[s]h'
-OLD=$(pgrep -f "$PAT" | head -3)
-echo "[0] 重启前PID: $OLD"
-for p in $OLD; do kill "$p" 2>/dev/null; done
-sleep 2
-rm -rf /root/.offline_watch_v2.lock /root/.offline_watch_v3.lock 2>/dev/null
-setsid nohup bash /root/offline_watch.sh >> /root/offline_watch2.log 2>&1 < /dev/null &
-sleep 3
-echo "[1] 重启后PID:"; pgrep -f "$PAT" | head -3
-echo "[2] 启动日志尾(v3.1基线):"; tail -2 /root/offline_watch3.log 2>/dev/null
-echo "[3] 登录态:"; bash /root/logincheck.sh 2>/dev/null | grep -E '\[在线\]|\[未登录\]|\[掉线\]' | head -1
-echo "=====完====="
---- 输出 ---
-[0] 重启前PID: 30107
-[1] 重启后PID:
-10445
-[2] 启动日志尾(v3.1基线):
-[11-22 12:41:43] ===== 取证器v3.0启动 基线:静默=2 被踢=1 日志A=/root/napcat.log 日志B=/root/napcat-restart.log =====
-[11-22 12:58:26] ===== 取证器v3.1启动 基线:静默=0 被踢=0 日志A=/root/napcat.log 日志B=/root/napcat-restart.log =====
-[3] 登录态:
-[未登录] 当前没有有效会话
-=====完=====
+<<<ALERT.txt>>>
+2026-11-22 12:59:26 阿萨尔已恢复在线
