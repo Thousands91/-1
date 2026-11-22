@@ -1,36 +1,40 @@
-<<<task_287662.txt>>>
-===== 任务287662 11-22 14:11:31 =====
+<<<task_287663.txt>>>
+===== 任务287663 11-22 14:13:23 =====
 --- 命令 ---
-echo "===== [0] 改前基线 ====="
-echo -n "wifi_sleep_policy="; settings get global wifi_sleep_policy 2>/dev/null
-echo -n "termux白名单计数="; dumpsys deviceidle whitelist 2>/dev/null | grep -c 'com.termux'
-echo "===== [1] WiFi休眠时保持连接 (0=NEVER休眠不断网) ====="
-settings put global wifi_sleep_policy 0 2>/dev/null
-echo "改后wifi_sleep_policy=$(settings get global wifi_sleep_policy 2>/dev/null)"
-echo "===== [2] Termux 加入电池优化白名单(iAware/Doze豁免) ====="
-dumpsys deviceidle whitelist +com.termux 2>&1 | head -2
-echo "改后termux白名单计数=$(dumpsys deviceidle whitelist 2>/dev/null | grep -c 'com.termux')"
-echo "===== [3] 申请唤醒锁(防CPU休眠) ====="
-WL=/data/data/com.termux/files/usr/bin/termux-wake-lock
-if [ -x "$WL" ]; then "$WL" && echo "wakelock申请OK" || echo "wakelock申请失败"; else echo "termux-wake-lock路径不存在"; fi
-echo "===== [4] 保活锚进程是否活着 ====="
-ps -ef | grep -E '[a]sar_keepalive|[a]zar_autoheal' | head -5
-echo "===== [5] 当前登录态(应仍[未登录]) ====="
-bash /root/logincheck.sh 2>/dev/null | grep -E '\[在线\]|\[未登录\]|\[掉线\]' | head -1
+echo "===== [1] settings命令是否可用 ====="
+command -v settings || echo "settings不在PATH"
+settings get global wifi_sleep_policy 2>&1 | head -2
+echo "===== [2] 内核wake_lock节点 ====="
+cat /sys/power/wake_lock 2>/dev/null || echo "无/sys/power/wake_lock节点"
+echo "--- wakeup_count ---"; cat /sys/power/wakeup_count 2>/dev/null || echo "无节点"
+echo "===== [3] termux唤醒锁状态(看进程持锁) ====="
+ls -la /data/data/com.termux/files/usr/bin/termux-wake-lock 2>/dev/null
+echo "===== [4] doze状态 ====="
+dumpsys deviceidle 2>/dev/null | grep -iE 'mDeepPowerSaveMode|mLightPowerSaveMode|mScreenOff|mCharging|enabled=' | head -8 || echo "dumpsys deviceidle无权限"
+echo "===== [5] guard为何没跑(检查启动配置) ====="
+grep -rn 'azar_guard' /root/start_all.sh /root/setup.sh /root/*.sh 2>/dev/null | head -10
+echo "(空=没有任何脚本拉起guard)"
+echo "===== [6] autoheal的wakelock续持行(确认它每轮续持) ====="
+grep -n 'wake-lock\|wakelock\|termux-wake' /root/azar_autoheal.sh 2>/dev/null | head -10
 echo "=====完====="
 --- 输出 ---
-===== [0] 改前基线 =====
-wifi_sleep_policy=termux白名单计数=0
-===== [1] WiFi休眠时保持连接 (0=NEVER休眠不断网) =====
-改后wifi_sleep_policy=
-===== [2] Termux 加入电池优化白名单(iAware/Doze豁免) =====
-Permission Denial: can't dump DeviceIdleController from from pid=6407, uid=10643 due to missing android.permission.DUMP permission
-改后termux白名单计数=0
-===== [3] 申请唤醒锁(防CPU休眠) =====
-wakelock申请OK
-===== [4] 保活锚进程是否活着 =====
-aid_u0_+ 17138     1  0  2023 ?        00:00:23 bash /root/azar_autoheal.sh
-aid_u0_+ 27977 26021  0  2023 pts/1    00:00:00 bash /data/data/com.termux/files/home/asar_keepalive.sh
-===== [5] 当前登录态(应仍[未登录]) =====
-[未登录] 当前没有有效会话
+===== [1] settings命令是否可用 =====
+/system/bin/settings
+Security exception: Permission Denial: getCurrentUser() from pid=7101, uid=10643 requires android.permission.INTERACT_ACROSS_USERS
+
+===== [2] 内核wake_lock节点 =====
+无/sys/power/wake_lock节点
+--- wakeup_count ---
+无节点
+===== [3] termux唤醒锁状态(看进程持锁) =====
+-rwx------ 1 root root 398 Aug 28  2025 /data/data/com.termux/files/usr/bin/termux-wake-lock
+===== [4] doze状态 =====
+===== [5] guard为何没跑(检查启动配置) =====
+/root/start_all.sh:3:nohup proot-distro login ubuntu -- bash -c 'cd /root && nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & nohup bash /root/azar_guard.sh >> /root/azar_guard.log 2>&1 & cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 & cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>python main.py > /root/bot.log 2>&11' > /dev/null 2>&1 &
+/root/start_all.sh:3:nohup proot-distro login ubuntu -- bash -c 'cd /root && nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & nohup bash /root/azar_guard.sh >> /root/azar_guard.log 2>&1 & cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox >> /root/napcat-restart.log 2>&1 & cd /root/bot/bot && nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>python main.py > /root/bot.log 2>&11' > /dev/null 2>&1 &
+(空=没有任何脚本拉起guard)
+===== [6] autoheal的wakelock续持行(确认它每轮续持) =====
+13:#       ② 每轮循环续持 termux-wake-lock——息屏不深睡、worker 回传不再断（用户不用一直亮屏）。
+63:  # ⓪ 息屏保活：续持 termux-wake-lock（每60秒刷一次；proot内可直调；失败静默不影响主职）
+64:  _WL=/data/data/com.termux/files/usr/bin/termux-wake-lock
 =====完=====
