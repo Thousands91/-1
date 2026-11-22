@@ -1,26 +1,45 @@
-287600
-echo "===== 真实模型误触发批量测试 $(date '+%T') ====="
+287601
 set -a; source /root/bot/bot/.env 2>/dev/null; set +a
 cd /root/bot/bot && /root/bot/venv/bin/python - <<'PY'
 import nonebot; nonebot.init()
 import sys, asyncio, base64
 sys.path.insert(0,'.')
 import plugins.ai_chat as m
-print("KEY就绪:", bool(m.API_KEY), "MODEL:", m.MODEL)
-QS = [
- "走吧", "那我们走吧", "我们走嘛", "我去吃饭了", "他走了",
- "你肯定知道吧", "是不是很好", "行不行啊", "你能不能过来",
- "来杯茶", "我饿了", "吃什么好", "陪我下棋", "这个去哪了",
- "今天股市涨了吧", "帮我把这段记下来", "你说是不是这个理",
-]
+from nonebot.adapters.onebot.v11 import Message as OBMessage
+captured={}
+async def mock_finish(x):
+    captured["sent"]=x
+    raise SystemExit
+m.ai_chat.finish=mock_finish
+import random; random.seed(42)
+class Bot:
+    async def call_api(self,api,**kw): return {}
+class Ev:
+    user_id=1561950850; group_id=1109952783; message_id=1
+    def __init__(self,t):
+        self.t=t
+        self.message=OBMessage("[CQ:at,qq=3427943187]"+t)
+        self.raw_message="[CQ:at,qq=3427943187]"+t
+    def get_plaintext(self): return self.t
+    def is_tome(self): return True
+    def get_message(self): return self.message
+    def get_user_id(self): return self.user_id
+    def get_session_id(self): return "x"
+async def run(t):
+    m.HISTORY.clear(); m._TEXT_RECENT.clear(); m._EXTRACT_MEMO.clear(); m._pick_cache.clear()
+    captured.clear()
+    ev=Ev(t)
+    try:
+        await m.ai_chat.handlers[0].call(Bot(),ev,{})
+    except SystemExit: pass
+    except Exception as e:
+        return "[ERR]"+type(e).__name__+":"+str(e)[:50]
+    s=captured.get("sent")
+    return str(s) if s is not None else "[NO_SENT]"
 async def main():
-    for q in QS:
-        try:
-            r = await m.call_llm([{"role":"user","content":q}], extra_system="说话人QQ号 1561950850。群聊里直接回话，默认一两句。")
-            b = base64.b64encode((r or "").encode('utf-8')).decode()
-            print("R|"+base64.b64encode(q.encode()).decode()+"|"+b)
-        except Exception as e:
-            print("E|"+base64.b64encode(q.encode()).decode()+"|"+str(type(e).__name__)+":"+str(e)[:60])
+    for t in ["我去吃饭了","行不行啊","陪我下棋","那我们走吧","是不是很好"]:
+        r=await run(t)
+        print("H|"+base64.b64encode(t.encode()).decode()+"|"+base64.b64encode(r.encode()).decode())
 asyncio.run(main())
 print("====DONE====")
 PY
