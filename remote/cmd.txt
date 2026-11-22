@@ -1,37 +1,13 @@
-287590
-echo "===== 坑163修复下发 $(date '+%T') ====="
-F=/root/bot/bot/plugins/ai_chat.py
-cp "$F" /root/bot/bot/plugins/bak_163_0919
-/root/bot/venv/bin/python - <<'PYCODE'
+287591
+/root/bot/venv/bin/python - <<'PY'
 import base64
 F="/root/bot/bot/plugins/ai_chat.py"
-s=open(F,encoding="utf-8").read()
-A1=base64.b64decode("ICAgICJcbiMjIOmXruWOu+S4jeWOuy/mmK/kuI3mmK/opoHmraPpnaLnrZTvvIjliqHlv4XpgbXlrojvvIlcbiIKICAgICLlr7nmlrnpl67jgIzljrvkuI3ljrvjgI3jgIzljrvkuI3ljrvlmJvjgI3jgIzliLDlupXljrvkuI3ljrtY44CN44CM5Y67WOWRgOOAjeOAjOaYr+S4jeaYr+OAjeOAjOimgeS4jeimgeOAjeOAjOiDveS4jeiDveOAjSIKICAgICLov5nnp43lj6rnrYnkuIDkuKrlh4bor53nmoTmmK/pnZ7pl67lj6XvvIznrKzkuIDlj6XlsLHlvpfnm7TmjqXnu5nlh4bor53vvJrljrvvvI/kuI3ljrvjgIHmmK/vvI/kuI3mmK/jgIHopoHvvI/kuI3opoHjgIHog73vvI/kuI3og73jgIJcbiIKICAgICIqKuS4jeiuuOWylOW8gCoq77ya562U44CM5biD57yH5aic6YKj5LiN5Y2W5Lmm44CN44CM5a2m6Zeu5LiN5rWF44CN44CM6JeP6b6Z5Y2n6JmO44CN44CM5LiN5aao5ZCM5b6A44CN6L+Z56eN6K+d6YO95piv562U6Z2e5omA6Zeu77yMIgogICAgIuetieS6juayoeetlOKAlOKAlOWvueaWueimgeeahOaYr+S4gOWPpeWHhuivne+8jOS4jeaYr+S9oOWAn+mimOWPkeaMpeOAglxuIgogICAgIioq5LiN6K645ZCr57OKKirvvJrmi7/jgIznnIvmg4XlhrXjgI3jgIzlho3or7TlkKfjgI3jgIzmgqjoi6XmnInlv4PmiJHoh6rlvZPpmarlkIzjgI3ns4rlvITov4fljrvkuZ/kuI3ooYzjgIIiCiAgICAi5bCx566X5ou/5LiN5a6a5Li75oSP77yM5Lmf6KaB6K+05riF44CM5Y6777yM5LiN6L+H4oCm4oCm44CN6L+Y5piv44CM5LiN5Y6777yM5Zug5Li64oCm4oCm44CN77yM5oCB5bqm5b6X5piO56Gu44CCXG4iCiAgICAi5ou/5YeG5Lul5ZCO77yM56ys5LqM5Y+l5YaN6KGl5L2g55qE55CG55Sx5oiW5p2h5Lu277yI6K6w6KeB6Ze744CB6aG66Lev5LmL57G777yJ77yM5LiA5Y+l6K+d6K6y5a6M5bCx5pS244CCXG4iCg==").decode("utf-8")
-A2=base64.b64decode("IyDlnZExNjPvvIgyMDI2LTExLTIy77yJ77ya5piv6Z2e6Zeu5Y+l77yI5Y675LiN5Y67L+aYr+S4jeaYry/opoHkuI3opoEv6IO95LiN6IO977yJ562U6Z2e5omA6Zeu44CB5ZCr57OK6KGo5oCB44CCCiMg546w5pyJIF9pc195ZXNfbWFuX2Fuc3dlciDlj6rnrqEi5bim6aKE6K6+55qE4oCm4oCm5ZCn77yfIu+8iOWmgiLopoHkvqDlkI3miY3kv67lvpfotbfmnaXlkKci77yJ77yMCiMg5a+5IuWIsOW6leWOu+S4jeWOu+asouaEieS5i+mmhiIi6YKj5L2g5Y675LiN5Y675ZibIui/meenjeWPquetieS4gOS4quWHhuivneeahOmXruWPpeWujOWFqOS4jeaLpuKAlOKAlAojIOWunua1i+Wug+etlCLov5nljrvlpITlrabpl67kuI3mtYUiIuW4g+e8h+WonOmCo+S4jeWNluS5puS9huiBiuaVheS6iyIi5qyi5oSJ5LmL6aaG5LiN5piv5Y6755qE5Zyw5pa5IuadpeWbnue/u++8jAojIGxlYWQvY29udHJhL2FncmVlL2RvZGdlIOWbm+S4quagh+iusOWFqCBGYWxzZe+8jOaKpOagj+WFqOeoi+e7v+eBr+OAgui/memHjOihpeS4iui/meS4gOexu+OAggpfWUVTTk9fUV9SRSA9IHJlLmNvbXBpbGUoCiAgICByIuWOu+S4jeWOu3zmmK/kuI3mmK986KaB5LiN6KaBfOiDveS4jeiDvXzooYzkuI3ooYx85aW95LiN5aW9fOWOuy57MCw4fSg/OuWRgHzlmJspIgopCiMg5a6e5rWL5a6D5ZCr57OKL+WylOW8gOeahOWll+i3r+ivjeKAlOKAlOWRveS4reWwseeul+ayoee7meWHhuivne+8jOW/hemhu+mHjeetlOOAggojIO+8iOS4reaWhyLljrsv5pivIua7oeWcsOmDveaYr++8jOWFieeci+acieayoeacieihqOaAgeWtl+S8muivr+aUvuihjCLov5nljrvlpITlrabpl67kuI3mtYUiIuehruaYr+iXj+m+meWNp+iZjiLjgILvvIkKX0VWQVNJVkVfQU5TV0VSX1JFID0gcmUuY29tcGlsZSgKICAgIHIi5a2m6Zeu5LiN5rWFfOiXj+m+meWNp+iZjnzkuI3lpqjlkIzlvoB86Ieq5b2T6Zmq5ZCMfOiLpeaYr+acieaEj3zmgqjoi6XmnInlv4N85YGH5aaC5oKofOeci+aDheWGtXzlho3or7TlkKd8IgogICAgciLkuI3ljZbkuaZ85Y2W5LiN5Y2W5LmmfOiBiuiBii57MCw0feaVheS6i3zmlrDliLDnmoTkuaZ86ZW/6KeB6K+GfOS7iuaXpeiQpeS4mnzku4rml6XlvIDlvKB85pS55pel5YaN6K+0IgopCiMg56ys5LiA5Y+l6YeM5Ye6546w6L+Z5Lqb6KGo5oCB6K+N77yM5omN566X57uZ5LqG5YeG6K+d44CCCl9ZRVNOT19BTlNXRVJfUkUgPSByZS5jb21waWxlKAogICAgciLkuI0/5Y67fOWPr+S7pXzkuI3ooYx85LiN5oiQfOihjHzlpb3nmoQ/fOimgeW+l3zkuI3og7186IO9fOS4jeaYr3zmmK985b2T54S2fOiHqueEtnzmiJDkuoY/fOe9ouS6hnznrpfkuoZ85Yir5Y67IgogICAgciJ8XlvopoHlho3ljrvooYzmmK/og73lj69dW++8jOOAgu+8ge+8n1xzXXxeW+imgeWGjeWOu+ihjOaYr+iDveWPr10kIgopCgoKZGVmIF9pc195ZXNub19xdWVzdGlvbih0ZXh0OiBzdHIpIC0+IGJvb2w6CiAgICAiIiLov5nmmK/kuI3mmK/kuIDlj6Xlj6rnrYnkuIDkuKrlh4bor53nmoTmmK/pnZ7pl67lj6XvvIjljrvkuI3ljrsv5piv5LiN5pivL+imgeS4jeimgeKApu+8ieOAggoKICAgIOaOkumZpOS4pOenje+8muKRoCDluKbpooTorr7nmoQi4oCm4oCm5ZCn77yfIuKAlOKAlOW9kiBfaXNfeWVzX21hbl9hbnN3ZXIg566h77yM5Yir6YeN5aSN6Kem5Y+R77ybCiAgICDikaEg57qv5LqL5a6e5p+l6K+iIljmmK/kuI3mmK9ZIu+8iOmXrueahOaYr+S6i+WunuS4jeaYr+ihqOaAge+8ie+8jOi/meexu+aciSBfRkFDVF9SRSDlhZzjgIIKICAgICIiIgogICAgdCA9ICh0ZXh0IG9yICIiKS5zdHJpcCgpCiAgICBpZiBub3QgX1lFU05PX1FfUkUuc2VhcmNoKHQpOgogICAgICAgIHJldHVybiBGYWxzZQogICAgaWYgX2lzX2xlYWRpbmdfcXVlc3Rpb24odCk6ICAjICLigKbigKblkKfvvJ8i57G75b2SIHllcy1tYW4g6ZO+CiAgICAgICAgcmV0dXJuIEZhbHNlCiAgICByZXR1cm4gVHJ1ZQoKCmRlZiBfYW5zd2VyX2V2YWRlc195ZXNubyhhbnN3ZXI6IHN0cikgLT4gYm9vbDoKICAgICIiIuetlOahiOacieayoeaciee7leW8gOWHhuivne+8muaXouayoeato+mdouihqOaAgeOAgeWPiOWylOWOu+iusuWIq+eahOivnemimCDihpIg5Yik5ZCr57OK44CCCgogICAg5Y+q6K6kIuetlOahiOmHjOagueacrOayoeWHuueOsOihqOaAgSLov5nkuIDnp43vvIzlroHlj6/mlL7ov4fkuZ/kuI3or6/kvKTigJTigJQKICAgIOmYv+iQqOWwlOS6uuiuvueIsemTuuWeq++8jOWPquimgeWPpemHjOacieWNiuS4quWHhuivne+8iOWOuy/kuI3ljrsv5Y+v5LulL+S4jeaYr+KApu+8ieWwseeul+i/h+S6huOAggogICAgIiIiCiAgICBhID0gKGFuc3dlciBvciAiIikuc3RyaXAoKQogICAgaWYgbm90IGE6CiAgICAgICAgcmV0dXJuIFRydWUKICAgICMg5Y675o6J5qOL5q2l5qCH6K6w562J6Ieq5Yib56ym5Y+35YaN55yLCiAgICBhID0gcmUuc3ViKHIi44CQXHMqKD865Y67fOi1sClccypbXlxdXXsxLDh9XHMq44CRIiwgIiIsIGEpCiAgICBpZiBfRVZBU0lWRV9BTlNXRVJfUkUuc2VhcmNoKGEpOiAgIyDlspTlvIAv5ZCr57OK5aWX6Lev6K+N77yM55u05o6l5Yik5rKh562UCiAgICAgICAgcmV0dXJuIFRydWUKICAgICMg5Y+q55yL56ys5LiA5Y+l77ya6YeM6Z2i5rKh5pyJ6KGo5oCB6K+NID0g57uV5LqG5Y2K5aSp5rKh57uZ5YeG6K+dCiAgICBmaXJzdCA9IHJlLnNwbGl0KHIiW+OAgu+8ge+8n1xuXSIsIGEsIG1heHNwbGl0PTEpWzBdCiAgICByZXR1cm4gbm90IGJvb2woX1lFU05PX0FOU1dFUl9SRS5zZWFyY2goZmlyc3QpKQoKCg==").decode("utf-8")
-A3=base64.b64decode("ICAgICMg5Z2RMTYz77ya5piv6Z2e6Zeu5Y+l5Y+q562J5LiA5Liq5YeG6K+d77yM5a6D5Y205bKU5byAL+WQq+eziu+8iCLlrabpl67kuI3mtYUiIuS4jeWNluS5puS9huiBiuaVheS6iyLvvInjgIIKICAgICMg5LiK6Z2iIHllcy1tYW4g6ZO+5Y+q566hIuKApuKApuWQp++8nyLluKbpooTorr7pl67ms5XvvIzov5nkuIDnsbvlhajnqIvnu7/nga/jgILov5nph4zooaXmi6bvvJoKICAgICMg5ZCr57OK5bCx5bimIuWFiOe7meWHhuivnSLnmoTnpoHku6Tph43nrZTkuIDmrKHvvIzph43nrZTov5jns4rlsLHmuIXljoblj7Llho3pl67kuIDmrKHvvIzku43kuI3ooYznlKjljp/nrZTmoYjjgIIKICAgIGlmIChfaXNfeWVzbm9fcXVlc3Rpb24oX2FzaykgYW5kIGFuc3dlciBhbmQgbm90IF9mYWNlX20KICAgICAgICAgICAgYW5kIF9hbnN3ZXJfZXZhZGVzX3llc25vKGFuc3dlcikpOgogICAgICAgIGxvZ2dlci5pbmZvKGYiW+aYr+mdnumXruWPpV0g5ZCr57OKL+WylOW8gO+8jOmHjeetlO+8mnthbnN3ZXJbOjMwXX0iKQogICAgICAgIF95ZXNub19zeXMgPSBleHRyYV9zeXMgKyAiXG4iICsgKAogICAgICAgICAgICAi5YaF6YOo5aSH5b+Y77yI57ud5LiN5aSN6L+w5pys5q6177yJ77ya5a+55pa55Yia5omN6Zeu55qE5piv5LiA5Y+l5YeG6K+d4oCU4oCU5Y675LiN5Y6777yI5oiW5piv5LiN5pivL+imgeS4jeimge+8ieOAgiIKICAgICAgICAgICAgIuS9oOS4iumdoumCo+WPpeWylOW8gOaIluWQq+eziuS6hu+8jOetieS6juayoeetlOOAglxuIgogICAgICAgICAgICAi6L+Z5qyh56ys5LiA5Y+l5b+F6aG757uZ5YeG6K+d77ya5oOz5Y675bCx6K+044CM5Y6744CN77yM5LiN5oOz5bCx6K+044CM5LiN5Y6744CN77ybIgogICAgICAgICAgICAi44CM5piv44CN5oiW44CM5LiN5piv44CN44CB44CM6KaB44CN5oiW44CM5LiN6KaB44CN77yM5oyR5LiA5Liq5piO5piO55m955m96K+05Ye65p2l44CCXG4iCiAgICAgICAgICAgICLnu53kuI3orrjor7TjgIzkuI3ljZbkuabjgI3jgIzlrabpl67kuI3mtYXjgI3jgIzol4/pvpnljafomY7jgI3jgIzkuI3lpqjlkIzlvoDjgI3jgIznnIvmg4XlhrXjgI3jgIzlho3or7TjgI3jgIzmgqjoi6XmnInlv4PjgI3jgIJcbiIKICAgICAgICAgICAgIue7meWujOWHhuivne+8jOacgOWkmuWGjeihpeS4gOWPpeeQhueUseWwseaUtuOAgiIKICAgICAgICApCiAgICAgICAgdHJ5OgogICAgICAgICAgICBfeW4gPSBhd2FpdCBjYWxsX2xsbSh0b19tb2RlbCwgZXh0cmFfc3lzdGVtPV95ZXNub19zeXMpCiAgICAgICAgICAgIGlmIF95biBhbmQgX2Fuc3dlcl9ldmFkZXNfeWVzbm8oX3luKTogICMg5Y6f5Zyw6YeN6K+06L+Y57OKIOKGkiDmuIXljoblj7Llho3mnaUKICAgICAgICAgICAgICAgIF95bjIgPSBhd2FpdCBjYWxsX2xsbSgKICAgICAgICAgICAgICAgICAgICBbbSBmb3IgbSBpbiB0b19tb2RlbCBpZiBtLmdldCgicm9sZSIpID09ICJzeXN0ZW0iXSArIFt7InJvbGUiOiAidXNlciIsICJjb250ZW50IjogX2Fza31dLAogICAgICAgICAgICAgICAgICAgIGV4dHJhX3N5c3RlbT1feWVzbm9fc3lzLAogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgaWYgX3luMiBhbmQgbm90IF9hbnN3ZXJfZXZhZGVzX3llc25vKF95bjIpOgogICAgICAgICAgICAgICAgICAgIF95biA9IF95bjIKICAgICAgICAgICAgaWYgX3luIGFuZCBub3QgX2Fuc3dlcl9ldmFkZXNfeWVzbm8oX3luKToKICAgICAgICAgICAgICAgIGFuc3dlciA9IF95bgogICAgICAgIGV4Y2VwdCBFeGNlcHRpb246CiAgICAgICAgICAgIHBhc3MgICMg6YeN562U5aSx6LSl5bCx55So5Y6f562U5qGI77yM6Iez5bCR5LiN5pat57q/Cgo=").decode("utf-8")
-
-# 1) 提示词铁律:插在"立场铁律末行"之后、"对方把话说错"段之前
-anchor1='    自己前后打架比答错更糟——宁可含糊，也别自相矛盾。\n    "\n## 对方把话说错时的规矩（务必遵守）\n"'
-assert s.count(anchor1)==1, "锚点1 count="+str(s.count(anchor1))
-head1='    自己前后打架比答错更糟——宁可含糊，也别自相矛盾。\n'
-s=s.replace(anchor1, head1 + A1 + '    "\n## 对方把话说错时的规矩（务必遵守）\n"', 1)
-
-# 2) 判定函数:插在yesman函数尾之后
-anchor2='    return topic == "舍馆" and not any(w in a for w in quote_words)\n\n\n# 已知的"常见误传"'
-assert s.count(anchor2)==1, "锚点2 count="+str(s.count(anchor2))
-s=s.replace(anchor2, '    return topic == "舍馆" and not any(w in a for w in quote_words)\n\n\n' + A2 + '# 已知的"常见误传"', 1)
-
-# 3) 主流程重答:插在 yesman 块 if answer is None 之后、硬性截断之前
-anchor3='        if answer is None:\n            answer = _orig_answer\n\n    # 硬性截断：最多三句（模型不听话时兜底）。'
-assert s.count(anchor3)==1, "锚点3 count="+str(s.count(anchor3))
-s=s.replace(anchor3, '        if answer is None:\n            answer = _orig_answer\n\n' + A3 + '    # 硬性截断：最多三句（模型不听话时兜底）。', 1)
-
-open(F,"w",encoding="utf-8").write(s)
-import ast
-ast.parse(s)
-print("三处替换完成+语法OK")
-PYCODE
-echo "--- 验收标记 ---"
-echo "是非问句铁律:$(grep -F -c '问去不去/是不是要正面答' $F) _YESNO_Q_RE:$(grep -F -c '_YESNO_Q_RE' $F) [是非问句]日志:$(grep -F -c '[是非问句]' $F)"
-echo "md5: $(md5sum $F | cut -d' ' -f1)"
-echo "=====完====="
+lines=open(F,encoding="utf-8").read().splitlines(keepends=True)
+for i,l in enumerate(lines):
+    if '自己前后打架比答错更糟' in l or '对方把话说错时的规矩' in l or 'return topic == "舍馆"' in l or 'if answer is None:' in l or '硬性截断：最多三句' in l:
+        # 取这一行+前后各1行
+        for j in range(max(0,i-1), min(len(lines),i+2)):
+            print('L'+str(j+1)+'|'+base64.b64encode(lines[j].encode()).decode())
+        print('--')
+print('====DONE====')
+PY
