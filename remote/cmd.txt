@@ -1,14 +1,29 @@
-287630
-# 用独立OUT跑自检,不污染正式取证日志
-OW_SELFTEST=1 OW_OUT=/tmp/v3_selftest.log OW_DRY_RUN=1 OW_PBOX=/tmp/v3_pbox \
-  OW_RUNLOG=/tmp/v3_selftest_run.log OW_LOCK=/tmp/v3_selftest.lock \
-  bash /root/offline_watch.sh
-sleep 2
-echo "===== [1] 自检产出块 ====="
-cat /tmp/v3_selftest.log 2>/dev/null | head -20
-echo "===== [2] 格式断言 ====="
-printf 'EVIDENCE锚点(应1): '; grep -c '^\[EVIDENCE' /tmp/v3_selftest.log 2>/dev/null
-printf '判定类型(应1): '; grep -c '【判定类型】' /tmp/v3_selftest.log 2>/dev/null
-printf '旧混淆模板(应0): '; grep -c '本次无KickedOffLine → 静默离线' /tmp/v3_selftest.log 2>/dev/null
-printf 'id唯一(头尾一致): '; H=$(grep '^===== 掉线取证' /tmp/v3_selftest.log | head -1); T=$(grep '取证结束 id=' /tmp/v3_selftest.log | head -1); echo "$H || $T"
+287631
+python3 - <<'PY'
+import re
+from datetime import datetime
+# 汇总两份NapCat日志里所有 离线/被踢/验证失败 事件
+ev=[]
+for f in ['/root/napcat.log','/root/napcat-restart.log']:
+    for ln in open(f,errors='replace'):
+        if any(k in ln for k in ['KickedOffLine','账号状态变更为离线','登录已失效','SelfOffline','errCode','ErrCode','验证失败']):
+            # 解析时间
+            ts='?'
+            m=re.search(r'(\d{2}-\d{2} \d{2}:\d{2}:\d{2})',ln)
+            if m: ts=m.group(1)
+            elif re.search(r'\d{4}/\d{6}\.',ln):
+                m2=re.search(r'(\d{2})(\d{2})/(\d{2})(\d{2})(\d{2})\.',ln)
+                if m2: ts=f'{m2.group(1)}-{m2.group(2)} {m2.group(3)}:{m2.group(4)}:{m2.group(5)}'
+            ev.append((ts,ln.strip()[:130],f.split('/')[-1]))
+# 按时间排序去重输出
+seen=set(); out=[]
+for ts,ln,f in ev:
+    k=(ts,ln[:60])
+    if k in seen: continue
+    seen.add(k); out.append((ts,ln,f))
+out.sort(key=lambda x:x[0])
+print('[EVT] 去重事件数',len(out))
+for ts,ln,f in out:
+    print(f'{ts} [{f}] {ln}')
+PY
 echo "=====完====="
