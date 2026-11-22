@@ -1,17 +1,14 @@
-287587
-echo "===== e4/e5来源取证 $(date '+%T') ====="
+287588
+echo "===== 整段对话取证 $(date '+%T') ====="
 /root/bot/venv/bin/python - <<'PY'
-import base64, glob
-files = glob.glob('/root/*.log') + glob.glob('/root/bot/*.log') + glob.glob('/root/bot/log/*.log')
-for f in files:
-    try:
-        lines = open(f, encoding='utf-8', errors='replace').read().splitlines()
-    except Exception:
-        continue
-    for i, l in enumerate(lines):
-        if ('核对' in l or 'ask=' in l) and ('e4' in l or 'e5' in l or 'Nf3' in l or '国际象棋' in l):
-            b = base64.b64encode(l.encode('utf-8')).decode()
-            print('HIT|' + f + '|L' + str(i+1) + '|' + b)
-print('====SCAN_DONE====')
+import base64
+f='/root/remote_ctl.log'
+lines = open(f, encoding='utf-8', errors='replace').read().splitlines()
+# 02:17~02:21 的核对调试行,全部base64
+for i, l in enumerate(lines):
+    if '[核对·调试]' in l and ('02:1' in l or '02:2' in l):
+        b = base64.b64encode(l.encode('utf-8')).decode()
+        print('D|L'+str(i+1)+'|'+b)
+print('====DONE====')
 PY
 echo "=====完====="
