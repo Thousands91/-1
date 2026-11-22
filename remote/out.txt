@@ -1,5 +1,5 @@
-<<<task_287602.txt>>>
-===== 任务287602 11-22 09:52:18 =====
+<<<task_287603.txt>>>
+===== 任务287603 11-22 09:52:50 =====
 --- 命令 ---
 set -a; source /root/bot/bot/.env 2>/dev/null; set +a
 cd /root/bot/bot && /root/bot/venv/bin/python - <<'PY'
@@ -17,17 +17,19 @@ class Bot:
 class Ev:
     user_id=1561950850; group_id=1109952783; message_id=1
     def __init__(self,t):
-        self.t=t; self.message=OBMessage("[CQ:at,qq=3427943187]"+t); self.raw_message=self.message
+        self.t=t; self.raw="[CQ:at,qq=3427943187]"+t; self.message=OBMessage(self.raw)
     def get_plaintext(self): return self.t
     def is_tome(self): return True
     def get_message(self): return self.message
     def get_user_id(self): return self.user_id
     def get_session_id(self): return "x"
+    @property
+    def raw_message(self): return self.raw
 async def run(t):
     m.HISTORY.clear(); m._TEXT_RECENT.clear(); m._EXTRACT_MEMO.clear(); m._pick_cache.clear(); captured.clear()
     try: await m.ai_chat.handlers[0].call(Bot(),Ev(t),{})
     except SystemExit: pass
-    except Exception as e: return "[ERR]"+type(e).__name__
+    except Exception as e: return "[ERR]"+type(e).__name__+":"+str(e)[:40]
     s=captured.get("sent"); return str(s) if s is not None else "[NO_SENT]"
 async def main():
     for t in ["陪我下棋","我们下棋吧","来下棋","想下棋","下棋吗","陪我下一盘","教我下棋","国际象棋怎么玩","走一步","走吧"]:
@@ -38,17 +40,36 @@ print("====DONE====")
 PY
 echo "=====完====="
 --- 输出 ---
-11-22 09:52:20 [SUCCESS] nonebot | NoneBot is initializing...
-11-22 09:52:20 [INFO] nonebot | Current Env: prod
-H|6Zmq5oiR5LiL5qOL|W0VSUl1UeXBlRXJyb3I=
-H|5oiR5Lus5LiL5qOL5ZCn|W0VSUl1UeXBlRXJyb3I=
-H|5p2l5LiL5qOL|W0VSUl1UeXBlRXJyb3I=
-H|5oOz5LiL5qOL|W0VSUl1UeXBlRXJyb3I=
-H|5LiL5qOL5ZCX|W0VSUl1UeXBlRXJyb3I=
-H|6Zmq5oiR5LiL5LiA55uY|W0VSUl1UeXBlRXJyb3I=
-H|5pWZ5oiR5LiL5qOL|W0VSUl1UeXBlRXJyb3I=
-H|5Zu96ZmF6LGh5qOL5oCO5LmI546p|W0VSUl1UeXBlRXJyb3I=
-H|6LWw5LiA5q2l|W0VSUl1UeXBlRXJyb3I=
-H|6LWw5ZCn|W0VSUl1UeXBlRXJyb3I=
+11-22 09:52:53 [SUCCESS] nonebot | NoneBot is initializing...
+11-22 09:52:53 [INFO] nonebot | Current Env: prod
+11-22 09:53:01 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-22 09:53:01 [INFO] plugins | [核对·调试] ask='[@3427943187]陪我下棋' lead=False contra=False agree=False dodge=False ans='国际象棋。'
+H|6Zmq5oiR5LiL5qOL|5Zu96ZmF6LGh5qOL44CC
+11-22 09:53:10 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(APITimeoutError)，尝试下一个
+11-22 09:53:11 [INFO] plugins | [核对·调试] ask='[@3427943187]我们下棋吧' lead=True contra=False agree=False dodge=False ans='国际象棋'
+H|5oiR5Lus5LiL5qOL5ZCn|5Zu96ZmF6LGh5qOL
+11-22 09:53:16 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-22 09:53:17 [INFO] plugins | [核对·调试] ask='[@3427943187]来下棋' lead=False contra=False agree=False dodge=False ans='国际象棋'
+H|5p2l5LiL5qOL|5Zu96ZmF6LGh5qOL
+11-22 09:53:18 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-22 09:53:21 [INFO] plugins | [核对·调试] ask='[@3427943187]想下棋' lead=False contra=False agree=False dodge=False ans='@3427943187 我在这，先生。您想下哪一盘？'
+H|5oOz5LiL5qOL|W0NROmF0LHFxPTM0Mjc5NDMxODddIOaIkeWcqOi/me+8jOWFiOeUn+OAguaCqOaDs+S4i+WTquS4gOebmO+8nw==
+11-22 09:53:21 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-22 09:53:22 [INFO] plugins | [核对·调试] ask='[@3427943187]下棋吗' lead=False contra=False agree=False dodge=False ans='@3427943187 国际象棋'
+H|5LiL5qOL5ZCX|W0NROmF0LHFxPTM0Mjc5NDMxODddIOWbvemZheixoeajiw==
+11-22 09:53:23 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-22 09:53:24 [INFO] plugins | [核对·调试] ask='[@3427943187]陪我下一盘' lead=False contra=False agree=False dodge=False ans='@3427943187 国际象棋'
+H|6Zmq5oiR5LiL5LiA55uY|W0NROmF0LHFxPTM0Mjc5NDMxODddIOWbvemZheixoeajiw==
+11-22 09:53:25 [INFO] plugins | [核对·调试] ask='[@3427943187]教我下棋' lead=False contra=False agree=False dodge=False ans='白方先走，您请。'
+H|5pWZ5oiR5LiL5qOL|55m95pa55YWI6LWw77yM5oKo6K+344CC
+11-22 09:53:25 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-22 09:53:28 [INFO] plugins | [核对·调试] ask='[@3427943187]国际象棋怎么玩' lead=False contra=False agree=False dodge=False ans='棋子走法：王走一步，横竖斜都行；车横竖直走；象斜线走；后横竖斜都走，最厉'
+H|5Zu96ZmF6LGh5qOL5oCO5LmI546p|5qOL5a2Q6LWw5rOV77ya546L6LWw5LiA5q2l77yM5qiq56uW5pac6YO96KGM77yb6L2m5qiq56uW55u06LWw77yb6LGh5pac57q/6LWw77yb5ZCO5qiq56uW5pac6YO96LWw77yM5pyA5Y6J5a6z77yb6ams6LWwIuaXpSLlrZfvvIzog73ot7PlrZDvvJvlhbXlj6rog73lkJHliY3vvIznrKzkuIDmraXlj6/otbDkuKTmoLzvvIzlkIPlrZDmlpzlkIPvvJvliLDlupXnur/ljYflj5jjgILnjovovabmmJPkvY3mmK/njovlkozovabkuIDmraXmjaLkvY3jgII=
+11-22 09:53:29 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-22 09:53:30 [INFO] plugins | [核对·调试] ask='[@3427943187]走一步' lead=False contra=False agree=False dodge=False ans='@3427943187 走 e4'
+H|6LWw5LiA5q2l|W0NROmF0LHFxPTM0Mjc5NDMxODddIOi1sCBlNA==
+11-22 09:53:30 [WARNING] plugins | [模型降级] glm-4.7-flash 调用失败(RateLimitError)，尝试下一个
+11-22 09:53:31 [INFO] plugins | [核对·调试] ask='[@3427943187]走吧' lead=True contra=False agree=False dodge=False ans='走吧，您先请。'
+H|6LWw5ZCn|6LWw5ZCn77yM5oKo5YWI6K+344CC
 ====DONE====
 =====完=====
