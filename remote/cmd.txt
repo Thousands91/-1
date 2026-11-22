@@ -1,17 +1,13 @@
-287663
-echo "===== [1] settings命令是否可用 ====="
-command -v settings || echo "settings不在PATH"
-settings get global wifi_sleep_policy 2>&1 | head -2
-echo "===== [2] 内核wake_lock节点 ====="
-cat /sys/power/wake_lock 2>/dev/null || echo "无/sys/power/wake_lock节点"
-echo "--- wakeup_count ---"; cat /sys/power/wakeup_count 2>/dev/null || echo "无节点"
-echo "===== [3] termux唤醒锁状态(看进程持锁) ====="
-ls -la /data/data/com.termux/files/usr/bin/termux-wake-lock 2>/dev/null
-echo "===== [4] doze状态 ====="
-dumpsys deviceidle 2>/dev/null | grep -iE 'mDeepPowerSaveMode|mLightPowerSaveMode|mScreenOff|mCharging|enabled=' | head -8 || echo "dumpsys deviceidle无权限"
-echo "===== [5] guard为何没跑(检查启动配置) ====="
-grep -rn 'azar_guard' /root/start_all.sh /root/setup.sh /root/*.sh 2>/dev/null | head -10
-echo "(空=没有任何脚本拉起guard)"
-echo "===== [6] autoheal的wakelock续持行(确认它每轮续持) ====="
-grep -n 'wake-lock\|wakelock\|termux-wake' /root/azar_autoheal.sh 2>/dev/null | head -10
+287664
+echo "===== [1] NapCat启动脚本里的-q快速登录参数 ====="
+grep -rn -- '-q \|quick\|快速登录\|quicklogin' /root/*.sh /root/Napcat/*.sh /root/Napcat/opt/QQ/*.sh 2>/dev/null | grep -v '^Binary' | head -15
+echo "(空=当前没用-q快速登录)"
+echo "===== [2] NapCat HTTP/WS探活口配置 ====="
+grep -rn '3011\|3000\|3001\|webui\|token' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/*.json 2>/dev/null | head -20
+echo "--- 配置文件列表 ---"
+find /root/Napcat -maxdepth 6 -name 'config.json' -o -name 'napcat.json' 2>/dev/null | head -10
+echo "===== [3] 当前NapCat进程完整命令 ====="
+for p in $(pgrep -f 'opt/QQ/qq' | head -2); do echo "PID $p:"; tr '\0' ' ' < /proc/$p/cmdline; echo; done
+echo "===== [4] ophoresis: 登录态数据目录(快速登录依赖它) ====="
+ls -la /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/data/ 2>/dev/null | head -10
 echo "=====完====="
