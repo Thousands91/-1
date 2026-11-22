@@ -1,4 +1,4 @@
-287602
+287603
 set -a; source /root/bot/bot/.env 2>/dev/null; set +a
 cd /root/bot/bot && /root/bot/venv/bin/python - <<'PY'
 import nonebot; nonebot.init()
@@ -15,17 +15,19 @@ class Bot:
 class Ev:
     user_id=1561950850; group_id=1109952783; message_id=1
     def __init__(self,t):
-        self.t=t; self.message=OBMessage("[CQ:at,qq=3427943187]"+t); self.raw_message=self.message
+        self.t=t; self.raw="[CQ:at,qq=3427943187]"+t; self.message=OBMessage(self.raw)
     def get_plaintext(self): return self.t
     def is_tome(self): return True
     def get_message(self): return self.message
     def get_user_id(self): return self.user_id
     def get_session_id(self): return "x"
+    @property
+    def raw_message(self): return self.raw
 async def run(t):
     m.HISTORY.clear(); m._TEXT_RECENT.clear(); m._EXTRACT_MEMO.clear(); m._pick_cache.clear(); captured.clear()
     try: await m.ai_chat.handlers[0].call(Bot(),Ev(t),{})
     except SystemExit: pass
-    except Exception as e: return "[ERR]"+type(e).__name__
+    except Exception as e: return "[ERR]"+type(e).__name__+":"+str(e)[:40]
     s=captured.get("sent"); return str(s) if s is not None else "[NO_SENT]"
 async def main():
     for t in ["陪我下棋","我们下棋吧","来下棋","想下棋","下棋吗","陪我下一盘","教我下棋","国际象棋怎么玩","走一步","走吧"]:
