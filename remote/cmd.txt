@@ -1,9 +1,3 @@
-287670
-HEALPAT='bash /root/azar_session_heal.[s]h'
-echo "[0] 当前进程:"; pgrep -f "$HEALPAT" | head -5
-for p in $(pgrep -f "$HEALPAT"); do kill "$p" 2>/dev/null; done
-sleep 2
-rm -rf /root/.session_heal.lock /root/.session_heal 2>/dev/null
-echo "[1] 清理后进程:"; pgrep -f "$HEALPAT" | head -5 || echo "  无"
-echo "[2] 日志报错行:"; grep -a 'No such file\|hour' /root/session_heal.log 2>/dev/null | tail -3
+287671
+command -v flock && echo "flock可用" || echo "flock不可用"
 echo "=====完====="
