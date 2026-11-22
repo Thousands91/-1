@@ -1,58 +1,118 @@
-<<<task_287658.txt>>>
-===== 任务287658 11-22 14:05:51 =====
+<<<task_287659.txt>>>
+===== 任务287659 11-22 14:06:20 =====
 --- 命令 ---
-echo "===== [1] 权限/设备环境 ====="
-id | head -1
-echo "机型:"; getprop ro.product.model 2>/dev/null; echo "Android:"; getprop ro.build.version.release 2>/dev/null
-echo "===== [2] 现有保活相关脚本/进程 ====="
-ls -la /root/*.sh 2>/dev/null | grep -iE 'guard|wake|keep|alive|autoheal|link|login|qnap' | head -30
-echo "--- 相关进程 ---"
-ps -ef | grep -iE '[a]zar_guard|[w]ake|[k]eepalive|[a]utoheal|[l]ink_probe' | head -20
-echo "===== [3] WakeLock 持有情况 ====="
-dumpsys power 2>/dev/null | grep -iE 'PARTIAL_WAKE_LOCK|wakefulness|Display Power|mHolding' | head -15
-echo "===== [4] WiFi休眠策略(值含义:1=始终连接 2=仅插电 0=从不) ====="
-settings get global wifi_sleep_policy 2>/dev/null
-echo "===== [5] 电池优化白名单(看是否有qq/napcat/termux) ====="
-dumpsys deviceidle whitelist 2>/dev/null | grep -iE 'qq|napcat|termux|bot' | head -15
-echo "(空=没加白名单)"
-echo "===== [6] NapCat运行方式/手机QQ进程 ====="
-ps -ef | grep -iE '[n]apcat|[N]apCat|[q]q|[m]obileqq' | head -15
-echo "===== [7] 快速登录相关文件 ====="
-ls -la /root/ 2>/dev/null | grep -iE 'quick|login|relogin|token|session' | head -20
+echo "===== [1] asar_keepalive.sh (Termux正在跑) ====="
+cat /data/data/com.termux/files/home/asar_keepalive.sh 2>/dev/null | head -90
+echo "===== [2] azar_guard.sh ====="
+cat /root/azar_guard.sh 2>/dev/null | head -90
+echo "===== [3] login_watch.sh ====="
+cat /root/login_watch.sh 2>/dev/null | head -40
 echo "=====完====="
 --- 输出 ---
-===== [1] 权限/设备环境 =====
-uid=0(root) gid=0(root) groups=0(root),3003(aid_inet),9997(aid_everybody),20643(aid_u0_a643_cache),50643(aid_all_a643)
-机型:
-TEL-AN00a
-Android:
-10
-===== [2] 现有保活相关脚本/进程 =====
--rwxr-xr-x 1 root root  7226 Nov 20 12:05 /root/azar_autoheal.sh
--rwxr-xr-x 1 root root  3471 Nov 19 00:50 /root/azar_guard.sh
--rwxr-xr-x 1 root root  3460 Nov  3 20:24 /root/azar_login.sh
--rwxr-xr-x 1 root root   462 Nov 13 11:41 /root/login_watch.sh
--rwxr-xr-x 1 root root  1036 Nov  1 01:23 /root/logincheck.sh
---- 相关进程 ---
-aid_u0_+ 17138     1  0  2023 ?        00:00:23 bash /root/azar_autoheal.sh
-aid_u0_+ 27977 26021  0  2023 pts/1    00:00:00 bash /data/data/com.termux/files/home/asar_keepalive.sh
-===== [3] WakeLock 持有情况 =====
-===== [4] WiFi休眠策略(值含义:1=始终连接 2=仅插电 0=从不) =====
-===== [5] 电池优化白名单(看是否有qq/napcat/termux) =====
-(空=没加白名单)
-===== [6] NapCat运行方式/手机QQ进程 =====
-aid_u0_+  3777  3744  0  2023 ?        00:00:00 grep -iE [n]apcat|[N]apCat|[q]q|[m]obileqq
-aid_u0_+ 10178 10172  0  2023 ?        00:00:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
-aid_u0_+ 10197 10178  0  2023 ?        00:01:02 /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512
-aid_u0_+ 10199 10197  0  2023 ?        00:00:00 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-aid_u0_+ 10200 10197  0  2023 ?        00:00:00 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
-aid_u0_+ 17780 10197  0  2023 ?        00:16:14 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --no-sandbox --disable-dev-shm-usage --enable-crash-reporter=ed95f686-be11-4e04-b899-7fe984b06b7b,no_channel --user-data-dir=/root/.config/QQ --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,14948092369491454982,15184374026698565505,262144 --enable-features=PdfUseShowSaveFilePicker --disable-features=LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708990997080739
-aid_u0_+ 17781 10199  0  2023 ?        00:00:00 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-aid_u0_+ 17784 10197  0  2023 ?        00:00:00 /proc/self/exe --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --no-sandbox --disable-dev-shm-usage --enable-crash-reporter=ed95f686-be11-4e04-b899-7fe984b06b7b,no_channel --user-data-dir=/root/.config/QQ --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,14948092369491454982,15184374026698565505,262144 --enable-features=PdfUseShowSaveFilePicker --disable-features=LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708992871164437
-===== [7] 快速登录相关文件 =====
--rwxr-xr-x  1 root root    3460 Nov  3 20:24 azar_login.sh
--rw-r--r--  1 root root     835 Nov 12 13:06 azar_login_run.log
--rw-r--r--  1 root root   66180 Nov 22 14:02 login_state.log
--rwxr-xr-x  1 root root     462 Nov 13 11:41 login_watch.sh
--rwxr-xr-x  1 root root    1036 Nov  1 01:23 logincheck.sh
+===== [1] asar_keepalive.sh (Termux正在跑) =====
+#!/data/data/com.termux/files/usr/bin/bash
+# 阿萨尔睡前保活锚：睡前在 Termux 原生 shell 执行；跑起来后按 Home 切走，别 exit、别关窗口
+# 原理：占住一个活会话 -> Termux 持前台服务资格 -> 荣耀 iAware 豁免（手册坑65）
+WL=/data/data/com.termux/files/usr/bin/termux-wake-lock
+echo "===== 阿萨尔保活锚启动 $(date '+%F %T') ====="
+if [ -x "$WL" ]; then "$WL" && echo "[1] 唤醒锁已申请" || echo "[1] 唤醒锁申请失败(不影响活会话锚)"; else echo "[1] 唤醒锁路径不存在"; fi
+echo "[2] 保活锚运行中：这个窗口别关、别 exit，按 Home 切走即可"
+echo "[3] 要停止：在这个窗口按 Ctrl+C"
+echo "=========================================="
+while true; do sleep infinity; done
+===== [2] azar_guard.sh =====
+#!/bin/bash
+# 阿萨尔掉线守护 v1.2 (2026-11-08)
+# v1.2 改动(依据2026-11-08社区调研): 被踢/等扫码期间完全停止自动重启
+#   —— 会话已被服务端作废,任何定时重试都是"频繁无效登录",只会加重风控
+#   —— 原v1.1的"被踢标记超6小时允许再试"已移除,被踢后只等人工扫码
+#   —— 人工恢复途径: 扫码后 connected 自动清标记;或 rm /root/.guard_kicked
+# 规则1: QQ进程死了且无近期二维码 -> 自动拉起(崩溃恢复,保留)
+# 规则2: WS断开+未被踢标记 -> 尝试重启NapCat免扫码恢复(登录态可能还在,保留)
+# 规则3: 重启后仍出新款二维码(=真被踢) -> 记被踢标记,此后不再自动重启,等人工扫码
+# 规则4: 每小时最多重启3次,重启后冷却5分钟;登录成功(connected)自动清被踢标记
+LOG=/root/bot/bot/bot.log
+QR=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+STATE=/root/guard_status.txt
+LAST_RESTART=/root/.guard_last
+CNT_FILE=/root/.guard_cnt
+KICKED=/root/.guard_kicked
+TS() { stat -c %Y "$1" 2>/dev/null || echo 0; }
+start_qq() {
+  cd /root && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 &
+}
+can_restart() {
+  NOW=$(date +%s)
+  LR=$(cat "$LAST_RESTART" 2>/dev/null || echo 0)
+  [ $(( NOW - LR )) -lt 300 ] && return 1
+  H=$(date +%H)
+  read C H2 < "$CNT_FILE" 2>/dev/null || { C=0; H2=$H; }
+  [ "$H" != "$H2" ] && C=0
+  [ "$C" -ge 3 ] && return 1
+  echo "$((C+1)) $H" > "$CNT_FILE"
+  echo "$NOW" > "$LAST_RESTART"
+  return 0
+}
+echo "$(date '+%m-%d %H:%M:%S') 守护v1.2启动" >> "$STATE"
+while true; do
+  sleep 60
+  pgrep -f "remote_ct[l].sh" >/dev/null || { echo "$(date '+%m-%d %H:%M:%S') 看护:遥控不在,拉起" >> "$STATE"; cd /root && setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & }
+  LAST=$(grep "WebSocket for Bot 3427943187" "$LOG" 2>/dev/null | tail -1)
+  case "$LAST" in
+    *connected*)
+      [ -f "$KICKED" ] && rm -f "$KICKED" && echo "$(date '+%m-%d %H:%M:%S') 已重新上线,清除被踢标记" >> "$STATE"
+      continue
+      ;;
+  esac
+  QQ_N=$(pgrep -fc "opt/QQ/[q]q" 2>/dev/null)
+  if [ "$QQ_N" = "0" ] || [ -z "$QQ_N" ]; then
+    AGE=999999
+    [ -f "$QR" ] && AGE=$(( $(date +%s) - $(TS "$QR") ))
+    if [ $AGE -gt 600 ]; then
+      if can_restart; then
+        echo "$(date '+%m-%d %H:%M:%S') QQ进程消失,自动拉起" >> "$STATE"
+        start_qq
+      fi
+    fi
+    continue
+  fi
+  # QQ活着但WS不在connected态
+  # v1.2: 被踢标记存在时,不做任何自动重启,静等人工扫码
+  if [ -f "$KICKED" ]; then
+    continue
+  fi
+  AGE=999999
+  [ -f "$QR" ] && AGE=$(( $(date +%s) - $(TS "$QR") ))
+  LR=$(cat "$LAST_RESTART" 2>/dev/null || echo 0)
+  QRT=$(TS "$QR")
+  if [ $AGE -lt 300 ]; then
+    # 新鲜二维码: 刚被踢或刚重启出来,先标记(若此码在最近一次重启之后出现,基本坐实被踢)
+    if [ "$QRT" -gt "$LR" ] && [ "$LR" != "0" ]; then
+      echo "$(date +%s)" > "$KICKED"
+      echo "$(date '+%m-%d %H:%M:%S') 重启后仍出新二维码: 确认被腾讯踢线,标记后等人工扫码(v1.2不再自动重试)" >> "$STATE"
+    fi
+    continue
+  fi
+  if can_restart; then
+    echo "$(date '+%m-%d %H:%M:%S') WS断开,尝试重启NapCat免扫码恢复" >> "$STATE"
+    pkill -f "opt/QQ/qq" 2>/dev/null
+    sleep 3
+    start_qq
+  fi
+done
+===== [3] login_watch.sh =====
+#!/bin/bash
+# 登录态台账:每5分钟记一行logincheck结果,踢号时刻/在线时长/周期从此可回溯
+LAST=""
+while true; do
+  S=$(bash /root/logincheck.sh 2>/dev/null | grep -oE "\[在线\]|\[掉线\]|\[未登录\]" | head -1)
+  T=$(date '+%F %T')
+  if [ "$S" != "$LAST" ]; then
+    echo "$T 状态变化: ${LAST:-初始} -> ${S:-未知}" >> /root/login_state.log
+    LAST="$S"
+  else
+    echo "$T $S" >> /root/login_state.log
+  fi
+  sleep 300
+done
 =====完=====
