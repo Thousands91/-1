@@ -1,4 +1,17 @@
-287609
-set -a; source /root/bot/bot/.env 2>/dev/null; set +a
-cd /root/bot/bot && /root/bot/venv/bin/python /tmp/e2e_163b_device.py 2>&1 | grep -E 'H\||====DONE===='
+287610
+echo "===== 坑163b @兜底 $(date '+%T') ====="
+/root/bot/venv/bin/python - <<'PYCODE'
+import base64
+F="/root/bot/bot/plugins/ai_chat.py"
+s=open(F,encoding="utf-8").read()
+def D(x): return base64.b64decode(x).decode("utf-8")
+old,new=D("ICAgIGltcG9ydCByZSBhcyBfcmUyCiAgICBfb3V0ID0gTWVzc2FnZSgpCiAgICBfcG9zID0gMAogICAgZm9yIF9tIGluIF9yZTIuZmluZGl0ZXIociJAXHMqKFxkezUsMTF9KSIsIGFuc3dlcik6CiAgICAgICAgaWYgX20uc3RhcnQoKSA+IF9wb3M6CiAgICAgICAgICAgIF9vdXQuYXBwZW5kKE1lc3NhZ2VTZWdtZW50LnRleHQoYW5zd2VyW19wb3M6X20uc3RhcnQoKV0pKQogICAgICAgIF9vdXQuYXBwZW5kKE1lc3NhZ2VTZWdtZW50LmF0KGludChfbS5ncm91cCgxKSkpKQogICAgICAgIF9wb3MgPSBfbS5lbmQoKQogICAgaWYgX3BvcyA8IGxlbihhbnN3ZXIpOgogICAgICAgIF9vdXQuYXBwZW5kKE1lc3NhZ2VTZWdtZW50LnRleHQoYW5zd2VyW19wb3M6XSkp"),D("ICAgIGltcG9ydCByZSBhcyBfcmUyCiAgICBfc2VsZl9pZCA9IGdldGF0dHIoZXZlbnQsICJzZWxmX2lkIiwgMCkgb3IgMAogICAgX291dCA9IE1lc3NhZ2UoKQogICAgX3BvcyA9IDAKICAgIGZvciBfbSBpbiBfcmUyLmZpbmRpdGVyKHIiQFxzKihcZHs1LDExfSkiLCBhbnN3ZXIpOgogICAgICAgIF9hdF91aWQgPSBpbnQoX20uZ3JvdXAoMSkpCiAgICAgICAgIyDlnZExNjNi77ya6Zey6IGK6YeM5qih5Z6L54ix5oqKIkDmiJEi54Wn5a2X6Z2i6L6T5Ye65oiQQOacuuWZqOS6uuiHquW3se+8jOS5sUDmvI/liLDnvqTph4zlvojmgKrjgIIKICAgICAgICAjIEDmnLrlmajkurroh6rlt7ExMDAl5piv6ZSZ55qE77yM5pW05q615ZCe5o6J77yb5ZCM5pe25oqK6L+Z5q615YmN6Z2i55qE56m655m95Lmf5bm26L+bX3Bvc+S4gOi1t+S4ouOAggogICAgICAgIGlmIF9zZWxmX2lkIGFuZCBfYXRfdWlkID09IF9zZWxmX2lkOgogICAgICAgICAgICBfcG9zID0gX20uZW5kKCkKICAgICAgICAgICAgY29udGludWUKICAgICAgICBpZiBfbS5zdGFydCgpID4gX3BvczoKICAgICAgICAgICAgX291dC5hcHBlbmQoTWVzc2FnZVNlZ21lbnQudGV4dChhbnN3ZXJbX3BvczpfbS5zdGFydCgpXSkpCiAgICAgICAgX291dC5hcHBlbmQoTWVzc2FnZVNlZ21lbnQuYXQoX2F0X3VpZCkpCiAgICAgICAgX3BvcyA9IF9tLmVuZCgpCiAgICBpZiBfcG9zIDwgbGVuKGFuc3dlcik6CiAgICAgICAgX291dC5hcHBlbmQoTWVzc2FnZVNlZ21lbnQudGV4dChhbnN3ZXJbX3BvczpdKSk=")
+c=s.count(old)
+assert c==1, "锚点count="+str(c)
+s=s.replace(old,new,1)
+open(F,"w",encoding="utf-8").write(s)
+import ast; ast.parse(s)
+print("替换完成+语法OK")
+PYCODE
+echo "兜底标记:$(grep -F -c '_self_id = getattr' /root/bot/bot/plugins/ai_chat.py)"
 echo "=====完====="
