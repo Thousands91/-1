@@ -1,70 +1,17 @@
-<<<task_287659.txt>>>
-===== 任务287659 11-22 14:06:20 =====
+<<<task_287660.txt>>>
+===== 任务287660 11-22 14:06:55 =====
 --- 命令 ---
-echo "===== [1] asar_keepalive.sh (Termux正在跑) ====="
-cat /data/data/com.termux/files/home/asar_keepalive.sh 2>/dev/null | head -90
-echo "===== [2] azar_guard.sh ====="
-cat /root/azar_guard.sh 2>/dev/null | head -90
-echo "===== [3] login_watch.sh ====="
-cat /root/login_watch.sh 2>/dev/null | head -40
+echo "===== [1] azar_guard.sh 全文(45行后) ====="
+sed -n '45,120p' /root/azar_guard.sh 2>/dev/null
+echo "===== [2] guard_status 最近20行 ====="
+tail -20 /root/guard_status.txt 2>/dev/null
+echo "===== [3] 被踢标记是否存在 ====="
+ls -la /root/.guard_kicked 2>/dev/null && echo "标记内容:" && cat /root/.guard_kicked 2>/dev/null || echo "无被踢标记"
+echo "===== [4] azar_login.sh 全文 ====="
+cat /root/azar_login.sh 2>/dev/null | head -80
 echo "=====完====="
 --- 输出 ---
-===== [1] asar_keepalive.sh (Termux正在跑) =====
-#!/data/data/com.termux/files/usr/bin/bash
-# 阿萨尔睡前保活锚：睡前在 Termux 原生 shell 执行；跑起来后按 Home 切走，别 exit、别关窗口
-# 原理：占住一个活会话 -> Termux 持前台服务资格 -> 荣耀 iAware 豁免（手册坑65）
-WL=/data/data/com.termux/files/usr/bin/termux-wake-lock
-echo "===== 阿萨尔保活锚启动 $(date '+%F %T') ====="
-if [ -x "$WL" ]; then "$WL" && echo "[1] 唤醒锁已申请" || echo "[1] 唤醒锁申请失败(不影响活会话锚)"; else echo "[1] 唤醒锁路径不存在"; fi
-echo "[2] 保活锚运行中：这个窗口别关、别 exit，按 Home 切走即可"
-echo "[3] 要停止：在这个窗口按 Ctrl+C"
-echo "=========================================="
-while true; do sleep infinity; done
-===== [2] azar_guard.sh =====
-#!/bin/bash
-# 阿萨尔掉线守护 v1.2 (2026-11-08)
-# v1.2 改动(依据2026-11-08社区调研): 被踢/等扫码期间完全停止自动重启
-#   —— 会话已被服务端作废,任何定时重试都是"频繁无效登录",只会加重风控
-#   —— 原v1.1的"被踢标记超6小时允许再试"已移除,被踢后只等人工扫码
-#   —— 人工恢复途径: 扫码后 connected 自动清标记;或 rm /root/.guard_kicked
-# 规则1: QQ进程死了且无近期二维码 -> 自动拉起(崩溃恢复,保留)
-# 规则2: WS断开+未被踢标记 -> 尝试重启NapCat免扫码恢复(登录态可能还在,保留)
-# 规则3: 重启后仍出新款二维码(=真被踢) -> 记被踢标记,此后不再自动重启,等人工扫码
-# 规则4: 每小时最多重启3次,重启后冷却5分钟;登录成功(connected)自动清被踢标记
-LOG=/root/bot/bot/bot.log
-QR=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-STATE=/root/guard_status.txt
-LAST_RESTART=/root/.guard_last
-CNT_FILE=/root/.guard_cnt
-KICKED=/root/.guard_kicked
-TS() { stat -c %Y "$1" 2>/dev/null || echo 0; }
-start_qq() {
-  cd /root && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 &
-}
-can_restart() {
-  NOW=$(date +%s)
-  LR=$(cat "$LAST_RESTART" 2>/dev/null || echo 0)
-  [ $(( NOW - LR )) -lt 300 ] && return 1
-  H=$(date +%H)
-  read C H2 < "$CNT_FILE" 2>/dev/null || { C=0; H2=$H; }
-  [ "$H" != "$H2" ] && C=0
-  [ "$C" -ge 3 ] && return 1
-  echo "$((C+1)) $H" > "$CNT_FILE"
-  echo "$NOW" > "$LAST_RESTART"
-  return 0
-}
-echo "$(date '+%m-%d %H:%M:%S') 守护v1.2启动" >> "$STATE"
-while true; do
-  sleep 60
-  pgrep -f "remote_ct[l].sh" >/dev/null || { echo "$(date '+%m-%d %H:%M:%S') 看护:遥控不在,拉起" >> "$STATE"; cd /root && setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & }
-  LAST=$(grep "WebSocket for Bot 3427943187" "$LOG" 2>/dev/null | tail -1)
-  case "$LAST" in
-    *connected*)
-      [ -f "$KICKED" ] && rm -f "$KICKED" && echo "$(date '+%m-%d %H:%M:%S') 已重新上线,清除被踢标记" >> "$STATE"
-      continue
-      ;;
-  esac
-  QQ_N=$(pgrep -fc "opt/QQ/[q]q" 2>/dev/null)
+===== [1] azar_guard.sh 全文(45行后) =====
   if [ "$QQ_N" = "0" ] || [ -z "$QQ_N" ]; then
     AGE=999999
     [ -f "$QR" ] && AGE=$(( $(date +%s) - $(TS "$QR") ))
@@ -100,19 +47,88 @@ while true; do
     start_qq
   fi
 done
-===== [3] login_watch.sh =====
+===== [2] guard_status 最近20行 =====
+===== [3] 被踢标记是否存在 =====
+无被踢标记
+===== [4] azar_login.sh 全文 =====
 #!/bin/bash
-# 登录态台账:每5分钟记一行logincheck结果,踢号时刻/在线时长/周期从此可回溯
-LAST=""
-while true; do
-  S=$(bash /root/logincheck.sh 2>/dev/null | grep -oE "\[在线\]|\[掉线\]|\[未登录\]" | head -1)
-  T=$(date '+%F %T')
-  if [ "$S" != "$LAST" ]; then
-    echo "$T 状态变化: ${LAST:-初始} -> ${S:-未知}" >> /root/login_state.log
-    LAST="$S"
-  else
-    echo "$T $S" >> /root/login_state.log
-  fi
-  sleep 300
+# 阿萨尔 NapCat 一键登录助手 —— 在手机 Ubuntu (proot) 的 ~ 目录运行
+# 用法: bash azar_login.sh
+# 做的事: 清理旧进程 -> 启动 NapCat -> 盯着二维码文件等它刷新 ->
+#         复制到相册目录 -> 倒计时提醒扫码 -> 盯到登录成功为止
+
+QR_SRC="/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png"
+QR_DST="/sdcard/DCIM/Camera/asar_qr.png"
+LOG="/root/napcat.log"
+QR_VALID_SEC=110   # 二维码按 110 秒算过期，留足余量
+
+echo "==> 第 1 步：清理旧进程"
+screen -S napcat -X quit 2>/dev/null
+pkill -f "opt/QQ/qq" 2>/dev/null
+sleep 3
+
+echo "==> 第 2 步：启动 NapCat（后台，日志在 $LOG）"
+rm -f "$LOG" "$QR_SRC"
+nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > "$LOG" 2>&1 &
+
+echo "==> 第 3 步：等二维码生成（NapCat 启动约需 20~40 秒）"
+GEN_TIME=""
+for i in $(seq 1 30); do
+    sleep 2
+    if [ -f "$QR_SRC" ]; then
+        GEN_TIME=$(stat -c %Y "$QR_SRC")
+        break
+    fi
 done
+if [ -z "$GEN_TIME" ]; then
+    echo "!! 60 秒内没等到二维码，NapCat 可能没起来。运行 tail -30 $LOG 看看日志"
+    exit 1
+fi
+
+echo "==> 第 4 步：复制二维码到相册"
+cp "$QR_SRC" "$QR_DST" && chmod 644 "$QR_DST"
+NOW=$(date +%s)
+AGE=$((NOW - GEN_TIME))
+echo "   二维码已就位（生成于 ${AGE} 秒前），有效期约 ${QR_VALID_SEC} 秒"
+
+echo ""
+echo "############################################################"
+echo "#                                                          #"
+echo "#   现在去手机上操作（抓紧时间，剩约 $((QR_VALID_SEC - AGE)) 秒）：      #"
+echo "#   1. 打开 QQ（机器人小号 3427943187 登录的那个）           #"
+echo "#   2. 随便开个聊天（推荐文件传输助手）                      #"
+echo "#   3. 发图片 -> 选 DCIM/Camera 里的 asar_qr.png            #"
+echo "#   4. 点开大图 -> 长按 -> 识别二维码 -> 确认登录            #"
+echo "#                                                          #"
+echo "############################################################"
+echo ""
+
+echo "==> 第 5 步：盯着登录结果（你也可以先去扫码，我在这等着）"
+LAST_GEN="$GEN_TIME"
+START=$(date +%s)
+while true; do
+    sleep 3
+    NOW=$(date +%s)
+
+    # 登录成功的标志：日志出现成功字样，或二维码文件消失/不再刷新
+    if grep -aqE "登录成功|登录成功!|Bot.*online|扫码登录成功" "$LOG" 2>/dev/null; then
+        echo ""
+        echo "############################################"
+        echo "#  ✅ 登录成功！阿萨尔在手机上活了          #"
+        echo "############################################"
+        exit 0
+    fi
+
+    # 二维码被刷新了 -> 旧的作废，复制新码并重新提醒
+    if [ -f "$QR_SRC" ]; then
+        NEW_GEN=$(stat -c %Y "$QR_SRC")
+        if [ "$NEW_GEN" != "$LAST_GEN" ]; then
+            LAST_GEN="$NEW_GEN"
+            cp "$QR_SRC" "$QR_DST" && chmod 644 "$QR_DST"
+            echo "[$(date +%H:%M:%S)] 二维码刷新了，已复制新的到相册，请重新识别（asar_qr.png）"
+        fi
+    fi
+
+    # 超过 10 分钟还没成功，提示重启脚本重来
+    if [ $((NOW - START)) -gt 600 ]; then
 =====完=====
