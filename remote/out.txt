@@ -1,19 +1,38 @@
-<<<task_287678.txt>>>
-===== 任务287678 11-22 14:42:11 =====
+<<<task_287679.txt>>>
+===== 任务287679 11-22 14:47:39 =====
 --- 命令 ---
-HEALPAT='bash /root/azar_session_heal.[s]h'
-echo "MD5=$(md5sum /root/azar_session_heal.sh 2>/dev/null | cut -d' ' -f1)"
-echo "LOCKTAG=$(grep -c MYLOCK /root/azar_session_heal.sh 2>/dev/null)"
-echo "PROCNUM=$(pgrep -f "$HEALPAT" | wc -l)"
-echo "PIDFILE=$(cat /root/.session_heal.lock.pid 2>/dev/null)"
-echo "LOGTAIL=$(tail -1 /root/session_heal.log 2>/dev/null)"
-echo "LOGIN=$(bash /root/logincheck.sh 2>/dev/null | grep -oE '\[(在线|未登录|掉线)\]' | head -1)"
+echo "===== 真实heal进程(排除任务自匹配:只看cmdline精确等于bash+脚本路径的) ====="
+N=0
+for d in /proc/[0-9]*; do
+  p=${d#/proc/}
+  cl=$(tr '\0' ' ' < "$d/cmdline" 2>/dev/null)
+  case "$cl" in
+    "bash /root/azar_session_heal.sh "*) echo "  PID=$p CMD=[$cl]"; N=$((N+1)) ;;
+  esac
+done
+echo "  真实进程数=$N (期望1)"
+echo "===== PID文件 ====="; cat /root/.session_heal.lock.pid 2>/dev/null
+echo "===== RUNDIR的hour(报错是否还在持续?看修改时间) ====="; ls -la --time-style=+%H:%M:%S /root/.session_heal/ 2>/dev/null
+echo "===== 最近1分钟日志是否还在报错 ====="; tail -1 /root/session_heal.log 2>/dev/null; stat -c '日志修改:%y' /root/session_heal.log 2>/dev/null
 echo "=====完====="
 --- 输出 ---
-MD5=405cba7c51cbfe6ec0d2b17ed9d265f3
-LOCKTAG=5
-PROCNUM=2
-PIDFILE=17050
-LOGTAIL=/root/azar_session_heal.sh: line 117: /root/.session_heal/hour: No such file or directory
-LOGIN=[未登录]
+===== 真实heal进程(排除任务自匹配:只看cmdline精确等于bash+脚本路径的) =====
+  PID=17050 CMD=[bash /root/azar_session_heal.sh ]
+  PID=17089 CMD=[bash /root/azar_session_heal.sh ]
+  PID=18972 CMD=[bash /root/azar_session_heal.sh ]
+bash: line 5: /proc/19456/cmdline: No such file or directory
+bash: line 5: /proc/19461/cmdline: No such file or directory
+  真实进程数=3 (期望1)
+===== PID文件 =====
+17050
+===== RUNDIR的hour(报错是否还在持续?看修改时间) =====
+total 0
+drwxr-xr-x  2 root root 3488 14:38:31 .
+drwx------ 17 root root 8192 14:44:25 ..
+-rw-r--r--  1 root root    2 14:44:45 fail_cnt
+-rw-r--r--  1 root root    5 14:44:43 hour
+-rw-r--r--  1 root root   11 14:44:43 last_restart
+===== 最近1分钟日志是否还在报错 =====
+/root/azar_session_heal.sh: line 117: /root/.session_heal/hour: No such file or directory
+日志修改:2026-11-22 14:38:31.420000000 +0800
 =====完=====
