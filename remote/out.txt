@@ -1,35 +1,39 @@
-<<<task_287632.txt>>>
-===== 任务287632 11-22 12:46:56 =====
+<<<task_287633.txt>>>
+===== 任务287633 11-22 12:50:15 =====
 --- 命令 ---
-python3 - <<'PY'
-import re
-ev=[]
-for f in ['/root/napcat.log','/root/napcat-restart.log']:
-    for ln in open(f,errors='replace'):
-        if any(k in ln for k in ['KickedOffLine','账号状态变更为离线','登录已失效','SelfOffline']):
-            ts='?'
-            m=re.search(r'(\d{2}-\d{2} \d{2}:\d{2}:\d{2})',ln)
-            if m: ts=m.group(1)
-            elif re.search(r'\d{4}/\d{6}\.',ln):
-                m2=re.search(r'(\d{2})(\d{2})/(\d{2})(\d{2})(\d{2})\.',ln)
-                if m2: ts=f'{m2.group(1)}-{m2.group(2)} {m2.group(3)}:{m2.group(4)}:{m2.group(5)}'
-            ev.append((ts,ln.strip()[:150],f.split('/')[-1]))
-seen=set(); out=[]
-for ts,ln,f in ev:
-    k=(ts,ln[:70])
-    if k in seen: continue
-    seen.add(k); out.append((ts,ln,f))
-out.sort(key=lambda x:x[0])
-print('[EVT] 踢线/离线事件(去重)',len(out))
-for ts,ln,f in out:
-    print(f'{ts} [{f}] {ln}')
-print('[RANGE] napcat.log 首行:',open('/root/napcat.log',errors='replace').readline()[:60].strip())
-PY
+echo "===== [1] 取证日志现状(大小/行数/首末时间) ====="
+ls -la /root/offline_forensics.log 2>/dev/null
+wc -l /root/offline_forensics.log 2>/dev/null
+head -1 /root/offline_forensics.log 2>/dev/null
+tail -1 /root/offline_forensics.log 2>/dev/null
+echo "===== [2] 有没有脚本/cron会清理或截断取证日志 ====="
+grep -rn 'offline_forensics.log' /root/*.sh /root/*.py /etc/cron* /var/spool/cron 2>/dev/null | grep -iE 'rm |truncate|> */root/offline_forensics|: *>|cat /dev/null' | head -20
+echo "(上面为空=没有清理脚本)"
+echo "===== [3] crontab 里相关条目 ====="
+crontab -l 2>/dev/null | grep -iE 'forensics|napcat|log' | head -10
+echo "===== [4] NapCat日志轮转配置 ====="
+find /etc/logrotate.d /root -maxdepth 3 -iname '*napcat*' -o -iname '*logrotate*' 2>/dev/null | head -10
+echo "===== [5] 取证器进程活着吗 ====="
+ps -ef | grep '[o]ffline_watch.[s]h' | head -2
 echo "=====完====="
 --- 输出 ---
-[EVT] 踢线/离线事件(去重) 3
-11-22 02:11:41 [napcat.log] 11-22 02:11:41 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-11-22 03:10:24 [napcat.log] 11-22 03:10:24 [[31merror[39m] 阿萨尔 | [KickedOffLine] [下线通知] 你的账号当前登录已失效，请重新登录。
-11-22 03:10:25 [napcat.log] 11-22 03:10:25 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-[RANGE] napcat.log 首行: not mini app.
+===== [1] 取证日志现状(大小/行数/首末时间) =====
+-rw-r--r-- 1 root root 40638 Nov 22 03:10 /root/offline_forensics.log
+654 /root/offline_forensics.log
+===== 掉线取证 v2.0 2026-11-19 12:41:46 CST =====
+===== 取证结束 =====
+===== [2] 有没有脚本/cron会清理或截断取证日志 =====
+(上面为空=没有清理脚本)
+===== [3] crontab 里相关条目 =====
+===== [4] NapCat日志轮转配置 =====
+/etc/logrotate.d
+/root/napcat.sh
+/root/.config/napcat
+/root/.config/QQ/NapCat
+/root/Napcat
+/root/.napcat_pulls
+/root/napcat-restart.log
+/root/napcat.log
+===== [5] 取证器进程活着吗 =====
+aid_u0_+ 30107     1  0  2023 ?        00:00:00 bash /root/offline_watch.sh
 =====完=====
