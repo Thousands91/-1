@@ -1,33 +1,34 @@
-<<<task_287628.txt>>>
-===== 任务287628 11-22 12:39:49 =====
+<<<task_287629.txt>>>
+===== 任务287629 11-22 12:41:40 =====
 --- 命令 ---
-echo "===== [1] md5(期望 a117792af0ebf4aaf282f01114bad044) ====="
-md5sum /root/offline_watch.sh /root/offline_watch_v3.sh 2>/dev/null
-echo "===== [2] 语法 ====="
-bash -n /root/offline_watch.sh && echo SYNTAX_OK
-echo "===== [3] v3标记 ====="
-printf 'EVIDENCE锚点='; grep -c '\[EVIDENCE id=' /root/offline_watch.sh
-printf '静默后复采确认='; grep -c '静默后复采确认' /root/offline_watch.sh
-printf '本次窗口='; grep -c '本次窗口' /root/offline_watch.sh
-printf 'v3版本行='; grep -c 'v3.0' /root/offline_watch.sh
-echo "===== [4] 备份 ====="
-ls -la /root/offline_watch.sh.bak_v2_* 2>/dev/null | tail -3
-echo "===== [5] 当前取证器进程(还是旧PID吗) ====="
-ps -ef | grep '[o]ffline_watch' | head -3
+PAT='bash /root/offline_watch.[s]h'
+echo "===== [0] 重启前PID ====="
+pgrep -f "$PAT" | head -3
+OLD=$(pgrep -f "$PAT" | head -3)
+for p in $OLD; do kill "$p" 2>/dev/null; done
+sleep 2
+rm -rf /root/.offline_watch_v2.lock /root/.offline_watch_v3.lock 2>/dev/null
+setsid nohup bash /root/offline_watch.sh >> /root/offline_watch2.log 2>&1 < /dev/null &
+sleep 3
+echo "===== [1] 重启后PID ====="
+pgrep -f "$PAT" | head -3
+echo "===== [2] 进程cmdline ====="
+NP=$(pgrep -f "$PAT" | head -1)
+[ -n "$NP" ] && tr '\0' ' ' < /proc/$NP/cmdline && echo
+echo "===== [3] 启动日志尾(v3基线行) ====="
+tail -3 /root/offline_watch3.log 2>/dev/null || echo "(v3日志未生成)"
+echo "===== [4] 登录态未受影响 ====="
+bash /root/logincheck.sh 2>/dev/null | grep -E '\[在线\]|\[未登录\]|\[掉线\]' | head -1
 echo "=====完====="
 --- 输出 ---
-===== [1] md5(期望 a117792af0ebf4aaf282f01114bad044) =====
-a117792af0ebf4aaf282f01114bad044  /root/offline_watch.sh
-a117792af0ebf4aaf282f01114bad044  /root/offline_watch_v3.sh
-===== [2] 语法 =====
-SYNTAX_OK
-===== [3] v3标记 =====
-EVIDENCE锚点=2
-静默后复采确认=1
-本次窗口=4
-v3版本行=3
-===== [4] 备份 =====
--rwxr-xr-x 1 root root 8870 Nov 22 12:38 /root/offline_watch.sh.bak_v2_11221238
-===== [5] 当前取证器进程(还是旧PID吗) =====
-aid_u0_+ 17145     1  0  2023 ?        00:01:15 bash /root/offline_watch.sh
+===== [0] 重启前PID =====
+17145
+===== [1] 重启后PID =====
+30107
+===== [2] 进程cmdline =====
+bash /root/offline_watch.sh 
+===== [3] 启动日志尾(v3基线行) =====
+[11-22 12:41:43] ===== 取证器v3.0启动 基线:静默=2 被踢=1 日志A=/root/napcat.log 日志B=/root/napcat-restart.log =====
+===== [4] 登录态未受影响 =====
+[未登录] 当前没有有效会话
 =====完=====
