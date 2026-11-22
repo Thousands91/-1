@@ -1,10 +1,16 @@
-287674
-echo "===== 脚本第105-118行 ====="
-sed -n '105,118p' /root/azar_session_heal.sh
-echo "===== RUNDIR与hour现状 ====="
-ls -la /root/.session_heal/ 2>/dev/null || echo "目录不存在"
-echo "===== 两个进程状态 ====="
-for p in $(pgrep -f 'bash /root/azar_session_heal.[s]h'); do echo "PID $p:"; cat /proc/$p/status 2>/dev/null | grep -E 'State|PPid'; tr '\0' ' ' </proc/$p/cmdline; echo; done
-echo "===== flock文件 ====="
-ls -la /root/.session_heal.lock* 2>/dev/null
+287675
+HEALPAT='bash /root/azar_session_heal.[s]h'
+echo "[0] 清理前:"; pgrep -f "$HEALPAT" | head -5
+# 全部杀干净
+for p in $(pgrep -f "$HEALPAT"); do kill -9 "$p" 2>/dev/null; done
+sleep 2
+rm -rf /root/.session_heal.lock* /root/.session_heal 2>/dev/null
+echo "[1] 清理后剩余:"; pgrep -f "$HEALPAT" | wc -l
+# 只起一个
+setsid nohup bash /root/azar_session_heal.sh >> /root/session_heal.log 2>&1 < /dev/null &
+sleep 4
+echo "[2] 启动后进程数(期望1):"; pgrep -f "$HEALPAT" | wc -l
+pgrep -f "$HEALPAT" | head -3
+echo "[3] 新日志尾(应无报错,有启动行):"; tail -3 /root/session_heal.log 2>/dev/null
+echo "[4] RUNDIR文件:"; ls /root/.session_heal/ 2>/dev/null
 echo "=====完====="
