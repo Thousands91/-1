@@ -1,3 +1,11 @@
-287684
-echo RECOVER_TEST_$(date +%H%M%S)
-echo "=====完====="
+287685
+echo "===== 通道探针 $(date '+%F %T') ====="
+echo "[1]遥控循环:"
+pgrep -af 'remote_ctl_v6.[s]h' || echo "  遥控循环未在运行"
+echo "[2]登录态:"
+tail -2 /root/login_state.log 2>/dev/null || echo "  无登录态日志"
+echo "[3]bot进程:"
+pgrep -af 'main.[p]y' | head -5 || echo "  bot未运行"
+echo "[4]github连通:"
+curl -s -o /dev/null -w "  api.github.com HTTP:%{http_code} %{time_total}s\n" --max-time 12 https://api.github.com
+echo "===== 探针完 ====="
