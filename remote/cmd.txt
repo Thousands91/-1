@@ -1,6 +1,15 @@
-287616
-echo "===== 坑163b重启验收 $(date '+%T') ====="
-cat /root/r163b_verify.log 2>/dev/null || echo "(还没写完)"
-echo "--- 启动日志连接行 ---"
-grep -iE 'Bot .* connected|connection open|Failed to load' /root/bot_restart_163b.log 2>/dev/null | tail -4
+287617
+echo "===== [1] login_state.log 11-22 全部状态变化 ====="
+grep '2026-11-22' /root/login_state.log 2>/dev/null | grep '状态变化'
+echo "===== [2] login_state.log 最后8行(带时间) ====="
+tail -8 /root/login_state.log 2>/dev/null
+echo "===== [3] napcat 账号状态变更为离线 (11-22) ====="
+grep -h '账号状态变更为离线' /root/napcat*.log /root/napcat/logs/*.log 2>/dev/null | grep '11-22' | tail -10
+echo "===== [4] NapCat Login Error 最早/最新(11-22) ====="
+grep -hiE 'Login Error|ErrType: ?1' /root/napcat*.log /root/napcat/logs/*.log 2>/dev/null | grep '11-22' | head -3
+echo "--- 最新3条 ---"
+grep -hiE 'Login Error|ErrType: ?1' /root/napcat*.log /root/napcat/logs/*.log 2>/dev/null | grep '11-22' | tail -3
+echo "===== [5] 当前时刻/登录态 ====="
+date '+%F %T'
+bash /root/logincheck.sh 2>/dev/null | head -4
 echo "=====完====="
