@@ -1,28 +1,7 @@
-287593
-echo "===== 坑163部署:只重启bot ====="
-if [ ! -f /root/.r163_armed ]; then
-  touch /root/.r163_armed
-  cat > /root/.r163.sh <<'SH'
-#!/bin/bash
-sleep 8
-OLDPID=$(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}' | head -1)
-[ -n "$OLDPID" ] && kill "$OLDPID"
-sleep 3
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py > /root/bot_restart_163.log 2>&1 < /dev/null &
-sleep 14
-{
-  echo "=== $(date '+%m-%d %H:%M:%S') 坑163重启后 ==="
-  echo "新PID: $(ps -eo pid,args | grep '[m]ain.py' | awk '{print $1}')"
-  echo "插件成功/失败: $(grep -c 'Succeeded to load plugin' /root/bot_restart_163.log 2>/dev/null) / $(grep -c 'Failed to load plugin' /root/bot_restart_163.log 2>/dev/null)"
-  grep -iE 'Bot .* connected|connection open' /root/bot_restart_163.log 2>/dev/null | tail -3
-  echo "登录态:"; tail -2 /root/login_state.log 2>/dev/null
-  echo "坑163标记: 铁律=$(grep -F -c '问去不去/是不是要正面答' /root/bot/bot/plugins/ai_chat.py) Q_RE=$(grep -F -c '_YESNO_Q_RE' /root/bot/bot/plugins/ai_chat.py)"
-  echo "启动日志尾:"; tail -4 /root/bot_restart_163.log 2>/dev/null
-} > /root/r163_verify.log 2>&1
-rm -f /root/.r163_armed
-SH
-  chmod +x /root/.r163.sh
-  setsid nohup bash /root/.r163.sh >/dev/null 2>&1 </dev/null &
-  echo "延迟重启已挂(8s kill+14s验证)"
-fi
+287594
+echo "===== 坑163验收 $(date '+%T') ====="
+cat /root/r163_verify.log 2>/dev/null || echo "(验收日志还没写完)"
+echo "--- link_probe最新心跳 ---"
+grep -E 'LIFECYCLE|HEARTBEAT' /root/link_probe.log 2>/dev/null | tail -3
+echo "--- 登录态 ---"; tail -2 /root/login_state.log 2>/dev/null
 echo "=====完====="
