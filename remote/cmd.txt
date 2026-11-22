@@ -1,11 +1,24 @@
-287699
-echo "===== 重启前PID核查 $(date '+%F %T') ====="
-echo "---main.py进程(精确)---"
-ps -eo pid,ppid,etime,args | grep -E 'venv/bin/python main\.py|python main\.py' | grep -v grep
-echo "---bot工作目录(确认日志位置)---"
-for p in $(pgrep -f 'venv/bin/python main\.py|python main\.py'); do echo "PID=$p cwd=$(readlink /proc/$p/cwd 2>/dev/null)"; done
-echo "---bot日志最后5行---"
-tail -5 /root/bot/bot/bot.log 2>/dev/null || tail -5 /root/bot.log 2>/dev/null
-echo "---登录态---"
-tail -1 /root/login_state.log 2>/dev/null
-echo "=====核查完====="
+287700
+echo "===== 重启大脑 $(date '+%F %T') ====="
+cd /root/bot/bot
+# 精确抓 python main.py 本体PID（方括号防自匹配，锚定venv/bin/python开头排除proot/bash）
+BP=$(ps -eo pid,args | grep "[m]ain.py" | grep "venv/bin/python" | awk '{print $1}')
+echo "旧大脑PID=[$BP]"
+if [ -z "$BP" ]; then echo "【异常】没抓到bot PID,不kill,退出"; exit 1; fi
+OLDPID="$BP"
+# 只kill bot本体,不碰遥控循环/NapCat/proot
+kill "$OLDPID" 2>&1 && echo "已kill旧PID=$OLDPID"
+sleep 3
+# 确认旧进程已退
+if kill -0 "$OLDPID" 2>/dev/null; then echo "旧进程仍在,发TERM后再等"; kill -9 "$OLDPID" 2>/dev/null; sleep 2; fi
+# 重新拉起(setsid脱离会话,>>追加日志)
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot.log 2>&1 < /dev/null &
+sleep 14
+NEWPID=$(ps -eo pid,args | grep "[m]ain.py" | grep "venv/bin/python" | awk '{print $1}')
+echo "新大脑PID=[$NEWPID]"
+if [ -n "$NEWPID" ] && [ "$NEWPID" != "$OLDPID" ]; then echo "【成功】大脑已重启 $OLDPID -> $NEWPID"; else echo "【警告】新PID异常,查日志"; fi
+echo "---启动日志尾(插件加载/connected)---"
+tail -40 /root/bot/bot.log 2>/dev/null | grep -E "Succeeded|Failed|connected|Error|Traceback|加载|doudizhu|关键词" | tail -18
+echo "---进程数(应=1)---"
+ps -eo pid,args | grep "[m]ain.py" | grep "venv/bin/python" | wc -l
+echo "=====重启完====="
