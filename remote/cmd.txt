@@ -1,15 +1,20 @@
-287628
-echo "===== [1] md5(期望 a117792af0ebf4aaf282f01114bad044) ====="
-md5sum /root/offline_watch.sh /root/offline_watch_v3.sh 2>/dev/null
-echo "===== [2] 语法 ====="
-bash -n /root/offline_watch.sh && echo SYNTAX_OK
-echo "===== [3] v3标记 ====="
-printf 'EVIDENCE锚点='; grep -c '\[EVIDENCE id=' /root/offline_watch.sh
-printf '静默后复采确认='; grep -c '静默后复采确认' /root/offline_watch.sh
-printf '本次窗口='; grep -c '本次窗口' /root/offline_watch.sh
-printf 'v3版本行='; grep -c 'v3.0' /root/offline_watch.sh
-echo "===== [4] 备份 ====="
-ls -la /root/offline_watch.sh.bak_v2_* 2>/dev/null | tail -3
-echo "===== [5] 当前取证器进程(还是旧PID吗) ====="
-ps -ef | grep '[o]ffline_watch' | head -3
+287629
+PAT='bash /root/offline_watch.[s]h'
+echo "===== [0] 重启前PID ====="
+pgrep -f "$PAT" | head -3
+OLD=$(pgrep -f "$PAT" | head -3)
+for p in $OLD; do kill "$p" 2>/dev/null; done
+sleep 2
+rm -rf /root/.offline_watch_v2.lock /root/.offline_watch_v3.lock 2>/dev/null
+setsid nohup bash /root/offline_watch.sh >> /root/offline_watch2.log 2>&1 < /dev/null &
+sleep 3
+echo "===== [1] 重启后PID ====="
+pgrep -f "$PAT" | head -3
+echo "===== [2] 进程cmdline ====="
+NP=$(pgrep -f "$PAT" | head -1)
+[ -n "$NP" ] && tr '\0' ' ' < /proc/$NP/cmdline && echo
+echo "===== [3] 启动日志尾(v3基线行) ====="
+tail -3 /root/offline_watch3.log 2>/dev/null || echo "(v3日志未生成)"
+echo "===== [4] 登录态未受影响 ====="
+bash /root/logincheck.sh 2>/dev/null | grep -E '\[在线\]|\[未登录\]|\[掉线\]' | head -1
 echo "=====完====="
