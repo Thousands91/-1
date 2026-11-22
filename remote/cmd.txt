@@ -1,21 +1,6 @@
-287667
-echo "===== 自检1: 在线→清零 ====="
-mkdir -p /tmp/heal_t1; echo 3 > /tmp/heal_t1/fail_cnt
-OW_STATE=/tmp/heal_t1/state OW_LOCK=/tmp/heal_t1/lock OW_RUNDIR=/tmp/heal_t1 \
-OW_LOGINCHECK="echo '[在线] 已登录'" OW_DRY_RUN=1 OW_ONCE=1 OW_WAIT=1 bash /root/azar_session_heal.sh >/dev/null 2>&1
-echo "  fail_cnt=$(cat /tmp/heal_t1/fail_cnt) (期望0)"
-
-echo "===== 自检2: 静默离线→触发(DRY) ====="
-mkdir -p /tmp/heal_t2; : > /tmp/heal_t2/logA; : > /tmp/heal_t2/logB
-OW_LOG_A=/tmp/heal_t2/logA OW_LOG_B=/tmp/heal_t2/logB OW_STATE=/tmp/heal_t2/state OW_LOCK=/tmp/heal_t2/lock OW_RUNDIR=/tmp/heal_t2 \
-OW_LOGINCHECK="echo '[未登录]'" OW_DRY_RUN=1 OW_ONCE=1 OW_WAIT=1 bash /root/azar_session_heal.sh >/dev/null 2>&1
-grep -aE '静默离线|DRY' /tmp/heal_t2/state | tail -2 | sed 's/^/  /'
-
-echo "===== 自检3: 被踢→跳过 ====="
-mkdir -p /tmp/heal_t3; : > /tmp/heal_t3/logA
-echo "$(date '+%m-%d %H:%M:%S') [error] [KickedOffLine] 你的账号当前登录已失效" > /tmp/heal_t3/logA
-: > /tmp/heal_t3/logB
-OW_LOG_A=/tmp/heal_t3/logA OW_LOG_B=/tmp/heal_t3/logB OW_STATE=/tmp/heal_t3/state OW_LOCK=/tmp/heal_t3/lock OW_RUNDIR=/tmp/heal_t3 \
-OW_LOGINCHECK="echo '[未登录]'" OW_DRY_RUN=1 OW_ONCE=1 OW_WAIT=1 bash /root/azar_session_heal.sh >/dev/null 2>&1
-echo "  静默恢复触发数=$(grep -ac '静默离线' /tmp/heal_t3/state 2>/dev/null) (期望0)  kicked标记=$([ -f /tmp/heal_t3/kicked_flag ]&&echo 有||echo 无)"
+287668
+echo "===== start_all.sh 全文 ====="
+cat -A /root/start_all.sh 2>/dev/null | head -10
+echo "===== 当前heal进程(应还没跑) ====="
+ps -ef | grep '[s]ession_heal' | head -3
 echo "=====完====="
