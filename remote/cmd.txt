@@ -1,10 +1,6 @@
-287625
-echo "===== [1] 取证器进程 ====="
-ps -ef | grep '[o]ffline_watch' | head -5
-echo "===== [2] 设备上v2/v3文件 ====="
-ls -la /root/offline_watch*.sh 2>/dev/null
-echo "===== [3] v2 md5 ====="
-md5sum /root/offline_watch_v2.sh 2>/dev/null
-echo "===== [4] 看护是否管着取证器(找watchdog/supervisor配置) ====="
-grep -rl 'offline_watch' /root/*.sh /root/*.service 2>/dev/null | head -10
+287626
+echo "===== [1] start_all.sh 里取证器启动行 ====="
+grep -n 'offline_watch' /root/start_all.sh /root/setup.sh /root/remote_ctl_v6.sh 2>/dev/null | head -20
+echo "===== [2] 当前进程完整cmdline ====="
+tr '\0' ' ' < /proc/17145/cmdline 2>/dev/null; echo
 echo "=====完====="
