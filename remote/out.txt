@@ -1,34 +1,32 @@
-<<<task_287653.txt>>>
-===== 任务287653 11-22 13:32:23 =====
+<<<task_287654.txt>>>
+===== 任务287654 11-22 13:34:32 =====
 --- 命令 ---
-PAT='[m]ain.py'
-OLD=$(pgrep -f "$PAT" | head -1)
-echo "[0] 旧bot PID: $OLD"
-# 延迟重启: 先留时间给回传落地
-sleep 5
-for p in $(pgrep -f "$PAT" | head -3); do kill "$p" 2>/dev/null; done
-sleep 2
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot_run.log 2>&1 < /dev/null &
-sleep 12
-echo "[1] 新bot PID:"; pgrep -f "$PAT" | head -2
-echo "[2] 插件加载(最后15行找SUCCESS/失败):"
-tail -40 /root/bot/bot/bot_run.log 2>/dev/null | grep -E 'SUCCESS|加载|Loaded|失败|ERROR|Traceback|Bot.*connected' | tail -8
-echo "[3] 登录态(应仍[未登录],重启不动NapCat):"
-bash /root/logincheck.sh 2>/dev/null | grep -E '\[在线\]|\[未登录\]|\[掉线\]' | head -1
+python3 - <<'PY'
+import re
+lines=open('/root/offline_forensics.log',errors='replace').read().splitlines()
+blocks=[]; cur=None
+for ln in lines:
+    if '===== 掉线取证' in ln:
+        cur=[]; blocks.append(cur)
+    if cur is not None: cur.append(ln)
+print('[总现场块]',len(blocks))
+b=blocks[-1]
+print('[最后一块头]',b[0][:70] if b else '')
+for l in b:
+    if any(k in l for k in ['[EVIDENCE','【判定类型】','③b 扩展提示','KickedOffLine','账号状态变更为离线','登录已失效','功能限制','身份验证']):
+        print(' ',l.strip()[:120])
+PY
 echo "=====完====="
 --- 输出 ---
-[0] 旧bot PID: 13099
-[1] 新bot PID:
-23503
-[2] 插件加载(最后15行找SUCCESS/失败):
-11-22 13:32:39 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
-11-22 13:32:39 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-11-22 13:32:39 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
-11-22 13:32:40 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
-11-22 13:32:40 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-22 13:32:40 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
-11-22 13:32:40 [SUCCESS] nonebot | Running NoneBot...
-11-22 13:32:40 [SUCCESS] nonebot | Loaded adapters: OneBot V11
-[3] 登录态(应仍[未登录],重启不动NapCat):
-[未登录] 当前没有有效会话
+[总现场块] 10
+[最后一块头] ===== 掉线取证 v3.1 id=20261122_131706_CST =====
+  [EVIDENCE id=20261122_131706_CST kind=静默离线(SelfOffline/status20)-窗口内未见踢线原文 verdict=静默离线(SelfOffline/status20)-窗口内未见踢线原文]
+  【判定类型】静默离线(SelfOffline/status20)-窗口内未见踢线原文
+  【触发原文】11-22 13:16:49 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+  11-22 13:16:49 | 静默离线(status20) | 11-22 13:16:49 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+  ---- ③b 扩展提示扫描(本次窗口±120s,账号/登录/风控类全部留痕) ----
+  11-22 13:16:49 | 11-22 13:16:49 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+  ---- ③ 被踢原因字段(本次窗口±60s的KickedOffLine原文) ----
+  (本次窗口内未见KickedOffLine原文——注意:这只说明抓取时点日志里没有,不等于腾讯没踢;证据等级=未采到)
+  11-22 13:16:49 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
 =====完=====
