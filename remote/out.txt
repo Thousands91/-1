@@ -1,21 +1,31 @@
-<<<task_287690.txt>>>
-===== 任务287690 11-23 03:57:00 =====
+<<<task_287692.txt>>>
+===== 任务287692 11-23 04:02:06 =====
 --- 命令 ---
-echo "===== 设备文件md5核查 $(date '+%F %T') ====="
+echo "===== 部署 doudizhu_engine.py $(date '+%F %T') ====="
 cd /root/bot/bot
-md5sum doudizhu_engine.py plugins/doudizhu.py plugins/image_search_multisource.py plugins/keyword_reply.py plugins/ai_chat.py plugins/fortune.py 2>&1
-echo "---os/bot目录确认---"
-ls -la /root/bot/bot/main.py /root/bot/venv/bin/python 2>&1
-echo "=====完====="
+B64='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'
+# 1) 备份线上原文(若存在)
+if [ -f "doudizhu_engine.py" ]; then cp -f "doudizhu_engine.py" "doudizhu_engine.py.bak_1123" && echo "已备份 -> doudizhu_engine.py.bak_1123"; else echo "线上无此文件,跳过备份"; fi
+# 2) 解码+解压还原
+printf '%s' "$B64" | base64 -d 2>/dev/null | gzip -dc > "doudizhu_engine.py.new"
+if [ $? -ne 0 ] || [ ! -s "doudizhu_engine.py.new" ]; then echo "【失败】解码/解压失败,不覆盖线上"; exit 1; fi
+# 3) 校验新文件md5
+GOT=$(md5sum "doudizhu_engine.py.new" | awk '{print $1}')
+echo "期望md5=3a2b7c2912e9103f5b92217c633009e4"
+echo "实际md5=$GOT"
+if [ "$GOT" != "3a2b7c2912e9103f5b92217c633009e4" ]; then echo "【失败】md5不符,不覆盖线上,删除临时"; rm -f "doudizhu_engine.py.new"; exit 1; fi
+# 4) 语法校验
+/root/bot/venv/bin/python -m py_compile "doudizhu_engine.py.new" 2>&1 && echo "语法OK" || { echo "【失败】语法错误,不覆盖线上"; rm -f "doudizhu_engine.py.new"; exit 1; }
+# 5) 原子替换
+mv -f "doudizhu_engine.py.new" "doudizhu_engine.py" && echo "【成功】doudizhu_engine.py 已覆盖"
+md5sum "doudizhu_engine.py"
+echo "===== 部署 doudizhu_engine.py 完 ====="
 --- 输出 ---
-===== 设备文件md5核查 2026-11-23 03:57:00 =====
-md5sum: doudizhu_engine.py: No such file or directory
-md5sum: plugins/doudizhu.py: No such file or directory
-37a3901cc2cecd8ed2172348b96f44d3  plugins/image_search_multisource.py
-cff3795ab97fcbe903e581a8a71afad7  plugins/keyword_reply.py
-1d628de44dc3805a288bf87ec11038fc  plugins/ai_chat.py
-a6604753f220afb36e79cf0b4fee40ff  plugins/fortune.py
----os/bot目录确认---
--rw-r--r-- 1 root root 979 Nov 11 22:41 /root/bot/bot/main.py
-lrwxrwxrwx 1 root root  18 Nov 11 23:30 /root/bot/venv/bin/python -> python3
-=====完=====
+===== 部署 doudizhu_engine.py 2026-11-23 04:02:06 =====
+线上无此文件,跳过备份
+期望md5=3a2b7c2912e9103f5b92217c633009e4
+实际md5=3a2b7c2912e9103f5b92217c633009e4
+语法OK
+【成功】doudizhu_engine.py 已覆盖
+3a2b7c2912e9103f5b92217c633009e4  doudizhu_engine.py
+===== 部署 doudizhu_engine.py 完 =====
