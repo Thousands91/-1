@@ -1,14 +1,9 @@
-287588
-echo "===== 整段对话取证 $(date '+%T') ====="
-/root/bot/venv/bin/python - <<'PY'
-import base64
-f='/root/remote_ctl.log'
-lines = open(f, encoding='utf-8', errors='replace').read().splitlines()
-# 02:17~02:21 的核对调试行,全部base64
-for i, l in enumerate(lines):
-    if '[核对·调试]' in l and ('02:1' in l or '02:2' in l):
-        b = base64.b64encode(l.encode('utf-8')).decode()
-        print('D|L'+str(i+1)+'|'+b)
-print('====DONE====')
-PY
+287589
+echo "===== 坑163下发前探测 $(date '+%T') ====="
+F=/root/bot/bot/plugins/ai_chat.py
+echo "md5: $(md5sum $F | cut -d' ' -f1)"
+echo "--- 插入锚点1(立场铁律末行)count ---"; grep -F -c '自己前后打架比答错更糟——宁可含糊，也别自相矛盾。' $F
+echo "--- 插入锚点2(yesman函数尾)count ---"; grep -F -c 'return topic == "舍馆" and not any(w in a for w in quote_words)' $F
+echo "--- 插入锚点3(主流程)count ---"; grep -F -c '        if answer is None:' $F
+echo "--- 新标记应全0 ---"; echo "是非问句铁律:$(grep -F -c '问去不去/是不是要正面答' $F) _YESNO_Q_RE:$(grep -F -c '_YESNO_Q_RE' $F) [是非问句]日志:$(grep -F -c '[是非问句]' $F)"
 echo "=====完====="
