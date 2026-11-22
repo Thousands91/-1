@@ -1,15 +1,24 @@
-<<<task_287609.txt>>>
-===== 任务287609 11-22 10:06:41 =====
+<<<task_287610.txt>>>
+===== 任务287610 11-22 10:09:25 =====
 --- 命令 ---
-set -a; source /root/bot/bot/.env 2>/dev/null; set +a
-cd /root/bot/bot && /root/bot/venv/bin/python /tmp/e2e_163b_device.py 2>&1 | grep -E 'H\||====DONE===='
+echo "===== 坑163b @兜底 $(date '+%T') ====="
+/root/bot/venv/bin/python - <<'PYCODE'
+import base64
+F="/root/bot/bot/plugins/ai_chat.py"
+s=open(F,encoding="utf-8").read()
+def D(x): return base64.b64decode(x).decode("utf-8")
+old,new=D("ICAgIGltcG9ydCByZSBhcyBfcmUyCiAgICBfb3V0ID0gTWVzc2FnZSgpCiAgICBfcG9zID0gMAogICAgZm9yIF9tIGluIF9yZTIuZmluZGl0ZXIociJAXHMqKFxkezUsMTF9KSIsIGFuc3dlcik6CiAgICAgICAgaWYgX20uc3RhcnQoKSA+IF9wb3M6CiAgICAgICAgICAgIF9vdXQuYXBwZW5kKE1lc3NhZ2VTZWdtZW50LnRleHQoYW5zd2VyW19wb3M6X20uc3RhcnQoKV0pKQogICAgICAgIF9vdXQuYXBwZW5kKE1lc3NhZ2VTZWdtZW50LmF0KGludChfbS5ncm91cCgxKSkpKQogICAgICAgIF9wb3MgPSBfbS5lbmQoKQogICAgaWYgX3BvcyA8IGxlbihhbnN3ZXIpOgogICAgICAgIF9vdXQuYXBwZW5kKE1lc3NhZ2VTZWdtZW50LnRleHQoYW5zd2VyW19wb3M6XSkp"),D("ICAgIGltcG9ydCByZSBhcyBfcmUyCiAgICBfc2VsZl9pZCA9IGdldGF0dHIoZXZlbnQsICJzZWxmX2lkIiwgMCkgb3IgMAogICAgX291dCA9IE1lc3NhZ2UoKQogICAgX3BvcyA9IDAKICAgIGZvciBfbSBpbiBfcmUyLmZpbmRpdGVyKHIiQFxzKihcZHs1LDExfSkiLCBhbnN3ZXIpOgogICAgICAgIF9hdF91aWQgPSBpbnQoX20uZ3JvdXAoMSkpCiAgICAgICAgIyDlnZExNjNi77ya6Zey6IGK6YeM5qih5Z6L54ix5oqKIkDmiJEi54Wn5a2X6Z2i6L6T5Ye65oiQQOacuuWZqOS6uuiHquW3se+8jOS5sUDmvI/liLDnvqTph4zlvojmgKrjgIIKICAgICAgICAjIEDmnLrlmajkurroh6rlt7ExMDAl5piv6ZSZ55qE77yM5pW05q615ZCe5o6J77yb5ZCM5pe25oqK6L+Z5q615YmN6Z2i55qE56m655m95Lmf5bm26L+bX3Bvc+S4gOi1t+S4ouOAggogICAgICAgIGlmIF9zZWxmX2lkIGFuZCBfYXRfdWlkID09IF9zZWxmX2lkOgogICAgICAgICAgICBfcG9zID0gX20uZW5kKCkKICAgICAgICAgICAgY29udGludWUKICAgICAgICBpZiBfbS5zdGFydCgpID4gX3BvczoKICAgICAgICAgICAgX291dC5hcHBlbmQoTWVzc2FnZVNlZ21lbnQudGV4dChhbnN3ZXJbX3BvczpfbS5zdGFydCgpXSkpCiAgICAgICAgX291dC5hcHBlbmQoTWVzc2FnZVNlZ21lbnQuYXQoX2F0X3VpZCkpCiAgICAgICAgX3BvcyA9IF9tLmVuZCgpCiAgICBpZiBfcG9zIDwgbGVuKGFuc3dlcik6CiAgICAgICAgX291dC5hcHBlbmQoTWVzc2FnZVNlZ21lbnQudGV4dChhbnN3ZXJbX3BvczpdKSk=")
+c=s.count(old)
+assert c==1, "锚点count="+str(c)
+s=s.replace(old,new,1)
+open(F,"w",encoding="utf-8").write(s)
+import ast; ast.parse(s)
+print("替换完成+语法OK")
+PYCODE
+echo "兜底标记:$(grep -F -c '_self_id = getattr' /root/bot/bot/plugins/ai_chat.py)"
 echo "=====完====="
 --- 输出 ---
-H|6Zmq5oiR5LiL5qOL|5bqX6YeM5pGG552A5LiA5Ymv6IO95LiL55qE5qOL44CC5byA5rOV77ya56ys5LiA5L2N546p5a62IEDmiJEg6K+044CM5Zu96ZmF6LGh5qOL44CN5Y2g55m95pa577yM56ys5LqM5L2N546p5a625LmfIEDmiJEg6K+044CM5Zu96ZmF6LGh5qOL44CN5o6l6buR5pa577yM5bCx6IO95LiL44CC
-H|5oiR5Lus5LiL5qOL5ZCn|5oiR5pCB6L+Z5YS/5ZGi77yM5oKo6K6y44CC
-H|5p2l5LiL5qOL|W0NROmF0LHFxPTM0Mjc5NDMxODddIOaji+ebmOWwseWcqOafnOWPsOmCo+WktO+8jOaCqOimgeaYr+i+k+S6hu+8jOi/meWxgOmlremSseeul+aIkeeahOOAgg==
-H|6LWw5LiA5q2l|77yI5oqs55y855yL5LqG5oKo5LiA5LiL77yJ
-H|5Zu96ZmF6LGh5qOL5oCO5LmI546p|546L77ya5LiA5q2l5LiA5qC877yM5YWr6Z2i6YO96KGM77yb6KKr5bCG5q275bCx6L6T44CC6L2m77ya5qiq56uW55u06LWw44CC6LGh77ya5pac57q/6LWw44CC
-H|6LWw5ZCn|6LWw77yf5oKo6L+Z5piv5oqK5Lmm5bqX5b2T5oiQ6am/56uZ5LqG77yM5oiR6L+Z5YS/6L+e5Liq5YOP5qC355qE6Iy25rC06YO95rKh5pyJ77yM5pu05Yir5o+Q6Lev5byV44CC
-====DONE====
+===== 坑163b @兜底 10:09:25 =====
+替换完成+语法OK
+兜底标记:1
 =====完=====
