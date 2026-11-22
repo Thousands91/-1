@@ -1,17 +1,21 @@
-<<<task_287689.txt>>>
-===== 任务287689 11-23 03:46:45 =====
+<<<task_287690.txt>>>
+===== 任务287690 11-23 03:57:00 =====
 --- 命令 ---
-echo "=====二维码取回 $(date '+%H:%M:%S') ====="
-echo "---相册副本是否存在---"
-ls -la /sdcard/DCIM/Camera/asar_qr.png 2>/dev/null || echo "相册无副本"
-echo "---二维码base64(供沙箱取图)---"
-base64 -w0 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png 2>/dev/null | head -c 4000
-echo ""
-echo "=====取回完====="
+echo "===== 设备文件md5核查 $(date '+%F %T') ====="
+cd /root/bot/bot
+md5sum doudizhu_engine.py plugins/doudizhu.py plugins/image_search_multisource.py plugins/keyword_reply.py plugins/ai_chat.py plugins/fortune.py 2>&1
+echo "---os/bot目录确认---"
+ls -la /root/bot/bot/main.py /root/bot/venv/bin/python 2>&1
+echo "=====完====="
 --- 输出 ---
-=====二维码取回 03:46:45 =====
----相册副本是否存在---
--rw-rw---- 1 root aid_everybody 598 Nov 22 12:58 /sdcard/DCIM/Camera/asar_qr.png
----二维码base64(供沙箱取图)---
-iVBORw0KGgoAAAANSUhEUgAAAJMAAACTAQAAAACinha4AAAACXBIWXMAAAsTAAALEwEAmpwYAAACCklEQVRIid2WTY6kMAyFjbLIjlwgUq6RXa4EF+DnAnCl7HKNSFyA7LKI8DyabnVLvcGa1UyEquArCdl+9nMR/z70X7OTaKxEWu0pm0idhBVuk24z3lPtnPAoYdEOnvfKJVmTaBSyMak1NQp5lLPJH3ulybdZyriNUS3kLrLdd26v2F2/ZD+vHzV9w3BKaoN2a1LlW8tX7PKZvNs5TwHvzqOMuU2ri9zKdggyBrmmkClYXKbSLGEnuSXkLlnyfAXbSRi+idwZHDOUV6uE4WmNjqva8Lv+nI+3TJNB7QmtqkpyRcIKo3IH7npNXVK7iEW0mLp0G/yx1ieWtwx5QGpTUXi3x0e310xbExWSOANa1a0SVj6muYut9xlDxhJ26jZ5KAYzyISgJIwrbz4PnuaKlnn65S07CXm4DdPJzbA1EobJKEwjnAwNq5+ZfstQ+F4jHBrCgftZxo5Fq9PDDHIfjl3EdCad4UCGVYlfWr5jV+BNYz7aEGjwQkbwg2ODl1QFHXYJ48QbqSWg2fn+lLBSsd/sWHmFYddDxGAhe2oIp0S1+cdL3jIYtmF4mMNoEtlZwnBQ/t7fTTqyWyXsY5+jZdSp4UN2ljDst0HniSAaCiBk2KvBTnDBCFMhI2SD5oVojvBdx0KGwsM+t3DXoIgY8rhXHMZaQfNdwhA78kD4K8NRlIj9zf+6f4/9ARclD/BaTBz2AAAAAElFTkSuQmCC
-=====取回完=====
+===== 设备文件md5核查 2026-11-23 03:57:00 =====
+md5sum: doudizhu_engine.py: No such file or directory
+md5sum: plugins/doudizhu.py: No such file or directory
+37a3901cc2cecd8ed2172348b96f44d3  plugins/image_search_multisource.py
+cff3795ab97fcbe903e581a8a71afad7  plugins/keyword_reply.py
+1d628de44dc3805a288bf87ec11038fc  plugins/ai_chat.py
+a6604753f220afb36e79cf0b4fee40ff  plugins/fortune.py
+---os/bot目录确认---
+-rw-r--r-- 1 root root 979 Nov 11 22:41 /root/bot/bot/main.py
+lrwxrwxrwx 1 root root  18 Nov 11 23:30 /root/bot/venv/bin/python -> python3
+=====完=====
