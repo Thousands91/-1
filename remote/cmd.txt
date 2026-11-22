@@ -1,20 +1,16 @@
-287637
-cat > /tmp/v31_logA <<'X'
-11-22 13:00:20 [warn] 阿萨尔 | 账号存在风险,功能限制
-11-22 13:00:22 [error] 阿萨尔 | 身份验证信息已失效
-11-22 13:00:24 [error] 阿萨尔 | [KickedOffLine] [下线通知] 你的账号当前登录已失效，请重新登录。
-11-22 13:00:25 [info] 阿萨尔 | 账号状态变更为离线
-X
-: > /tmp/v31_logB; : > /tmp/v31_net
-OW_SELFTEST=1 OW_OUT=/tmp/v31_out.log OW_DRY_RUN=1 OW_PBOX=/tmp/v31_pbox \
-  OW_LOG_A=/tmp/v31_logA OW_LOG_B=/tmp/v31_logB OW_NET=/tmp/v31_net \
-  OW_RUNLOG=/tmp/v31_run.log OW_LOCK=/tmp/v31_lock bash /root/offline_watch.sh
-sleep 1
-echo "[1] ③b段:"
-sed -n '/③b/,/---- ③ /p' /tmp/v31_out.log 2>/dev/null | head -8
-echo "[2] 断言:"
-printf '版本v3.1='; grep -c '取证 v3.1' /tmp/v31_out.log
-printf '扩展段存在='; grep -c '③b 扩展提示扫描' /tmp/v31_out.log
-printf '抓到功能限制='; grep -c '功能限制' /tmp/v31_out.log
-printf 'EVIDENCE唯一='; grep -c '^\[EVIDENCE' /tmp/v31_out.log
+287638
+echo "===== [1] 当前时刻 ====="
+date '+%F %T'
+echo "===== [2] 权威登录态 ====="
+bash /root/logincheck.sh 2>/dev/null | head -5
+echo "===== [3] 最近状态变化 ====="
+grep '状态变化' /root/login_state.log 2>/dev/null | tail -4
+echo "===== [4] bot进程 ====="
+ps -ef | grep '[m]ain.py' | head -2
+echo "===== [5] WS心跳/连接探针最后3条 ====="
+tail -3 /root/link_probe.log 2>/dev/null
+echo "===== [6] 最近收到的消息(bot日志尾) ====="
+tail -5 /root/bot/bot/bot.log 2>/dev/null
+echo "===== [7] 新修复标记 ====="
+for k in _chess_leak _CHESS_TAG 立场一致铁律 坑161; do printf '%s=' "$k"; grep -c "$k" /root/bot/bot/plugins/ai_chat.py 2>/dev/null; done
 echo "=====完====="
