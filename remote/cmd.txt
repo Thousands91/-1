@@ -1,12 +1,11 @@
-287698
-echo "===== 部署后统一验证 $(date '+%F %T') ====="
-cd /root/bot/bot
-echo "---6文件md5---"
-md5sum doudizhu_engine.py plugins/doudizhu.py plugins/image_search_multisource.py plugins/keyword_reply.py plugins/ai_chat.py plugins/fortune.py 2>&1
-echo "---语法编译---"
-/root/bot/venv/bin/python -m py_compile doudizhu_engine.py plugins/doudizhu.py plugins/image_search_multisource.py plugins/keyword_reply.py plugins/ai_chat.py plugins/fortune.py 2>&1 && echo "全部语法OK" || echo "语法有问题"
-echo "---备份文件在位---"
-ls -1 plugins/*.bak_1123 2>/dev/null | head -10
-echo "---当前bot进程---"
-pgrep -af 'venv/bin/python main.[p]y' | head -2 | cut -c1-70
-echo "=====验证完====="
+287699
+echo "===== 重启前PID核查 $(date '+%F %T') ====="
+echo "---main.py进程(精确)---"
+ps -eo pid,ppid,etime,args | grep -E 'venv/bin/python main\.py|python main\.py' | grep -v grep
+echo "---bot工作目录(确认日志位置)---"
+for p in $(pgrep -f 'venv/bin/python main\.py|python main\.py'); do echo "PID=$p cwd=$(readlink /proc/$p/cwd 2>/dev/null)"; done
+echo "---bot日志最后5行---"
+tail -5 /root/bot/bot/bot.log 2>/dev/null || tail -5 /root/bot.log 2>/dev/null
+echo "---登录态---"
+tail -1 /root/login_state.log 2>/dev/null
+echo "=====核查完====="
