@@ -1,18 +1,9 @@
-287669
+287670
 HEALPAT='bash /root/azar_session_heal.[s]h'
-# 1) 加入开机自启(方括号隔离,仿autoheal行)
-if ! grep -q 'azar_session_heal.sh' /root/start_all.sh; then
-  echo "pgrep -f 'bash /root/azar_session_heal.[s]h' >/dev/null || ( setsid nohup bash /root/azar_session_heal.sh >> /root/session_heal.log 2>&1 < /dev/null & )" >> /root/start_all.sh
-  echo "[1] 已加入start_all.sh自启"
-else
-  echo "[1] start_all.sh已有该行,跳过"
-fi
-echo "[2] 自启行:"; grep -n 'session_heal' /root/start_all.sh
-# 2) 立即启动
-pgrep -f "$HEALPAT" >/dev/null || ( setsid nohup bash /root/azar_session_heal.sh >> /root/session_heal.log 2>&1 < /dev/null & )
-sleep 3
-echo "[3] 启动后进程:"
-ps -ef | grep '[s]ession_heal' | head -3
-echo "[4] 启动日志:"; tail -3 /root/session_heal.log 2>/dev/null
-echo "[5] 登录态:"; bash /root/logincheck.sh 2>/dev/null | grep -E '\[在线\]|\[未登录\]|\[掉线\]' | head -1
+echo "[0] 当前进程:"; pgrep -f "$HEALPAT" | head -5
+for p in $(pgrep -f "$HEALPAT"); do kill "$p" 2>/dev/null; done
+sleep 2
+rm -rf /root/.session_heal.lock /root/.session_heal 2>/dev/null
+echo "[1] 清理后进程:"; pgrep -f "$HEALPAT" | head -5 || echo "  无"
+echo "[2] 日志报错行:"; grep -a 'No such file\|hour' /root/session_heal.log 2>/dev/null | tail -3
 echo "=====完====="
