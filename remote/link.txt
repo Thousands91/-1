@@ -1,1 +1,1 @@
-[11-23 14:02:44.459] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+[11-23 19:54:31.101] LIFECYCLE sub_type=connect self_id=3427943187
