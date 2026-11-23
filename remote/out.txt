@@ -1,47 +1,25 @@
-<<<task_287720.txt>>>
-===== 任务287720 11-23 19:43:21 =====
+<<<task_287721.txt>>>
+===== 任务287721 11-23 19:47:29 =====
 --- 命令 ---
-echo "==任务287720 欠账盘点取证=="
-echo "--- Termux层boot目录(proot bind路径) ---"
-ls -la /data/data/com.termux/files/home/.termux/ 2>/dev/null
-ls -la /data/data/com.termux/files/home/.termux/boot/ 2>/dev/null
-echo "--- Termux:Boot插件是否安装 ---"
-ls -d /data/data/com.termux/files/home/.termux/boot 2>/dev/null && echo "boot目录存在(可能装过Boot插件)"
-ls /data/data/com.termux/files/usr/bin/termux-boot 2>/dev/null
-echo "--- 设备image_see.py现状 ---"
-md5sum /root/bot/bot/plugins/image_see.py 2>/dev/null || ls /root/bot/bot/plugins/ | head -20
-echo "--- 取证脚本现状(2843待修缺陷) ---"
-ls -l /root/*.sh | grep -iE "forensic|blackbox|heal" | head -5
+echo "==任务287721 补坑180开机自启脚本+核对image_see=="
+mkdir -p /data/data/com.termux/files/home/.termux/boot
+echo "H4sICKAnBGsCA2FzYXJfYm9vdC5zaACVks9rE0EUx+/7VzzTkuphMtlNa6uYHATBi0rBgyASZncnmzWbmc3ObJqUIjkoNiqkkfRS60GkWkQpKFjR+M9IN42n/AvOZtUk2II9zMC89+bzvu/H3DlsE0mSy+LVjKRBNWzgkutRgUMRYNNl2CSirM0BESQompzLjCjDj1YP7uhZiPqtwe7X4eN30dZB1Ds4+tKKHu1Fndej/qaRNS4iXUdGDoav9n5+3xr1n0Uvu/pKdtRvK95xb3/waXvU37k9Tnr5qkLDoPP86NvnCfXJ/vDtm6jTHey+Hz7cUfeo/2LQfhrbD7sQK4MH+I/sWByekZmH4w/twfZmIlATHqU+GEva/5SdGNEaqVDkcauiUavMIRWjf9d7+DERB/PnFYpeSEGhAKn567duXJuS4XEnpQkqhWsD4+XQBz9QdmS7QgYclNtlEJohkyEglNSELFjQLBtwHIlvEt8iEtJpmME06iUTBSEDRGYCMfclXl3FtRqgGuQWjeVLizl9ZVnRGUeCMNvkDfVQAojpUeT44dRL8JJcIwFFARGqBe46Daa8Nq0jUa6iUBCHKvt9gUoecUQeoSppIO7ZSPjEUhj1Mb+kG3FLEnFsLC5uBxiFtA5XACsaZqHnQXpSrJmcf6qdeOuU1ccT8puyzBlUicsyfnOSyeSnpplBjludfAlolUtatKQXr81f0pT5jECyrubvhCSwZ4BjS1EN7TSe7wRqRVEJUnflPdeqqN9qrSYRGxsntUUmkdOBY3Zaow1qQbL3Liu5zJVNbeHUPT1J0S8erGHXJQQAAA==" | base64 -d | gzip -d > /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+chmod +x /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+echo "--- md5核对(应为16ab793e1a421e3d0f34a853b96cc8e1) ---"
+md5sum /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+echo "--- 语法检查 ---"
+bash -n /data/data/com.termux/files/home/.termux/boot/asar_boot.sh && echo "asar_boot.sh 语法OK"
+echo "--- 落盘确认 ---"
+ls -l --full-time /data/data/com.termux/files/home/.termux/boot/
+echo "--- image_see.py 设备现状核对 ---"
+md5sum /root/bot/bot/plugins/image_see.py 2>/dev/null && echo "(沙箱preview版=730d6e432958814b2b9123bbbd85fff7)"
 --- 输出 ---
-==任务287720 欠账盘点取证==
---- Termux层boot目录(proot bind路径) ---
+==任务287721 补坑180开机自启脚本+核对image_see==
+--- md5核对(应为16ab793e1a421e3d0f34a853b96cc8e1) ---
+16ab793e1a421e3d0f34a853b96cc8e1  /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+--- 语法检查 ---
+asar_boot.sh 语法OK
+--- 落盘确认 ---
 total 0
-drwx------ 2 root root 3488 Nov 11 20:14 .
-drwx------ 6 root root 3488 Nov 18 09:48 ..
--rw------- 1 root root 6037 Nov 11 20:14 termux.properties
---- Termux:Boot插件是否安装 ---
---- 设备image_see.py现状 ---
-__pycache__
-ai_chat.py
-ai_chat.py.bak_1123
-ai_chat.py.bak_287391
-ai_chat.py.bak_ac161
-ai_chat.py.bak_quote156_2137
-ai_chat.py.bak_quote159_11212205
-ai_chat.py.bak_quote_2051
-bak_162_0235
-bak_163_0919
-bak_163_v2
-bak_163b
-book_find.py
-chess_game.py
-chess_game.py.bak_0412_1458
-doudizhu.py
-fortune.py
-fortune.py.bak_1123
-games.py
-games.py.bak_287385
---- 取证脚本现状(2843待修缺陷) ---
--rwxr-xr-x 1 root root  7226 Nov 20 12:05 /root/azar_autoheal.sh
--rwxr-xr-x 1 root root  6345 Nov 22 14:38 /root/azar_session_heal.sh
--rw-r--r-- 1 root root  1000 Nov 16 18:30 /root/health_probe.sh
+-rwxr-xr-x 1 root root 1061 2026-11-23 19:47:29.810000000 +0800 asar_boot.sh
+--- image_see.py 设备现状核对 ---
