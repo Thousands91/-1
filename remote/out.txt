@@ -1,40 +1,33 @@
-<<<task_287726.txt>>>
-===== 任务287726 11-23 20:08:22 =====
+<<<task_287727.txt>>>
+===== 任务287727 11-23 20:12:31 =====
 --- 命令 ---
-echo "==任务287726 autoheal运行状态核实=="
-echo "--- 进程在跑吗 ---"
+echo "==任务287727 拉起autoheal+boot脚本补autoheal行=="
+echo "--- 1.查guard/remote_ctl是否本该拉autoheal ---"
+grep -c "autoheal" /root/azar_guard.sh /root/remote_ctl.sh 2>/dev/null
+echo "--- 2.立即拉起autoheal(自带单实例锁,重复拉安全) ---"
+setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal_run.log 2>&1 < /dev/null &
+sleep 5
 for p in /proc/[0-9]*; do
-  if grep -qa "azar_autoheal" "$p/cmdline" 2>/dev/null; then
-    comm=$(cat $p/comm 2>/dev/null)
-    echo "pid=${p#/proc/} comm=$comm"
-  fi
+  if grep -qa "azar_autoheal" "$p/cmdline" 2>/dev/null; then echo "autoheal进程 pid=${p#/proc/} comm=$(cat $p/comm)"; fi
 done
-echo "--- autoheal.log 尾部 ---"
-tail -12 /root/autoheal.log 2>/dev/null
-echo "--- 告警拼接段(确认带在线时长) ---"
-grep -n "在线\|_ON" /root/azar_autoheal.sh | tail -8
+tail -3 /root/autoheal.log
+echo "--- 3.boot脚本更新(加autoheal行) ---"
+echo "H4sICEwtBGsCA2FzYXJfYm9vdC5zaACVk89rE0EUx+/7VzzTkuphOt1Na6vYHATBi0rBgyASZncn2TWbmc3ObJqUIjkoNiqkkfRS60GkWkQpKFjR+M9IN42n/AvOZq3JYuuPww7Md9583ve9eTt1BttEkmSxeGVW0qAS1nHR9ajAoQiw6TJsEuFoU0AECQom53JWOPCt2YVb+hxEvWZ/5/Pg4Ztocz/q7h9+akYPdqP2y2Fvw5gzziNdR0YOBi92v3/dHPaeRM87+tLcsNdSvKPuXv/D1rC3fXOU9OJlhYZ+++nhl49j6qO9wetXUbvT33k7uL+t1mHvWb/1ONYPOhA7g3v42HZsDqdsLsPRu1Z/ayMxqAmPUh+MBe1fyk5EtErKFHncKmvUcjhkYvTPeg/eJ+Zg+qxC0XMZyOchM331xrUrEzY8Xspogkrh2sC4E/rgB0pHtitkwEEduwxCM2QyBISSmpAFM5plA44j8XXiW0RCNgspTL1WNFEQMkAkFYi5L/HKCq5WAVUhN28sXpjP6UuLis44EoTZJq+rjTJATI+ikh9O7AQvylUSUBQQoVrgrtFg4tSmNSScCgoFKVGl3xWo6JGSWEaoQuqIezYSPrEURl1cXtCNuCWJOTYyF7cDjHxWh0uAFQ2z0PMgOy7WTL7fqh2f1iirjV7Ib0iHM6gQl836jXEmk5+aJoUctTq5EtAKl7RgSS8em1+kCfk/gWRNvX8pJIGdAo6Ugnq003h+KVAjioqQuS3vuFZZ3VZjNY5YXz+pLTKJnAwcsf/ij4SSO5Skaz4W/+SS1qkFyd/ksqLLXNnQZk6d/pMIPwAtkKF2ewQAAA==" | base64 -d | gzip -d > /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+chmod +x /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+md5sum /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+bash -n /data/data/com.termux/files/home/.termux/boot/asar_boot.sh && echo "boot脚本语法OK"
+grep -c autoheal /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
 --- 输出 ---
-==任务287726 autoheal运行状态核实==
---- 进程在跑吗 ---
---- autoheal.log 尾部 ---
-[11-22 03:10:55] ALERT: 阿萨尔掉线([未登录])! 本次在线57分/距最后发送3078秒/距最后收信3081秒;已自愈,5分钟不恢复需本人扫码
-[11-22 03:10:59] 告警:已推送GitHub
-[11-22 10:20:22] 大脑进程不在,拉起
-[11-22 10:20:22] ALERT: 大脑进程异常退出,已自动拉起
-[11-22 10:20:26] 告警:推送失败,留PBOX待worker回传
-[11-22 12:59:26] 登录态: [未登录] -> [在线]
-[11-22 12:59:26] ALERT: 阿萨尔已恢复在线
-[11-22 12:59:30] 告警:已推送GitHub
-[11-22 13:16:43] 登录态: [在线] -> [未知]
-[11-22 13:18:51] 登录态: [未知] -> [未登录]
-[11-22 13:18:51] ALERT: 阿萨尔掉线([未登录])! 本次在线19分/距最后发送248秒/距最后收信113秒;已自愈,5分钟不恢复需本人扫码
+==任务287727 拉起autoheal+boot脚本补autoheal行==
+--- 1.查guard/remote_ctl是否本该拉autoheal ---
+/root/azar_guard.sh:0
+/root/remote_ctl.sh:0
+--- 2.立即拉起autoheal(自带单实例锁,重复拉安全) ---
+autoheal进程 pid=17500 comm=bash
 [11-22 13:18:54] 告警:已推送GitHub
---- 告警拼接段(确认带在线时长) ---
-95:          _ON=$(( ( $(date +%s) - ON_TS + 30 ) / 60 ))
-97:          # fallback：看台账最后一条状态变化——只有它恰好是"-> 在线"才说明会话还活着可计时；
-98:          # 若已是"-> 未登录"（会话早结束了，如本例22:47掉线），不许把掉线期也算进在线时长（v1.2.1 修账bug）
-101:            *"-> [在线]")
-104:                _OB=$(date -d "$_OT" +%s 2>/dev/null) && _ON=$(( ( $(date +%s) - _OB + 30 ) / 60 ))
-120:        send_alert "阿萨尔掉线($ST)! 本次在线${_ON:-?}分${_FRZ_NOTE:+,$_FRZ_NOTE}/${_G:-间隔未知};已自愈,5分钟不恢复需本人扫码" ;;
-121:      *在线*)
-123:        [ -n "$PREV" ] && send_alert "阿萨尔已恢复在线" ;;
+[11-23 20:12:32] ===== autoheal v1.2 启动 2026-11-23 20:12:32 =====
+[11-23 20:12:34] 登录态: 初始 -> [在线]
+--- 3.boot脚本更新(加autoheal行) ---
+62374b4422883398b9c8c415d65aeacd  /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+boot脚本语法OK
+1
