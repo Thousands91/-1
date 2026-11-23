@@ -1,45 +1,61 @@
-<<<task_287718.txt>>>
-===== 任务287718 11-23 19:34:36 =====
+<<<task_287719.txt>>>
+===== 任务287719 11-23 19:36:42 =====
 --- 命令 ---
-echo "==任务287718 找NapCat启动命令所在文件=="
-grep -rln "napcat.log" /root/*.sh /root/Napcat/*.sh /root/*.txt 2>/dev/null
-echo "---"
-grep -rn "> /root/napcat.log" /root/*.sh /root/Napcat/*.sh 2>/dev/null | head -5
-echo "--- 今日NapCat进程的启动来源 ---"
-for p in /proc/[0-9]*; do
-  if grep -qa "opt/QQ/qq" "$p/cmdline" 2>/dev/null; then
-    echo "pid=${p#/proc/} ppid=$(awk '{print $4}' $p/stat 2>/dev/null)"
-    ppid=$(awk '{print $4}' $p/stat 2>/dev/null)
-    [ -r /proc/$ppid/cmdline ] && tr '\0' ' ' < /proc/$ppid/cmdline | head -c 300; echo
-  fi
-done
+echo "==任务287719 修napcat.log覆盖清空缺陷=="
+python3 - <<'PY'
+ROT='if [ -f /root/napcat.log ] && [ "$(stat -c %s /root/napcat.log)" -gt 2097152 ]; then gzip -c /root/napcat.log > /root/napcat.log.$(date +%m%d_%H%M).gz && : > /root/napcat.log; fi\n'
+import os
+files=['/root/morning.sh','/root/st.sh','/root/start_nap.sh']
+for f in files:
+    bak=f+'.bak_1123_log'
+    s=open(f).read()
+    open(bak,'w').write(s)
+    if 'napcat.log.$(date' in s:
+        print(f,'已改过,跳过'); continue
+    n=s.count('> /root/napcat.log 2>&1')
+    if n==0:
+        print(f,'未找到目标片段,跳过(请人工检查)'); continue
+    out=[]
+    changed=0
+    for ln in s.splitlines(keepends=True):
+        if '> /root/napcat.log 2>&1' in ln:
+            indent=ln[:len(ln)-len(ln.lstrip())]
+            out.append(indent+ROT)
+            out.append(ln.replace('> /root/napcat.log 2>&1','>> /root/napcat.log 2>&1'))
+            changed+=1
+        else:
+            out.append(ln)
+    open(f,'w').write(''.join(out))
+    print(f,'替换%d处'%changed)
+PY
+echo "--- 语法检查 ---"
+for f in /root/morning.sh /root/st.sh /root/start_nap.sh; do bash -n "$f" && echo "$f 语法OK"; done
+echo "--- 验证:三个脚本的关键行 ---"
+grep -n "napcat.log" /root/morning.sh /root/st.sh /root/start_nap.sh | grep -v "^Binary"
+echo "--- 备份在位 ---"
+ls -l /root/*.bak_1123_log
+echo "--- napcat.log当前大小 ---"
+stat -c "%s字节 %y" /root/napcat.log
 --- 输出 ---
-==任务287718 找NapCat启动命令所在文件==
-/root/azar_autoheal.sh
-/root/azar_login.sh
-/root/azar_session_heal.sh
-/root/morning.sh
-/root/offline_watch.sh
-/root/offline_watch_v2.sh
-/root/offline_watch_v3.sh
-/root/remote_ctl_v6.sh
-/root/st.sh
-/root/start_nap.sh
-/root/forensic_offline_1117_1533.txt
----
-/root/morning.sh:15:  cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 &
-/root/st.sh:4:  nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 &
-/root/start_nap.sh:1:pkill -f "opt/QQ/[q]q"; sleep 2; cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & sleep 25; cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册,去QQ扫 || echo 码未生成,稍后再拷
---- 今日NapCat进程的启动来源 ---
-pid=22064 ppid=22062
-/bin/bash -l 
-pid=22082 ppid=22064
-/bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 
-pid=22096 ppid=22082
-/root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 
-pid=22098 ppid=22082
-/root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 
-pid=22147 ppid=22096
-/root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox 
-pid=22621 ppid=1
-
+==任务287719 修napcat.log覆盖清空缺陷==
+/root/morning.sh 替换1处
+/root/st.sh 替换1处
+/root/start_nap.sh 替换1处
+--- 语法检查 ---
+/root/morning.sh 语法OK
+/root/st.sh 语法OK
+/root/start_nap.sh 语法OK
+--- 验证:三个脚本的关键行 ---
+/root/morning.sh:15:  if [ -f /root/napcat.log ] && [ "$(stat -c %s /root/napcat.log)" -gt 2097152 ]; then gzip -c /root/napcat.log > /root/napcat.log.$(date +%m%d_%H%M).gz && : > /root/napcat.log; fi
+/root/morning.sh:16:  cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat.log 2>&1 &
+/root/morning.sh:18:  pgrep -f 'opt/QQ/qq' >/dev/null && echo "   ✅ 已重启" || echo "   ✗ 重启失败，把 napcat.log 发我"
+/root/st.sh:4:  if [ -f /root/napcat.log ] && [ "$(stat -c %s /root/napcat.log)" -gt 2097152 ]; then gzip -c /root/napcat.log > /root/napcat.log.$(date +%m%d_%H%M).gz && : > /root/napcat.log; fi
+/root/st.sh:5:  nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat.log 2>&1 &
+/root/start_nap.sh:1:if [ -f /root/napcat.log ] && [ "$(stat -c %s /root/napcat.log)" -gt 2097152 ]; then gzip -c /root/napcat.log > /root/napcat.log.$(date +%m%d_%H%M).gz && : > /root/napcat.log; fi
+/root/start_nap.sh:2:pkill -f "opt/QQ/[q]q"; sleep 2; cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat.log 2>&1 < /dev/null & sleep 25; cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册,去QQ扫 || echo 码未生成,稍后再拷
+--- 备份在位 ---
+-rw-r--r-- 1 root root 3050 Nov 23 19:36 /root/morning.sh.bak_1123_log
+-rw-r--r-- 1 root root  899 Nov 23 19:36 /root/st.sh.bak_1123_log
+-rw-r--r-- 1 root root  442 Nov 23 19:36 /root/start_nap.sh.bak_1123_log
+--- napcat.log当前大小 ---
+150556字节 2026-11-23 19:36:22.880000000 +0800
