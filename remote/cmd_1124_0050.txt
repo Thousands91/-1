@@ -1,0 +1,18 @@
+287738
+echo "==任务287738 开机脚本漏项盘点+wake-lock核实=="
+echo "--- A./root下全部.sh及其最后活动时间(判断长驻与否) ---"
+for f in /root/*.sh; do
+  last=$(grep -a "$(date +%m-%d)" "${f%.sh}.log" 2>/dev/null | tail -1 | cut -c1-17)
+  echo "$f 最后日志:${last:-无对应log}"
+done
+echo "--- B.当前还活着的容器内进程 ---"
+ps -eo pid,cmd | grep -vE "grep|ps -eo|\[" | tail -25
+echo "--- C.boot脚本现拉起的清单 ---"
+grep -oE "nohup [^&]+|bash [^&]+" /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null | head -12
+echo "--- D.wake-lock实际持有状态 ---"
+/data/data/com.termux/files/usr/bin/termux-wake-lock 2>&1
+dumpsys power 2>/dev/null | grep -aiE "wake lock|hold" | head -5 || echo "dumpsys不可用(proot内)"
+ls /data/data/com.termux/files/usr/bin/termux-wake-lock && echo wake-lock命令在
+echo "--- E.Termux:Boot插件装了吗 ---"
+ls -d /data/data/com.termux/files/home/.termux/boot && ls /data/data/com.termux/files/home/.termux/boot/
+pm list packages 2>/dev/null | grep -i "termux.boot" || echo "pm不可用"
