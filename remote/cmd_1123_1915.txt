@@ -1,0 +1,9 @@
+287716
+echo "==任务287716 凭据目录+历史重扫日志取证=="
+echo "--- /root/.config/QQ 顶层 ---"
+ls -l --full-time /root/.config/QQ/ | head -12
+echo "--- 按UIN的凭据目录(找数字目录) ---"
+find /root/.config/QQ -maxdepth 3 -type d -name "*3427943187*" 2>/dev/null | head -5
+ls -l --full-time /root/.config/QQ/global/nt_data/ 2>/dev/null | head -15
+echo "--- 历史日志: 二维码过期与扫码确认(11-21~22) ---"
+grep -a "二维码已被扫描\|二维码已过期\|ErrCode:3\|Login Success\|登录成功\|账号状态变更" /root/napcat.log /root/napcat-restart.log 2>/dev/null | tail -25
