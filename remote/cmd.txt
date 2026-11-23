@@ -1,3 +1,13 @@
-287725
-echo "==任务287725 读autoheal脚本50行以后=="
-sed -n '50,220p' /root/azar_autoheal.sh
+287726
+echo "==任务287726 autoheal运行状态核实=="
+echo "--- 进程在跑吗 ---"
+for p in /proc/[0-9]*; do
+  if grep -qa "azar_autoheal" "$p/cmdline" 2>/dev/null; then
+    comm=$(cat $p/comm 2>/dev/null)
+    echo "pid=${p#/proc/} comm=$comm"
+  fi
+done
+echo "--- autoheal.log 尾部 ---"
+tail -12 /root/autoheal.log 2>/dev/null
+echo "--- 告警拼接段(确认带在线时长) ---"
+grep -n "在线\|_ON" /root/azar_autoheal.sh | tail -8
