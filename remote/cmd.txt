@@ -1,11 +1,10 @@
-287730
-echo "==任务287730 网络波动假设取证=="
-echo "--- 1.ipwatch IP台账:历史有没有换过IP ---"
-wc -l /root/ipwatch.log 2>/dev/null
-awk '{print $NF}' /root/ipwatch.log 2>/dev/null | sort -u | head -8
-echo "--- 2.tick.log短断档案例(断>90s且<1h又恢复) ---"
-awk 'NR>1{d=($1-p); if(d>90 && d<3600) print "断档"d"秒: 前一跳"prev" 恢复跳"$0} {p=$1; prev=$0}' /root/tick.log 2>/dev/null | head -10
-echo "--- 3.login_state.log:离线→在线自愈(无人干预)案例 ---"
-grep -E "离线|在线|offline|online" /root/login_state.log 2>/dev/null | tail -25
-echo "--- 4.今日bot.log里有无重连/断网痕迹 ---"
-grep -iE "reconnect|断开|掉线|disconnect|ws" /root/bot.log 2>/dev/null | tail -8
+287731
+echo "==任务287731 补查:账本文件名+02:14断档细节=="
+echo "--- /root下账本类文件 ---"
+ls -l /root/*.log 2>/dev/null | awk '{print $NF, $5"B"}'
+echo "--- tick.log 11-22 01:55~02:20 原样 ---"
+grep -a "02:0\|02:1\|01:5" /root/tick.log 2>/dev/null | grep "2026-11-22" | head -12
+echo "--- health.log 同窗口 ---"
+grep -a "01:5\|02:0\|02:1" /root/health.log 2>/dev/null | grep "11-22" | head -10
+echo "--- ip日志实际名与IP变动 ---"
+ls /root/ip*.log 2>/dev/null; tail -5 /root/ipwatch.log 2>/dev/null || tail -5 /root/ip.log 2>/dev/null
