@@ -1,12 +1,10 @@
-287713
-echo "==任务287713 六文件md5终验+插件加载核对=="
-md5sum /root/bot/bot/doudizhu_engine.py /root/bot/bot/plugins/doudizhu.py /root/bot/bot/plugins/image_search_multisource.py /root/bot/bot/plugins/keyword_reply.py /root/bot/bot/plugins/ai_chat.py /root/bot/bot/plugins/fortune.py
-echo "--- 当前bot进程(应为26996) ---"
-for p in /proc/[0-9]*; do
-  if [ "$(cat $p/comm 2>/dev/null)" = "python" ] && grep -qa "main.py" "$p/cmdline" 2>/dev/null; then
-    echo "pid=${p#/proc/} 启动于 $(stat -c %y /proc/${p#/proc/} 2>/dev/null | cut -d. -f1)"
-  fi
-done
-echo "--- 重启后插件加载记录 ---"
-grep -E "Succeeded|_loaded|插件" /root/bot.log | tail -8
-grep -c "running complete" /root/bot.log
+287714
+echo "==任务287714 NapCat登录机制取证=="
+echo "--- NapCat版本 ---"
+cat /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null | head -5
+ls /root/Napcat/opt/QQ/resources/app/app_launcher/ 2>/dev/null | head
+echo "--- NapCat本地数据目录结构 ---"
+ls /root/Napcat/ 2>/dev/null
+find /root/Napcat -maxdepth 3 -name "quickLogin*" -o -maxdepth 3 -name "onebot11*" 2>/dev/null | head -10
+echo "--- 登录相关配置/凭据文件 ---"
+ls -l --full-time /root/Napcat/config/ 2>/dev/null | head -15
