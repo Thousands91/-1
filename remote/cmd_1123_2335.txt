@@ -1,0 +1,10 @@
+287731
+echo "==任务287731 补查:账本文件名+02:14断档细节=="
+echo "--- /root下账本类文件 ---"
+ls -l /root/*.log 2>/dev/null | awk '{print $NF, $5"B"}'
+echo "--- tick.log 11-22 01:55~02:20 原样 ---"
+grep -a "02:0\|02:1\|01:5" /root/tick.log 2>/dev/null | grep "2026-11-22" | head -12
+echo "--- health.log 同窗口 ---"
+grep -a "01:5\|02:0\|02:1" /root/health.log 2>/dev/null | grep "11-22" | head -10
+echo "--- ip日志实际名与IP变动 ---"
+ls /root/ip*.log 2>/dev/null; tail -5 /root/ipwatch.log 2>/dev/null || tail -5 /root/ip.log 2>/dev/null
