@@ -1,0 +1,7 @@
+287706
+echo "==任务287702 只读核查菜单文件=="
+md5sum /root/bot/bot/plugins/keyword_reply.py
+grep -c "斗地主" /root/bot/bot/plugins/keyword_reply.py
+grep -n "斗地主 ——" /root/bot/bot/plugins/keyword_reply.py | head -3
+ls -l /root/bot/bot/plugins/keyword_reply.py*
+pgrep -af "main.py" | grep -v grep | head -5
