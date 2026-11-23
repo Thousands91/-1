@@ -1,7 +1,17 @@
-287706
-echo "==任务287702 只读核查菜单文件=="
-md5sum /root/bot/bot/plugins/keyword_reply.py
-grep -c "斗地主" /root/bot/bot/plugins/keyword_reply.py
-grep -n "斗地主 ——" /root/bot/bot/plugins/keyword_reply.py | head -3
-ls -l /root/bot/bot/plugins/keyword_reply.py*
-pgrep -af "main.py" | grep -v grep | head -5
+287707
+echo "==任务287707 只读核查bot进程启动时间=="
+for p in /proc/[0-9]*; do
+  if grep -q "main.py" "$p/cmdline" 2>/dev/null; then
+    comm=$(cat "$p/comm" 2>/dev/null)
+    if [ "$comm" = "python" ]; then
+      pid=${p#/proc/}
+      echo "python进程 pid=$pid"
+      ps -o pid,lstart,etime,cmd -p $pid 2>/dev/null | tail -1
+      ls -l /proc/$pid/cwd
+    fi
+  fi
+done
+echo "---"
+ls -l --full-time /root/bot/bot/plugins/keyword_reply.py
+echo "---插件pyc缓存---"
+ls -l --full-time /root/bot/bot/plugins/__pycache__/ 2>/dev/null | grep keyword
