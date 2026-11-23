@@ -1,15 +1,10 @@
-287745
-echo "==只读确认ipwatch+boot最终状态=="
-echo "--- 1.ipwatch进程 ---"
-pgrep -f "[i]pwatch" | head -2
-echo "--- 2.ip.log末2行+写入时刻 ---"
-tail -2 /root/ip.log
-stat -c "%y" /root/ip.log
-echo "--- 3.boot脚本md5 ---"
-md5sum /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
-echo "--- 4.boot自启仪器行 ---"
-grep -nE "health_probe|netmon|login_watch|ipwatch|autoheal" /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
-echo "--- 5.boot语法 ---"
-bash -n /data/data/com.termux/files/home/.termux/boot/asar_boot.sh && echo 语法OK
-echo "--- 6.当前时间 ---"
-date
+287746
+TOK=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
+IPW=$(pgrep -f "[i]pwatch" | head -1)
+IPL=$(tail -1 /root/ip.log 2>/dev/null)
+BMD5=$(md5sum /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null | cut -d' ' -f1)
+BNUM=$(grep -cE "health_probe|netmon|login_watch|ipwatch" /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null)
+NOW=$(date '+%m-%d %H:%M:%S')
+R="time=$NOW | ipwatch_pid=$IPW | ip.log末=$IPL | boot_md5=$BMD5 | boot仪器数=$BNUM"
+B=$(echo -n "$R" | base64 -w0)
+curl -s --max-time 30 -X PUT -H "Authorization: token $TOK" "https://api.github.com/repos/Thousands91/-1/contents/remote/hb_verify.txt" -d "{\"message\":\"hb verify\",\"content\":\"$B\",\"branch\":\"main\"}" -o /dev/null -w "PUT HTTP:%{http_code}\n"
