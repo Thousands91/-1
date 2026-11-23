@@ -1,63 +1,14 @@
-<<<task_287736.txt>>>
-===== 任务287736 11-24 00:38:43 =====
+<<<task_287737.txt>>>
+===== 任务287737 11-24 00:43:59 =====
 --- 命令 ---
-echo "==任务287736 拉起仪器全家+息屏冻结取证=="
-echo "--- A.仪器进程现状 ---"
-for n in tick.sh health_probe netmon login_watch azar_autoheal; do
-  f=$(pgrep -f "$n" | head -1)
-  echo "$n: ${f:-未运行}"
-done
-echo "--- B.拉起全部仪器(幂等) ---"
-pgrep -f "[t]ick.sh" >/dev/null || { setsid nohup /root/tick.sh >/dev/null 2>&1 < /dev/null & echo "tick已拉起"; }
-ls /root/health_probe* /root/netmon* /root/login_watch* 2>/dev/null
-pgrep -f "[h]ealth_probe" >/dev/null || { H=$(ls /root/health_probe*.sh 2>/dev/null | head -1); [ -n "$H" ] && { setsid nohup bash "$H" >/dev/null 2>&1 < /dev/null & echo "health已拉起:$H"; }; }
-pgrep -f "[n]etmon" >/dev/null || { N=$(ls /root/netmon*.sh 2>/dev/null | head -1); [ -n "$N" ] && { setsid nohup bash "$N" >/dev/null 2>&1 < /dev/null & echo "netmon已拉起:$N"; }; }
-pgrep -f "[l]ogin_watch" >/dev/null || { L=$(ls /root/login_watch*.sh 2>/dev/null | head -1); [ -n "$L" ] && { setsid nohup bash "$L" >/dev/null 2>&1 < /dev/null & echo "login_watch已拉起:$L"; }; }
-pgrep -f "[a]zar_autoheal" >/dev/null || { setsid nohup bash /root/azar_autoheal.sh >/dev/null 2>&1 < /dev/null & echo "autoheal已拉起"; }
-sleep 8
-echo "--- C.拉起后仪器进程 ---"
-for n in tick.sh health_probe netmon login_watch azar_autoheal; do
-  echo "$n: $(pgrep -f "$n" | head -1)"
-done
-echo "--- D.napcat.log今天00:10~00:26断线痕迹 ---"
-grep -an "00:1[0-9]\|00:2[0-6]" /root/napcat.log | grep -iaE "offline|离线|断|disconnect|reconnect|错误|error|timeout" | head -10
-tail -5 /root/napcat.log
-echo "--- E.remote_ctl.log 00:10~00:25有无活动(区分冻结vs没拉起) ---"
-grep -an "11-24 00:1" /root/remote_ctl.log | head -8
-grep -c "11-24" /root/remote_ctl.log
+echo "==任务287737 boot脚本补三仪器=="
+echo "H4sICCVtBGsCA2FzYXJfYm9vdC5zaACVlEFP1EAUx+/9FM+FLHoYhhYQNMLBxMSLGhIPJmazmbaz20o7UzrTZSHEcNAIagIYuCAejEGJ0ZBoIkbXL2Posp72KzhtxW0ji3DoJPPmvd/7v/emM3AB20SSbLG4Pyxp6EdNXHM9KnAkQmy6DJtEONoAEEHCqsm5HBYO/FzehHv6CMSt5fbOt86T9/H6fry5f/h1OX68G6+96bZWjBHjMtJ1ZIxC5/Xurx/r3dbz+NWGPjnSba0q3tHmXvvzVre1fTdNevW6QkN77cXh9y896tO9zru38dpGe+dD59G2Wrutl+3VZ4n9YAMSZfAQH8tOxOGCzCk4+rja3lrJBGrCozQAY1w7S9mZEc2TWYo8bs1q1HI4lBL0n3oPPmXiYPCiQtFLJZiehtLgzTu3buRkeLxe0gSVwrWBcScKIAiVHdmukCEHdewyiMyIyQgQympCFgxplg048cS3SWARCeUyFDDNRs1EYcQAkYIj5oHEMzN4bg7QHIyOGRNXxkb1yQlFZxwJwmyTN9VGCSCmR1E9iHI7wWtynoQUhUSoFriLNMyd2rSBhOOjSJA6VfYHAtU8UhdTCPmkibhnIxEQS2FU4NS4biQtycSxVFzSDjCmyzpcA6xomEWeB+VesWb2/VNt77RBWSOdULAgHc7AJy4bDhZ6mUzeN00BmbY6CwmpzyWtWtJLrs1fUs58TiBZVPOvRyS0C8DUUlVD68cL6qG6oqgGpfuy4lqzKlpdq57H0tJJbZGZZ94xZRd4ToUSTzpVdf1Meio0V4eTizkpQ1/1rEKlz9lZ87DU+1wZvEry61TnibScs6bxeiH/z3XqbEkkedKcwniPjadNmDapBdlL5LKay1y5oA31fTlOIvwGYkqwCbcFAAA=" | base64 -d | gzip -d > /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+chmod +x /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+md5sum /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+bash -n /data/data/com.termux/files/home/.termux/boot/asar_boot.sh && echo 语法OK
+grep -cE "health_probe|netmon|login_watch" /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
 --- 输出 ---
-==任务287736 拉起仪器全家+息屏冻结取证==
---- A.仪器进程现状 ---
-tick.sh: 未运行
-health_probe: 未运行
-netmon: 未运行
-login_watch: 未运行
-azar_autoheal: 17500
---- B.拉起全部仪器(幂等) ---
-tick已拉起
-/root/health_probe.sh
-/root/health_probe_v1.bak
-/root/health_probe_v2.bak
-/root/health_probe_v3.bak
-/root/login_watch.sh
-/root/netmon.log
-/root/netmon.sh
-health已拉起:/root/health_probe.sh
-netmon已拉起:/root/netmon.sh
-login_watch已拉起:/root/login_watch.sh
---- C.拉起后仪器进程 ---
-tick.sh: 28113
-health_probe: 28121
-netmon: 28129
-login_watch: 28140
-azar_autoheal: 17500
---- D.napcat.log今天00:10~00:26断线痕迹 ---
-1099:11-24 00:25:17 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
-11-24 00:37:44 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
-11-24 00:37:49 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-24 00:37:49 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
-11-24 00:37:49 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 你不是能搜索吗？你去多了解一点齐豫
-11-24 00:37:51 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
---- E.remote_ctl.log 00:10~00:25有无活动(区分冻结vs没拉起) ---
-23149:grep -a "11-24 00:1\|11-24 00:2\|11-24 00:0" /root/health.log | tail -25
-24
+==任务287737 boot脚本补三仪器==
+1dba862b5f1b67d0a5f5a90f872cd876  /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+语法OK
+3
