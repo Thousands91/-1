@@ -1,4 +1,8 @@
-287709
-echo "==任务287709 bot.log原样尾部=="
-ls -l --full-time /root/bot.log
-tail -60 /root/bot.log
+287710
+echo "==任务287710 搜日志里菜单消息=="
+grep -n "菜单" /root/bot.log | tail -15
+echo "---最后一条菜单消息后的处理matcher---"
+L=$(grep -n "菜单" /root/bot.log | tail -1 | cut -d: -f1)
+[ -n "$L" ] && sed -n "${L},$((L+8))p" /root/bot.log
+echo "---登录成功记录---"
+grep -iE "login successful|online|登录" /root/bot.log /root/napcat.log 2>/dev/null | tail -8
