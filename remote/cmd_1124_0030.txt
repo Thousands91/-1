@@ -1,0 +1,21 @@
+287735
+echo "==任务287735 冻结边界+登录态核实=="
+echo "--- tick.log 最后10行(冻结从哪开始) ---"
+tail -10 /root/tick.log
+echo "--- health.log 最后8行 ---"
+tail -8 /root/health.log
+echo "--- netmon.log 最后8行 ---"
+tail -8 /root/netmon.log
+echo "--- login_state.log 最后6行(现在登录态) ---"
+tail -6 /root/login_state.log
+echo "--- napcat进程还活着吗 ---"
+for p in /proc/[0-9]*; do
+  if grep -qa "opt/QQ/qq" "$p/cmdline" 2>/dev/null && [ "$(cat $p/comm 2>/dev/null)" = "qq" ]; then
+    echo "NapCat pid=${p#/proc/} 活着"
+  fi
+done
+for p in /proc/[0-9]*; do
+  if [ "$(cat $p/comm 2>/dev/null)" = "python" ] && grep -qa "main.py" "$p/cmdline" 2>/dev/null; then
+    echo "bot pid=${p#/proc/} 活着"
+  fi
+done
