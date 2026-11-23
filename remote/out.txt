@@ -1,52 +1,97 @@
-<<<task_287730.txt>>>
-===== 任务287730 11-23 23:34:47 =====
+<<<task_287731.txt>>>
+===== 任务287731 11-23 23:39:02 =====
 --- 命令 ---
-echo "==任务287730 网络波动假设取证=="
-echo "--- 1.ipwatch IP台账:历史有没有换过IP ---"
-wc -l /root/ipwatch.log 2>/dev/null
-awk '{print $NF}' /root/ipwatch.log 2>/dev/null | sort -u | head -8
-echo "--- 2.tick.log短断档案例(断>90s且<1h又恢复) ---"
-awk 'NR>1{d=($1-p); if(d>90 && d<3600) print "断档"d"秒: 前一跳"prev" 恢复跳"$0} {p=$1; prev=$0}' /root/tick.log 2>/dev/null | head -10
-echo "--- 3.login_state.log:离线→在线自愈(无人干预)案例 ---"
-grep -E "离线|在线|offline|online" /root/login_state.log 2>/dev/null | tail -25
-echo "--- 4.今日bot.log里有无重连/断网痕迹 ---"
-grep -iE "reconnect|断开|掉线|disconnect|ws" /root/bot.log 2>/dev/null | tail -8
+echo "==任务287731 补查:账本文件名+02:14断档细节=="
+echo "--- /root下账本类文件 ---"
+ls -l /root/*.log 2>/dev/null | awk '{print $NF, $5"B"}'
+echo "--- tick.log 11-22 01:55~02:20 原样 ---"
+grep -a "02:0\|02:1\|01:5" /root/tick.log 2>/dev/null | grep "2026-11-22" | head -12
+echo "--- health.log 同窗口 ---"
+grep -a "01:5\|02:0\|02:1" /root/health.log 2>/dev/null | grep "11-22" | head -10
+echo "--- ip日志实际名与IP变动 ---"
+ls /root/ip*.log 2>/dev/null; tail -5 /root/ipwatch.log 2>/dev/null || tail -5 /root/ip.log 2>/dev/null
 --- 输出 ---
-==任务287730 网络波动假设取证==
---- 1.ipwatch IP台账:历史有没有换过IP ---
---- 2.tick.log短断档案例(断>90s且<1h又恢复) ---
---- 3.login_state.log:离线→在线自愈(无人干预)案例 ---
-2026-11-22 01:25:17 [在线]
-2026-11-22 01:30:18 [在线]
-2026-11-22 01:35:19 [在线]
-2026-11-22 01:40:21 [在线]
-2026-11-22 01:45:22 [在线]
-2026-11-22 01:50:23 [在线]
-2026-11-22 01:55:24 [在线]
-2026-11-22 02:00:26 [在线]
-2026-11-22 02:14:40 [在线]
-2026-11-22 02:19:41 [在线]
-2026-11-22 02:24:42 [在线]
-2026-11-22 02:29:42 [在线]
-2026-11-22 02:34:43 [在线]
-2026-11-22 02:39:44 [在线]
-2026-11-22 02:44:45 [在线]
-2026-11-22 02:49:46 [在线]
-2026-11-22 02:54:47 [在线]
-2026-11-22 02:59:48 [在线]
-2026-11-22 03:04:49 [在线]
-2026-11-22 03:09:50 [在线]
-2026-11-22 03:14:51 状态变化: [在线] -> [未登录]
-2026-11-22 13:01:31 状态变化: [未登录] -> [在线]
-2026-11-22 13:06:31 [在线]
-2026-11-22 13:11:32 [在线]
-2026-11-22 13:17:06 状态变化: [在线] -> [未登录]
---- 4.今日bot.log里有无重连/断网痕迹 ---
-11-23 14:15:10 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.news, lineno=19)
-11-23 14:15:11 [INFO] nonebot | Matcher(type='message', module=plugins.news, lineno=19) running complete
-11-23 19:54:26 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-11-23 19:54:28 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
-11-23 19:54:31 [INFO] uvicorn | 127.0.0.1:35164 - "WebSocket /onebot/v11/ws" [accepted]
-11-23 21:17:56 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
-11-23 21:17:57 [INFO] __main__ | OneBot v11 反向 WS：/onebot/v11/ws
-11-23 21:17:59 [INFO] uvicorn | 127.0.0.1:34162 - "WebSocket /onebot/v11/ws" [accepted]
+==任务287731 补查:账本文件名+02:14断档细节==
+--- /root下账本类文件 ---
+/root/ac161restart_verify.log 791B
+/root/asar_sync_boot.log 52B
+/root/autoheal.log 23050B
+/root/autoheal_run.log 0B
+/root/azar_login_run.log 835B
+/root/bot.log 804546B
+/root/bot_restart_1121.log 33587B
+/root/bot_restart_1535.log 659809B
+/root/bot_restart_162.log 19226B
+/root/bot_restart_163.log 2304B
+/root/bot_restart_163b.log 63402B
+/root/bot_restart_2055.log 40414B
+/root/bot_restart_2138.log 28127B
+/root/bot_restart_ac161.log 36961B
+/root/bot_restart_q159.log 41206B
+/root/bot_restart_v160.log 25233B
+/root/bot_restart_v160b.log 31991B
+/root/bot_restart_wsfix.log 21074B
+/root/botrestart_156_verify.log 230B
+/root/botrestart_quote_verify.log 140B
+/root/botrestart_verify.log 525B
+/root/botrestart_weather_verify.log 1189B
+/root/cleanup_1120.log 28B
+/root/guard_run.log 85B
+/root/health.log 406351B
+/root/ip.log 6038B
+/root/jumpfix_verify.log 185B
+/root/link_probe.log 8170B
+/root/login_state.log 66436B
+/root/music_sign.log 6961B
+/root/music_sign_v4.log 3507B
+/root/napcat-restart.log 3711591B
+/root/napcat.log 178198B
+/root/netmon.log 172123B
+/root/officialback_verify.log 352B
+/root/offline_forensics.log 45240B
+/root/offline_watch2.log 2394B
+/root/offline_watch3.log 451B
+/root/playerrestore_verify.log 441B
+/root/q159restart_verify.log 1317B
+/root/r162_verify.log 748B
+/root/r163_verify.log 515B
+/root/r163b_verify.log 164B
+/root/remote_boot.log 11B
+/root/remote_ctl.log 2305360B
+/root/session_heal.log 360B
+/root/tick.log 225120B
+/root/v160brestart_verify.log 699B
+/root/v160restart_verify.log 608B
+/root/v6fix29.log 36B
+/root/wsfix_verify.log 1006B
+--- tick.log 11-22 01:55~02:20 原样 ---
+2026-11-22 01:50:43
+2026-11-22 01:51:43
+2026-11-22 01:52:43
+2026-11-22 01:53:43
+2026-11-22 01:54:44
+2026-11-22 01:55:44
+2026-11-22 01:56:44
+2026-11-22 01:57:44
+2026-11-22 01:58:44
+2026-11-22 01:59:44
+2026-11-22 02:00:44
+2026-11-22 02:01:44
+--- health.log 同窗口 ---
+11-22 00:01:53 elapsed=60s ip=192.168.31.142 if=无
+11-22 01:02:11 elapsed=61s ip=192.168.31.142 if=无
+11-22 01:50:38 elapsed=60s ip=192.168.31.142 if=无
+11-22 01:51:39 elapsed=61s ip=192.168.31.142 if=无
+11-22 01:52:39 elapsed=60s ip=192.168.31.142 if=无
+11-22 01:53:39 elapsed=60s ip=192.168.31.142 if=无
+11-22 01:54:40 elapsed=61s ip=192.168.31.142 if=无
+11-22 01:55:40 elapsed=60s ip=192.168.31.142 if=无
+11-22 01:56:41 elapsed=60s ip=192.168.31.142 if=无
+11-22 01:57:41 elapsed=61s ip=192.168.31.142 if=无
+--- ip日志实际名与IP变动 ---
+/root/ip.log
+2026-11-22 10:29:39 14.19.177.57
+2026-11-22 11:29:41 14.19.177.57
+2026-11-22 12:29:44 14.19.177.57
+2026-11-22 13:29:48 14.19.177.57
+2026-11-22 14:30:02 查询失败
