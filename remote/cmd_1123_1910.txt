@@ -1,0 +1,11 @@
+287715
+echo "==任务287715 NapCat凭据与数据目录取证=="
+echo "--- NapCat框架目录 ---"
+find /root/Napcat -maxdepth 5 -type d -name "napcat*" 2>/dev/null | head
+echo "--- onebot/quick登录配置 ---"
+find /root/Napcat -maxdepth 6 -name "onebot11*.json" -o -maxdepth 6 -name "quickLogin*" 2>/dev/null | head
+echo "--- QQ NT 用户数据目录(凭据在这) ---"
+ls -d /root/QQUin* /root/.config/QQ* /root/Napcat/opt/QQ/* 2>/dev/null | head
+find /root -maxdepth 4 -type d -iname "*QQUin*" 2>/dev/null | head -3
+echo "--- 今日登录日志关键行 ---"
+grep -aE "二维码|qrcode|Qrcode|扫码|登录|login|Login" /root/napcat.log | tail -15
