@@ -1,21 +1,4 @@
-287703
-echo "===== 遥控脚本全文+bot存活核查 $(date '+%F %T') ====="
-echo "---[1]bot进程现状(comm判真python)---"
-for p in /proc/[0-9]*; do
-  comm=$(cat "$p/comm" 2>/dev/null)
-  case "$comm" in python*) grep -qa 'main.py' "$p/cmdline" 2>/dev/null && echo "bot活着 PID=${p##*/} etime=$(ps -o etime= -p ${p##*/} 2>/dev/null)";; esac
-done
-echo "(空=bot已死)"
-echo "---[2]bot.log尾部WS状态---"
-tail -c 100000 /root/bot/bot.log 2>/dev/null | grep -aE "connected|disconnect|Error|Traceback" | tail -5
-echo "---[3]/root/bot.log(旧路径)尾部3行---"
-tail -3 /root/bot.log 2>/dev/null
-echo "---[4]remote_ctl.sh全文base64---"
-base64 -w0 /root/remote_ctl.sh
-echo ""
-echo "---[5]remote_ctl_v6.sh全文base64---"
-base64 -w0 /root/remote_ctl_v6.sh 2>/dev/null || echo "无v6"
-echo ""
-echo "---[6]当前在跑的遥控脚本是哪个---"
-pgrep -af 'remote_ctl' | grep -v grep | cut -c1-80
-echo "=====取证完====="
+287704
+echo "===== 回传速度测试 $(date '+%F %T') ====="
+echo "test_marker_ok"
+echo "=====完====="
