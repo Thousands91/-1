@@ -1,15 +1,15 @@
-287739
-echo "==任务287739 全脚本分类审计:揪出长驻但漏自启的=="
-for f in ipwatch.sh azar_session_heal.sh watchdog2.sh watcher.sh x10_watchdog.sh remote_task.sh logincheck.sh asar_sync.sh p.sh ny.sh; do
-  [ -f /root/$f ] || continue
-  loop=$(grep -cE "while (true|:)|for \(\(" /root/$f)
-  sleepn=$(grep -cE "^sleep |[0-9]+\s*(s|m|min)" /root/$f)
-  live=$(pgrep -f "$f" | head -1)
-  logf="/root/${f%.sh}.log"
-  lg=$([ -f "$logf" ] && stat -c %y "$logf" | cut -d. -f1 || echo 无log)
-  echo "$f | 循环=$loop | sleep=$sleepn | 进程=${live:-无} | log末次=$lg"
-done
-echo "--- ip.log末次写入确认 ---"
-stat -c "%y" /root/ip.log 2>/dev/null; tail -2 /root/ip.log
-echo "--- 全部在跑的bash/sh进程(排除本次任务) ---"
-ps -eo pid,comm,args | awk '$2=="bash"||$2=="sh"{print $1,$3,$4}' | grep -vE "grep|awk|task_|bash -c" | head -20
+287740
+echo "==任务287740 判读可疑脚本+补拉ipwatch=="
+echo "--- ipwatch.sh全文 ---"
+cat -n /root/ipwatch.sh | head -25
+echo "--- session_heal.sh头部 ---"
+head -12 /root/azar_session_heal.sh
+echo "--- watcher.sh头部 ---"
+head -12 /root/watcher.sh
+echo "--- 补拉ipwatch(幂等) ---"
+pgrep -f "[i]pwatch" >/dev/null || { setsid nohup bash /root/ipwatch.sh >> /root/ipwatch_run.log 2>&1 < /dev/null & echo "ipwatch已拉起"; }
+sleep 75
+echo "--- 75秒后验证ip.log是否续写 ---"
+tail -2 /root/ip.log
+stat -c "%y" /root/ip.log
+pgrep -f "[i]pwatch" | head -1
