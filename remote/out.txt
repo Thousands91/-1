@@ -1,34 +1,30 @@
-<<<task_287713.txt>>>
-===== 任务287713 11-23 14:06:56 =====
+<<<task_287714.txt>>>
+===== 任务287714 11-23 19:07:51 =====
 --- 命令 ---
-echo "==任务287713 六文件md5终验+插件加载核对=="
-md5sum /root/bot/bot/doudizhu_engine.py /root/bot/bot/plugins/doudizhu.py /root/bot/bot/plugins/image_search_multisource.py /root/bot/bot/plugins/keyword_reply.py /root/bot/bot/plugins/ai_chat.py /root/bot/bot/plugins/fortune.py
-echo "--- 当前bot进程(应为26996) ---"
-for p in /proc/[0-9]*; do
-  if [ "$(cat $p/comm 2>/dev/null)" = "python" ] && grep -qa "main.py" "$p/cmdline" 2>/dev/null; then
-    echo "pid=${p#/proc/} 启动于 $(stat -c %y /proc/${p#/proc/} 2>/dev/null | cut -d. -f1)"
-  fi
-done
-echo "--- 重启后插件加载记录 ---"
-grep -E "Succeeded|_loaded|插件" /root/bot.log | tail -8
-grep -c "running complete" /root/bot.log
+echo "==任务287714 NapCat登录机制取证=="
+echo "--- NapCat版本 ---"
+cat /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null | head -5
+ls /root/Napcat/opt/QQ/resources/app/app_launcher/ 2>/dev/null | head
+echo "--- NapCat本地数据目录结构 ---"
+ls /root/Napcat/ 2>/dev/null
+find /root/Napcat -maxdepth 3 -name "quickLogin*" -o -maxdepth 3 -name "onebot11*" 2>/dev/null | head -10
+echo "--- 登录相关配置/凭据文件 ---"
+ls -l --full-time /root/Napcat/config/ 2>/dev/null | head -15
 --- 输出 ---
-==任务287713 六文件md5终验+插件加载核对==
-3a2b7c2912e9103f5b92217c633009e4  /root/bot/bot/doudizhu_engine.py
-bf112fbcbf356cbb89a0a15f24e88cae  /root/bot/bot/plugins/doudizhu.py
-8a708131346d57b41f186a2bf0332b64  /root/bot/bot/plugins/image_search_multisource.py
-8a6c579373cf1f0f9e0c4d5768ff7b2c  /root/bot/bot/plugins/keyword_reply.py
-1e55a0df0801ead47e30c7fcb3ca2b55  /root/bot/bot/plugins/ai_chat.py
-c86405ec79a7dad9163cbe3474cf9288  /root/bot/bot/plugins/fortune.py
---- 当前bot进程(应为26996) ---
-pid=26996 启动于 2026-11-23 14:02:11
---- 重启后插件加载记录 ---
-11-23 14:02:23 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
-11-23 14:02:23 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
-11-23 14:02:23 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
-11-23 14:02:23 [SUCCESS] nonebot | Succeeded to load plugin "doudizhu" from "plugins.doudizhu"
-11-23 14:02:24 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
-11-23 14:02:24 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
-11-23 14:02:24 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
-11-23 14:02:24 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
-98
+==任务287714 NapCat登录机制取证==
+--- NapCat版本 ---
+{
+  "name": "QQ",
+  "version": "3.2.34-53644",
+  "private": true,
+  "description": "QQ",
+adm-zip.js
+index.js
+launcher.js
+napcat
+--- NapCat本地数据目录结构 ---
+guild1.db
+guild1.db-shm
+guild1.db-wal
+opt
+--- 登录相关配置/凭据文件 ---
