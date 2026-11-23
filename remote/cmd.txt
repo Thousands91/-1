@@ -1,15 +1,7 @@
-287740
-echo "==任务287740 判读可疑脚本+补拉ipwatch=="
-echo "--- ipwatch.sh全文 ---"
-cat -n /root/ipwatch.sh | head -25
-echo "--- session_heal.sh头部 ---"
-head -12 /root/azar_session_heal.sh
-echo "--- watcher.sh头部 ---"
-head -12 /root/watcher.sh
-echo "--- 补拉ipwatch(幂等) ---"
-pgrep -f "[i]pwatch" >/dev/null || { setsid nohup bash /root/ipwatch.sh >> /root/ipwatch_run.log 2>&1 < /dev/null & echo "ipwatch已拉起"; }
-sleep 75
-echo "--- 75秒后验证ip.log是否续写 ---"
-tail -2 /root/ip.log
-stat -c "%y" /root/ip.log
-pgrep -f "[i]pwatch" | head -1
+287741
+echo "==任务287741 补拉ipwatch快速版(不sleep)=="
+pgrep -f "[i]pwatch" >/dev/null && echo "ipwatch已在跑" || { setsid nohup bash /root/ipwatch.sh >> /root/ipwatch_run.log 2>&1 < /dev/null & echo "ipwatch已拉起"; }
+sleep 3
+echo "ipwatch进程: $(pgrep -f '[i]pwatch' | head -1)"
+echo "ip.log当前末行: $(tail -1 /root/ip.log)"
+echo "ipwatch_run.log: $(tail -2 /root/ipwatch_run.log 2>/dev/null)"
