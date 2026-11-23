@@ -1,25 +1,21 @@
-287701
-echo "===== 精确进程核查 $(date '+%F %T') ====="
-echo "---逐个查/proc: comm=python且cmdline含main.py的才是真bot---"
-for p in /proc/[0-9]*; do
-  pid=${p##*/}
-  comm=$(cat "$p/comm" 2>/dev/null)
-  case "$comm" in
-    python*|python3*)
-      cmd=$(tr '\0' ' ' < "$p/cmdline" 2>/dev/null | cut -c1-90)
-      echo "真python进程 PID=$pid comm=$comm cmd=$cmd"
-      ;;
-  esac
+287702
+echo "===== 断电取证+回传机制取证 $(date '+%F %T') ====="
+echo "---[1]本次开机时刻---"
+uptime -s 2>/dev/null || uptime
+echo "---[2]tick.log最后6条心跳(断电时刻铁证,60s一跳)---"
+tail -6 /root/tick.log 2>/dev/null || echo "无tick.log"
+echo "---[3]关键日志文件最后写入时间---"
+for f in /root/tick.log /root/bot/bot.log /root/bot.log /root/napcat.log /root/napcat-run.log /root/remote_ctl.log /root/login_state.log /root/guard_run.log /root/remote_last /root/.remote_last; do
+  [ -f "$f" ] && stat -c '%y  %n' "$f"
 done
-echo "---其中main.py进程数---"
-CNT=0
-for p in /proc/[0-9]*; do
-  comm=$(cat "$p/comm" 2>/dev/null)
-  case "$comm" in python*) grep -qa 'main.py' "$p/cmdline" 2>/dev/null && CNT=$((CNT+1));; esac
-done
-echo "main.py真进程数=$CNT"
-echo "---遥控循环(方括号防自匹配)---"
-pgrep -af 'remote_ctl.[s]h' | grep -v 'proot' | head -2 | cut -c1-70
-echo "---登录态---"
-tail -1 /root/login_state.log 2>/dev/null
-echo "=====核查完====="
+echo "---[4]login_state.log最后3条---"
+tail -3 /root/login_state.log 2>/dev/null
+echo "---[5]bot.log断电前最后写入(尾部500KB内找11-22 14:4x)---"
+tail -c 500000 /root/bot/bot.log 2>/dev/null | grep -a "11-22 14:4" | tail -4 || tail -c 500000 /root/bot.log 2>/dev/null | grep -a "11-22 14:4" | tail -4
+echo "---[6]remote_ctl.sh大小---"
+wc -lc /root/remote_ctl.sh /root/remote_ctl_v6.sh 2>/dev/null
+echo "---[7]remote_ctl.sh回传相关关键行---"
+grep -n "out.txt\|PUT\|curl\|sleep\|task\|cmd.txt" /root/remote_ctl.sh 2>/dev/null | head -40
+echo "---[8]remote_ctl.log尾部30行(看回传PUT有无报错)---"
+tail -30 /root/remote_ctl.log 2>/dev/null | tail -15
+echo "=====取证完====="
