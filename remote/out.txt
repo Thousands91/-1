@@ -1,39 +1,83 @@
-<<<task_287701.txt>>>
-===== 任务287701 11-23 04:48:59 =====
+<<<task_287702.txt>>>
+===== 任务287702 11-23 12:00:26 =====
 --- 命令 ---
-echo "===== 精确进程核查 $(date '+%F %T') ====="
-echo "---逐个查/proc: comm=python且cmdline含main.py的才是真bot---"
-for p in /proc/[0-9]*; do
-  pid=${p##*/}
-  comm=$(cat "$p/comm" 2>/dev/null)
-  case "$comm" in
-    python*|python3*)
-      cmd=$(tr '\0' ' ' < "$p/cmdline" 2>/dev/null | cut -c1-90)
-      echo "真python进程 PID=$pid comm=$comm cmd=$cmd"
-      ;;
-  esac
+echo "===== 断电取证+回传机制取证 $(date '+%F %T') ====="
+echo "---[1]本次开机时刻---"
+uptime -s 2>/dev/null || uptime
+echo "---[2]tick.log最后6条心跳(断电时刻铁证,60s一跳)---"
+tail -6 /root/tick.log 2>/dev/null || echo "无tick.log"
+echo "---[3]关键日志文件最后写入时间---"
+for f in /root/tick.log /root/bot/bot.log /root/bot.log /root/napcat.log /root/napcat-run.log /root/remote_ctl.log /root/login_state.log /root/guard_run.log /root/remote_last /root/.remote_last; do
+  [ -f "$f" ] && stat -c '%y  %n' "$f"
 done
-echo "---其中main.py进程数---"
-CNT=0
-for p in /proc/[0-9]*; do
-  comm=$(cat "$p/comm" 2>/dev/null)
-  case "$comm" in python*) grep -qa 'main.py' "$p/cmdline" 2>/dev/null && CNT=$((CNT+1));; esac
-done
-echo "main.py真进程数=$CNT"
-echo "---遥控循环(方括号防自匹配)---"
-pgrep -af 'remote_ctl.[s]h' | grep -v 'proot' | head -2 | cut -c1-70
-echo "---登录态---"
-tail -1 /root/login_state.log 2>/dev/null
-echo "=====核查完====="
+echo "---[4]login_state.log最后3条---"
+tail -3 /root/login_state.log 2>/dev/null
+echo "---[5]bot.log断电前最后写入(尾部500KB内找11-22 14:4x)---"
+tail -c 500000 /root/bot/bot.log 2>/dev/null | grep -a "11-22 14:4" | tail -4 || tail -c 500000 /root/bot.log 2>/dev/null | grep -a "11-22 14:4" | tail -4
+echo "---[6]remote_ctl.sh大小---"
+wc -lc /root/remote_ctl.sh /root/remote_ctl_v6.sh 2>/dev/null
+echo "---[7]remote_ctl.sh回传相关关键行---"
+grep -n "out.txt\|PUT\|curl\|sleep\|task\|cmd.txt" /root/remote_ctl.sh 2>/dev/null | head -40
+echo "---[8]remote_ctl.log尾部30行(看回传PUT有无报错)---"
+tail -30 /root/remote_ctl.log 2>/dev/null | tail -15
+echo "=====取证完====="
 --- 输出 ---
-===== 精确进程核查 2026-11-23 04:48:59 =====
----逐个查/proc: comm=python且cmdline含main.py的才是真bot---
-真python进程 PID=22630 comm=python cmd=/root/bot/venv/bin/python main.py 
----其中main.py进程数---
-main.py真进程数=1
----遥控循环(方括号防自匹配)---
-22626 bash -c cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat
-22627 bash -c cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat
----登录态---
+===== 断电取证+回传机制取证 2026-11-23 12:00:26 =====
+---[1]本次开机时刻---
+2026-11-23 11:58:22
+---[2]tick.log最后6条心跳(断电时刻铁证,60s一跳)---
+2026-11-22 14:36:06
+2026-11-22 14:37:07
+2026-11-22 14:38:25
+2026-11-22 14:41:16
+2026-11-22 14:42:31
+2026-11-22 14:47:40
+---[3]关键日志文件最后写入时间---
+2026-11-22 14:47:40.960000000 +0800  /root/tick.log
+2026-11-23 04:44:00.140000000 +0800  /root/bot/bot.log
+2026-11-23 06:32:36.810000000 +0800  /root/bot.log
+2026-11-23 05:02:29.260000000 +0800  /root/napcat.log
+2026-11-23 11:59:21.400000000 +0800  /root/remote_ctl.log
+2026-11-22 14:43:30.090000000 +0800  /root/login_state.log
+2026-11-23 05:02:28.810000000 +0800  /root/guard_run.log
+2026-11-23 12:00:26.100000000 +0800  /root/.remote_last
+---[4]login_state.log最后3条---
+2026-11-22 14:33:23 [未登录]
+2026-11-22 14:38:28 [未登录]
 2026-11-22 14:43:30 [未登录]
-=====核查完=====
+---[5]bot.log断电前最后写入(尾部500KB内找11-22 14:4x)---
+---[6]remote_ctl.sh大小---
+  130  6046 /root/remote_ctl.sh
+  182  8824 /root/remote_ctl_v6.sh
+  312 14870 total
+---[7]remote_ctl.sh回传相关关键行---
+8:CMD_URL="$BASE/cmd.txt"
+9:OUT_URL="$BASE/out.txt"
+27:run_task() {
+30:  O="$PBOX/task_$1.txt"
+42:  SHA=$(timeout 30 curl -s -H "Authorization: token $TOK" "$OUT_URL?cb=$(date +%s)" | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+44:  R=$(timeout 60 curl -s -X PUT -H "Authorization: token $TOK" -d "{\"message\":\"遥控输出(API) $(date '+%m-%d %H:%M')\",\"content\":\"$B64\"${SHA:+,\"sha\":\"$SHA\"}}" "$OUT_URL")
+68:  pkill -f "opt/QQ/qq" 2>/dev/null; sleep 3
+87:  SHA=$(timeout 30 curl -s -H "Authorization: token $TOK" "$BASE/status.txt" | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+89:  R=$(timeout 60 curl -s -X PUT -H "Authorization: token $TOK" -d "{\"message\":\"status\",\"content\":\"$B64S\"${SHA:+,\"sha\":\"$SHA\"}}" "$BASE/status.txt")
+100:  for U in "cmd_$CUR.txt" "cmd_$PRV.txt" "cmd.txt"; do
+101:    RAW=$(timeout 15 curl -s "$RAWBASE/$U?cb=$(date +%s%N)")
+108:    run_task "$BESTID" "/tmp/remote_cmd_$BESTID.txt"
+129:  sleep 15
+---[8]remote_ctl.log尾部30行(看回传PUT有无报错)---
+[11-23 11:39] 心跳:循环正常,LAST=287701
+[11-23 11:39] intake:槽位=1123_1135/1123_1130 命中ID=287701
+[11-23 11:41] intake:槽位=1123_1140/1123_1135 命中ID=287701
+[11-23 11:43] intake:槽位=1123_1140/1123_1135 命中ID=287701
+[11-23 11:44] intake:槽位=1123_1140/1123_1135 命中ID=287701
+[11-23 11:46] intake:槽位=1123_1145/1123_1140 命中ID=287701
+[11-23 11:48] intake:槽位=1123_1145/1123_1140 命中ID=287701
+[11-23 11:49] intake:槽位=1123_1145/1123_1140 命中ID=287701
+[11-23 11:51] intake:槽位=1123_1150/1123_1145 命中ID=287701
+[11-23 11:52] intake:槽位=1123_1150/1123_1145 命中ID=287701
+[11-23 11:54] intake:槽位=1123_1150/1123_1145 命中ID=287701
+[11-23 11:55] 心跳:循环正常,LAST=287701
+[11-23 11:55] intake:槽位=1123_1155/1123_1150 命中ID=287701
+[11-23 11:57] intake:槽位=1123_1155/1123_1150 命中ID=287701
+[11-23 11:59] intake:槽位=1123_1155/1123_1150 命中ID=287701
+=====取证完=====
