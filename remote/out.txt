@@ -1,61 +1,47 @@
-<<<task_287719.txt>>>
-===== 任务287719 11-23 19:36:42 =====
+<<<task_287720.txt>>>
+===== 任务287720 11-23 19:43:21 =====
 --- 命令 ---
-echo "==任务287719 修napcat.log覆盖清空缺陷=="
-python3 - <<'PY'
-ROT='if [ -f /root/napcat.log ] && [ "$(stat -c %s /root/napcat.log)" -gt 2097152 ]; then gzip -c /root/napcat.log > /root/napcat.log.$(date +%m%d_%H%M).gz && : > /root/napcat.log; fi\n'
-import os
-files=['/root/morning.sh','/root/st.sh','/root/start_nap.sh']
-for f in files:
-    bak=f+'.bak_1123_log'
-    s=open(f).read()
-    open(bak,'w').write(s)
-    if 'napcat.log.$(date' in s:
-        print(f,'已改过,跳过'); continue
-    n=s.count('> /root/napcat.log 2>&1')
-    if n==0:
-        print(f,'未找到目标片段,跳过(请人工检查)'); continue
-    out=[]
-    changed=0
-    for ln in s.splitlines(keepends=True):
-        if '> /root/napcat.log 2>&1' in ln:
-            indent=ln[:len(ln)-len(ln.lstrip())]
-            out.append(indent+ROT)
-            out.append(ln.replace('> /root/napcat.log 2>&1','>> /root/napcat.log 2>&1'))
-            changed+=1
-        else:
-            out.append(ln)
-    open(f,'w').write(''.join(out))
-    print(f,'替换%d处'%changed)
-PY
-echo "--- 语法检查 ---"
-for f in /root/morning.sh /root/st.sh /root/start_nap.sh; do bash -n "$f" && echo "$f 语法OK"; done
-echo "--- 验证:三个脚本的关键行 ---"
-grep -n "napcat.log" /root/morning.sh /root/st.sh /root/start_nap.sh | grep -v "^Binary"
-echo "--- 备份在位 ---"
-ls -l /root/*.bak_1123_log
-echo "--- napcat.log当前大小 ---"
-stat -c "%s字节 %y" /root/napcat.log
+echo "==任务287720 欠账盘点取证=="
+echo "--- Termux层boot目录(proot bind路径) ---"
+ls -la /data/data/com.termux/files/home/.termux/ 2>/dev/null
+ls -la /data/data/com.termux/files/home/.termux/boot/ 2>/dev/null
+echo "--- Termux:Boot插件是否安装 ---"
+ls -d /data/data/com.termux/files/home/.termux/boot 2>/dev/null && echo "boot目录存在(可能装过Boot插件)"
+ls /data/data/com.termux/files/usr/bin/termux-boot 2>/dev/null
+echo "--- 设备image_see.py现状 ---"
+md5sum /root/bot/bot/plugins/image_see.py 2>/dev/null || ls /root/bot/bot/plugins/ | head -20
+echo "--- 取证脚本现状(2843待修缺陷) ---"
+ls -l /root/*.sh | grep -iE "forensic|blackbox|heal" | head -5
 --- 输出 ---
-==任务287719 修napcat.log覆盖清空缺陷==
-/root/morning.sh 替换1处
-/root/st.sh 替换1处
-/root/start_nap.sh 替换1处
---- 语法检查 ---
-/root/morning.sh 语法OK
-/root/st.sh 语法OK
-/root/start_nap.sh 语法OK
---- 验证:三个脚本的关键行 ---
-/root/morning.sh:15:  if [ -f /root/napcat.log ] && [ "$(stat -c %s /root/napcat.log)" -gt 2097152 ]; then gzip -c /root/napcat.log > /root/napcat.log.$(date +%m%d_%H%M).gz && : > /root/napcat.log; fi
-/root/morning.sh:16:  cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat.log 2>&1 &
-/root/morning.sh:18:  pgrep -f 'opt/QQ/qq' >/dev/null && echo "   ✅ 已重启" || echo "   ✗ 重启失败，把 napcat.log 发我"
-/root/st.sh:4:  if [ -f /root/napcat.log ] && [ "$(stat -c %s /root/napcat.log)" -gt 2097152 ]; then gzip -c /root/napcat.log > /root/napcat.log.$(date +%m%d_%H%M).gz && : > /root/napcat.log; fi
-/root/st.sh:5:  nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat.log 2>&1 &
-/root/start_nap.sh:1:if [ -f /root/napcat.log ] && [ "$(stat -c %s /root/napcat.log)" -gt 2097152 ]; then gzip -c /root/napcat.log > /root/napcat.log.$(date +%m%d_%H%M).gz && : > /root/napcat.log; fi
-/root/start_nap.sh:2:pkill -f "opt/QQ/[q]q"; sleep 2; cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat.log 2>&1 < /dev/null & sleep 25; cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册,去QQ扫 || echo 码未生成,稍后再拷
---- 备份在位 ---
--rw-r--r-- 1 root root 3050 Nov 23 19:36 /root/morning.sh.bak_1123_log
--rw-r--r-- 1 root root  899 Nov 23 19:36 /root/st.sh.bak_1123_log
--rw-r--r-- 1 root root  442 Nov 23 19:36 /root/start_nap.sh.bak_1123_log
---- napcat.log当前大小 ---
-150556字节 2026-11-23 19:36:22.880000000 +0800
+==任务287720 欠账盘点取证==
+--- Termux层boot目录(proot bind路径) ---
+total 0
+drwx------ 2 root root 3488 Nov 11 20:14 .
+drwx------ 6 root root 3488 Nov 18 09:48 ..
+-rw------- 1 root root 6037 Nov 11 20:14 termux.properties
+--- Termux:Boot插件是否安装 ---
+--- 设备image_see.py现状 ---
+__pycache__
+ai_chat.py
+ai_chat.py.bak_1123
+ai_chat.py.bak_287391
+ai_chat.py.bak_ac161
+ai_chat.py.bak_quote156_2137
+ai_chat.py.bak_quote159_11212205
+ai_chat.py.bak_quote_2051
+bak_162_0235
+bak_163_0919
+bak_163_v2
+bak_163b
+book_find.py
+chess_game.py
+chess_game.py.bak_0412_1458
+doudizhu.py
+fortune.py
+fortune.py.bak_1123
+games.py
+games.py.bak_287385
+--- 取证脚本现状(2843待修缺陷) ---
+-rwxr-xr-x 1 root root  7226 Nov 20 12:05 /root/azar_autoheal.sh
+-rwxr-xr-x 1 root root  6345 Nov 22 14:38 /root/azar_session_heal.sh
+-rw-r--r-- 1 root root  1000 Nov 16 18:30 /root/health_probe.sh
