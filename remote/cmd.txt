@@ -1,21 +1,25 @@
-287735
-echo "==任务287735 冻结边界+登录态核实=="
-echo "--- tick.log 最后10行(冻结从哪开始) ---"
-tail -10 /root/tick.log
-echo "--- health.log 最后8行 ---"
-tail -8 /root/health.log
-echo "--- netmon.log 最后8行 ---"
-tail -8 /root/netmon.log
-echo "--- login_state.log 最后6行(现在登录态) ---"
-tail -6 /root/login_state.log
-echo "--- napcat进程还活着吗 ---"
-for p in /proc/[0-9]*; do
-  if grep -qa "opt/QQ/qq" "$p/cmdline" 2>/dev/null && [ "$(cat $p/comm 2>/dev/null)" = "qq" ]; then
-    echo "NapCat pid=${p#/proc/} 活着"
-  fi
+287736
+echo "==任务287736 拉起仪器全家+息屏冻结取证=="
+echo "--- A.仪器进程现状 ---"
+for n in tick.sh health_probe netmon login_watch azar_autoheal; do
+  f=$(pgrep -f "$n" | head -1)
+  echo "$n: ${f:-未运行}"
 done
-for p in /proc/[0-9]*; do
-  if [ "$(cat $p/comm 2>/dev/null)" = "python" ] && grep -qa "main.py" "$p/cmdline" 2>/dev/null; then
-    echo "bot pid=${p#/proc/} 活着"
-  fi
+echo "--- B.拉起全部仪器(幂等) ---"
+pgrep -f "[t]ick.sh" >/dev/null || { setsid nohup /root/tick.sh >/dev/null 2>&1 < /dev/null & echo "tick已拉起"; }
+ls /root/health_probe* /root/netmon* /root/login_watch* 2>/dev/null
+pgrep -f "[h]ealth_probe" >/dev/null || { H=$(ls /root/health_probe*.sh 2>/dev/null | head -1); [ -n "$H" ] && { setsid nohup bash "$H" >/dev/null 2>&1 < /dev/null & echo "health已拉起:$H"; }; }
+pgrep -f "[n]etmon" >/dev/null || { N=$(ls /root/netmon*.sh 2>/dev/null | head -1); [ -n "$N" ] && { setsid nohup bash "$N" >/dev/null 2>&1 < /dev/null & echo "netmon已拉起:$N"; }; }
+pgrep -f "[l]ogin_watch" >/dev/null || { L=$(ls /root/login_watch*.sh 2>/dev/null | head -1); [ -n "$L" ] && { setsid nohup bash "$L" >/dev/null 2>&1 < /dev/null & echo "login_watch已拉起:$L"; }; }
+pgrep -f "[a]zar_autoheal" >/dev/null || { setsid nohup bash /root/azar_autoheal.sh >/dev/null 2>&1 < /dev/null & echo "autoheal已拉起"; }
+sleep 8
+echo "--- C.拉起后仪器进程 ---"
+for n in tick.sh health_probe netmon login_watch azar_autoheal; do
+  echo "$n: $(pgrep -f "$n" | head -1)"
 done
+echo "--- D.napcat.log今天00:10~00:26断线痕迹 ---"
+grep -an "00:1[0-9]\|00:2[0-6]" /root/napcat.log | grep -iaE "offline|离线|断|disconnect|reconnect|错误|error|timeout" | head -10
+tail -5 /root/napcat.log
+echo "--- E.remote_ctl.log 00:10~00:25有无活动(区分冻结vs没拉起) ---"
+grep -an "11-24 00:1" /root/remote_ctl.log | head -8
+grep -c "11-24" /root/remote_ctl.log
