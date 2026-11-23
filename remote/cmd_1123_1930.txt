@@ -1,0 +1,13 @@
+287718
+echo "==任务287718 找NapCat启动命令所在文件=="
+grep -rln "napcat.log" /root/*.sh /root/Napcat/*.sh /root/*.txt 2>/dev/null
+echo "---"
+grep -rn "> /root/napcat.log" /root/*.sh /root/Napcat/*.sh 2>/dev/null | head -5
+echo "--- 今日NapCat进程的启动来源 ---"
+for p in /proc/[0-9]*; do
+  if grep -qa "opt/QQ/qq" "$p/cmdline" 2>/dev/null; then
+    echo "pid=${p#/proc/} ppid=$(awk '{print $4}' $p/stat 2>/dev/null)"
+    ppid=$(awk '{print $4}' $p/stat 2>/dev/null)
+    [ -r /proc/$ppid/cmdline ] && tr '\0' ' ' < /proc/$ppid/cmdline | head -c 300; echo
+  fi
+done
