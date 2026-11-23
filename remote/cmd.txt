@@ -1,17 +1,6 @@
-287707
-echo "==任务287707 只读核查bot进程启动时间=="
-for p in /proc/[0-9]*; do
-  if grep -q "main.py" "$p/cmdline" 2>/dev/null; then
-    comm=$(cat "$p/comm" 2>/dev/null)
-    if [ "$comm" = "python" ]; then
-      pid=${p#/proc/}
-      echo "python进程 pid=$pid"
-      ps -o pid,lstart,etime,cmd -p $pid 2>/dev/null | tail -1
-      ls -l /proc/$pid/cwd
-    fi
-  fi
-done
-echo "---"
-ls -l --full-time /root/bot/bot/plugins/keyword_reply.py
-echo "---插件pyc缓存---"
-ls -l --full-time /root/bot/bot/plugins/__pycache__/ 2>/dev/null | grep keyword
+287708
+echo "==任务287708 查今天菜单消息的实际处理路径=="
+date
+grep "Event handled" /root/bot.log | tail -20
+echo "---今天13点后日志尾---"
+awk '/^2026-11-23 1[23]:/' /root/bot.log | tail -40
