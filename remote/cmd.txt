@@ -1,4 +1,4 @@
-287704
-echo "===== 回传速度测试 $(date '+%F %T') ====="
-echo "test_marker_ok"
+287705
+echo "===== 双投速度测试 $(date '+%F %T') ====="
+echo "slot_test_ok"
 echo "=====完====="
