@@ -1,30 +1,33 @@
-<<<task_287716.txt>>>
-===== 任务287716 11-23 19:18:49 =====
+<<<task_287717.txt>>>
+===== 任务287717 11-23 19:21:56 =====
 --- 命令 ---
-echo "==任务287716 凭据目录+历史重扫日志取证=="
-echo "--- /root/.config/QQ 顶层 ---"
-ls -l --full-time /root/.config/QQ/ | head -12
-echo "--- 按UIN的凭据目录(找数字目录) ---"
-find /root/.config/QQ -maxdepth 3 -type d -name "*3427943187*" 2>/dev/null | head -5
-ls -l --full-time /root/.config/QQ/global/nt_data/ 2>/dev/null | head -15
-echo "--- 历史日志: 二维码过期与扫码确认(11-21~22) ---"
-grep -a "二维码已被扫描\|二维码已过期\|ErrCode:3\|Login Success\|登录成功\|账号状态变更" /root/napcat.log /root/napcat-restart.log 2>/dev/null | tail -25
+echo "==任务287717 Login凭据落盘时间取证=="
+ls -l --full-time /root/.config/QQ/global/Login/ 2>/dev/null
+echo "--- nt_qq账号目录最近写入的文件(看最新mtime) ---"
+find /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317 -type f -newermt "2026-11-23 00:00" 2>/dev/null | head -8
+echo "--- 今日13:37前后有写入的文件数 ---"
+find /root/.config/QQ -type f -newermt "2026-11-23 13:36" ! -newermt "2026-11-23 14:00" 2>/dev/null | wc -l
+find /root/.config/QQ -type f -newermt "2026-11-23 13:36" ! -newermt "2026-11-23 14:00" 2>/dev/null | head -10
 --- 输出 ---
-==任务287716 凭据目录+历史重扫日志取证==
---- /root/.config/QQ 顶层 ---
-total 0
-drwx------ 2 root root 3488 2026-11-12 00:08:40.680000000 +0800 Crashpad
-drwxr-xr-x 4 root root 3488 2026-11-12 00:23:44.130000000 +0800 NapCat
-drwxr-x--- 2 root root 3488 2026-11-12 00:23:36.230000000 +0800 crash_files
-drwx------ 5 root root 3488 2026-11-12 00:08:42.470000000 +0800 global
-drwxr-xr-x 5 root root 3488 2026-11-12 00:23:36.770000000 +0800 nt_qq_f31de70269f5ae9ebeb8d47e85491317
---- 按UIN的凭据目录(找数字目录) ---
-total 0
-drwx------ 3 root root 3488 2026-11-12 00:23:43.960000000 +0800 Emoji
-drwxr-xr-x 4 root root 3488 2026-11-12 00:08:42.470000000 +0800 Log
-drwx------ 2 root root 3488 2026-11-12 00:23:31.820000000 +0800 Login
-drwx------ 2 root root 3488 2026-11-12 00:23:57.080000000 +0800 Skin
-drwxr-xr-x 3 root root 3488 2026-11-12 00:23:44.950000000 +0800 mmkv
-drwx------ 3 root root 3488 2026-11-12 00:08:43.610000000 +0800 msf
---- 历史日志: 二维码过期与扫码确认(11-21~22) ---
-/root/napcat.log:11-23 13:37:02 [[32minfo[39m] [Core] [Login] 二维码已被扫描，等待确认...
+==任务287717 Login凭据落盘时间取证==
+--- nt_qq账号目录最近写入的文件(看最新mtime) ---
+/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log-cache/qq-log.mmap3
+/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-13.qqxlog
+/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-14.qqxlog
+/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-15.qqxlog
+/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-16.qqxlog
+/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-17.qqxlog
+/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-18.qqxlog
+/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-19.qqxlog
+--- 今日13:37前后有写入的文件数 ---
+54
+/root/.config/QQ/global/nt_data/Log/log-cache/prelogin-log.mmap3
+/root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-23-13.qqxlog
+/root/.config/QQ/global/nt_data/mmkv/nt_mmkv_msf_united_config
+/root/.config/QQ/global/nt_data/mmkv/nt_mmkv_msf_united_config.crc
+/root/.config/QQ/global/nt_data/mmkv/nt_mmkv_global_misc
+/root/.config/QQ/global/nt_data/mmkv/nt_mmkv_global_misc.crc
+/root/.config/QQ/global/nt_data/mmkv/nt_mmkv_o3
+/root/.config/QQ/global/nt_data/mmkv/nt_mmkv_o3.crc
+/root/.config/QQ/global/nt_data/mmkv/mmkv.default
+/root/.config/QQ/global/nt_data/mmkv/mmkv.default.crc
