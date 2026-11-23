@@ -1,67 +1,63 @@
-<<<task_287735.txt>>>
-===== 任务287735 11-24 00:35:32 =====
+<<<task_287736.txt>>>
+===== 任务287736 11-24 00:38:43 =====
 --- 命令 ---
-echo "==任务287735 冻结边界+登录态核实=="
-echo "--- tick.log 最后10行(冻结从哪开始) ---"
-tail -10 /root/tick.log
-echo "--- health.log 最后8行 ---"
-tail -8 /root/health.log
-echo "--- netmon.log 最后8行 ---"
-tail -8 /root/netmon.log
-echo "--- login_state.log 最后6行(现在登录态) ---"
-tail -6 /root/login_state.log
-echo "--- napcat进程还活着吗 ---"
-for p in /proc/[0-9]*; do
-  if grep -qa "opt/QQ/qq" "$p/cmdline" 2>/dev/null && [ "$(cat $p/comm 2>/dev/null)" = "qq" ]; then
-    echo "NapCat pid=${p#/proc/} 活着"
-  fi
+echo "==任务287736 拉起仪器全家+息屏冻结取证=="
+echo "--- A.仪器进程现状 ---"
+for n in tick.sh health_probe netmon login_watch azar_autoheal; do
+  f=$(pgrep -f "$n" | head -1)
+  echo "$n: ${f:-未运行}"
 done
-for p in /proc/[0-9]*; do
-  if [ "$(cat $p/comm 2>/dev/null)" = "python" ] && grep -qa "main.py" "$p/cmdline" 2>/dev/null; then
-    echo "bot pid=${p#/proc/} 活着"
-  fi
+echo "--- B.拉起全部仪器(幂等) ---"
+pgrep -f "[t]ick.sh" >/dev/null || { setsid nohup /root/tick.sh >/dev/null 2>&1 < /dev/null & echo "tick已拉起"; }
+ls /root/health_probe* /root/netmon* /root/login_watch* 2>/dev/null
+pgrep -f "[h]ealth_probe" >/dev/null || { H=$(ls /root/health_probe*.sh 2>/dev/null | head -1); [ -n "$H" ] && { setsid nohup bash "$H" >/dev/null 2>&1 < /dev/null & echo "health已拉起:$H"; }; }
+pgrep -f "[n]etmon" >/dev/null || { N=$(ls /root/netmon*.sh 2>/dev/null | head -1); [ -n "$N" ] && { setsid nohup bash "$N" >/dev/null 2>&1 < /dev/null & echo "netmon已拉起:$N"; }; }
+pgrep -f "[l]ogin_watch" >/dev/null || { L=$(ls /root/login_watch*.sh 2>/dev/null | head -1); [ -n "$L" ] && { setsid nohup bash "$L" >/dev/null 2>&1 < /dev/null & echo "login_watch已拉起:$L"; }; }
+pgrep -f "[a]zar_autoheal" >/dev/null || { setsid nohup bash /root/azar_autoheal.sh >/dev/null 2>&1 < /dev/null & echo "autoheal已拉起"; }
+sleep 8
+echo "--- C.拉起后仪器进程 ---"
+for n in tick.sh health_probe netmon login_watch azar_autoheal; do
+  echo "$n: $(pgrep -f "$n" | head -1)"
 done
+echo "--- D.napcat.log今天00:10~00:26断线痕迹 ---"
+grep -an "00:1[0-9]\|00:2[0-6]" /root/napcat.log | grep -iaE "offline|离线|断|disconnect|reconnect|错误|error|timeout" | head -10
+tail -5 /root/napcat.log
+echo "--- E.remote_ctl.log 00:10~00:25有无活动(区分冻结vs没拉起) ---"
+grep -an "11-24 00:1" /root/remote_ctl.log | head -8
+grep -c "11-24" /root/remote_ctl.log
 --- 输出 ---
-==任务287735 冻结边界+登录态核实==
---- tick.log 最后10行(冻结从哪开始) ---
-2026-11-22 14:31:02
-2026-11-22 14:32:02
-2026-11-22 14:33:23
-2026-11-22 14:34:41
-2026-11-22 14:36:06
-2026-11-22 14:37:07
-2026-11-22 14:38:25
-2026-11-22 14:41:16
-2026-11-22 14:42:31
-2026-11-22 14:47:40
---- health.log 最后8行 ---
-11-22 14:33:23 elapsed=62s ip=192.168.31.142 if=无
-11-22 14:34:41 elapsed=78s ip=192.168.31.142 if=无
-11-22 14:36:07 elapsed=85s ip=192.168.31.142 if=无
-11-22 14:37:07 elapsed=61s ip=192.168.31.142 if=无
-11-22 14:38:25 elapsed=78s ip=192.168.31.142 if=无
-11-22 14:41:27 elapsed=132s ip=192.168.31.142 if=无
-11-22 14:42:33 elapsed=116s ip=192.168.31.142 if=无
-11-22 14:47:40 elapsed=306s ip=192.168.31.142 if=无
---- netmon.log 最后8行 ---
-11-22 14:33:23 ping=FAILms batt=
-11-22 14:34:41 ping=FAILms batt=
-11-22 14:36:06 ping=FAILms batt=
-11-22 14:37:30 ping=FAILms batt=
-11-22 14:38:33 ping=FAILms batt=
-11-22 14:41:57 ping=FAILms batt=
-11-22 14:43:14 ping=FAILms batt=
-11-22 14:47:39 ping=FAILms batt=
---- login_state.log 最后6行(现在登录态) ---
-2026-11-22 14:17:56 [未登录]
-2026-11-22 14:22:57 [未登录]
-2026-11-22 14:27:59 [未登录]
-2026-11-22 14:33:23 [未登录]
-2026-11-22 14:38:28 [未登录]
-2026-11-22 14:43:30 [未登录]
---- napcat进程还活着吗 ---
-NapCat pid=22082 活着
-NapCat pid=22096 活着
-NapCat pid=22098 活着
-NapCat pid=22147 活着
-bot pid=29005 活着
+==任务287736 拉起仪器全家+息屏冻结取证==
+--- A.仪器进程现状 ---
+tick.sh: 未运行
+health_probe: 未运行
+netmon: 未运行
+login_watch: 未运行
+azar_autoheal: 17500
+--- B.拉起全部仪器(幂等) ---
+tick已拉起
+/root/health_probe.sh
+/root/health_probe_v1.bak
+/root/health_probe_v2.bak
+/root/health_probe_v3.bak
+/root/login_watch.sh
+/root/netmon.log
+/root/netmon.sh
+health已拉起:/root/health_probe.sh
+netmon已拉起:/root/netmon.sh
+login_watch已拉起:/root/login_watch.sh
+--- C.拉起后仪器进程 ---
+tick.sh: 28113
+health_probe: 28121
+netmon: 28129
+login_watch: 28140
+azar_autoheal: 17500
+--- D.napcat.log今天00:10~00:26断线痕迹 ---
+1099:11-24 00:25:17 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+11-24 00:37:44 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 对方正在输入...
+11-24 00:37:49 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-24 00:37:49 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+11-24 00:37:49 [[32minfo[39m] 阿萨尔 | 接收 <- 私聊 (1561950850) 你不是能搜索吗？你去多了解一点齐豫
+11-24 00:37:51 [[32minfo[39m] 阿萨尔 | [Notice] [输入状态] 1561950850 
+--- E.remote_ctl.log 00:10~00:25有无活动(区分冻结vs没拉起) ---
+23149:grep -a "11-24 00:1\|11-24 00:2\|11-24 00:0" /root/health.log | tail -25
+24
