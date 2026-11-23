@@ -1,33 +1,45 @@
-<<<task_287717.txt>>>
-===== 任务287717 11-23 19:21:56 =====
+<<<task_287718.txt>>>
+===== 任务287718 11-23 19:34:36 =====
 --- 命令 ---
-echo "==任务287717 Login凭据落盘时间取证=="
-ls -l --full-time /root/.config/QQ/global/Login/ 2>/dev/null
-echo "--- nt_qq账号目录最近写入的文件(看最新mtime) ---"
-find /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317 -type f -newermt "2026-11-23 00:00" 2>/dev/null | head -8
-echo "--- 今日13:37前后有写入的文件数 ---"
-find /root/.config/QQ -type f -newermt "2026-11-23 13:36" ! -newermt "2026-11-23 14:00" 2>/dev/null | wc -l
-find /root/.config/QQ -type f -newermt "2026-11-23 13:36" ! -newermt "2026-11-23 14:00" 2>/dev/null | head -10
+echo "==任务287718 找NapCat启动命令所在文件=="
+grep -rln "napcat.log" /root/*.sh /root/Napcat/*.sh /root/*.txt 2>/dev/null
+echo "---"
+grep -rn "> /root/napcat.log" /root/*.sh /root/Napcat/*.sh 2>/dev/null | head -5
+echo "--- 今日NapCat进程的启动来源 ---"
+for p in /proc/[0-9]*; do
+  if grep -qa "opt/QQ/qq" "$p/cmdline" 2>/dev/null; then
+    echo "pid=${p#/proc/} ppid=$(awk '{print $4}' $p/stat 2>/dev/null)"
+    ppid=$(awk '{print $4}' $p/stat 2>/dev/null)
+    [ -r /proc/$ppid/cmdline ] && tr '\0' ' ' < /proc/$ppid/cmdline | head -c 300; echo
+  fi
+done
 --- 输出 ---
-==任务287717 Login凭据落盘时间取证==
---- nt_qq账号目录最近写入的文件(看最新mtime) ---
-/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log-cache/qq-log.mmap3
-/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-13.qqxlog
-/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-14.qqxlog
-/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-15.qqxlog
-/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-16.qqxlog
-/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-17.qqxlog
-/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-18.qqxlog
-/root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-19.qqxlog
---- 今日13:37前后有写入的文件数 ---
-54
-/root/.config/QQ/global/nt_data/Log/log-cache/prelogin-log.mmap3
-/root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-23-13.qqxlog
-/root/.config/QQ/global/nt_data/mmkv/nt_mmkv_msf_united_config
-/root/.config/QQ/global/nt_data/mmkv/nt_mmkv_msf_united_config.crc
-/root/.config/QQ/global/nt_data/mmkv/nt_mmkv_global_misc
-/root/.config/QQ/global/nt_data/mmkv/nt_mmkv_global_misc.crc
-/root/.config/QQ/global/nt_data/mmkv/nt_mmkv_o3
-/root/.config/QQ/global/nt_data/mmkv/nt_mmkv_o3.crc
-/root/.config/QQ/global/nt_data/mmkv/mmkv.default
-/root/.config/QQ/global/nt_data/mmkv/mmkv.default.crc
+==任务287718 找NapCat启动命令所在文件==
+/root/azar_autoheal.sh
+/root/azar_login.sh
+/root/azar_session_heal.sh
+/root/morning.sh
+/root/offline_watch.sh
+/root/offline_watch_v2.sh
+/root/offline_watch_v3.sh
+/root/remote_ctl_v6.sh
+/root/st.sh
+/root/start_nap.sh
+/root/forensic_offline_1117_1533.txt
+---
+/root/morning.sh:15:  cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 &
+/root/st.sh:4:  nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 &
+/root/start_nap.sh:1:pkill -f "opt/QQ/[q]q"; sleep 2; cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & sleep 25; cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册,去QQ扫 || echo 码未生成,稍后再拷
+--- 今日NapCat进程的启动来源 ---
+pid=22064 ppid=22062
+/bin/bash -l 
+pid=22082 ppid=22064
+/bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 
+pid=22096 ppid=22082
+/root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 
+pid=22098 ppid=22082
+/root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 
+pid=22147 ppid=22096
+/root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox 
+pid=22621 ppid=1
+
