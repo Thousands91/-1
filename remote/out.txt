@@ -1,21 +1,18 @@
-<<<task_287709.txt>>>
-===== 任务287709 11-23 13:50:27 =====
+<<<task_287710.txt>>>
+===== 任务287710 11-23 13:55:45 =====
 --- 命令 ---
-echo "==任务287709 bot.log原样尾部=="
-ls -l --full-time /root/bot.log
-tail -60 /root/bot.log
+echo "==任务287710 搜日志里菜单消息=="
+grep -n "菜单" /root/bot.log | tail -15
+echo "---最后一条菜单消息后的处理matcher---"
+L=$(grep -n "菜单" /root/bot.log | tail -1 | cut -d: -f1)
+[ -n "$L" ] && sed -n "${L},$((L+8))p" /root/bot.log
+echo "---登录成功记录---"
+grep -iE "login successful|online|登录" /root/bot.log /root/napcat.log 2>/dev/null | tail -8
 --- 输出 ---
-==任务287709 bot.log原样尾部==
--rw-r--r-- 1 root root 16022 2026-11-23 13:50:14.320000000 +0800 /root/bot.log
-11-23 13:40:45 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 363445570 from 1561950850@[群:590454333] '[at:qq=3427943187] 抽签'
-11-23 13:40:45 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.fortune, lineno=25)
-11-23 13:40:47 [INFO] nonebot | Matcher(type='message', module=plugins.fortune, lineno=25) running complete
-11-23 13:41:14 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-23 13:41:14 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-23 13:41:44 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-23 13:41:44 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-23 13:42:01 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1478479239 from 3327068725@[群:562796842] '[at:qq=3427943187] 抽签'
-11-23 13:42:02 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.fortune, lineno=25)
+==任务287710 搜日志里菜单消息==
+51:11-23 13:37:49 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 846359508 from 1561950850@[群:562796842] '[at:qq=3427943187] 菜单'
+90:11-23 13:42:03 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2127688212 from 1561950850@[群:590454333] '[at:qq=3427943187] 菜单'
+---最后一条菜单消息后的处理matcher---
 11-23 13:42:03 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2127688212 from 1561950850@[群:590454333] '[at:qq=3427943187] 菜单'
 11-23 13:42:03 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=130)
 11-23 13:42:04 [INFO] nonebot | Matcher(type='message', module=plugins.fortune, lineno=25) running complete
@@ -25,45 +22,9 @@ tail -60 /root/bot.log
 11-23 13:42:27 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 2057750160 from 3327068725@[群:562796842] 'ono'
 11-23 13:42:27 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
 11-23 13:42:27 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-23 13:42:27 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1433)
-11-23 13:42:27 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1433) running complete
-11-23 13:42:44 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-23 13:42:44 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-23 13:43:14 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-23 13:43:14 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-23 13:43:44 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-23 13:43:44 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-23 13:43:45 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1981720604 from 3273077048@[群:562796842] '[at:qq=3427943187] 抽签'
-11-23 13:43:45 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.fortune, lineno=25)
-11-23 13:43:47 [INFO] nonebot | Matcher(type='message', module=plugins.fortune, lineno=25) running complete
-11-23 13:44:14 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-23 13:44:14 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-23 13:44:44 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-23 13:44:44 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-23 13:45:14 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-23 13:45:14 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-23 13:45:44 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-23 13:45:44 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-23 13:45:57 [SUCCESS] nonebot | OneBot V11 3427943187 | [message.group.normal]: Message 1965489373 from 3273077048@[群:562796842] '[image:summary=[哇],file=DB9BD7B92986AAE730B6474193E981BF.jpg,sub_type=7,url=https://multimedia.nt.qq.com.cn/download?appid=1407&fileid=EhRx5Qwq...,file_size=1916]'
-11-23 13:45:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.keyword_reply, lineno=137)
-11-23 13:45:57 [INFO] nonebot | Matcher(type='message', module=plugins.keyword_reply, lineno=137) running complete
-11-23 13:45:57 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1433)
-11-23 13:45:57 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1433) running complete
-11-23 13:46:14 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-23 13:46:14 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-23 13:46:44 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-23 13:46:44 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-23 13:47:14 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-23 13:47:14 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-23 13:47:44 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-23 13:47:44 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-23 13:48:14 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-23 13:48:14 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-23 13:48:44 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-23 13:48:44 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-23 13:49:14 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-23 13:49:14 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-23 13:49:44 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-23 13:49:44 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
-11-23 13:50:14 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
-11-23 13:50:14 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+---登录成功记录---
+/root/bot.log:11-23 03:31:01 [INFO] __main__ | 请确认 NapCat / go-cqhttp 已登录
+/root/bot.log:11-23 13:37:44 [WARNING] link_probe | [连接探针] [11-23 13:37:44.159] HEARTBEAT 状态跳变 online=True good=True 自启动累计心跳=1 self_id=3427943187
+/root/napcat.log:11-23 13:36:35 [[32minfo[39m] 没有 -q 指令指定快速登录，将使用二维码登录方式
+/root/napcat.log:11-23 13:36:35 [[32minfo[39m] 可用于快速登录 of QQ：
+/root/napcat.log:11-23 13:36:35 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
