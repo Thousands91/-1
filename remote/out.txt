@@ -1,44 +1,30 @@
-<<<task_287715.txt>>>
-===== 任务287715 11-23 19:15:02 =====
+<<<task_287716.txt>>>
+===== 任务287716 11-23 19:18:49 =====
 --- 命令 ---
-echo "==任务287715 NapCat凭据与数据目录取证=="
-echo "--- NapCat框架目录 ---"
-find /root/Napcat -maxdepth 5 -type d -name "napcat*" 2>/dev/null | head
-echo "--- onebot/quick登录配置 ---"
-find /root/Napcat -maxdepth 6 -name "onebot11*.json" -o -maxdepth 6 -name "quickLogin*" 2>/dev/null | head
-echo "--- QQ NT 用户数据目录(凭据在这) ---"
-ls -d /root/QQUin* /root/.config/QQ* /root/Napcat/opt/QQ/* 2>/dev/null | head
-find /root -maxdepth 4 -type d -iname "*QQUin*" 2>/dev/null | head -3
-echo "--- 今日登录日志关键行 ---"
-grep -aE "二维码|qrcode|Qrcode|扫码|登录|login|Login" /root/napcat.log | tail -15
+echo "==任务287716 凭据目录+历史重扫日志取证=="
+echo "--- /root/.config/QQ 顶层 ---"
+ls -l --full-time /root/.config/QQ/ | head -12
+echo "--- 按UIN的凭据目录(找数字目录) ---"
+find /root/.config/QQ -maxdepth 3 -type d -name "*3427943187*" 2>/dev/null | head -5
+ls -l --full-time /root/.config/QQ/global/nt_data/ 2>/dev/null | head -15
+echo "--- 历史日志: 二维码过期与扫码确认(11-21~22) ---"
+grep -a "二维码已被扫描\|二维码已过期\|ErrCode:3\|Login Success\|登录成功\|账号状态变更" /root/napcat.log /root/napcat-restart.log 2>/dev/null | tail -25
 --- 输出 ---
-==任务287715 NapCat凭据与数据目录取证==
---- NapCat框架目录 ---
---- onebot/quick登录配置 ---
---- QQ NT 用户数据目录(凭据在这) ---
-/root/.config/QQ
-/root/Napcat/opt/QQ/LICENSE.electron.txt
-/root/Napcat/opt/QQ/LICENSES.chromium.html
-/root/Napcat/opt/QQ/chrome-sandbox
-/root/Napcat/opt/QQ/chrome_100_percent.pak
-/root/Napcat/opt/QQ/chrome_200_percent.pak
-/root/Napcat/opt/QQ/chrome_crashpad_handler
-/root/Napcat/opt/QQ/icudtl.dat
-/root/Napcat/opt/QQ/libEGL.so
-/root/Napcat/opt/QQ/libGLESv2.so
---- 今日登录日志关键行 ---
-11-23 13:36:35 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
-二维码解码URL: https://txz.qq.com/p?k=sHZDfGTk3TFJ-Hu7CYrb5BbaSjwfFP5k&f=1600001615
-如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
-11-23 13:36:35 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-11-23 13:37:02 [[32minfo[39m] [Core] [Login] 二维码已被扫描，等待确认...
-[I] <MMKV.cpp:260::mmkvWithID> prepare to load nt_mmkv_united_config_no_login_v3 (id nt_mmkv_united_config_no_login_v3) from rootPath /root/.config/QQ/global/nt_data/mmkv
-[I] <MemoryFile.cpp:98::open> open fd[0x66], /root/.config/QQ/global/nt_data/mmkv/nt_mmkv_united_config_no_login_v3
-[I] <MemoryFile.cpp:98::open> open fd[0x68], /root/.config/QQ/global/nt_data/mmkv/nt_mmkv_united_config_no_login_v3.crc
-[I] <MMKV_IO.cpp:213::loadMetaInfoAndCheck> meta file [nt_mmkv_united_config_no_login_v3] has flag [0]
-[I] <MMKV_IO.cpp:87::loadFromFile> loading [nt_mmkv_united_config_no_login_v3] with 16998 actual size, file size 32768, InterProcess 1, meta info version:4
-[I] <MMKV_IO.cpp:92::loadFromFile> loading [nt_mmkv_united_config_no_login_v3] with crc 4027081389 sequence 79 version 4
-[I] <MMKV_IO.cpp:136::loadFromFile> loaded [nt_mmkv_united_config_no_login_v3] with 393 key-values
-[I] <MMKV_IO.cpp:516::writeActualSize> [nt_mmkv_united_config_no_login_v3] increase sequence to 80, crc 492024174, actualSize 16027
-[I] <MMKV_IO.cpp:516::writeActualSize> [nt_mmkv_united_config_no_login_v3] increase sequence to 81, crc 1758272403, actualSize 16003
-[I] <MMKV_IO.cpp:516::writeActualSize> [nt_mmkv_united_config_no_login_v3] increase sequence to 82, crc 947885849, actualSize 16003
+==任务287716 凭据目录+历史重扫日志取证==
+--- /root/.config/QQ 顶层 ---
+total 0
+drwx------ 2 root root 3488 2026-11-12 00:08:40.680000000 +0800 Crashpad
+drwxr-xr-x 4 root root 3488 2026-11-12 00:23:44.130000000 +0800 NapCat
+drwxr-x--- 2 root root 3488 2026-11-12 00:23:36.230000000 +0800 crash_files
+drwx------ 5 root root 3488 2026-11-12 00:08:42.470000000 +0800 global
+drwxr-xr-x 5 root root 3488 2026-11-12 00:23:36.770000000 +0800 nt_qq_f31de70269f5ae9ebeb8d47e85491317
+--- 按UIN的凭据目录(找数字目录) ---
+total 0
+drwx------ 3 root root 3488 2026-11-12 00:23:43.960000000 +0800 Emoji
+drwxr-xr-x 4 root root 3488 2026-11-12 00:08:42.470000000 +0800 Log
+drwx------ 2 root root 3488 2026-11-12 00:23:31.820000000 +0800 Login
+drwx------ 2 root root 3488 2026-11-12 00:23:57.080000000 +0800 Skin
+drwxr-xr-x 3 root root 3488 2026-11-12 00:23:44.950000000 +0800 mmkv
+drwx------ 3 root root 3488 2026-11-12 00:08:43.610000000 +0800 msf
+--- 历史日志: 二维码过期与扫码确认(11-21~22) ---
+/root/napcat.log:11-23 13:37:02 [[32minfo[39m] [Core] [Login] 二维码已被扫描，等待确认...
