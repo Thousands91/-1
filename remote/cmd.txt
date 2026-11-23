@@ -1,4 +1,4 @@
-287743
+287744
 echo "===== rc.sh diag 回传静默四查 $(date '+%F %T') ====="
 echo "---[1]循环日志尾(循环死活+失败原文)---"
 tail -15 /root/remote_ctl.log
