@@ -1,0 +1,17 @@
+287727
+echo "==任务287727 拉起autoheal+boot脚本补autoheal行=="
+echo "--- 1.查guard/remote_ctl是否本该拉autoheal ---"
+grep -c "autoheal" /root/azar_guard.sh /root/remote_ctl.sh 2>/dev/null
+echo "--- 2.立即拉起autoheal(自带单实例锁,重复拉安全) ---"
+setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal_run.log 2>&1 < /dev/null &
+sleep 5
+for p in /proc/[0-9]*; do
+  if grep -qa "azar_autoheal" "$p/cmdline" 2>/dev/null; then echo "autoheal进程 pid=${p#/proc/} comm=$(cat $p/comm)"; fi
+done
+tail -3 /root/autoheal.log
+echo "--- 3.boot脚本更新(加autoheal行) ---"
+echo "H4sICEwtBGsCA2FzYXJfYm9vdC5zaACVk89rE0EUx+/7VzzTkuphOt1Na6vYHATBi0rBgyASZncn2TWbmc3ObJqUIjkoNiqkkfRS60GkWkQpKFjR+M9IN42n/AvOZq3JYuuPww7Md9583ve9eTt1BttEkmSxeGVW0qAS1nHR9ajAoQiw6TJsEuFoU0AECQom53JWOPCt2YVb+hxEvWZ/5/Pg4Ztocz/q7h9+akYPdqP2y2Fvw5gzziNdR0YOBi92v3/dHPaeRM87+tLcsNdSvKPuXv/D1rC3fXOU9OJlhYZ+++nhl49j6qO9wetXUbvT33k7uL+t1mHvWb/1ONYPOhA7g3v42HZsDqdsLsPRu1Z/ayMxqAmPUh+MBe1fyk5EtErKFHncKmvUcjhkYvTPeg/eJ+Zg+qxC0XMZyOchM331xrUrEzY8Xspogkrh2sC4E/rgB0pHtitkwEEduwxCM2QyBISSmpAFM5plA44j8XXiW0RCNgspTL1WNFEQMkAkFYi5L/HKCq5WAVUhN28sXpjP6UuLis44EoTZJq+rjTJATI+ikh9O7AQvylUSUBQQoVrgrtFg4tSmNSScCgoFKVGl3xWo6JGSWEaoQuqIezYSPrEURl1cXtCNuCWJOTYyF7cDjHxWh0uAFQ2z0PMgOy7WTL7fqh2f1iirjV7Ib0iHM6gQl836jXEmk5+aJoUctTq5EtAKl7RgSS8em1+kCfk/gWRNvX8pJIGdAo6Ugnq003h+KVAjioqQuS3vuFZZ3VZjNY5YXz+pLTKJnAwcsf/ij4SSO5Skaz4W/+SS1qkFyd/ksqLLXNnQZk6d/pMIPwAtkKF2ewQAAA==" | base64 -d | gzip -d > /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+chmod +x /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+md5sum /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+bash -n /data/data/com.termux/files/home/.termux/boot/asar_boot.sh && echo "boot脚本语法OK"
+grep -c autoheal /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
