@@ -1,0 +1,7 @@
+287741
+echo "==任务287741 补拉ipwatch快速版(不sleep)=="
+pgrep -f "[i]pwatch" >/dev/null && echo "ipwatch已在跑" || { setsid nohup bash /root/ipwatch.sh >> /root/ipwatch_run.log 2>&1 < /dev/null & echo "ipwatch已拉起"; }
+sleep 3
+echo "ipwatch进程: $(pgrep -f '[i]pwatch' | head -1)"
+echo "ip.log当前末行: $(tail -1 /root/ip.log)"
+echo "ipwatch_run.log: $(tail -2 /root/ipwatch_run.log 2>/dev/null)"
