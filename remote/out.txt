@@ -1,86 +1,40 @@
-<<<task_287725.txt>>>
-===== 任务287725 11-23 20:03:15 =====
+<<<task_287726.txt>>>
+===== 任务287726 11-23 20:08:22 =====
 --- 命令 ---
-echo "==任务287725 读autoheal脚本50行以后=="
-sed -n '50,220p' /root/azar_autoheal.sh
---- 输出 ---
-==任务287725 读autoheal脚本50行以后==
-      -d "{\"message\":\"掉线告警 $(date '+%m-%d %H:%M')\",\"content\":\"$b64\"${sha:+,\"sha\":\"$sha\"}}" \
-      "$ALERT_URL" 2>/dev/null | grep -q '"content"'; then
-    say "告警:已推送GitHub"
-  else
-    say "告警:推送失败,留PBOX待worker回传"
+echo "==任务287726 autoheal运行状态核实=="
+echo "--- 进程在跑吗 ---"
+for p in /proc/[0-9]*; do
+  if grep -qa "azar_autoheal" "$p/cmdline" 2>/dev/null; then
+    comm=$(cat $p/comm 2>/dev/null)
+    echo "pid=${p#/proc/} comm=$comm"
   fi
-}
-
-say "===== autoheal v1.2 启动 $(date '+%F %T') ====="
-PREV=""
-ON_TS=""   # 本次在线的起始时刻（v1.2 会话寿命记账用）
-_LAST_LOOP=$(date +%s)   # v1.2.2: 上一轮循环时刻，检测冻结跳变
-while true; do
-  # ⓪ 息屏保活：续持 termux-wake-lock（每60秒刷一次；proot内可直调；失败静默不影响主职）
-  _WL=/data/data/com.termux/files/usr/bin/termux-wake-lock
-  [ -x "$_WL" ] && "$_WL" 2>/dev/null
-  # v1.2.2: 冻结检测——本轮与上轮间隔>300秒=期间被doze冻结过
-  _NOW=$(date +%s); _FROZEN=$(( _NOW - _LAST_LOOP )); _LAST_LOOP=$_NOW
-  [ "$_FROZEN" -gt 300 ] && _FRZ_NOTE="含冻结$(( (_FROZEN + 30) / 60 ))分" || _FRZ_NOTE=""
-  # ① 进程存活守护（掉线后的 NapCat 重启由 worker 的 restart_napcat 负责，这里只保"进程在"）
-  pgrep -f '/root/bot/venv/bin/python main.py' >/dev/null || {
-    say "大脑进程不在,拉起"
-    send_alert "大脑进程异常退出,已自动拉起"
-    ( cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot/bot/bot.log 2>&1 < /dev/null & )
-  }
-  pgrep -f 'opt/QQ/[q]q' >/dev/null || {
-    say "QQ进程不在,拉起(-q快速登录)"
-    send_alert "QQ进程异常退出,已自动拉起"
-    ( cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 < /dev/null & )
-  }
-
-  # ② 登录态监测（权威判定走 logincheck）
-  ST=$(timeout 20 bash /root/logincheck.sh 2>/dev/null | grep -oE '\[在线\]|\[掉线\]|\[未登录\]' | head -1)
-  [ -z "$ST" ] && ST="[未知]"
-  if [ "$ST" != "$PREV" ]; then
-    say "登录态: ${PREV:-初始} -> $ST"
-    case "$ST" in
-      *未登录*|*掉线*)
-        # v1.2.2：冻结期不算在线——若刚从冻结苏醒，在线时长起点重置为苏醒时刻
-        if [ -n "$_FRZ_NOTE" ] && [ -n "$ON_TS" ]; then
-          ON_TS=$_NOW
-        fi
-        # v1.2：本次在线时长（优先本进程记账；进程重启丢了就查 login_state.log 最后一次上线时刻）
-        _ON=""
-        if [ -n "$ON_TS" ]; then
-          _ON=$(( ( $(date +%s) - ON_TS + 30 ) / 60 ))
-        else
-          # fallback：看台账最后一条状态变化——只有它恰好是"-> 在线"才说明会话还活着可计时；
-          # 若已是"-> 未登录"（会话早结束了，如本例22:47掉线），不许把掉线期也算进在线时长（v1.2.1 修账bug）
-          _LT=$(grep "状态变化" /root/login_state.log 2>/dev/null | tail -1)
-          case "$_LT" in
-            *"-> [在线]")
-              _OT=$(echo "$_LT" | grep -oE "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}")
-              if [ -n "$_OT" ]; then
-                _OB=$(date -d "$_OT" +%s 2>/dev/null) && _ON=$(( ( $(date +%s) - _OB + 30 ) / 60 ))
-              fi ;;
-          esac
-        fi
-        # v1.1：掉线告警带"距最后发送/最后收信秒数"，积累掉线-交互相关性数据
-        _LT=$(grep "发送 ->" /root/napcat.log 2>/dev/null | grep -oE "11-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}" | tail -1)
-        _LR=$(grep "接收 <-" /root/napcat.log 2>/dev/null | grep -oE "11-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}" | tail -1)
-        _G=""
-        if [ -n "$_LT" ]; then
-          _B=$(date -d "$(date +%Y)-${_LT}" +%s 2>/dev/null)
-          [ -n "$_B" ] && _G="距最后发送$(( $(date +%s) - _B ))秒"
-        fi
-        if [ -n "$_LR" ]; then
-          _B2=$(date -d "$(date +%Y)-${_LR}" +%s 2>/dev/null)
-          [ -n "$_B2" ] && _G="${_G}/距最后收信$(( $(date +%s) - _B2 ))秒"
-        fi
-        send_alert "阿萨尔掉线($ST)! 本次在线${_ON:-?}分${_FRZ_NOTE:+,$_FRZ_NOTE}/${_G:-间隔未知};已自愈,5分钟不恢复需本人扫码" ;;
-      *在线*)
-        ON_TS=$(date +%s)
-        [ -n "$PREV" ] && send_alert "阿萨尔已恢复在线" ;;
-    esac
-    PREV="$ST"
-  fi
-  sleep 60
 done
+echo "--- autoheal.log 尾部 ---"
+tail -12 /root/autoheal.log 2>/dev/null
+echo "--- 告警拼接段(确认带在线时长) ---"
+grep -n "在线\|_ON" /root/azar_autoheal.sh | tail -8
+--- 输出 ---
+==任务287726 autoheal运行状态核实==
+--- 进程在跑吗 ---
+--- autoheal.log 尾部 ---
+[11-22 03:10:55] ALERT: 阿萨尔掉线([未登录])! 本次在线57分/距最后发送3078秒/距最后收信3081秒;已自愈,5分钟不恢复需本人扫码
+[11-22 03:10:59] 告警:已推送GitHub
+[11-22 10:20:22] 大脑进程不在,拉起
+[11-22 10:20:22] ALERT: 大脑进程异常退出,已自动拉起
+[11-22 10:20:26] 告警:推送失败,留PBOX待worker回传
+[11-22 12:59:26] 登录态: [未登录] -> [在线]
+[11-22 12:59:26] ALERT: 阿萨尔已恢复在线
+[11-22 12:59:30] 告警:已推送GitHub
+[11-22 13:16:43] 登录态: [在线] -> [未知]
+[11-22 13:18:51] 登录态: [未知] -> [未登录]
+[11-22 13:18:51] ALERT: 阿萨尔掉线([未登录])! 本次在线19分/距最后发送248秒/距最后收信113秒;已自愈,5分钟不恢复需本人扫码
+[11-22 13:18:54] 告警:已推送GitHub
+--- 告警拼接段(确认带在线时长) ---
+95:          _ON=$(( ( $(date +%s) - ON_TS + 30 ) / 60 ))
+97:          # fallback：看台账最后一条状态变化——只有它恰好是"-> 在线"才说明会话还活着可计时；
+98:          # 若已是"-> 未登录"（会话早结束了，如本例22:47掉线），不许把掉线期也算进在线时长（v1.2.1 修账bug）
+101:            *"-> [在线]")
+104:                _OB=$(date -d "$_OT" +%s 2>/dev/null) && _ON=$(( ( $(date +%s) - _OB + 30 ) / 60 ))
+120:        send_alert "阿萨尔掉线($ST)! 本次在线${_ON:-?}分${_FRZ_NOTE:+,$_FRZ_NOTE}/${_G:-间隔未知};已自愈,5分钟不恢复需本人扫码" ;;
+121:      *在线*)
+123:        [ -n "$PREV" ] && send_alert "阿萨尔已恢复在线" ;;
