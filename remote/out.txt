@@ -1,10 +1,18 @@
-<<<task_287705.txt>>>
-===== 任务287705 11-23 12:21:34 =====
+<<<task_287706.txt>>>
+===== 任务287706 11-23 13:40:53 =====
 --- 命令 ---
-echo "===== 双投速度测试 $(date '+%F %T') ====="
-echo "slot_test_ok"
-echo "=====完====="
+echo "==任务287702 只读核查菜单文件=="
+md5sum /root/bot/bot/plugins/keyword_reply.py
+grep -c "斗地主" /root/bot/bot/plugins/keyword_reply.py
+grep -n "斗地主 ——" /root/bot/bot/plugins/keyword_reply.py | head -3
+ls -l /root/bot/bot/plugins/keyword_reply.py*
+pgrep -af "main.py" | grep -v grep | head -5
 --- 输出 ---
-===== 双投速度测试 2026-11-23 12:21:35 =====
-slot_test_ok
-=====完=====
+==任务287702 只读核查菜单文件==
+8a6c579373cf1f0f9e0c4d5768ff7b2c  /root/bot/bot/plugins/keyword_reply.py
+11
+161:    "　斗地主 —— 三人各 @我 说「斗地主」入座，牌我私下递各位；"
+-rw-r--r-- 1 root root 13179 Nov 23 04:17 /root/bot/bot/plugins/keyword_reply.py
+-rw-r--r-- 1 root root  9408 Nov 23 04:17 /root/bot/bot/plugins/keyword_reply.py.bak_1123
+22621 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/storage --bind=/storage/emulated/0:/sdcard --bind=/storage/emulated/0:/mnt/sdcard --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/system/product --bind=/system --bind=/vendor --bind=/data/data/com.termux/files/usr /bin/bash -c bash -c 'cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & exec sleep infinity'
+22630 /root/bot/venv/bin/python main.py
