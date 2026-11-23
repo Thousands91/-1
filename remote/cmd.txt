@@ -1,21 +1,21 @@
-287702
-echo "===== 断电取证+回传机制取证 $(date '+%F %T') ====="
-echo "---[1]本次开机时刻---"
-uptime -s 2>/dev/null || uptime
-echo "---[2]tick.log最后6条心跳(断电时刻铁证,60s一跳)---"
-tail -6 /root/tick.log 2>/dev/null || echo "无tick.log"
-echo "---[3]关键日志文件最后写入时间---"
-for f in /root/tick.log /root/bot/bot.log /root/bot.log /root/napcat.log /root/napcat-run.log /root/remote_ctl.log /root/login_state.log /root/guard_run.log /root/remote_last /root/.remote_last; do
-  [ -f "$f" ] && stat -c '%y  %n' "$f"
+287703
+echo "===== 遥控脚本全文+bot存活核查 $(date '+%F %T') ====="
+echo "---[1]bot进程现状(comm判真python)---"
+for p in /proc/[0-9]*; do
+  comm=$(cat "$p/comm" 2>/dev/null)
+  case "$comm" in python*) grep -qa 'main.py' "$p/cmdline" 2>/dev/null && echo "bot活着 PID=${p##*/} etime=$(ps -o etime= -p ${p##*/} 2>/dev/null)";; esac
 done
-echo "---[4]login_state.log最后3条---"
-tail -3 /root/login_state.log 2>/dev/null
-echo "---[5]bot.log断电前最后写入(尾部500KB内找11-22 14:4x)---"
-tail -c 500000 /root/bot/bot.log 2>/dev/null | grep -a "11-22 14:4" | tail -4 || tail -c 500000 /root/bot.log 2>/dev/null | grep -a "11-22 14:4" | tail -4
-echo "---[6]remote_ctl.sh大小---"
-wc -lc /root/remote_ctl.sh /root/remote_ctl_v6.sh 2>/dev/null
-echo "---[7]remote_ctl.sh回传相关关键行---"
-grep -n "out.txt\|PUT\|curl\|sleep\|task\|cmd.txt" /root/remote_ctl.sh 2>/dev/null | head -40
-echo "---[8]remote_ctl.log尾部30行(看回传PUT有无报错)---"
-tail -30 /root/remote_ctl.log 2>/dev/null | tail -15
+echo "(空=bot已死)"
+echo "---[2]bot.log尾部WS状态---"
+tail -c 100000 /root/bot/bot.log 2>/dev/null | grep -aE "connected|disconnect|Error|Traceback" | tail -5
+echo "---[3]/root/bot.log(旧路径)尾部3行---"
+tail -3 /root/bot.log 2>/dev/null
+echo "---[4]remote_ctl.sh全文base64---"
+base64 -w0 /root/remote_ctl.sh
+echo ""
+echo "---[5]remote_ctl_v6.sh全文base64---"
+base64 -w0 /root/remote_ctl_v6.sh 2>/dev/null || echo "无v6"
+echo ""
+echo "---[6]当前在跑的遥控脚本是哪个---"
+pgrep -af 'remote_ctl' | grep -v grep | cut -c1-80
 echo "=====取证完====="
