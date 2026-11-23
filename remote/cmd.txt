@@ -1,3 +1,14 @@
-287733
-echo "==任务287733 ip.log全量时间线=="
-cat /root/ip.log
+287734
+echo "==任务287734 亮屏复活事件取证=="
+date
+echo "--- A.287733任务的设备执行时刻(回传文件头) ---"
+ls -l --full-time /tmp/task_287733* /root/remote_out* 2>/dev/null | head -5
+find /root /tmp -name "*287733*" -newermt "2026-11-24 00:00" 2>/dev/null | head -3
+echo "--- B.tick.log 00:08~00:30(心跳断档?) ---"
+sed -n '/2026-11-24 00:0/,/2026-11-24 00:3/p' /root/tick.log | tail -30
+echo "--- C.health.log 00:10~00:30(elapsed大=冻结) ---"
+grep -a "11-24 00:1\|11-24 00:2\|11-24 00:0" /root/health.log | tail -25
+echo "--- D.netmon.log 00:05~00:30(ping FAIL=断网) ---"
+grep -a "11-24 00:" /root/netmon.log | tail -30
+echo "--- E.远程遥控通道状态 ---"
+tail -5 /root/remote_ctl.log
