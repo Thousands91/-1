@@ -1,8 +1,13 @@
-287717
-echo "==任务287717 Login凭据落盘时间取证=="
-ls -l --full-time /root/.config/QQ/global/Login/ 2>/dev/null
-echo "--- nt_qq账号目录最近写入的文件(看最新mtime) ---"
-find /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317 -type f -newermt "2026-11-23 00:00" 2>/dev/null | head -8
-echo "--- 今日13:37前后有写入的文件数 ---"
-find /root/.config/QQ -type f -newermt "2026-11-23 13:36" ! -newermt "2026-11-23 14:00" 2>/dev/null | wc -l
-find /root/.config/QQ -type f -newermt "2026-11-23 13:36" ! -newermt "2026-11-23 14:00" 2>/dev/null | head -10
+287718
+echo "==任务287718 找NapCat启动命令所在文件=="
+grep -rln "napcat.log" /root/*.sh /root/Napcat/*.sh /root/*.txt 2>/dev/null
+echo "---"
+grep -rn "> /root/napcat.log" /root/*.sh /root/Napcat/*.sh 2>/dev/null | head -5
+echo "--- 今日NapCat进程的启动来源 ---"
+for p in /proc/[0-9]*; do
+  if grep -qa "opt/QQ/qq" "$p/cmdline" 2>/dev/null; then
+    echo "pid=${p#/proc/} ppid=$(awk '{print $4}' $p/stat 2>/dev/null)"
+    ppid=$(awk '{print $4}' $p/stat 2>/dev/null)
+    [ -r /proc/$ppid/cmdline ] && tr '\0' ' ' < /proc/$ppid/cmdline | head -c 300; echo
+  fi
+done
