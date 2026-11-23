@@ -1,6 +1,4 @@
-287708
-echo "==任务287708 查今天菜单消息的实际处理路径=="
-date
-grep "Event handled" /root/bot.log | tail -20
-echo "---今天13点后日志尾---"
-awk '/^2026-11-23 1[23]:/' /root/bot.log | tail -40
+287709
+echo "==任务287709 bot.log原样尾部=="
+ls -l --full-time /root/bot.log
+tail -60 /root/bot.log
