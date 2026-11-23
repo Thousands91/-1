@@ -1,25 +1,11 @@
-287729
-echo "==任务287729 重启bot加载关键词定版=="
-OLD=""
-for p in /proc/[0-9]*; do
-  if [ "$(cat $p/comm 2>/dev/null)" = "python" ] && grep -qa "main.py" "$p/cmdline" 2>/dev/null; then
-    OLD="$OLD ${p#/proc/}"
-  fi
-done
-echo "旧bot进程:$OLD"
-for pid in $OLD; do kill $pid 2>/dev/null; done
-sleep 6
-for pid in $OLD; do [ -d /proc/$pid ] && kill -9 $pid 2>/dev/null; done
-sleep 3
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 &
-sleep 18
-FINAL=""
-for p in /proc/[0-9]*; do
-  if [ "$(cat $p/comm 2>/dev/null)" = "python" ] && grep -qa "main.py" "$p/cmdline" 2>/dev/null; then
-    FINAL="$FINAL ${p#/proc/}"
-  fi
-done
-echo "新bot进程:$FINAL (应为1个)"
-grep -c "Succeeded to load" /root/bot.log
-grep -E "Failed to load" /root/bot.log | head -3
-tail -3 /root/bot.log
+287730
+echo "==任务287730 网络波动假设取证=="
+echo "--- 1.ipwatch IP台账:历史有没有换过IP ---"
+wc -l /root/ipwatch.log 2>/dev/null
+awk '{print $NF}' /root/ipwatch.log 2>/dev/null | sort -u | head -8
+echo "--- 2.tick.log短断档案例(断>90s且<1h又恢复) ---"
+awk 'NR>1{d=($1-p); if(d>90 && d<3600) print "断档"d"秒: 前一跳"prev" 恢复跳"$0} {p=$1; prev=$0}' /root/tick.log 2>/dev/null | head -10
+echo "--- 3.login_state.log:离线→在线自愈(无人干预)案例 ---"
+grep -E "离线|在线|offline|online" /root/login_state.log 2>/dev/null | tail -25
+echo "--- 4.今日bot.log里有无重连/断网痕迹 ---"
+grep -iE "reconnect|断开|掉线|disconnect|ws" /root/bot.log 2>/dev/null | tail -8
