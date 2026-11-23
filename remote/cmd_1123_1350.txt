@@ -1,0 +1,4 @@
+287709
+echo "==任务287709 bot.log原样尾部=="
+ls -l --full-time /root/bot.log
+tail -60 /root/bot.log
