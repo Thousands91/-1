@@ -1,0 +1,14 @@
+287711
+echo "==任务287711 验证旧版bak的菜单handler行号+进程真实启动时刻=="
+echo "--- bak_1123 旧版 125~135 行 ---"
+sed -n '125,135p' /root/bot/bot/plugins/keyword_reply.py.bak_1123
+echo "--- 进程22630真实启动时刻(由/proc计算) ---"
+awk '{print "starttime_jiffies="$22}' /proc/22630/stat
+awk '{print "uptime="$1}' /proc/uptime
+python3 -c "
+st=int(open('/proc/22630/stat').read().split()[21])
+up=float(open('/proc/uptime').read().split()[0])
+import time
+bt=time.time()-up
+print('进程启动于', time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(bt+st/100)))
+"
