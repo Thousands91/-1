@@ -1,0 +1,11 @@
+287742
+echo "==任务287742 boot补ipwatch+核实ipwatch已拉起=="
+echo "H4sICNd1BGsCA2FzYXJfYm9vdC5zaACVlEFP1EAUx+/9FM+FLHoYhhYQNMLBxMSLGBIPJmazmbaz20o7UzrTZSHEcNAIagIYuCAejEGJ0ZBoIkbXL2Posp72KzjdittGluwetknfvPf7/9+btx26hG0iSfqwuD8qaehHdVxxPSpwJEJsugybRDjaEBBBwrLJuRwVDvxa24H7+hjEjbXm/vfW0w/x1lG8c3TybS1+chBvvm031o0x4yrSdWSMQ+vNwe+fW+3Gi/j1tj491m5sKN7pzmHzy267sXevI3r9pkJDc/PlyY+vXeqzw9b7d/HmdnP/Y+vxnnq2G6+aG8+T+PE2JM7gET6znZjDOZszcPppo7m7nhrUhEdpAMak1k/baRAtkQWKPG4taNRyOBQS9N9+jz+n5mD4skLRKwWYnYXC8O27d25lbHi8WtAElcK1gXEnCiAIVRzZrpAhB3XsMojMiMkIEEp7QhaMaJYNOMnEcySwiIRiEXKYeq1iojBigEguEfNA4vl5vLgIaBHGJ4ypaxPj+vSUojOOBGG2yevqRRkgpkdRNYgyb4JX5BIJKQqJUCNwV2iYObVpDQnHR5EgVariDwWqeKQqZhDySR1xz0YiIJbCqMKZSd1IRpKaYx1zyTjAmC3qcAOwomEWeR4Uu82a6e+/brunNcpqnRsKlqXDGfjEZaPBclfJ5D1lcsjOqNOSkPpc0rIlvWRt/pEy4QGBZEXdfzUioZ0DdiJldWm9eEE1VCuKKlB4IEuutaCq1Vp1M1ZXzxuLTDOziR12jueUKPGkU1brZ9ILoZk+nEzNeQo93bMSlT5n/eqwTvZACl4p+euUl4i0nH5lvG7JQFpuKRhIxw361Lhwf0gkeXIBuRU6C160RbROLUi/di6ruMyVy9pIz6/TeYQ/2pF1zBsGAAA=" | base64 -d | gzip -d > /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+chmod +x /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+md5sum /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+bash -n /data/data/com.termux/files/home/.termux/boot/asar_boot.sh && echo 语法OK
+echo "自启仪器数: $(grep -cE 'health_probe|netmon|login_watch|ipwatch' /data/data/com.termux/files/home/.termux/boot/asar_boot.sh)"
+echo "--- ipwatch当前进程 ---"
+pgrep -f "[i]pwatch" | head -2
+echo "--- ip.log末行(确认续写) ---"
+tail -1 /root/ip.log
