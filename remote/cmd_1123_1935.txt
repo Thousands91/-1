@@ -1,0 +1,36 @@
+287719
+echo "==任务287719 修napcat.log覆盖清空缺陷=="
+python3 - <<'PY'
+ROT='if [ -f /root/napcat.log ] && [ "$(stat -c %s /root/napcat.log)" -gt 2097152 ]; then gzip -c /root/napcat.log > /root/napcat.log.$(date +%m%d_%H%M).gz && : > /root/napcat.log; fi\n'
+import os
+files=['/root/morning.sh','/root/st.sh','/root/start_nap.sh']
+for f in files:
+    bak=f+'.bak_1123_log'
+    s=open(f).read()
+    open(bak,'w').write(s)
+    if 'napcat.log.$(date' in s:
+        print(f,'已改过,跳过'); continue
+    n=s.count('> /root/napcat.log 2>&1')
+    if n==0:
+        print(f,'未找到目标片段,跳过(请人工检查)'); continue
+    out=[]
+    changed=0
+    for ln in s.splitlines(keepends=True):
+        if '> /root/napcat.log 2>&1' in ln:
+            indent=ln[:len(ln)-len(ln.lstrip())]
+            out.append(indent+ROT)
+            out.append(ln.replace('> /root/napcat.log 2>&1','>> /root/napcat.log 2>&1'))
+            changed+=1
+        else:
+            out.append(ln)
+    open(f,'w').write(''.join(out))
+    print(f,'替换%d处'%changed)
+PY
+echo "--- 语法检查 ---"
+for f in /root/morning.sh /root/st.sh /root/start_nap.sh; do bash -n "$f" && echo "$f 语法OK"; done
+echo "--- 验证:三个脚本的关键行 ---"
+grep -n "napcat.log" /root/morning.sh /root/st.sh /root/start_nap.sh | grep -v "^Binary"
+echo "--- 备份在位 ---"
+ls -l /root/*.bak_1123_log
+echo "--- napcat.log当前大小 ---"
+stat -c "%s字节 %y" /root/napcat.log
