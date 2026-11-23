@@ -1,0 +1,12 @@
+287720
+echo "==任务287720 欠账盘点取证=="
+echo "--- Termux层boot目录(proot bind路径) ---"
+ls -la /data/data/com.termux/files/home/.termux/ 2>/dev/null
+ls -la /data/data/com.termux/files/home/.termux/boot/ 2>/dev/null
+echo "--- Termux:Boot插件是否安装 ---"
+ls -d /data/data/com.termux/files/home/.termux/boot 2>/dev/null && echo "boot目录存在(可能装过Boot插件)"
+ls /data/data/com.termux/files/usr/bin/termux-boot 2>/dev/null
+echo "--- 设备image_see.py现状 ---"
+md5sum /root/bot/bot/plugins/image_see.py 2>/dev/null || ls /root/bot/bot/plugins/ | head -20
+echo "--- 取证脚本现状(2843待修缺陷) ---"
+ls -l /root/*.sh | grep -iE "forensic|blackbox|heal" | head -5
