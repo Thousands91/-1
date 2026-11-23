@@ -1,0 +1,10 @@
+287714
+echo "==任务287714 NapCat登录机制取证=="
+echo "--- NapCat版本 ---"
+cat /root/Napcat/opt/QQ/resources/app/package.json 2>/dev/null | head -5
+ls /root/Napcat/opt/QQ/resources/app/app_launcher/ 2>/dev/null | head
+echo "--- NapCat本地数据目录结构 ---"
+ls /root/Napcat/ 2>/dev/null
+find /root/Napcat -maxdepth 3 -name "quickLogin*" -o -maxdepth 3 -name "onebot11*" 2>/dev/null | head -10
+echo "--- 登录相关配置/凭据文件 ---"
+ls -l --full-time /root/Napcat/config/ 2>/dev/null | head -15
