@@ -1,95 +1,42 @@
-<<<task_287738.txt>>>
-===== 任务287738 11-24 00:53:17 =====
+<<<task_287739.txt>>>
+===== 任务287739 11-24 01:02:26 =====
 --- 命令 ---
-echo "==任务287738 开机脚本漏项盘点+wake-lock核实=="
-echo "--- A./root下全部.sh及其最后活动时间(判断长驻与否) ---"
-for f in /root/*.sh; do
-  last=$(grep -a "$(date +%m-%d)" "${f%.sh}.log" 2>/dev/null | tail -1 | cut -c1-17)
-  echo "$f 最后日志:${last:-无对应log}"
+echo "==任务287739 全脚本分类审计:揪出长驻但漏自启的=="
+for f in ipwatch.sh azar_session_heal.sh watchdog2.sh watcher.sh x10_watchdog.sh remote_task.sh logincheck.sh asar_sync.sh p.sh ny.sh; do
+  [ -f /root/$f ] || continue
+  loop=$(grep -cE "while (true|:)|for \(\(" /root/$f)
+  sleepn=$(grep -cE "^sleep |[0-9]+\s*(s|m|min)" /root/$f)
+  live=$(pgrep -f "$f" | head -1)
+  logf="/root/${f%.sh}.log"
+  lg=$([ -f "$logf" ] && stat -c %y "$logf" | cut -d. -f1 || echo 无log)
+  echo "$f | 循环=$loop | sleep=$sleepn | 进程=${live:-无} | log末次=$lg"
 done
-echo "--- B.当前还活着的容器内进程 ---"
-ps -eo pid,cmd | grep -vE "grep|ps -eo|\[" | tail -25
-echo "--- C.boot脚本现拉起的清单 ---"
-grep -oE "nohup [^&]+|bash [^&]+" /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null | head -12
-echo "--- D.wake-lock实际持有状态 ---"
-/data/data/com.termux/files/usr/bin/termux-wake-lock 2>&1
-dumpsys power 2>/dev/null | grep -aiE "wake lock|hold" | head -5 || echo "dumpsys不可用(proot内)"
-ls /data/data/com.termux/files/usr/bin/termux-wake-lock && echo wake-lock命令在
-echo "--- E.Termux:Boot插件装了吗 ---"
-ls -d /data/data/com.termux/files/home/.termux/boot && ls /data/data/com.termux/files/home/.termux/boot/
-pm list packages 2>/dev/null | grep -i "termux.boot" || echo "pm不可用"
+echo "--- ip.log末次写入确认 ---"
+stat -c "%y" /root/ip.log 2>/dev/null; tail -2 /root/ip.log
+echo "--- 全部在跑的bash/sh进程(排除本次任务) ---"
+ps -eo pid,comm,args | awk '$2=="bash"||$2=="sh"{print $1,$3,$4}' | grep -vE "grep|awk|task_|bash -c" | head -20
 --- 输出 ---
-==任务287738 开机脚本漏项盘点+wake-lock核实==
---- A./root下全部.sh及其最后活动时间(判断长驻与否) ---
-/root/azar_autoheal.sh 最后日志:无对应log
-/root/azar_guard.sh 最后日志:无对应log
-/root/azar_login.sh 最后日志:无对应log
-/root/azar_session_heal.sh 最后日志:无对应log
-/root/check.sh 最后日志:无对应log
-/root/health_probe.sh 最后日志:无对应log
-/root/ipwatch.sh 最后日志:无对应log
-/root/login_watch.sh 最后日志:无对应log
-/root/logincheck.sh 最后日志:无对应log
-/root/morning.sh 最后日志:无对应log
-/root/napcat.sh 最后日志:11-24 00:43:44 [
-/root/netmon.sh 最后日志:11-24 00:53:13 pi
-/root/offline_watch.sh 最后日志:无对应log
-/root/offline_watch_v2.sh 最后日志:无对应log
-/root/offline_watch_v3.sh 最后日志:无对应log
-/root/p.sh 最后日志:无对应log
-/root/remote_ctl.sh 最后日志:[11-24 00:52] int
-/root/remote_ctl_v5.sh 最后日志:无对应log
-/root/remote_ctl_v6.sh 最后日志:无对应log
-/root/restart_bot.sh 最后日志:无对应log
-/root/selfcheck.sh 最后日志:无对应log
-/root/setup.sh 最后日志:无对应log
-/root/st.sh 最后日志:无对应log
-/root/start_all.sh 最后日志:无对应log
-/root/start_nap.sh 最后日志:无对应log
-/root/tick.sh 最后日志:2026-11-24 00:52:
-/root/watcher.sh 最后日志:无对应log
---- B.当前还活着的容器内进程 ---
-22098 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
-22147 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
-22166 /proc/self/exe --type=utility --utility-sub-type=node.mojom.NodeService --lang=en-US --service-sandbox-type=none --no-sandbox --disable-dev-shm-usage --enable-crash-reporter=ed95f686-be11-4e04-b899-7fe984b06b7b,no_channel --user-data-dir=/root/.config/QQ --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,2887613605594700521,14472671814107309413,262144 --enable-features=PdfUseShowSaveFilePicker --disable-features=LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708989122997041
-22167 /proc/self/exe --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --no-sandbox --disable-dev-shm-usage --enable-crash-reporter=ed95f686-be11-4e04-b899-7fe984b06b7b,no_channel --user-data-dir=/root/.config/QQ --shared-files=v8_context_snapshot_data:100 --field-trial-handle=3,i,2887613605594700521,14472671814107309413,262144 --enable-features=PdfUseShowSaveFilePicker --disable-features=LocalNetworkAccessChecks,ScreenAIOCREnabled,SpareRendererForSitePerProcess,TraceSiteInstanceGetProcessCreation --variations-seed-version --trace-process-track-uuid=3190708990060038890
-22621 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/storage --bind=/storage/emulated/0:/sdcard --bind=/storage/emulated/0:/mnt/sdcard --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/system/product --bind=/system --bind=/vendor --bind=/data/data/com.termux/files/usr /bin/bash -c bash -c 'cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & exec sleep infinity'
-22625 sleep infinity
+==任务287739 全脚本分类审计:揪出长驻但漏自启的==
+ipwatch.sh | 循环=1 | sleep=0 | 进程=无 | log末次=无log
+azar_session_heal.sh | 循环=1 | sleep=0 | 进程=无 | log末次=无log
+watcher.sh | 循环=1 | sleep=0 | 进程=无 | log末次=无log
+logincheck.sh | 循环=0 | sleep=0 | 进程=无 | log末次=无log
+p.sh | 循环=0 | sleep=0 | 进程=无 | log末次=无log
+--- ip.log末次写入确认 ---
+2026-11-22 14:30:02.420000000 +0800
+2026-11-22 13:29:48 14.19.177.57
+2026-11-22 14:30:02 查询失败
+--- 全部在跑的bash/sh进程(排除本次任务) ---
+1477 bash 
+9154 /data/data/com.termux/files/usr/bin/bash -l
+17500 bash /root/azar_autoheal.sh
+20082 /bin/bash -l
+22062 /bin/bash -l
+22626 <defunct> [bash]
+22627 <defunct> [bash]
 22628 bash /root/remote_ctl.sh
 22629 bash /root/azar_guard.sh
-22644 Xvfb :160 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.Rvd6lR/Xauthority
-23910 Xvfb :161 -screen 0 1280x1024x24 -nolisten tcp -auth /tmp/xvfb-run.ArZVYZ/Xauthority
-28113 /bin/bash /root/tick.sh
 28121 bash /root/health_probe.sh
 28129 bash /root/netmon.sh
 28140 bash /root/login_watch.sh
-29003 bash
-29005 /root/bot/venv/bin/python main.py
-30188 sleep 300
-30932 sleep 60
-30952 sleep 60
-30987 sleep 60
-31014 sleep 60
-31051 sleep 60
-31059 timeout 90 bash
-31060 bash
-31199 tail -25
---- C.boot脚本现拉起的清单 ---
-bash ~/.termux/boot/asar_boot.sh = 等效自启
-nohup proot-distro login ubuntu -- bash -c '
-nohup xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat.log 2>
-nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>
-nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>
-nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>
-nohup /root/tick.sh >/dev/null 2>
-nohup bash /root/health_probe.sh >/dev/null 2>
-nohup bash /root/netmon.sh >/dev/null 2>
-nohup bash /root/login_watch.sh >/dev/null 2>
-nohup bash /root/azar_autoheal.sh >> /root/autoheal_run.log 2>
---- D.wake-lock实际持有状态 ---
-/data/data/com.termux/files/usr/bin/termux-wake-lock
-wake-lock命令在
---- E.Termux:Boot插件装了吗 ---
-/data/data/com.termux/files/home/.termux/boot
-asar_boot.sh
-pm不可用
+29003 bash 
