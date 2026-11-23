@@ -1,0 +1,15 @@
+287745
+echo "==只读确认ipwatch+boot最终状态=="
+echo "--- 1.ipwatch进程 ---"
+pgrep -f "[i]pwatch" | head -2
+echo "--- 2.ip.log末2行+写入时刻 ---"
+tail -2 /root/ip.log
+stat -c "%y" /root/ip.log
+echo "--- 3.boot脚本md5 ---"
+md5sum /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+echo "--- 4.boot自启仪器行 ---"
+grep -nE "health_probe|netmon|login_watch|ipwatch|autoheal" /data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+echo "--- 5.boot语法 ---"
+bash -n /data/data/com.termux/files/home/.termux/boot/asar_boot.sh && echo 语法OK
+echo "--- 6.当前时间 ---"
+date
