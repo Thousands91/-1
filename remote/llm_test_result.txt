@@ -1,6 +1,6 @@
 Traceback (most recent call last):
-  File "<stdin>", line 30, in <module>
-  File "/root/bot/bot/plugins/ai_chat.py", line 22, in <module>
-    from nonebot.log import logger
-ModuleNotFoundError: No module named 'nonebot.log'; 'nonebot' is not a package
-DONE=11-26 01:47:32
+  File "<stdin>", line 40, in <module>
+  File "/root/bot/bot/plugins/ai_chat.py", line 24, in <module>
+    from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message, MessageSegment, PrivateMessageEvent
+ImportError: cannot import name 'GroupMessageEvent' from 'nonebot.adapters.onebot.v11' (unknown location)
+DONE=11-26 01:50:21
