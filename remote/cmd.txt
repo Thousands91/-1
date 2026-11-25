@@ -1,5 +1,4 @@
-287758
-# 真模型短句实测 v3:不import模块,用ast从源码提取隔离system,直接复现call_llm调用
+287759
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
@@ -12,40 +11,31 @@ cd /root/bot && set -a && source .env 2>/dev/null && set +a
 /root/bot/venv/bin/python - <<'PY' >> "$LOG" 2>&1
 import sys, ast, asyncio, os
 src=open('/root/bot/bot/plugins/ai_chat.py').read()
-tree=ast.parse(src)
 SHORT_SYS=None
-for node in tree.body:
+for node in ast.parse(src).body:
     if isinstance(node,ast.Assign):
         for t in node.targets:
             if isinstance(t,ast.Name) and t.id=='SHORT_FOLLOWUP_SYSTEM':
                 SHORT_SYS=ast.literal_eval(node.value)
-print("SHORT_SYS_LEN=",len(SHORT_SYS) if SHORT_SYS else None)
-print("SHORT_SYS_HAS_e5=",'e5' in (SHORT_SYS or ''))
-print("SHORT_SYS_HAS_齐豫=",'齐豫' in (SHORT_SYS or ''))
-key=os.getenv('OPENAI_API_KEY','')
-base=os.getenv('OPENAI_BASE_URL','https://api.siliconflow.cn/v1')
-model=os.getenv('OPENAI_MODEL','Qwen/Qwen2.5-7B-Instruct')
-print("KEY_OK=",bool(key)," BASE=",base," MODEL=",model)
+key=(os.getenv('OPENAI_API_KEY','') or os.getenv('SILICONFLOW_API_KEY','')).strip().strip('"').strip("'")
+base=(os.getenv('OPENAI_BASE_URL','') or 'https://api.siliconflow.cn/v1').strip().strip('"')
+model=(os.getenv('OPENAI_MODEL','') or 'Qwen/Qwen2.5-7B-Instruct').strip().strip('"')
+print("KEY_OK=",bool(key)," MODEL=",model," SHORT_SYS_LEN=",len(SHORT_SYS))
+print("FUEL_e5=",'e5' in SHORT_SYS," FUEL_齐豫=",'齐豫' in SHORT_SYS)
 from openai import AsyncOpenAI
-msgs=[
-  {"role":"user","content":"昨天那本书我翻到第三章了"},
-  {"role":"assistant","content":"哦？讲到什么了，先生。"},
-  {"role":"user","content":"？"},
-]
-full=[{"role":"system","content":SHORT_SYS}]+msgs
+msgs=[{"role":"user","content":"昨天那本书我翻到第三章了"},{"role":"assistant","content":"哦？讲到什么了，先生。"},{"role":"user","content":"？"}]
 async def go():
-    c=AsyncOpenAI(api_key=key,base_url=base,max_retries=0,timeout=15.0)
+    c=AsyncOpenAI(api_key=key,base_url=base,max_retries=0,timeout=20.0)
     try:
-        r=await c.chat.completions.create(model=model,messages=full,max_tokens=120,temperature=0.7)
+        r=await c.chat.completions.create(model=model,messages=[{"role":"system","content":SHORT_SYS}]+msgs,max_tokens=120,temperature=0.7)
         print("ANSWER=",(r.choices[0].message.content or '')[:250])
     except Exception as e:
         print("CALL_ERR=",type(e).__name__,str(e)[:200])
-    finally:
-        await c.close()
+    finally: await c.close()
 asyncio.run(go())
 PY
 echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
 SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/llm_test_result.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
 B=$(base64 -w0 "$LOG")
-if [ -n "$SHA" ]; then P="{\"message\":\"llmtest3\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"llmtest3\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
-curl -s -o /dev/null -w "PUT:%{http_code}\n" --max-time 45 -X PUT -H "Authorization: token $TOK" "$API/llm_test_result.txt" -d "$P"
+if [ -n "$SHA" ]; then P="{\"message\":\"llmtest4\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"llmtest4\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code}\n" --max-time 50 -X PUT -H "Authorization: token $TOK" "$API/llm_test_result.txt" -d "$P"
