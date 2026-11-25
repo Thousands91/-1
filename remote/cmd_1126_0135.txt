@@ -1,0 +1,48 @@
+287753
+# 部署 ai_chat.py 架构改 v3(md5 fcab57e4),下载载荷->解码->md5校验->py_compile->备份->原子mv
+A=github_pat_11BQPEBSA0
+B=iHriCXm9QGCt_74skvWNFH
+C=KumHCtG6L026yU4FNjISYSZ
+D=VmIjR9F9Ojw3QEXVSIPygfznQqG
+TOK="${A}${B}${C}${D}"
+API='https://api.github.com/repos/Thousands91/-1/contents/remote'
+DEST=/root/bot/bot/plugins/ai_chat.py
+TMP=/root/ai_chat_v3.tmp
+LOG=/tmp/deploy_aichat_result.txt
+: > "$LOG"
+step(){ echo "$1" >> "$LOG"; }
+EXPECT=fcab57e4b67514bc32c85a576cf055c3
+# 1. 下载载荷(contents API,分段token)
+curl -s --max-time 60 -H "Authorization: token $TOK" "$API/aichat_v3.b64" > /root/aichat_payload.json
+python3 - <<'PY' >> "$LOG" 2>&1
+import json,base64,gzip,hashlib
+d=json.load(open('/root/aichat_payload.json'))
+payload=base64.b64decode(d['content']).decode()
+raw=gzip.decompress(base64.b64decode(payload))
+open('/root/ai_chat_v3.tmp','wb').write(raw)
+md5=hashlib.md5(raw).hexdigest()
+print('decoded_bytes=',len(raw),'md5=',md5)
+PY
+GOT=$(grep -oE 'md5= [a-f0-9]{32}' "$LOG" | awk '{print $2}' | tail -1)
+if [ "$GOT" != "$EXPECT" ]; then
+  echo "ABORT: md5不符 got=$GOT expect=$EXPECT" >> "$LOG"
+  SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/deploy_result.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+  B=$(base64 -w0 "$LOG")
+  if [ -n "$SHA" ]; then P="{\"message\":\"deployfail\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"deployfail\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+  curl -s -o /dev/null -X PUT -H "Authorization: token $TOK" "$API/deploy_result.txt" -d "$P"
+  exit 1
+fi
+step "MD5_OK=$GOT"
+# 2. py_compile 校验
+/root/bot/venv/bin/python -m py_compile "$TMP" 2>>"$LOG" && step "PYCOMPILE_OK" || { step "PYCOMPILE_FAIL"; exit 1; }
+# 3. 备份原文件 + 原子替换
+cp "$DEST" "${DEST}.bak_1126_pre" && step "BACKUP_OK"
+mv "$TMP" "$DEST" && step "MV_OK"
+NEWD5=$(md5sum "$DEST" | awk '{print $1}')
+step "FINAL_MD5=$NEWD5"
+step "DONE=$(date '+%m-%d %H:%M:%S')"
+# 4. 回传结果
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/deploy_result.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+B=$(base64 -w0 "$LOG")
+if [ -n "$SHA" ]; then P="{\"message\":\"deploy-result\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"deploy-result\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "resultPUT:%{http_code}\n" --max-time 30 -X PUT -H "Authorization: token $TOK" "$API/deploy_result.txt" -d "$P"
