@@ -1,17 +1,15 @@
-SHORT_SYS_LEN= 184
-SHORT_SYS_HAS_e5= False
-SHORT_SYS_HAS_齐豫= False
-KEY_OK= False  BASE= https://api.siliconflow.cn/v1  MODEL= Qwen/Qwen2.5-7B-Instruct
+KEY_OK= False  MODEL= Qwen/Qwen2.5-7B-Instruct  SHORT_SYS_LEN= 184
+FUEL_e5= False  FUEL_齐豫= False
 Traceback (most recent call last):
-  File "<stdin>", line 33, in <module>
+  File "<stdin>", line 24, in <module>
   File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
     return loop.run_until_complete(main)
   File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
     return future.result()
-  File "<stdin>", line 25, in go
+  File "<stdin>", line 17, in go
   File "/root/bot/venv/lib/python3.10/site-packages/openai/_client.py", line 850, in __init__
     return async__init__(
   File "/root/bot/venv/lib/python3.10/site-packages/openai/lib/_client_auth.py", line 665, in async__init__
     raise _sdk_client.OpenAIError(
 openai.OpenAIError: Missing credentials. Please pass an `api_key`, `workload_identity`, `admin_api_key`, or set the `OPENAI_API_KEY` or `OPENAI_ADMIN_KEY` environment variable.
-DONE=11-26 01:52:47
+DONE=11-26 01:55:31
