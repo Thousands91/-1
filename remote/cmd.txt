@@ -1,5 +1,5 @@
-287757
-# 真模型短句实测 v2:补全 nonebot 子模块 stub
+287758
+# 真模型短句实测 v3:不import模块,用ast从源码提取隔离system,直接复现call_llm调用
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
@@ -10,61 +10,42 @@ LOG=/tmp/llm_test_result.txt
 : > "$LOG"
 cd /root/bot && set -a && source .env 2>/dev/null && set +a
 /root/bot/venv/bin/python - <<'PY' >> "$LOG" 2>&1
-import sys, asyncio, types
-def newmod(name, **attrs):
-    m = types.ModuleType(name)
-    for k,v in attrs.items(): setattr(m,k,v)
-    sys.modules[name] = m
-    return m
-class _Matcher:
-    def __init__(self,*a,**k): pass
-    def handle(self,*a,**k): return lambda f:f
-class _Event: pass
-class _Bot: pass
-class _Message(list):
-    def __init__(self,*a,**k): super().__init__()
-    def __add__(self,o): return self
-class _Rule:
-    def __and__(self,o): return self
-    def __or__(self,o): return self
-logger = types.SimpleNamespace(info=lambda *a,**k:None, warning=lambda *a,**k:None, error=lambda *a,**k:None, debug=lambda *a,**k:None)
-nb = newmod('nonebot',
-    on_message=lambda *a,**k:_Matcher(), on_notice=lambda *a,**k:_Matcher(),
-    on_command=lambda *a,**k:_Matcher(), on_regex=lambda *a,**k:_Matcher(),
-    on_keyword=lambda *a,**k:_Matcher(),
-    get_driver=lambda *a,**k:types.SimpleNamespace(on_startup=lambda f:f, on_shutdown=lambda f:f, config=types.SimpleNamespace()),
-    get_plugin=lambda *a,**k:None, require=lambda *a,**k:None,
-    load_builtin_plugins=lambda *a,**k:None, init=lambda *a,**k:None,
-)
-nb.__path__ = []
-newmod('nonebot.log', logger=logger)
-newmod('nonebot.rule', Rule=_Rule, to_me=lambda: _Rule(), keyword=lambda *a:_Rule(), command=lambda *a:_Rule())
-newmod('nonebot.typing', T_State=dict, EventHandler=object)
-newmod('nonebot.exception', FinishedException=Exception, StopPropagation=Exception)
-newmod('nonebot.config', Config=dict)
-newmod('nonebot.adapters', Event=_Event, Bot=_Bot, Message=_Message)
-ob = newmod('nonebot.adapters.onebot', Event=_Event, Bot=_Bot, Message=_Message)
-ob.__path__ = []
-v11 = newmod('nonebot.adapters.onebot.v11', Event=_Event, Bot=_Bot, Message=_Message, MessageSegment=types.SimpleNamespace)
-ob.v11 = v11
-try:
-    sys.path.insert(0,'/root/bot/bot/plugins')
-    import ai_chat as A
-    print("IMPORT_OK, SHORT_SYS_LEN=", len(A.SHORT_FOLLOWUP_SYSTEM))
-    msgs=[
-      {"role":"user","content":"昨天那本书我翻到第三章了"},
-      {"role":"assistant","content":"哦？讲到什么了，先生。"},
-      {"role":"user","content":"？"},
-    ]
-    async def go():
-        r=await A.call_llm(msgs, system_override=A.SHORT_FOLLOWUP_SYSTEM)
-        print("ANSWER=",r[:250])
-    asyncio.run(go())
-except Exception as e:
-    import traceback; traceback.print_exc()
+import sys, ast, asyncio, os
+src=open('/root/bot/bot/plugins/ai_chat.py').read()
+tree=ast.parse(src)
+SHORT_SYS=None
+for node in tree.body:
+    if isinstance(node,ast.Assign):
+        for t in node.targets:
+            if isinstance(t,ast.Name) and t.id=='SHORT_FOLLOWUP_SYSTEM':
+                SHORT_SYS=ast.literal_eval(node.value)
+print("SHORT_SYS_LEN=",len(SHORT_SYS) if SHORT_SYS else None)
+print("SHORT_SYS_HAS_e5=",'e5' in (SHORT_SYS or ''))
+print("SHORT_SYS_HAS_齐豫=",'齐豫' in (SHORT_SYS or ''))
+key=os.getenv('OPENAI_API_KEY','')
+base=os.getenv('OPENAI_BASE_URL','https://api.siliconflow.cn/v1')
+model=os.getenv('OPENAI_MODEL','Qwen/Qwen2.5-7B-Instruct')
+print("KEY_OK=",bool(key)," BASE=",base," MODEL=",model)
+from openai import AsyncOpenAI
+msgs=[
+  {"role":"user","content":"昨天那本书我翻到第三章了"},
+  {"role":"assistant","content":"哦？讲到什么了，先生。"},
+  {"role":"user","content":"？"},
+]
+full=[{"role":"system","content":SHORT_SYS}]+msgs
+async def go():
+    c=AsyncOpenAI(api_key=key,base_url=base,max_retries=0,timeout=15.0)
+    try:
+        r=await c.chat.completions.create(model=model,messages=full,max_tokens=120,temperature=0.7)
+        print("ANSWER=",(r.choices[0].message.content or '')[:250])
+    except Exception as e:
+        print("CALL_ERR=",type(e).__name__,str(e)[:200])
+    finally:
+        await c.close()
+asyncio.run(go())
 PY
 echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
 SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/llm_test_result.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
 B=$(base64 -w0 "$LOG")
-if [ -n "$SHA" ]; then P="{\"message\":\"llmtest2\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"llmtest2\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+if [ -n "$SHA" ]; then P="{\"message\":\"llmtest3\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"llmtest3\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
 curl -s -o /dev/null -w "PUT:%{http_code}\n" --max-time 45 -X PUT -H "Authorization: token $TOK" "$API/llm_test_result.txt" -d "$P"
