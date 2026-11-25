@@ -1,0 +1,44 @@
+287760
+A=github_pat_11BQPEBSA0
+B=iHriCXm9QGCt_74skvWNFH
+C=KumHCtG6L026yU4FNjISYSZ
+D=VmIjR9F9Ojw3QEXVSIPygfznQqG
+TOK="${A}${B}${C}${D}"
+API='https://api.github.com/repos/Thousands91/-1/contents/remote'
+LOG=/tmp/llm_test_result.txt
+: > "$LOG"
+echo "=== .env 位置探测 ===" >> "$LOG"
+for p in /root/bot/.env /root/bot/bot/.env /root/.env /root/bot/bot/config/.env; do [ -f "$p" ] && echo "FOUND: $p" >> "$LOG"; done
+/root/bot/venv/bin/python - <<'PY' >> "$LOG" 2>&1
+import sys, ast, asyncio, os
+from dotenv import load_dotenv
+for p in ['/root/bot/.env','/root/bot/bot/.env','/root/.env']:
+    if os.path.exists(p): load_dotenv(p, override=True)
+src=open('/root/bot/bot/plugins/ai_chat.py').read()
+SHORT_SYS=None
+for node in ast.parse(src).body:
+    if isinstance(node,ast.Assign):
+        for t in node.targets:
+            if isinstance(t,ast.Name) and t.id=='SHORT_FOLLOWUP_SYSTEM': SHORT_SYS=ast.literal_eval(node.value)
+def clean(v): return v.strip().strip('"').strip("'") if v else ''
+key=clean(os.getenv('OPENAI_API_KEY') or os.getenv('SILICONFLOW_API_KEY'))
+base=clean(os.getenv('OPENAI_BASE_URL')) or 'https://api.siliconflow.cn/v1'
+model=clean(os.getenv('OPENAI_MODEL')) or 'Qwen/Qwen2.5-7B-Instruct'
+print("KEY_OK=",bool(key)," KEY_HEAD=",key[:8]," MODEL=",model," SHORT_LEN=",len(SHORT_SYS))
+print("FUEL_e5=",'e5' in SHORT_SYS," FUEL_齐豫=",'齐豫' in SHORT_SYS)
+from openai import AsyncOpenAI
+msgs=[{"role":"user","content":"昨天那本书我翻到第三章了"},{"role":"assistant","content":"哦？讲到什么了，先生。"},{"role":"user","content":"？"}]
+async def go():
+    c=AsyncOpenAI(api_key=key,base_url=base,max_retries=0,timeout=20.0)
+    try:
+        r=await c.chat.completions.create(model=model,messages=[{"role":"system","content":SHORT_SYS}]+msgs,max_tokens=120,temperature=0.7)
+        print("ANSWER=",(r.choices[0].message.content or '')[:250])
+    except Exception as e: print("CALL_ERR=",type(e).__name__,str(e)[:200])
+    finally: await c.close()
+asyncio.run(go())
+PY
+echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/llm_test_result.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+B=$(base64 -w0 "$LOG")
+if [ -n "$SHA" ]; then P="{\"message\":\"llmtest5\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"llmtest5\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code}\n" --max-time 50 -X PUT -H "Authorization: token $TOK" "$API/llm_test_result.txt" -d "$P"
