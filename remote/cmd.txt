@@ -1,14 +1,18 @@
-287748
+287749
+echo "===== 部署前只读核查 $(date '+%F %T') ====="
+echo "---[1] 当前 ai_chat.py md5/大小 ---"
+md5sum /root/bot/bot/plugins/ai_chat.py 2>/dev/null
+ls -l /root/bot/bot/plugins/ai_chat.py 2>/dev/null
+echo "---[2] bot 进程 ---"
+ps -eo pid,args | grep "[m]ain.py" | head -5
+echo "---[3] 登录态 ---"
+tail -2 /root/login_state.log 2>/dev/null
+echo "---[4] tick 心跳 ---"
+tail -2 /root/tick.log 2>/dev/null
+echo "---[5] 设备端 token 有效性(ghp_) ---"
 TOK=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
-IPW=$(pgrep -f "[i]pwatch" | head -1)
-CTL=$(pgrep -f "[r]emote_ctl" | head -1)
-BOT=$(pgrep -f "[m]ain.py" | head -1)
-QQP=$(pgrep -f "[o]pt/QQ/qq" | head -1)
-IPL=$(tail -1 /root/ip.log 2>/dev/null)
-BMD5=$(md5sum /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null | cut -d' ' -f1)
-NOW=$(date '+%m-%d %H:%M:%S')
-R="time=$NOW | remote_ctl=$CTL | bot=$BOT | napcat=$QQP | ipwatch=$IPW | ip.log末=$IPL | boot_md5=$BMD5"
-B=$(echo -n "$R" | base64 -w0)
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "https://api.github.com/repos/Thousands91/-1/contents/remote/hb_verify.txt?cb=$(date +%s%N)" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
-if [ -n "$SHA" ]; then PAYLOAD="{\"message\":\"probe\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else PAYLOAD="{\"message\":\"probe\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
-curl -s --max-time 30 -X PUT -H "Authorization: token $TOK" "https://api.github.com/repos/Thousands91/-1/contents/remote/hb_verify.txt" -d "$PAYLOAD" -o /dev/null -w "PUT:%{http_code}\n"
+echo "设备token前缀=${TOK:0:8} 长度=${#TOK}"
+curl -s -o /dev/null -w "设备PUT hb_verify HTTP:%{http_code}\n" --max-time 20 -X PUT -H "Authorization: token $TOK" https://api.github.com/repos/Thousands91/-1/contents/remote/hb_verify.txt -d '{"message":"precheck","content":"cHJlY2hlY2s=","branch":"main"}'
+echo "---[6] 当前水位 ---"
+cat /root/.remote_last 2>/dev/null; echo
+echo "===== 核查完毕(只读,未改任何状态) ====="
