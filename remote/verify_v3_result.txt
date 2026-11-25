@@ -1,0 +1,41 @@
+=== 真python进程 ===
+29005 python          /root/bot/venv/bin/python main.py
+python_main_count=1
+=== 启动横幅 ===
+11-26 01:41:47 [INFO] nonebot | Current Env: prod
+11-26 01:41:49 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-26 01:41:49 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+11-26 01:41:53 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+11-26 01:41:53 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
+11-26 01:41:54 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+11-26 01:41:54 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
+11-26 01:41:54 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
+11-26 01:41:55 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
+11-26 01:41:55 [SUCCESS] nonebot | Succeeded to load plugin "doudizhu" from "plugins.doudizhu"
+11-26 01:41:55 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
+11-26 01:41:55 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-26 01:41:55 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
+11-26 01:41:55 [SUCCESS] nonebot | Succeeded to load plugin "image_see" from "plugins.image_see"
+11-26 01:41:55 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+11-26 01:41:55 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+11-26 01:41:55 [SUCCESS] nonebot | Running NoneBot...
+11-26 01:41:55 [SUCCESS] nonebot | Loaded adapters: OneBot V11
+11-26 01:42:19 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-26 01:42:19 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+11-26 01:42:49 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-26 01:42:49 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+11-26 01:43:19 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-26 01:43:19 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+11-26 01:43:49 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-26 01:43:49 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+11-26 01:44:19 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-26 01:44:19 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+11-26 01:44:49 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-26 01:44:49 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+=== 代码锚点 ===
+code_md5=fcab57e4b67514bc32c85a576cf055c3
+SHORT_FOLLOWUP_SYSTEM=3
+system_override=5
+=== 真模型短句实测 ===
+TEST_ERR= ValueError NoneBot has not been initialized.
+DONE=11-26 01:45:19
