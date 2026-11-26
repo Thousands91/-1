@@ -1,9 +1,12 @@
 === 下载载荷 ===
-bash: line 13: python3.11: command not found
-载荷字节=0
+载荷字节=85368
 === 解码+md5校验 ===
-
-gzip: stdin: unexpected end of file
-md5=d41d8cd98f00b204e9800998ecf8427e expect=437cd23a183ea169f7d604432f8990f4
-MD5_MISMATCH_ABORT
-DONE=11-27 00:35:46
+md5=437cd23a183ea169f7d604432f8990f4 expect=437cd23a183ea169f7d604432f8990f4
+=== py_compile ===
+PYCOMPILE_OK
+=== 备份+原子替换 ===
+BACKUP_OK
+REPLACE_OK
+最终md5=437cd23a183ea169f7d604432f8990f4
+锚点 _load_nick=1 nick注入=1 FB中性=1
+DONE=11-27 00:38:31
