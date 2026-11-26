@@ -1,0 +1,34 @@
+old_pid=22621
+after_kill_pid=22621
+new_pid=12324
+new_etime=00:00
+--- plugins ---
+11-26 20:53:19 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1681) running complete
+11-26 20:55:38 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1681)
+11-26 20:55:38 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1681) running complete
+11-26 20:56:39 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1681)
+11-26 20:56:39 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1681) running complete
+11-26 20:57:20 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1681)
+11-26 20:57:20 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1681) running complete
+11-26 20:57:33 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1681)
+11-26 20:57:33 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1681) running complete
+11-26 20:57:38 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1681)
+11-26 20:57:38 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1681) running complete
+11-26 20:57:42 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1681)
+11-26 20:57:42 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1681) running complete
+11-26 20:57:48 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1681)
+11-26 20:57:48 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1681) running complete
+11-26 20:57:52 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1681)
+11-26 20:57:52 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1681) running complete
+11-26 20:57:59 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1681)
+11-26 20:57:59 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1681) running complete
+11-26 20:58:02 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1681)
+11-26 20:58:02 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1681) running complete
+11-26 20:58:07 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1681)
+11-26 20:58:07 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1681) running complete
+11-26 21:00:52 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1681)
+11-26 21:00:52 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1681) running complete
+--- 199 markers ---
+REALWORLD_HINT=2
+code_md5=69a99f4182784798f65fc9eeb0c30110
+DONE=11-26 21:02:08
