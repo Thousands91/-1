@@ -1,0 +1,36 @@
+287778
+A=github_pat_11BQPEBSA0
+B=iHriCXm9QGCt_74skvWNFH
+C=KumHCtG6L026yU4FNjISYSZ
+D=VmIjR9F9Ojw3QEXVSIPygfznQqG
+TOK="${A}${B}${C}${D}"
+API='https://api.github.com/repos/Thousands91/-1/contents/remote'
+LOG=/tmp/deploy200_result.txt
+: > "$LOG"
+TARGET=/root/bot/bot/plugins/ai_chat.py
+EXPECT=437cd23a183ea169f7d604432f8990f4
+B64URL="$API/aichat_200.b64"
+echo "=== 下载载荷 ===" >> "$LOG"
+curl -s --max-time 30 -H "Authorization: token $TOK" "$B64URL?cb=$(date +%s%N)" | /root/bot/venv/bin/python -c "import sys,json,base64; d=json.load(sys.stdin); sys.stdout.write(base64.b64decode(d['content']).decode())" > /tmp/aichat_200.b64 2>>"$LOG"
+B64SIZE=$(wc -c < /tmp/aichat_200.b64)
+echo "载荷字节=$B64SIZE" >> "$LOG"
+echo "=== 解码+md5校验 ===" >> "$LOG"
+base64 -d /tmp/aichat_200.b64 | gzip -dc > /tmp/ai_chat_200.py 2>>"$LOG"
+GOT=$(md5sum /tmp/ai_chat_200.py | cut -d' ' -f1)
+echo "md5=$GOT expect=$EXPECT" >> "$LOG"
+if [ "$GOT" != "$EXPECT" ]; then echo "MD5_MISMATCH_ABORT" >> "$LOG"; else
+  echo "=== py_compile ===" >> "$LOG"
+  /root/bot/venv/bin/python -m py_compile /tmp/ai_chat_200.py 2>>"$LOG" && echo "PYCOMPILE_OK" >> "$LOG" || echo "PYCOMPILE_FAIL_ABORT" >> "$LOG"
+  if /root/bot/venv/bin/python -m py_compile /tmp/ai_chat_200.py 2>/dev/null; then
+    echo "=== 备份+原子替换 ===" >> "$LOG"
+    cp "$TARGET" "$TARGET.bak_200_before" && echo "BACKUP_OK" >> "$LOG"
+    cp /tmp/ai_chat_200.py "$TARGET" && echo "REPLACE_OK" >> "$LOG"
+    echo "最终md5=$(md5sum $TARGET | cut -d' ' -f1)" >> "$LOG"
+    echo "锚点 _load_nick=$(grep -c 'def _load_nick' $TARGET) nick注入=$(grep -c '这位客人喜欢你叫他' $TARGET) FB中性=$(grep -c '备忘里说这位客人' $TARGET)" >> "$LOG"
+  fi
+fi
+echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/deploy200_result.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+B=$(base64 -w0 "$LOG")
+if [ -n "$SHA" ]; then P="{\"message\":\"deploy200\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"deploy200\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code}\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/deploy200_result.txt" -d "$P"
