@@ -1,31 +1,30 @@
-287770
+287771
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
 D=VmIjR9F9Ojw3QEXVSIPygfznQqG
 TOK="${A}${B}${C}${D}"
 API='https://api.github.com/repos/Thousands91/-1/contents/remote'
-LOG=/tmp/restart199v2_result.txt
+LOG=/tmp/verify199v2_result.txt
 : > "$LOG"
-# 平滑重启(方括号隔离防自杀,不动NapCat,不扫码) —— 严格沿用 v3 成功脚本的启动方式
-OLDPID=$(ps -eo pid,args | grep "[m]ain.py" | grep -v grep | awk '{print $1}' | head -1)
-echo "old_pid=$OLDPID" >> "$LOG"
-[ -n "$OLDPID" ] && kill $OLDPID 2>>"$LOG"
-sleep 3
-ALIVE=$(ps -eo pid,args | grep "[m]ain.py" | grep -v grep | awk '{print $1}' | head -1)
-echo "after_kill_pid=${ALIVE:-none}" >> "$LOG"
-cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 < /dev/null &
-sleep 8
-NEWPID=$(ps -eo pid,args | grep "[m]ain.py" | grep -v grep | awk '{print $1}' | head -1)
-echo "new_pid=$NEWPID" >> "$LOG"
-echo "new_etime=$(ps -o etime= -p $NEWPID 2>/dev/null | tr -d ' ')" >> "$LOG"
-echo "--- plugins ---" >> "$LOG"
-grep -E "Succeeded|Failed|加载|ai_chat|doudizhu" /root/bot.log | tail -25 >> "$LOG"
-echo "--- 199 markers ---" >> "$LOG"
-echo "REALWORLD_HINT=$(grep -c REALWORLD_HINT /root/bot/bot/plugins/ai_chat.py)" >> "$LOG"
+echo "=== 真python进程(comm匹配,排除启动器) ===" >> "$LOG"
+ps -eo pid,comm,args | awk '$2 ~ /python/ && /main\.py/ && /\/root\/bot/' >> "$LOG"
+PYCOUNT=$(ps -eo pid,comm,args | awk '$2 ~ /python/ && /main\.py/ && /\/root\/bot/' | wc -l)
+echo "python_main_count=$PYCOUNT" >> "$LOG"
+echo "=== 该进程启动时间(确认在部署之后) ===" >> "$LOG"
+for p in $(ps -eo pid,comm,args | awk '$2 ~ /python/ && /main\.py/ && /\/root\/bot/ {print $1}'); do echo "pid=$p etime=$(ps -o etime= -p $p | tr -d ' ') start=$(ps -o lstart= -p $p)" >> "$LOG"; done
+echo "=== 磁盘代码锚点 ===" >> "$LOG"
 echo "code_md5=$(md5sum /root/bot/bot/plugins/ai_chat.py | awk '{print $1}')" >> "$LOG"
+echo "REALWORLD_HINT=$(grep -c REALWORLD_HINT /root/bot/bot/plugins/ai_chat.py)" >> "$LOG"
+echo "最先判断=$(grep -c '最先判断' /root/bot/bot/plugins/ai_chat.py)" >> "$LOG"
+echo "照抄例句残留=$(grep -c '这话是听来的，我没亲见，不写进册子' /root/bot/bot/plugins/ai_chat.py)" >> "$LOG"
+echo "=== 启动日志有无报错/插件失败 ===" >> "$LOG"
+tail -200 /root/bot.log | grep -iE "Failed|Traceback|Error|加载失败" | tail -10 >> "$LOG"
+echo "(上面为空=无报错)" >> "$LOG"
+echo "=== 最近重启横幅 ===" >> "$LOG"
+grep -n "Succeeded" /root/bot.log | tail -15 >> "$LOG"
 echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/restart199v2_result.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/verify199v2_result.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
 B=$(base64 -w0 "$LOG")
-if [ -n "$SHA" ]; then P="{\"message\":\"restart199\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"restart199\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
-curl -s -o /dev/null -w "resultPUT:%{http_code}\n" --max-time 30 -X PUT -H "Authorization: token $TOK" "$API/restart199v2_result.txt" -d "$P"
+if [ -n "$SHA" ]; then P="{\"message\":\"verify199\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"verify199\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code}\n" --max-time 40 -X PUT -H "Authorization: token $TOK" "$API/verify199v2_result.txt" -d "$P"
