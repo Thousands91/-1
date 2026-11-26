@@ -1,0 +1,13 @@
+=== CASE 备忘在system_问好 ===
+MODEL= glm-4.5-flash  ANSWER= 我在，先生。
+有老板= False  有您= False
+=== CASE 备忘在user末_问好 ===
+MODEL= glm-4.5-flash  ANSWER= 在，老板。
+有老板= True  有您= False
+=== CASE 备忘在user末_油价 ===
+MODEL= glm-4.5-flash  ANSWER= 老板，您这消息来得比风还快，我这刚进的新书墨迹还没干呢。
+有老板= True  有您= True
+=== CASE 无备忘_问好 ===
+MODEL= glm-4.5-flash  ANSWER= 我在这，先生。
+有老板= False  有您= False
+DONE=11-27 00:27:50
