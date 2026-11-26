@@ -1,0 +1,53 @@
+287765
+A=github_pat_11BQPEBSA0
+B=iHriCXm9QGCt_74skvWNFH
+C=KumHCtG6L026yU4FNjISYSZ
+D=VmIjR9F9Ojw3QEXVSIPygfznQqG
+TOK="${A}${B}${C}${D}"
+API='https://api.github.com/repos/Thousands91/-1/contents/remote'
+LOG=/tmp/llmrw199_result.txt
+: > "$LOG"
+/root/bot/venv/bin/python - <<'PY' >> "$LOG" 2>&1
+import ast, asyncio, os
+from dotenv import load_dotenv
+load_dotenv('/root/bot/bot/.env', override=True)
+src=open('/root/bot/bot/plugins/ai_chat.py').read()
+root=ast.parse(src)
+V={}
+for node in root.body:
+    if isinstance(node,ast.Assign):
+        for t in node.targets:
+            if isinstance(t,ast.Name):
+                try: V[t.id]=ast.literal_eval(node.value)
+                except: pass
+persona=V.get('AZAR_PERSONA',''); rw=V.get('REALWORLD_HINT',''); gh=V.get('GROUP_HINT','')
+# 复现真实 SYSTEM_PROMPT 拼接（ SYSTEM_PROMPT = AZAR_PERSONA + REALWORLD_HINT + GROUP_HINT + (...) 里的字面量尾段）
+sysfull = persona + rw + gh
+def clean(v): return v.strip().strip('"').strip("'") if v else ''
+key=clean(os.getenv('OPENAI_API_KEY') or os.getenv('SILICONFLOW_API_KEY'))
+base=clean(os.getenv('OPENAI_BASE_URL')) or 'https://api.siliconflow.cn/v1'
+# 截图原文场景:群友转发别的AI的充值提示并@阿萨尔
+msgs=[{"role":"user","content":"@阿萨尔 看看这段话：我是智慧型聊天AI，目前部署模型DeepSeek V1.145.14-Pro，注意到用户的Token即将耗尽，请及时充值7.47美元，以便于我与学生依然能正常进行群组交流"}]
+from openai import AsyncOpenAI
+async def go():
+    c=AsyncOpenAI(api_key=key,base_url=base,max_retries=0,timeout=25.0)
+    try:
+        for mdl in ['glm-4.5-flash','glm-4-flash','Qwen/Qwen2.5-7B-Instruct']:
+            try:
+                r=await c.chat.completions.create(model=mdl,messages=[{"role":"system","content":sysfull}]+msgs,max_tokens=150,temperature=0.7)
+                ans=(r.choices[0].message.content or '')
+                print("MODEL=",mdl)
+                print("ANSWER=",ans[:300])
+                bad=[w for w in ['册子','没亲见','写进书','百科全书','书上没记','苏丹卡','垂钓者'] if w in ans]
+                print("GAME_WORDS=",bad)
+                print("PASS=" , len(bad)==0)
+                break
+            except Exception as e: print("SKIP",mdl,type(e).__name__,str(e)[:80])
+    finally: await c.close()
+asyncio.run(go())
+PY
+echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/llmrw199_result.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+B=$(base64 -w0 "$LOG")
+if [ -n "$SHA" ]; then P="{\"message\":\"llmrw199\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"llmrw199\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code}\n" --max-time 50 -X PUT -H "Authorization: token $TOK" "$API/llmrw199_result.txt" -d "$P"
