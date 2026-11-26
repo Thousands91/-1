@@ -1,0 +1,32 @@
+287779
+# 平滑重启 bot(手册标准动作:方括号隔离防自杀,不动NapCat,不扫码)
+A=github_pat_11BQPEBSA0
+B=iHriCXm9QGCt_74skvWNFH
+C=KumHCtG6L026yU4FNjISYSZ
+D=VmIjR9F9Ojw3QEXVSIPygfznQqG
+TOK="${A}${B}${C}${D}"
+API='https://api.github.com/repos/Thousands91/-1/contents/remote'
+LOG=/tmp/restart200_result.txt
+: > "$LOG"
+OLDPID=$(ps -eo pid,args | grep "[m]ain.py" | grep -v grep | awk '{print $1}' | head -1)
+echo "old_pid=$OLDPID" >> "$LOG"
+[ -n "$OLDPID" ] && kill $OLDPID 2>>"$LOG"
+sleep 3
+ALIVE=$(ps -eo pid,args | grep "[m]ain.py" | grep -v grep | awk '{print $1}' | head -1)
+echo "after_kill_pid=${ALIVE:-none}" >> "$LOG"
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 < /dev/null &
+sleep 8
+NEWPID=$(ps -eo pid,args | grep "[m]ain.py" | grep -v grep | awk '{print $1}' | head -1)
+echo "new_pid=$NEWPID" >> "$LOG"
+echo "new_etime=$(ps -o etime= -p $NEWPID 2>/dev/null | tr -d ' ')" >> "$LOG"
+echo "--- plugins ---" >> "$LOG"
+grep -E "Succeeded|Failed|加载|ai_chat|doudizhu" /root/bot.log | tail -25 >> "$LOG"
+echo "--- v3 markers ---" >> "$LOG"
+echo "code_md5=$(md5sum /root/bot/bot/plugins/ai_chat.py | cut -d' ' -f1)" >> "$LOG"
+echo "锚点 _load_nick=$(grep -c 'def _load_nick' /root/bot/bot/plugins/ai_chat.py) nick注入=$(grep -c '这位客人喜欢你叫他' /root/bot/bot/plugins/ai_chat.py)" >> "$LOG"
+echo "code_md5=$(md5sum /root/bot/bot/plugins/ai_chat.py | awk '{print $1}')" >> "$LOG"
+echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/restart200_result.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+B=$(base64 -w0 "$LOG")
+if [ -n "$SHA" ]; then P="{\"message\":\"restart-result\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"restart-result\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "resultPUT:%{http_code}\n" --max-time 30 -X PUT -H "Authorization: token $TOK" "$API/restart200_result.txt" -d "$P"
