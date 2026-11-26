@@ -1,4 +1,4 @@
-287777
+287778
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
@@ -11,7 +11,7 @@ TARGET=/root/bot/bot/plugins/ai_chat.py
 EXPECT=437cd23a183ea169f7d604432f8990f4
 B64URL="$API/aichat_200.b64"
 echo "=== 下载载荷 ===" >> "$LOG"
-curl -s --max-time 30 -H "Authorization: token $TOK" "$B64URL?cb=$(date +%s%N)" | python3.11 -c "import sys,json,base64; d=json.load(sys.stdin); sys.stdout.write(base64.b64decode(d['content']).decode())" > /tmp/aichat_200.b64 2>>"$LOG"
+curl -s --max-time 30 -H "Authorization: token $TOK" "$B64URL?cb=$(date +%s%N)" | /root/bot/venv/bin/python -c "import sys,json,base64; d=json.load(sys.stdin); sys.stdout.write(base64.b64decode(d['content']).decode())" > /tmp/aichat_200.b64 2>>"$LOG"
 B64SIZE=$(wc -c < /tmp/aichat_200.b64)
 echo "载荷字节=$B64SIZE" >> "$LOG"
 echo "=== 解码+md5校验 ===" >> "$LOG"
