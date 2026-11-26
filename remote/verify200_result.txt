@@ -1,0 +1,35 @@
+=== 真python单实例 ===
+python_main_count=2
+22621 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/storage --bind=/storage/emulated/0:/sdcard --bind=/storage/emulated/0:/mnt/sdcard --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/system/product --bind=/system --bind=/vendor --bind=/data/data/com.termux/files/usr /bin/bash -c bash -c 'cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & exec sleep infinity'
+29005 /root/bot/venv/bin/python main.py
+=== 代码落地 ===
+code_md5=437cd23a183ea169f7d604432f8990f4
+锚点 _load_nick=1 nick注入=1 FB中性=1 软化GROUP=1
+=== 插件加载 ===
+11-26 21:02:10 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
+11-26 21:02:10 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-26 21:02:11 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
+11-26 21:02:11 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+11-26 21:02:11 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+11-26 21:02:11 [SUCCESS] nonebot | Succeeded to load plugin "doudizhu" from "plugins.doudizhu"
+11-26 21:02:11 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
+11-27 00:40:50 [SUCCESS] nonebot | Succeeded to load plugin "image_see" from "plugins.image_see"
+11-27 00:40:50 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
+11-27 00:40:50 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+11-27 00:40:50 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
+11-27 00:40:50 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
+11-27 00:40:50 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+11-27 00:40:50 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
+11-27 00:40:50 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+11-27 00:40:51 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+11-27 00:40:52 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
+11-27 00:40:52 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
+11-27 00:40:52 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+11-27 00:40:52 [SUCCESS] nonebot | Succeeded to load plugin "doudizhu" from "plugins.doudizhu"
+=== 最新加载横幅 ===
+11-27 00:40:54 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1681) running complete
+11-27 00:40:56 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1681)
+11-27 00:40:56 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1681) running complete
+11-27 00:41:01 [INFO] nonebot | Event will be handled by Matcher(type='message', module=plugins.ai_chat, lineno=1681)
+11-27 00:41:01 [INFO] nonebot | Matcher(type='message', module=plugins.ai_chat, lineno=1681) running complete
+DONE=11-27 00:45:44
