@@ -1,0 +1,12 @@
+SYSTEM_LEN= 3640
+=== SCENE REAL ===
+MODEL= glm-4.7-flash finish= stop len= 30
+ANSWER= 7块多就能聊上，这价钱连本地的水烟都买不齐，这服务倒是挺贵。
+GAME_WORDS= []
+PASS_NO_GAME= True
+=== SCENE GAME ===
+SKIP glm-4.7-flash RateLimitError Error code: 429 - 该模型当前访问量过大，请您稍后再试
+MODEL= glm-4.5-flash finish= stop len= 11
+ANSWER= 今晚吃烤鸽子，香得很。
+GAME_WORDS= []
+DONE=11-26 16:58:20
