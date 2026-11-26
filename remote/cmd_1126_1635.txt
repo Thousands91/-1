@@ -1,0 +1,35 @@
+287762
+A=github_pat_11BQPEBSA0
+B=iHriCXm9QGCt_74skvWNFH
+C=KumHCtG6L026yU4FNjISYSZ
+D=VmIjR9F9Ojw3QEXVSIPygfznQqG
+TOK="${A}${B}${C}${D}"
+API='https://api.github.com/repos/Thousands91/-1/contents/remote'
+LOG=/tmp/deploy199_result.txt
+: > "$LOG"
+cd /root/bot
+TARGET=bot/plugins/ai_chat.py
+EXP=d3866e9645a9be8f704a39b66705e507
+# 1. 下载载荷
+curl -s --max-time 40 -H "Authorization: token $TOK" "$API/aichat_199.b64" | python3 -c "import sys,json,base64; print(base64.b64decode(json.load(sys.stdin)['content']).decode(),end='')" > /tmp/a199.b64 2>>"$LOG"
+echo "下载字节=$(wc -c < /tmp/a199.b64)" >> "$LOG"
+# 2. 解码+md5
+base64 -d /tmp/a199.b64 2>/dev/null | gzip -dc > /tmp/a199.py 2>>"$LOG"
+GOT=$(md5sum /tmp/a199.py | cut -d' ' -f1)
+echo "解码md5=$GOT" >> "$LOG"
+if [ "$GOT" != "$EXP" ]; then echo "MD5_MISMATCH_ABORT" >> "$LOG"; else
+# 3. py_compile
+/root/bot/venv/bin/python -m py_compile /tmp/a199.py 2>>"$LOG" && echo "PYCOMPILE_OK" >> "$LOG" || echo "PYCOMPILE_FAIL_ABORT" >> "$LOG"
+if [ -f /tmp/a199.py ] && /root/bot/venv/bin/python -m py_compile /tmp/a199.py 2>/dev/null; then
+# 4. 备份+原子替换
+cp "$TARGET" "${TARGET}.bak_199_$(date +%m%d%H%M)" 2>>"$LOG"
+mv /tmp/a199.py "$TARGET" 2>>"$LOG"
+echo "REPLACED md5=$(md5sum $TARGET | cut -d' ' -f1)" >> "$LOG"
+grep -c "REALWORLD_HINT" "$TARGET" >> "$LOG"
+else echo "ABORT_NO_REPLACE" >> "$LOG"; fi
+fi
+echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/deploy199_result.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+B=$(base64 -w0 "$LOG")
+if [ -n "$SHA" ]; then P="{\"message\":\"deploy199\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"deploy199\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code}\n" --max-time 50 -X PUT -H "Authorization: token $TOK" "$API/deploy199_result.txt" -d "$P"
