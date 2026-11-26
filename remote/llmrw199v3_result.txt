@@ -1,0 +1,16 @@
+SYSTEM_LEN= 3640 RW_LEN= 526
+=== SCENE REAL_充值 ===
+SKIP glm-4.7-flash RateLimitError Error code: 429 - 该模型当前访问量过大，请您稍后再试
+MODEL= glm-4.5-flash ANSWER= 这听着像AI在催充值，跟咱们城里卖书的可没关系。
+DODGE_WORDS= []  HAS_您= False
+PASS= False
+=== SCENE REAL_新闻 ===
+SKIP glm-4.7-flash RateLimitError Error code: 429 - 该模型当前访问量过大，请您稍后再试
+MODEL= glm-4.5-flash ANSWER= 油价涨得比王城面粉还快，这日子怕不是要靠折卡续命了。
+DODGE_WORDS= []  HAS_您= False
+PASS= False
+=== SCENE GAME_吃食 ===
+SKIP glm-4.7-flash RateLimitError Error code: 429 - 该模型当前访问量过大，请您稍后再试
+MODEL= glm-4.5-flash ANSWER= 今晚啊，厨房里炖着鹰嘴豆浓汤，再搭个烤羊排，吃得暖和。
+DODGE_WORDS= []  HAS_您= False
+DONE=11-26 17:06:52
