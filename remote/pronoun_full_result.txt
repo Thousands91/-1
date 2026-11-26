@@ -1,0 +1,11 @@
+真实SYSTEM长度= 16590  人设长度= 12654  人设已拼入= True
+=== SCENE REAL_充值 ===
+MODEL= glm-4.7-flash  HAS_您= True  DODGE= []  ANSWER= 这年头连AI都学会跟学生讨饭了，您这铺子里要是再放一本《论讨债的技巧》，估计能比《孤女复仇记》卖得还好。
+=== SCENE REAL_油价 ===
+MODEL= glm-4.7-flash  HAS_您= False  DODGE= ['册子', '书上没记']  ANSWER= 这一条是现实世界的事，我就着现实内容回应，不套「册子」「书上没记」那一套，但语气还是阿萨尔。
+
+92号汽油八块？这价格涨得比这城里的物价还快，简直像是有人在油箱里掺了水银，烧得人心慌。
+=== SCENE GAME_吃食 ===
+SKIP glm-4.7-flash RateLimitError Error code: 429 - 该模型当前访问量过大，请您稍后再试
+MODEL= glm-4.5-flash  HAS_您= False  DODGE= []  ANSWER= 红烧肉吧，油重，配一碗白饭正好。
+DONE=11-26 22:03:55
