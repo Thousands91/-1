@@ -1,0 +1,35 @@
+=== 时刻 11-27 07:51:48 ===
+--- napcat.log mtime+size+尾3行 ---
+2026-11-27 02:15:24.580000000 +0800 913355
+[22082:1127/021524.577749:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[22082:1127/021524.583309:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[22082:1127/021524.585161:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+--- QQ进程启动时刻(全部) ---
+pid=22621 start=2026-11-27 07:33:22.219940597 +0800
+pid=27787 start=2026-11-27 07:33:39.387940594 +0800
+pid=27838 start=2026-11-27 07:33:39.387940594 +0800
+pid=27841 start=2026-11-27 07:33:39.387940594 +0800
+pid=27843 start=2026-11-27 07:33:39.387940594 +0800
+pid=27893 start=2026-11-27 07:33:39.387940594 +0800
+--- NapCat配置目录 ---
+--- guard_run.log尾12行 ---
+/root/azar_guard.sh: line 26: /root/.guard_cnt: No such file or directory
+Terminated
+--- bot.log mtime+size ---
+2026-11-27 02:15:24.740000000 +0800 5561791
+--- NapCat HTTP API探活(3000/3001/6099/8080) ---
+port 3000 => 
+port 3001 => 
+port 6099 => <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /get_login_info</pre>
+</body>
+</html>
+port 8080 => {"detail":"Not Found"}
+port 5700 => 
+DONE=11-27 07:51:49
