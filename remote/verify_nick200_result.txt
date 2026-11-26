@@ -1,0 +1,5 @@
+  File "<stdin>", line 19
+    'MEMORY_DIR':V.get('MEMORY_DIR'))}
+                                    ^
+SyntaxError: closing parenthesis ')' does not match opening parenthesis '{' on line 17
+DONE=11-27 00:30:09
