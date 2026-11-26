@@ -1,0 +1,5 @@
+MODEL= glm-4.5-flash
+ANSWER= 
+GAME_WORDS= []
+PASS= True
+DONE=11-26 16:50:15
