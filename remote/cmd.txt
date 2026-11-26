@@ -1,11 +1,11 @@
-287766
+287767
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
 D=VmIjR9F9Ojw3QEXVSIPygfznQqG
 TOK="${A}${B}${C}${D}"
 API='https://api.github.com/repos/Thousands91/-1/contents/remote'
-LOG=/tmp/llmrw199v2_result.txt
+LOG=/tmp/llmrw199v3_result.txt
 : > "$LOG"
 /root/bot/venv/bin/python - <<'PY' >> "$LOG" 2>&1
 import ast, asyncio, os
@@ -20,7 +20,6 @@ for node in root.body:
             if isinstance(t,ast.Name):
                 try: V[t.id]=ast.literal_eval(node.value)
                 except: pass
-# 递归求值 SYSTEM_PROMPT 的完整拼接(含末尾括号字面量)
 def ev(n):
     if isinstance(n,ast.Name): return V.get(n.id,'')
     if isinstance(n,ast.Constant): return n.value
@@ -31,14 +30,15 @@ SYS=''
 for node in root.body:
     if isinstance(node,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='SYSTEM_PROMPT' for t in node.targets):
         SYS=ev(node.value)
-print("SYSTEM_LEN=",len(SYS))
+print("SYSTEM_LEN=",len(SYS),"RW_LEN=",len(V.get('REALWORLD_HINT','')))
 def clean(v): return v.strip().strip('"').strip("'") if v else ''
 key=clean(os.getenv('OPENAI_API_KEY') or os.getenv('SILICONFLOW_API_KEY'))
 base=clean(os.getenv('OPENAI_BASE_URL')) or 'https://api.siliconflow.cn/v1'
 from openai import AsyncOpenAI
 SCENES=[
- ("REAL", "@阿萨尔 看看这段话：我是智慧型聊天AI，目前部署模型DeepSeek V1.145.14-Pro，注意到用户的Token即将耗尽，请及时充值7.47美元，以便于我与学生依然能正常进行群组交流"),
- ("GAME", "@阿萨尔 今晚吃什么"),
+ ("REAL_充值", "@阿萨尔 看看这段话：我是智慧型聊天AI，目前部署模型DeepSeek V1.145.14-Pro，注意到用户的Token即将耗尽，请及时充值7.47美元，以便于我与学生依然能正常进行群组交流"),
+ ("REAL_新闻", "@阿萨尔 听说今天油价又涨了，现在92号都快八块了"),
+ ("GAME_吃食", "@阿萨尔 今晚吃什么"),
 ]
 async def go():
     c=AsyncOpenAI(api_key=key,base_url=base,max_retries=0,timeout=25.0)
@@ -51,25 +51,21 @@ async def go():
                         model=mdl,
                         messages=[{"role":"system","content":SYS},{"role":"user","content":content}],
                         max_tokens=200,temperature=0.7,
-                        extra_body={"thinking":{"type":"disabled"}},   # 关键:关思考模式
+                        extra_body={"thinking":{"type":"disabled"}},
                     )
-                    m=r.choices[0].message
-                    ans=(m.content or '').strip()
-                    print("MODEL=",mdl,"finish=",r.choices[0].finish_reason,"len=",len(ans))
-                    print("ANSWER=",ans[:300])
-                    if not ans and hasattr(m,'reasoning_content'):
-                        print("REASONING_HEAD=",(m.reasoning_content or '')[:100])
-                    bad=[w for w in ['册子','没亲见','写进书','百科全书','书上没记','不敢妄言','苏丹卡','垂钓者'] if w in ans]
-                    print("GAME_WORDS=",bad)
-                    if tag=='REAL': print("PASS_NO_GAME=" , len(bad)==0 and len(ans)>0)
+                    ans=(r.choices[0].message.content or '').strip()
+                    print("MODEL=",mdl,"ANSWER=",ans[:300])
+                    dodge=[w for w in ['册子','没亲见','写进书','百科全书','书上没记','这是听来的','不敢妄言'] if w in ans]
+                    polite=('您' in ans)
+                    print("DODGE_WORDS=",dodge," HAS_您=",polite)
+                    if tag.startswith('REAL'): print("PASS=",len(dodge)==0 and len(ans)>0 and polite)
                     break
-                except Exception as e:
-                    print("SKIP",mdl,type(e).__name__,str(e)[:100])
+                except Exception as e: print("SKIP",mdl,type(e).__name__,str(e)[:80])
     finally: await c.close()
 asyncio.run(go())
 PY
 echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/llmrw199v2_result.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/llmrw199v3_result.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
 B=$(base64 -w0 "$LOG")
-if [ -n "$SHA" ]; then P="{\"message\":\"llmrw199v2\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"llmrw199v2\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
-curl -s -o /dev/null -w "PUT:%{http_code}\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/llmrw199v2_result.txt" -d "$P"
+if [ -n "$SHA" ]; then P="{\"message\":\"llmrw199v3\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"llmrw199v3\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code}\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/llmrw199v3_result.txt" -d "$P"
