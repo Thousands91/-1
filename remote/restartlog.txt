@@ -1,0 +1,73 @@
+=== 时刻 11-27 07:57:55 ===
+--- napcat-restart.log 尾60行 ---
+f1ebc8d26a58b43b89241debc798b4ef291aa5d570794883587dc0ec7b7680db
+0ccfe9dd400bc3c2baf0fd678c5de2d130a72bfec4e33df92d172cf7f44faa2b
+11-27 07:56:54 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+e97b23f82b43bb23f14e9f1d90fdcdc9bc687c247a4c7a755c1ad638435eb436
+11-27 07:56:54 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+11-27 07:56:54 [[33mwarn[39m] 
+
+▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+█ ▄▄▄▄▄ █▀ █▀▀▀ ▀▀▀▀▄█▀█▄▀█ ▄▄▄▄▄ █
+█ █   █ █▀ ▄ █▀█ ▀▀  █▄ ███ █   █ █
+█ █▄▄▄█ █▀█ █▄█▄▀▀▄▄▄▄▄▄█▀█ █▄▄▄█ █
+█▄▄▄▄▄▄▄█▄█▄█ █▄▀ █▄▀▄▀▄█ █▄▄▄▄▄▄▄█
+█▄   ▄▀▄   ▄█▄▄▀█▄ ▀ ▀   █▄▀▄█▄▀ ▀█
+█▀▄█  █▄█  ▀ ▄██▄▀█▀▀▄  ▀█▀▀▄ ▄▀▄██
+█▄▀█▄█▄▄▀█▄▀▄▀▄▀▄▀█▀▀ ▀ █▄▄▀ ▄▄█▀▀█
+█▀█▄▄  ▄ ▀███▀██▄▀▄▀▀█▀ █▀  ▀██▀▄██
+███ ▀██▄▀██▀█▄▄▀▄██▀▄ █▄██▄▀█▄▀█ ▀█
+█▀▄ █▀▀▄██▄  ▄██ ████ ▀▀██ ▄▀█▄▀▄██
+█ █ ██▀▄██▄█▄▀▄▀▀▀ █▄▀▀▄ ▀█▀█▄▀█ ▀█
+█ ██ █ ▄█▄▀▀█▀█▀ ▄▄ ▀▄▀▀▀▀  ▄  ▀▄██
+█▄████▄▄█ █▄█▄▄▀▄   █▀▄▄▄ ▄▄▄  ▀█ █
+█ ▄▄▄▄▄ █▄▄█ ▄▄▄ ▀███▀ ▄  █▄█ ▀ ▄██
+█ █   █ █  ▄▄ ▄▀█▀▄█▀▄█▄▀▄ ▄  ▄█▄██
+█ █▄▄▄█ █ ▀ ███▀▄▄█▄▀  ▄ █▄▄ ▀▀ ▄██
+█▄▄▄▄▄▄▄█▄▄▄██▄█▄████▄▄▄█▄██▄▄▄█▄██
+
+二维码解码URL: https://txz.qq.com/p?k=QGxTirUwkcLlW4CMZsjj2-lFEz-qClqH&f=1600001615
+如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+658658e5a4bdf5b92ce9953a269b4923603ff37afdd4aa625989addfe389d16d
+11-27 07:56:54 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+154a2459ebff5ce8215ad46c46c45899efc6155a219426531cdf9785322fe9ef
+2a6c5a4c7e1fef0e934e5d2d32cd0fcecf1948e12e1c6e1381b84d11db0d20f5
+3e88b4ac7320e39d390dd6424301d89d2d7dc5a78e685e3f2107bd8adc716bed
+8301b604833bbf574538ec3eec8b94f1a6e477579cd9ba930c267dadbd2a294f
+5b04cf400fe71ac133ae7daed4fe4403573a8c79883eafa4d5dec6a93a46c503
+4860da96c19b7257ca2ce5558e2c126b895464e5e2c68241b344a92e7fb62019
+f6b273536a1ec7ce2a2bde5a61c4a1e1658b45243c0b6897141edeae83b15901
+1e758fac5584230e946f6e3023e547ad443f890737fc7e027b9138fdb3107396
+60133187d7ee05013cefd4ff2b527fa69b28dbe9d7929298fa5b4d1bb0482bd5
+e75e85540e59874db7b9e95afedc7151168c20f9c7a7643fc31bf5ff95450852
+f9e28657065b3bd3ed7605be56ff2a4e3e41b74ff36c64c8851b9aefecb8078e
+3376f0c42bbc5f01d24de89bb4c54384a7eecc4e0c2cb77b2ce895cc770eb38d
+e0b84d4f63607a6e2c9c24c861474e90183e0e2462678bb3a89d4150c218a383
+e6816ffdf5ffc9643f505db666c5e7d788ef6a144975637ed84f5b5f601cb8a9
+d6356553ea0d0a8a56ba8c7aff81044acb1b8e6fc02b02f66696bdcb1d96f900
+86109b82e027efd00df422baf3f8bd903402ca975fe9d892d5f81723e6a20968
+66ff50797a88c8a9bde171b683809dc8e249b9f665d5fd202baadfd185361693
+0fb5272002e82c9ad1072cff220b07426bf6654731591b22c86036be5452f0df
+423921f4a2e0ee4084dc143351a4c66043331a41e538c4c89d1123269f73aeb7
+b7c5f217bac3209b2cd58ca6118667895b1e482048d5ff3b37c8e8a4df6f076b
+2e1dd13f5062040bb3b726714754a3a9d71075c72a3fed00d101adda6aaf2476
+d8942c4bc57ab9229520993e9a850478a89a6c14e3f8bf7b65064ce3ca01e225
+835bcb96423281614c533be9bf4ed052628aa6ed5ad4ee35f0cddfe15f5a2079
+24ccc911bd9fa27d83e0bd02828ace9e57149dd6c5ee38e940957567a5e856cf
+e0e0432eac6c3800feb6f92cdc82b2a847b87af7a664c4ff1f66a667b8e10707
+62d505e3c05977ea5e3e2800b0cf9751d6c456621b7e348ae625bb022089959a
+ad17f43ceb313c599d431f399fbd0e21e1fb8f475cb77ae68abde375c5f40853
+d3b794f5718daef269a92b24f992900aaf78bf4534da33e61c0f71af63c496ad
+294196f575244b39b33e774e1daacbb096f62343b4d944d1d0fb7e0395bbf969
+0958242887122bd084f8cbf5b74b5dbb6f70882b72c5050966f490f4144ba118
+--- 是否有二维码/登录相关文件 ---
+--- restart循环脚本进程 ---
+22629       00:00 bash /root/azar_guard.sh
+27787       00:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox
+27838       00:00 /root/Napcat/opt/QQ/qq --no-sandbox
+27841       00:00 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+27843       00:00 /root/Napcat/opt/QQ/qq --type=zygote --no-sandbox
+27893       00:00 /root/Napcat/opt/QQ/qq --type=zygote --no-zygote-sandbox --no-sandbox
+--- CPU负载 ---
+ 07:57:55 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
+DONE=11-27 07:57:56
