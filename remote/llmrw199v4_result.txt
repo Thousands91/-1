@@ -1,0 +1,18 @@
+SYSTEM_LEN= 3640
+=== SCENE REAL_充值 ===
+SKIP glm-4.7-flash RateLimitError Error code: 429 - 该模型当前访问量过大，请您稍后再试
+MODEL= glm-4.5-flash ANSWER= 这听着像某个AI客服的自动提醒，倒像是城里那种催人买书的传单。
+DODGE_WORDS= []
+=== SCENE REAL_油价 ===
+SKIP glm-4.7-flash RateLimitError Error code: 429 - 该模型当前访问量过大，请您稍后再试
+MODEL= glm-4.5-flash ANSWER= 油价涨得比王城的折卡还快，这日子怕不是要靠骑骆驼出门了。
+DODGE_WORDS= []
+=== SCENE REAL_天气 ===
+SKIP glm-4.7-flash RateLimitError Error code: 429 - 该模型当前访问量过大，请您稍后再试
+MODEL= glm-4.5-flash ANSWER= 谢谢提醒，我这把老骨头可淋不得雨。
+DODGE_WORDS= []
+=== SCENE GAME_吃食 ===
+SKIP glm-4.7-flash RateLimitError Error code: 429 - 该模型当前访问量过大，请您稍后再试
+MODEL= glm-4.5-flash ANSWER= 今晚吃烤鱼配柠檬汁，再配点橄榄和面包。
+DODGE_WORDS= []
+DONE=11-26 20:54:34
