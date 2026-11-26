@@ -1,96 +1,36 @@
-287776
+287777
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
 D=VmIjR9F9Ojw3QEXVSIPygfznQqG
 TOK="${A}${B}${C}${D}"
 API='https://api.github.com/repos/Thousands91/-1/contents/remote'
-LOG=/tmp/verify_nick200_result.txt
+LOG=/tmp/deploy200_result.txt
 : > "$LOG"
-cd /root/bot && /root/bot/venv/bin/python - <<'PY' >> "$LOG" 2>&1
-import ast, asyncio, os, sys, re
-sys.path.insert(0,'/root/bot/bot')
-from dotenv import load_dotenv
-load_dotenv('/root/bot/bot/.env', override=True)
-from persona import AZAR_PERSONA
-src=open('/root/bot/bot/plugins/ai_chat.py').read()
-root=ast.parse(src)
-V={}; F={}
-for node in root.body:
-    if isinstance(node,ast.Assign):
-        for t in node.targets:
-            if isinstance(t,ast.Name):
-                try: V[t.id]=ast.literal_eval(node.value)
-                except: pass
-    if isinstance(node,ast.FunctionDef) and node.name in {'_extract_nick','_clean_nick','_nick_path','_load_nick','_save_nick'}:
-        F[node.name]=node
-ns={'__name__':'extract_test','_re_mod':re,'_re':re,'_json':__import__('json'),
-    '_time':__import__('time'),'os':os,'Path':__import__('pathlib').Path,
-    'MEMORY_DIR':V.get('MEMORY_DIR'))}
-}
-# 补 MEMORY_DIR（从源码常量算）
-for node in root.body:
-    if isinstance(node,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='MEMORY_DIR' for t in node.targets):
-        ns['MEMORY_DIR']=eval(compile(ast.Expression(node.value),'x','eval'),{'__file__':'/root/bot/bot/plugins/ai_chat.py','Path':__import__('pathlib').Path})
-for node in root.body:
-    if isinstance(node,ast.Assign):
-        for t in node.targets:
-            if isinstance(t,ast.Name) and t.id.startswith('_NICK'):
-                try: ns[t.id]=eval(compile(ast.Expression(node.value),'x','eval'),ns)
-                except: pass
-for fn in F.values():
-    exec(compile(ast.Module(body=[fn],type_ignores=[]),'x','exec'),ns)
-extract=ns['_extract_nick']; save=ns['_save_nick']; load=ns['_load_nick']
-print("=== 存储链路测试 ===")
-TEST_UID=999999001
-# 群100:设为老板; 群200:设为掌柜; 私聊:不设
-a1,v1=extract("叫我老板"); save(TEST_UID,v1,100)
-a2,v2=extract("以后叫我掌柜"); save(TEST_UID,v2,200)
-print("群100称呼=",load(TEST_UID,100)," 群200称呼=",load(TEST_UID,200)," 私聊称呼=",repr(load(TEST_UID,0)))
-print("分群隔离PASS=", load(TEST_UID,100)=="老板" and load(TEST_UID,200)=="掌柜" and load(TEST_UID,0)=="")
-# 取消
-a3,v3=extract("别叫我老板"); 
-if a3=="cancel" and load(TEST_UID,100)==v3: save(TEST_UID,"",100)
-print("取消后群100=",repr(load(TEST_UID,100))," 取消PASS=", load(TEST_UID,100)=="")
-# 清理测试数据
-for g in (100,200): save(TEST_UID,"",g)
-# === 真模型:用user末尾注入版,验证降级喊称呼 ===
-def ev(n):
-    if isinstance(n,ast.Name):
-        if n.id=='AZAR_PERSONA': return AZAR_PERSONA
-        return V.get(n.id,'')
-    if isinstance(n,ast.Constant): return n.value
-    if isinstance(n,ast.BinOp) and isinstance(n.op,ast.Add): return ev(n.left)+ev(n.right)
-    try: return ast.literal_eval(n)
-    except: return ''
-SYS=''
-for node in root.body:
-    if isinstance(node,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='SYSTEM_PROMPT' for t in node.targets):
-        SYS=ev(node.value)
-def clean(v): return v.strip().strip('"').strip("'") if v else ''
-key=clean(os.getenv('OPENAI_API_KEY') or os.getenv('SILICONFLOW_API_KEY'))
-base=clean(os.getenv('OPENAI_BASE_URL')) or 'https://api.siliconflow.cn/v1'
-from openai import AsyncOpenAI
-async def go():
-    c=AsyncOpenAI(api_key=key,base_url=base,max_retries=0,timeout=25.0)
-    try:
-        # 完整system + user末尾注入称呼（复现代码最终版）
-        content="@阿萨尔 在吗"+"\n\n（这位客人喜欢你叫他「老板」，聊天时自然这么叫即可，不必刻意。）"
-        for mdl in ['glm-4.5-flash','glm-4-flash']:
-            try:
-                r=await c.chat.completions.create(
-                    model=mdl,messages=[{"role":"system","content":SYS},{"role":"user","content":content}],
-                    max_tokens=200,temperature=0.7,extra_body={"thinking":{"type":"disabled"}})
-                ans=(r.choices[0].message.content or '').strip()
-                print("=== 真模型降级喊称呼 ===")
-                print("MODEL=",mdl," ANSWER=",ans[:200]," 喊老板=",('老板' in ans))
-                break
-            except Exception as e: print("SKIP",mdl,type(e).__name__,str(e)[:80])
-    finally: await c.close()
-asyncio.run(go())
-PY
+TARGET=/root/bot/bot/plugins/ai_chat.py
+EXPECT=437cd23a183ea169f7d604432f8990f4
+B64URL="$API/aichat_200.b64"
+echo "=== 下载载荷 ===" >> "$LOG"
+curl -s --max-time 30 -H "Authorization: token $TOK" "$B64URL?cb=$(date +%s%N)" | python3.11 -c "import sys,json,base64; d=json.load(sys.stdin); sys.stdout.write(base64.b64decode(d['content']).decode())" > /tmp/aichat_200.b64 2>>"$LOG"
+B64SIZE=$(wc -c < /tmp/aichat_200.b64)
+echo "载荷字节=$B64SIZE" >> "$LOG"
+echo "=== 解码+md5校验 ===" >> "$LOG"
+base64 -d /tmp/aichat_200.b64 | gzip -dc > /tmp/ai_chat_200.py 2>>"$LOG"
+GOT=$(md5sum /tmp/ai_chat_200.py | cut -d' ' -f1)
+echo "md5=$GOT expect=$EXPECT" >> "$LOG"
+if [ "$GOT" != "$EXPECT" ]; then echo "MD5_MISMATCH_ABORT" >> "$LOG"; else
+  echo "=== py_compile ===" >> "$LOG"
+  /root/bot/venv/bin/python -m py_compile /tmp/ai_chat_200.py 2>>"$LOG" && echo "PYCOMPILE_OK" >> "$LOG" || echo "PYCOMPILE_FAIL_ABORT" >> "$LOG"
+  if /root/bot/venv/bin/python -m py_compile /tmp/ai_chat_200.py 2>/dev/null; then
+    echo "=== 备份+原子替换 ===" >> "$LOG"
+    cp "$TARGET" "$TARGET.bak_200_before" && echo "BACKUP_OK" >> "$LOG"
+    cp /tmp/ai_chat_200.py "$TARGET" && echo "REPLACE_OK" >> "$LOG"
+    echo "最终md5=$(md5sum $TARGET | cut -d' ' -f1)" >> "$LOG"
+    echo "锚点 _load_nick=$(grep -c 'def _load_nick' $TARGET) nick注入=$(grep -c '这位客人喜欢你叫他' $TARGET) FB中性=$(grep -c '备忘里说这位客人' $TARGET)" >> "$LOG"
+  fi
+fi
 echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/verify_nick200_result.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/deploy200_result.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
 B=$(base64 -w0 "$LOG")
-if [ -n "$SHA" ]; then P="{\"message\":\"vernick200\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"vernick200\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
-curl -s -o /dev/null -w "PUT:%{http_code}\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/verify_nick200_result.txt" -d "$P"
+if [ -n "$SHA" ]; then P="{\"message\":\"deploy200\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"deploy200\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code}\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/deploy200_result.txt" -d "$P"
