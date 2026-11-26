@@ -1,0 +1,30 @@
+=== 真python进程(comm匹配,排除启动器) ===
+29005 python          /root/bot/venv/bin/python main.py
+python_main_count=1
+=== 该进程启动时间(确认在部署之后) ===
+pid=29005 etime=00:00 start=Wed Mar 29 19:19:41 2023
+=== 磁盘代码锚点 ===
+code_md5=69a99f4182784798f65fc9eeb0c30110
+REALWORLD_HINT=2
+最先判断=1
+照抄例句残留=1
+=== 启动日志有无报错/插件失败 ===
+11-26 21:02:12 [ERROR] uvicorn | [Errno 98] error while attempting to bind on address ('0.0.0.0', 8080): address already in use
+(上面为空=无报错)
+=== 最近重启横幅 ===
+39638:11-26 16:42:27 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
+39639:11-26 16:42:27 [SUCCESS] nonebot | Succeeded to load plugin "doudizhu" from "plugins.doudizhu"
+41734:11-26 21:02:10 [SUCCESS] nonebot | Succeeded to load plugin "image_see" from "plugins.image_see"
+41735:11-26 21:02:10 [SUCCESS] nonebot | Succeeded to load plugin "chess_game" from "plugins.chess_game"
+41736:11-26 21:02:10 [SUCCESS] nonebot | Succeeded to load plugin "games" from "plugins.games"
+41737:11-26 21:02:10 [SUCCESS] nonebot | Succeeded to load plugin "image_search_multisource" from "plugins.image_search_multisource"
+41738:11-26 21:02:10 [SUCCESS] nonebot | Succeeded to load plugin "weather" from "plugins.weather"
+41739:11-26 21:02:10 [SUCCESS] nonebot | Succeeded to load plugin "fortune" from "plugins.fortune"
+41740:11-26 21:02:10 [SUCCESS] nonebot | Succeeded to load plugin "link_probe" from "plugins.link_probe"
+41741:11-26 21:02:10 [SUCCESS] nonebot | Succeeded to load plugin "song_request" from "plugins.song_request"
+41742:11-26 21:02:11 [SUCCESS] nonebot | Succeeded to load plugin "book_find" from "plugins.book_find"
+41743:11-26 21:02:11 [SUCCESS] nonebot | Succeeded to load plugin "news" from "plugins.news"
+41744:11-26 21:02:11 [SUCCESS] nonebot | Succeeded to load plugin "ai_chat" from "plugins.ai_chat"
+41745:11-26 21:02:11 [SUCCESS] nonebot | Succeeded to load plugin "doudizhu" from "plugins.doudizhu"
+41746:11-26 21:02:11 [SUCCESS] nonebot | Succeeded to load plugin "keyword_reply" from "plugins.keyword_reply"
+DONE=11-26 21:04:52
