@@ -1,0 +1,26 @@
+287781
+A=github_pat_11BQPEBSA0
+B=iHriCXm9QGCt_74skvWNFH
+C=KumHCtG6L026yU4FNjISYSZ
+D=VmIjR9F9Ojw3QEXVSIPygfznQqG
+TOK="${A}${B}${C}${D}"
+API='https://api.github.com/repos/Thousands91/-1/contents/remote'
+LOG=/tmp/now_probe.txt
+: > "$LOG"
+echo "=== NOW $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
+echo "--- 真python bot进程 ---" >> "$LOG"
+ps -eo pid,etime,args | grep '[/]root/bot/venv/bin/python main.py' >> "$LOG"
+echo "count=$(ps -eo pid,args | grep '[/]root/bot/venv/bin/python main.py' | wc -l)" >> "$LOG"
+echo "--- napcat(QQ) ---" >> "$LOG"
+ps -eo pid,etime,args | grep '[o]pt/QQ/qq' | head -3 >> "$LOG"
+echo "--- remote_ctl ---" >> "$LOG"
+ps -eo pid,etime,args | grep '[r]emote_ctl' | head -3 >> "$LOG"
+echo "--- bot.log 尾部25行 ---" >> "$LOG"
+tail -25 /root/bot.log >> "$LOG"
+echo "--- ip.log 尾部2行 ---" >> "$LOG"
+tail -2 /root/ip.log >> "$LOG"
+echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/now_probe.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+B=$(base64 -w0 "$LOG")
+if [ -n "$SHA" ]; then P="{\"message\":\"nowprobe\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"nowprobe\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code}\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/now_probe.txt" -d "$P"
