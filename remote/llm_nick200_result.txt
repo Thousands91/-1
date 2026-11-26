@@ -1,0 +1,21 @@
+SYS_LEN= 16590  人设拼入= True
+=== CASE 无备忘_吃食 ===
+SKIP glm-4.7-flash RateLimitError Error code: 429 - 该模型当前访问量过大，请您稍后再试
+MODEL= glm-4.5-flash
+ANSWER= 红烧肉吧，油重，配一碗白饭正好。
+有老板= False  有您= False  备忘泄漏= []
+=== CASE 有老板备忘_吃食 ===
+SKIP glm-4.7-flash RateLimitError Error code: 429 - 该模型当前访问量过大，请您稍后再试
+MODEL= glm-4.5-flash
+ANSWER= 红烧肉吧，油重，配一碗白饭正好。
+有老板= False  有您= False  备忘泄漏= []
+=== CASE 有老板备忘_油价 ===
+SKIP glm-4.7-flash RateLimitError Error code: 429 - 该模型当前访问量过大，请您稍后再试
+MODEL= glm-4.5-flash
+ANSWER= 八块一升？这城里连骆驼的饲料都没这么贵。
+有老板= False  有您= False  备忘泄漏= []
+=== CASE 有老板备忘_问好 ===
+MODEL= glm-4.7-flash
+ANSWER= 老板这就在，您看这架上的书，哪一本正合您的心意？
+有老板= True  有您= True  备忘泄漏= []
+DONE=11-27 00:24:58
