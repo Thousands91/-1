@@ -1,0 +1,43 @@
+=== 轻量探针 11-27 13:29:15 ===
+uptime:  13:29:15 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
+remote_ctl进程: 22621 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/storage --bind=/storage/emulated/0:/sdcard --bind=/storage/emulated/0:/mnt/sdcard --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/system/product --bind=/system --bind=/vendor --bind=/data/data/com.termux/files/usr /bin/bash -c bash -c 'cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & exec sleep infinity'
+22628 bash /root/remote_ctl.sh
+qarg_audit任务还在cmd里? /root/azar_autoheal.sh:0
+/root/azar_guard.sh:0
+/root/azar_login.sh:0
+/root/azar_session_heal.sh:0
+/root/check.sh:0
+/root/health_probe.sh:0
+/root/ipwatch.sh:0
+/root/login_watch.sh:0
+/root/logincheck.sh:0
+/root/morning.sh:0
+/root/napcat.sh:0
+/root/netmon.sh:0
+/root/offline_snapshot.sh:0
+/root/offline_watch.sh:0
+/root/offline_watch_v2.sh:0
+/root/offline_watch_v3.sh:0
+/root/p.sh:0
+/root/remote_ctl.sh:0
+/root/remote_ctl_v5.sh:0
+/root/remote_ctl_v6.sh:0
+/root/restart_bot.sh:0
+/root/selfcheck.sh:0
+/root/setup.sh:0
+/root/st.sh:0
+/root/start_all.sh:0
+/root/start_nap.sh:0
+/root/tick.sh:0
+/root/watcher.sh:0
+/root/webui_state_watch.sh:0
+锁文件: /root/.remote_ctl.lock:
+total 0
+drwxr-xr-x  2 root root 3488 Nov 20 14:17 .
+drwx------ 17 root root 8192 Nov 27 12:54 ..
+-rw-r--r--  1 root root    6 Nov 20 14:17 pid
+最近remote_ctl.log尾3:
+[11-27 13:28] 保险丝熔断:NapCat 24h内已自动拉起3次,停止自动重启,需人工排查
+[11-27 13:28] status上传失败
+[11-27 13:29] intake:槽位=1127_1325/1127_1320 命中ID=287809
+DONE=11-27 13:29:16
