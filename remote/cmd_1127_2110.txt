@@ -1,21 +1,21 @@
-287822
-# 诊断remote_ctl的report为什么没覆盖out.txt:读日志尾+PBOX+git状态,自带token回传
+287823
+# 查看PBOX积压文件清单+大小,判断清理安全性
 A='github_pat_11BQPEBSA0iH'
 B='riCXm9QGCt_74skvWNFHKum'
 C='HCtG6L026yU4FNjISYSZVmI'
 D='jR9F9Ojw3QEXVSIPygfznQqG'
 TOK="${A}${B}${C}${D}"
 API="https://api.github.com/repos/Thousands91/-1/contents/remote"
-# remote_ctl.log尾20行
-LOGTAIL=$(tail -20 /root/remote_ctl.log 2>/dev/null | base64 -w0)
-# PBOX待发箱文件数
-PBN=$(ls /root/.remote_pending 2>/dev/null | wc -l)
-# asar-sync仓库git状态
-cd /root/asar-sync 2>/dev/null && GS=$(git status --short 2>/dev/null | head -5 | tr '\n' ';') || GS="no-repo"
-# out.txt本地mtime
-OMT=$(stat -c '%y %s' /root/asar-sync/remote/out.txt 2>/dev/null)
-R="LOGTAIL_B64=$LOGTAIL | PBOX=$PBN | gitstatus=$GS | out_mtime=$OMT"
+# PBOX文件列表(名字+大小+时间),按时间排
+LIST=$(ls -lht /root/.remote_pending 2>/dev/null | head -30 | base64 -w0)
+# bundle大小
+BSZ=$(wc -c < /tmp/remote_bundle.txt 2>/dev/null)
+# PBOX总大小
+PSZ=$(du -sh /root/.remote_pending 2>/dev/null | cut -f1)
+# make_bundle当前脚本里的限制逻辑(看有没有>3丢弃)
+MB=$(grep -nE 'F=|head -|make_bundle|for f in' /root/remote_ctl.sh 2>/dev/null | head -10 | tr '\n' ';')
+R="LIST_B64=$LIST | bundle字节=$BSZ | PBOX总大小=$PSZ | make_bundle=$MB"
 BB=$(echo -n "$R" | base64 -w0)
-SHA=$(timeout 15 curl -s -H "Authorization: token $TOK" "$API/report_diag.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
-if [ -n "$SHA" ]; then P="{\"message\":\"reportdiag\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"reportdiag\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
-curl -s --max-time 20 -X PUT -H "Authorization: token $TOK" "$API/report_diag.txt" -d "$P" -o /dev/null -w "PUT:%{http_code}\n"
+SHA=$(timeout 15 curl -s -H "Authorization: token $TOK" "$API/pbox_inspect.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+if [ -n "$SHA" ]; then P="{\"message\":\"pboxinspect\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"pboxinspect\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
+curl -s --max-time 20 -X PUT -H "Authorization: token $TOK" "$API/pbox_inspect.txt" -d "$P" -o /dev/null -w "PUT:%{http_code}\n"
