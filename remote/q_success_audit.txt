@@ -1,0 +1,44 @@
+=== -q快速登录成功史审计 11-27 13:14:12 ===
+--- [1] restart.log里ErrCode:3总数+首次+末次 ---
+总数=1038
+首次: 11-21 23:40:22 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+末次: 11-27 09:10:16 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+--- [2] restart.log里[Core][Login]所有不同消息类型(去掉二维码hash) ---
+   1038 [Core] [Login] Login Error,ErrType:
+    154 [Core] [Login] 登录服务已断开，将允许重新获取二维码
+    144 [Core] [Login] 登录服务重连完成，正在获取二维码 {"requested":true,"msfStatus":
+--- [3] restart.log里'没有-q指令'次数(不带-q的启动) ---
+次数=11
+--- [4] napcat.log里'没有-q指令'出现时间(启动方式判据) ---
+43:11-23 13:36:35 [[32minfo[39m] 没有 -q 指令指定快速登录，将使用二维码登录方式
+--- [5] napcat.log里登录相关全部命中(找成功判据) ---
+38:11-23 13:36:34 [[32minfo[39m] [NapCat] [WebUi] WebUi Token: 560aad98b99d
+39:11-23 13:36:34 [[32minfo[39m] [NapCat] [WebUi] WebUi User Panel Url: http://127.0.0.1:6099/webui?token=560aad98b99d
+40:11-23 13:36:34 [[32minfo[39m] [NapCat] [WebUi] WebUi User Panel Url: http://[::]:6099/webui?token=560aad98b99d
+43:11-23 13:36:35 [[32minfo[39m] 没有 -q 指令指定快速登录，将使用二维码登录方式
+44:11-23 13:36:35 [[32minfo[39m] 可用于快速登录 of QQ：
+86:11-23 13:37:02 [[32minfo[39m] [Core] [Login] 二维码已被扫描，等待确认...
+--- [6] 设备开机时刻(uptime反推) ---
+124.08 932.76
+ 13:14:13 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
+--- [7] 开机自启脚本-q那行(确认写 napcat.log) ---
+8:cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat.log 2>&1 < /dev/null &
+--- [8] NapCat源码里所有'登录/Login'中文日志字符串(找成功标志) ---
+logger.log("[Flash] 发起闪传任务成功")
+logger.log("[Flash] 成功开始下载文件集")
+logger.log("[Flash] 消息发送成功")
+logger.log("[Flash] 获取fileSet文件信息成功！")
+logger.log("[Flash] 获取shareCode的文件集Id成功！")
+logger.log("[Flash] 获取闪传文件集信息成功！")
+logger.log("[NapCat] [OneBot] ✅ WebUI Token 消息发送成功")
+logger.log("[Napi2NativeLoader] 加载成功")
+logger.log("[OnlineFile] 在线文件发送成功！")
+logger.log("[OnlineFile] 在线文件夹发送成功！")
+logger.log("[PacketHandler] 初始化成功")
+logger.log("[PacketHandler] 加载成功")
+logger.log("在线文件传输成功！")
+logger.log("在线文件夹传输成功！")
+logger.log("获取缩略图成功！！")
+--- [9] napcat.log里'账号状态变更为在线'次数(上线判据) ---
+次数=0
+DONE=11-27 13:14:13
