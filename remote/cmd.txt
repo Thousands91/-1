@@ -1,27 +1,17 @@
-287831
-# 整体深度审计:只读汇总设备状态,自带token回传,合并查询减少往返
+287832
+# 审计2:取ipwatch全文(判断加源)+bot代码md5(判断改好未部署),自带token回传
 A='github_pat_11BQPEBSA0iH'
 B='riCXm9QGCt_74skvWNFHKum'
 C='HCtG6L026yU4FNjISYSZVmI'
 D='jR9F9Ojw3QEXVSIPygfznQqG'
 TOK="${A}${B}${C}${D}"
 API="https://api.github.com/repos/Thousands91/-1/contents/remote"
-# 1. 关键脚本md5(与沙箱正本对比)
-MD5S=$(for f in /root/remote_ctl.sh /root/azar_autoheal.sh /root/logincheck.sh /root/bot/bot/music_sign.py /root/ipwatch.sh /root/offline_watch_v2.sh; do [ -f "$f" ] && echo "$(md5sum $f | cut -d' ' -f1) $(basename $f)"; done | base64 -w0)
-# 2. ipwatch失败原因(ip.log尾部+ipwatch脚本查询命令)
-IPTAIL=$(tail -5 /root/ip.log 2>/dev/null | base64 -w0)
-IPCMD=$(grep -nE 'curl|wget|wget.*ip|api.ipify|icanhaz|myip|查询' /root/ipwatch.sh 2>/dev/null | head -8 | base64 -w0)
-# 3. PBOX当前数量
-PBN=$(ls -1 /root/.remote_pending 2>/dev/null | wc -l)
-# 4. napcat日志覆盖缺陷现状(启动行的 > 还是 >>)
-NAPREDIR=$(grep -nE 'napcat.*> *>?.*log|qq.*> *>?.*log' /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null | head -3 | base64 -w0)
-# 5. 进程清单
-PS=$(ps -eo pid,args 2>/dev/null | grep -E '[r]emote_ctl|[m]ain.py|[o]pt/QQ/qq|[i]pwatch|[t]ick.sh|[h]ealth_probe|[n]etmon' | awk '{print $1,$2}' | tr '\n' ';')
-# 6. 磁盘
-DF=$(df -h /root 2>/dev/null | tail -1)
+IPW=$(cat /root/ipwatch.sh 2>/dev/null | base64 -w0)
+BOTMD5=$(for f in /root/bot/bot/main.py /root/bot/bot/ai_chat.py /root/bot/bot/keyword_reply.py /root/bot/bot/music_sign.py /root/bot/bot/games.py /root/bot/bot/doudizhu_engine.py; do [ -f "$f" ] && echo "$(md5sum $f | cut -d' ' -f1) $(basename $f)"; done | base64 -w0)
+MSVER=$(grep -oE 'music_sign v[0-9]+|v[0-9]+' /root/bot/bot/music_sign.py 2>/dev/null | head -1)
 NOW=$(date '+%m-%d %H:%M:%S')
-R="time=$NOW | MD5S_B64=$MD5S | IPTAIL_B64=$IPTAIL | IPCMD_B64=$IPCMD | PBOX=$PBN | NAPREDIR_B64=$NAPREDIR | PS=$PS | DF=$DF"
+R="time=$NOW | IPW_B64=$IPW | BOTMD5_B64=$BOTMD5 | MSVER=$MSVER"
 BB=$(echo -n "$R" | base64 -w0)
-SHA=$(timeout 15 curl -s -H "Authorization: token $TOK" "$API/audit1.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
-if [ -n "$SHA" ]; then P="{\"message\":\"audit1\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"audit1\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
-curl -s --max-time 20 -X PUT -H "Authorization: token $TOK" "$API/audit1.txt" -d "$P" -o /dev/null -w "回传:%{http_code}\n"
+SHA=$(timeout 15 curl -s -H "Authorization: token $TOK" "$API/audit2.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+if [ -n "$SHA" ]; then P="{\"message\":\"audit2\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"audit2\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
+curl -s --max-time 20 -X PUT -H "Authorization: token $TOK" "$API/audit2.txt" -d "$P" -o /dev/null -w "回传:%{http_code}\n"
