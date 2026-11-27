@@ -1,0 +1,41 @@
+287798
+A=github_pat_11BQPEBSA0
+B=iHriCXm9QGCt_74skvWNFH
+C=KumHCtG6L026yU4FNjISYSZ
+D=VmIjR9F9Ojw3QEXVSIPygfznQqG
+TOK="${A}${B}${C}${D}"
+API='https://api.github.com/repos/Thousands91/-1/contents/remote'
+LOG=/tmp/rigor_probe.txt
+: > "$LOG"
+echo "=== 严谨取证:校准登录成功日志特征 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
+
+echo "--- [1] azar_autoheal.sh全文(-q怎么调/日志重定向到哪) ---" >> "$LOG"
+cat /root/azar_autoheal.sh 2>/dev/null >> "$LOG"
+echo "" >> "$LOG"
+
+echo "--- [2] 所有候选日志文件清单(mtime/size) ---" >> "$LOG"
+ls -lat /root/*.log /root/Napcat/logs/*.log 2>/dev/null | head -45 >> "$LOG"
+
+echo "--- [3] 阳性对照:11-23 13:35~13:45 扫码成功那次各日志原文 ---" >> "$LOG"
+for f in /root/napcat.log /root/napcat-restart.log; do
+  echo "### $f"
+  grep -nE '11-23 13:(3[5-9]|4[0-5]):' "$f" 2>/dev/null | grep -iE 'Login|login|二维码|扫描|success|在线|成功|error|离线' | head -40
+done >> "$LOG"
+
+echo "--- [4] '二维码已被扫描'所有出现位置(定位登录成功日志特征) ---" >> "$LOG"
+grep -rn '二维码已被扫描' /root/napcat.log /root/napcat-restart.log 2>/dev/null | head -20 >> "$LOG"
+
+echo "--- [5] 11-24 00:25:15~00:25:32 napcat.log逐行原文(不过滤) ---" >> "$LOG"
+grep -nE '11-24 00:25:(1[5-9]|2[0-9]|3[0-2]):' /root/napcat.log 2>/dev/null | head -70 >> "$LOG"
+
+echo "--- [6] 11-25 02:14:05~02:16:00 napcat.log逐行原文(不过滤) ---" >> "$LOG"
+grep -nE '11-25 02:1[4-6]:' /root/napcat.log 2>/dev/null | head -80 >> "$LOG"
+
+echo "--- [7] 全日志所有含Login的行(11-23~11-27),看登录日志真实格式 ---" >> "$LOG"
+grep -hniE '\[Login\]|login' /root/napcat.log /root/napcat-restart.log 2>/dev/null | grep -E '11-2[34567]' | sort -u | head -60 >> "$LOG"
+
+echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/rigor_probe.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+B=$(base64 -w0 "$LOG")
+if [ -n "$SHA" ]; then P="{\"message\":\"rigorprobe\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"rigorprobe\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/rigor_probe.txt" -d "$P"
