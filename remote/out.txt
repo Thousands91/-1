@@ -1,29 +1,26 @@
-<<<task_287837.txt>>>
-===== 任务287837 11-27 22:21:31 =====
+<<<task_287838.txt>>>
+===== 任务287838 11-27 22:23:46 =====
 --- 命令 ---
-# 只读：核实两个"待办"是否已装。不改动。
-echo "=== Termux:Boot 插件是否安装 ==="
-pm list packages 2>/dev/null | grep -i 'termux.boot\|termux.boot' || echo "pm不可用或无结果"
-echo "=== 开机boot目录 ==="
-ls -la /data/data/com.termux/files/home/.termux/boot/ 2>/dev/null | awk '{print $1,$5,$9}'
-echo "=== x10_watchdog 看门狗进程 ==="
-pgrep -af '[x]10_watchdog' | head -3 || echo "无看门狗进程"
-echo "=== 看门狗脚本文件 ==="
-ls -la /data/data/com.termux/files/home/x10_watchdog.sh 2>/dev/null | awk '{print $5,$9}' || echo "无"
-echo "=== 已运行时长(证明重启后自动拉起?) ==="
-uptime
-echo "=== DONE4 ==="
+# 只读：重启后全家桶状态核实。不改动。
+echo "=== 当前关键PID ==="
+echo "remote_ctl: $(pgrep -f '[r]emote_ctl.sh' | tr '\n' ' ')"
+echo "bot(main.py): $(pgrep -f '[m]ain.py' | tr '\n' ' ')"
+echo "napcat(qq): $(pgrep -f 'opt/QQ/[q]q' | tr '\n' ' ')"
+echo "watchdog: $(pgrep -f '[x]10_watchdog' | tr '\n' ' ')"
+echo "ipwatch: $(pgrep -f '[i]pwatch' | tr '\n' ' ')"
+echo "=== 登录态 ==="
+cat /root/logincheck.txt 2>/dev/null | head -2 || echo "无logincheck文件"
+echo "=== boot脚本里是否有watchdog行 ==="
+grep -n 'watchdog' /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null || echo "boot脚本无watchdog行"
+echo "=== DONE5 ==="
 --- 输出 ---
-=== Termux:Boot 插件是否安装 ===
-pm不可用或无结果
-=== 开机boot目录 ===
-total  
-drwxr-xr-x 3488 .
-drwx------ 3488 ..
--rwxr-xr-x 1563 asar_boot.sh
-=== x10_watchdog 看门狗进程 ===
-=== 看门狗脚本文件 ===
-372 /data/data/com.termux/files/home/x10_watchdog.sh
-=== 已运行时长(证明重启后自动拉起?) ===
- 22:21:32 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
-=== DONE4 ===
+=== 当前关键PID ===
+remote_ctl: 8689 22621 
+bot(main.py): 22621 29005 
+napcat(qq): 15875 15891 15893 15894 15924 22621 
+watchdog: 
+ipwatch: 16677 
+=== 登录态 ===
+=== boot脚本里是否有watchdog行 ===
+boot脚本无watchdog行
+=== DONE5 ===
