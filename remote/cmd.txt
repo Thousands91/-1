@@ -1,15 +1,49 @@
-287804
+287805
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
 D=VmIjR9F9Ojw3QEXVSIPygfznQqG
 TOK="${A}${B}${C}${D}"
 API='https://api.github.com/repos/Thousands91/-1/contents/remote'
-QR=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-cp "$QR" /tmp/qr_final.png 2>/dev/null
-B64=$(base64 -w0 /tmp/qr_final.png)
-SZ=$(stat -c %s /tmp/qr_final.png 2>/dev/null)
-M=$(stat -c %y "$QR" 2>/dev/null)
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/qr_live.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
-if [ -n "$SHA" ]; then P="{\"message\":\"qr_final_$(date '+%H%M%S')_sz${SZ}\",\"content\":\"$B64\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"qr_final_$(date '+%H%M%S')_sz${SZ}\",\"content\":\"$B64\",\"branch\":\"main\"}"; fi
-curl -s -o /dev/null -w "PUT:%{http_code} sz=$SZ mtime=$M\n" --max-time 90 -X PUT -H "Authorization: token $TOK" "$API/qr_live.txt" -d "$P"
+LOG=/tmp/recheck_day.txt
+: > "$LOG"
+echo "=== 今日结论复核 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
+
+echo "--- [1] 11-27首次ErrCode:3上下文(判断-q还是刷码流程) ---" >> "$LOG"
+LN=$(grep -n '11-27.*ErrCode' /root/napcat-restart.log 2>/dev/null | head -1 | cut -d: -f1)
+echo "首行=$LN" >> "$LOG"
+if [ -n "$LN" ]; then S=$((LN-12)); [ $S -lt 1 ] && S=1; sed -n "${S},$((LN+8))p" /root/napcat-restart.log >> "$LOG"; fi
+
+echo "--- [2] 11-27某次ErrCode:3后紧跟什么(取中段) ---" >> "$LOG"
+LN=$(grep -n '11-27.*ErrCode' /root/napcat-restart.log 2>/dev/null | sed -n '50p' | cut -d: -f1)
+echo "第50次行=$LN" >> "$LOG"
+if [ -n "$LN" ]; then S=$((LN-4)); sed -n "${S},$((LN+12))p" /root/napcat-restart.log >> "$LOG"; fi
+
+echo "--- [3] 所有用-q的脚本及日志重定向 ---" >> "$LOG"
+grep -rn -- '-q 3427943187' /root/*.sh /data/data/com.termux/files/home/.termux/boot/*.sh 2>/dev/null | grep -v '\.bak' >> "$LOG"
+
+echo "--- [4] restart.log里'二维码已被扫描'/'登录成功'全记录 ---" >> "$LOG"
+grep -nE '二维码已被扫描|登录成功|Login Success|Login success' /root/napcat-restart.log 2>/dev/null | tail -20 >> "$LOG"
+echo "count=$(grep -cE '二维码已被扫描|登录成功|Login Success' /root/napcat-restart.log 2>/dev/null)" >> "$LOG"
+
+echo "--- [5] 11-23扫码成功后~11-24掉线间restart.log有无-q尝试 ---" >> "$LOG"
+grep -nE '11-23 1[4-9]:|11-23 2[0-3]:|11-24 00:' /root/napcat-restart.log 2>/dev/null | head -25 >> "$LOG"
+echo "该时段行数=$(grep -cE '11-23 1[4-9]:|11-23 2[0-3]:|11-24 00:' /root/napcat-restart.log 2>/dev/null)" >> "$LOG"
+
+echo "--- [6] 设备实际mjs的onSelfStatusChanged源码(确认源码结论) ---" >> "$LOG"
+grep -o 'onSelfStatusChanged = (n) =>[^;]*' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs 2>/dev/null | head -c 600 >> "$LOG"
+echo "" >> "$LOG"
+
+echo "--- [7] login_state.log是否记过err字段(历史原因码) ---" >> "$LOG"
+echo "含err=行数=$(grep -c 'err=' /root/login_state.log 2>/dev/null)" >> "$LOG"
+head -3 /root/login_state.log 2>/dev/null >> "$LOG"
+
+echo "--- [8] 11-27 02:14掉线瞬间napcat.log有无原因码类字段 ---" >> "$LOG"
+LN=$(grep -n '11-27 02:14' /root/napcat.log 2>/dev/null | head -1 | cut -d: -f1)
+if [ -n "$LN" ]; then S=$((LN-3)); sed -n "${S},$((LN+10))p" /root/napcat.log >> "$LOG"; fi
+
+echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/recheck_day.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+B=$(base64 -w0 "$LOG")
+if [ -n "$SHA" ]; then P="{\"message\":\"recheckday\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"recheckday\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/recheck_day.txt" -d "$P"
