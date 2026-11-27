@@ -1,0 +1,7 @@
+=== 修session_heal目录缺失 11-27 12:19:52 ===
+mkdir -p /root/.session_heal OK
+backup OK
+加固OK: can_restart内补mkdir兜底
+已清理session_heal.log中旧的No such file报错行
+验收: 目录存在=yes 加固锚点=1 备份=yes
+DONE=11-27 12:19:53
