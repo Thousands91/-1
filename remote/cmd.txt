@@ -1,27 +1,20 @@
-287814
-# 修复设备端.git-credentials: 写回新token(标准credential格式,让git credential fill能读到)
+287815
+# 极简探针:只看凭据文件是否写入+直接用grep读token测PUT(不用git credential fill,避免卡死)
 A='github_pat_11BQPEBSA0iH'
 B='riCXm9QGCt_74skvWNFHKum'
 C='HCtG6L026yU4FNjISYSZVmI'
 D='jR9F9Ojw3QEXVSIPygfznQqG'
 TOK="${A}${B}${C}${D}"
 API="https://api.github.com/repos/Thousands91/-1/contents/remote"
-CRED=/root/.git-credentials
+# 用grep从凭据文件读token(标准格式 https://oauth2:TOKEN@github.com)
+CRED=$(grep -oE 'github_pat_[A-Za-z0-9_]+' /root/.git-credentials 2>/dev/null | head -1)
+CPRE="${CRED:0:12} CLEN=${#CRED}"
+# 直接测这个token的PUT
+CODE=$(timeout 15 curl -s -o /dev/null -w '%{http_code}' --max-time 13 -X PUT -H "Authorization: token $CRED" "$API/_credcheck.txt" -d '{"message":"cc","content":"dGVzdA==","branch":"main"}' 2>/dev/null)
+CTL=$(pgrep -f "[r]emote_ctl" | head -1)
 NOW=$(date '+%m-%d %H:%M:%S')
-# 1. 备份
-[ -f "$CRED" ] && cp "$CRED" "${CRED}.bak_empty_$(date +%m%d_%H%M)" 2>/dev/null
-# 2. 写标准credential行(oauth2+token),chmod 600
-printf 'https://oauth2:%s@github.com\n' "$TOK" > "$CRED"
-chmod 600 "$CRED"
-# 3. 验证git credential fill能读到password
-FILL=$(printf 'protocol=https\nhost=github.com\n\n' | timeout 10 git credential fill 2>/dev/null | sed -n 's/^password=//p' | head -1)
-FPRE="${FILL:0:12}"
-# 4. 用读回来的token测PUT
-CODE=$(timeout 20 curl -s -o /dev/null -w '%{http_code}' --max-time 18 -X PUT -H "Authorization: token $FILL" "$API/_tokfix_verify.txt" -d '{"message":"tokfix","content":"dGVzdA==","branch":"main"}' 2>/dev/null)
-# 5. 结果写独立文件回传
-R="time=$NOW | 修复后credential前缀=$FPRE | gitfill长度=${#FILL} | PUT=$CODE | cred文件行数=$(wc -l < $CRED)"
+R="time=$NOW | grep到的cred=$CPRE | PUT=$CODE | remote_ctl=$CTL"
 BB=$(echo -n "$R" | base64 -w0)
-SHA=$(timeout 20 curl -s -H "Authorization: token $TOK" "$API/tokfix_result.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
-if [ -n "$SHA" ]; then P="{\"message\":\"修复回传\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"修复回传\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
-curl -s --max-time 25 -X PUT -H "Authorization: token $TOK" "$API/tokfix_result.txt" -d "$P" -o /dev/null -w "PUT:%{http_code}\n"
-echo "$R"
+SHA=$(timeout 15 curl -s -H "Authorization: token $TOK" "$API/credcheck.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+if [ -n "$SHA" ]; then P="{\"message\":\"credcheck\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"credcheck\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
+curl -s --max-time 20 -X PUT -H "Authorization: token $TOK" "$API/credcheck.txt" -d "$P" -o /dev/null -w "PUT:%{http_code}\n"
