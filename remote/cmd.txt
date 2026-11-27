@@ -1,50 +1,124 @@
-287801
+287802
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
 D=VmIjR9F9Ojw3QEXVSIPygfznQqG
 TOK="${A}${B}${C}${D}"
 API='https://api.github.com/repos/Thousands91/-1/contents/remote'
-LOG=/tmp/observe_recon.txt
+LOG=/tmp/observe_deploy.txt
 : > "$LOG"
-echo "=== 可观测性改造前取证 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
+echo "=== 可观测性三项改造部署 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
 
-echo "--- [1] 谁写login_state.log(grep所有sh) ---" >> "$LOG"
-for f in /root/*.sh /root/Napcat/*.sh /data/data/com.termux/files/home/.termux/boot/*.sh; do
-  grep -q 'login_state.log' "$f" 2>/dev/null && { echo "### $f"; grep -n 'login_state.log\|状态变化\|登录态' "$f"; }
-done >> "$LOG"
+# ==================== 改造1: WebUI状态结构化台账 ====================
+cat > /root/webui_state_watch.sh <<'WEBUI'
+#!/bin/bash
+# 可观测性改造1: 每轮记录WebUI完整登录状态到 webui_state.log
+CFG=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json
+PY=/root/bot/venv/bin/python3
+[ -x "$PY" ] || PY=python3
+T=$(grep -o '"token": "[^"]*"' "$CFG" 2>/dev/null | head -1 | sed 's/.*: "//;s/"//')
+[ -n "$T" ] || exit 0
+H=$($PY -c "import hashlib;print(hashlib.sha256(('$T'+'.napcat').encode()).hexdigest())" 2>/dev/null)
+C=$(curl -s --max-time 5 -X POST http://127.0.0.1:6099/api/auth/login -H 'Content-Type: application/json' -d "{\"hash\":\"$H\"}" 2>/dev/null | $PY -c "import sys,json;print(json.load(sys.stdin)['data']['Credential'])" 2>/dev/null)
+[ -n "$C" ] || exit 0
+LINE=$(curl -s --max-time 6 -X POST http://127.0.0.1:6099/api/QQLogin/CheckLoginStatus -H "Authorization: Bearer $C" 2>/dev/null | $PY -c "
+import sys,json,datetime
+try:
+ d=json.load(sys.stdin)['data']
+ ts=datetime.datetime.now().strftime('%F %T')
+ print(ts,'phase='+str(d.get('loginPhase')),'login='+str(d.get('isLogin')),'offline='+str(d.get('isOffline')),'core='+str(d.get('coreReady')),'qr='+str(d.get('qrLoginAccepted')),'err='+repr(d.get('loginError')))
+except Exception as e: print(datetime.datetime.now().strftime('%F %T'),'ERR',str(e)[:60])
+" 2>/dev/null)
+[ -n "$LINE" ] && echo "$LINE" >> /root/webui_state.log
+WEBUI
+chmod +x /root/webui_state_watch.sh
+echo "改造1脚本: $(md5sum /root/webui_state_watch.sh | cut -d' ' -f1)" >> "$LOG"
 
-echo "--- [2] tick/health脚本里登录判定写台账逻辑 ---" >> "$LOG"
-for f in /root/tick.sh /root/health.sh /root/netmon.sh /root/login_state.sh; do
-  [ -f "$f" ] && { echo "### $f"; grep -n 'login\|登录\|状态变化\|login_state' "$f" 2>/dev/null | head -30; }
-done >> "$LOG"
+# ==================== 改造2: 掉线瞬间全量快照 ====================
+cat > /root/offline_snapshot.sh <<'SNAP'
+#!/bin/bash
+# 可观测性改造2: 掉线瞬间抓全量现场到 /root/offline_snapshots/
+D=/root/offline_snapshots
+mkdir -p "$D"
+TS=$(date '+%Y%m%d_%H%M%S')
+F="$D/off_${TS}.txt"
+{
+echo "=== 掉线快照 $TS ==="
+echo "--- logincheck权威判定 ---"; bash /root/logincheck.sh 2>/dev/null
+echo "--- 相关进程 ---"; ps -eo pid,etime,args | grep -E '[o]pt/QQ/qq|[m]ain.py|[r]emote_ctl|[n]apcat|[a]utoheal' | head -20
+echo "--- napcat.log尾80 ---"; tail -80 /root/napcat.log 2>/dev/null
+echo "--- napcat-restart.log尾120 ---"; tail -120 /root/napcat-restart.log 2>/dev/null
+echo "--- bot.log尾20 ---"; tail -20 /root/bot.log 2>/dev/null
+echo "--- login_state.log尾10 ---"; tail -10 /root/login_state.log 2>/dev/null
+echo "--- webui_state.log尾10 ---"; tail -10 /root/webui_state.log 2>/dev/null
+echo "--- ip.log尾3 ---"; tail -3 /root/ip.log 2>/dev/null
+echo "--- 最新prelogin底层日志可读错误行 ---"
+PL=$(ls -t /root/.config/QQ/global/nt_data/Log/log/prelogin-log_*.qqxlog 2>/dev/null | head -1)
+[ -n "$PL" ] && { echo "file=$PL size=$(stat -c %s "$PL")"; strings "$PL" 2>/dev/null | grep -iE 'error|fail|expired|ticket|offline|kick|token|errcode|retcode' | tail -50; }
+echo "SNAP_DONE $(date '+%F %T')"
+} > "$F" 2>&1
+ls -t "$D"/off_*.txt 2>/dev/null | tail -n +21 | xargs -r rm -f
+SNAP
+chmod +x /root/offline_snapshot.sh
+echo "改造2脚本: $(md5sum /root/offline_snapshot.sh | cut -d' ' -f1)" >> "$LOG"
 
-echo "--- [3] NapCat onSelfStatusChanged 源码位置 ---" >> "$LOG"
-grep -rl 'onSelfStatusChanged\|账号状态变更为离线' /root/Napcat 2>/dev/null | head -20 >> "$LOG"
-
-echo "--- [4] 命中文件里该段上下文 ---" >> "$LOG"
-SRC=$(grep -rl '账号状态变更为离线' /root/Napcat 2>/dev/null | head -1)
-echo "SRC=$SRC" >> "$LOG"
-if [ -n "$SRC" ]; then
-  echo "文件类型: $(file "$SRC")" >> "$LOG"
-  echo "大小: $(stat -c %s "$SRC")" >> "$LOG"
-  LN=$(grep -n '账号状态变更为离线' "$SRC" 2>/dev/null | head -1 | cut -d: -f1)
-  echo "行号=$LN" >> "$LOG"
-  if [ -n "$LN" ]; then S=$((LN-25)); [ $S -lt 1 ] && S=1; sed -n "${S},$((LN+25))p" "$SRC" >> "$LOG"; fi
+# ==================== 改造3: NapCat静默离线dump Info ====================
+NJ=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
+cp "$NJ" "$NJ.bak_observe_1127" && echo "改造3备份: OK" >> "$LOG"
+python3 - >> "$LOG" 2>&1 <<'PYMOD'
+p='/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs'
+s=open(p,encoding='utf-8').read()
+old='this.context.logger.log("账号状态变更为离线")'
+new='this.context.logger.log("账号状态变更为离线 InfoDump=" + (()=>{try{return JSON.stringify(n)}catch(e){return "DUMPERR:"+e.message}})())'
+if 'InfoDump=' in s:
+    print('改造3: 已改过,跳过')
+elif s.count(old)==1:
+    open(p,'w',encoding='utf-8').write(s.replace(old,new,1))
+    print('改造3: Info dump注入OK, 替换次数=1')
+else:
+    print('改造3: 锚点数='+str(s.count(old))+',未改(保持原样)')
+PYMOD
+# 语法校验,失败回滚
+if command -v node >/dev/null 2>&1; then
+  if node --check "$NJ" >/dev/null 2>&1; then echo "改造3 node --check: OK" >> "$LOG"; else echo "改造3 node --check: FAIL,回滚" >> "$LOG"; cp "$NJ.bak_observe_1127" "$NJ"; fi
+else
+  echo "改造3 node不可用,跳过语法校验(备份已留)" >> "$LOG"
 fi
+echo "改造3现md5: $(md5sum "$NJ" | cut -d' ' -f1)" >> "$LOG"
 
-echo "--- [5] QQNT底层日志路径 ---" >> "$LOG"
-find /root/.config/QQ /root/Napcat -type f -name '*.qqxlog' 2>/dev/null | head -15 | while read f; do stat -c '%y %s %n' "$f"; done >> "$LOG"
+# ==================== 把改造1/2挂进autoheal(带总开关) ====================
+AH=/root/azar_autoheal.sh
+cp "$AH" "$AH.bak_observe_1127" && echo "autoheal备份: OK" >> "$LOG"
+python3 - >> "$LOG" 2>&1 <<'PYMOD'
+p='/root/azar_autoheal.sh'
+s=open(p).read()
+if 'OBS_ENABLE' in s:
+    print('autoheal: 已挂过,跳过')
+else:
+    # 1) 总开关
+    a='LOG=/root/autoheal.log'
+    s=s.replace(a, a+'\nOBS_ENABLE=1   # 可观测性改造总开关,出问题改0即关', 1)
+    # 2) 每轮记录WebUI状态
+    b='  # ② 登录态监测（权威判定走 logincheck）'
+    s=s.replace(b, '  # 可观测性改造1: 每轮记录WebUI完整状态\n  [ "$OBS_ENABLE" = 1 ] && timeout 15 bash /root/webui_state_watch.sh >/dev/null 2>&1\n'+b, 1)
+    # 3) 掉线跳变时抓快照
+    c='      *未登录*|*掉线*)\n        # v1.2.2'
+    s=s.replace(c, '      *未登录*|*掉线*)\n        # 可观测性改造2: 掉线瞬间全量快照\n        [ "$OBS_ENABLE" = 1 ] && timeout 60 bash /root/offline_snapshot.sh "$ST" >/dev/null 2>&1\n        # v1.2.2', 1)
+    open(p,'w').write(s)
+    print('autoheal: 挂载OK 开关='+str('OBS_ENABLE=1' in s)+' 状态记录='+str('webui_state_watch' in s)+' 快照='+str('offline_snapshot' in s))
+PYMOD
+bash -n "$AH" && echo "autoheal bash -n: OK" >> "$LOG" || { echo "autoheal bash -n: FAIL,回滚" >> "$LOG"; cp "$AH.bak_observe_1127" "$AH"; }
+echo "autoheal现md5: $(md5sum "$AH" | cut -d' ' -f1)" >> "$LOG"
 
-echo "--- [6] NapCat目录结构(顶层) ---" >> "$LOG"
-ls -la /root/Napcat/ 2>/dev/null | head -25 >> "$LOG"
-
-echo "--- [7] autoheal当前md5+是否已含快照函数 ---" >> "$LOG"
-md5sum /root/azar_autoheal.sh 2>/dev/null >> "$LOG"
-grep -c 'snapshot\|快照\|forensic' /root/azar_autoheal.sh 2>/dev/null >> "$LOG"
-
+# ==================== 手动触发一次状态记录验证改造1 ====================
+timeout 15 bash /root/webui_state_watch.sh >/dev/null 2>&1
+echo "--- webui_state.log尾2 ---" >> "$LOG"
+tail -2 /root/webui_state.log 2>/dev/null >> "$LOG"
+echo "--- 快照目录 ---" >> "$LOG"
+ls -la /root/offline_snapshots/ 2>/dev/null | head -5 >> "$LOG"
 echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/observe_recon.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/observe_deploy.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
 B=$(base64 -w0 "$LOG")
-if [ -n "$SHA" ]; then P="{\"message\":\"observerecon\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"observerecon\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
-curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/observe_recon.txt" -d "$P"
+if [ -n "$SHA" ]; then P="{\"message\":\"observedeploy\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"observedeploy\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/observe_deploy.txt" -d "$P"
