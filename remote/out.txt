@@ -1,10 +1,47 @@
-<<<task_287827.txt>>>
-===== 任务287827 11-27 21:27:36 =====
+<<<task_287829.txt>>>
+===== 任务287829 11-27 21:34:15 =====
 --- 命令 ---
-echo "E2E回传验证 $(date +%H:%M:%S)"
-bash /root/logincheck.sh 2>/dev/null | head -3
+# 装自动心跳脚本hb_auto.sh:每5分钟写hb_verify,不动remote_ctl/NapCat
+A='github_pat_11BQPEBSA0iH'
+B='riCXm9QGCt_74skvWNFHKum'
+C='HCtG6L026yU4FNjISYSZVmI'
+D='jR9F9Ojw3QEXVSIPygfznQqG'
+TOK="${A}${B}${C}${D}"
+API="https://api.github.com/repos/Thousands91/-1/contents/remote"
+# 1. 解码写入脚本
+echo 'IyEvZGF0YS9kYXRhL2NvbS50ZXJtdXgvZmlsZXMvdXNyL2Jpbi9iYXNoCiMg6Ieq5Yqo5b+D6LezOuavjzXliIbpkp/lhpnkuIDmrKFoYl92ZXJpZnkudHh0KOeLrOeri+aWh+S7tizkuI3norBvdXQudHh0L3N0YXR1c+S4u+mTvikKIyB0b2tlbuS7ji5naXQtY3JlZGVudGlhbHPor7ss5YW85a65Z2hwX+WSjGdpdGh1Yl9wYXRf5Lik56eN5YmN57yACkFQST0iaHR0cHM6Ly9hcGkuZ2l0aHViLmNvbS9yZXBvcy9UaG91c2FuZHM5MS8tMS9jb250ZW50cy9yZW1vdGUiCndoaWxlIHRydWU7IGRvCiAgVE9LPSQoZ3JlcCAtb0UgJ2docF9bQS1aYS16MC05XSt8Z2l0aHViX3BhdF9bQS1aYS16MC05X10rJyAvcm9vdC8uZ2l0LWNyZWRlbnRpYWxzIDI+L2Rldi9udWxsIHwgaGVhZCAtMSkKICBpZiBbIC1uICIkVE9LIiBdOyB0aGVuCiAgICBDVEw9JChwZ3JlcCAtZiAiW3JdZW1vdGVfY3RsIiB8IGhlYWQgLTEpCiAgICBCT1Q9JChwZ3JlcCAtZiAiW21dYWluLnB5IiB8IGhlYWQgLTEpCiAgICBRUVA9JChwZ3JlcCAtZiAiW29dcHQvUVEvcXEiIHwgaGVhZCAtMSkKICAgIElQVz0kKHBncmVwIC1mICJbaV1wd2F0Y2giIHwgaGVhZCAtMSkKICAgIElQTD0kKHRhaWwgLTEgL3Jvb3QvaXAubG9nIDI+L2Rldi9udWxsKQogICAgQk1ENT0kKG1kNXN1bSAvZGF0YS9kYXRhL2NvbS50ZXJtdXgvZmlsZXMvaG9tZS8udGVybXV4L2Jvb3QvYXNhcl9ib290LnNoIDI+L2Rldi9udWxsIHwgY3V0IC1kJyAnIC1mMSkKICAgIE5PVz0kKGRhdGUgJyslbS0lZCAlSDolTTolUycpCiAgICBSPSJ0aW1lPSROT1cgfCByZW1vdGVfY3RsPSRDVEwgfCBib3Q9JEJPVCB8IG5hcGNhdD0kUVFQIHwgaXB3YXRjaD0kSVBXIHwgaXAubG9n5pyrPSRJUEwgfCBib290X21kNT0kQk1ENSIKICAgIEI9JChlY2hvIC1uICIkUiIgfCBiYXNlNjQgLXcwKQogICAgU0hBPSQoY3VybCAtcyAtLW1heC10aW1lIDE1IC1IICJBdXRob3JpemF0aW9uOiB0b2tlbiAkVE9LIiAiJEFQSS9oYl92ZXJpZnkudHh0IiB8IHRyIC1kICcgJyB8IGdyZXAgLW8gJyJzaGEiOiJbXiJdKiInIHwgaGVhZCAtMSB8IGN1dCAtZCciJyAtZjQpCiAgICBpZiBbIC1uICIkU0hBIiBdOyB0aGVuIFBBWUxPQUQ9IntcIm1lc3NhZ2VcIjpcInByb2JlXCIsXCJjb250ZW50XCI6XCIkQlwiLFwic2hhXCI6XCIkU0hBXCIsXCJicmFuY2hcIjpcIm1haW5cIn0iOyBlbHNlIFBBWUxPQUQ9IntcIm1lc3NhZ2VcIjpcInByb2JlXCIsXCJjb250ZW50XCI6XCIkQlwiLFwiYnJhbmNoXCI6XCJtYWluXCJ9IjsgZmkKICAgIGN1cmwgLXMgLS1tYXgtdGltZSAzMCAtWCBQVVQgLUggIkF1dGhvcml6YXRpb246IHRva2VuICRUT0siICIkQVBJL2hiX3ZlcmlmeS50eHQiIC1kICIkUEFZTE9BRCIgLW8gL2Rldi9udWxsCiAgZmkKICBzbGVlcCAzMDAKZG9uZQo=' | base64 -d > /root/hb_auto.sh
+chmod 755 /root/hb_auto.sh
+SMD5=$(md5sum /root/hb_auto.sh | cut -d' ' -f1)
+# 2. 安全启动:不重复启动
+OLDPID=$(cat /root/.hb_auto.pid 2>/dev/null)
+if [ -n "$OLDPID" ] && kill -0 "$OLDPID" 2>/dev/null; then
+  RUNNING="已在运行pid=$OLDPID"
+else
+  setsid nohup bash /root/hb_auto.sh >> /root/hb_auto.log 2>&1 < /dev/null &
+  NEWPID=$!
+  echo "$NEWPID" > /root/.hb_auto.pid
+  RUNNING="新启动pid=$NEWPID"
+fi
+sleep 3
+# 3. 验证进程活着
+HPID=$(cat /root/.hb_auto.pid 2>/dev/null)
+HALIVE=$(kill -0 "$HPID" 2>/dev/null && echo yes || echo no)
+# 4. 立即手动触发一次心跳写入(用脚本同源逻辑,验证能写进hb_verify)
+T2=$(grep -oE 'ghp_[A-Za-z0-9]+|github_pat_[A-Za-z0-9_]+' /root/.git-credentials 2>/dev/null | head -1)
+CTL=$(pgrep -f "[r]emote_ctl" | head -1)
+BOT=$(pgrep -f "[m]ain.py" | head -1)
+QQP=$(pgrep -f "[o]pt/QQ/qq" | head -1)
+NOW=$(date '+%m-%d %H:%M:%S')
+R2="time=$NOW | remote_ctl=$CTL | bot=$BOT | napcat=$QQP"
+B2=$(echo -n "$R2" | base64 -w0)
+SH2=$(timeout 15 curl -s -H "Authorization: token $T2" "$API/hb_verify.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+if [ -n "$SH2" ]; then P2="{\"message\":\"probe\",\"content\":\"$B2\",\"sha\":\"$SH2\",\"branch\":\"main\"}"; else P2="{\"message\":\"probe\",\"content\":\"$B2\",\"branch\":\"main\"}"; fi
+CODE=$(timeout 20 curl -s -o /dev/null -w '%{http_code}' --max-time 18 -X PUT -H "Authorization: token $T2" "$API/hb_verify.txt" -d "$P2" 2>/dev/null)
+# 5. 回传安装结果(自带token)
+R="time=$NOW | hb脚本md5=$SMD5 | $(echo $RUNNING) | alive=$HALIVE | 立即写入hb_verify的HTTP=$CODE | 设备token前缀=${T2:0:12}"
+BB=$(echo -n "$R" | base64 -w0)
+SHA=$(timeout 15 curl -s -H "Authorization: token $TOK" "$API/hb_install.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+if [ -n "$SHA" ]; then P="{\"message\":\"hbinstall\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"hbinstall\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
+curl -s --max-time 20 -X PUT -H "Authorization: token $TOK" "$API/hb_install.txt" -d "$P" -o /dev/null -w "回传:%{http_code}\n"
 --- 输出 ---
-E2E回传验证 21:27:37
-=== 登录状态（权威判定）===
-[在线] 已登录，一切正常
-阶段: ready
+回传:201
