@@ -1,37 +1,29 @@
-287793
+287794
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
 D=VmIjR9F9Ojw3QEXVSIPygfznQqG
 TOK="${A}${B}${C}${D}"
 API='https://api.github.com/repos/Thousands91/-1/contents/remote'
-LOG=/tmp/quicklogin_deep.txt
+LOG=/tmp/stats_read.txt
 : > "$LOG"
-echo "=== -q失败深挖 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
-echo "--- [1] 当前登录态(关键!) ---" >> "$LOG"
-echo "bot.log尾5:"; tail -5 /root/bot.log >> "$LOG"
-echo "bot.log mtime:"; stat -c '%y' /root/bot.log >> "$LOG"
-echo "napcat.log mtime:"; stat -c '%y' /root/napcat.log >> "$LOG"
-echo "napcat-restart.log mtime:"; stat -c '%y' /root/napcat-restart.log >> "$LOG"
-echo "最后Login Error时刻:"; grep 'Login Error' /root/napcat-restart.log 2>/dev/null | tail -1 >> "$LOG"
-echo "最后二维码时刻:"; grep '二维码已保存' /root/napcat-restart.log 2>/dev/null | tail -1 >> "$LOG"
-echo "--- [2] -q启动的QQ进程还在吗 ---" >> "$LOG"
-ps -eo pid,etime,args | grep '[o]pt/QQ/qq' | grep -v grep | head -3 >> "$LOG"
-echo "--- [3] prelogin日志明文错误(07~09时段) ---" >> "$LOG"
-for f in /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-27-0[789].qqxlog; do
-  echo "### $(basename $f)"
-  strings "$f" 2>/dev/null | grep -iE 'error|fail|invalid|expired|ticket|a2|d2|token|login|code:|errcode|retcode|verify|风控' | tail -25
-done >> "$LOG" 2>/dev/null
-echo "--- [4] nt_qq账号目录token文件 ---" >> "$LOG"
-find /root/.config/QQ/nt_qq_* -maxdepth 3 -type f 2>/dev/null | head -30 | while read f; do stat -c '%y %s %n' "$f"; done >> "$LOG"
-echo "--- [5] session_heal_state全文 ---" >> "$LOG"
-cat /root/session_heal_state.txt 2>/dev/null | tail -50 >> "$LOG"
-echo "--- [6] ErrCode3第一次出现前后(07:10) ---" >> "$LOG"
-LN=$(grep -n 'Login Error' /root/napcat-restart.log 2>/dev/null | head -1 | cut -d: -f1)
-echo "第一次行号=$LN" >> "$LOG"
-if [ -n "$LN" ]; then S=$((LN-12)); [ $S -lt 1 ] && S=1; sed -n "${S},$((LN+8))p" /root/napcat-restart.log >> "$LOG"; fi
+echo "=== 统计+脚本读取 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
+echo "--- [1] session_heal脚本全文 ---" >> "$LOG"
+cat /root/azar_session_heal.sh 2>/dev/null >> "$LOG"
+echo "--- [2] session_heal_state.txt 全文 ---" >> "$LOG"
+cat /root/session_heal_state.txt 2>/dev/null >> "$LOG"
+echo "--- [3] session_heal_state 成功统计 ---" >> "$LOG"
+echo "总行数=$(wc -l < /root/session_heal_state.txt 2>/dev/null)" >> "$LOG"
+echo "含'恢复成功/已恢复/online':" >> "$LOG"
+grep -iE '恢复成功|已恢复|成功|online' /root/session_heal_state.txt 2>/dev/null | tail -30 >> "$LOG"
+echo "--- [4] napcat.log 扫码登录/登录成功时间点(11-23~11-27) ---" >> "$LOG"
+grep -E '二维码已被扫描|登录成功|\[Core\] \[Login\].*(success|Success)|账号状态变更为在线' /root/napcat.log 2>/dev/null | tail -30 >> "$LOG"
+echo "--- [5] napcat-restart.log 11-23~11-27 登录成功/扫码记录 ---" >> "$LOG"
+grep -E '二维码已被扫描|登录成功|\[Core\] \[Login\].*(success|Success)' /root/napcat-restart.log 2>/dev/null | head -40 >> "$LOG"
+echo "--- [6] .session_heal目录现状 ---" >> "$LOG"
+ls -la /root/.session_heal/ 2>&1 | head -20 >> "$LOG"
 echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/quicklogin_deep.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/stats_read.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
 B=$(base64 -w0 "$LOG")
-if [ -n "$SHA" ]; then P="{\"message\":\"quicklogindeep\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"quicklogindeep\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
-curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/quicklogin_deep.txt" -d "$P"
+if [ -n "$SHA" ]; then P="{\"message\":\"statsread\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"statsread\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/stats_read.txt" -d "$P"
