@@ -1,35 +1,44 @@
-287795
+287796
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
 D=VmIjR9F9Ojw3QEXVSIPygfznQqG
 TOK="${A}${B}${C}${D}"
 API='https://api.github.com/repos/Thousands91/-1/contents/remote'
-LOG=/tmp/stats_deep.txt
+LOG=/tmp/fix_session_heal.txt
 : > "$LOG"
-echo "=== -q成功次数深挖 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
-echo "--- [1] napcat.log 11-23~11-27 所有登录/在线/扫码事件 ---" >> "$LOG"
-grep -E '\[Core\] \[Login\]|二维码已被扫描|登录成功|账号状态变更|\[在线\]|\[掉线\]|快速登录|-q' /root/napcat.log 2>/dev/null | grep -E '11-2[34567]' | tail -50 >> "$LOG"
-echo "--- [2] napcat-restart.log 11-23~11-27 '扫码已被扫描'计数 ---" >> "$LOG"
-echo "二维码已被扫描次数=$(grep -c '二维码已被扫描' /root/napcat-restart.log 2>/dev/null)" >> "$LOG"
-grep -n '二维码已被扫描' /root/napcat-restart.log 2>/dev/null | tail -20 >> "$LOG"
-echo "--- [3] 所有日志里'恢复成功'字样 ---" >> "$LOG"
-grep -rn '恢复成功\|已恢复\|login success\|Login Success' /root/*.log /root/.session_heal/* 2>/dev/null | tail -20 >> "$LOG"
-echo "--- [4] autoheal日志 -q成功记录 ---" >> "$LOG"
-for f in /root/autoheal.log /root/azar_autoheal.log /root/guard_run.log; do
-  echo "### $f"
-  grep -iE 'q|快速登录|恢复|成功|上线|online' "$f" 2>/dev/null | tail -15
-done >> "$LOG" 2>/dev/null
-echo "--- [5] 11-24 和 11-25 掉线后怎么恢复的(napcat.log上下文) ---" >> "$LOG"
-for T in '11-24 00:25' '11-25 02:14'; do
-  echo "### $T"
-  LN=$(grep -n "$T" /root/napcat.log 2>/dev/null | head -1 | cut -d: -f1)
-  [ -n "$LN" ] && { S=$((LN-3)); sed -n "${S},$((LN+12))p" /root/napcat.log; }
-done >> "$LOG" 2>/dev/null
-echo "--- [6] login_state判定依据脚本 ---" >> "$LOG"
-cat /root/logincheck.sh 2>/dev/null | head -60 >> "$LOG"
+S=/root/azar_session_heal.sh
+R=/root/.session_heal
+echo "=== 修session_heal目录缺失 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
+# 1. 确保目录真实存在
+mkdir -p "$R" && echo "mkdir -p $R OK" >> "$LOG"
+# 2. 备份
+cp "$S" "$S.bak_dirfix_1127" && echo "backup OK" >> "$LOG"
+# 3. 加固：在 can_restart 函数体开头(注释行后)补一次兜底mkdir；用python精确插入
+python3 - <<'PY' >> "$LOG" 2>&1
+p='/root/azar_session_heal.sh'
+s=open(p).read()
+needle='can_restart() {\n  local now LR H CH H2 C RC\n'
+repl='can_restart() {\n  local now LR H CH H2 C RC\n  mkdir -p "$RUNDIR" 2>/dev/null   # 兜底:运行中目录若被删,重建,防止读$HR报No such file\n'
+if '兜底:运行中目录若被删' in s:
+    print('已加固过,跳过')
+elif needle in s:
+    open(p,'w').write(s.replace(needle,repl,1))
+    print('加固OK: can_restart内补mkdir兜底')
+else:
+    print('未找到锚点,未改(保持原样)')
+PY
+# 4. 语法检查
+bash -n "$S" && echo "bash -n OK" || echo "bash -n FAIL" >> "$LOG"
+# 5. 清掉旧的错误日志行(那条No such file是11-22旧版本残留,现版本已mkdir)
+if [ -f /root/session_heal.log ]; then
+  grep -v 'No such file or directory' /root/session_heal.log > /tmp/sh_clean && mv /tmp/sh_clean /root/session_heal.log
+  echo "已清理session_heal.log中旧的No such file报错行" >> "$LOG"
+fi
+# 6. 验收
+echo "验收: 目录存在=$([ -d "$R" ] && echo yes || echo no) 加固锚点=$(grep -c '兜底:运行中目录若被删' "$S") 备份=$([ -f "$S.bak_dirfix_1127" ] && echo yes || echo no)" >> "$LOG"
 echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/stats_deep.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/fix_session_heal.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
 B=$(base64 -w0 "$LOG")
-if [ -n "$SHA" ]; then P="{\"message\":\"statsdeep\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"statsdeep\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
-curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/stats_deep.txt" -d "$P"
+if [ -n "$SHA" ]; then P="{\"message\":\"fixsessionheal\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"fixsessionheal\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code}\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/fix_session_heal.txt" -d "$P"
