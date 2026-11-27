@@ -1,30 +1,23 @@
-287787
+287788
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
 D=VmIjR9F9Ojw3QEXVSIPygfznQqG
 TOK="${A}${B}${C}${D}"
 API='https://api.github.com/repos/Thousands91/-1/contents/remote'
-LOG=/tmp/offline_forensics.txt
+LOG=/tmp/offline_history.txt
 : > "$LOG"
-echo "=== 掉线取证 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
-echo "--- [1] napcat.log 02:05~02:20 全量 ---" >> "$LOG"
-grep -E '11-27 02:(0[5-9]|1[0-9]|20):' /root/napcat.log 2>/dev/null | grep -vE '\[I\]|MMKV|接收 <-|Markdown' | head -120 >> "$LOG"
-echo "--- [2] 掉线/踢/心跳关键词(全日志) ---" >> "$LOG"
-grep -iE 'offline|kick|踢|下线|断线|heartbeat|心跳|token|expired|失效|network|网络|重连|reconnect' /root/napcat.log 2>/dev/null | tail -60 >> "$LOG"
-echo "--- [3] ip.log 01:50~02:30 ---" >> "$LOG"
-grep -E '01:5[0-9]|02:[0-2][0-9]' /root/ip.log 2>/dev/null | tail -40 >> "$LOG"
-echo "--- [4] 掉线取证脚本日志/黑匣子文件 ---" >> "$LOG"
-for f in /root/offline_watch.log /root/forensics*.log /root/offline*.txt /root/*.forensics; do
-  [ -f "$f" ] && { echo "### $f"; tail -30 "$f"; }
-done >> "$LOG" 2>/dev/null
-echo "--- [5] 系统启动/关机痕迹 ---" >> "$LOG"
-uptime >> "$LOG"
-echo "的系统启动时刻:"; cat /proc/uptime 2>/dev/null >> "$LOG"
-echo "--- [6] guard_run.log 全量尾 ---" >> "$LOG"
-tail -30 /root/guard_run.log 2>/dev/null >> "$LOG"
+echo "=== 掉线历史规律 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
+echo "--- [1] forensics.txt 全文 ---" >> "$LOG"
+cat /root/forensics.txt 2>/dev/null >> "$LOG"
+echo "--- [2] lessons.md 掉线相关段落 ---" >> "$LOG"
+grep -iE -A3 -B1 '掉线|离线|扫码|登录|GPU|崩|踢|水位|封|风控' /root/lessons.md 2>/dev/null | tail -150 >> "$LOG"
+echo "--- [3] napcat.log 历史所有'账号状态变更'时间点 ---" >> "$LOG"
+grep -E '账号状态变更|设备状态变更|Login Error|二维码' /root/napcat.log 2>/dev/null | tail -40 >> "$LOG"
+echo "--- [4] napcat-restart.log 历史Login Error时间点 ---" >> "$LOG"
+grep -E 'Login Error|账号状态变更|二维码' /root/napcat-restart.log 2>/dev/null | tail -30 >> "$LOG"
 echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/offline_forensics.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/offline_history.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
 B=$(base64 -w0 "$LOG")
-if [ -n "$SHA" ]; then P="{\"message\":\"offlineforensics\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"offlineforensics\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
-curl -s -o /dev/null -w "PUT:%{http_code}\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/offline_forensics.txt" -d "$P"
+if [ -n "$SHA" ]; then P="{\"message\":\"offlinehistory\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"offlinehistory\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code} size=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/offline_history.txt" -d "$P"
