@@ -1,0 +1,15 @@
+=== 可观测性三项改造部署 11-27 12:54:35 ===
+改造1脚本: aa2eec0f82f3404b6586abeab06f9026
+改造2脚本: 75dda948d89c344295f3430dae396047
+改造3备份: OK
+改造3: Info dump注入OK, 替换次数=1
+改造3 node不可用,跳过语法校验(备份已留)
+改造3现md5: 0a5a4a9f7366547ac68c993af722a261
+autoheal备份: OK
+autoheal: 挂载OK 开关=True 状态记录=True 快照=True
+autoheal bash -n: OK
+autoheal现md5: 592a0bfc485d1212794c63980a2e7c00
+--- webui_state.log尾2 ---
+2026-11-27 12:54:37 phase=waiting_qrcode login=False offline=False core=False qr=False err=''
+--- 快照目录 ---
+DONE=11-27 12:54:37
