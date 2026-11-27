@@ -1,0 +1,196 @@
+=== -q快速登录失败取证 11-27 12:02:02 ===
+--- [1] napcat-restart.log 所有Login Error/ErrCode/扫码行 ---
+63691:11-27 07:10:04 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+63773:11-27 07:12:05 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+63862:11-27 07:14:07 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+63951:11-27 07:16:10 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+64036:11-27 07:18:12 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+64124:11-27 07:20:12 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+64210:11-27 07:22:15 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+64299:11-27 07:24:17 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+64387:11-27 07:26:19 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+64473:11-27 07:28:24 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+64561:11-27 07:30:25 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+64645:11-27 07:32:26 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+64733:11-27 07:34:27 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+64819:11-27 07:36:29 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+64907:11-27 07:38:34 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+64995:11-27 07:40:35 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+65083:11-27 07:42:36 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+65172:11-27 07:44:39 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+65256:11-27 07:46:42 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+65347:11-27 07:48:46 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+65436:11-27 07:50:49 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+65520:11-27 07:52:50 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+65609:11-27 07:54:53 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+65693:11-27 07:56:54 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+65781:11-27 07:58:55 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+65870:11-27 08:00:57 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+65956:11-27 08:03:00 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+66045:11-27 08:05:03 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+66130:11-27 08:07:05 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+66218:11-27 08:09:06 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+66306:11-27 08:11:06 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+66393:11-27 08:13:08 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+66482:11-27 08:15:10 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+66568:11-27 08:17:12 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+66657:11-27 08:19:14 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+66745:11-27 08:21:16 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+66830:11-27 08:23:17 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+66918:11-27 08:25:18 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+67004:11-27 08:27:19 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+67093:11-27 08:29:22 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+67183:11-27 08:31:31 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+67273:11-27 08:33:39 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+67361:11-27 08:35:40 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+67449:11-27 08:37:41 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+67537:11-27 08:39:41 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+67623:11-27 08:41:46 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+67712:11-27 08:43:48 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+67800:11-27 08:45:49 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+67887:11-27 08:47:51 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+67975:11-27 08:49:52 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+68059:11-27 08:51:53 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+68148:11-27 08:53:57 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+68237:11-27 08:55:59 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+68324:11-27 08:58:01 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+68413:11-27 09:00:04 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+68499:11-27 09:02:06 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+68587:11-27 09:04:07 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+68675:11-27 09:06:09 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+68762:11-27 09:08:14 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+68851:11-27 09:10:16 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+--- [2] 最后一次-q尝试前后15行 ---
+最后Login Error行号=68851
+d2d177a613d97381a18f734bc599142cf8788e3c90f4b7d86d6a98faea2fca06
+902e019db658571d031e77f76689034a31572ef6ee4cb6b75e95c3d24432cc61
+a635375da2d34f7a328d57eb1c1c1988ea7916a04739483b96226a9d12b5bdc0
+fb6cff6b771466d5d5333feeace26620796c77fbe8e27938f206086b5c2acbe4
+d0cf8fcf6e94859ff7027f57524725eb28954a7eadd6660d53a7662b809451bc
+ca4f1ee90bf2492ec3662cbba525267ad9115e7d7f31fb8cdab39ced79d0d4b1
+1b31f69f18a43a614d1ecb296e5705fb07827a58c0d3ea885ec623e880efaf83
+36c889116ebfe647027d3861d585efdfed1e1175bb60a05cb3299223b9715417
+52f3d052544bfb9afee228de2f08845857a0156dd0ae0aacc9b76398e94f133c
+3fff83f040deb7974de1256f173127ad8b10dac6e6e939d37dbbfa231ac0f7ee
+a361fb5c8c436717adfc32abc94214874d558eef1773896fbb8997f9466d9a4f
+a0a9188d18102d48ac66d2f81db6032f7b4a2e2868f6468ef8fb7fbfc958a6e5
+0d8f2495c738c90b544877dd793444a3aa3077b0722a8b840278cb334606266f
+9795c96b1e5b486b06072cfcdef321ea54a865ae401fc7a74114475b6cc2f495
+9078e5a75aaa66dc628ac68a08506f1a7dd37e3a10d3b3fd8bc006f4b2ee45d1
+11-27 09:10:16 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+f54591478032f335a24e6e8ef091305c9ac9c39fef92a3ad568f37279b65da19
+11-27 09:10:17 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+11-27 09:10:17 [[33mwarn[39m] 
+
+▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+█ ▄▄▄▄▄ █▀ █▀▀▀ ▀▀▀▀█▄  █▀█ ▄▄▄▄▄ █
+█ █   █ █▀ ▄ █▀█ ▀▀▄▄▄▄ ▀▄█ █   █ █
+█ █▄▄▄█ █▀█ █▄█▄▀▀███▄▀▀█▀█ █▄▄▄█ █
+█▄▄▄▄▄▄▄█▄█▄█ █▄▀ █ ▀ ▀▄█ █▄▄▄▄▄▄▄█
+█ ▄  ▄█▄▄▄ ▄█▄▄▀█▄▀█ ▀▀ ▄█▄▀▄█▄▀ ▀█
+█▀▀██▄ ▄▀  ▀ ▄██▄▀▄ █▀▀█▀█▀▀▄ ▄▀▄██
+█ █ ▀██▄ ▄▄▀▄▀▄▀▄▀██ ▀▀▀▀▀▄▀ ▄▄█▀▀█
+█ ▄▄▀  ▄ ▀▄██▀██▄▀▄██▄▀ ▀   ▀██▀▄██
+█▀████ ▄▀█▄ █▄▄▀▄█ ▀▄ ▄▄▀▄▄▀█▄▀█ ▀█
+█▄██▀▀▀▄▄▀▄▀ ▄██▄ █▄██▀▀██ ▄▀█▄▀▄██
+█ ▄▀▀█ ▄▄▀▄ ▄▀▄▀ ▀▄█ ▄█▀ ▀█▀█▄▀█ ▀█
+█ █▄▄▄▀▄▄▄ ▀█▀█▀ ▄█▀██ █▀▀  ▄  ▀▄██
+█▄██▄▄▄▄█▀▄██▄▄▀▀▀▄▄▄ ▀ ▄ ▄▄▄  ▀█ █
+█ ▄▄▄▄▄ █▄ █ ▄▄▄  ▄▄▀█▀▀  █▄█ ▀ ▄██
+█ █   █ █ ▀ ▄ ▄▀▄▀  ▀ ▄ ▀▄ ▄  ▄█▄██
+--- [3] session_heal 相关日志 ---
+### /root/session_heal.log
+/root/azar_session_heal.sh: line 112: /root/.session_heal/hour: No such file or directory
+/root/azar_session_heal.sh: line 113: /root/.session_heal/hour: No such file or directory
+/root/azar_session_heal.sh: line 113: /root/.session_heal/hour: No such file or directory
+/root/azar_session_heal.sh: line 117: /root/.session_heal/hour: No such file or directory
+### /root/session_heal.log
+/root/azar_session_heal.sh: line 112: /root/.session_heal/hour: No such file or directory
+/root/azar_session_heal.sh: line 113: /root/.session_heal/hour: No such file or directory
+/root/azar_session_heal.sh: line 113: /root/.session_heal/hour: No such file or directory
+/root/azar_session_heal.sh: line 117: /root/.session_heal/hour: No such file or directory
+--- [4] QQNT登录票据文件位置+mtime ---
+2026-11-27 12:02:00.360000000 +0800 327680 /root/.config/QQ/global/nt_data/Log/log-cache/prelogin-log.mmap3
+2026-11-22 04:59:59.480000000 +0800 10389016 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-04.qqxlog
+2026-11-22 04:18:39.320000000 +0800 3297 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-20.qqxlog
+2026-11-22 05:59:59.110000000 +0800 10382533 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-05.qqxlog
+2026-11-22 07:59:59.660000000 +0800 10438981 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-07.qqxlog
+2026-11-22 08:59:59.180000000 +0800 10434223 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-08.qqxlog
+2026-11-22 09:59:59.500000000 +0800 10337037 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-09.qqxlog
+2026-11-22 13:59:59.460000000 +0800 7213149 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-13.qqxlog
+2026-11-22 14:51:18.790000000 +0800 10486551 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-14.qqxlog
+2026-11-22 15:03:40.660000000 +0800 1499599 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-14_1.qqxlog
+2026-11-22 16:03:30.040000000 +0800 5322675 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-15.qqxlog
+2026-11-22 17:00:29.640000000 +0800 5273040 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-16.qqxlog
+2026-11-22 17:18:02.920000000 +0800 1429745 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-17.qqxlog
+2026-11-23 03:59:59.920000000 +0800 4794640 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-23-03.qqxlog
+2026-11-23 04:59:59.320000000 +0800 9987327 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-23-04.qqxlog
+2026-11-23 05:59:59.010000000 +0800 9954125 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-23-05.qqxlog
+2026-11-23 07:00:00.070000000 +0800 9929783 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-23-06.qqxlog
+2026-11-23 07:59:59.700000000 +0800 9979282 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-23-07.qqxlog
+2026-11-23 08:59:59.430000000 +0800 9997977 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-23-08.qqxlog
+2026-11-23 09:59:59.780000000 +0800 10029791 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-23-09.qqxlog
+2026-11-23 10:59:59.470000000 +0800 9949536 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-23-10.qqxlog
+2026-11-23 11:59:59.300000000 +0800 9980021 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-23-11.qqxlog
+2026-11-27 02:59:58.930000000 +0800 7374489 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-27-02.qqxlog
+2026-11-27 03:59:59.750000000 +0800 9981402 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-27-03.qqxlog
+2026-11-27 04:59:59.000000000 +0800 9943782 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-27-04.qqxlog
+2026-11-27 05:59:59.920000000 +0800 10008321 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-27-05.qqxlog
+2026-11-27 06:59:59.250000000 +0800 9997601 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-27-06.qqxlog
+2026-11-27 07:59:59.630000000 +0800 9940374 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-27-07.qqxlog
+2026-11-27 08:59:59.730000000 +0800 10040584 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-27-08.qqxlog
+2026-11-27 09:59:59.490000000 +0800 9941273 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-27-09.qqxlog
+2026-11-27 10:59:59.900000000 +0800 9894753 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-27-10.qqxlog
+2026-11-27 11:59:59.190000000 +0800 9916543 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-27-11.qqxlog
+2026-11-27 12:02:01.960000000 +0800 305396 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-27-12.qqxlog
+2026-11-17 15:59:58.940000000 +0800 4526335 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-17-15.qqxlog
+2026-11-17 16:59:50.490000000 +0800 10486687 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-17-16.qqxlog
+2026-11-17 16:59:59.070000000 +0800 25076 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-17-16_1.qqxlog
+2026-11-17 17:59:59.850000000 +0800 8579788 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-17-17.qqxlog
+2026-11-17 18:59:51.730000000 +0800 10479884 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-17-18.qqxlog
+2026-11-18 01:59:59.770000000 +0800 1271286 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-18-01.qqxlog
+2026-11-18 02:01:04.010000000 +0800 202073 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-18-02.qqxlog
+--- [5] QQ配置目录顶层 ---
+total 0
+drwx------ 7 root root 3488 Nov 12 00:23 .
+drwxr-xr-x 4 root root 3488 Nov 12 00:08 ..
+drwx------ 2 root root 3488 Nov 12 00:08 Crashpad
+drwxr-xr-x 4 root root 3488 Nov 12 00:23 NapCat
+drwxr-x--- 2 root root 3488 Nov 12 00:23 crash_files
+drwx------ 5 root root 3488 Nov 12 00:08 global
+drwxr-xr-x 5 root root 3488 Nov 12 00:23 nt_qq_f31de70269f5ae9ebeb8d47e85491317
+--- [6] session_heal脚本-q部分 ---
+2:# azar_session_heal.sh v1.0 — 会话超时(静默离线)自动恢复，保守熔断（2026-11-22）
+5:# 只做一件受严格约束的事：静默离线时用 -q 快速登录重启QQ，恢复会话。
+17:#   OW_STARTQQ            重启QQ的命令
+18:#   OW_STATE / OW_LOCK / OW_RUNDIR   状态文件/锁/计数目录
+22:STAMP() { date '+%m-%d %H:%M:%S'; }
+30:STATE="${OW_STATE:-/root/session_heal_state.txt}"
+38:LAST="$RUNDIR/last_restart"
+42:say() { echo "[$(STAMP)] $*" >> "$STATE"; }
+51:     && tr -d '\0' < "/proc/$OLPID/cmdline" 2>/dev/null | grep -q 'session_heal'; then
+94:# ---- 重启QQ（快速登录）----
+97:    say "DRY_RUN: 模拟重启QQ(-q快速登录)"
+100:  if [ -n "$OW_STARTQQ" ]; then
+101:    eval "$OW_STARTQQ" >> "$STATE" 2>&1
+103:    ( cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 < /dev/null & )
+113:  LR=$(cat "$LAST" 2>/dev/null || echo 0)
+121:  echo "$now" > "$LAST"
+132:  ST=$(login_state)
+134:  if [ "$ST" = online ]; then
+149:      # 曾被踢且尚未恢复在线：即使窗口过去也持续跳过，绝不-q重试(防风控)
+150:      :  # 静默等待人工扫码或登录态自然恢复
+152:      # 无被踢=静默离线，可尝试恢复
+155:        say "静默离线($ST)，第$((C+1))次尝试-q快速登录恢复"
+160:        ST2=$(login_state)
+161:        if [ "$ST2" = online ]; then
+--- [7] 当前是否已扫码登录成功 ---
+11-27 08:55:59 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-27 08:58:01 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-27 09:00:04 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-27 09:02:06 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-27 09:04:07 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-27 09:06:09 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-27 09:08:14 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-27 09:10:16 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+DONE=11-27 12:02:03
