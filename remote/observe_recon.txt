@@ -1,0 +1,109 @@
+=== 可观测性改造前取证 11-27 12:50:34 ===
+--- [1] 谁写login_state.log(grep所有sh) ---
+### /root/azar_autoheal.sh
+81:  # ② 登录态监测（权威判定走 logincheck）
+85:    say "登录态: ${PREV:-初始} -> $ST"
+92:        # v1.2：本次在线时长（优先本进程记账；进程重启丢了就查 login_state.log 最后一次上线时刻）
+97:          # fallback：看台账最后一条状态变化——只有它恰好是"-> 在线"才说明会话还活着可计时；
+99:          _LT=$(grep "状态变化" /root/login_state.log 2>/dev/null | tail -1)
+### /root/login_watch.sh
+2:# 登录态台账:每5分钟记一行logincheck结果,踢号时刻/在线时长/周期从此可回溯
+8:    echo "$T 状态变化: ${LAST:-初始} -> ${S:-未知}" >> /root/login_state.log
+11:    echo "$T $S" >> /root/login_state.log
+### /root/offline_watch.sh
+176:    echo "登录态台账尾: $(tail -3 /root/login_state.log 2>/dev/null | tr '\n' ' | ')"
+### /root/offline_watch_v2.sh
+116:    echo "登录态台账尾: $(tail -3 /root/login_state.log 2>/dev/null | tr '\n' ' | ')"
+### /root/offline_watch_v3.sh
+176:    echo "登录态台账尾: $(tail -3 /root/login_state.log 2>/dev/null | tr '\n' ' | ')"
+--- [2] tick/health脚本里登录判定写台账逻辑 ---
+### /root/tick.sh
+### /root/netmon.sh
+--- [3] NapCat onSelfStatusChanged 源码位置 ---
+/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
+/root/Napcat/opt/QQ/resources/app/major.node
+/root/Napcat/opt/QQ/resources/app/wrapper.node
+--- [4] 命中文件里该段上下文 ---
+SRC=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
+文件类型: /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs: ASCII text
+大小: 3344922
+行号=36195
+    if (e) return e;
+    let r = this.context.wrapper.NodeQQNTWrapperUtil.getNTUserDataInfoConfig();
+    return r || (r = ge.resolve(it.homedir(), "./.config/QQ"), Ie.mkdirSync(r, { recursive: !0 })), r;
+  }
+  // Renamed from 'InitDataListener'
+  async initNapCatCoreListeners() {
+    const e = new X9();
+    e.onRecvOnlineFileMsg = (n) => {
+      n.forEach((i) => this.context.logger.logMessage(i, this.selfInfo));
+    }, e.onKickedOffLine = (n) => {
+      const i = `[KickedOffLine] [${n.tipsTitle}] ${n.tipsDesc}`;
+      this.context.logger.logError(i), this.selfInfo.online = !1, this.event.emit("KickedOffLine", i);
+    }, e.onRecvMsg = (n) => {
+      n.forEach((i) => this.context.logger.logMessage(i, this.selfInfo));
+    }, e.onAddSendMsg = (n) => {
+      this.context.logger.logMessage(n, this.selfInfo);
+    }, this.context.session.getMsgService().addKernelMsgListener(
+      Xu(e, this.context.logger)
+    );
+    const r = new sde();
+    r.onProfileDetailInfoChanged = (n) => {
+      n.uid === this.selfInfo.uid && Object.assign(this.selfInfo, n);
+    }, r.onSelfStatusChanged = (n) => {
+      if (n.status === 20) {
+        const i = this.selfInfo.online === !0;
+        this.selfInfo.online = !1, this.context.logger.log("账号状态变更为离线"), i && this.event.emit("SelfOffline", "[SelfOffline] 账号状态变更为离线（未收到 KickedOffLine 通知）");
+      } else
+        this.selfInfo.online = !0;
+    }, this.context.session.getProfileService().addKernelProfileListener(
+      Xu(r, this.context.logger)
+    );
+  }
+}
+async function hde(t, e, r, n, i, o) {
+  const s = ge.join(o, "NapCat", "temp");
+  Ie.mkdirSync(s, { recursive: !0 });
+  const c = {
+    win32: Ts.KWINDOWS,
+    darwin: Ts.KMAC,
+    linux: Ts.KLINUX
+  }[it.platform()] ?? Ts.KWINDOWS;
+  return {
+    selfUin: n,
+    selfUid: i,
+    desktopPathConfig: {
+      account_path: o
+      // 可以通过NodeQQNTWrapperUtil().getNTUserDataInfoConfig()获取
+    },
+    clientVer: r,
+    a2: "",
+    d2: "",
+--- [5] QQNT底层日志路径 ---
+2026-11-22 04:59:59.480000000 +0800 10389016 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-04.qqxlog
+2026-11-22 04:18:39.320000000 +0800 3297 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-20.qqxlog
+2026-11-22 05:59:59.110000000 +0800 10382533 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-05.qqxlog
+2026-11-22 07:59:59.660000000 +0800 10438981 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-07.qqxlog
+2026-11-22 08:59:59.180000000 +0800 10434223 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-08.qqxlog
+2026-11-22 09:59:59.500000000 +0800 10337037 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-09.qqxlog
+2026-11-22 13:59:59.460000000 +0800 7213149 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-13.qqxlog
+2026-11-22 14:51:18.790000000 +0800 10486551 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-14.qqxlog
+2026-11-22 15:03:40.660000000 +0800 1499599 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-14_1.qqxlog
+2026-11-22 16:03:30.040000000 +0800 5322675 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-15.qqxlog
+2026-11-22 17:00:29.640000000 +0800 5273040 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-16.qqxlog
+2026-11-22 17:18:02.920000000 +0800 1429745 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-22-17.qqxlog
+2026-11-23 03:59:59.920000000 +0800 4794640 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-23-03.qqxlog
+2026-11-23 04:59:59.320000000 +0800 9987327 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-23-04.qqxlog
+2026-11-23 05:59:59.010000000 +0800 9954125 /root/.config/QQ/global/nt_data/Log/log/prelogin-log_2026-11-23-05.qqxlog
+--- [6] NapCat目录结构(顶层) ---
+total 0
+drwxr-xr-x  3 root root   3488 Nov 12 00:23 .
+drwx------ 17 root root   8192 Nov 27 12:19 ..
+-rw-r--r--  1 root root   4096 Nov 12 00:23 guild1.db
+-rw-r--r--  1 root root  32768 Nov 23 13:37 guild1.db-shm
+-rw-r--r--  1 root root 436752 Nov 13 02:23 guild1.db-wal
+drwxr-xr-x  3 root root   3488 Nov 11 23:49 opt
+--- [7] autoheal当前md5+是否已含快照函数 ---
+3d7ca5c4100189f01448aafcc08d1e86  /root/azar_autoheal.sh
+0
+DONE=11-27 12:50:51
