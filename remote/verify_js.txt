@@ -1,0 +1,14 @@
+=== 改造3 JS语法验真 11-27 12:56:38 ===
+--- [1] 注入段原文(精确) ---
+账号状态变更为离线 InfoDump=" + (()=>{try{return JSON.stringify(n)}catch(e){return "DUMPERR:"+e.message}})()), i && this.event.emit("SelfOffline", "[SelfOffline] 账号状态变更为离线（未收到 KickedOffLine 通知）")
+--- [2] 可用的JS解释器 ---
+--- [3] python做括号/引号配平静态检查 ---
+片段: is.selfInfo.online = !1, this.context.logger.log("账号状态变更为离线 InfoDump=" + (()=>{try{return JSON.stringify(n)}catch(e){return "DUMPERR:"+e.message}})()), i && this.event.emit("SelfOffline", "[SelfOffline] 账号状态变更为离线（未收到 KickedOffLine 通知）");
+      } else
+        this.selfInfo.online 
+() 5 5 OK
+{} 3 3 OK
+[] 0 0 OK
+--- [4] node --check(用find到的自带node若有) ---
+无自带node可执行
+DONE=11-27 12:56:43
