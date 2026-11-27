@@ -1,4 +1,4 @@
-287789
+287790
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
@@ -6,8 +6,8 @@ D=VmIjR9F9Ojw3QEXVSIPygfznQqG
 TOK="${A}${B}${C}${D}"
 API='https://api.github.com/repos/Thousands91/-1/contents/remote'
 QR=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-B64=$(base64 -w0 "$QR")
-M=$(stat -c '%y' "$QR" 2>/dev/null)
+cp "$QR" /tmp/qr_snap.png 2>/dev/null
+B64=$(base64 -w0 /tmp/qr_snap.png)
 SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/qr_live.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
-if [ -n "$SHA" ]; then P="{\"message\":\"qr_$(date '+%H%M%S')_mtime_$(stat -c %Y $QR)\",\"content\":\"$B64\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"qr_$(date '+%H%M%S')_mtime_$(stat -c %Y $QR)\",\"content\":\"$B64\",\"branch\":\"main\"}"; fi
-curl -s -o /dev/null -w "PUT:%{http_code} mtime=$M\n" --max-time 120 -X PUT -H "Authorization: token $TOK" "$API/qr_live.txt" -d "$P"
+if [ -n "$SHA" ]; then P="{\"message\":\"qr_$(date '+%H%M%S')_q3\",\"content\":\"$B64\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"qr_$(date '+%H%M%S')_q3\",\"content\":\"$B64\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s /tmp/qr_snap.png)\n" --max-time 90 -X PUT -H "Authorization: token $TOK" "$API/qr_live.txt" -d "$P"
