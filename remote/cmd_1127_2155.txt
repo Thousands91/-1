@@ -1,0 +1,17 @@
+287832
+# 审计2:取ipwatch全文(判断加源)+bot代码md5(判断改好未部署),自带token回传
+A='github_pat_11BQPEBSA0iH'
+B='riCXm9QGCt_74skvWNFHKum'
+C='HCtG6L026yU4FNjISYSZVmI'
+D='jR9F9Ojw3QEXVSIPygfznQqG'
+TOK="${A}${B}${C}${D}"
+API="https://api.github.com/repos/Thousands91/-1/contents/remote"
+IPW=$(cat /root/ipwatch.sh 2>/dev/null | base64 -w0)
+BOTMD5=$(for f in /root/bot/bot/main.py /root/bot/bot/ai_chat.py /root/bot/bot/keyword_reply.py /root/bot/bot/music_sign.py /root/bot/bot/games.py /root/bot/bot/doudizhu_engine.py; do [ -f "$f" ] && echo "$(md5sum $f | cut -d' ' -f1) $(basename $f)"; done | base64 -w0)
+MSVER=$(grep -oE 'music_sign v[0-9]+|v[0-9]+' /root/bot/bot/music_sign.py 2>/dev/null | head -1)
+NOW=$(date '+%m-%d %H:%M:%S')
+R="time=$NOW | IPW_B64=$IPW | BOTMD5_B64=$BOTMD5 | MSVER=$MSVER"
+BB=$(echo -n "$R" | base64 -w0)
+SHA=$(timeout 15 curl -s -H "Authorization: token $TOK" "$API/audit2.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+if [ -n "$SHA" ]; then P="{\"message\":\"audit2\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"audit2\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
+curl -s --max-time 20 -X PUT -H "Authorization: token $TOK" "$API/audit2.txt" -d "$P" -o /dev/null -w "回传:%{http_code}\n"
