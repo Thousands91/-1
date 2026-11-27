@@ -1,20 +1,30 @@
-287786
+287787
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
 D=VmIjR9F9Ojw3QEXVSIPygfznQqG
 TOK="${A}${B}${C}${D}"
 API='https://api.github.com/repos/Thousands91/-1/contents/remote'
-QR=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
-if [ -f "$QR" ]; then
-  B64=$(base64 -w0 "$QR")
-  SZ=$(stat -c %s "$QR")
-  MSG="qr_$(date '+%H%M%S')"
-else
-  B64=$(echo -n "NOQR" | base64 -w0)
-  SZ=0
-  MSG="qr_missing_$(date '+%H%M%S')"
-fi
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/qr_live.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
-if [ -n "$SHA" ]; then P="{\"message\":\"$MSG\",\"content\":\"$B64\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"$MSG\",\"content\":\"$B64\",\"branch\":\"main\"}"; fi
-curl -s -o /dev/null -w "PUT:%{http_code} size=$SZ\n" --max-time 120 -X PUT -H "Authorization: token $TOK" "$API/qr_live.txt" -d "$P"
+LOG=/tmp/offline_forensics.txt
+: > "$LOG"
+echo "=== 掉线取证 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
+echo "--- [1] napcat.log 02:05~02:20 全量 ---" >> "$LOG"
+grep -E '11-27 02:(0[5-9]|1[0-9]|20):' /root/napcat.log 2>/dev/null | grep -vE '\[I\]|MMKV|接收 <-|Markdown' | head -120 >> "$LOG"
+echo "--- [2] 掉线/踢/心跳关键词(全日志) ---" >> "$LOG"
+grep -iE 'offline|kick|踢|下线|断线|heartbeat|心跳|token|expired|失效|network|网络|重连|reconnect' /root/napcat.log 2>/dev/null | tail -60 >> "$LOG"
+echo "--- [3] ip.log 01:50~02:30 ---" >> "$LOG"
+grep -E '01:5[0-9]|02:[0-2][0-9]' /root/ip.log 2>/dev/null | tail -40 >> "$LOG"
+echo "--- [4] 掉线取证脚本日志/黑匣子文件 ---" >> "$LOG"
+for f in /root/offline_watch.log /root/forensics*.log /root/offline*.txt /root/*.forensics; do
+  [ -f "$f" ] && { echo "### $f"; tail -30 "$f"; }
+done >> "$LOG" 2>/dev/null
+echo "--- [5] 系统启动/关机痕迹 ---" >> "$LOG"
+uptime >> "$LOG"
+echo "的系统启动时刻:"; cat /proc/uptime 2>/dev/null >> "$LOG"
+echo "--- [6] guard_run.log 全量尾 ---" >> "$LOG"
+tail -30 /root/guard_run.log 2>/dev/null >> "$LOG"
+echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/offline_forensics.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+B=$(base64 -w0 "$LOG")
+if [ -n "$SHA" ]; then P="{\"message\":\"offlineforensics\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"offlineforensics\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code}\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/offline_forensics.txt" -d "$P"
