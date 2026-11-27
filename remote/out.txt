@@ -1,53 +1,27 @@
-<<<task_287835.txt>>>
-===== 任务287835 11-27 22:12:24 =====
+<<<task_287836.txt>>>
+===== 任务287836 11-27 22:18:41 =====
 --- 命令 ---
-# 精确补查：给每个grep加标签，定位main.py/doudizhu_engine.py真实路径。只读。
-echo "=== main/engine真实路径 ==="
-ls -la /root/bot/bot/main.py /root/bot/bot/doudizhu_engine.py 2>/dev/null | awk '{print $5,$9}'
-find /root/bot -name 'doudizhu_engine.py' -o -name 'main.py' 2>/dev/null
-echo "=== ai_chat md5 ==="
-md5sum /root/bot/bot/plugins/ai_chat.py 2>/dev/null | cut -d' ' -f1
-echo "=== 特征计数(带标签) ==="
-echo "atomic_osreplace=$(grep -c 'os.replace' /root/bot/bot/plugins/ai_chat.py 2>/dev/null)"
-echo "segment_gap=$(grep -c 'AI_SEGMENT_GAP_SEC' /root/bot/bot/plugins/ai_chat.py 2>/dev/null)"
-echo "bio_self=$(grep -c '_BIO_SELF_RE' /root/bot/bot/plugins/ai_chat.py 2>/dev/null)"
-echo "asked_person=$(grep -c '_asked_person_name' /root/bot/bot/plugins/ai_chat.py 2>/dev/null)"
-echo "memory_path=$(grep -c '_memory_path' /root/bot/bot/plugins/ai_chat.py 2>/dev/null)"
-echo "owner_only=$(grep -c '_owner_only_private' /root/bot/bot/plugins/image_search_multisource.py 2>/dev/null)"
-echo "invalid_hint_engine=$(grep -c 'invalid_hint' /root/bot/bot/doudizhu_engine.py 2>/dev/null)"
-echo "deliver_hand_ddz=$(grep -c 'deliver_hand' /root/bot/bot/plugins/doudizhu.py 2>/dev/null)"
-echo "ddz_fuzzy_ddz=$(grep -c 'ddz_fuzzy' /root/bot/bot/plugins/doudizhu.py 2>/dev/null)"
-echo "assert_cmd_ddz=$(grep -c 'assert_cmd\|出牌' /root/bot/bot/plugins/doudizhu.py 2>/dev/null)"
-echo "=== bot插件加载数(最近日志) ==="
-grep -c 'Succeeded' /root/bot.log 2>/dev/null | tail -1
-echo "=== DONE2 ==="
+# 只读：核实设备 remote_ctl.sh 的 make_bundle 是否有 >3 丢弃逻辑（坑1000线索）。不改动。
+echo "=== remote_ctl.sh 路径与md5 ==="
+md5sum /root/remote_ctl.sh 2>/dev/null | cut -d' ' -f1
+echo "=== make_bundle 定义段 ==="
+grep -n 'make_bundle' /root/remote_ctl.sh 2>/dev/null
+echo "--- 函数体(含tail/head/ls -t丢弃逻辑?) ---"
+awk '/make_bundle\(\)/,/^}/' /root/remote_ctl.sh 2>/dev/null | head -30
+echo "=== 丢弃逻辑关键词 ==="
+echo "tail_n=$(grep -c 'tail -n +4\|tail -n +5\|head -3\|ls -t' /root/remote_ctl.sh 2>/dev/null)"
+echo "PBOX清理=$(grep -c '.remote_pending.*rm\|task_.*rm' /root/remote_ctl.sh 2>/dev/null)"
+echo "=== 当前PBOX与bundle大小 ==="
+echo "PBOX数=$(ls /root/.remote_pending/task_*.txt 2>/dev/null | wc -l)"
+echo "=== DONE3 ==="
 --- 输出 ---
-=== main/engine真实路径 ===
-15283 /root/bot/bot/doudizhu_engine.py
-979 /root/bot/bot/main.py
-/root/bot/bot/main.py
-/root/bot/bot/doudizhu_engine.py
-/root/bot/venv/lib/python3.10/site-packages/pip/_internal/main.py
-/root/bot/venv/lib/python3.10/site-packages/pip/_internal/cli/main.py
-/root/bot/venv/lib/python3.10/site-packages/dotenv/main.py
-/root/bot/venv/lib/python3.10/site-packages/annotated_doc/main.py
-/root/bot/venv/lib/python3.10/site-packages/uvicorn/main.py
-/root/bot/venv/lib/python3.10/site-packages/pydantic/main.py
-/root/bot/venv/lib/python3.10/site-packages/pydantic/v1/main.py
-/root/bot/venv/lib/python3.10/site-packages/watchfiles/main.py
-=== ai_chat md5 ===
-437cd23a183ea169f7d604432f8990f4
-=== 特征计数(带标签) ===
-atomic_osreplace=5
-segment_gap=1
-bio_self=2
-asked_person=2
-memory_path=6
-owner_only=2
-invalid_hint_engine=1
-deliver_hand_ddz=6
-ddz_fuzzy_ddz=4
-assert_cmd_ddz=10
-=== bot插件加载数(最近日志) ===
-101
-=== DONE2 ===
+=== remote_ctl.sh 路径与md5 ===
+0c7ab885890af30025b5ca7a4f707abb
+=== make_bundle 定义段 ===
+--- 函数体(含tail/head/ls -t丢弃逻辑?) ---
+=== 丢弃逻辑关键词 ===
+tail_n=0
+PBOX清理=0
+=== 当前PBOX与bundle大小 ===
+PBOX数=1
+=== DONE3 ===
