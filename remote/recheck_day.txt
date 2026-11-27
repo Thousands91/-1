@@ -1,0 +1,72 @@
+=== 今日结论复核 11-27 13:01:38 ===
+--- [1] 11-27首次ErrCode:3上下文(判断-q还是刷码流程) ---
+首行=51357
+5e913d81b5b3d82bd840b839cb90b0b76b592620d85ba6035dd4e8bac5253500
+f5cd9a9bf96365b3ff470424a34e2d23c7c01a27ecf54b7305d8bb796aa0de4d
+219fb464bf9725bc0b0f1cf96bda7902a3b24cfc0925984b6b09cb748e93ee5d
+2ba73ee2cd90de1088c6ce8f23efdeaada6173677a6cd34208911b4744ad96fc
+469e59a7652d98deda3b403aacc7acbe4217a2069cca88336b1448e1f8fdaa17
+8241861db3262aa95179159dcc9bcf5d5b4fc6fb1f2732afe1416d94efa5fae8
+d11cc1c337b880ef302cf789757bafb240e2078ad700e0ec77dda74cbb501d6b
+00a2ed7f4aaf423e004e42b481e1b05ae71bf33cd36a4e3f46eb2cea54566ab2
+5f5daf4feccfbeb297fb87ee03a422b781e8a7eac9bb9bacdf3419c9c1f3b44b
+bbd04de03760aebc900bafa657463ec1e1dd03f108d0d77fcc8ee792a7360658
+f5a203f212566aabf66a146bb70b6d9c7bf7edff397c1d56f035d637b368a894
+0606fc1816bdafb8fde5e563ecb80a2c4820638a216c55895115a0b964bb27d1
+11-27 02:17:44 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+fdb0fe40c7e206a2f16877e16fac58aa2461b04d416785946fd6f3e40f2bacaf
+14abf2d0881b9f7b4fb15a01458fbc27427df4203622b93c47a6d857085a078f
+11-27 02:17:44 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+11-27 02:17:44 [[33mwarn[39m] 
+
+▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+█ ▄▄▄▄▄ █ ██▀▀▄█▄▀ ▀▀▀██▄██ ▄▄▄▄▄ █
+█ █   █ █  ▀█ ▀█ ▄ ▀█  █ ██ █   █ █
+--- [2] 11-27某次ErrCode:3后紧跟什么(取中段) ---
+第50次行=56027
+0f6fbffe1b12ddb6a488ea90508ef63e3a22e8c0205342abc9921ce68500cccc
+cec3889de244b8edc8c52ac6d09b7d2534c592de5a61763c01001b862bd32c54
+e19437699fa5980c4a733dfee8a446a8c96feb24322bdf57cac77f9cc77701a4
+766cac99d5765b2d385c5158cacecc19dc98c904c7922b8bda6cc8b0816136ef
+11-27 04:09:46 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+63ad90cee40e7fc8a337895163f7f6e93acbda82c9d426b42c70f1dee7e9c59e
+11-27 04:09:46 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+11-27 04:09:46 [[33mwarn[39m] 
+
+▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+█ ▄▄▄▄▄ █▄▄███▀▄█▀▄█▄▄▄  ██ ▄▄▄▄▄ █
+█ █   █ █ ▀█ ▄ █▀ ██▀▄█▄███ █   █ █
+█ █▄▄▄█ █▄ ▄▄▀▀█▄██▄▀▀█▄▄ █ █▄▄▄█ █
+█▄▄▄▄▄▄▄█▄▀▄▀▄█ █ ▀▄█ █▄█ █▄▄▄▄▄▄▄█
+█ ▄ ▄▀█▄▀ ▀████▀▄█▀ ▀▀▀█▀▄▄▀█▄▄ ▀ █
+█ ▄▄▄ ▄▄█▄██▀▀▀▄▀█▄█▀▀▄▄  █ ▀▄█▄ ▄█
+██▄▄█▀▄▄▀▄ ▀ █▄█ ▀▄█ █▀▀▀ ▄█▄▄ ▀▀██
+--- [3] 所有用-q的脚本及日志重定向 ---
+/root/azar_autoheal.sh:79:    ( cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 < /dev/null & )
+/root/azar_session_heal.sh:103:    ( cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 < /dev/null & )
+/root/remote_ctl_v6.sh:134:  cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox >> /root/napcat-restart.log 2>&1 &
+/data/data/com.termux/files/home/.termux/boot/asar_boot.sh:8:cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat.log 2>&1 < /dev/null &
+--- [4] restart.log里'二维码已被扫描'/'登录成功'全记录 ---
+count=0
+--- [5] 11-23扫码成功后~11-24掉线间restart.log有无-q尝试 ---
+该时段行数=0
+--- [6] 设备实际mjs的onSelfStatusChanged源码(确认源码结论) ---
+onSelfStatusChanged = (n) => {
+
+--- [7] login_state.log是否记过err字段(历史原因码) ---
+含err=行数=0
+2026-11-13 11:41:30 状态变化: 初始 -> [未登录]
+2026-11-13 11:46:31 [未登录]
+2026-11-13 11:51:31 [未登录]
+--- [8] 11-27 02:14掉线瞬间napcat.log有无原因码类字段 ---
+[I] <MMKV.cpp:1178::sync> MMKV::sync, SyncFlag = 1
+28c1568970491d1ba6eab583cf6459b4c263f451aeb2cd98aa7b2bb6f38f9091
+11-27 02:11:25 [[32minfo[39m] 阿萨尔 | [ServerTime] 时间同步完成，偏差 -769ms
+11-27 02:14:41 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+d495952ca81ff9305d835d1b854abea524cf65f698c7d4789a49be49ca338542
+[22082:1127/021524.541663:ERROR:content/common/zygote/zygote_communication_linux.cc:293] Failed to send GetTerminationStatus message to zygote
+[22082:1127/021524.571537:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[22082:1127/021524.577749:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[22082:1127/021524.583309:ERROR:content/browser/gpu/gpu_process_host.cc:997] GPU process launch failed: error_code=1002
+[22082:1127/021524.585161:FATAL:content/browser/gpu/gpu_data_manager_impl_private.cc:415] GPU process isn't usable. Goodbye.
+DONE=11-27 13:01:39
