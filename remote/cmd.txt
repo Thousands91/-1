@@ -1,37 +1,21 @@
-287834
-# 只读审计：核对"未部署"功能是否其实已上车 + 心跳/IP/PBOX 现状。不碰登录态、不改任何文件。
-echo "===== [1] bot目录结构 ====="
-ls -la /root/bot/*.py 2>/dev/null | awk '{print $5,$9}'
-echo "--- plugins ---"
-ls /root/bot/bot/plugins/*.py 2>/dev/null | xargs -n1 basename 2>/dev/null
-echo "===== [2] 关键文件md5 ====="
-for f in /root/bot/main.py /root/bot/doudizhu_engine.py /root/bot/bot/plugins/ai_chat.py /root/bot/bot/plugins/keyword_reply.py /root/bot/bot/plugins/doudizhu.py /root/bot/bot/plugins/fortune.py /root/bot/bot/plugins/image_search_multisource.py; do
-  [ -f "$f" ] && md5sum "$f" || echo "MISSING $f"
-done
-echo "===== [3] 11-22功能特征码是否在设备上(判断未部署是否过时) ====="
-echo "-- ai_chat: 原子写os.replace --"
-grep -c 'os.replace' /root/bot/bot/plugins/ai_chat.py 2>/dev/null
-echo "-- ai_chat: 话题分段AI_SEGMENT_GAP_SEC --"
-grep -c 'AI_SEGMENT_GAP_SEC' /root/bot/bot/plugins/ai_chat.py 2>/dev/null
-echo "-- ai_chat: 记忆三修复 _BIO_SELF_RE/_asked_person_name/_memory_path --"
-grep -c '_BIO_SELF_RE' /root/bot/bot/plugins/ai_chat.py 2>/dev/null
-grep -c '_asked_person_name' /root/bot/bot/plugins/ai_chat.py 2>/dev/null
-echo "-- image_search: owner only _owner_only_private --"
-grep -c '_owner_only_private' /root/bot/bot/plugins/image_search_multisource.py 2>/dev/null
-echo "-- doudizhu: invalid_hint / deliver_hand / ddz_fuzzy --"
-grep -c 'invalid_hint' /root/bot/doudizhu_engine.py 2>/dev/null
-grep -c 'deliver_hand' /root/bot/bot/plugins/doudizhu.py 2>/dev/null
-grep -c 'ddz_fuzzy' /root/bot/bot/plugins/doudizhu.py 2>/dev/null
-echo "===== [4] 心跳/回传/PBOX ====="
-echo "-- PBOX文件数 --"
-ls /root/.remote_pending/task_*.txt 2>/dev/null | wc -l
-echo "-- ipwatch进程 --"
-pgrep -af '[i]pwatch' | head -3
-echo "-- ip.log尾3 --"
-tail -3 /root/ip.log 2>/dev/null
-echo "-- status提交(经git log) --"
-cd /root 2>/dev/null && git log -3 --format='%cd %s' --date=format:'%m-%d %H:%M' 2>/dev/null | head -5
-echo "===== [5] 遥控/QQ/bot进程 ====="
-pgrep -af '[r]emote_ctl' | head -2
-pgrep -af '[m]ain.py' | head -2
-echo "===== AUDIT_DONE ====="
+287835
+# 精确补查：给每个grep加标签，定位main.py/doudizhu_engine.py真实路径。只读。
+echo "=== main/engine真实路径 ==="
+ls -la /root/bot/bot/main.py /root/bot/bot/doudizhu_engine.py 2>/dev/null | awk '{print $5,$9}'
+find /root/bot -name 'doudizhu_engine.py' -o -name 'main.py' 2>/dev/null
+echo "=== ai_chat md5 ==="
+md5sum /root/bot/bot/plugins/ai_chat.py 2>/dev/null | cut -d' ' -f1
+echo "=== 特征计数(带标签) ==="
+echo "atomic_osreplace=$(grep -c 'os.replace' /root/bot/bot/plugins/ai_chat.py 2>/dev/null)"
+echo "segment_gap=$(grep -c 'AI_SEGMENT_GAP_SEC' /root/bot/bot/plugins/ai_chat.py 2>/dev/null)"
+echo "bio_self=$(grep -c '_BIO_SELF_RE' /root/bot/bot/plugins/ai_chat.py 2>/dev/null)"
+echo "asked_person=$(grep -c '_asked_person_name' /root/bot/bot/plugins/ai_chat.py 2>/dev/null)"
+echo "memory_path=$(grep -c '_memory_path' /root/bot/bot/plugins/ai_chat.py 2>/dev/null)"
+echo "owner_only=$(grep -c '_owner_only_private' /root/bot/bot/plugins/image_search_multisource.py 2>/dev/null)"
+echo "invalid_hint_engine=$(grep -c 'invalid_hint' /root/bot/bot/doudizhu_engine.py 2>/dev/null)"
+echo "deliver_hand_ddz=$(grep -c 'deliver_hand' /root/bot/bot/plugins/doudizhu.py 2>/dev/null)"
+echo "ddz_fuzzy_ddz=$(grep -c 'ddz_fuzzy' /root/bot/bot/plugins/doudizhu.py 2>/dev/null)"
+echo "assert_cmd_ddz=$(grep -c 'assert_cmd\|出牌' /root/bot/bot/plugins/doudizhu.py 2>/dev/null)"
+echo "=== bot插件加载数(最近日志) ==="
+grep -c 'Succeeded' /root/bot.log 2>/dev/null | tail -1
+echo "=== DONE2 ==="
