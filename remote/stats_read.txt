@@ -1,0 +1,211 @@
+=== 统计+脚本读取 11-27 12:12:54 ===
+--- [1] session_heal脚本全文 ---
+#!/bin/bash
+# azar_session_heal.sh v1.0 — 会话超时(静默离线)自动恢复，保守熔断（2026-11-22）
+# 背景：进程活着但QQ协议层会话超时(账号状态变更为离线、无KickedOffLine)= "脑死亡"，
+#       原azar_guard.sh只在QQ进程消失时才拉起，/sdk覆盖不到这类，故补本脚本。
+# 只做一件受严格约束的事：静默离线时用 -q 快速登录重启QQ，恢复会话。
+#
+# 【安全铁律 / 绝不能违反】
+#  1. 出现 KickedOffLine（被服务端踢）= 登录态作废，自动重启无效且会触发风控 → 一律跳过，只告警。
+#  2. 失败熔断：连续3次重启仍上线失败 → 停手写标记，等人工扫码；绝不无限重试。
+#  3. 节流：两次重启至少间隔5分钟；每小时最多3次。
+#  4. 一旦判到 [在线] → 立即清零失败计数与标记。
+#  5. 只重启 QQ/NapCat 进程，绝不碰 bot / 取证器 / 登录态数据。
+#
+# 可注入环境变量便于沙箱自测：
+#   OW_LOG_A / OW_LOG_B   日志路径
+#   OW_LOGINCHECK         登录态判定命令（输出含 [在线]/[掉线]/[未登录]）
+#   OW_STARTQQ            重启QQ的命令
+#   OW_STATE / OW_LOCK / OW_RUNDIR   状态文件/锁/计数目录
+#   OW_DRY_RUN=1          自测模式：不真重启
+#   OW_ONCE=1             只跑一轮
+
+STAMP() { date '+%m-%d %H:%M:%S'; }
+
+# RUNDIR 必须在单例锁之前建好(避免并发时目录被删导致写文件失败)
+RUNDIR="${OW_RUNDIR:-/root/.session_heal}"
+mkdir -p "$RUNDIR" 2>/dev/null
+
+LOG_A="${OW_LOG_A:-/root/napcat.log}"
+LOG_B="${OW_LOG_B:-/root/napcat-restart.log}"
+STATE="${OW_STATE:-/root/session_heal_state.txt}"
+LOCK="${OW_LOCK:-/root/.session_heal.lock}"
+DRY="${OW_DRY_RUN:-0}"
+ONCE="${OW_ONCE:-0}"
+
+mkdir -p "$RUNDIR" 2>/dev/null
+CNT="$RUNDIR/fail_cnt"
+HR="$RUNDIR/hour"
+LAST="$RUNDIR/last_restart"
+KICKED="$RUNDIR/kicked_flag"
+NEEDMAN="$RUNDIR/need_manual"
+
+say() { echo "[$(STAMP)] $*" >> "$STATE"; }
+
+# ---- 单例锁(PID文件 + kill -0,不依赖flock,适配proot文件系统) ----
+# 实测 proot/fuse 上 flock 排他语义不可靠(两进程都能打开同一锁文件),
+# 故改用 PID 文件存活检测:启动时若已有存活的本脚本实例,立即退出。
+MYLOCK="$LOCK.pid"
+if [ -f "$MYLOCK" ]; then
+  OLPID=$(tr -d ' ' < "$MYLOCK" 2>/dev/null)
+  if [ -n "$OLPID" ] && [ "$OLPID" != "$$" ] && kill -0 "$OLPID" 2>/dev/null \
+     && tr -d '\0' < "/proc/$OLPID/cmdline" 2>/dev/null | grep -q 'session_heal'; then
+    exit 0
+  fi
+fi
+echo $$ > "$MYLOCK"
+trap 'rm -f "$MYLOCK" 2>/dev/null' EXIT
+
+# ---- 登录态判定：返回 online | offline | unlogin ----
+login_state() {
+  local out
+  if [ -n "$OW_LOGINCHECK" ]; then
+    out=$(eval "$OW_LOGINCHECK" 2>/dev/null)
+  else
+    out=$(bash /root/logincheck.sh 2>/dev/null)
+  fi
+  case "$out" in
+    *'[在线]'*)   echo online ;;
+    *'[掉线]'*)   echo offline ;;
+    *'[未登录]'*) echo unlogin ;;
+    *)            echo unknown ;;
+  esac
+}
+
+# ---- 最近N分钟内是否有 KickedOffLine（被踢原文）----
+# 用日志行内时间戳判断，避免历史残留误伤
+has_kick_recent() {
+  local win="${OW_KICKWIN:-900}" now ts age found=0 f ln yr
+  now=$(date +%s); yr=$(date +%Y)
+  for f in "$LOG_A" "$LOG_B"; do
+    [ -f "$f" ] || continue
+    # 取最后200行里含KickedOffLine的
+    while IFS= read -r ln; do
+      case "$ln" in *KickedOffLine*) ;; *) continue ;; esac
+      ts=$(echo "$ln" | grep -oE '[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}' | head -1)
+      [ -z "$ts" ] && { found=1; break; }
+      age=$(date -d "$yr-$ts" +%s 2>/dev/null || echo 0)
+      if [ $((now-age)) -le "$win" ]; then found=1; break; fi
+    done < <(tail -200 "$f" 2>/dev/null)
+    [ "$found" = 1 ] && break
+  done
+  echo "$found"
+}
+
+# ---- 重启QQ（快速登录）----
+start_qq() {
+  if [ "$DRY" = 1 ]; then
+    say "DRY_RUN: 模拟重启QQ(-q快速登录)"
+    return 0
+  fi
+  if [ -n "$OW_STARTQQ" ]; then
+    eval "$OW_STARTQQ" >> "$STATE" 2>&1
+  else
+    ( cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 < /dev/null & )
+  fi
+}
+
+can_restart() {
+  local now LR H CH H2 C RC
+  now=$(date +%s)
+  # 熔断标记：连续3次失败后停手
+  [ -f "$NEEDMAN" ] && return 1
+  # 距上次重启至少5分钟
+  LR=$(cat "$LAST" 2>/dev/null || echo 0)
+  [ $((now-LR)) -lt 300 ] && return 1
+  # 每小时最多3次
+  H=$(date +%H)
+  read C H2 < "$HR" 2>/dev/null || { C=0; H2=$H; }
+  [ "$H" != "$H2" ] && { C=0; H2=$H; }
+  [ "$C" -ge 3 ] && return 1
+  echo "$((C+1)) $H2" > "$HR"
+  echo "$now" > "$LAST"
+  return 0
+}
+
+reset_ok() {
+  echo 0 > "$CNT"; rm -f "$KICKED" "$NEEDMAN"
+}
+
+say "会话恢复器v1.0启动"
+
+while true; do
+  ST=$(login_state)
+
+  if [ "$ST" = online ]; then
+    # 在线：清零一切
+    if [ -s "$CNT" ] && [ "$(cat "$CNT")" != 0 ] || [ -f "$NEEDMAN" ]; then
+      say "检测到在线，清零失败计数与标记"
+    fi
+    reset_ok
+  else
+    # 不在线：先看是否被踢
+    KICK=$(has_kick_recent)
+    if [ "$KICK" = 1 ]; then
+      if [ ! -f "$KICKED" ]; then
+        echo "$(date +%s)" > "$KICKED"
+        say "窗口内发现KickedOffLine(被服务端踢)→跳过自动恢复，只告警等人扫码"
+      fi
+    elif [ -f "$KICKED" ]; then
+      # 曾被踢且尚未恢复在线：即使窗口过去也持续跳过，绝不-q重试(防风控)
+      :  # 静默等待人工扫码或登录态自然恢复
+    else
+      # 无被踢=静默离线，可尝试恢复
+      if can_restart; then
+        C=$(cat "$CNT" 2>/dev/null || echo 0)
+        say "静默离线($ST)，第$((C+1))次尝试-q快速登录恢复"
+        start_qq
+        C=$((C+1)); echo "$C" > "$CNT"
+        # 等一会儿看是否恢复
+        sleep "${OW_WAIT:-20}"
+        ST2=$(login_state)
+        if [ "$ST2" = online ]; then
+          say "恢复成功，清零"
+          reset_ok
+        elif [ "$C" -ge 3 ]; then
+          echo "$(date +%s)" > "$NEEDMAN"
+          say "连续3次恢复失败→熔断停手，写need_manual标记，等人工扫码"
+        else
+          say "本次未恢复(累计失败$C次)，等待下次窗口"
+        fi
+      fi
+    fi
+  fi
+
+  [ "$ONCE" = 1 ] && break
+  sleep 60
+done
+echo "=====完====="
+--- [2] session_heal_state.txt 全文 ---
+[11-22 14:24:46] 会话恢复器v1.0启动
+[11-22 14:24:47] 静默离线(unlogin)，第1次尝试-q快速登录恢复
+[11-22 14:25:07] 本次未恢复(累计失败1次)，等待下次窗口
+[11-22 14:29:56] 会话恢复器v1.0启动
+[11-22 14:30:02] 静默离线(unknown)，第1次尝试-q快速登录恢复
+[11-22 14:30:23] 本次未恢复(累计失败1次)，等待下次窗口
+[11-22 14:33:46] 会话恢复器v1.0启动
+[11-22 14:33:47] 静默离线(unlogin)，第1次尝试-q快速登录恢复
+[11-22 14:34:16] 本次未恢复(累计失败1次)，等待下次窗口
+[11-22 14:38:31] 会话恢复器v1.0启动
+[11-22 14:38:31] 静默离线(unlogin)，第1次尝试-q快速登录恢复
+[11-22 14:39:02] 本次未恢复(累计失败1次)，等待下次窗口
+[11-22 14:44:43] 静默离线(unknown)，第2次尝试-q快速登录恢复
+[11-22 14:45:39] 本次未恢复(累计失败2次)，等待下次窗口
+[11-22 14:50:50] 静默离线(unknown)，第3次尝试-q快速登录恢复
+[11-22 14:51:42] 连续3次恢复失败→熔断停手，写need_manual标记，等人工扫码
+--- [3] session_heal_state 成功统计 ---
+总行数=16
+含'恢复成功/已恢复/online':
+--- [4] napcat.log 扫码登录/登录成功时间点(11-23~11-27) ---
+11-23 13:37:02 [[32minfo[39m] [Core] [Login] 二维码已被扫描，等待确认...
+--- [5] napcat-restart.log 11-23~11-27 登录成功/扫码记录 ---
+--- [6] .session_heal目录现状 ---
+total 0
+drwxr-xr-x  2 root root 3488 Nov 22 14:51 .
+drwx------ 17 root root 8192 Nov 26 01:38 ..
+-rw-r--r--  1 root root    2 Nov 22 14:50 fail_cnt
+-rw-r--r--  1 root root    5 Nov 22 14:50 hour
+-rw-r--r--  1 root root   11 Nov 22 14:50 last_restart
+-rw-r--r--  1 root root   11 Nov 22 14:51 need_manual
+DONE=11-27 12:12:54
