@@ -1,40 +1,53 @@
-287807
+287808
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
 D=VmIjR9F9Ojw3QEXVSIPygfznQqG
 TOK="${A}${B}${C}${D}"
 API='https://api.github.com/repos/Thousands91/-1/contents/remote'
-LOG=/tmp/q_success_audit2.txt
+LOG=/tmp/qarg_audit.txt
 : > "$LOG"
-echo "=== -q成功审计2:重启史判据 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
+NJ=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs
+echo "=== -q参数传递链审计 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
 
-echo "--- [1] napcat.log里所有启动痕迹(NapCat版本/Wrapper启动) ---" >> "$LOG"
-grep -nE 'NapCat.*[Vv]ersion|\[NapCat\] 版本|Wrapper.*启动|正在启动|启动 NapCat|NapCat加载|加载成功' /root/napcat.log 2>/dev/null | head -30 >> "$LOG"
+echo "--- [1] napcat.mjs里'没有 -q 指令'判断逻辑(前后各12行) ---" >> "$LOG"
+LN=$(grep -n '没有 -q 指令指定快速登录' "$NJ" 2>/dev/null | head -1 | cut -d: -f1)
+echo "行号=$LN" >> "$LOG"
+if [ -n "$LN" ]; then S=$((LN-12)); [ $S -lt 1 ] && S=1; sed -n "${S},$((LN+14))p" "$NJ" >> "$LOG"; fi
 
-echo "--- [2] napcat.log里'可用于快速登录 of QQ'出现几次(带-q启动才会打印) ---" >> "$LOG"
-echo "次数=$(grep -c '可用于快速登录 of QQ' /root/napcat.log 2>/dev/null)" >> "$LOG"
-grep -n '可用于快速登录 of QQ' /root/napcat.log 2>/dev/null >> "$LOG"
-echo "restart.log次数=$(grep -c '可用于快速登录 of QQ' /root/napcat-restart.log 2>/dev/null)" >> "$LOG"
+echo "--- [2] '可用于快速登录 of QQ'判断逻辑 ---" >> "$LOG"
+LN2=$(grep -n '可用于快速登录 of QQ' "$NJ" 2>/dev/null | head -1 | cut -d: -f1)
+echo "行号=$LN2" >> "$LOG"
+if [ -n "$LN2" ]; then S=$((LN2-8)); [ $S -lt 1 ] && S=1; sed -n "${S},$((LN2+10))p" "$NJ" >> "$LOG"; fi
 
-echo "--- [3] 设备重启史:从各日志'启动/welcome'痕迹找 ---" >> "$LOG"
-for f in /root/ip.log /root/netmon.log /root/health.log /root/tick.log; do
-  echo "### $f 首行: $(head -1 $f 2>/dev/null | cut -c1-80)"
-done >> "$LOG"
+echo "--- [3] qq启动器文件类型+前40行 ---" >> "$LOG"
+file /root/Napcat/opt/QQ/qq 2>/dev/null >> "$LOG"
+ls -la /root/Napcat/opt/QQ/qq 2>/dev/null >> "$LOG"
+head -40 /root/Napcat/opt/QQ/qq 2>/dev/null >> "$LOG"
 
-echo "--- [4] napcat.log总行数+时间戳跨度 ---" >> "$LOG"
-echo "行数=$(wc -l < /root/napcat.log)" >> "$LOG"
-echo "首条时间: $(grep -oE '[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}' /root/napcat.log 2>/dev/null | head -1)" >> "$LOG"
-echo "末条时间: $(grep -oE '[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}' /root/napcat.log 2>/dev/null | tail -1)" >> "$LOG"
+echo "--- [4] xvfb-run路径+它怎么处理参数 ---" >> "$LOG"
+XR=$(command -v xvfb-run 2>/dev/null); echo "xvfb-run=$XR" >> "$LOG"
+[ -n "$XR" ] && grep -nE 'while|shift|argv|"\$\@"|exec|command' "$XR" 2>/dev/null | head -25 >> "$LOG"
 
-echo "--- [5] napcat.log里'二维码已保存'次数(=扫码轮次) ---" >> "$LOG"
-echo "次数=$(grep -c '二维码已保存' /root/napcat.log 2>/dev/null)" >> "$LOG"
+echo "--- [5] 当前状态:13:12重启后开机自启有没有写napcat.log ---" >> "$LOG"
+stat -c '%y %s' /root/napcat.log 2>/dev/null >> "$LOG"
+tail -8 /root/napcat.log 2>/dev/null >> "$LOG"
+echo "--- 当前QQ进程命令行 ---" >> "$LOG"
+ps -eo pid,etime,args | grep '[o]pt/QQ/qq' | head -3 >> "$LOG"
 
-echo "--- [6] 关键:扫码成功后到下次掉线间,有无'重新走-q成功'的迹象 ---" >> "$LOG"
-echo "11-23 13:37扫码后,napcat.log在13:37~23:59的行数=$(grep -cE '11-23 1[3-9]:|11-23 2[0-3]:' /root/napcat.log 2>/dev/null)" >> "$LOG"
+echo "--- [6] 11-23 13:36那次启动的触发源(谁在13:35~13:36动了) ---" >> "$LOG"
+grep -nE '11-23 13:3[4-8]' /root/remote_ctl.log 2>/dev/null | tail -15 >> "$LOG"
+echo "### guard_run.log全文" >> "$LOG"
+cat /root/guard_run.log 2>/dev/null >> "$LOG"
+
+echo "--- [7] 开机自启脚本全文 ---" >> "$LOG"
+cat /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null >> "$LOG"
+
+echo "--- [8] 现在时间/uptime ---" >> "$LOG"
+date '+%F %T' >> "$LOG"; uptime >> "$LOG"
 
 echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/q_success_audit2.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/qarg_audit.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
 B=$(base64 -w0 "$LOG")
-if [ -n "$SHA" ]; then P="{\"message\":\"qsuccessaudit2\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"qsuccessaudit2\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
-curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/q_success_audit2.txt" -d "$P"
+if [ -n "$SHA" ]; then P="{\"message\":\"qargaudit\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"qargaudit\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/qarg_audit.txt" -d "$P"
