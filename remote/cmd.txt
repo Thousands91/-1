@@ -1,19 +1,21 @@
-287821
-# 收尾:确认remote_ctl活着+清理诊断临时文件(设备本地)+报告最终状态
+287822
+# 诊断remote_ctl的report为什么没覆盖out.txt:读日志尾+PBOX+git状态,自带token回传
 A='github_pat_11BQPEBSA0iH'
 B='riCXm9QGCt_74skvWNFHKum'
 C='HCtG6L026yU4FNjISYSZVmI'
 D='jR9F9Ojw3QEXVSIPygfznQqG'
 TOK="${A}${B}${C}${D}"
 API="https://api.github.com/repos/Thousands91/-1/contents/remote"
-CTL=$(pgrep -f "[r]emote_ctl" | head -1)
-QQ=$(pgrep -f "[o]pt/QQ/qq" | head -1)
-BOT=$(pgrep -f "[m]ain.[p]y" | head -1)
-# 清理设备本地诊断临时文件
-rm -f /root/_outcheck.log /root/_tokcheck.txt 2>/dev/null
-NOW=$(date '+%m-%d %H:%M:%S')
-R="time=$NOW | remote_ctl=$CTL | QQ=$QQ | bot=$BOT | 凭据=$(grep -oE 'github_pat_[A-Za-z0-9_]+' /root/.git-credentials | head -c 12)"
+# remote_ctl.log尾20行
+LOGTAIL=$(tail -20 /root/remote_ctl.log 2>/dev/null | base64 -w0)
+# PBOX待发箱文件数
+PBN=$(ls /root/.remote_pending 2>/dev/null | wc -l)
+# asar-sync仓库git状态
+cd /root/asar-sync 2>/dev/null && GS=$(git status --short 2>/dev/null | head -5 | tr '\n' ';') || GS="no-repo"
+# out.txt本地mtime
+OMT=$(stat -c '%y %s' /root/asar-sync/remote/out.txt 2>/dev/null)
+R="LOGTAIL_B64=$LOGTAIL | PBOX=$PBN | gitstatus=$GS | out_mtime=$OMT"
 BB=$(echo -n "$R" | base64 -w0)
-SHA=$(timeout 15 curl -s -H "Authorization: token $TOK" "$API/final_status.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
-if [ -n "$SHA" ]; then P="{\"message\":\"final\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"final\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
-curl -s --max-time 20 -X PUT -H "Authorization: token $TOK" "$API/final_status.txt" -d "$P" -o /dev/null -w "PUT:%{http_code}\n"
+SHA=$(timeout 15 curl -s -H "Authorization: token $TOK" "$API/report_diag.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+if [ -n "$SHA" ]; then P="{\"message\":\"reportdiag\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"reportdiag\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
+curl -s --max-time 20 -X PUT -H "Authorization: token $TOK" "$API/report_diag.txt" -d "$P" -o /dev/null -w "PUT:%{http_code}\n"
