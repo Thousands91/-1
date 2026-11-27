@@ -1,31 +1,41 @@
-287797
+287798
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
 D=VmIjR9F9Ojw3QEXVSIPygfznQqG
 TOK="${A}${B}${C}${D}"
 API='https://api.github.com/repos/Thousands91/-1/contents/remote'
-LOG=/tmp/verify_qclaim.txt
+LOG=/tmp/rigor_probe.txt
 : > "$LOG"
-echo "=== 证伪取证:前两次恢复是否-q的功劳 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
-echo "--- [1] 11-24 00:25前后 napcat.log 逐行 ---" >> "$LOG"
-grep -nE '11-24 00:2[3-9]:' /root/napcat.log 2>/dev/null | head -40 >> "$LOG"
-echo "--- [2] 11-25 02:14前后 napcat.log 逐行 ---" >> "$LOG"
-grep -nE '11-25 02:1[3-9]:|11-25 02:2[0-5]:' /root/napcat.log 2>/dev/null | head -40 >> "$LOG"
-echo "--- [3] 11-24/11-25 napcat-restart.log 有无QQ重启登录痕迹 ---" >> "$LOG"
-echo "11-24 Login相关行数=$(grep -c '11-24' /root/napcat-restart.log 2>/dev/null)" >> "$LOG"
-echo "11-25 Login相关行数=$(grep -c '11-25' /root/napcat-restart.log 2>/dev/null)" >> "$LOG"
-grep -nE '11-24|11-25' /root/napcat-restart.log 2>/dev/null | grep -iE 'Login|online|二维码|扫描|success|error' | head -20 >> "$LOG"
-echo "--- [4] 明确的Login Success记录(全日志) ---" >> "$LOG"
-grep -rniE 'login success|登录成功|\[Core\] \[Login\] success' /root/napcat.log /root/napcat-restart.log 2>/dev/null | head -20 >> "$LOG"
-echo "--- [5] autoheal判定'已恢复在线'的逻辑 ---" >> "$LOG"
-grep -nE '恢复在线|send_alert|login|在线|PREV' /root/azar_autoheal.sh 2>/dev/null | head -40 >> "$LOG"
-echo "--- [6] autoheal.log 11-24/11-25全上下文 ---" >> "$LOG"
-grep -nE '11-24 00:2|11-25 02:1' /root/autoheal.log 2>/dev/null | head -30 >> "$LOG"
-echo "--- [7] 11-27掉线首条时间戳(对比恢复快慢) ---" >> "$LOG"
-grep -nE '11-27 02:1[4-9]:|11-27 02:2[0-5]:' /root/napcat.log 2>/dev/null | head -20 >> "$LOG"
+echo "=== 严谨取证:校准登录成功日志特征 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
+
+echo "--- [1] azar_autoheal.sh全文(-q怎么调/日志重定向到哪) ---" >> "$LOG"
+cat /root/azar_autoheal.sh 2>/dev/null >> "$LOG"
+echo "" >> "$LOG"
+
+echo "--- [2] 所有候选日志文件清单(mtime/size) ---" >> "$LOG"
+ls -lat /root/*.log /root/Napcat/logs/*.log 2>/dev/null | head -45 >> "$LOG"
+
+echo "--- [3] 阳性对照:11-23 13:35~13:45 扫码成功那次各日志原文 ---" >> "$LOG"
+for f in /root/napcat.log /root/napcat-restart.log; do
+  echo "### $f"
+  grep -nE '11-23 13:(3[5-9]|4[0-5]):' "$f" 2>/dev/null | grep -iE 'Login|login|二维码|扫描|success|在线|成功|error|离线' | head -40
+done >> "$LOG"
+
+echo "--- [4] '二维码已被扫描'所有出现位置(定位登录成功日志特征) ---" >> "$LOG"
+grep -rn '二维码已被扫描' /root/napcat.log /root/napcat-restart.log 2>/dev/null | head -20 >> "$LOG"
+
+echo "--- [5] 11-24 00:25:15~00:25:32 napcat.log逐行原文(不过滤) ---" >> "$LOG"
+grep -nE '11-24 00:25:(1[5-9]|2[0-9]|3[0-2]):' /root/napcat.log 2>/dev/null | head -70 >> "$LOG"
+
+echo "--- [6] 11-25 02:14:05~02:16:00 napcat.log逐行原文(不过滤) ---" >> "$LOG"
+grep -nE '11-25 02:1[4-6]:' /root/napcat.log 2>/dev/null | head -80 >> "$LOG"
+
+echo "--- [7] 全日志所有含Login的行(11-23~11-27),看登录日志真实格式 ---" >> "$LOG"
+grep -hniE '\[Login\]|login' /root/napcat.log /root/napcat-restart.log 2>/dev/null | grep -E '11-2[34567]' | sort -u | head -60 >> "$LOG"
+
 echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/verify_qclaim.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/rigor_probe.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
 B=$(base64 -w0 "$LOG")
-if [ -n "$SHA" ]; then P="{\"message\":\"verifyqclaim\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"verifyqclaim\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
-curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/verify_qclaim.txt" -d "$P"
+if [ -n "$SHA" ]; then P="{\"message\":\"rigorprobe\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"rigorprobe\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/rigor_probe.txt" -d "$P"
