@@ -1,42 +1,35 @@
-287799
+287800
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
 D=VmIjR9F9Ojw3QEXVSIPygfznQqG
 TOK="${A}${B}${C}${D}"
 API='https://api.github.com/repos/Thousands91/-1/contents/remote'
-LOG=/tmp/rigor_probe2.txt
+LOG=/tmp/webui_err.txt
 : > "$LOG"
-echo "=== 严谨取证2:权威状态台账+原文 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
+echo "=== WebUI原因码活体取证 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
 
-echo "--- [1] napcat.log 基本信息(首行/尾行/总行数) ---" >> "$LOG"
-echo "总行数=$(wc -l < /root/napcat.log)" >> "$LOG"
-echo "首行: $(head -1 /root/napcat.log)" >> "$LOG"
-echo "尾行: $(tail -1 /root/napcat.log)" >> "$LOG"
+echo "--- [1] 实时跑logincheck.sh完整输出 ---" >> "$LOG"
+bash /root/logincheck.sh 2>&1 >> "$LOG"
 
-echo "--- [2] 11-24 00:2x napcat.log 全部行(宽泛grep) ---" >> "$LOG"
-grep -n '11-24 00:2' /root/napcat.log 2>/dev/null | head -60 >> "$LOG"
+echo "--- [2] WebUI CheckLoginStatus 完整data JSON ---" >> "$LOG"
+CFG=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json
+PY=/root/bot/venv/bin/python3
+[ -x "$PY" ] || PY=python3
+TOKEN2=$(grep -o '"token": "[^"]*"' "$CFG" 2>/dev/null | head -1 | sed 's/.*: "//;s/"//')
+H=$($PY -c "import hashlib;print(hashlib.sha256(('$TOKEN2'+'.napcat').encode()).hexdigest())" 2>/dev/null)
+C=$(curl -s --max-time 5 -X POST http://127.0.0.1:6099/api/auth/login -H 'Content-Type: application/json' -d "{\"hash\":\"$H\"}" 2>/dev/null | $PY -c "import sys,json;print(json.load(sys.stdin)['data']['Credential'])" 2>/dev/null)
+echo "Credential前8位=${C:0:8}" >> "$LOG"
+curl -s --max-time 8 -X POST http://127.0.0.1:6099/api/QQLogin/CheckLoginStatus -H "Authorization: Bearer $C" 2>/dev/null | $PY -m json.tool >> "$LOG" 2>/dev/null
 
-echo "--- [3] 11-25 02:1x~02:2x napcat.log 全部行(宽泛grep) ---" >> "$LOG"
-grep -nE '11-25 02:(1[0-9]|2[0-9])' /root/napcat.log 2>/dev/null | head -60 >> "$LOG"
+echo "--- [3] login_state.log 11-24/11-25/11-27 起始状态变化 ---" >> "$LOG"
+grep -E '11-24 00:2|11-25 02:1|^2026-11-27 0[0-3]' /root/login_state.log 2>/dev/null | head -40 >> "$LOG"
 
-echo "--- [4] login_state.log 11-23~11-27 状态变化全记录(权威) ---" >> "$LOG"
-grep -E '11-2[34567]' /root/login_state.log 2>/dev/null | grep -E '状态变化|在线|掉线|未登录' | tail -80 >> "$LOG"
-
-echo "--- [5] autoheal.log 11-24/11-25 原文 ---" >> "$LOG"
-grep -nE '11-24 00:2|11-25 02:1' /root/autoheal.log 2>/dev/null | head -40 >> "$LOG"
-
-echo "--- [6] logincheck.sh 全文(判定逻辑) ---" >> "$LOG"
-cat /root/logincheck.sh 2>/dev/null >> "$LOG"
-
-echo "--- [7] napcat-restart.log 11-24/11-25 有无内容 ---" >> "$LOG"
-echo "11-24行数=$(grep -c '11-24' /root/napcat-restart.log 2>/dev/null)" >> "$LOG"
-echo "11-25行数=$(grep -c '11-25' /root/napcat-restart.log 2>/dev/null)" >> "$LOG"
-grep -n '11-24' /root/napcat-restart.log 2>/dev/null | head -12 >> "$LOG"
-grep -n '11-25' /root/napcat-restart.log 2>/dev/null | head -12 >> "$LOG"
+echo "--- [4] 全日志搜结构化错误码字段(loginError/retcode/errCode) ---" >> "$LOG"
+grep -rniE 'loginError|retcode|errcode|err_type|errCode' /root/login_state.log /root/napcat.log 2>/dev/null | tail -20 >> "$LOG"
 
 echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/rigor_probe2.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/webui_err.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
 B=$(base64 -w0 "$LOG")
-if [ -n "$SHA" ]; then P="{\"message\":\"rigorprobe2\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"rigorprobe2\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
-curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/rigor_probe2.txt" -d "$P"
+if [ -n "$SHA" ]; then P="{\"message\":\"webuierr\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"webuierr\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/webui_err.txt" -d "$P"
