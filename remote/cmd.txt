@@ -1,32 +1,27 @@
-287830
-# 收尾:撤掉上一轮装的hb_auto.sh自动心跳(恢复hb_verify按需手动探针本职),自带token回传
+287831
+# 整体深度审计:只读汇总设备状态,自带token回传,合并查询减少往返
 A='github_pat_11BQPEBSA0iH'
 B='riCXm9QGCt_74skvWNFHKum'
 C='HCtG6L026yU4FNjISYSZVmI'
 D='jR9F9Ojw3QEXVSIPygfznQqG'
 TOK="${A}${B}${C}${D}"
 API="https://api.github.com/repos/Thousands91/-1/contents/remote"
-# 1. 停自动脚本(PID文件kill,不用pkill)
-HPID=$(cat /root/.hb_auto.pid 2>/dev/null)
-[ -n "$HPID" ] && kill "$HPID" 2>/dev/null && STOP="已停pid=$HPID" || STOP="无进程"
-sleep 1
-HALIVE=$( [ -n "$HPID" ] && kill -0 "$HPID" 2>/dev/null && echo still_alive || echo stopped )
-# 2. 删除脚本+PID+log(防止残留/重复启动)
-rm -f /root/hb_auto.sh /root/.hb_auto.pid
-# 3. 用修好的兼容grep手动探测一次(证明按需probe可用,这才是hb_verify本职)
-T2=$(grep -oE 'ghp_[A-Za-z0-9]+|github_pat_[A-Za-z0-9_]+' /root/.git-credentials 2>/dev/null | head -1)
-CTL=$(pgrep -f "[r]emote_ctl" | head -1)
-BOT=$(pgrep -f "[m]ain.py" | head -1)
-QQP=$(pgrep -f "[o]pt/QQ/qq" | head -1)
+# 1. 关键脚本md5(与沙箱正本对比)
+MD5S=$(for f in /root/remote_ctl.sh /root/azar_autoheal.sh /root/logincheck.sh /root/bot/bot/music_sign.py /root/ipwatch.sh /root/offline_watch_v2.sh; do [ -f "$f" ] && echo "$(md5sum $f | cut -d' ' -f1) $(basename $f)"; done | base64 -w0)
+# 2. ipwatch失败原因(ip.log尾部+ipwatch脚本查询命令)
+IPTAIL=$(tail -5 /root/ip.log 2>/dev/null | base64 -w0)
+IPCMD=$(grep -nE 'curl|wget|wget.*ip|api.ipify|icanhaz|myip|查询' /root/ipwatch.sh 2>/dev/null | head -8 | base64 -w0)
+# 3. PBOX当前数量
+PBN=$(ls -1 /root/.remote_pending 2>/dev/null | wc -l)
+# 4. napcat日志覆盖缺陷现状(启动行的 > 还是 >>)
+NAPREDIR=$(grep -nE 'napcat.*> *>?.*log|qq.*> *>?.*log' /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null | head -3 | base64 -w0)
+# 5. 进程清单
+PS=$(ps -eo pid,args 2>/dev/null | grep -E '[r]emote_ctl|[m]ain.py|[o]pt/QQ/qq|[i]pwatch|[t]ick.sh|[h]ealth_probe|[n]etmon' | awk '{print $1,$2}' | tr '\n' ';')
+# 6. 磁盘
+DF=$(df -h /root 2>/dev/null | tail -1)
 NOW=$(date '+%m-%d %H:%M:%S')
-R2="time=$NOW | 手动probe(按需) | remote_ctl=$CTL | bot=$BOT | napcat=$QQP"
-B2=$(echo -n "$R2" | base64 -w0)
-SH2=$(timeout 15 curl -s -H "Authorization: token $T2" "$API/hb_verify.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
-if [ -n "$SH2" ]; then P2="{\"message\":\"probe\",\"content\":\"$B2\",\"sha\":\"$SH2\",\"branch\":\"main\"}"; else P2="{\"message\":\"probe\",\"content\":\"$B2\",\"branch\":\"main\"}"; fi
-CODE=$(timeout 20 curl -s -o /dev/null -w '%{http_code}' --max-time 18 -X PUT -H "Authorization: token $T2" "$API/hb_verify.txt" -d "$P2" 2>/dev/null)
-# 4. 回传结果(自带token)
-R="time=$NOW | $(echo $STOP) | alive=$HALIVE | 脚本已删=$([ ! -f /root/hb_auto.sh ] && echo yes || echo no) | 手动probe写hb_verify的HTTP=$CODE | 设备token前缀=${T2:0:12}"
+R="time=$NOW | MD5S_B64=$MD5S | IPTAIL_B64=$IPTAIL | IPCMD_B64=$IPCMD | PBOX=$PBN | NAPREDIR_B64=$NAPREDIR | PS=$PS | DF=$DF"
 BB=$(echo -n "$R" | base64 -w0)
-SHA=$(timeout 15 curl -s -H "Authorization: token $TOK" "$API/hb_revert.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
-if [ -n "$SHA" ]; then P="{\"message\":\"hbrevert\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"hbrevert\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
-curl -s --max-time 20 -X PUT -H "Authorization: token $TOK" "$API/hb_revert.txt" -d "$P" -o /dev/null -w "回传:%{http_code}\n"
+SHA=$(timeout 15 curl -s -H "Authorization: token $TOK" "$API/audit1.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+if [ -n "$SHA" ]; then P="{\"message\":\"audit1\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"audit1\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
+curl -s --max-time 20 -X PUT -H "Authorization: token $TOK" "$API/audit1.txt" -d "$P" -o /dev/null -w "回传:%{http_code}\n"
