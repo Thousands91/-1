@@ -1,29 +1,33 @@
-287791
+287792
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
 D=VmIjR9F9Ojw3QEXVSIPygfznQqG
 TOK="${A}${B}${C}${D}"
 API='https://api.github.com/repos/Thousands91/-1/contents/remote'
-LOG=/tmp/reason_probe.txt
+LOG=/tmp/quicklogin_probe.txt
 : > "$LOG"
-echo "=== 原因码取证 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
-echo "--- [1] 02:14:35~02:15:30 原始未过滤日志 ---" >> "$LOG"
-grep -nE '02:14:(3[5-9]|4[0-9]|5[0-9])|02:15:[0-2][0-9]' /root/napcat.log 2>/dev/null | tail -80 >> "$LOG"
-echo "--- [2] '账号状态变更为离线'那行前后各25行(完整原文) ---" >> "$LOG"
-LN=$(grep -n '账号状态变更为离线' /root/napcat.log 2>/dev/null | tail -1 | cut -d: -f1)
-echo "行号=$LN" >> "$LOG"
-if [ -n "$LN" ]; then S=$((LN-25)); [ $S -lt 1 ] && S=1; sed -n "${S},$((LN+35))p" /root/napcat.log >> "$LOG"; fi
-echo "--- [3] NapCat版本 ---" >> "$LOG"
-grep -oE '"version"[^,]*' /root/Napcat/package.json 2>/dev/null | head -3 >> "$LOG"
-echo "--- [4] NapCat配置目录树 ---" >> "$LOG"
-find /root/Napcat -maxdepth 3 -name '*.json' 2>/dev/null | head -30 >> "$LOG"
-echo "--- [5] 日志级别配置 ---" >> "$LOG"
-grep -riE 'log[Ll]evel|日志级别|"debug"|"info"' /root/Napcat/config /root/Napcat/*.json 2>/dev/null | head -20 >> "$LOG"
-echo "--- [6] 快速登录-q配置 ---" >> "$LOG"
-grep -riE 'quick|快速登录| -q ' /root/*.sh /root/Napcat/*.sh /data/data/com.termux/files/home/.termux/boot/*.sh 2>/dev/null | head -20 >> "$LOG"
+echo "=== -q快速登录失败取证 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
+echo "--- [1] napcat-restart.log 所有Login Error/ErrCode/扫码行 ---" >> "$LOG"
+grep -nE 'Login Error|ErrCode|ErrType|快速登录|二维码已被扫描|登录成功|login success' /root/napcat-restart.log 2>/dev/null | tail -60 >> "$LOG"
+echo "--- [2] 最后一次-q尝试前后15行 ---" >> "$LOG"
+LN=$(grep -n 'Login Error' /root/napcat-restart.log 2>/dev/null | tail -1 | cut -d: -f1)
+echo "最后Login Error行号=$LN" >> "$LOG"
+if [ -n "$LN" ]; then S=$((LN-15)); [ $S -lt 1 ] && S=1; sed -n "${S},$((LN+20))p" /root/napcat-restart.log >> "$LOG"; fi
+echo "--- [3] session_heal 相关日志 ---" >> "$LOG"
+for f in /root/session_heal.log /root/session_heal*.log /root/azar_session_heal.log; do
+  [ -f "$f" ] && { echo "### $f"; tail -40 "$f"; }
+done >> "$LOG" 2>/dev/null
+echo "--- [4] QQNT登录票据文件位置+mtime ---" >> "$LOG"
+find /root/.config/QQ /root/Napcat -maxdepth 6 -type f \( -iname '*a2*' -o -iname '*d2*' -o -iname '*token*' -o -iname '*login*' -o -iname '*account*' \) 2>/dev/null | head -40 | while read f; do stat -c '%y %s %n' "$f" 2>/dev/null; done >> "$LOG"
+echo "--- [5] QQ配置目录顶层 ---" >> "$LOG"
+ls -la /root/.config/QQ/ 2>/dev/null | head -25 >> "$LOG"
+echo "--- [6] session_heal脚本-q部分 ---" >> "$LOG"
+grep -nE '\-q|快速登录|ST|status|静默|OFFLINE' /root/azar_session_heal.sh 2>/dev/null | head -40 >> "$LOG"
+echo "--- [7] 当前是否已扫码登录成功 ---" >> "$LOG"
+grep -E '二维码已被扫描|登录成功|\[Core\] \[Login\]' /root/napcat-restart.log 2>/dev/null | tail -8 >> "$LOG"
 echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/reason_probe.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/quicklogin_probe.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
 B=$(base64 -w0 "$LOG")
-if [ -n "$SHA" ]; then P="{\"message\":\"reasonprobe\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"reasonprobe\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
-curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/reason_probe.txt" -d "$P"
+if [ -n "$SHA" ]; then P="{\"message\":\"quickloginprobe\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"quickloginprobe\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/quicklogin_probe.txt" -d "$P"
