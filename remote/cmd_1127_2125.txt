@@ -1,0 +1,3 @@
+287827
+echo "E2E回传验证 $(date +%H:%M:%S)"
+bash /root/logincheck.sh 2>/dev/null | head -3
