@@ -1,33 +1,3 @@
-287826
-# 安全重启remote_ctl:让它重新加载修好的凭据(PID文件kill+rm PID+单独启动,后台延迟防自杀)
-A='github_pat_11BQPEBSA0iH'
-B='riCXm9QGCt_74skvWNFHKum'
-C='HCtG6L026yU4FNjISYSZVmI'
-D='jR9F9Ojw3QEXVSIPygfznQqG'
-TOK="${A}${B}${C}${D}"
-API="https://api.github.com/repos/Thousands91/-1/contents/remote"
-OLDPID=$(cat /root/.remote_pid 2>/dev/null)
-NOW=$(date '+%m-%d %H:%M:%S')
-# 先回传"准备重启"证据(自带token,不依赖report)
-R="time=$NOW | 准备重启remote_ctl | oldpid=$OLDPID"
-BB=$(echo -n "$R" | base64 -w0)
-SHA=$(timeout 15 curl -s -H "Authorization: token $TOK" "$API/restart_rctl.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
-if [ -n "$SHA" ]; then P="{\"message\":\"restart\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"restart\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
-curl -s --max-time 20 -X PUT -H "Authorization: token $TOK" "$API/restart_rctl.txt" -d "$P" -o /dev/null -w "回传:%{http_code}\n"
-# 后台延迟3秒:kill(用PID文件)→删PID/锁→单独启动→验证新PID并再回传
-( sleep 3
-  [ -n "$OLDPID" ] && kill "$OLDPID" 2>/dev/null
-  sleep 2
-  rm -f /root/.remote_pid
-  rm -rf /root/.remote_ctl.lock
-  setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 < /dev/null &
-  sleep 5
-  NEWPID=$(cat /root/.remote_pid 2>/dev/null)
-  NEWT=$(date '+%m-%d %H:%M:%S')
-  R2="time=$NEWT | 重启完成 | oldpid=$OLDPID | newpid=$NEWPID"
-  BB2=$(echo -n "$R2" | base64 -w0)
-  SH2=$(timeout 15 curl -s -H "Authorization: token $TOK" "$API/restart_rctl2.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
-  if [ -n "$SH2" ]; then P2="{\"message\":\"restart2\",\"content\":\"$BB2\",\"sha\":\"$SH2\",\"branch\":\"main\"}"; else P2="{\"message\":\"restart2\",\"content\":\"$BB2\",\"branch\":\"main\"}"; fi
-  curl -s --max-time 20 -X PUT -H "Authorization: token $TOK" "$API/restart_rctl2.txt" -d "$P2" -o /dev/null -w "回传2:%{http_code}\n"
-) &
-echo "重启已排入后台"
+287827
+echo "E2E回传验证 $(date +%H:%M:%S)"
+bash /root/logincheck.sh 2>/dev/null | head -3
