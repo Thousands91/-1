@@ -1,0 +1,167 @@
+=== -q失败深挖 11-27 12:07:26 ===
+--- [1] 当前登录态(关键!) ---
+11-27 02:15:05 [INFO] nonebot | Event will be handled by Matcher(type='meta_event', module=plugins.link_probe, lineno=89)
+11-27 02:15:05 [INFO] nonebot | Matcher(type='meta_event', module=plugins.link_probe, lineno=89) running complete
+11-27 02:15:24 [WARNING] nonebot | OneBot V11 | WebSocket for Bot 3427943187 closed by peer
+11-27 07:51:49 [INFO] uvicorn | 127.0.0.1:40776 - "GET /get_login_info HTTP/1.1" 404
+11-27 07:55:30 [INFO] uvicorn | 127.0.0.1:55724 - "POST / HTTP/1.1" 404
+2026-11-27 07:55:30.530000000 +0800
+2026-11-27 02:15:24.580000000 +0800
+2026-11-27 12:07:24.970000000 +0800
+11-27 09:10:16 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-27 09:10:17 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+--- [2] -q启动的QQ进程还在吗 ---
+22621       00:00 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/storage --bind=/storage/emulated/0:/sdcard --bind=/storage/emulated/0:/mnt/sdcard --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/system/product --bind=/system --bind=/vendor --bind=/data/data/com.termux/files/usr /bin/bash -c bash -c 'cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & exec sleep infinity'
+27787       00:00 /bin/sh /usr/bin/xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox
+27838       00:00 /root/Napcat/opt/QQ/qq --no-sandbox
+--- [3] prelogin日志明文错误(07~09时段) ---
+### prelogin-log_2026-11-27-07.qqxlog
+${A2/
+${A2/
+05d2
+3 D2
+${A2/
+${A2/
+Cd2/
+d2W6
+${A2/
+${A2/
+05d2
+${A2/
+qnpd2x
+${A2/
+)d2?
+3 D2
+${A2/
+3 D2
+${A2/
+A2<;eA]
+${A2/
+ba2/
+O~D2
+${A2/
+)d2?
+### prelogin-log_2026-11-27-08.qqxlog
+ka2z
+A2<;eA]
+${A2/
+d2 [p?
+A2<;eA]
+nlD2
+${A2/
+${A2/
+3 D2
+eha2u,
+)d2?
+A2<;eA]
+${A2/
+3 D2
+${A2/
+${A2/
+${A2/
+${A2/
+a2AG
+${A2/
+${A2/
+O~D2
+O~D2
+${A2/
+nlD2
+### prelogin-log_2026-11-27-09.qqxlog
+D2QZ
+A2<;eA]
+${A2/
+xnUA2e
+Pd2w
+${A2/
+${A2/
+${A2/
+${A2/
+nlD2
+${A2/
+ad2`
+${A2/
+${A2/
+${A2/
+O~D2
+O~D2
+nlD2
+${A2/
+O~D2
+aNa2
+O~D2
+O~D2
+${A2/
+O~D2
+--- [4] nt_qq账号目录token文件 ---
+2026-11-27 02:15:20.450000000 +0800 327680 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log-cache/qq-log.mmap3
+2026-11-22 13:17:06.350000000 +0800 369656 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-22-13.qqxlog
+2026-11-23 13:59:01.680000000 +0800 662497 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-13.qqxlog
+2026-11-23 14:59:02.790000000 +0800 517046 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-14.qqxlog
+2026-11-23 15:59:00.470000000 +0800 569282 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-15.qqxlog
+2026-11-23 16:59:00.190000000 +0800 936654 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-16.qqxlog
+2026-11-23 17:59:02.010000000 +0800 609206 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-17.qqxlog
+2026-11-23 18:59:01.820000000 +0800 531051 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-18.qqxlog
+2026-11-23 19:59:01.920000000 +0800 449464 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-19.qqxlog
+2026-11-23 20:59:02.970000000 +0800 253744 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-20.qqxlog
+2026-11-23 21:59:01.130000000 +0800 289083 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-21.qqxlog
+2026-11-23 22:59:00.350000000 +0800 258946 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-22.qqxlog
+2026-11-23 23:50:00.620000000 +0800 465145 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-23-23.qqxlog
+2026-11-24 00:59:00.160000000 +0800 356842 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-24-00.qqxlog
+2026-11-24 01:59:01.030000000 +0800 179676 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-24-01.qqxlog
+2026-11-24 02:59:02.110000000 +0800 169826 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-24-02.qqxlog
+2026-11-24 03:59:00.470000000 +0800 172345 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-24-03.qqxlog
+2026-11-24 04:59:01.270000000 +0800 198558 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-24-04.qqxlog
+2026-11-24 05:59:02.330000000 +0800 159598 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-24-05.qqxlog
+2026-11-24 06:59:00.370000000 +0800 220499 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-24-06.qqxlog
+2026-11-24 07:59:01.680000000 +0800 181085 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-24-07.qqxlog
+2026-11-24 08:59:02.610000000 +0800 255761 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-24-08.qqxlog
+2026-11-24 09:59:00.730000000 +0800 213225 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-24-09.qqxlog
+2026-11-13 13:59:02.470000000 +0800 412495 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-13-13.qqxlog
+2026-11-13 14:59:00.090000000 +0800 474819 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-13-14.qqxlog
+2026-11-13 15:59:00.280000000 +0800 726457 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-13-15.qqxlog
+2026-11-13 16:59:02.260000000 +0800 967208 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-13-16.qqxlog
+2026-11-13 17:59:00.090000000 +0800 1162010 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-13-17.qqxlog
+2026-11-13 18:59:01.160000000 +0800 1121372 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-13-18.qqxlog
+2026-11-13 19:59:02.440000000 +0800 339802 /root/.config/QQ/nt_qq_f31de70269f5ae9ebeb8d47e85491317/nt_data/log/qq-log_2026-11-13-19.qqxlog
+--- [5] session_heal_state全文 ---
+[11-22 14:24:46] 会话恢复器v1.0启动
+[11-22 14:24:47] 静默离线(unlogin)，第1次尝试-q快速登录恢复
+[11-22 14:25:07] 本次未恢复(累计失败1次)，等待下次窗口
+[11-22 14:29:56] 会话恢复器v1.0启动
+[11-22 14:30:02] 静默离线(unknown)，第1次尝试-q快速登录恢复
+[11-22 14:30:23] 本次未恢复(累计失败1次)，等待下次窗口
+[11-22 14:33:46] 会话恢复器v1.0启动
+[11-22 14:33:47] 静默离线(unlogin)，第1次尝试-q快速登录恢复
+[11-22 14:34:16] 本次未恢复(累计失败1次)，等待下次窗口
+[11-22 14:38:31] 会话恢复器v1.0启动
+[11-22 14:38:31] 静默离线(unlogin)，第1次尝试-q快速登录恢复
+[11-22 14:39:02] 本次未恢复(累计失败1次)，等待下次窗口
+[11-22 14:44:43] 静默离线(unknown)，第2次尝试-q快速登录恢复
+[11-22 14:45:39] 本次未恢复(累计失败2次)，等待下次窗口
+[11-22 14:50:50] 静默离线(unknown)，第3次尝试-q快速登录恢复
+[11-22 14:51:42] 连续3次恢复失败→熔断停手，写need_manual标记，等人工扫码
+--- [6] ErrCode3第一次出现前后(07:10) ---
+第一次行号=44
+223ef18ac40dae152138a16724067041673bf1834d4a627dcdaedb7901862842
+c4fc439257ddb852b593135a60478eca5da3a90b0c915cae8e666f531bdea89e
+407446815d908b118d359910d3cced90e60d41b7a53e5366d38be6892b28a1cf
+497fda7f7ed0b148ff971b4c7fee4b321752ef20ab554c9ddc867c0883107aa2
+3dad3f625571b5376ba681b43f4b749a53a345158c4f5ef556257fb81c4a916c
+ca7271d2c3dadbcf3e4709049c3134cf1c3330b8cf48815fd6555be768e15ffa
+254d2fa41966be2a48037215e634477aa31c84278afb2f35b36d1f18bb8dc9eb
+1027da8cc14e06399339fc2b7156c3d88055667c1cb1d6f16bd2f377019719f0
+59eee8a3a23de680cf4cdad0f55a93f714bccc0eee37c48e3e8c44d4474e7fa1
+9eb8a7cecbd50b3621755889d86efc6746654692f103b6f59762b6dbbfbd79a1
+4cbbe159d12bd317b0af69d8eb9b9ea016a2166a90cc1150117efd5da67472a9
+cd6a57fbca6389b9d3f81cd90ac930b78fc7e7b53c7eeb3574face763018e209
+11-21 23:40:22 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+4a241e75fd2574c0dd554929f499b9b6f344a657b528f50c2fc305a348e999b5
+11-21 23:40:22 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+11-21 23:40:22 [[33mwarn[39m] 
+
+▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+█ ▄▄▄▄▄ █▄▄███▀▄█▀▀▀█     █ ▄▄▄▄▄ █
+█ █   █ █ ▀█ ▄ █▀ ▀█████▀██ █   █ █
+█ █▄▄▄█ █▄ ▄▄▀▀█▄█ █▀▀█ █ █ █▄▄▄█ █
+DONE=11-27 12:07:29
