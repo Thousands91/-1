@@ -1,27 +1,29 @@
-<<<task_287836.txt>>>
-===== 任务287836 11-27 22:18:41 =====
+<<<task_287837.txt>>>
+===== 任务287837 11-27 22:21:31 =====
 --- 命令 ---
-# 只读：核实设备 remote_ctl.sh 的 make_bundle 是否有 >3 丢弃逻辑（坑1000线索）。不改动。
-echo "=== remote_ctl.sh 路径与md5 ==="
-md5sum /root/remote_ctl.sh 2>/dev/null | cut -d' ' -f1
-echo "=== make_bundle 定义段 ==="
-grep -n 'make_bundle' /root/remote_ctl.sh 2>/dev/null
-echo "--- 函数体(含tail/head/ls -t丢弃逻辑?) ---"
-awk '/make_bundle\(\)/,/^}/' /root/remote_ctl.sh 2>/dev/null | head -30
-echo "=== 丢弃逻辑关键词 ==="
-echo "tail_n=$(grep -c 'tail -n +4\|tail -n +5\|head -3\|ls -t' /root/remote_ctl.sh 2>/dev/null)"
-echo "PBOX清理=$(grep -c '.remote_pending.*rm\|task_.*rm' /root/remote_ctl.sh 2>/dev/null)"
-echo "=== 当前PBOX与bundle大小 ==="
-echo "PBOX数=$(ls /root/.remote_pending/task_*.txt 2>/dev/null | wc -l)"
-echo "=== DONE3 ==="
+# 只读：核实两个"待办"是否已装。不改动。
+echo "=== Termux:Boot 插件是否安装 ==="
+pm list packages 2>/dev/null | grep -i 'termux.boot\|termux.boot' || echo "pm不可用或无结果"
+echo "=== 开机boot目录 ==="
+ls -la /data/data/com.termux/files/home/.termux/boot/ 2>/dev/null | awk '{print $1,$5,$9}'
+echo "=== x10_watchdog 看门狗进程 ==="
+pgrep -af '[x]10_watchdog' | head -3 || echo "无看门狗进程"
+echo "=== 看门狗脚本文件 ==="
+ls -la /data/data/com.termux/files/home/x10_watchdog.sh 2>/dev/null | awk '{print $5,$9}' || echo "无"
+echo "=== 已运行时长(证明重启后自动拉起?) ==="
+uptime
+echo "=== DONE4 ==="
 --- 输出 ---
-=== remote_ctl.sh 路径与md5 ===
-0c7ab885890af30025b5ca7a4f707abb
-=== make_bundle 定义段 ===
---- 函数体(含tail/head/ls -t丢弃逻辑?) ---
-=== 丢弃逻辑关键词 ===
-tail_n=0
-PBOX清理=0
-=== 当前PBOX与bundle大小 ===
-PBOX数=1
-=== DONE3 ===
+=== Termux:Boot 插件是否安装 ===
+pm不可用或无结果
+=== 开机boot目录 ===
+total  
+drwxr-xr-x 3488 .
+drwx------ 3488 ..
+-rwxr-xr-x 1563 asar_boot.sh
+=== x10_watchdog 看门狗进程 ===
+=== 看门狗脚本文件 ===
+372 /data/data/com.termux/files/home/x10_watchdog.sh
+=== 已运行时长(证明重启后自动拉起?) ===
+ 22:21:32 up 2 min,  0 users,  load average: 0.12, 0.07, 0.02
+=== DONE4 ===
