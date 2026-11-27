@@ -1,0 +1,45 @@
+=== 掉线历史规律 11-27 08:06:01 ===
+--- [1] forensics.txt 全文 ---
+--- [2] lessons.md 掉线相关段落 ---
+--- [3] napcat.log 历史所有'账号状态变更'时间点 ---
+11-23 13:36:35 [[32minfo[39m] 没有 -q 指令指定快速登录，将使用二维码登录方式
+11-23 13:36:35 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+二维码解码URL: https://txz.qq.com/p?k=sHZDfGTk3TFJ-Hu7CYrb5BbaSjwfFP5k&f=1600001615
+如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+11-23 13:36:35 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+11-23 13:37:02 [[32minfo[39m] [Core] [Login] 二维码已被扫描，等待确认...
+11-24 00:25:17 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+11-25 02:14:12 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+11-27 02:14:41 [[32minfo[39m] 阿萨尔 | 账号状态变更为离线
+--- [4] napcat-restart.log 历史Login Error时间点 ---
+11-27 07:54:53 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-27 07:54:53 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+二维码解码URL: https://txz.qq.com/p?k=07bxu0Uf2k8S5M7wyx-6XTa7ccDcbLRM&f=1600001615
+如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+11-27 07:54:53 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+11-27 07:56:54 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-27 07:56:54 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+二维码解码URL: https://txz.qq.com/p?k=QGxTirUwkcLlW4CMZsjj2-lFEz-qClqH&f=1600001615
+如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+11-27 07:56:54 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+11-27 07:58:55 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-27 07:58:55 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+二维码解码URL: https://txz.qq.com/p?k=2BuTKvVw0D*1i2AhSWPR51nDr1Ghjvk5&f=1600001615
+如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+11-27 07:58:55 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+11-27 08:00:57 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-27 08:00:58 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+二维码解码URL: https://txz.qq.com/p?k=5NF3FdI3NTX75CmyyulBG5nSqGqpghGe&f=1600001615
+如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+11-27 08:00:58 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+11-27 08:03:00 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-27 08:03:00 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+二维码解码URL: https://txz.qq.com/p?k=Dv5QPeNdRH-3SrTF1*AV4ExS8hvZK0zk&f=1600001615
+如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+11-27 08:03:01 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+11-27 08:05:03 [[31merror[39m] [Core] [Login] Login Error,ErrType:  1  ErrCode: 3
+11-27 08:05:03 [[33mwarn[39m] 请扫描下面的二维码，然后在手Q上授权登录：
+二维码解码URL: https://txz.qq.com/p?k=539N0m8eCnoDfmRfGOTMmi55Ib8cIjXo&f=1600001615
+如果控制台二维码无法扫码，可以复制解码url到二维码生成网站生成二维码再扫码，也可以打开下方的二维码路径图片进行扫码。
+11-27 08:05:03 [[33mwarn[39m] 二维码已保存到 /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+DONE=11-27 08:06:01
