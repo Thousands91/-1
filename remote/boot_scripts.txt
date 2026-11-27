@@ -1,0 +1,44 @@
+=== 开机启动脚本全对比 11-27 13:31:17 ===
+--- [1] boot目录所有文件 ---
+total 0
+drwxr-xr-x 2 root root 3488 Nov 23 19:47 .
+drwx------ 3 root root 3488 Nov 23 19:47 ..
+-rwxr-xr-x 1 root root 1563 Nov 24 01:21 asar_boot.sh
+--- [2] 每个脚本里QQ启动那行(带不带-q) ---
+### asar_boot.sh md5=1bf5e7c1dc75af65c0902ac7edac1d67
+8:cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat.log 2>&1 < /dev/null &
+--- [3] asar_boot.sh全文 ---
+#!/data/data/com.termux/files/usr/bin/bash
+# asar_boot.sh — X10 开机自启唯一入口（2026-11-23 补齐，坑180）
+# 用法：Termux:Boot 插件开机自动触发本脚本；手动跑 bash ~/.termux/boot/asar_boot.sh = 等效自启
+sleep 25
+/data/data/com.termux/files/usr/bin/termux-wake-lock
+echo "boot自启已触发 $(date)" >> "$HOME/asar_boot.log"
+setsid nohup proot-distro login ubuntu -- bash -c '
+cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq -q 3427943187 --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat.log 2>&1 < /dev/null &
+cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 < /dev/null &
+setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 < /dev/null &
+setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 < /dev/null &
+pgrep -f "[t]ick.sh" >/dev/null || setsid nohup /root/tick.sh >/dev/null 2>&1 &
+pgrep -f "[h]ealth_probe" >/dev/null || setsid nohup bash /root/health_probe.sh >/dev/null 2>&1 < /dev/null &
+pgrep -f "[n]etmon" >/dev/null || setsid nohup bash /root/netmon.sh >/dev/null 2>&1 < /dev/null &
+pgrep -f "[l]ogin_watch" >/dev/null || setsid nohup bash /root/login_watch.sh >/dev/null 2>&1 < /dev/null &
+pgrep -f "[i]pwatch" >/dev/null || setsid nohup bash /root/ipwatch.sh >/dev/null 2>&1 < /dev/null &
+setsid nohup bash /root/azar_autoheal.sh >> /root/autoheal_run.log 2>&1 < /dev/null &
+exec sleep infinity
+' >> "$HOME/asar_boot.log" 2>&1 < /dev/null &
+--- [4] 谁在proot启动命令里(找无-q那段的来源) ---
+/root/azar_guard.sh:19:  cd /root && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat-restart.log 2>&1 &
+/root/azar_login.sh:19:nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > "$LOG" 2>&1 &
+/root/morning.sh:16:  cd /root/Napcat && nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat.log 2>&1 &
+/root/st.sh:5:  nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat.log 2>&1 &
+/root/start_nap.sh:2:pkill -f "opt/QQ/[q]q"; sleep 2; cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 >> /root/napcat.log 2>&1 < /dev/null & sleep 25; cp /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png "/sdcard/DCIM/Camera/asar_qr.png" && echo 码已放进相册,去QQ扫 || echo 码未生成,稍后再拷
+--- [5] 保险丝脚本逻辑 ---
+/root/azar_session_heal.sh:2:# azar_session_heal.sh v1.0 — 会话超时(静默离线)自动恢复，保守熔断（2026-11-22）
+/root/azar_session_heal.sh:9:#  2. 失败熔断：连续3次重启仍上线失败 → 停手写标记，等人工扫码；绝不无限重试。
+/root/azar_session_heal.sh:111:  # 熔断标记：连续3次失败后停手
+/root/azar_session_heal.sh:167:          say "连续3次恢复失败→熔断停手，写need_manual标记，等人工扫码"
+/root/remote_ctl.sh:63:    echo "[$(date '+%m-%d %H:%M')] 保险丝熔断:NapCat 24h内已自动拉起${CNT}次,停止自动重启,需人工排查" >> "$LOG"
+/root/remote_ctl_v5.sh:86:    echo "[$(date '+%m-%d %H:%M')] 保险丝熔断:NapCat 24h内已自动拉起${CNT}次,停止自动重启,需人工排查" >> "$LOG"
+/root/remote_ctl_v6.sh:128:    echo "[$(date '+%m-%d %H:%M')] 保险丝熔断:NapCat 24h内已自动拉起${CNT}次,停止自动重启,需人工排查" >> "$LOG"
+DONE=11-27 13:31:17
