@@ -1,38 +1,92 @@
-<<<task_287833.txt>>>
-===== 任务287833 11-27 22:02:25 =====
+<<<task_287834.txt>>>
+===== 任务287834 11-27 22:10:16 =====
 --- 命令 ---
-# 部署ipwatch优化:加两个兜底IP源,零在线态风险(不动QQ/bot/登录态)
-A='github_pat_11BQPEBSA0iH'
-B='riCXm9QGCt_74skvWNFHKum'
-C='HCtG6L026yU4FNjISYSZVmI'
-D='jR9F9Ojw3QEXVSIPygfznQqG'
-TOK="${A}${B}${C}${D}"
-API="https://api.github.com/repos/Thousands91/-1/contents/remote"
-# 1. 备份+写入新脚本
-cp /root/ipwatch.sh /root/ipwatch.sh.bak_1127 2>/dev/null
-echo 'IyEvYmluL2Jhc2gKIyDlh7rlj6NJUOiusOW9leS7qjrmr4/lsI/ml7borrDkuIDooYws5o6J57q/5o6S5p+l5pe25Y+v5Zue5rqvSVDlj5jliqgKIyAxMS0yN+S8mOWMljrliqDkuKTkuKrlhZzlupXmupAoaWNhbmhhemlwL2lwaW5mby5pbyks6ZmN5L2O5p+l6K+i5aSx6LSl546HKDIwOjEyLzIxOjEy6L+e57ut5Lik5qyh5aSx6LSlKQp3aGlsZSB0cnVlOyBkbwogIElQPSQodGltZW91dCAxMCBjdXJsIC1zIC0tbWF4LXRpbWUgOCBodHRwczovL2FwaS5pcGlmeS5vcmcgMj4vZGV2L251bGwgfHwgdGltZW91dCAxMCBjdXJsIC1zIC0tbWF4LXRpbWUgOCBodHRwOi8vbWVtYmVycy4zMzIyLm9yZy9keW5kbnMvZ2V0aXAgMj4vZGV2L251bGwgfHwgdGltZW91dCAxMCBjdXJsIC1zIC0tbWF4LXRpbWUgOCBodHRwczovL2ljYW5oYXppcC5jb20gMj4vZGV2L251bGwgfHwgdGltZW91dCAxMCBjdXJsIC1zIC0tbWF4LXRpbWUgOCBodHRwczovL2lwaW5mby5pby9pcCAyPi9kZXYvbnVsbCB8fCBlY2hvICLmn6Xor6LlpLHotKUiKQogIGVjaG8gIiQoZGF0ZSAnKyVGICVUJykgJElQIiA+PiAvcm9vdC9pcC5sb2cKICBzbGVlcCAzNjAwCmRvbmUK' | base64 -d > /root/ipwatch.sh
-chmod 755 /root/ipwatch.sh
-SMD5=$(md5sum /root/ipwatch.sh | cut -d' ' -f1)
-# 2. 立即测一次新脚本的取IP逻辑(不写日志,只看结果)
-TIP=$(timeout 10 curl -s --max-time 8 https://api.ipify.org 2>/dev/null || timeout 10 curl -s --max-time 8 http://members.3322.org/dyndns/getip 2>/dev/null || timeout 10 curl -s --max-time 8 https://icanhazip.com 2>/dev/null || timeout 10 curl -s --max-time 8 https://ipinfo.io/ip 2>/dev/null || echo "查询失败")
-# 3. 后台延迟重启ipwatch(kill旧PID+单独启动,防自杀)
-OLDPID=$(pgrep -f "[i]pwatch" | head -1)
-( sleep 2
-  [ -n "$OLDPID" ] && kill "$OLDPID" 2>/dev/null
-  sleep 1
-  setsid nohup bash /root/ipwatch.sh >> /root/ipwatch_run.log 2>&1 < /dev/null &
-  sleep 2
-  NEWPID=$(pgrep -f "[i]pwatch" | head -1)
-  echo "restart old=$OLDPID new=$NEWPID at $(date '+%m-%d %H:%M:%S')" >> /root/ipwatch_run.log
-) &
-sleep 6
-NEWPID=$(pgrep -f "[i]pwatch" | head -1)
-# 4. 回传结果
-NOW=$(date '+%m-%d %H:%M:%S')
-R="time=$NOW | 新脚本md5=$SMD5 | 实测取IP=$TIP | oldpid=$OLDPID newpid=$NEWPID"
-BB=$(echo -n "$R" | base64 -w0)
-SHA=$(timeout 15 curl -s -H "Authorization: token $TOK" "$API/ipwatch_fix.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
-if [ -n "$SHA" ]; then P="{\"message\":\"ipwatchfix\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"ipwatchfix\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
-curl -s --max-time 20 -X PUT -H "Authorization: token $TOK" "$API/ipwatch_fix.txt" -d "$P" -o /dev/null -w "回传:%{http_code}\n"
+# 只读审计：核对"未部署"功能是否其实已上车 + 心跳/IP/PBOX 现状。不碰登录态、不改任何文件。
+echo "===== [1] bot目录结构 ====="
+ls -la /root/bot/*.py 2>/dev/null | awk '{print $5,$9}'
+echo "--- plugins ---"
+ls /root/bot/bot/plugins/*.py 2>/dev/null | xargs -n1 basename 2>/dev/null
+echo "===== [2] 关键文件md5 ====="
+for f in /root/bot/main.py /root/bot/doudizhu_engine.py /root/bot/bot/plugins/ai_chat.py /root/bot/bot/plugins/keyword_reply.py /root/bot/bot/plugins/doudizhu.py /root/bot/bot/plugins/fortune.py /root/bot/bot/plugins/image_search_multisource.py; do
+  [ -f "$f" ] && md5sum "$f" || echo "MISSING $f"
+done
+echo "===== [3] 11-22功能特征码是否在设备上(判断未部署是否过时) ====="
+echo "-- ai_chat: 原子写os.replace --"
+grep -c 'os.replace' /root/bot/bot/plugins/ai_chat.py 2>/dev/null
+echo "-- ai_chat: 话题分段AI_SEGMENT_GAP_SEC --"
+grep -c 'AI_SEGMENT_GAP_SEC' /root/bot/bot/plugins/ai_chat.py 2>/dev/null
+echo "-- ai_chat: 记忆三修复 _BIO_SELF_RE/_asked_person_name/_memory_path --"
+grep -c '_BIO_SELF_RE' /root/bot/bot/plugins/ai_chat.py 2>/dev/null
+grep -c '_asked_person_name' /root/bot/bot/plugins/ai_chat.py 2>/dev/null
+echo "-- image_search: owner only _owner_only_private --"
+grep -c '_owner_only_private' /root/bot/bot/plugins/image_search_multisource.py 2>/dev/null
+echo "-- doudizhu: invalid_hint / deliver_hand / ddz_fuzzy --"
+grep -c 'invalid_hint' /root/bot/doudizhu_engine.py 2>/dev/null
+grep -c 'deliver_hand' /root/bot/bot/plugins/doudizhu.py 2>/dev/null
+grep -c 'ddz_fuzzy' /root/bot/bot/plugins/doudizhu.py 2>/dev/null
+echo "===== [4] 心跳/回传/PBOX ====="
+echo "-- PBOX文件数 --"
+ls /root/.remote_pending/task_*.txt 2>/dev/null | wc -l
+echo "-- ipwatch进程 --"
+pgrep -af '[i]pwatch' | head -3
+echo "-- ip.log尾3 --"
+tail -3 /root/ip.log 2>/dev/null
+echo "-- status提交(经git log) --"
+cd /root 2>/dev/null && git log -3 --format='%cd %s' --date=format:'%m-%d %H:%M' 2>/dev/null | head -5
+echo "===== [5] 遥控/QQ/bot进程 ====="
+pgrep -af '[r]emote_ctl' | head -2
+pgrep -af '[m]ain.py' | head -2
+echo "===== AUDIT_DONE ====="
 --- 输出 ---
-回传:201
+===== [1] bot目录结构 =====
+--- plugins ---
+ai_chat.py
+book_find.py
+chess_game.py
+doudizhu.py
+fortune.py
+games.py
+image_search_multisource.py
+image_see.py
+keyword_reply.py
+link_probe.py
+news.py
+song_request.py
+weather.py
+===== [2] 关键文件md5 =====
+MISSING /root/bot/main.py
+MISSING /root/bot/doudizhu_engine.py
+437cd23a183ea169f7d604432f8990f4  /root/bot/bot/plugins/ai_chat.py
+fd1b9ad99550c4c914bf9ccfef13f545  /root/bot/bot/plugins/keyword_reply.py
+bf112fbcbf356cbb89a0a15f24e88cae  /root/bot/bot/plugins/doudizhu.py
+c86405ec79a7dad9163cbe3474cf9288  /root/bot/bot/plugins/fortune.py
+8a708131346d57b41f186a2bf0332b64  /root/bot/bot/plugins/image_search_multisource.py
+===== [3] 11-22功能特征码是否在设备上(判断未部署是否过时) =====
+-- ai_chat: 原子写os.replace --
+5
+-- ai_chat: 话题分段AI_SEGMENT_GAP_SEC --
+1
+-- ai_chat: 记忆三修复 _BIO_SELF_RE/_asked_person_name/_memory_path --
+2
+2
+-- image_search: owner only _owner_only_private --
+2
+-- doudizhu: invalid_hint / deliver_hand / ddz_fuzzy --
+6
+4
+===== [4] 心跳/回传/PBOX =====
+-- PBOX文件数 --
+1
+-- ipwatch进程 --
+16677 bash /root/ipwatch.sh
+-- ip.log尾3 --
+2026-11-27 20:12:47 查询失败
+2026-11-27 21:12:59 查询失败
+2026-11-27 22:02:55 14.19.177.57
+-- status提交(经git log) --
+===== [5] 遥控/QQ/bot进程 =====
+8689 bash /root/remote_ctl.sh
+22621 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/storage --bind=/storage/emulated/0:/sdcard --bind=/storage/emulated/0:/mnt/sdcard --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/system/product --bind=/system --bind=/vendor --bind=/data/data/com.termux/files/usr /bin/bash -c bash -c 'cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & exec sleep infinity'
+22621 /data/data/com.termux/files/usr/bin/proot --kill-on-exit --link2symlink --sysvipc --kernel-release=\Linux\localhost\6.17.0-PRoot-Distro\#1 SMP PREEMPT_DYNAMIC Fri, 10 Oct 2025 00:00:00 +0000\aarch64\localdomain\-1\ -L --change-id=0:0 --rootfs=. --cwd=/root --bind=/dev --bind=/proc --bind=/sys --bind=/dev/urandom:/dev/random --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sys_empty:/sys/fs/selinux --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/loadavg:/proc/loadavg --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/stat:/proc/stat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/uptime:/proc/uptime --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/version:/proc/version --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/vmstat:/proc/vmstat --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowuid:/proc/sys/kernel/overflowuid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/sysdata/sysctl_kernel_overflowgid:/proc/sys/kernel/overflowgid --bind=/data/data/com.termux/files/usr/var/lib/proot-distro/containers/ubuntu/shm:/dev/shm --bind=/data/app --bind=/data/dalvik-cache --bind=/storage --bind=/storage/emulated/0:/sdcard --bind=/storage/emulated/0:/mnt/sdcard --bind=/data/data/com.termux/cache --bind=/data/data/com.termux/files/home --bind=/apex --bind=/odm --bind=/system/product --bind=/system --bind=/vendor --bind=/data/data/com.termux/files/usr /bin/bash -c bash -c 'cd /root/Napcat && setsid nohup xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage --js-flags=--max-old-space-size=512 > /root/napcat.log 2>&1 < /dev/null & cd /root/bot/bot && setsid nohup /root/bot/venv/bin/python main.py >> /root/bot.log 2>&1 & setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 & setsid nohup bash /root/azar_guard.sh >> /root/guard_run.log 2>&1 & exec sleep infinity'
+29005 /root/bot/venv/bin/python main.py
+===== AUDIT_DONE =====
