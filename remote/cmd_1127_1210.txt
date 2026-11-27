@@ -1,29 +1,35 @@
-287794
+287795
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
 D=VmIjR9F9Ojw3QEXVSIPygfznQqG
 TOK="${A}${B}${C}${D}"
 API='https://api.github.com/repos/Thousands91/-1/contents/remote'
-LOG=/tmp/stats_read.txt
+LOG=/tmp/stats_deep.txt
 : > "$LOG"
-echo "=== 统计+脚本读取 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
-echo "--- [1] session_heal脚本全文 ---" >> "$LOG"
-cat /root/azar_session_heal.sh 2>/dev/null >> "$LOG"
-echo "--- [2] session_heal_state.txt 全文 ---" >> "$LOG"
-cat /root/session_heal_state.txt 2>/dev/null >> "$LOG"
-echo "--- [3] session_heal_state 成功统计 ---" >> "$LOG"
-echo "总行数=$(wc -l < /root/session_heal_state.txt 2>/dev/null)" >> "$LOG"
-echo "含'恢复成功/已恢复/online':" >> "$LOG"
-grep -iE '恢复成功|已恢复|成功|online' /root/session_heal_state.txt 2>/dev/null | tail -30 >> "$LOG"
-echo "--- [4] napcat.log 扫码登录/登录成功时间点(11-23~11-27) ---" >> "$LOG"
-grep -E '二维码已被扫描|登录成功|\[Core\] \[Login\].*(success|Success)|账号状态变更为在线' /root/napcat.log 2>/dev/null | tail -30 >> "$LOG"
-echo "--- [5] napcat-restart.log 11-23~11-27 登录成功/扫码记录 ---" >> "$LOG"
-grep -E '二维码已被扫描|登录成功|\[Core\] \[Login\].*(success|Success)' /root/napcat-restart.log 2>/dev/null | head -40 >> "$LOG"
-echo "--- [6] .session_heal目录现状 ---" >> "$LOG"
-ls -la /root/.session_heal/ 2>&1 | head -20 >> "$LOG"
+echo "=== -q成功次数深挖 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
+echo "--- [1] napcat.log 11-23~11-27 所有登录/在线/扫码事件 ---" >> "$LOG"
+grep -E '\[Core\] \[Login\]|二维码已被扫描|登录成功|账号状态变更|\[在线\]|\[掉线\]|快速登录|-q' /root/napcat.log 2>/dev/null | grep -E '11-2[34567]' | tail -50 >> "$LOG"
+echo "--- [2] napcat-restart.log 11-23~11-27 '扫码已被扫描'计数 ---" >> "$LOG"
+echo "二维码已被扫描次数=$(grep -c '二维码已被扫描' /root/napcat-restart.log 2>/dev/null)" >> "$LOG"
+grep -n '二维码已被扫描' /root/napcat-restart.log 2>/dev/null | tail -20 >> "$LOG"
+echo "--- [3] 所有日志里'恢复成功'字样 ---" >> "$LOG"
+grep -rn '恢复成功\|已恢复\|login success\|Login Success' /root/*.log /root/.session_heal/* 2>/dev/null | tail -20 >> "$LOG"
+echo "--- [4] autoheal日志 -q成功记录 ---" >> "$LOG"
+for f in /root/autoheal.log /root/azar_autoheal.log /root/guard_run.log; do
+  echo "### $f"
+  grep -iE 'q|快速登录|恢复|成功|上线|online' "$f" 2>/dev/null | tail -15
+done >> "$LOG" 2>/dev/null
+echo "--- [5] 11-24 和 11-25 掉线后怎么恢复的(napcat.log上下文) ---" >> "$LOG"
+for T in '11-24 00:25' '11-25 02:14'; do
+  echo "### $T"
+  LN=$(grep -n "$T" /root/napcat.log 2>/dev/null | head -1 | cut -d: -f1)
+  [ -n "$LN" ] && { S=$((LN-3)); sed -n "${S},$((LN+12))p" /root/napcat.log; }
+done >> "$LOG" 2>/dev/null
+echo "--- [6] login_state判定依据脚本 ---" >> "$LOG"
+cat /root/logincheck.sh 2>/dev/null | head -60 >> "$LOG"
 echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/stats_read.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/stats_deep.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
 B=$(base64 -w0 "$LOG")
-if [ -n "$SHA" ]; then P="{\"message\":\"statsread\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"statsread\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
-curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/stats_read.txt" -d "$P"
+if [ -n "$SHA" ]; then P="{\"message\":\"statsdeep\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"statsdeep\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/stats_deep.txt" -d "$P"
