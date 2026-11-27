@@ -1,47 +1,15 @@
-287803
+287804
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
 D=VmIjR9F9Ojw3QEXVSIPygfznQqG
 TOK="${A}${B}${C}${D}"
 API='https://api.github.com/repos/Thousands91/-1/contents/remote'
-LOG=/tmp/verify_js.txt
-: > "$LOG"
-echo "=== 改造3 JS语法验真 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
-
-echo "--- [1] 注入段原文(精确) ---" >> "$LOG"
-grep -o '账号状态变更为离线 InfoDump[^;]*' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs 2>/dev/null | head -1 >> "$LOG"
-
-echo "--- [2] 可用的JS解释器 ---" >> "$LOG"
-for c in node nodejs qjs quickjs deno bun js; do command -v $c 2>/dev/null && echo "found: $c"; done >> "$LOG"
-# NapCat自带的node(在QQ包里)
-find /root/Napcat /root/.config/QQ -type f -name 'node' -o -name 'nodejs' 2>/dev/null | head -10 >> "$LOG"
-
-echo "--- [3] python做括号/引号配平静态检查 ---" >> "$LOG"
-python3 - >> "$LOG" 2>&1 <<'PY'
-p='/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs'
-s=open(p,encoding='utf-8').read()
-i=s.find('InfoDump=')
-seg=s[i-60:i+220]
-print('片段:',seg)
-# 配平检查(只看注入的IIFE)
-inj='(()=>{try{return JSON.stringify(n)}catch(e){return "DUMPERR:"+e.message}})()'
-for a,b in [('(',')'),('{','}'),('[',']')]:
-    print(a+b, inj.count(a), inj.count(b), 'OK' if inj.count(a)==inj.count(b) else 'MISMATCH')
-PY
-
-echo "--- [4] node --check(用find到的自带node若有) ---" >> "$LOG"
-NODE=$(find /root/Napcat -type f -name 'node' 2>/dev/null | head -1)
-if [ -n "$NODE" ] && [ -x "$NODE" ]; then
-  echo "用自带node: $NODE" >> "$LOG"
-  "$NODE" --check /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs 2>&1 | head -5 >> "$LOG"
-  echo "check_exit=$?" >> "$LOG"
-else
-  echo "无自带node可执行" >> "$LOG"
-fi
-
-echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/verify_js.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
-B=$(base64 -w0 "$LOG")
-if [ -n "$SHA" ]; then P="{\"message\":\"verifyjs\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"verifyjs\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
-curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/verify_js.txt" -d "$P"
+QR=/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/cache/qrcode.png
+cp "$QR" /tmp/qr_final.png 2>/dev/null
+B64=$(base64 -w0 /tmp/qr_final.png)
+SZ=$(stat -c %s /tmp/qr_final.png 2>/dev/null)
+M=$(stat -c %y "$QR" 2>/dev/null)
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/qr_live.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+if [ -n "$SHA" ]; then P="{\"message\":\"qr_final_$(date '+%H%M%S')_sz${SZ}\",\"content\":\"$B64\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"qr_final_$(date '+%H%M%S')_sz${SZ}\",\"content\":\"$B64\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code} sz=$SZ mtime=$M\n" --max-time 90 -X PUT -H "Authorization: token $TOK" "$API/qr_live.txt" -d "$P"
