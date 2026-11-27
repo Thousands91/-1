@@ -1,49 +1,47 @@
-287805
+287806
 A=github_pat_11BQPEBSA0
 B=iHriCXm9QGCt_74skvWNFH
 C=KumHCtG6L026yU4FNjISYSZ
 D=VmIjR9F9Ojw3QEXVSIPygfznQqG
 TOK="${A}${B}${C}${D}"
 API='https://api.github.com/repos/Thousands91/-1/contents/remote'
-LOG=/tmp/recheck_day.txt
+LOG=/tmp/q_success_audit.txt
 : > "$LOG"
-echo "=== 今日结论复核 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
+echo "=== -q快速登录成功史审计 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
 
-echo "--- [1] 11-27首次ErrCode:3上下文(判断-q还是刷码流程) ---" >> "$LOG"
-LN=$(grep -n '11-27.*ErrCode' /root/napcat-restart.log 2>/dev/null | head -1 | cut -d: -f1)
-echo "首行=$LN" >> "$LOG"
-if [ -n "$LN" ]; then S=$((LN-12)); [ $S -lt 1 ] && S=1; sed -n "${S},$((LN+8))p" /root/napcat-restart.log >> "$LOG"; fi
+echo "--- [1] restart.log里ErrCode:3总数+首次+末次 ---" >> "$LOG"
+echo "总数=$(grep -c 'Login Error' /root/napcat-restart.log 2>/dev/null)" >> "$LOG"
+echo "首次: $(grep 'Login Error' /root/napcat-restart.log 2>/dev/null | head -1)" >> "$LOG"
+echo "末次: $(grep 'Login Error' /root/napcat-restart.log 2>/dev/null | tail -1)" >> "$LOG"
 
-echo "--- [2] 11-27某次ErrCode:3后紧跟什么(取中段) ---" >> "$LOG"
-LN=$(grep -n '11-27.*ErrCode' /root/napcat-restart.log 2>/dev/null | sed -n '50p' | cut -d: -f1)
-echo "第50次行=$LN" >> "$LOG"
-if [ -n "$LN" ]; then S=$((LN-4)); sed -n "${S},$((LN+12))p" /root/napcat-restart.log >> "$LOG"; fi
+echo "--- [2] restart.log里[Core][Login]所有不同消息类型(去掉二维码hash) ---" >> "$LOG"
+grep -o '\[Core\] \[Login\][^0-9]*' /root/napcat-restart.log 2>/dev/null | sed 's/[[:space:]]*$//' | sort | uniq -c | sort -rn | head -20 >> "$LOG"
 
-echo "--- [3] 所有用-q的脚本及日志重定向 ---" >> "$LOG"
-grep -rn -- '-q 3427943187' /root/*.sh /data/data/com.termux/files/home/.termux/boot/*.sh 2>/dev/null | grep -v '\.bak' >> "$LOG"
+echo "--- [3] restart.log里'没有-q指令'次数(不带-q的启动) ---" >> "$LOG"
+echo "次数=$(grep -c '没有 -q 指令' /root/napcat-restart.log 2>/dev/null)" >> "$LOG"
 
-echo "--- [4] restart.log里'二维码已被扫描'/'登录成功'全记录 ---" >> "$LOG"
-grep -nE '二维码已被扫描|登录成功|Login Success|Login success' /root/napcat-restart.log 2>/dev/null | tail -20 >> "$LOG"
-echo "count=$(grep -cE '二维码已被扫描|登录成功|Login Success' /root/napcat-restart.log 2>/dev/null)" >> "$LOG"
+echo "--- [4] napcat.log里'没有-q指令'出现时间(启动方式判据) ---" >> "$LOG"
+grep -n '没有 -q 指令\|二维码登录方式' /root/napcat.log 2>/dev/null | tail -20 >> "$LOG"
 
-echo "--- [5] 11-23扫码成功后~11-24掉线间restart.log有无-q尝试 ---" >> "$LOG"
-grep -nE '11-23 1[4-9]:|11-23 2[0-3]:|11-24 00:' /root/napcat-restart.log 2>/dev/null | head -25 >> "$LOG"
-echo "该时段行数=$(grep -cE '11-23 1[4-9]:|11-23 2[0-3]:|11-24 00:' /root/napcat-restart.log 2>/dev/null)" >> "$LOG"
+echo "--- [5] napcat.log里登录相关全部命中(找成功判据) ---" >> "$LOG"
+grep -nE '二维码已被扫描|登录成功|Login success|Login Success|快速登录|Token|token' /root/napcat.log 2>/dev/null | grep -vE '\[I\]|MMKV' | tail -30 >> "$LOG"
 
-echo "--- [6] 设备实际mjs的onSelfStatusChanged源码(确认源码结论) ---" >> "$LOG"
-grep -o 'onSelfStatusChanged = (n) =>[^;]*' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs 2>/dev/null | head -c 600 >> "$LOG"
-echo "" >> "$LOG"
+echo "--- [6] 设备开机时刻(uptime反推) ---" >> "$LOG"
+cat /proc/uptime >> "$LOG"
+uptime >> "$LOG"
 
-echo "--- [7] login_state.log是否记过err字段(历史原因码) ---" >> "$LOG"
-echo "含err=行数=$(grep -c 'err=' /root/login_state.log 2>/dev/null)" >> "$LOG"
-head -3 /root/login_state.log 2>/dev/null >> "$LOG"
+echo "--- [7] 开机自启脚本-q那行(确认写 napcat.log) ---" >> "$LOG"
+grep -n 'q 3427943187' /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null >> "$LOG"
 
-echo "--- [8] 11-27 02:14掉线瞬间napcat.log有无原因码类字段 ---" >> "$LOG"
-LN=$(grep -n '11-27 02:14' /root/napcat.log 2>/dev/null | head -1 | cut -d: -f1)
-if [ -n "$LN" ]; then S=$((LN-3)); sed -n "${S},$((LN+10))p" /root/napcat.log >> "$LOG"; fi
+echo "--- [8] NapCat源码里所有'登录/Login'中文日志字符串(找成功标志) ---" >> "$LOG"
+grep -oE 'logger\.log\("[^"]*(登录|成功|Login)[^"]*"\)' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs 2>/dev/null | sort -u | head -25 >> "$LOG"
+
+echo "--- [9] napcat.log里'账号状态变更为在线'次数(上线判据) ---" >> "$LOG"
+echo "次数=$(grep -c '账号状态变更为在线' /root/napcat.log 2>/dev/null)" >> "$LOG"
+grep -n '账号状态变更为在线' /root/napcat.log 2>/dev/null | tail -10 >> "$LOG"
 
 echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/recheck_day.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/q_success_audit.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
 B=$(base64 -w0 "$LOG")
-if [ -n "$SHA" ]; then P="{\"message\":\"recheckday\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"recheckday\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
-curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/recheck_day.txt" -d "$P"
+if [ -n "$SHA" ]; then P="{\"message\":\"qsuccessaudit\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"qsuccessaudit\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/q_success_audit.txt" -d "$P"
