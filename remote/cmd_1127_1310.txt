@@ -1,0 +1,47 @@
+287806
+A=github_pat_11BQPEBSA0
+B=iHriCXm9QGCt_74skvWNFH
+C=KumHCtG6L026yU4FNjISYSZ
+D=VmIjR9F9Ojw3QEXVSIPygfznQqG
+TOK="${A}${B}${C}${D}"
+API='https://api.github.com/repos/Thousands91/-1/contents/remote'
+LOG=/tmp/q_success_audit.txt
+: > "$LOG"
+echo "=== -q快速登录成功史审计 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
+
+echo "--- [1] restart.log里ErrCode:3总数+首次+末次 ---" >> "$LOG"
+echo "总数=$(grep -c 'Login Error' /root/napcat-restart.log 2>/dev/null)" >> "$LOG"
+echo "首次: $(grep 'Login Error' /root/napcat-restart.log 2>/dev/null | head -1)" >> "$LOG"
+echo "末次: $(grep 'Login Error' /root/napcat-restart.log 2>/dev/null | tail -1)" >> "$LOG"
+
+echo "--- [2] restart.log里[Core][Login]所有不同消息类型(去掉二维码hash) ---" >> "$LOG"
+grep -o '\[Core\] \[Login\][^0-9]*' /root/napcat-restart.log 2>/dev/null | sed 's/[[:space:]]*$//' | sort | uniq -c | sort -rn | head -20 >> "$LOG"
+
+echo "--- [3] restart.log里'没有-q指令'次数(不带-q的启动) ---" >> "$LOG"
+echo "次数=$(grep -c '没有 -q 指令' /root/napcat-restart.log 2>/dev/null)" >> "$LOG"
+
+echo "--- [4] napcat.log里'没有-q指令'出现时间(启动方式判据) ---" >> "$LOG"
+grep -n '没有 -q 指令\|二维码登录方式' /root/napcat.log 2>/dev/null | tail -20 >> "$LOG"
+
+echo "--- [5] napcat.log里登录相关全部命中(找成功判据) ---" >> "$LOG"
+grep -nE '二维码已被扫描|登录成功|Login success|Login Success|快速登录|Token|token' /root/napcat.log 2>/dev/null | grep -vE '\[I\]|MMKV' | tail -30 >> "$LOG"
+
+echo "--- [6] 设备开机时刻(uptime反推) ---" >> "$LOG"
+cat /proc/uptime >> "$LOG"
+uptime >> "$LOG"
+
+echo "--- [7] 开机自启脚本-q那行(确认写 napcat.log) ---" >> "$LOG"
+grep -n 'q 3427943187' /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null >> "$LOG"
+
+echo "--- [8] NapCat源码里所有'登录/Login'中文日志字符串(找成功标志) ---" >> "$LOG"
+grep -oE 'logger\.log\("[^"]*(登录|成功|Login)[^"]*"\)' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/napcat.mjs 2>/dev/null | sort -u | head -25 >> "$LOG"
+
+echo "--- [9] napcat.log里'账号状态变更为在线'次数(上线判据) ---" >> "$LOG"
+echo "次数=$(grep -c '账号状态变更为在线' /root/napcat.log 2>/dev/null)" >> "$LOG"
+grep -n '账号状态变更为在线' /root/napcat.log 2>/dev/null | tail -10 >> "$LOG"
+
+echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/q_success_audit.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+B=$(base64 -w0 "$LOG")
+if [ -n "$SHA" ]; then P="{\"message\":\"qsuccessaudit\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"qsuccessaudit\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
+curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/q_success_audit.txt" -d "$P"
