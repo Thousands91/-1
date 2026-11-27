@@ -1,36 +1,16 @@
-287810
-A=github_pat_11BQPEBSA0
-B=iHriCXm9QGCt_74skvWNFH
-C=KumHCtG6L026yU4FNjISYSZ
-D=VmIjR9F9Ojw3QEXVSIPygfznQqG
-TOK="${A}${B}${C}${D}"
-API='https://api.github.com/repos/Thousands91/-1/contents/remote'
-LOG=/tmp/boot_scripts.txt
-: > "$LOG"
-echo "=== 开机启动脚本全对比 $(date '+%m-%d %H:%M:%S') ===" >> "$LOG"
-BD=/data/data/com.termux/files/home/.termux/boot
-
-echo "--- [1] boot目录所有文件 ---" >> "$LOG"
-ls -la "$BD/" 2>/dev/null >> "$LOG"
-
-echo "--- [2] 每个脚本里QQ启动那行(带不带-q) ---" >> "$LOG"
-for f in "$BD"/*; do
-  [ -f "$f" ] || continue
-  echo "### $(basename $f) md5=$(md5sum "$f" 2>/dev/null | cut -d' ' -f1)" >> "$LOG"
-  grep -nE 'QQ/qq|q 3427943187|napcat' "$f" 2>/dev/null | head -8 >> "$LOG"
-done
-
-echo "--- [3] asar_boot.sh全文 ---" >> "$LOG"
-cat "$BD/asar_boot.sh" 2>/dev/null >> "$LOG"
-
-echo "--- [4] 谁在proot启动命令里(找无-q那段的来源) ---" >> "$LOG"
-grep -rn 'no-sandbox.*disable-gpu.*max-old-space-size=512' "$BD" /root/*.sh 2>/dev/null | grep -v 'q 3427943187' | head -10 >> "$LOG"
-
-echo "--- [5] 保险丝脚本逻辑 ---" >> "$LOG"
-grep -rn '保险丝\|24h内已自动拉起\|熔断' /root/*.sh 2>/dev/null | head -15 >> "$LOG"
-
-echo "DONE=$(date '+%m-%d %H:%M:%S')" >> "$LOG"
-SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" "$API/boot_scripts.txt" | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
-B=$(base64 -w0 "$LOG")
-if [ -n "$SHA" ]; then P="{\"message\":\"bootscripts\",\"content\":\"$B\",\"sha\":\"$SHA\",\"branch\":\"main\"}"; else P="{\"message\":\"bootscripts\",\"content\":\"$B\",\"branch\":\"main\"}"; fi
-curl -s -o /dev/null -w "PUT:%{http_code} sz=$(stat -c %s $LOG)\n" --max-time 60 -X PUT -H "Authorization: token $TOK" "$API/boot_scripts.txt" -d "$P"
+287811
+echo "===== rc.sh diag 回传静默四查 $(date '+%F %T') ====="
+echo "---[1]循环日志尾(循环死活+失败原文)---"
+tail -15 /root/remote_ctl.log
+echo "---[2]小包PUT手测(一锤定音通道好坏)---"
+TOK=$(grep -oE 'ghp_[A-Za-z0-9]+' /root/.git-credentials 2>/dev/null | head -1)
+curl -s -o /dev/null -w "api.github.com HTTP:%{http_code} 耗时:%{time_total}s\n" --max-time 15 https://api.github.com
+SHA=$(curl -s --max-time 15 -H "Authorization: token $TOK" https://api.github.com/repos/Thousands91/-1/contents/remote/diag_probe.txt | grep -o '"sha": "[^"]*"' | head -1 | sed 's/.*: "//;s/"//')
+curl -s -o /dev/null -w "PUT diag_probe.txt HTTP:%{http_code} 耗时:%{time_total}s\n" --max-time 30 -X PUT -H "Authorization: token $TOK" https://api.github.com/repos/Thousands91/-1/contents/remote/diag_probe.txt -d "{\"message\":\"diag probe\",\"content\":\"ZGlhZ19wcm9iZQ==\",\"sha\":\"$SHA\",\"branch\":\"main\"}"
+echo "---[3]git push手测(non-fast-forward=仓库不同步)---"
+cd /root/asar-sync && git push origin main 2>&1 | tail -3
+echo "---[4]水位(任务被谁消费)---"
+cat /root/.remote_last 2>/dev/null; echo
+echo "---[判据]tick.log心跳(60s连续=CPU没冻)---"
+tail -3 /root/tick.log 2>/dev/null
+echo "=====四查完毕,拿到结果前不许说冻结====="
