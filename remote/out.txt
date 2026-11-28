@@ -1,20 +1,31 @@
-<<<task_287843.txt>>>
-===== 任务287843 11-28 14:15:37 =====
+<<<task_287844.txt>>>
+===== 任务287844 11-28 14:17:43 =====
 --- 命令 ---
-# 优化B替换+安全重启：备份→替换→后台延迟kill(PID文件)→删PID/锁→setsid重启→回传新PID
-cp /root/remote_ctl.sh /root/remote_ctl.sh.bak_optb_1128 && echo "备份OK"
-cp /tmp/remote_ctl_new.sh /root/remote_ctl.sh && chmod +x /root/remote_ctl.sh && echo "替换OK md5=$(md5sum /root/remote_ctl.sh | cut -d\  -f1)"
-echo "落地语法=$(bash -n /root/remote_ctl.sh 2>&1 && echo OK || echo FAIL)"
-OLD=$(cat /root/.remote_pid 2>/dev/null || echo 8689)
-echo "准备重启:旧PID=$OLD"
-# 后台延迟3秒执行重启链，让本任务先回传完成
-( sleep 3; kill "$OLD" 2>/dev/null; sleep 2; rm -f /root/.remote_pid /root/.remote_lock; setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 < /dev/null & echo $! > /root/.remote_pid; sleep 2; echo "[$(date '+%m-%d %H:%M')] 优化B:remote_ctl已重启 newpid=$(cat /root/.remote_pid)" >> /root/remote_ctl.log ) >/dev/null 2>&1 &
-echo "重启链已排入后台(延迟3s)"
-echo "=== DEPLOY_B_RESTART_SENT ==="
+# 只读：验证优化B重启成功 + 回传链正常。方括号隔离防自匹配。
+echo "=== 新PID文件 ==="
+cat /root/.remote_pid 2>/dev/null || echo "无PID文件"
+echo "=== 进程存活 ==="
+NP=$(cat /root/.remote_pid 2>/dev/null)
+if [ -n "$NP" ] && kill -0 "$NP" 2>/dev/null; then echo "新PID $NP 存活=YES"; else echo "新PID $NP 存活=NO"; fi
+echo "=== 重启日志尾 ==="
+grep '优化B:remote_ctl已重启' /root/remote_ctl.log 2>/dev/null | tail -2
+echo "=== remote_ctl.log尾3 ==="
+tail -3 /root/remote_ctl.log 2>/dev/null
+echo "=== 当前落地md5 ==="
+md5sum /root/remote_ctl.sh 2>/dev/null | cut -d\  -f1
+echo "=== DONE_VB ==="
 --- 输出 ---
-备份OK
-替换OK md5=42a11a0726721f692258c08b1e5e089e
-落地语法=OK
-准备重启:旧PID=8689
-重启链已排入后台(延迟3s)
-=== DEPLOY_B_RESTART_SENT ===
+=== 新PID文件 ===
+21128
+=== 进程存活 ===
+新PID 21128 存活=YES
+=== 重启日志尾 ===
+( sleep 3; kill "$OLD" 2>/dev/null; sleep 2; rm -f /root/.remote_pid /root/.remote_lock; setsid nohup bash /root/remote_ctl.sh >> /root/remote_ctl.log 2>&1 < /dev/null & echo $! > /root/.remote_pid; sleep 2; echo "[$(date '+%m-%d %H:%M')] 优化B:remote_ctl已重启 newpid=$(cat /root/.remote_pid)" >> /root/remote_ctl.log ) >/dev/null 2>&1 &
+[11-28 14:15] 优化B:remote_ctl已重启 newpid=21128
+=== remote_ctl.log尾3 ===
+[11-28 14:15] intake:槽位=1128_1415/1128_1410 命中ID=287843
+[11-28 14:15] report:API回传成功
+[11-28 14:17] intake:槽位=1128_1415/1128_1410 命中ID=287844
+=== 当前落地md5 ===
+42a11a0726721f692258c08b1e5e089e
+=== DONE_VB ===
