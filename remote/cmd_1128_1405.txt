@@ -1,0 +1,6 @@
+287840
+# 只读：取remote_ctl.sh 全文(base64) 用于沙箱精确分析。不改动。
+echo "=== CTL_B64_BEGIN ==="
+base64 -w0 /root/remote_ctl.sh 2>/dev/null; echo
+echo "=== CTL_B64_END ==="
+echo "=== DONE6 ==="
