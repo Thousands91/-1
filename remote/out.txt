@@ -1,26 +1,37 @@
-<<<task_287838.txt>>>
-===== 任务287838 11-27 22:23:46 =====
+<<<task_287839.txt>>>
+===== 任务287839 11-28 14:01:56 =====
 --- 命令 ---
-# 只读：重启后全家桶状态核实。不改动。
-echo "=== 当前关键PID ==="
-echo "remote_ctl: $(pgrep -f '[r]emote_ctl.sh' | tr '\n' ' ')"
-echo "bot(main.py): $(pgrep -f '[m]ain.py' | tr '\n' ' ')"
-echo "napcat(qq): $(pgrep -f 'opt/QQ/[q]q' | tr '\n' ' ')"
-echo "watchdog: $(pgrep -f '[x]10_watchdog' | tr '\n' ' ')"
-echo "ipwatch: $(pgrep -f '[i]pwatch' | tr '\n' ' ')"
-echo "=== 登录态 ==="
-cat /root/logincheck.txt 2>/dev/null | head -2 || echo "无logincheck文件"
-echo "=== boot脚本里是否有watchdog行 ==="
-grep -n 'watchdog' /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null || echo "boot脚本无watchdog行"
-echo "=== DONE5 ==="
+# 只读：回传三个脚本完整内容(base64,避免特殊字符破坏)。不改动。
+echo "=== WATCHDOG_B64_BEGIN ==="
+base64 -w0 /data/data/com.termux/files/home/x10_watchdog.sh 2>/dev/null; echo
+echo "=== WATCHDOG_B64_END ==="
+echo "=== BOOT_B64_BEGIN ==="
+base64 -w0 /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null; echo
+echo "=== BOOT_B64_END ==="
+echo "=== CTL_MD5_SIZE ==="
+md5sum /root/remote_ctl.sh 2>/dev/null
+wc -l /root/remote_ctl.sh 2>/dev/null
+echo "=== CTL_BUNDLE_LINES ==="
+grep -n 'bundle\|BUNDLE\|remote_pending\|task_\|make_bundle\|PBOX' /root/remote_ctl.sh 2>/dev/null | head -40
+echo "=== DONE_FETCH ==="
 --- 输出 ---
-=== 当前关键PID ===
-remote_ctl: 8689 22621 
-bot(main.py): 22621 29005 
-napcat(qq): 15875 15891 15893 15894 15924 22621 
-watchdog: 
-ipwatch: 16677 
-=== 登录态 ===
-=== boot脚本里是否有watchdog行 ===
-boot脚本无watchdog行
-=== DONE5 ===
+=== WATCHDOG_B64_BEGIN ===
+IyEvYmluL2Jhc2gKIyBYMTAg6YGl5o6n6Ieq5Yqo5ouJ5rS755yL6Zeo54uX77yIVGVybXV45bGC6L+Q6KGM77yM5q+P5YiG6ZKf5beh5qOA77yJCndoaWxlIHRydWU7IGRvCiAgcHJvb3QtZGlzdHJvIGxvZ2luIHVidW50dSAtLSBiYXNoIC1jICdwZ3JlcCAtZiAicmVtb3RlX2N0bC5zaCIgPi9kZXYvbnVsbCB8fCB7IHJtIC1mIC9yb290Ly5yZW1vdGVfcGlkOyBzZXRzaWQgbm9odXAgYmFzaCAvcm9vdC9yZW1vdGVfY3RsLnNoID4+IC9yb290L3JlbW90ZV9jdGwubG9nIDI+JjEgJiBlY2hvICJbJChkYXRlICslbS0lZCAlSDolTSldIHdhdGNoZG9n5ouJ5rS7cmVtb3RlX2N0bCIgPj4gL3Jvb3Qvd2F0Y2hkb2cubG9nOyB9JwogIHNsZWVwIDYwCmRvbmUK
+=== WATCHDOG_B64_END ===
+=== BOOT_B64_BEGIN ===
+IyEvZGF0YS9kYXRhL2NvbS50ZXJtdXgvZmlsZXMvdXNyL2Jpbi9iYXNoCiMgYXNhcl9ib290LnNoIOKAlCBYMTAg5byA5py66Ieq5ZCv5ZSv5LiA5YWl5Y+j77yIMjAyNi0xMS0yMyDooaXpvZDvvIzlnZExODDvvIkKIyDnlKjms5XvvJpUZXJtdXg6Qm9vdCDmj5Lku7blvIDmnLroh6rliqjop6blj5HmnKzohJrmnKzvvJvmiYvliqjot5EgYmFzaCB+Ly50ZXJtdXgvYm9vdC9hc2FyX2Jvb3Quc2ggPSDnrYnmlYjoh6rlkK8Kc2xlZXAgMjUKL2RhdGEvZGF0YS9jb20udGVybXV4L2ZpbGVzL3Vzci9iaW4vdGVybXV4LXdha2UtbG9jawplY2hvICJib2906Ieq5ZCv5bey6Kem5Y+RICQoZGF0ZSkiID4+ICIkSE9NRS9hc2FyX2Jvb3QubG9nIgpzZXRzaWQgbm9odXAgcHJvb3QtZGlzdHJvIGxvZ2luIHVidW50dSAtLSBiYXNoIC1jICcKY2QgL3Jvb3QvTmFwY2F0ICYmIHNldHNpZCBub2h1cCB4dmZiLXJ1biAtYSAvcm9vdC9OYXBjYXQvb3B0L1FRL3FxIC1xIDM0Mjc5NDMxODcgLS1uby1zYW5kYm94IC0tZGlzYWJsZS1ncHUgLS1kaXNhYmxlLXNvZnR3YXJlLXJhc3Rlcml6ZXIgLS1kaXNhYmxlLWRldi1zaG0tdXNhZ2UgLS1qcy1mbGFncz0tLW1heC1vbGQtc3BhY2Utc2l6ZT01MTIgPj4gL3Jvb3QvbmFwY2F0LmxvZyAyPiYxIDwgL2Rldi9udWxsICYKY2QgL3Jvb3QvYm90L2JvdCAmJiBzZXRzaWQgbm9odXAgL3Jvb3QvYm90L3ZlbnYvYmluL3B5dGhvbiBtYWluLnB5ID4+IC9yb290L2JvdC5sb2cgMj4mMSA8IC9kZXYvbnVsbCAmCnNldHNpZCBub2h1cCBiYXNoIC9yb290L3JlbW90ZV9jdGwuc2ggPj4gL3Jvb3QvcmVtb3RlX2N0bC5sb2cgMj4mMSA8IC9kZXYvbnVsbCAmCnNldHNpZCBub2h1cCBiYXNoIC9yb290L2F6YXJfZ3VhcmQuc2ggPj4gL3Jvb3QvZ3VhcmRfcnVuLmxvZyAyPiYxIDwgL2Rldi9udWxsICYKcGdyZXAgLWYgIlt0XWljay5zaCIgPi9kZXYvbnVsbCB8fCBzZXRzaWQgbm9odXAgL3Jvb3QvdGljay5zaCA+L2Rldi9udWxsIDI+JjEgJgpwZ3JlcCAtZiAiW2hdZWFsdGhfcHJvYmUiID4vZGV2L251bGwgfHwgc2V0c2lkIG5vaHVwIGJhc2ggL3Jvb3QvaGVhbHRoX3Byb2JlLnNoID4vZGV2L251bGwgMj4mMSA8IC9kZXYvbnVsbCAmCnBncmVwIC1mICJbbl1ldG1vbiIgPi9kZXYvbnVsbCB8fCBzZXRzaWQgbm9odXAgYmFzaCAvcm9vdC9uZXRtb24uc2ggPi9kZXYvbnVsbCAyPiYxIDwgL2Rldi9udWxsICYKcGdyZXAgLWYgIltsXW9naW5fd2F0Y2giID4vZGV2L251bGwgfHwgc2V0c2lkIG5vaHVwIGJhc2ggL3Jvb3QvbG9naW5fd2F0Y2guc2ggPi9kZXYvbnVsbCAyPiYxIDwgL2Rldi9udWxsICYKcGdyZXAgLWYgIltpXXB3YXRjaCIgPi9kZXYvbnVsbCB8fCBzZXRzaWQgbm9odXAgYmFzaCAvcm9vdC9pcHdhdGNoLnNoID4vZGV2L251bGwgMj4mMSA8IC9kZXYvbnVsbCAmCnNldHNpZCBub2h1cCBiYXNoIC9yb290L2F6YXJfYXV0b2hlYWwuc2ggPj4gL3Jvb3QvYXV0b2hlYWxfcnVuLmxvZyAyPiYxIDwgL2Rldi9udWxsICYKZXhlYyBzbGVlcCBpbmZpbml0eQonID4+ICIkSE9NRS9hc2FyX2Jvb3QubG9nIiAyPiYxIDwgL2Rldi9udWxsICYK
+=== BOOT_B64_END ===
+=== CTL_MD5_SIZE ===
+0c7ab885890af30025b5ca7a4f707abb  /root/remote_ctl.sh
+130 /root/remote_ctl.sh
+=== CTL_BUNDLE_LINES ===
+10:PBOX=/root/.remote_pending
+11:mkdir -p "$PBOX"
+30:  O="$PBOX/task_$1.txt"
+36:  ls "$PBOX" >/dev/null 2>&1 || return 0
+37:  F=$(ls -A "$PBOX" 2>/dev/null); [ -n "$F" ] || return 0
+38:  : > /tmp/remote_bundle.txt
+39:  for f in $F; do echo "<<<$f>>>" >> /tmp/remote_bundle.txt; cat "$PBOX/$f" >> /tmp/remote_bundle.txt; done
+43:  B64=$(base64 -w0 /tmp/remote_bundle.txt) || return 1
+46:    rm -f "$PBOX"/*
+=== DONE_FETCH ===
