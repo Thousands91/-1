@@ -1,6 +1,13 @@
-287840
-# 只读：取remote_ctl.sh 全文(base64) 用于沙箱精确分析。不改动。
-echo "=== CTL_B64_BEGIN ==="
-base64 -w0 /root/remote_ctl.sh 2>/dev/null; echo
-echo "=== CTL_B64_END ==="
-echo "=== DONE6 ==="
+287841
+# 只读：查PID文件与进程,为安全重启做准备。用方括号隔离防自匹配。
+echo "=== .remote_pid ==="
+cat /root/.remote_pid 2>/dev/null || echo "无PID文件"
+echo "=== remote_ctl真实进程(方括号) ==="
+pgrep -af 'remote_ctl[.]sh' | head -5
+echo "=== 锁文件 ==="
+ls -la /root/.remote_lock /root/.remote.pid 2>/dev/null | awk '{print $9}'
+echo "=== watchdog进程(方括号) ==="
+pgrep -af 'x10_watchdog[.]sh' | head -3 || echo "无watchdog进程"
+echo "=== 当前PBOX文件清单 ==="
+ls -1t /root/.remote_pending/ 2>/dev/null | head -10
+echo "=== DONE_PID ==="
