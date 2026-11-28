@@ -1,32 +1,31 @@
-<<<task_287853.txt>>>
-===== 任务287853 11-28 14:41:31 =====
+<<<task_287854.txt>>>
+===== 任务287854 11-28 14:46:50 =====
 --- 命令 ---
-# 优化A最终:替换容器内watchdog + boot proot块内插启动行 + 立即启动。方括号隔离。
-BOOT=/data/data/com.termux/files/home/.termux/boot/asar_boot.sh
-# 1) watchdog 备份+替换(容器内/root/)
-[ -f /root/x10_watchdog.sh ] && cp /root/x10_watchdog.sh /root/x10_watchdog.sh.bak_opta_1128
-cp /tmp/wd_v2.sh /root/x10_watchdog.sh && chmod +x /root/x10_watchdog.sh && echo "watchdog落地OK md5=$(md5sum /root/x10_watchdog.sh | cut -d\  -f1)"
-# 2) boot 备份+proot块内插行(锚点=容器内autoheal行)
-cp "$BOOT" "$BOOT.bak_opta2_1128" && echo "boot备份OK"
-if ! grep -q 'x10_watchdog' "$BOOT"; then
-  sed -i '/setsid nohup bash \/root\/azar_autoheal\.sh/a pgrep -f "[x]10_watchdog" >/dev/null || setsid nohup bash /root/x10_watchdog.sh >> /root/watchdog.log 2>&1 < /dev/null \&' "$BOOT"
-  echo "boot插行完成 watchdog行数=$(grep -c 'x10_watchdog' "$BOOT")"
-fi
-echo "boot新md5=$(md5sum "$BOOT" | cut -d\  -f1)"
-echo "boot语法=$(bash -n "$BOOT" 2>&1 && echo OK || echo FAIL)"
-# 3) 立即启动watchdog(容器内,方括号隔离)
-if ! pgrep -f 'x10_watchdog[.]sh' >/dev/null; then
-  setsid nohup bash /root/x10_watchdog.sh >> /root/watchdog.log 2>&1 < /dev/null &
-  echo "watchdog启动指令已发 pid=$!"
-else
-  echo "watchdog已在跑"
-fi
-echo "=== DEPLOY_A4_DONE ==="
+# 只读:验证watchdog存活+不误伤remote_ctl+登录态。方括号隔离。
+echo "=== watchdog进程(方括号) ==="
+pgrep -af 'x10_watchdog[.]sh' | head -3
+echo "watchdog数=$(pgrep -f 'x10_watchdog[.]sh' | wc -l)"
+echo "=== remote_ctl进程(应仍21128单实例) ==="
+echo "remote_ctl PID="$(pgrep -f 'remote_ctl[.]sh' | tr '\n' ' ')
+echo "remote_pid文件="$(cat /root/.remote_pid 2>/dev/null)
+echo "=== watchdog日志(90s内应为空,未误拉活) ==="
+cat /root/watchdog.log 2>/dev/null | tail -5 || echo "日志空(未误拉活=好)"
+echo "=== 登录态 ==="
+bash /root/logincheck.sh 2>/dev/null | head -2
+echo "=== boot watchdog行 ==="
+grep 'x10_watchdog' /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null
+echo "=== DONE_VA ==="
 --- 输出 ---
-watchdog落地OK md5=f07b60d0e29a25ed1a7e78dca7a5a977
-boot备份OK
-boot插行完成 watchdog行数=1
-boot新md5=bb66aacf952966666eea71f2375c1d7c
-boot语法=OK
-watchdog启动指令已发 pid=27022
-=== DEPLOY_A4_DONE ===
+=== watchdog进程(方括号) ===
+27022 bash /root/x10_watchdog.sh
+watchdog数=1
+=== remote_ctl进程(应仍21128单实例) ===
+remote_ctl PID=21128 22621
+remote_pid文件=21128
+=== watchdog日志(90s内应为空,未误拉活) ===
+=== 登录态 ===
+=== 登录状态（权威判定）===
+[在线] 已登录，一切正常
+=== boot watchdog行 ===
+pgrep -f "[x]10_watchdog" >/dev/null || setsid nohup bash /root/x10_watchdog.sh >> /root/watchdog.log 2>&1 < /dev/null &
+=== DONE_VA ===
