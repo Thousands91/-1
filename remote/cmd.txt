@@ -1,12 +1,14 @@
-287856
-echo "=== 最终健康快照 ==="
-echo "时间: $(date '+%m-%d %H:%M:%S')"
-echo "remote_ctl: $(cat /root/.remote_pid 2>/dev/null) alive=$(kill -0 $(cat /root/.remote_pid 2>/dev/null) 2>/dev/null && echo Y || echo N)"
-echo "watchdog: $(pgrep -f 'x10_watchdog[.]sh' | tr '\n' ' ')"
-echo "bot: $(pgrep -f '[m]ain.py' | tail -1)"
-echo "PBOX: $(ls /root/.remote_pending/ 2>/dev/null | wc -l)"
-echo "wd日志行数: $(wc -l < /root/watchdog.log 2>/dev/null)"
-echo "丢弃日志: $(grep -c 'PBOX超量丢弃' /root/remote_ctl.log 2>/dev/null)"
-echo "登录: $(bash /root/logincheck.sh 2>/dev/null | grep -oE '\[(在线|未登录|掉线)\]' | head -1)"
-echo "status尾: $(grep message=status /dev/null 2>/dev/null; tail -1 /root/remote_ctl.log | cut -c1-60)"
-echo "=== DONE_FINAL ==="
+287857
+echo "=== 真实bot日志路径(问进程本人,不猜) ==="
+P=$(pgrep -f '[m]ain.py' | head -1); echo "main.py pid=$P"
+LOG=$(readlink /proc/$P/fd/1 2>/dev/null | sed 's/ (deleted)//'); echo "LOG=$LOG"
+[ -n "$LOG" ] || LOG=/root/bot.log
+echo "=== 定位这三条消息(ask特征词)的[核对·调试]行 ==="
+grep -nE '欢愉之女里面选|给你自己选|从欢愉之女|在吗' "$LOG" 2>/dev/null | tail -20
+echo "=== 那两条回复的特征词所在行(含上下文) ==="
+grep -nE '羊毛衫|欢颜|夏玛|朱娜|最值得读|哪敢替|听来的|没亲见|不写进册子' "$LOG" 2>/dev/null | tail -20
+echo "=== 联网/降级/重答/模型 相关(尾部60) ==="
+grep -nE '\[联网|\[存疑|\[改口|\[核对|降级|429|RateLimit|model=|glm-' "$LOG" 2>/dev/null | tail -60
+echo "=== .env模型 ==="
+grep -iE 'MODEL|BASE_URL' /root/bot/bot/.env 2>/dev/null || grep -iE 'MODEL|BASE_URL' /root/bot/.env 2>/dev/null
+echo "=== DONE_CHATLOG ==="
