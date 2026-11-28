@@ -1,21 +1,14 @@
-<<<task_287845.txt>>>
-===== 任务287845 11-28 14:21:02 =====
+<<<task_287846.txt>>>
+===== 任务287846 11-28 14:23:00 =====
 --- 命令 ---
-# 优化B功能验收:造5个假task,等api_report跑一轮,看是否被剪到≤3。测完清理。
+# 优化B验收重做:只造5个假task,立即返回。主循环随后跑api_report应剪到3并打日志。
 for i in 1 2 3 4 5; do echo "test$i" > "/root/.remote_pending/task_test$i.txt"; done
 echo "造5个后=$(ls /root/.remote_pending/task_test*.txt 2>/dev/null | wc -l)"
-# 触发一轮api_report(任务本身执行后主循环会report);等25秒让它跑完
-sleep 25
-echo "25秒后剩=$(ls /root/.remote_pending/task_test*.txt 2>/dev/null | wc -l)"
-echo "剩下的:$(ls -1 /root/.remote_pending/task_test*.txt 2>/dev/null | xargs -n1 basename 2>/dev/null | tr '\n' ' ')"
-echo "丢弃日志:$(grep -c 'PBOX超量丢弃' /root/remote_ctl.log 2>/dev/null)"
-rm -f /root/.remote_pending/task_test*.txt
-echo "清理后PBOX=$(ls /root/.remote_pending/ 2>/dev/null | wc -l)"
-echo "=== DONE_TESTB ==="
+echo "=== DONE_TESTB2 ==="
 --- 输出 ---
 造5个后=5
-25秒后剩=5
-剩下的:task_test1.txt task_test2.txt task_test3.txt task_test4.txt task_test5.txt 
-丢弃日志:0
-清理后PBOX=1
-=== DONE_TESTB ===
+=== DONE_TESTB2 ===
+<<<task_test3.txt>>>
+test3
+<<<task_test5.txt>>>
+test5
