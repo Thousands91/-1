@@ -1,14 +1,5 @@
-287857
-echo "=== 真实bot日志路径(问进程本人,不猜) ==="
-P=$(pgrep -f '[m]ain.py' | head -1); echo "main.py pid=$P"
-LOG=$(readlink /proc/$P/fd/1 2>/dev/null | sed 's/ (deleted)//'); echo "LOG=$LOG"
-[ -n "$LOG" ] || LOG=/root/bot.log
-echo "=== 定位这三条消息(ask特征词)的[核对·调试]行 ==="
-grep -nE '欢愉之女里面选|给你自己选|从欢愉之女|在吗' "$LOG" 2>/dev/null | tail -20
-echo "=== 那两条回复的特征词所在行(含上下文) ==="
-grep -nE '羊毛衫|欢颜|夏玛|朱娜|最值得读|哪敢替|听来的|没亲见|不写进册子' "$LOG" 2>/dev/null | tail -20
-echo "=== 联网/降级/重答/模型 相关(尾部60) ==="
-grep -nE '\[联网|\[存疑|\[改口|\[核对|降级|429|RateLimit|model=|glm-' "$LOG" 2>/dev/null | tail -60
-echo "=== .env模型 ==="
-grep -iE 'MODEL|BASE_URL' /root/bot/bot/.env 2>/dev/null || grep -iE 'MODEL|BASE_URL' /root/bot/.env 2>/dev/null
-echo "=== DONE_CHATLOG ==="
+287858
+echo "PING $(date '+%H:%M:%S')"
+echo "mainpid=$(pgrep -f '[m]ain.py' | head -1) pid829=$(pgrep -f '[r]emote_ctl' | head -1)"
+echo "logs=$(ls -la /root/bot.log /root/bot/bot/bot.log 2>/dev/null | awk '{print $5,$9}')"
+echo "DONE_PING"
