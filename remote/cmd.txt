@@ -1,15 +1,9 @@
-287854
-# 只读:验证watchdog存活+不误伤remote_ctl+登录态。方括号隔离。
-echo "=== watchdog进程(方括号) ==="
-pgrep -af 'x10_watchdog[.]sh' | head -3
-echo "watchdog数=$(pgrep -f 'x10_watchdog[.]sh' | wc -l)"
-echo "=== remote_ctl进程(应仍21128单实例) ==="
-echo "remote_ctl PID="$(pgrep -f 'remote_ctl[.]sh' | tr '\n' ' ')
-echo "remote_pid文件="$(cat /root/.remote_pid 2>/dev/null)
-echo "=== watchdog日志(90s内应为空,未误拉活) ==="
-cat /root/watchdog.log 2>/dev/null | tail -5 || echo "日志空(未误拉活=好)"
-echo "=== 登录态 ==="
-bash /root/logincheck.sh 2>/dev/null | head -2
-echo "=== boot watchdog行 ==="
-grep 'x10_watchdog' /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null
-echo "=== DONE_VA ==="
+287855
+echo "=== watchdog日志(巡检后应仍空=未误拉活) ==="
+wc -l /root/watchdog.log 2>/dev/null || echo "无日志文件"
+cat /root/watchdog.log 2>/dev/null | tail -3
+echo "=== watchdog进程仍活 ==="
+echo "pid=$(pgrep -f 'x10_watchdog[.]sh' | tr '\n' ' ')"
+echo "=== remote_ctl仍21128单实例 ==="
+echo "PID="$(pgrep -f 'remote_ctl[.]sh' | tr '\n' ' ')
+echo "=== DONE_WDC ==="
