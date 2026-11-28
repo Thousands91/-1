@@ -1,19 +1,26 @@
-<<<task_287855.txt>>>
-===== 任务287855 11-28 14:48:01 =====
+<<<task_287856.txt>>>
+===== 任务287856 11-28 14:53:08 =====
 --- 命令 ---
-echo "=== watchdog日志(巡检后应仍空=未误拉活) ==="
-wc -l /root/watchdog.log 2>/dev/null || echo "无日志文件"
-cat /root/watchdog.log 2>/dev/null | tail -3
-echo "=== watchdog进程仍活 ==="
-echo "pid=$(pgrep -f 'x10_watchdog[.]sh' | tr '\n' ' ')"
-echo "=== remote_ctl仍21128单实例 ==="
-echo "PID="$(pgrep -f 'remote_ctl[.]sh' | tr '\n' ' ')
-echo "=== DONE_WDC ==="
+echo "=== 最终健康快照 ==="
+echo "时间: $(date '+%m-%d %H:%M:%S')"
+echo "remote_ctl: $(cat /root/.remote_pid 2>/dev/null) alive=$(kill -0 $(cat /root/.remote_pid 2>/dev/null) 2>/dev/null && echo Y || echo N)"
+echo "watchdog: $(pgrep -f 'x10_watchdog[.]sh' | tr '\n' ' ')"
+echo "bot: $(pgrep -f '[m]ain.py' | tail -1)"
+echo "PBOX: $(ls /root/.remote_pending/ 2>/dev/null | wc -l)"
+echo "wd日志行数: $(wc -l < /root/watchdog.log 2>/dev/null)"
+echo "丢弃日志: $(grep -c 'PBOX超量丢弃' /root/remote_ctl.log 2>/dev/null)"
+echo "登录: $(bash /root/logincheck.sh 2>/dev/null | grep -oE '\[(在线|未登录|掉线)\]' | head -1)"
+echo "status尾: $(grep message=status /dev/null 2>/dev/null; tail -1 /root/remote_ctl.log | cut -c1-60)"
+echo "=== DONE_FINAL ==="
 --- 输出 ---
-=== watchdog日志(巡检后应仍空=未误拉活) ===
-0 /root/watchdog.log
-=== watchdog进程仍活 ===
-pid=27022 
-=== remote_ctl仍21128单实例 ===
-PID=21128 22621
-=== DONE_WDC ===
+=== 最终健康快照 ===
+时间: 11-28 14:53:08
+remote_ctl: 21128 alive=Y
+watchdog: 27022 
+bot: 29005
+PBOX: 1
+wd日志行数: 0
+丢弃日志: 7
+登录: [在线]
+status尾: [11-28 14:52] intake:槽位=1128_1450/1128_1445 命中ID=287
+=== DONE_FINAL ===
