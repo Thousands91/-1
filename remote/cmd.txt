@@ -1,14 +1,12 @@
-287844
-# 只读：验证优化B重启成功 + 回传链正常。方括号隔离防自匹配。
-echo "=== 新PID文件 ==="
-cat /root/.remote_pid 2>/dev/null || echo "无PID文件"
-echo "=== 进程存活 ==="
-NP=$(cat /root/.remote_pid 2>/dev/null)
-if [ -n "$NP" ] && kill -0 "$NP" 2>/dev/null; then echo "新PID $NP 存活=YES"; else echo "新PID $NP 存活=NO"; fi
-echo "=== 重启日志尾 ==="
-grep '优化B:remote_ctl已重启' /root/remote_ctl.log 2>/dev/null | tail -2
-echo "=== remote_ctl.log尾3 ==="
-tail -3 /root/remote_ctl.log 2>/dev/null
-echo "=== 当前落地md5 ==="
-md5sum /root/remote_ctl.sh 2>/dev/null | cut -d\  -f1
-echo "=== DONE_VB ==="
+287845
+# 优化B功能验收:造5个假task,等api_report跑一轮,看是否被剪到≤3。测完清理。
+for i in 1 2 3 4 5; do echo "test$i" > "/root/.remote_pending/task_test$i.txt"; done
+echo "造5个后=$(ls /root/.remote_pending/task_test*.txt 2>/dev/null | wc -l)"
+# 触发一轮api_report(任务本身执行后主循环会report);等25秒让它跑完
+sleep 25
+echo "25秒后剩=$(ls /root/.remote_pending/task_test*.txt 2>/dev/null | wc -l)"
+echo "剩下的:$(ls -1 /root/.remote_pending/task_test*.txt 2>/dev/null | xargs -n1 basename 2>/dev/null | tr '\n' ' ')"
+echo "丢弃日志:$(grep -c 'PBOX超量丢弃' /root/remote_ctl.log 2>/dev/null)"
+rm -f /root/.remote_pending/task_test*.txt
+echo "清理后PBOX=$(ls /root/.remote_pending/ 2>/dev/null | wc -l)"
+echo "=== DONE_TESTB ==="
