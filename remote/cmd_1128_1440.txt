@@ -1,0 +1,22 @@
+287853
+# 优化A最终:替换容器内watchdog + boot proot块内插启动行 + 立即启动。方括号隔离。
+BOOT=/data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+# 1) watchdog 备份+替换(容器内/root/)
+[ -f /root/x10_watchdog.sh ] && cp /root/x10_watchdog.sh /root/x10_watchdog.sh.bak_opta_1128
+cp /tmp/wd_v2.sh /root/x10_watchdog.sh && chmod +x /root/x10_watchdog.sh && echo "watchdog落地OK md5=$(md5sum /root/x10_watchdog.sh | cut -d\  -f1)"
+# 2) boot 备份+proot块内插行(锚点=容器内autoheal行)
+cp "$BOOT" "$BOOT.bak_opta2_1128" && echo "boot备份OK"
+if ! grep -q 'x10_watchdog' "$BOOT"; then
+  sed -i '/setsid nohup bash \/root\/azar_autoheal\.sh/a pgrep -f "[x]10_watchdog" >/dev/null || setsid nohup bash /root/x10_watchdog.sh >> /root/watchdog.log 2>&1 < /dev/null \&' "$BOOT"
+  echo "boot插行完成 watchdog行数=$(grep -c 'x10_watchdog' "$BOOT")"
+fi
+echo "boot新md5=$(md5sum "$BOOT" | cut -d\  -f1)"
+echo "boot语法=$(bash -n "$BOOT" 2>&1 && echo OK || echo FAIL)"
+# 3) 立即启动watchdog(容器内,方括号隔离)
+if ! pgrep -f 'x10_watchdog[.]sh' >/dev/null; then
+  setsid nohup bash /root/x10_watchdog.sh >> /root/watchdog.log 2>&1 < /dev/null &
+  echo "watchdog启动指令已发 pid=$!"
+else
+  echo "watchdog已在跑"
+fi
+echo "=== DEPLOY_A4_DONE ==="
