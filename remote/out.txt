@@ -1,26 +1,20 @@
-<<<task_287847.txt>>>
-===== 任务287847 11-28 14:26:11 =====
+<<<task_287848.txt>>>
+===== 任务287848 11-28 14:28:39 =====
 --- 命令 ---
-# 只读:验证优化B丢弃是否触发。方括号隔离。
-echo "=== 丢弃日志(应≥1) ==="
-grep 'PBOX超量丢弃' /root/remote_ctl.log 2>/dev/null | tail -3
-echo "丢弃次数=$(grep -c 'PBOX超量丢弃' /root/remote_ctl.log 2>/dev/null)"
-echo "=== 剩余test文件(回传成功会清空PBOX,应为0) ==="
-echo "test残留=$(ls /root/.remote_pending/task_test*.txt 2>/dev/null | wc -l)"
-echo "PBOX总数=$(ls /root/.remote_pending/ 2>/dev/null | wc -l)"
-echo "=== 回传成功日志尾 ==="
-grep 'report:' /root/remote_ctl.log 2>/dev/null | tail -3
-echo "=== DONE_CHB2 ==="
+# 优化A第1步:写watchdog与boot新脚本到设备临时文件,校验md5+语法。不替换不启动。
+# watchdog base64
+printf '%s' 'IyEvYmluL2Jhc2gKIyBYMTAg6YGl5o6n6Ieq5Yqo5ouJ5rS755yL6Zeo54uX77yIVGVybXV45bGC6L+Q6KGM77yM5q+P5YiG6ZKf5beh5qOA77yJCiMgMTEtMjjkv67lpI064pGg6KO4cGdyZXDoh6rljLnphY3ovb3kvZPov5vnqIso5Z2RMTU4LzYwYinihpLmlrnmi6zlj7fpmpTnprs74pGh5byA5py65YWI562JOTBz6YG/5YWo5a625qG256ue5oCBKOmYsuWPjOW8gCkKc2xlZXAgOTAKd2hpbGUgdHJ1ZTsgZG8KICBwcm9vdC1kaXN0cm8gbG9naW4gdWJ1bnR1IC0tIGJhc2ggLWMgJ3BncmVwIC1mICJyZW1vdGVfY3RsWy5dc2giID4vZGV2L251bGwgfHwgeyBybSAtZiAvcm9vdC8ucmVtb3RlX3BpZDsgc2V0c2lkIG5vaHVwIGJhc2ggL3Jvb3QvcmVtb3RlX2N0bC5zaCA+PiAvcm9vdC9yZW1vdGVfY3RsLmxvZyAyPiYxICYgZWNobyAiWyQoZGF0ZSArJW0tJWQgJUg6JU0pXSB3YXRjaGRvZ+aLiea0u3JlbW90ZV9jdGwiID4+IC9yb290L3dhdGNoZG9nLmxvZzsgfScKICBzbGVlcCA2MApkb25lCg==' > /tmp/watchdog_new.b64
+base64 -d /tmp/watchdog_new.b64 > /tmp/watchdog_new.sh 2>/dev/null && echo "watchdog解码OK" || echo "watchdog解码FAIL"
+echo "watchdog新md5=$(md5sum /tmp/watchdog_new.sh 2>/dev/null | cut -d\  -f1)(应230a0ff41d3a74afb9840b40a18b855b)"
+echo "watchdog语法=$(bash -n /tmp/watchdog_new.sh 2>&1 && echo OK || echo FAIL)"
+# 设备boot用sed精确插入一行(锚点=autoheal行后),先在沙箱验证锚点唯一
+echo "boot当前md5=$(md5sum /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null | cut -d\  -f1)"
+echo "boot已含watchdog行=$(grep -c 'x10_watchdog' /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null)"
+echo "=== DONE_A_PREP ==="
 --- 输出 ---
-=== 丢弃日志(应≥1) ===
-echo "丢弃日志:$(grep -c 'PBOX超量丢弃' /root/remote_ctl.log 2>/dev/null)"
-[11-28 14:23] report:PBOX超量丢弃3个旧task(留最新3)
-丢弃次数=2
-=== 剩余test文件(回传成功会清空PBOX,应为0) ===
-test残留=0
-PBOX总数=1
-=== 回传成功日志尾 ===
-[11-28 14:21] report:API回传成功
-[11-28 14:23] report:PBOX超量丢弃3个旧task(留最新3)
-[11-28 14:23] report:API回传成功
-=== DONE_CHB2 ===
+watchdog解码OK
+watchdog新md5=230a0ff41d3a74afb9840b40a18b855b(应230a0ff41d3a74afb9840b40a18b855b)
+watchdog语法=OK
+boot当前md5=1bf5e7c1dc75af65c0902ac7edac1d67
+boot已含watchdog行=0
+=== DONE_A_PREP ===
