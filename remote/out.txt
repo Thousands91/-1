@@ -1,17 +1,16 @@
-<<<task_287850.txt>>>
-===== 任务287850 11-28 14:33:10 =====
+<<<task_287851.txt>>>
+===== 任务287851 11-28 14:37:20 =====
 --- 命令 ---
-echo "=== watchdog.log 存在与尾部 ==="
-ls -la /data/data/com.termux/files/home/watchdog.log /root/watchdog.log 2>/dev/null | awk '{print $5,$9}'
-tail -5 /data/data/com.termux/files/home/watchdog.log 2>/dev/null || echo "Termux层无watchdog.log"
-tail -5 /root/watchdog.log 2>/dev/null || echo "容器内无watchdog.log"
-echo "=== 嵌套proot可行性测试(只测命令存在,不真login) ==="
-echo "当前是否已在proot内: $(grep -c 'proot' /proc/1/cmdline 2>/dev/null || echo 0)"
-echo "=== DONE_WDLOG ==="
+echo "=== 容器内能否看到remote_ctl(方括号隔离) ==="
+echo "匹配数=$(pgrep -f 'remote_ctl[.]sh' | wc -l)"
+echo "匹配PID=$(pgrep -f 'remote_ctl[.]sh' | tr '\n' ' ')"
+echo "=== remote_ctl命令形态 ==="
+pgrep -af 'remote_ctl[.]sh' | head -1 | cut -c1-80
+echo "=== DONE_PGT ==="
 --- 输出 ---
-=== watchdog.log 存在与尾部 ===
-Termux层无watchdog.log
-容器内无watchdog.log
-=== 嵌套proot可行性测试(只测命令存在,不真login) ===
-当前是否已在proot内: 0
-=== DONE_WDLOG ===
+=== 容器内能否看到remote_ctl(方括号隔离) ===
+匹配数=2
+匹配PID=21128 22621 
+=== remote_ctl命令形态 ===
+21128 bash /root/remote_ctl.sh
+=== DONE_PGT ===
