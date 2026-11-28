@@ -1,0 +1,9 @@
+287855
+echo "=== watchdog日志(巡检后应仍空=未误拉活) ==="
+wc -l /root/watchdog.log 2>/dev/null || echo "无日志文件"
+cat /root/watchdog.log 2>/dev/null | tail -3
+echo "=== watchdog进程仍活 ==="
+echo "pid=$(pgrep -f 'x10_watchdog[.]sh' | tr '\n' ' ')"
+echo "=== remote_ctl仍21128单实例 ==="
+echo "PID="$(pgrep -f 'remote_ctl[.]sh' | tr '\n' ' ')
+echo "=== DONE_WDC ==="
