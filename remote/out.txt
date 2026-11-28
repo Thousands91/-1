@@ -1,22 +1,17 @@
-<<<task_287849.txt>>>
-===== 任务287849 11-28 14:31:35 =====
+<<<task_287850.txt>>>
+===== 任务287850 11-28 14:33:10 =====
 --- 命令 ---
-echo "=== 当前shell环境 ==="
-echo "HOME=$HOME"
-echo "PWD=$PWD"
-echo "proot-distro在PATH=$(command -v proot-distro || echo 无)"
-echo "uname=$(uname -m) $(uname -o 2>/dev/null)"
-echo "termux-wake-lock=$(command -v termux-wake-lock || echo 无)"
-echo "=== watchdog脚本路径可达性 ==="
-ls -la /data/data/com.termux/files/home/x10_watchdog.sh 2>/dev/null | awk '{print $5,$9}' || echo "容器内不可达"
-echo "=== DONE_ENV ==="
+echo "=== watchdog.log 存在与尾部 ==="
+ls -la /data/data/com.termux/files/home/watchdog.log /root/watchdog.log 2>/dev/null | awk '{print $5,$9}'
+tail -5 /data/data/com.termux/files/home/watchdog.log 2>/dev/null || echo "Termux层无watchdog.log"
+tail -5 /root/watchdog.log 2>/dev/null || echo "容器内无watchdog.log"
+echo "=== 嵌套proot可行性测试(只测命令存在,不真login) ==="
+echo "当前是否已在proot内: $(grep -c 'proot' /proc/1/cmdline 2>/dev/null || echo 0)"
+echo "=== DONE_WDLOG ==="
 --- 输出 ---
-=== 当前shell环境 ===
-HOME=/root
-PWD=/root/asar-sync
-proot-distro在PATH=/data/data/com.termux/files/usr/bin/proot-distro
-uname=aarch64 GNU/Linux
-termux-wake-lock=/data/data/com.termux/files/usr/bin/termux-wake-lock
-=== watchdog脚本路径可达性 ===
-372 /data/data/com.termux/files/home/x10_watchdog.sh
-=== DONE_ENV ===
+=== watchdog.log 存在与尾部 ===
+Termux层无watchdog.log
+容器内无watchdog.log
+=== 嵌套proot可行性测试(只测命令存在,不真login) ===
+当前是否已在proot内: 0
+=== DONE_WDLOG ===
