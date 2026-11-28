@@ -1,14 +1,6 @@
-287839
-# 只读：回传三个脚本完整内容(base64,避免特殊字符破坏)。不改动。
-echo "=== WATCHDOG_B64_BEGIN ==="
-base64 -w0 /data/data/com.termux/files/home/x10_watchdog.sh 2>/dev/null; echo
-echo "=== WATCHDOG_B64_END ==="
-echo "=== BOOT_B64_BEGIN ==="
-base64 -w0 /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null; echo
-echo "=== BOOT_B64_END ==="
-echo "=== CTL_MD5_SIZE ==="
-md5sum /root/remote_ctl.sh 2>/dev/null
-wc -l /root/remote_ctl.sh 2>/dev/null
-echo "=== CTL_BUNDLE_LINES ==="
-grep -n 'bundle\|BUNDLE\|remote_pending\|task_\|make_bundle\|PBOX' /root/remote_ctl.sh 2>/dev/null | head -40
-echo "=== DONE_FETCH ==="
+287840
+# 只读：取remote_ctl.sh 全文(base64) 用于沙箱精确分析。不改动。
+echo "=== CTL_B64_BEGIN ==="
+base64 -w0 /root/remote_ctl.sh 2>/dev/null; echo
+echo "=== CTL_B64_END ==="
+echo "=== DONE6 ==="
