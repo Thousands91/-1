@@ -1,14 +1,26 @@
-<<<task_287846.txt>>>
-===== 任务287846 11-28 14:23:00 =====
+<<<task_287847.txt>>>
+===== 任务287847 11-28 14:26:11 =====
 --- 命令 ---
-# 优化B验收重做:只造5个假task,立即返回。主循环随后跑api_report应剪到3并打日志。
-for i in 1 2 3 4 5; do echo "test$i" > "/root/.remote_pending/task_test$i.txt"; done
-echo "造5个后=$(ls /root/.remote_pending/task_test*.txt 2>/dev/null | wc -l)"
-echo "=== DONE_TESTB2 ==="
+# 只读:验证优化B丢弃是否触发。方括号隔离。
+echo "=== 丢弃日志(应≥1) ==="
+grep 'PBOX超量丢弃' /root/remote_ctl.log 2>/dev/null | tail -3
+echo "丢弃次数=$(grep -c 'PBOX超量丢弃' /root/remote_ctl.log 2>/dev/null)"
+echo "=== 剩余test文件(回传成功会清空PBOX,应为0) ==="
+echo "test残留=$(ls /root/.remote_pending/task_test*.txt 2>/dev/null | wc -l)"
+echo "PBOX总数=$(ls /root/.remote_pending/ 2>/dev/null | wc -l)"
+echo "=== 回传成功日志尾 ==="
+grep 'report:' /root/remote_ctl.log 2>/dev/null | tail -3
+echo "=== DONE_CHB2 ==="
 --- 输出 ---
-造5个后=5
-=== DONE_TESTB2 ===
-<<<task_test3.txt>>>
-test3
-<<<task_test5.txt>>>
-test5
+=== 丢弃日志(应≥1) ===
+echo "丢弃日志:$(grep -c 'PBOX超量丢弃' /root/remote_ctl.log 2>/dev/null)"
+[11-28 14:23] report:PBOX超量丢弃3个旧task(留最新3)
+丢弃次数=2
+=== 剩余test文件(回传成功会清空PBOX,应为0) ===
+test残留=0
+PBOX总数=1
+=== 回传成功日志尾 ===
+[11-28 14:21] report:API回传成功
+[11-28 14:23] report:PBOX超量丢弃3个旧task(留最新3)
+[11-28 14:23] report:API回传成功
+=== DONE_CHB2 ===
