@@ -1,7 +1,22 @@
-287852
-# 优化A重写:容器内简化版watchdog写入/root/,校验md5+语法。不替换不启动。
-printf '%s' 'IyEvYmluL2Jhc2gKIyBYMTAg6YGl5o6n6Ieq5Yqo5ouJ5rS755yL6Zeo54uX77yI5a655Zmo5YaF6L+Q6KGM77yM5q+P5YiG6ZKf5beh5qOAIHJlbW90ZV9jdGzvvIkKIyAxMS0yOCDph43lhpnvvJrikaDljrvmjonltYzlpZdwcm9vdCjlrrnlmajlhoXnm7TmjqXlj6/op4FyZW1vdGVfY3RsLOWOn+eJiOS7juayoei3kemAmui/hyk74pGh6KO4cGdyZXDoh6rljLnphY3ihpLmlrnmi6zlj7fpmpTnprso5Z2RMTU4LzYwYik74pGi5byA5py65YWI562JOTBz6YG/5YWo5a625qG256ue5oCB6Ziy5Y+M5byACnNsZWVwIDkwCndoaWxlIHRydWU7IGRvCiAgcGdyZXAgLWYgJ3JlbW90ZV9jdGxbLl1zaCcgPi9kZXYvbnVsbCAyPiYxIHx8IHsKICAgIHJtIC1mIC9yb290Ly5yZW1vdGVfcGlkCiAgICBzZXRzaWQgbm9odXAgYmFzaCAvcm9vdC9yZW1vdGVfY3RsLnNoID4+IC9yb290L3JlbW90ZV9jdGwubG9nIDI+JjEgPCAvZGV2L251bGwgJgogICAgZWNobyAiWyQoZGF0ZSAnKyVtLSVkICVIOiVNJyldIHdhdGNoZG9n5ouJ5rS7cmVtb3RlX2N0bCBwaWQ9JCEiID4+IC9yb290L3dhdGNoZG9nLmxvZwogIH0KICBzbGVlcCA2MApkb25lCg==' > /tmp/wd_v2.b64
-base64 -d /tmp/wd_v2.b64 > /tmp/wd_v2.sh 2>/dev/null && echo "解码OK" || echo "解码FAIL"
-echo "md5=$(md5sum /tmp/wd_v2.sh 2>/dev/null | cut -d\  -f1)(应f07b60d0e29a25ed1a7e78dca7a5a977)"
-echo "语法=$(bash -n /tmp/wd_v2.sh 2>&1 && echo OK || echo FAIL)"
-echo "=== DONE_A3 ==="
+287853
+# 优化A最终:替换容器内watchdog + boot proot块内插启动行 + 立即启动。方括号隔离。
+BOOT=/data/data/com.termux/files/home/.termux/boot/asar_boot.sh
+# 1) watchdog 备份+替换(容器内/root/)
+[ -f /root/x10_watchdog.sh ] && cp /root/x10_watchdog.sh /root/x10_watchdog.sh.bak_opta_1128
+cp /tmp/wd_v2.sh /root/x10_watchdog.sh && chmod +x /root/x10_watchdog.sh && echo "watchdog落地OK md5=$(md5sum /root/x10_watchdog.sh | cut -d\  -f1)"
+# 2) boot 备份+proot块内插行(锚点=容器内autoheal行)
+cp "$BOOT" "$BOOT.bak_opta2_1128" && echo "boot备份OK"
+if ! grep -q 'x10_watchdog' "$BOOT"; then
+  sed -i '/setsid nohup bash \/root\/azar_autoheal\.sh/a pgrep -f "[x]10_watchdog" >/dev/null || setsid nohup bash /root/x10_watchdog.sh >> /root/watchdog.log 2>&1 < /dev/null \&' "$BOOT"
+  echo "boot插行完成 watchdog行数=$(grep -c 'x10_watchdog' "$BOOT")"
+fi
+echo "boot新md5=$(md5sum "$BOOT" | cut -d\  -f1)"
+echo "boot语法=$(bash -n "$BOOT" 2>&1 && echo OK || echo FAIL)"
+# 3) 立即启动watchdog(容器内,方括号隔离)
+if ! pgrep -f 'x10_watchdog[.]sh' >/dev/null; then
+  setsid nohup bash /root/x10_watchdog.sh >> /root/watchdog.log 2>&1 < /dev/null &
+  echo "watchdog启动指令已发 pid=$!"
+else
+  echo "watchdog已在跑"
+fi
+echo "=== DEPLOY_A4_DONE ==="
