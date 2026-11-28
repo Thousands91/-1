@@ -1,11 +1,10 @@
-287848
-# 优化A第1步:写watchdog与boot新脚本到设备临时文件,校验md5+语法。不替换不启动。
-# watchdog base64
-printf '%s' 'IyEvYmluL2Jhc2gKIyBYMTAg6YGl5o6n6Ieq5Yqo5ouJ5rS755yL6Zeo54uX77yIVGVybXV45bGC6L+Q6KGM77yM5q+P5YiG6ZKf5beh5qOA77yJCiMgMTEtMjjkv67lpI064pGg6KO4cGdyZXDoh6rljLnphY3ovb3kvZPov5vnqIso5Z2RMTU4LzYwYinihpLmlrnmi6zlj7fpmpTnprs74pGh5byA5py65YWI562JOTBz6YG/5YWo5a625qG256ue5oCBKOmYsuWPjOW8gCkKc2xlZXAgOTAKd2hpbGUgdHJ1ZTsgZG8KICBwcm9vdC1kaXN0cm8gbG9naW4gdWJ1bnR1IC0tIGJhc2ggLWMgJ3BncmVwIC1mICJyZW1vdGVfY3RsWy5dc2giID4vZGV2L251bGwgfHwgeyBybSAtZiAvcm9vdC8ucmVtb3RlX3BpZDsgc2V0c2lkIG5vaHVwIGJhc2ggL3Jvb3QvcmVtb3RlX2N0bC5zaCA+PiAvcm9vdC9yZW1vdGVfY3RsLmxvZyAyPiYxICYgZWNobyAiWyQoZGF0ZSArJW0tJWQgJUg6JU0pXSB3YXRjaGRvZ+aLiea0u3JlbW90ZV9jdGwiID4+IC9yb290L3dhdGNoZG9nLmxvZzsgfScKICBzbGVlcCA2MApkb25lCg==' > /tmp/watchdog_new.b64
-base64 -d /tmp/watchdog_new.b64 > /tmp/watchdog_new.sh 2>/dev/null && echo "watchdog解码OK" || echo "watchdog解码FAIL"
-echo "watchdog新md5=$(md5sum /tmp/watchdog_new.sh 2>/dev/null | cut -d\  -f1)(应230a0ff41d3a74afb9840b40a18b855b)"
-echo "watchdog语法=$(bash -n /tmp/watchdog_new.sh 2>&1 && echo OK || echo FAIL)"
-# 设备boot用sed精确插入一行(锚点=autoheal行后),先在沙箱验证锚点唯一
-echo "boot当前md5=$(md5sum /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null | cut -d\  -f1)"
-echo "boot已含watchdog行=$(grep -c 'x10_watchdog' /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null)"
-echo "=== DONE_A_PREP ==="
+287849
+echo "=== 当前shell环境 ==="
+echo "HOME=$HOME"
+echo "PWD=$PWD"
+echo "proot-distro在PATH=$(command -v proot-distro || echo 无)"
+echo "uname=$(uname -m) $(uname -o 2>/dev/null)"
+echo "termux-wake-lock=$(command -v termux-wake-lock || echo 无)"
+echo "=== watchdog脚本路径可达性 ==="
+ls -la /data/data/com.termux/files/home/x10_watchdog.sh 2>/dev/null | awk '{print $5,$9}' || echo "容器内不可达"
+echo "=== DONE_ENV ==="
