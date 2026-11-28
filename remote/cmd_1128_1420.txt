@@ -1,0 +1,5 @@
+287846
+# 优化B验收重做:只造5个假task,立即返回。主循环随后跑api_report应剪到3并打日志。
+for i in 1 2 3 4 5; do echo "test$i" > "/root/.remote_pending/task_test$i.txt"; done
+echo "造5个后=$(ls /root/.remote_pending/task_test*.txt 2>/dev/null | wc -l)"
+echo "=== DONE_TESTB2 ==="
