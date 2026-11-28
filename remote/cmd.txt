@@ -1,13 +1,14 @@
-287838
-# 只读：重启后全家桶状态核实。不改动。
-echo "=== 当前关键PID ==="
-echo "remote_ctl: $(pgrep -f '[r]emote_ctl.sh' | tr '\n' ' ')"
-echo "bot(main.py): $(pgrep -f '[m]ain.py' | tr '\n' ' ')"
-echo "napcat(qq): $(pgrep -f 'opt/QQ/[q]q' | tr '\n' ' ')"
-echo "watchdog: $(pgrep -f '[x]10_watchdog' | tr '\n' ' ')"
-echo "ipwatch: $(pgrep -f '[i]pwatch' | tr '\n' ' ')"
-echo "=== 登录态 ==="
-cat /root/logincheck.txt 2>/dev/null | head -2 || echo "无logincheck文件"
-echo "=== boot脚本里是否有watchdog行 ==="
-grep -n 'watchdog' /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null || echo "boot脚本无watchdog行"
-echo "=== DONE5 ==="
+287839
+# 只读：回传三个脚本完整内容(base64,避免特殊字符破坏)。不改动。
+echo "=== WATCHDOG_B64_BEGIN ==="
+base64 -w0 /data/data/com.termux/files/home/x10_watchdog.sh 2>/dev/null; echo
+echo "=== WATCHDOG_B64_END ==="
+echo "=== BOOT_B64_BEGIN ==="
+base64 -w0 /data/data/com.termux/files/home/.termux/boot/asar_boot.sh 2>/dev/null; echo
+echo "=== BOOT_B64_END ==="
+echo "=== CTL_MD5_SIZE ==="
+md5sum /root/remote_ctl.sh 2>/dev/null
+wc -l /root/remote_ctl.sh 2>/dev/null
+echo "=== CTL_BUNDLE_LINES ==="
+grep -n 'bundle\|BUNDLE\|remote_pending\|task_\|make_bundle\|PBOX' /root/remote_ctl.sh 2>/dev/null | head -40
+echo "=== DONE_FETCH ==="
